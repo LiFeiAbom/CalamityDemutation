@@ -29,7 +29,6 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using tModPorter;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace CalamityDemutation.Players
 {
     /// <summary>
