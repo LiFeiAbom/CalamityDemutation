@@ -93,7 +93,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             target.ExoDebuffs();
         }
         /// <summary>
-        /// 命中玩家（PvP）：施加原版四元素 debuff 各 300 帧；现代版灾厄再补五种 debuff 500 帧，经典版随机 ExoFreeze 及多种 300 帧
+        /// 命中玩家（PvP）：施加原版四元素 debuff 各 300 帧；
+        /// 现代版灾厄再补四种 debuff 各 500 帧（HolyFlames/MiracleBlight/BrimstoneFlames/Plague）；
+        /// 经典版以 1/30 概率补 ExoFreeze，另加四种 debuff 各 300 帧（BrimstoneFlames/GlacialState/Plague/HolyLight）。
         /// </summary>
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {

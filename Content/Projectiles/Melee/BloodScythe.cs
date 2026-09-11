@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     internal class BloodScythe:ModProjectile
     {
         /// <summary>
-        /// 基础属性：28x28 半透明（alpha 100）碰撞箱；友方、近战伤害、撞实心块反弹、单次穿透、存活 600 帧
+        /// 基础属性：28x28 半透明（alpha 100）碰撞箱；友方、近战伤害、撞实心块销毁（原版默认行为，无反弹）、单次穿透、存活 600 帧
         /// </summary>
         public override void SetDefaults()
         {

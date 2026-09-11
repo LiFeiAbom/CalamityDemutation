@@ -151,7 +151,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Main.dust[num458].velocity += Projectile.velocity * 0.1f;
         }
         /// <summary>
-        /// 命中敌人：根据玩家所在生物群系施加对应 debuff（现代版 90 帧，经典版 180 帧）
+        /// 命中敌人：根据玩家所在生物群系施加对应 debuff（现代版 90 帧，经典版 180 帧）。
+        /// 例外：发光蘑菇地的 TemporalSadness 现代版只持续 debuffTime / 3 = 30 帧。
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

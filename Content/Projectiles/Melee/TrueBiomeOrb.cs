@@ -153,7 +153,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             CDUtil.HomeInNPC(Projectile, 400f, 24f, 20f);   // 向 400 像素内的敌人追踪
         }
         /// <summary>
-        /// 命中敌人：根据玩家所在生物群系施加对应 debuff（持续 360 帧）
+        /// 命中敌人：根据玩家所在生物群系施加对应 debuff（持续 360 帧）。
+        /// 例外：发光蘑菇地的 TemporalSadness 现代版只持续 120 帧。
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

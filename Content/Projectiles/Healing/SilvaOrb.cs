@@ -9,8 +9,8 @@ namespace CalamityDemutation.Content.Projectiles.Healing
     /// 森林球（SilvaOrb） - 森林套（Silva armor）吸血时生成的治疗弹幕。
     /// 由 CalamityDemutationGlobalProjectile 在 silvaSet 触发吸血时生成，参数 ai[0] = 目标玩家编号、ai[1] = 治疗量
     /// （治疗量 = 弹幕伤害 × (3% − 该弹幕已命中次数×1.5%)，会优先送给 1200 像素内血量缺口最大的队友）。
-    /// 与同目录 CactusHealOrb / FungalHeal 的异同：三者都是"触碰玩家即回血"的治疗球（前两者用隐形贴图、靠粉尘表现），
-    /// 但本弹幕自带贴图与呼吸式缩放、追踪速度更快（6）、每帧额外更新 3 次，且目标可以是任意队友而不限于主人。
+    /// 与同目录 CactusHealOrb / FungalHeal 的异同：三者都是"触碰玩家即回血"的治疗球，且都用隐形贴图、靠粉尘表现；
+    /// 但本弹幕追踪速度更快（6）、每帧额外更新 3 次，且目标可以是任意队友而不限于主人。
     /// </summary>
     internal class SilvaOrb:ModProjectile
     {

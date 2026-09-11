@@ -20,7 +20,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>
         /// 基础属性：58x58 碰撞箱；近战伤害、友方；借用恶魔镰刀 AI 模板、半透明（alpha 100）、
-        /// 撞实心块反弹、单次穿透、存活 300 帧
+        /// 撞实心块销毁（原版默认行为，无反弹）、单次穿透、存活 300 帧
         /// </summary>
         public override void SetDefaults()
         {

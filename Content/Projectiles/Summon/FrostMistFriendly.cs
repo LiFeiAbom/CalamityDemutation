@@ -9,7 +9,9 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 友方霜雾弹：由海妖诱饵（SirenLure）发射，先追踪玩家再朝敌人方向加速，带有蓝焰粒子。
+    /// 友方霜雾弹：由海妖诱饵（SirenLure）发射，带蓝焰粒子，并做缩放/透明度往返的"呼吸"效果。
+    /// 生成后的第 30~110 帧窗口内会把速度方向修正为朝最近的**玩家**（通常是召唤者本人）；
+    /// 代码中不存在朝敌人追踪或加速的逻辑。
     /// </summary>
     internal class FrostMistFriendly:ModProjectile
     {

@@ -77,13 +77,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             */
         }
         /// <summary>
-        /// 消亡处理：以自身为中心做 32 半径的伤害爆炸，喷出金色尘粒，并生成 3~5 枚 DefenseFlame 火舌。
+        /// 消亡处理：以自身为中心做 32 半径的伤害爆炸，喷出金色尘粒，并生成 3~4 枚 DefenseFlame 火舌。
         /// 只有拥有者客户端（owner == Main.myPlayer）才负责生成子弹幕，避免多人重复生成。
         /// </summary>
         public override void OnKill(int timeLeft)
         {
             Projectile.Explode(32, SoundID.Item20);   // 半径 32 的爆炸判定 + 指定音效
-            // 30 颗金色尘粒向外飞散：先取随机方向，再归一化到 3~9 的随机速度
+            // 31 颗金色尘粒向外飞散（d 从 0 到 30 闭区间）：先取随机方向，再归一化到 3~9 的随机速度
             for (int d = 0; d <= 30; d++)
             {
                 float num463 = Main.rand.Next(-10, 11);

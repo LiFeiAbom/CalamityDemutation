@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     internal class OathswordFlame:ModProjectile
     {
         /// <summary>
-        /// 基础属性：20x20 碰撞箱；近战伤害、友方、单次穿透、撞实心块反弹、存活 240 帧；
+        /// 基础属性：20x20 碰撞箱；近战伤害、友方、单次穿透、撞实心块销毁（原版默认行为，无反弹）、存活 240 帧；
         /// 初始完全不透明度的逆值 Opacity=0（完全透明），随 AI 渐显
         /// </summary>
         public override void SetDefaults()
@@ -31,7 +31,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override void AI()
         {
-            // 每帧把 Opacity 提高 0.08（封顶 1），实现出生后 0.4 秒内渐显
+            // 每帧把 Opacity 提高 0.08（封顶 1），约 13 帧（≈0.2 秒）完成渐显
             Projectile.Opacity = MathHelper.Clamp(Projectile.Opacity + 0.08f, 0f, 1f);
             // 向 700 像素内的敌人平滑追踪（转向 15、惯性 10，不穿墙判定）
             Projectile.HomeInNPC(700f, 15f, 10f, null, false);

@@ -14,7 +14,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
         // 使用隐形贴图，视觉效果完全由粉尘承担
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>
-        /// 基础属性：2x2 微小碰撞箱，友方、无限穿透、撞实心块反弹/停止；魔法伤害、存活 300 帧、全透明并放大 1.1 倍；每帧额外更新 1 次
+        /// 基础属性：2x2 微小碰撞箱，友方、无限穿透、撞实心块销毁（原版默认行为，无反弹）；魔法伤害、存活 300 帧、全透明并放大 1.1 倍；每帧额外更新 1 次
         /// </summary>
         public override void SetDefaults()
         {
