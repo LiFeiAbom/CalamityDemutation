@@ -1,0 +1,64 @@
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using Terraria.Graphics.Shaders;
+using Terraria.ModLoader;
+namespace CalamityDemutation.Effects
+{
+    /// <summary>
+    /// 着色器加载与注册系统（移植自灾厄的 CalamityShaders 模式）：
+    /// 内容加载完成后从 Effects/ 目录加载 .fx 着色器，
+    /// 以 "CalamityDemutation:" 前缀注册到 GameShaders.Misc 供弹幕绘制使用。
+    /// </summary>
+    [Autoload(Side = ModSide.Client)]
+    public sealed class CDShaders : ModSystem
+    {
+        private const string ShaderPath = "Effects/";
+        private const string ShaderPrefix = "CalamityDemutation:";
+        /// <summary>
+        /// HeavenlyGale 硬光箭的拖尾着色器（原灾厄 HeavenlyGaleTrail，PiercePass）
+        /// </summary>
+        internal static Asset<Effect> HeavenlyGaleTrailShader;
+        /// <summary>
+        /// PrimitiveRenderer 未指定着色器时的默认兜底着色器（仅输出顶点色）
+        /// </summary>
+        internal static Asset<Effect> StandardPrimitiveShader;
+        /// <summary>
+        /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
+        /// 分别以 HeavenlyGaleTrail（PiercePass）与 StandardPrimitiveShader（PrimitivePass）为名
+        /// 注册进 GameShaders.Misc，供弹幕/拖尾绘制时通过 GameShaders.Misc["CalamityDemutation:xxx"] 取用
+        /// </summary>
+        public override void PostSetupContent()
+        {
+            AssetRepository cdAssets = CalamityDemutation.Instance.Assets;
+            // 用默认的异步加载：ImmediateLoad 会在模组加载期阻塞(日志里的 "blocking on asset loading" 警告)，
+            // MiscShaderData 本身就接收 Asset，绘制时才取 .Value，无需在加载期就把着色器读出来。
+            Asset<Effect> LoadShader(string path) => cdAssets.Request<Effect>($"{ShaderPath}{path}");
+            HeavenlyGaleTrailShader = LoadShader("HeavenlyGaleTrailShader");
+            RegisterMiscShader(HeavenlyGaleTrailShader, "PiercePass", "HeavenlyGaleTrail");
+            StandardPrimitiveShader = LoadShader("StandardPrimitiveShader");
+            RegisterMiscShader(StandardPrimitiveShader, "PrimitivePass", "StandardPrimitiveShader");
+        }
+        /// <summary>
+        /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
+        /// 否则注册项会持有本模组程序集，触发 "mod class still using memory" 警告
+        /// </summary>
+        public override void Unload()
+        {
+            // 注册进 GameShaders.Misc 的是 Terraria 侧的全局字典，不清理会把本模组程序集一直挂住，
+            // 对应日志里的 "mod class still using memory" 警告
+            GameShaders.Misc.Remove($"{ShaderPrefix}HeavenlyGaleTrail");
+            GameShaders.Misc.Remove($"{ShaderPrefix}StandardPrimitiveShader");
+            HeavenlyGaleTrailShader = null;
+            StandardPrimitiveShader = null;
+        }
+        /// <summary>
+        /// 将已加载的着色器注册到 Terraria 图形引擎的 Misc 槽位，
+        /// 注册名统一带 "CalamityDemutation:" 前缀，通过 GameShaders.Misc 访问。
+        /// </summary>
+        private static void RegisterMiscShader(Asset<Effect> shader, string passName, string registrationName)
+        {
+            MiscShaderData passParamRegistration = new(shader, passName);
+            GameShaders.Misc[$"{ShaderPrefix}{registrationName}"] = passParamRegistration;
+        }
+    }
+}
