@@ -91,7 +91,7 @@ Buffs: {
 
 	GodSlayerDashCooldown: {
 		DisplayName: God Slayer Dash Cooldown
-		Description: Mods.CalamityDemutation.Buffs.GodSlayerDashCooldown.Description
+		Description: The God Slayer's power is gathering
 	}
 }
 
