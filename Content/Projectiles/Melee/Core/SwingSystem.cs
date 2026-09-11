@@ -10,29 +10,29 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
     /// </summary>
     internal static class SwingSystem
     {
-        internal static Dictionary<int, Asset<Texture2D>> trailTextures = [];
+        /// <summary>
+        /// 颜色采样贴图缓存（弹幕类型 → 贴图资源）
+        /// </summary>
         internal static Dictionary<int, Asset<Texture2D>> gradientTextures = [];
+        /// <summary>
+        /// 刀光流形贴图缓存（弹幕类型 → 贴图资源）
+        /// </summary>
+        internal static Dictionary<int, Asset<Texture2D>> trailTextures = [];
         /// <summary>
         /// 初始化：清空两张缓存字典，由 CalamityDemutation.Load() 调用，避免热重载时残留旧贴图引用。
         /// </summary>
-        internal static void Load() {
+        internal static void Load()
+        {
             trailTextures = [];
             gradientTextures = [];
         }
         /// <summary>
-        /// 按弹幕类型懒加载并缓存刀光流形贴图：传入的 customPath 为空时回退到默认的
-        /// <c>CalamityDemutationConstant.Masking + "MotionTrail3"</c>，已缓存则直接返回。
-        /// 由 <see cref="BaseSwingCO.TrailTexture"/> 属性调用。
+        /// tML 卸载回调：由 CalamityDemutation.UnLoad() 调用，把两张缓存字典置空以释放贴图资源。
         /// </summary>
-        internal static Asset<Texture2D> GetTrailTexture(int type, string customPath)
+        internal static void UnLoad()
         {
-            if (!trailTextures.TryGetValue(type, out Asset<Texture2D> tex))
-            {
-                string path = customPath == "" ? CalamityDemutationConstant.Masking + "MotionTrail3" : customPath;
-                tex = ModContent.Request<Texture2D>(path, AssetRequestMode.ImmediateLoad);
-                trailTextures[type] = tex;
-            }
-            return tex;
+            trailTextures = null;
+            gradientTextures = null;
         }
         /// <summary>
         /// 按弹幕类型懒加载并缓存颜色采样贴图：customPath 为空时回退到默认的
@@ -50,12 +50,19 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
             return tex;
         }
         /// <summary>
-        /// tML 卸载回调：由 CalamityDemutation.UnLoad() 调用，把两张缓存字典置空以释放贴图资源。
+        /// 按弹幕类型懒加载并缓存刀光流形贴图：传入的 customPath 为空时回退到默认的
+        /// <c>CalamityDemutationConstant.Masking + "MotionTrail3"</c>，已缓存则直接返回。
+        /// 由 <see cref="BaseSwingCO.TrailTexture"/> 属性调用。
         /// </summary>
-        internal static void UnLoad()
+        internal static Asset<Texture2D> GetTrailTexture(int type, string customPath)
         {
-            trailTextures = null;
-            gradientTextures = null;
+            if (!trailTextures.TryGetValue(type, out Asset<Texture2D> tex))
+            {
+                string path = customPath == "" ? CalamityDemutationConstant.Masking + "MotionTrail3" : customPath;
+                tex = ModContent.Request<Texture2D>(path, AssetRequestMode.ImmediateLoad);
+                trailTextures[type] = tex;
+            }
+            return tex;
         }
     }
 }

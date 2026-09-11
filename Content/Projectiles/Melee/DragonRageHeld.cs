@@ -341,6 +341,112 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             canDrawSlashTrail = Projectile.ai[0] != 3;
             inDrawFlipdiagonally = Projectile.ai[0] == 1 || Projectile.ai[0] == 5;
         }
+        /// <summary>
+        /// 命中敌怪：ai[0]=3 的突刺会在命中点叠加两层 bloom 粒子、额外发射一枚 FireBall（伤害 1/4）并施加血炎爆炸 debuff 300 帧；
+        /// ai[0]=6 的蓄力旋转则在特殊世界种子（zenithWorld/getGoodWorld/drunkWorld）下，每累计 3 次命中向四周抛出 3 颗 DragonRageFireOrb。
+        /// 最后统一调用 <see cref="HitEffect"/> 播放命中火花。
+        /// </summary>
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            int type = ModContent.ProjectileType<DragonRageFireOrb>();
+            if (Projectile.ai[0] == 3)
+            {
+                float orbSize = Main.rand.NextFloat(0.5f, 0.8f) * Projectile.numHits;
+                if (orbSize > 2.2f)
+                {
+                    orbSize = 2.2f;
+                }
+                GeneralParticleHandler.SpawnParticle(new GenericBloom(target.Center, Vector2.Zero, Color.OrangeRed, orbSize + 0.6f, 8, true));
+                GeneralParticleHandler.SpawnParticle(new GenericBloom(target.Center, Vector2.Zero, Color.White, orbSize + 0.2f, 8, true));
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<FireBall>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
+                target.AddBuff(ModContent.BuffType<HellfireExplosion>(), 300);
+            }
+            else if (Projectile.ai[0] == 6 && Projectile.IsOwnedByLocalPlayer() && Projectile.numHits % 3 == 0 && (Main.zenithWorld || Main.getGoodWorld || Main.drunkWorld))
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 vr = (MathHelper.TwoPi / 3f * i + Main.GameUpdateCount * 0.1f).ToRotationVector2();
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Owner.Center + vr * Main.rand.Next(22, 38), vr.RotatedByRandom(0.32f) * 3
+                        , type, Projectile.damage / 6, Projectile.knockBack, Projectile.owner, 0f, rotSpeed * 0.1f);
+                }
+            }
+            HitEffect(target);
+        }
+
+        /// <summary>
+        /// 命中玩家（PvP）时的对应处理：施加血炎爆炸 debuff 300 帧；ai[0]=3 突刺同样额外发射一枚 FireBall，随后调用 <see cref="HitEffect"/>。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<HellfireExplosion>(), 300);
+            if (Projectile.ai[0] == 3)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<FireBall>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
+            }
+            HitEffect(target);
+        }
+
+        /// <summary>
+        /// 命中修正：仅 ai[0]=3 的直线突刺生效——把护甲有效度乘 0（<c>DefenseEffectiveness = 0</c>），即突刺完全无视目标防御。
+        /// </summary>
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            if (Projectile.ai[0] == 3)
+            {
+                modifiers.DefenseEffectiveness *= 0f;
+            }
+        }
+
+        /// <summary>
+        /// 自定义碰撞：不用默认矩形碰撞盒，而是取「玩家中心指向弹幕中心」的方向，从弹幕中心向外延伸
+        /// <c>Length * scale * 1.3</c> 得到刀尖端点，再以宽度 <c>25 * scale</c> 的线段与目标 AABB 做碰撞检测。
+        /// </summary>
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            float point = 0f;
+            float rotding = Owner.Center.To(Projectile.Center).ToRotation();
+            Vector2 endPos = rotding.ToRotationVector2() * Length * Projectile.scale * 1.3f + Projectile.Center;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, endPos, 25 * Projectile.scale, ref point);
+        }
+
+        /// <summary>
+        /// 绘制刀光顶点带：由基类 <see cref="BaseSwingCO.DrawTrailHander"/>（经 <see cref="BaseSwingCO.DrawSlashTrail"/>）回调。
+        /// 使用 <c>noEffects/KnifeRendering</c> 着色器，绑定变换矩阵、流形贴图与颜色条贴图，每个 pass 先正常画一遍，
+        /// 再切到加色混合叠画一遍，得到高亮刀光效果。
+        /// </summary>
+        public override void DrawTrail(List<VertexPositionColorTexture> bars)
+        {
+            Effect effect = CalamityDemutation.Instance.Assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering").Value;
+            effect.Parameters["transformMatrix"].SetValue(GetTransfromMaxrix());
+            effect.Parameters["sampleTexture"].SetValue(TrailTexture);
+            effect.Parameters["gradientTexture"].SetValue(GradientTexture);
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+                Main.graphics.GraphicsDevice.BlendState = BlendState.Additive;
+                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+            }
+        }
+
+        /// <summary>
+        /// 绘制武器本体：由基类 <see cref="BaseSwingCO.PreDraw"/> 在 <see cref="BaseSwingCO.DrawSlashTrail"/> 之后调用。
+        /// ai[0]=6 的蓄力旋转先在玩家中心叠加一张红色加色光晕（Particles/Light），随后调 base.DrawSwing 走通用绘制，
+        /// 保证其余模式的绘制行为不变。
+        /// </summary>
+        public override void DrawSwing(SpriteBatch spriteBatch, Color lightColor)
+        {
+            if (Projectile.ai[0] == 6)
+            {
+                Texture2D value = ModContent.Request<Texture2D>("CalamityDemutation/Particles/Light").Value;
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                Main.EntitySpriteDraw(value, Owner.Center - Main.screenPosition, null, Color.Red * 0.9f, Projectile.rotation, value.Size() * 0.5f, Projectile.scale * 2.15f, SpriteEffects.None, 0);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            }
+            base.DrawSwing(spriteBatch, lightColor);
+        }
 
         /// <summary>
         /// 蓄力旋转（ai[0]=6）的尘土表现：沿刀光弧线端点抛撒铜币尘（DustID.CopperCoin），
@@ -461,111 +567,5 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
         }
 
-        /// <summary>
-        /// 命中敌怪：ai[0]=3 的突刺会在命中点叠加两层 bloom 粒子、额外发射一枚 FireBall（伤害 1/4）并施加血炎爆炸 debuff 300 帧；
-        /// ai[0]=6 的蓄力旋转则在特殊世界种子（zenithWorld/getGoodWorld/drunkWorld）下，每累计 3 次命中向四周抛出 3 颗 DragonRageFireOrb。
-        /// 最后统一调用 <see cref="HitEffect"/> 播放命中火花。
-        /// </summary>
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            int type = ModContent.ProjectileType<DragonRageFireOrb>();
-            if (Projectile.ai[0] == 3)
-            {
-                float orbSize = Main.rand.NextFloat(0.5f, 0.8f) * Projectile.numHits;
-                if (orbSize > 2.2f)
-                {
-                    orbSize = 2.2f;
-                }
-                GeneralParticleHandler.SpawnParticle(new GenericBloom(target.Center, Vector2.Zero, Color.OrangeRed, orbSize + 0.6f, 8, true));
-                GeneralParticleHandler.SpawnParticle(new GenericBloom(target.Center, Vector2.Zero, Color.White, orbSize + 0.2f, 8, true));
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<FireBall>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
-                target.AddBuff(ModContent.BuffType<HellfireExplosion>(), 300);
-            }
-            else if (Projectile.ai[0] == 6 && Projectile.IsOwnedByLocalPlayer() && Projectile.numHits % 3 == 0 && (Main.zenithWorld || Main.getGoodWorld || Main.drunkWorld))
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    Vector2 vr = (MathHelper.TwoPi / 3f * i + Main.GameUpdateCount * 0.1f).ToRotationVector2();
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Owner.Center + vr * Main.rand.Next(22, 38), vr.RotatedByRandom(0.32f) * 3
-                        , type, Projectile.damage / 6, Projectile.knockBack, Projectile.owner, 0f, rotSpeed * 0.1f);
-                }
-            }
-            HitEffect(target);
-        }
-
-        /// <summary>
-        /// 命中玩家（PvP）时的对应处理：施加血炎爆炸 debuff 300 帧；ai[0]=3 突刺同样额外发射一枚 FireBall，随后调用 <see cref="HitEffect"/>。
-        /// </summary>
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
-        {
-            target.AddBuff(ModContent.BuffType<HellfireExplosion>(), 300);
-            if (Projectile.ai[0] == 3)
-            {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<FireBall>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
-            }
-            HitEffect(target);
-        }
-
-        /// <summary>
-        /// 命中修正：仅 ai[0]=3 的直线突刺生效——把护甲有效度乘 0（<c>DefenseEffectiveness = 0</c>），即突刺完全无视目标防御。
-        /// </summary>
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
-        {
-            if (Projectile.ai[0] == 3)
-            {
-                modifiers.DefenseEffectiveness *= 0f;
-            }
-        }
-
-        /// <summary>
-        /// 自定义碰撞：不用默认矩形碰撞盒，而是取「玩家中心指向弹幕中心」的方向，从弹幕中心向外延伸
-        /// <c>Length * scale * 1.3</c> 得到刀尖端点，再以宽度 <c>25 * scale</c> 的线段与目标 AABB 做碰撞检测。
-        /// </summary>
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
-        {
-            float point = 0f;
-            float rotding = Owner.Center.To(Projectile.Center).ToRotation();
-            Vector2 endPos = rotding.ToRotationVector2() * Length * Projectile.scale * 1.3f + Projectile.Center;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, endPos, 25 * Projectile.scale, ref point);
-        }
-
-        /// <summary>
-        /// 绘制刀光顶点带：由基类 <see cref="BaseSwingCO.DrawTrailHander"/>（经 <see cref="BaseSwingCO.DrawSlashTrail"/>）回调。
-        /// 使用 <c>noEffects/KnifeRendering</c> 着色器，绑定变换矩阵、流形贴图与颜色条贴图，每个 pass 先正常画一遍，
-        /// 再切到加色混合叠画一遍，得到高亮刀光效果。
-        /// </summary>
-        public override void DrawTrail(List<VertexPositionColorTexture> bars)
-        {
-            Effect effect = CalamityDemutation.Instance.Assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering").Value;
-            effect.Parameters["transformMatrix"].SetValue(GetTransfromMaxrix());
-            effect.Parameters["sampleTexture"].SetValue(TrailTexture);
-            effect.Parameters["gradientTexture"].SetValue(GradientTexture);
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
-                Main.graphics.GraphicsDevice.BlendState = BlendState.Additive;
-                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
-            }
-        }
-
-        /// <summary>
-        /// 绘制武器本体：由基类 <see cref="BaseSwingCO.PreDraw"/> 在 <see cref="BaseSwingCO.DrawSlashTrail"/> 之后调用。
-        /// ai[0]=6 的蓄力旋转先在玩家中心叠加一张红色加色光晕（Particles/Light），随后调 base.DrawSwing 走通用绘制，
-        /// 保证其余模式的绘制行为不变。
-        /// </summary>
-        public override void DrawSwing(SpriteBatch spriteBatch, Color lightColor)
-        {
-            if (Projectile.ai[0] == 6)
-            {
-                Texture2D value = ModContent.Request<Texture2D>("CalamityDemutation/Particles/Light").Value;
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                Main.EntitySpriteDraw(value, Owner.Center - Main.screenPosition, null, Color.Red * 0.9f, Projectile.rotation, value.Size() * 0.5f, Projectile.scale * 2.15f, SpriteEffects.None, 0);
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-            }
-            base.DrawSwing(spriteBatch, lightColor);
-        }
     }
 }
