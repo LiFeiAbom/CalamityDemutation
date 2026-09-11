@@ -76,7 +76,6 @@ namespace CalamityDemutation.Players
         /// Mod.BuffType 找不到返回 0（不抛异常），比 Find&lt;ModBuff&gt; 更抗灾厄版本变化。
         /// </summary>
         private static readonly Dictionary<(string mod, string buff), int> buffTypeCache = new();
-        public static int MinionsAddition = 1;
         /// <summary>
         /// The Community 进度 Boss 清单（石巨人 → 至尊灾厄，18 档），与庇护之刃 LegendaryBosses 同序。
         /// 仅用于统计"已击败几档"来驱动各属性的线性成长；召唤栏/飞行等一次性加成另行按 Boss 判定。
@@ -107,12 +106,22 @@ namespace CalamityDemutation.Players
         /// 这些 buff 虽被标为 debuff（Main.debuff=true），实为增益/特殊状态，不应被缩短持续时间。
         /// </summary>
         private static HashSet<int> communityDebuffBlacklist;
+        /// <summary>
+        /// 本模组认作"Boss 战进行中"的额外 NPC 类型（灾厄未置 boss 标记的史莱姆神分身），
+        /// 由 AnyBossNPCS 首次调用时按名字软依赖解析并缓存
+        /// </summary>
+        private static HashSet<int> extraBossTypes;
+        /// <summary>
+        /// 额外赐予的召唤栏数量（固定 +1），由天界洋葱类物品在解锁后累加
+        /// </summary>
+        public static int MinionsAddition = 1;
         // ── 属性 ──
         /// <summary>
         /// 经典版三使者是否全部倒下（经典版无单个使者标记，只有 Sentinel1/2/3）。
         /// </summary>
         private static bool ClassicSentinelsDowned =>
             BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
+        // ── 实例字段 ──
         /// <summary>
         /// 已装备风之石：+10% 移速、+2 跳跃力、+3% 通用增伤，青色照明
         /// </summary>
@@ -495,6 +504,7 @@ namespace CalamityDemutation.Players
         /// 亚利姆徽章已装备（近战加成+圣焰debuff）
         /// </summary>
         public bool yharimsInsignia = false;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 每帧重置所有饰品开关标记（由各饰品的 UpdateAccessory 重新置位）
         /// </summary>
@@ -2436,142 +2446,51 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 UpdateLifeRegen 钩子：每帧在生命回复结算前调用，可直接改 Player.lifeRegen 与 lifeRegenTime。
-        /// 影之再生（shadeRegen）通过反射读取灾厄 CalamityPlayer / CalamityPlayerPreTrailer 的私有字段
-        /// areThereAnyDamnBosses，据此选择"静止回血"参数（有 Boss：时间上限 900、每帧 +2、上限 16；
-        /// 无 Boss：上限 3600、每帧 +8、上限 60），在玩家完全静止且无使用动画时快速累积回复量，
-        /// 并按 lifeRegenTime 概率生成 ShadowbeamStaff 尘埃。
+        /// 影之再生（shadeRegen，由恶魔之影胸甲置位）：玩家完全静止且无使用动画时快速累积回复量，
+        /// 速率取决于 <see cref="AnyBossNPCS"/>（有 Boss 存活时回血更慢：时间上限 900、每帧 +2、封顶 16；
+        /// 无 Boss 时：上限 3600、每帧 +8、封顶 60），并按 lifeRegenTime 概率生成 ShadowbeamStaff 尘埃。
         /// 塔拉生命回复（tarraLifeRegen）则简单叠加 +10 生命回复。
         /// </summary>
         public override void UpdateLifeRegen()
         {
-            if (shadeRegen)
+            if (shadeRegen && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
             {
-                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                bool areThereAnyDamnBosses = AnyBossNPCS();
+                int lifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 900 : 3600);
+                int lifeRegenMaxBoost = (areThereAnyDamnBosses ? 2 : 8);
+                float lifeRegenLifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 16 : 60);
+                if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < lifeRegenTimeMaxBoost)
                 {
-                    var calamityPlayerType = calamity.Code.GetTypes()
-                        .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
-                    if (calamityPlayerType != null)
-                    {
-                        var getModPlayerMethod = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)
-                            ?.MakeGenericMethod(calamityPlayerType);
-                        if (getModPlayerMethod != null)
-                        {
-                            if (getModPlayerMethod.Invoke(Player, null) is ModPlayer calPlayer)
-                            {
-                                var field = calamityPlayerType.GetField("areThereAnyDamnBosses",
-                                    System.Reflection.BindingFlags.Public |
-                                    System.Reflection.BindingFlags.NonPublic |
-                                    System.Reflection.BindingFlags.Instance);
-                                if (field != null)
-                                {
-                                    bool areThereAnyDamnBosses = (bool)field.GetValue(calPlayer);
-                                    int lifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 900 : 3600);
-                                    int lifeRegenMaxBoost = (areThereAnyDamnBosses ? 2 : 8);
-                                    float lifeRegenLifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 16 : 60);
-                                    if ((double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
-                                    {
-                                        if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < lifeRegenTimeMaxBoost)
-                                        {
-                                            Player.lifeRegenTime = lifeRegenTimeMaxBoost;
-                                        }
-                                        Player.lifeRegenTime += lifeRegenMaxBoost;
-                                        Player.lifeRegen += lifeRegenMaxBoost;
-                                        float num3 = (float)((double)Player.lifeRegenTime * 2.5); //lifeRegenTime max is 3600
-                                        num3 /= 300f;
-                                        if (num3 > 0f)
-                                        {
-                                            if (num3 > lifeRegenLifeRegenTimeMaxBoost)
-                                            {
-                                                num3 = lifeRegenLifeRegenTimeMaxBoost;
-                                            }
-                                            Player.lifeRegen += (int)num3;
-                                        }
-                                        if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
-                                        {
-                                            Player.lifeRegenCount++;
-                                            if ((Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.Next(30) == 0))
-                                            {
-                                                int num5 = Dust.NewDust(Player.position, Player.width, Player.height, DustID.ShadowbeamStaff, 0f, 0f, 200, default(Color), 1f);
-                                                Main.dust[num5].noGravity = true;
-                                                Main.dust[num5].velocity *= 0.75f;
-                                                Main.dust[num5].fadeIn = 1.3f;
-                                                Vector2 vector = new((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
-                                                vector.Normalize();
-                                                vector *= (float)Main.rand.Next(50, 100) * 0.04f;
-                                                Main.dust[num5].velocity = vector;
-                                                vector.Normalize();
-                                                vector *= 34f;
-                                                Main.dust[num5].position = Player.Center - vector;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    Player.lifeRegenTime = lifeRegenTimeMaxBoost;
                 }
-            }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
-            {
-                var calamityPlayerType = calamity1.Code.GetTypes()
-                        .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
-                if (calamityPlayerType != null)
+                Player.lifeRegenTime += lifeRegenMaxBoost;
+                Player.lifeRegen += lifeRegenMaxBoost;
+                float num3 = (float)((double)Player.lifeRegenTime * 2.5); //lifeRegenTime max is 3600
+                num3 /= 300f;
+                if (num3 > 0f)
                 {
-                    var getModPlayerMethod = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)
-                            ?.MakeGenericMethod(calamityPlayerType);
-                    if (getModPlayerMethod != null)
+                    if (num3 > lifeRegenLifeRegenTimeMaxBoost)
                     {
-                        if (getModPlayerMethod.Invoke(Player, null) is ModPlayer calPlayer)
-                        {
-                            var field = calamityPlayerType.GetField("areThereAnyDamnBosses",
-                                System.Reflection.BindingFlags.Public |
-                                System.Reflection.BindingFlags.NonPublic |
-                                System.Reflection.BindingFlags.Instance);
-                            if (field != null)
-                            {
-                                bool areThereAnyDamnBosses = (bool)field.GetValue(calPlayer);
-                                int lifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 900 : 3600);
-                                int lifeRegenMaxBoost = (areThereAnyDamnBosses ? 2 : 8);
-                                float lifeRegenLifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 16 : 60);
-                                if ((double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
-                                {
-                                    if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < lifeRegenTimeMaxBoost)
-                                    {
-                                        Player.lifeRegenTime = lifeRegenTimeMaxBoost;
-                                    }
-                                    Player.lifeRegenTime += lifeRegenMaxBoost;
-                                    Player.lifeRegen += lifeRegenMaxBoost;
-                                    float num3 = (float)((double)Player.lifeRegenTime * 2.5); //lifeRegenTime max is 3600
-                                    num3 /= 300f;
-                                    if (num3 > 0f)
-                                    {
-                                        if (num3 > lifeRegenLifeRegenTimeMaxBoost)
-                                        {
-                                            num3 = lifeRegenLifeRegenTimeMaxBoost;
-                                        }
-                                        Player.lifeRegen += (int)num3;
-                                    }
-                                    if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
-                                    {
-                                        Player.lifeRegenCount++;
-                                        if ((Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.Next(30) == 0))
-                                        {
-                                            int num5 = Dust.NewDust(Player.position, Player.width, Player.height, DustID.ShadowbeamStaff, 0f, 0f, 200, default(Color), 1f);
-                                            Main.dust[num5].noGravity = true;
-                                            Main.dust[num5].velocity *= 0.75f;
-                                            Main.dust[num5].fadeIn = 1.3f;
-                                            Vector2 vector = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
-                                            vector.Normalize();
-                                            vector *= (float)Main.rand.Next(50, 100) * 0.04f;
-                                            Main.dust[num5].velocity = vector;
-                                            vector.Normalize();
-                                            vector *= 34f;
-                                            Main.dust[num5].position = Player.Center - vector;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        num3 = lifeRegenLifeRegenTimeMaxBoost;
+                    }
+                    Player.lifeRegen += (int)num3;
+                }
+                if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
+                {
+                    Player.lifeRegenCount++;
+                    if ((Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.Next(30) == 0))
+                    {
+                        int num5 = Dust.NewDust(Player.position, Player.width, Player.height, DustID.ShadowbeamStaff, 0f, 0f, 200, default(Color), 1f);
+                        Main.dust[num5].noGravity = true;
+                        Main.dust[num5].velocity *= 0.75f;
+                        Main.dust[num5].fadeIn = 1.3f;
+                        Vector2 vector = new((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
+                        vector.Normalize();
+                        vector *= (float)Main.rand.Next(50, 100) * 0.04f;
+                        Main.dust[num5].velocity = vector;
+                        vector.Normalize();
+                        vector *= 34f;
+                        Main.dust[num5].position = Player.Center - vector;
                     }
                 }
             }
@@ -3832,6 +3751,7 @@ namespace CalamityDemutation.Players
                 packet.Send();
             }
         }
+        // ── 公开方法 ──
         /// <summary>
         /// 施加灾厄模组 debuff：buff type 非法（对应模组/技能不存在）时静默跳过
         /// </summary>
@@ -3852,20 +3772,6 @@ namespace CalamityDemutation.Players
                 target.AddBuff(type, duration, false);
         }
         /// <summary>
-        /// 解析"模组名 + buff 名"为 buff type，结果缓存在 buffTypeCache 中。
-        /// 模组或技能不存在时静默返回 0（上层据此跳过施加），不抛异常。
-        /// </summary>
-        private static int GetBuffType(string modName, string buffName)
-        {
-            if (buffTypeCache.TryGetValue((modName, buffName), out int cached))
-                return cached;
-            int type = 0;
-            if (ModLoader.TryGetMod(modName, out Mod mod) && mod.TryFind<ModBuff>(buffName, out ModBuff buff))
-                type = buff.Type;
-            buffTypeCache[(modName, buffName)] = type;
-            return type;
-        }
-        /// <summary>
         /// 检查玩家当前是否佩戴指定饰品（直接查 armor 饰品槽，而非 ModPlayer 标志位）。
         /// 供 PvP 命中钩子在受害者客户端上判断【攻击者】的装备，
         /// 避免远程玩家实例的标志位因 ResetEffects 只对本地运行而残留/不同步。
@@ -3882,6 +3788,43 @@ namespace CalamityDemutation.Players
         }
         // ── 私有工具 ──
         /// <summary>
+        /// 移植自灾厄的 areThereAnyDamnBosses（影之再生据此选择回血速率）：判定场上是否正有 Boss 存活。
+        /// 口径取灾厄两版本 AnyBossNPCS() 的并集——npc.boss（排除日耀飞碟核心）、世界吞噬者的头/身/尾，
+        /// 以及灾厄未置 boss 标记的史莱姆神分身（现代版 EbonianPaladin/CrimulanPaladin/Split*，
+        /// 经典版 SlimeGodRun/SlimeGodRunSplit/SlimeGod/SlimeGodSplit）。
+        /// 分身类型按名字软依赖解析一次并缓存；灾厄未安装或改名时该项自动跳过，不影响其余判定。
+        /// </summary>
+        private static bool AnyBossNPCS()
+        {
+            if (extraBossTypes == null)
+            {
+                extraBossTypes = new HashSet<int>();
+                void TryAddBoss(string modName, string npcName)
+                {
+                    if (ModContent.TryFind(modName, npcName, out ModNPC npc))
+                        extraBossTypes.Add(npc.Type);
+                }
+                TryAddBoss("CalamityMod", "EbonianPaladin");
+                TryAddBoss("CalamityMod", "CrimulanPaladin");
+                TryAddBoss("CalamityMod", "SplitEbonianPaladin");
+                TryAddBoss("CalamityMod", "SplitCrimulanPaladin");
+                TryAddBoss("CalamityModClassicPreTrailer", "SlimeGodRun");
+                TryAddBoss("CalamityModClassicPreTrailer", "SlimeGodRunSplit");
+                TryAddBoss("CalamityModClassicPreTrailer", "SlimeGod");
+                TryAddBoss("CalamityModClassicPreTrailer", "SlimeGodSplit");
+            }
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (npc.type == NPCID.MartianSaucerCore)
+                    continue;
+                if (npc.boss || extraBossTypes.Contains(npc.type))
+                    return true;
+                if (npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsTail)
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
         /// 统计 CommunityBosses 中已击败的 Boss 数量。
         /// </summary>
         private static int CommunityBossCount()
@@ -3891,6 +3834,20 @@ namespace CalamityDemutation.Players
                 if (downed())
                     count++;
             return count;
+        }
+        /// <summary>
+        /// 解析"模组名 + buff 名"为 buff type，结果缓存在 buffTypeCache 中。
+        /// 模组或技能不存在时静默返回 0（上层据此跳过施加），不抛异常。
+        /// </summary>
+        private static int GetBuffType(string modName, string buffName)
+        {
+            if (buffTypeCache.TryGetValue((modName, buffName), out int cached))
+                return cached;
+            int type = 0;
+            if (ModLoader.TryGetMod(modName, out Mod mod) && mod.TryFind<ModBuff>(buffName, out ModBuff buff))
+                type = buff.Type;
+            buffTypeCache[(modName, buffName)] = type;
+            return type;
         }
         /// <summary>
         /// 判断指定 buff 是否在 The Community 的 Debuff 缩减黑名单内。
