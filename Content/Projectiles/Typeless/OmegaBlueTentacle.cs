@@ -1,4 +1,4 @@
-using CalamityDemutation.Players;
+﻿using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
