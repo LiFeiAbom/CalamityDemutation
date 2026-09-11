@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Players;
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -17,9 +17,21 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
     /// </summary>
     internal class OmegaBlueTentacle:ModProjectile
     {
-        public bool initSegments = false;                    // 是否已把分段位置初始化到出生点
-        public Vector2[] segment = new Vector2[6];           // 触手 6 个骨骼节点（0 锚在玩家、5 为头部）
-        private Player Owner => Main.player[Projectile.owner];   // 弹幕归属玩家
+        // ── 实例字段 ──
+        /// <summary>
+        /// 是否已把分段位置初始化到出生点
+        /// </summary>
+        public bool initSegments = false;
+        /// <summary>
+        /// 触手 6 个骨骼节点（0 锚在玩家、5 为头部）
+        /// </summary>
+        public Vector2[] segment = new Vector2[6];
+        // ── 属性 ──
+        /// <summary>
+        /// 弹幕归属玩家
+        /// </summary>
+        private Player Owner => Main.player[Projectile.owner];
+        // ── 生命周期方法 ──
         /// <summary>
         /// 弹幕基础属性：小判定箱、无限穿透、高频局部无敌以支持持续吸血
         /// </summary>
@@ -180,14 +192,6 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             }
         }
         /// <summary>
-        /// 单次骨骼松弛：把节点 current 移向相邻两节点的中点，使触手呈平滑弧线而非硬直折线
-        /// </summary>
-        private static void MoveSegment(Vector2 previous, ref Vector2 current, Vector2 next)
-        {
-            current = previous + next;
-            current /= 2;   // 取前后节点的中点
-        }
-        /// <summary>
         /// 伤害修正：深渊疯狂状态下强制本次命中暴击（modifiers.SetCrit 置满暴击）
         /// </summary>
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
@@ -275,6 +279,15 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
+        }
+        // ── 私有工具 ──
+        /// <summary>
+        /// 单次骨骼松弛：把节点 current 移向相邻两节点的中点，使触手呈平滑弧线而非硬直折线
+        /// </summary>
+        private static void MoveSegment(Vector2 previous, ref Vector2 current, Vector2 next)
+        {
+            current = previous + next;
+            current /= 2;   // 取前后节点的中点
         }
     }
 }
