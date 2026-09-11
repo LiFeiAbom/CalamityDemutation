@@ -11,7 +11,7 @@ namespace CalamityDemutation
     /// </summary>
     public class CalamityDemutation : Mod
     {
-        internal Mod gravityDontFlipScreen = null;
+        // ── 静态字段 ──
         /// <summary>
         /// 蜂类敌人 ID 列表：收录原版蜜蜂/黄蜂及灾厄瘟疫系列敌人，
         /// 供“蜂抗”等需要识别蜂类单位的效果使用
@@ -22,11 +22,22 @@ namespace CalamityDemutation
         /// 供蜂巢相关效果判断蜂类弹幕使用
         /// </summary>
         public static List<int> beeProjectileList;
+        /// <summary>
+        /// 持续伤害类 debuff ID 列表：原版毒素/燃烧系列 + 灾厄两版本的专属 debuff，
+        /// 供需要统一处理「持续伤害」的效果批量判定
+        /// </summary>
         public static List<int> debuffList;
         /// <summary>
         /// 模组单例：供全局静态访问当前 Mod 实例
         /// </summary>
         public static CalamityDemutation Instance;
+        // ── 实例字段 ──
+        /// <summary>
+        /// GravityDontFlipScreen 模组的软依赖引用（未安装时为 null）。
+        /// 供 BaseHeldProjCO 在重力翻转时判断是否需要修正持握弹幕的朝向
+        /// </summary>
+        internal Mod gravityDontFlipScreen = null;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 模组加载钩子：由 tModLoader 加载模组时自动调用一次，
         /// 缓存单例并构建蜂类单位 ID 列表
@@ -81,6 +92,45 @@ namespace CalamityDemutation
                     NetMessage.SendData(MessageID.SyncPlayer, -1, -1, null, targetWho);
                 }
             }
+        }
+        /// <summary>
+        /// 回退灾厄对原版翅膀的削弱（飞行时间/水平速度/悬浮速度与加速度）。
+        /// 灾厄在 CalamityGlobalItem.SetStaticDefaults 里改这些翅膀属性，此处在其后恢复原版值。
+        /// </summary>
+        public override void PostSetupContent()
+        {
+            if (!ModLoader.HasMod("CalamityMod"))
+                return;
+            if (Systems.CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true)
+                return;
+            var stats = ArmorIDs.Wing.Sets.Stats;
+            stats[9].FlyTime = 160;                                                       // FlameWings 火焰翅膀：飞行时间 130→160
+            stats[14].AccRunSpeedOverride = 7.5f;                                         // BatWings 蝙蝠翅膀：水平速度 6.75→7.5
+            stats[44].FlyTime = 150;                                                      // RainbowWings 女皇翅膀：飞行时间 120→150
+            stats[28].DownHoverSpeedOverride = 12f;                                       // BejeweledValkyrieWing：悬浮 10.8→12
+            stats[28].DownHoverAccelerationMult = 12f;
+            stats[33].DownHoverSpeedOverride = 12f;                                       // Yoraiz0rWings：悬浮 10.8→12
+            stats[33].DownHoverAccelerationMult = 12f;
+            stats[35].DownHoverSpeedOverride = 12f;                                       // SkiphsWings：悬浮 10.8→12
+            stats[35].DownHoverAccelerationMult = 12f;
+            stats[37].DownHoverSpeedOverride = 12f;                                       // BetsyWings：悬浮 10.8→12
+            stats[37].DownHoverAccelerationMult = 12f;
+            stats[45].AccRunAccelerationMult = 4.5f;                                      // LongRainbowTrailWings 天界星盘：加速 2.75→4.5
+            stats[45].DownHoverSpeedOverride = 16f;                                       // 天界星盘：悬浮 12→16
+            stats[45].DownHoverAccelerationMult = 16f;
+        }
+        // ── 公开方法 ──
+        /// <summary>
+        /// 重新解析外部模组引用：先调用 emptyMod() 清空旧引用，再用 ModLoader.TryGetMod 软依赖查找
+        /// GravityDontFlipScreen，结果存入 gravityDontFlipScreen 字段，供 BaseHeldProjCO 在重力翻转时
+        /// 修正持握弹幕的朝向。查找失败时字段保持 null，相关逻辑以 null 判定跳过，缺少该模组不会报错。
+        /// 注意：灾厄双版本（CalamityMod / CalamityModClassicPreTrailer）的软依赖不在此解析，
+        /// 而是由本类各内容列表与内容类中的 ModContent.TryFind / ModLoader.TryGetMod 分别处理。
+        /// </summary>
+        public void FindMod()
+        {
+            emptyMod();
+            ModLoader.TryGetMod("GravityDontFlipScreen", out gravityDontFlipScreen);
         }
         /// <summary>
         /// 初始化蜂类弹幕与敌人 ID 列表，供蜂巢相关饰品效果判断蜂类单位使用
@@ -274,47 +324,13 @@ namespace CalamityDemutation
             if (ModContent.TryFind("CalamityModClassicPreTrailer", "MarkedforDeath", out ModBuff buffC12))
                 debuffList.Add(buffC12.Type);
         }
+        // ── 私有工具 ──
+        /// <summary>
+        /// 清空本类缓存的全部外部模组引用（当前仅 gravityDontFlipScreen）
+        /// </summary>
         private void emptyMod()
         {
             gravityDontFlipScreen = null;
-        }
-        /// <summary>
-        /// 重新解析外部模组引用：先调用 emptyMod() 清空旧引用，再用 ModLoader.TryGetMod 软依赖查找
-        /// GravityDontFlipScreen，结果存入 gravityDontFlipScreen 字段，供 BaseHeldProjCO 在重力翻转时
-        /// 修正持握弹幕的朝向。查找失败时字段保持 null，相关逻辑以 null 判定跳过，缺少该模组不会报错。
-        /// 注意：灾厄双版本（CalamityMod / CalamityModClassicPreTrailer）的软依赖不在此解析，
-        /// 而是由本类各内容列表与内容类中的 ModContent.TryFind / ModLoader.TryGetMod 分别处理。
-        /// </summary>
-        public void FindMod()
-        {
-            emptyMod();
-            ModLoader.TryGetMod("GravityDontFlipScreen", out gravityDontFlipScreen);
-        }
-        /// <summary>
-        /// 回退灾厄对原版翅膀的削弱（飞行时间/水平速度/悬浮速度与加速度）。
-        /// 灾厄在 CalamityGlobalItem.SetStaticDefaults 里改这些翅膀属性，此处在其后恢复原版值。
-        /// </summary>
-        public override void PostSetupContent()
-        {
-            if (!ModLoader.HasMod("CalamityMod"))
-                return;
-            if (Systems.CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true)
-                return;
-            var stats = ArmorIDs.Wing.Sets.Stats;
-            stats[9].FlyTime = 160;                                                       // FlameWings 火焰翅膀：飞行时间 130→160
-            stats[14].AccRunSpeedOverride = 7.5f;                                         // BatWings 蝙蝠翅膀：水平速度 6.75→7.5
-            stats[44].FlyTime = 150;                                                      // RainbowWings 女皇翅膀：飞行时间 120→150
-            stats[28].DownHoverSpeedOverride = 12f;                                       // BejeweledValkyrieWing：悬浮 10.8→12
-            stats[28].DownHoverAccelerationMult = 12f;
-            stats[33].DownHoverSpeedOverride = 12f;                                       // Yoraiz0rWings：悬浮 10.8→12
-            stats[33].DownHoverAccelerationMult = 12f;
-            stats[35].DownHoverSpeedOverride = 12f;                                       // SkiphsWings：悬浮 10.8→12
-            stats[35].DownHoverAccelerationMult = 12f;
-            stats[37].DownHoverSpeedOverride = 12f;                                       // BetsyWings：悬浮 10.8→12
-            stats[37].DownHoverAccelerationMult = 12f;
-            stats[45].AccRunAccelerationMult = 4.5f;                                      // LongRainbowTrailWings 天界星盘：加速 2.75→4.5
-            stats[45].DownHoverSpeedOverride = 16f;                                       // 天界星盘：悬浮 12→16
-            stats[45].DownHoverAccelerationMult = 16f;
         }
     }
 }
