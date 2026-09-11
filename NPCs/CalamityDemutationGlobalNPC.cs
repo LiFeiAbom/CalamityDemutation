@@ -24,6 +24,20 @@ namespace CalamityDemutation.NPCs
     /// </summary>
     internal class CalamityDemutationGlobalNPC : GlobalNPC
     {
+        // ── 实例字段 ──
+        /// <summary>
+        /// 恶魔烈焰标记：由 DemonFlames debuff 在敌怪侧置位，参与命中附加效果
+        /// </summary>
+        public bool demonFlames = false;
+        /// <summary>
+        /// 狂怒标记：由 Enraged buff 在敌怪侧置位，仅用于 GlobalNPC.GetAlpha 染色
+        /// </summary>
+        public bool enraged = false;
+        /// <summary>
+        /// 女巫眩晕标记：由 SilvaHysteresis debuff 在敌怪侧置位，用于减速等结算
+        /// </summary>
+        public bool silvaHysteresis = false;
+        // ── 属性 ──
         /// <summary>
         /// 按实例启用，避免多个 NPC 共享全局状态
         /// </summary>
@@ -34,9 +48,7 @@ namespace CalamityDemutation.NPCs
                 return true;
             }
         }
-        public bool demonFlames = false;
-        public bool enraged = false;
-        public bool silvaHysteresis = false;
+        // ── 生命周期方法 ──
         /// <summary>
         /// tModLoader 的 ResetEffects 钩子：每帧重置 NPC 状态时调用（本类已按实例启用）。
         /// 把本模组在 NPC 上使用的三个标记——恶魔烈焰 demonFlames、狂怒 enraged、
