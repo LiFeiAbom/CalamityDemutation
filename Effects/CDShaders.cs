@@ -12,8 +12,16 @@ namespace CalamityDemutation.Effects
     [Autoload(Side = ModSide.Client)]
     public sealed class CDShaders : ModSystem
     {
+        // ── 常量 ──
+        /// <summary>
+        /// 着色器资源所在目录（配 Mod.Assets.Request 使用的相对路径，不含模组名前缀）
+        /// </summary>
         private const string ShaderPath = "Effects/";
+        /// <summary>
+        /// 注册进 GameShaders.Misc 时统一使用的模组名前缀
+        /// </summary>
         private const string ShaderPrefix = "CalamityDemutation:";
+        // ── 静态字段 ──
         /// <summary>
         /// HeavenlyGale 硬光箭的拖尾着色器（原灾厄 HeavenlyGaleTrail，PiercePass）
         /// </summary>
@@ -22,6 +30,7 @@ namespace CalamityDemutation.Effects
         /// PrimitiveRenderer 未指定着色器时的默认兜底着色器（仅输出顶点色）
         /// </summary>
         internal static Asset<Effect> StandardPrimitiveShader;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
         /// 分别以 HeavenlyGaleTrail（PiercePass）与 StandardPrimitiveShader（PrimitivePass）为名
@@ -51,6 +60,7 @@ namespace CalamityDemutation.Effects
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
         }
+        // ── 私有工具 ──
         /// <summary>
         /// 将已加载的着色器注册到 Terraria 图形引擎的 Misc 槽位，
         /// 注册名统一带 "CalamityDemutation:" 前缀，通过 GameShaders.Misc 访问。

@@ -4,15 +4,34 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Common.Effects
 {
     /// <summary>
-    /// 刀光渲染 shader 加载器（精简版，仅保留 KnifeRendering/KnifeDistortion）
+    /// 着色器加载器：请求并托管本模组全部 .fx 资源——
+    /// 刀光 KnifeRendering / KnifeDistortion、屏幕扭曲 WarpShader、
+    /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader。
     /// </summary>
     public class EffectLoader
     {
-        public static Asset<Effect> KnifeRendering;
-        public static Asset<Effect> KnifeDistortion;
-        public static Asset<Effect> WarpShader;
-        public static Asset<Effect> MetaballEdgeShader;
+        // ── 静态字段 ──
+        /// <summary>
+        /// 变形球边缘着色器（加法混合版），DragonsBreathMetaball 绘制时使用
+        /// </summary>
         public static Asset<Effect> AdditiveMetaballEdgeShader;
+        /// <summary>
+        /// 刀光扭曲着色器，BaseSwingCO.WarpDraw 绘制挥舞弧光时使用
+        /// </summary>
+        public static Asset<Effect> KnifeDistortion;
+        /// <summary>
+        /// 刀光渲染着色器，BaseSwingCO / DragonRageHeld 绘制挥舞弧光时使用
+        /// </summary>
+        public static Asset<Effect> KnifeRendering;
+        /// <summary>
+        /// 变形球边缘着色器（普通版本），Metaball 绘制时使用
+        /// </summary>
+        public static Asset<Effect> MetaballEdgeShader;
+        /// <summary>
+        /// 屏幕扭曲着色器，EffectsSystem 合成 IDrawWarp 弹幕的扭曲效果时使用
+        /// </summary>
+        public static Asset<Effect> WarpShader;
+        // ── 静态方法 ──
         /// <summary>
         /// 请求加载全部 .fx 着色器资源（异步）：路径前缀取 CalamityDemutationConstant.noEffects（"Effects/"）。
         /// 只持有 Asset 句柄，不在此处取 .Value，真正取值推迟到绘制期

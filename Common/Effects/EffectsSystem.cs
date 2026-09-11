@@ -15,8 +15,13 @@ namespace CalamityDemutation.Common.Effects
     [Autoload(Side = ModSide.Client)]
     internal class EffectsSystem : ModSystem
     {
+        // ── 静态字段 ──
+        /// <summary>
+        /// 屏幕备份渲染目标：扭曲合成前先把 Main.screenTarget 拷到这里，之后作为采样源传给 WarpShader。
+        /// 惰性创建（首次 EndCapture 或分辨率变化时），内容加载期不分配
+        /// </summary>
         internal static RenderTarget2D screen;
-
+        // ── 生命周期方法 ──
         /// <summary>
         /// 加载时挂上两个钩子：On_FilterManager.EndCapture（屏幕捕获末尾做扭曲合成）
         /// 与 Main.OnResolutionChanged（分辨率变化时重建 screen 渲染目标）
@@ -26,7 +31,6 @@ namespace CalamityDemutation.Common.Effects
             On_FilterManager.EndCapture += FilterManager_EndCapture;
             Main.OnResolutionChanged += Main_OnResolutionChanged;
         }
-
         /// <summary>
         /// 卸载时解绑两个钩子，并把 screen 的释放投递到主线程执行，避免后台线程调用图形 API 崩溃
         /// </summary>
@@ -44,16 +48,7 @@ namespace CalamityDemutation.Common.Effects
                 Main.RunOnMainThread(toDispose.Dispose);
             }
         }
-
-        /// <summary>
-        /// 分辨率变化回调：释放旧 screen 并按新的屏幕宽高重建，供扭曲合成当作屏幕备份
-        /// </summary>
-        private void Main_OnResolutionChanged(Vector2 obj)
-        {
-            screen?.Dispose();
-            screen = new RenderTarget2D(Main.graphics.GraphicsDevice, Main.screenWidth, Main.screenHeight);
-        }
-
+        // ── 私有工具 ──
         /// <summary>
         /// 屏幕捕获末尾的钩子：先确保 screen 已创建；若存在实现 IDrawWarp 的活跃弹幕，
         /// 则依次执行「备份屏幕 → 画 warp 遮罩到 screenTargetSwap → 用 WarpShader 合成回 screenTarget → 弹幕本体叠画在上层」，
@@ -105,7 +100,6 @@ namespace CalamityDemutation.Common.Effects
             }
             orig.Invoke(self, finalTexture, screenTarget1, screenTarget2, clearColor);
         }
-
         /// <summary>
         /// 扫描全部活跃弹幕，收集其 ModProjectile 实现了 IDrawWarp 的实例到 warpSets；
         /// 返回是否存在（数量大于 0）
@@ -121,6 +115,14 @@ namespace CalamityDemutation.Common.Effects
                 }
             }
             return warpSets.Count > 0;
+        }
+        /// <summary>
+        /// 分辨率变化回调：释放旧 screen 并按新的屏幕宽高重建，供扭曲合成当作屏幕备份
+        /// </summary>
+        private void Main_OnResolutionChanged(Vector2 obj)
+        {
+            screen?.Dispose();
+            screen = new RenderTarget2D(Main.graphics.GraphicsDevice, Main.screenWidth, Main.screenHeight);
         }
     }
 }
