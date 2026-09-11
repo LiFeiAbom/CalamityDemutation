@@ -108,7 +108,7 @@ namespace CalamityDemutation.Graphics.Primitives
     /// </summary>
     public readonly struct PrimitiveSettings
     {
-        #region Delegates
+        // ── 嵌套类型 ──
         /// <summary>
         /// 动态决定拖尾各点宽度的委托。
         /// </summary>
@@ -130,8 +130,7 @@ namespace CalamityDemutation.Graphics.Primitives
         /// <param name="vertexPosition">当前点的世界坐标。</param>
         /// <returns>当前点的偏移量。</returns>
         public delegate Vector2 VertexOffsetFunction(float trailLengthInterpolant, Vector2 vertexPosition);
-        #endregion
-        #region Instance Fields
+        // ── 实例字段 ──
         /// <summary>
         /// 用于决定各顶点宽度。
         /// </summary>
@@ -222,7 +221,7 @@ namespace CalamityDemutation.Graphics.Primitives
         /// 决定丝带两端的封口方式。
         /// </summary>
         public readonly PrimitiveCapStyle CapStyle;
-        #endregion
+        // ── 构造函数 ──
         /// <summary>
         /// 创建 Primitive 拖尾的全部可选项。
         /// </summary>
