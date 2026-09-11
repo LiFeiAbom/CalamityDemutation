@@ -10,7 +10,6 @@ namespace CalamityDemutation.Common.Effects
     /// </summary>
     public class EffectLoader
     {
-        // ── 静态字段 ──
         /// <summary>
         /// 变形球边缘着色器（加法混合版），DragonsBreathMetaball 绘制时使用
         /// </summary>
@@ -31,7 +30,6 @@ namespace CalamityDemutation.Common.Effects
         /// 屏幕扭曲着色器，EffectsSystem 合成 IDrawWarp 弹幕的扭曲效果时使用
         /// </summary>
         public static Asset<Effect> WarpShader;
-        // ── 静态方法 ──
         /// <summary>
         /// 请求加载全部 .fx 着色器资源（异步）：路径前缀取 CalamityDemutationConstant.noEffects（"Effects/"）。
         /// 只持有 Asset 句柄，不在此处取 .Value，真正取值推迟到绘制期
