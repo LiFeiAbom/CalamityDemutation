@@ -40,6 +40,79 @@ namespace CalamityDemutation.Players
     /// </summary>
     internal class CalamityDemutationPlayer : ModPlayer
     {
+        // ── 常量 ──
+        /// <summary>
+        /// 地狱火齐射的总扇形散开角度（单位：度），120 度均分给 FireProjectiles 发弹幕
+        /// </summary>
+        public const float FireAngleSpread = 120;
+        /// <summary>
+        /// 单次地狱火齐射的弹幕数量（4 发），与 FireAngleSpread 配合铺开扇形
+        /// </summary>
+        public const int FireProjectiles = 4;
+        // 各属性成长端点：初始值（击败石巨人时）→ 满配值（18 档全清）
+        private const float InitDamage = 0.10f, MaxDamage = 0.30f;           // 通用增伤（0.10 = +10%）
+        private const float InitCrit = 10f, MaxCrit = 30f;                   // 暴击（百分点：10 = +10%）
+        private const float InitMeleeSpeed = 0.05f, MaxMeleeSpeed = 0.30f;   // 近战攻速（0.05 = +5%）
+        private const float InitEndurance = 0.05f, MaxEndurance = 0.15f;     // 伤害减免（0.05 = +5%）
+        private const float InitMoveSpeed = 0.05f, MaxMoveSpeed = 0.30f;     // 移速（0.05 = +5%）
+        private const float InitLifePct = 0.05f, MaxLifePct = 0.30f;         // 最大生命（百分比）
+        private const float InitManaPct = 0.05f, MaxManaPct = 0.30f;         // 最大魔力（百分比）
+        private const int InitLifeRegen = 1, MaxLifeRegen = 10;              // 回血
+        private const int InitManaRegen = 1, MaxManaRegen = 10;              // 回蓝
+        private const int InitDefense = 5, MaxDefense = 30;                  // 防御
+        private const float InitJumpPct = 0.05f, MaxJumpPct = 0.30f;         // 跳跃力（0.05 = +5%）
+        private const float InitMinePct = 0.05f, MaxMinePct = 0.30f;         // 挖掘速度（0.05 = +5%）
+        private const float InitCostPct = 0.05f, MaxCostPct = 0.30f;         // 魔力消耗减免（0.05 = -5%）
+        private const float InitThornsPct = 0.05f, MaxThornsPct = 0.30f;     // 荆棘反伤（0.05 = 5%）
+        private const float InitLuckPct = 0.05f, MaxLuckPct = 0.30f;         // 幸运（0.05 = +0.05）
+        /// <summary>
+        /// 自定义网络消息码：客户端上报"洋葱永久解锁状态变更"（见 SendClientChanges），
+        /// 由主类 CalamityDemutation.HandlePacket 处理。
+        /// </summary>
+        public const byte MsgPermanentUnlock = 0;
+        // ── 静态字段 ──
+        /// <summary>
+        /// 按"模组名/技能名"缓存 buff type，避免每次命中都 TryGetMod + Find。
+        /// Mod.BuffType 找不到返回 0（不抛异常），比 Find&lt;ModBuff&gt; 更抗灾厄版本变化。
+        /// </summary>
+        private static readonly Dictionary<(string mod, string buff), int> buffTypeCache = new();
+        public static int MinionsAddition = 1;
+        /// <summary>
+        /// The Community 进度 Boss 清单（石巨人 → 至尊灾厄，18 档），与庇护之刃 LegendaryBosses 同序。
+        /// 仅用于统计"已击败几档"来驱动各属性的线性成长；召唤栏/飞行等一次性加成另行按 Boss 判定。
+        /// </summary>
+        private static readonly Func<bool>[] CommunityBosses =
+        [
+            () => NPC.downedGolemBoss,                               // 石巨人 Golem
+            () => CalamityDemulationBossSystem.Plaguebringer,        // 瘟疫使者歌莉娅 Plaguebringer Goliath
+            () => CalamityDemulationBossSystem.Ravager,              // 毁灭魔像（掠夺者）Ravager
+            () => NPC.downedAncientCultist,                          // 拜月教邪教徒 Lunatic Cultist
+            () => CalamityDemulationBossSystem.AstrumDeus,           // 星神游龙 Astrum Deus
+            () => NPC.downedMoonlord,                                // 月球领主 Moon Lord
+            () => CalamityDemulationBossSystem.Guardians,            // 亵渎守卫 Profaned Guardians
+            () => CalamityDemulationBossSystem.Dragonfolly,          // 丛林龙 Dragonfolly
+            () => CalamityDemulationBossSystem.Providence,           // 亵渎天神 Providence
+            () => CalamityDemulationBossSystem.CeaselessVoid || ClassicSentinelsDowned, // 无尽虚空 Ceaseless Void
+            () => CalamityDemulationBossSystem.StormWeaver || ClassicSentinelsDowned,   // 风暴编织者 Storm Weaver
+            () => CalamityDemulationBossSystem.Signus || ClassicSentinelsDowned,        // 西格纳斯 Signus
+            () => CalamityDemulationBossSystem.Polterghast,          // 噬魂幽花 Polterghast
+            () => CalamityDemulationBossSystem.OldDuke,              // 硫海遗爵（老公爵）Old Duke
+            () => CalamityDemulationBossSystem.DevourerOfGods,       // 噬神者 Devourer of Gods
+            () => CalamityDemulationBossSystem.Yharon,               // 犽戎 Yharon
+            () => CalamityDemulationBossSystem.ExoMechs,             // 星流巨械 Exo Mechs
+            () => CalamityDemulationBossSystem.SupremeCalamitas,     // 至尊灾厄 Supreme Calamitas
+        ];
+        /// <summary>
+        /// The Community 的 Debuff 缩减黑名单缓存：懒加载一次后复用。
+        /// 这些 buff 虽被标为 debuff（Main.debuff=true），实为增益/特殊状态，不应被缩短持续时间。
+        /// </summary>
+        private static HashSet<int> communityDebuffBlacklist;
+        // ── 属性 ──
+        /// <summary>
+        /// 经典版三使者是否全部倒下（经典版无单个使者标记，只有 Sentinel1/2/3）。
+        /// </summary>
+        private static bool ClassicSentinelsDowned =>
+            CalamityDemulationBossSystem.Sentinel1 && CalamityDemulationBossSystem.Sentinel2 && CalamityDemulationBossSystem.Sentinel3;
         /// <summary>
         /// 已装备风之石：+10% 移速、+2 跳跃力、+3% 通用增伤，青色照明
         /// </summary>
@@ -128,11 +201,6 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool brimstoneWaifu = false;
         /// <summary>
-        /// 按"模组名/技能名"缓存 buff type，避免每次命中都 TryGetMod + Find。
-        /// Mod.BuffType 找不到返回 0（不抛异常），比 Find&lt;ModBuff&gt; 更抗灾厄版本变化。
-        /// </summary>
-        private static readonly Dictionary<(string mod, string buff), int> buffTypeCache = new();
-        /// <summary>
         /// 已装备灾厄之戒：+15% 通用伤害，免疫受击期间概率在玩家附近降下站火弹幕
         /// </summary>
         public bool calamityRing = false;
@@ -207,14 +275,6 @@ namespace CalamityDemutation.Players
         /// 已装备风暴之眼（召唤饰品）：置位后维持云娘仆从存在并允许其存活
         /// </summary>
         public bool eyeoftheStorm = false;
-        /// <summary>
-        /// 地狱火齐射的总扇形散开角度（单位：度），120 度均分给 FireProjectiles 发弹幕
-        /// </summary>
-        public const float FireAngleSpread = 120;
-        /// <summary>
-        /// 单次地狱火齐射的弹幕数量（4 发），与 FireAngleSpread 配合铺开扇形
-        /// </summary>
-        public const int FireProjectiles = 4;
         /// <summary>
         /// 血肉图腾已装备（减半敌人接触伤害，20 秒冷却）
         /// </summary>
@@ -301,7 +361,6 @@ namespace CalamityDemutation.Players
         /// 已装备魔力凝胶：+20 魔力上限，静止不动时额外魔力回复
         /// </summary>
         public bool manaJelly = false;
-        public static int MinionsAddition = 1;
         public float modStealth = 1f;
         public int modStealthTimer;
         /// <summary>
@@ -402,91 +461,6 @@ namespace CalamityDemutation.Players
         /// 同时处理治疗冷却（药水病）/魔力病/一般 Debuff。仅在装备期间递增。
         /// </summary>
         private int communityDebuffTickCounter = 0;   // Debuff 缩减统一计时
-        // ===== The Community 属性成长（Boss 进度驱动）=====
-        /// <summary>
-        /// The Community 进度 Boss 清单（石巨人 → 至尊灾厄，18 档），与庇护之刃 LegendaryBosses 同序。
-        /// 仅用于统计"已击败几档"来驱动各属性的线性成长；召唤栏/飞行等一次性加成另行按 Boss 判定。
-        /// </summary>
-        private static readonly Func<bool>[] CommunityBosses =
-        [
-            () => NPC.downedGolemBoss,                               // 石巨人 Golem
-            () => CalamityDemulationBossSystem.Plaguebringer,        // 瘟疫使者歌莉娅 Plaguebringer Goliath
-            () => CalamityDemulationBossSystem.Ravager,              // 毁灭魔像（掠夺者）Ravager
-            () => NPC.downedAncientCultist,                          // 拜月教邪教徒 Lunatic Cultist
-            () => CalamityDemulationBossSystem.AstrumDeus,           // 星神游龙 Astrum Deus
-            () => NPC.downedMoonlord,                                // 月球领主 Moon Lord
-            () => CalamityDemulationBossSystem.Guardians,            // 亵渎守卫 Profaned Guardians
-            () => CalamityDemulationBossSystem.Dragonfolly,          // 丛林龙 Dragonfolly
-            () => CalamityDemulationBossSystem.Providence,           // 亵渎天神 Providence
-            () => CalamityDemulationBossSystem.CeaselessVoid || ClassicSentinelsDowned, // 无尽虚空 Ceaseless Void
-            () => CalamityDemulationBossSystem.StormWeaver || ClassicSentinelsDowned,   // 风暴编织者 Storm Weaver
-            () => CalamityDemulationBossSystem.Signus || ClassicSentinelsDowned,        // 西格纳斯 Signus
-            () => CalamityDemulationBossSystem.Polterghast,          // 噬魂幽花 Polterghast
-            () => CalamityDemulationBossSystem.OldDuke,              // 硫海遗爵（老公爵）Old Duke
-            () => CalamityDemulationBossSystem.DevourerOfGods,       // 噬神者 Devourer of Gods
-            () => CalamityDemulationBossSystem.Yharon,               // 犽戎 Yharon
-            () => CalamityDemulationBossSystem.ExoMechs,             // 星流巨械 Exo Mechs
-            () => CalamityDemulationBossSystem.SupremeCalamitas,     // 至尊灾厄 Supreme Calamitas
-        ];
-        /// <summary>
-        /// 经典版三使者是否全部倒下（经典版无单个使者标记，只有 Sentinel1/2/3）。
-        /// </summary>
-        private static bool ClassicSentinelsDowned =>
-            CalamityDemulationBossSystem.Sentinel1 && CalamityDemulationBossSystem.Sentinel2 && CalamityDemulationBossSystem.Sentinel3;
-        /// <summary>
-        /// 统计 CommunityBosses 中已击败的 Boss 数量。
-        /// </summary>
-        private static int CommunityBossCount()
-        {
-            int count = 0;
-            foreach (Func<bool> downed in CommunityBosses)
-                if (downed())
-                    count++;
-            return count;
-        }
-        // 各属性成长端点：初始值（击败石巨人时）→ 满配值（18 档全清）
-        private const float InitDamage = 0.10f, MaxDamage = 0.30f;           // 通用增伤（0.10 = +10%）
-        private const float InitCrit = 10f, MaxCrit = 30f;                   // 暴击（百分点：10 = +10%）
-        private const float InitMeleeSpeed = 0.05f, MaxMeleeSpeed = 0.30f;   // 近战攻速（0.05 = +5%）
-        private const float InitEndurance = 0.05f, MaxEndurance = 0.15f;     // 伤害减免（0.05 = +5%）
-        private const float InitMoveSpeed = 0.05f, MaxMoveSpeed = 0.30f;     // 移速（0.05 = +5%）
-        private const float InitLifePct = 0.05f, MaxLifePct = 0.30f;         // 最大生命（百分比）
-        private const float InitManaPct = 0.05f, MaxManaPct = 0.30f;         // 最大魔力（百分比）
-        private const int InitLifeRegen = 1, MaxLifeRegen = 10;              // 回血
-        private const int InitManaRegen = 1, MaxManaRegen = 10;              // 回蓝
-        private const int InitDefense = 5, MaxDefense = 30;                  // 防御
-        private const float InitJumpPct = 0.05f, MaxJumpPct = 0.30f;         // 跳跃力（0.05 = +5%）
-        private const float InitMinePct = 0.05f, MaxMinePct = 0.30f;         // 挖掘速度（0.05 = +5%）
-        private const float InitCostPct = 0.05f, MaxCostPct = 0.30f;         // 魔力消耗减免（0.05 = -5%）
-        private const float InitThornsPct = 0.05f, MaxThornsPct = 0.30f;     // 荆棘反伤（0.05 = 5%）
-        private const float InitLuckPct = 0.05f, MaxLuckPct = 0.30f;         // 幸运（0.05 = +0.05）
-        /// <summary>
-        /// The Community 的 Debuff 缩减黑名单缓存：懒加载一次后复用。
-        /// 这些 buff 虽被标为 debuff（Main.debuff=true），实为增益/特殊状态，不应被缩短持续时间。
-        /// </summary>
-        private static HashSet<int> communityDebuffBlacklist;
-        /// <summary>
-        /// 判断指定 buff 是否在 The Community 的 Debuff 缩减黑名单内。
-        /// 覆盖本模组 Enraged，以及灾厄现代版/经典版的肾上腺素（AdrenalineMode）、怒气（RageMode）、
-        /// Enraged。对应 buff 不存在时 GetBuffType 返回 0（无害，循环中 buffType&gt;0 不会命中）。
-        /// </summary>
-        private static bool IsBuffInCommunityBlacklist(int buffType)
-        {
-            if (communityDebuffBlacklist == null)
-            {
-                communityDebuffBlacklist = new HashSet<int>
-                {
-                    ModContent.BuffType<Enraged>(),                                  // 本模组 Enraged
-                    GetBuffType("CalamityMod", "AdrenalineMode"),                   // 灾厄现代版 肾上腺素
-                    GetBuffType("CalamityMod", "RageMode"),                         // 灾厄现代版 怒气
-                    GetBuffType("CalamityMod", "Enraged"),                          // 灾厄现代版 Enraged
-                    GetBuffType("CalamityModClassicPreTrailer", "AdrenalineMode"),  // 灾厄经典版 肾上腺素
-                    GetBuffType("CalamityModClassicPreTrailer", "RageMode"),        // 灾厄经典版 怒气
-                    GetBuffType("CalamityModClassicPreTrailer", "Enraged"),         // 灾厄经典版 Enraged
-                };
-            }
-            return communityDebuffBlacklist.Contains(buffType);
-        }
         /// <summary>
         /// 已装备最初暗影焰（召唤饰品）：召唤物命中敌人时施加 5 秒暗影焰
         /// </summary>
@@ -3831,11 +3805,6 @@ namespace CalamityDemutation.Players
             extraWingSlot = tag.GetBool("extraWingSlot");
         }
         /// <summary>
-        /// 自定义网络消息码：客户端上报"洋葱永久解锁状态变更"（见 SendClientChanges），
-        /// 由主类 CalamityDemutation.HandlePacket 处理。
-        /// </summary>
-        public const byte MsgPermanentUnlock = 0;
-        /// <summary>
         /// 联机时把本地玩家的洋葱解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
         /// 只同步这两个永久标志；其余字段每帧由装备重算，无需跨端传输。
         /// </summary>
@@ -3910,6 +3879,40 @@ namespace CalamityDemutation.Players
                     return true;
             }
             return false;
+        }
+        // ── 私有工具 ──
+        /// <summary>
+        /// 统计 CommunityBosses 中已击败的 Boss 数量。
+        /// </summary>
+        private static int CommunityBossCount()
+        {
+            int count = 0;
+            foreach (Func<bool> downed in CommunityBosses)
+                if (downed())
+                    count++;
+            return count;
+        }
+        /// <summary>
+        /// 判断指定 buff 是否在 The Community 的 Debuff 缩减黑名单内。
+        /// 覆盖本模组 Enraged，以及灾厄现代版/经典版的肾上腺素（AdrenalineMode）、怒气（RageMode）、
+        /// Enraged。对应 buff 不存在时 GetBuffType 返回 0（无害，循环中 buffType&gt;0 不会命中）。
+        /// </summary>
+        private static bool IsBuffInCommunityBlacklist(int buffType)
+        {
+            if (communityDebuffBlacklist == null)
+            {
+                communityDebuffBlacklist = new HashSet<int>
+                {
+                    ModContent.BuffType<Enraged>(),                                  // 本模组 Enraged
+                    GetBuffType("CalamityMod", "AdrenalineMode"),                   // 灾厄现代版 肾上腺素
+                    GetBuffType("CalamityMod", "RageMode"),                         // 灾厄现代版 怒气
+                    GetBuffType("CalamityMod", "Enraged"),                          // 灾厄现代版 Enraged
+                    GetBuffType("CalamityModClassicPreTrailer", "AdrenalineMode"),  // 灾厄经典版 肾上腺素
+                    GetBuffType("CalamityModClassicPreTrailer", "RageMode"),        // 灾厄经典版 怒气
+                    GetBuffType("CalamityModClassicPreTrailer", "Enraged"),         // 灾厄经典版 Enraged
+                };
+            }
+            return communityDebuffBlacklist.Contains(buffType);
         }
     }
 }
