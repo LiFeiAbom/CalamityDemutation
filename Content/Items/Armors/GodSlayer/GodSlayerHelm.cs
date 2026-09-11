@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.GodSlayer
@@ -58,7 +59,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
                 "Taking over 80 damage in one hit will cause you to release a swarm of high-damage god killer darts\n" +
                 "Enemies take a lot of damage when they hit you\n" +
                 "An attack that would deal 80 damage or less will have its damage reduced to 1\n" +
-                "Pressing Y key allows the player to dash towards the position of their cursor for 1.25 seconds\n" +
+                $"Press [{KeybindsSystem.GodslayerDashKeyDisplay}] to dash in any of eight directions\n" +
                 "Dealing great damage and inflicting the God Slayer Inferno debuff on contact\n" +
                 "This effect has a 45-second cooldown\n";
             player.thorns += 2.5f;  // 反伤倍率 +2.5（与胸甲的 +0.9 叠加）
