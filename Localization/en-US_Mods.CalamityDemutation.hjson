@@ -1,3 +1,150 @@
+Buffs: {
+	Afflicted: {
+		DisplayName: Afflicted
+		Description: Empowered by otherworldly spirits
+	}
+
+	BrimstoneWaifu: {
+		Description: The brimstone elemental will protect you
+		DisplayName: Brimstone Elemental
+	}
+
+	CloudyWaifu: {
+		Description: The cloud elemental will protect you
+		DisplayName: Cloud Elemental
+	}
+
+	DemonFlames: {
+		DisplayName: Demon Flames
+		Description: Another burning debuff
+	}
+
+	DrewsSandyWaifu: {
+		Description: The sand elemental will heal you
+		DisplayName: Rare Sand Elemental
+	}
+
+	Enraged: {
+		DisplayName: Enraged
+		Description: Enemies are enraged
+	}
+
+	FungalClump: {
+		DisplayName: Fungal Clump
+		Description: The fungal clump will protect you
+	}
+
+	GodSlayerCooldown: {
+		DisplayName: God Slayer Cooldown
+		Description: 10% increase to all damage; godslayer effect is recharging
+	}
+
+	HellfireExplosion: {
+		DisplayName: Hellfire Explosion
+		Description: Burning fiercely
+	}
+
+	HotE: {
+		Description: All elementals will protect you
+		DisplayName: Heart of the Elements
+	}
+
+	RedDevil: {
+		DisplayName: Red Devil
+		Description: The red devil will protect you
+	}
+
+	SandyWaifu: {
+		Description: The sand elemental will protect you
+		DisplayName: Sand Elemental
+	}
+
+	ShellBoost: {
+		DisplayName: Shell Speed Boost
+		Description: Speed is boosted
+	}
+
+	SilvaHysteresis: {
+		DisplayName: Silva Hysteresis
+		Description: Heavy yet crumbling
+	}
+
+	SilvaRevival: {
+		DisplayName: Silva Revival
+		Description: You are invulnerable
+	}
+
+	SirenLure: {
+		Description: The siren will protect you
+		DisplayName: Siren
+	}
+
+	TarraLifeRegen: {
+		DisplayName: Tarra Life Regen
+		Description: Rapid healing
+	}
+
+	YharimPower: {
+		DisplayName: Yharim's Power
+		Description: You feel like you can break the world in two...with your bare hands!
+	}
+}
+
+Configs: {
+	CalamityDemutationConfigSystem: {
+		DisplayName: Calamity Demutation Config
+
+		PerformanceMode: {
+			Label: Performance Mode
+			Tooltip:
+				'''
+				Reduces rendering load by disabling the afterimage trail effect on this mod's projectiles.
+				When enabled, projectiles such as Eon Beams, Biome Orbs, Omega Biome Orbs, Galaxia orbs and Terra Balls are drawn without their layered trail afterimages, rendering only the base sprite.
+				This can noticeably improve the framerate during intense fights where many projectiles are on screen at once (e.g. boss battles, invasion events, or farming with heavy melee weapons).
+				Visual trade-off: projectiles lose their glowing motion trail, so their flight paths look less flashy and can be slightly harder to track.
+				Recommended: enable if you experience frame drops, use low-end hardware, or find the trails distracting.
+				Keep it off if you want the full visual effect and have no performance issues.
+				Default: Off.
+				'''
+		}
+
+		RevertVanillaNerfs: {
+			Label: Revert Vanilla Nerfs
+			Tooltip:
+				'''
+				Reverts Calamity's nerfs to vanilla player content.
+				Restores the original stats of vanilla weapons, armor, tools, wings, accessories, and buffs that Calamity weakens.
+				Also reverts the summoner cross-class damage penalty and the Shadow Armor / Soaring Insignia movement nerfs.
+				Only applies while the Calamity Mod is enabled.
+				Default: Off.
+				'''
+		}
+
+		EnableSwordLight: {
+			Label: Enable Sword Light
+			Tooltip:
+				'''
+				Toggles the sweeping slash trail (arc light) rendered behind this mod's sword-like held projectiles.
+				When on, melee swings such as the Dragon Rage draw a glowing motion trail that sweeps across the arc of the strike.
+				This effect relies on the KnifeRendering shader, so it also acts as a fallback toggle if that effect ever fails to load.
+				Turn it off if you dislike the effect, experience rendering glitches, or want to save some draw overhead.
+				Default: On.
+				'''
+		}
+
+		WeaponAdaptiveIllumination: {
+			Label: Weapon Adaptive Illumination
+			Tooltip:
+				'''
+				Controls whether the weapon sprite of this mod's sword-like held projectiles is tinted by the surrounding light level.
+				When on, the blade dims slightly in dark areas and brightens in lit ones, matching how the environment shades it.
+				When off, the weapon is always drawn at full brightness in plain white, ignoring light — useful if the blade looks too dark in caves or at night.
+				Default: On.
+				'''
+		}
+	}
+}
+
 Items: {
 	AeroStone: {
 		Tooltip:
@@ -14,6 +161,17 @@ Items: {
 			'''
 			Gives you and all other players on your team powerful buffs, grants immnuity of knockback
 			+4 life regan, +20% max life, 8% damage reduction, 45 defense, and 15% increased damage
+			'''
+	}
+
+	AmalgamatedBrain: {
+		DisplayName: Amalgamated Brain
+		Tooltip:
+			'''
+			10% increased damage and 5% increased critical strike chance
+			Shade rains down when you are hit
+			You will confuse nearby enemies when you are struck
+			Has a chance to create illusions and dodge an attack
 			'''
 	}
 
@@ -70,6 +228,38 @@ Items: {
 		Tooltip: A heavenly blade infused with the essence of Terraria
 	}
 
+	AuricTeslaBodyArmor: {
+		DisplayName: Auric Tesla Body Armor
+		Tooltip:
+			'''
+			+400 max life and +400 max mana
+			25% increased movement speed
+			Attacks have a 5% chance to do no damage to you
+			30% increased damage and increased critical strike chance
+			You will freeze enemies near you when you are struck
+			'''
+	}
+
+	AuricTeslaCuisses: {
+		DisplayName: Auric Tesla Cuisses
+		Tooltip:
+			'''
+			50% increased movement speed
+			14% increased damage and increased critical strike chance
+			Magic carpet effect
+			'''
+	}
+
+	AuricTeslaHelm: {
+		DisplayName: Auric Tesla Helm
+		Tooltip:
+			'''
+			20% increased melee damage and critical strike chance
+			28% increased melee attackspeed
+			Not moving boosts all damage and critical strike chance
+			'''
+	}
+
 	BadgeofBravery: {
 		DisplayName: Badge of Bravery
 		Tooltip:
@@ -86,9 +276,24 @@ Items: {
 		Tooltip: Fires different projectiles based on what biome you're in
 	}
 
+	BlackMatterStick: {
+		DisplayName: Black Matter Stick
+		Tooltip: ""
+	}
+
 	BladecrestOathsword: {
 		DisplayName: Bladecrest Oathsword
 		Tooltip: Sword of an ancient demon lord
+	}
+
+	BloodflareBodyArmor: {
+		DisplayName: Bloodflare Body Armor
+		Tooltip:
+			'''
+			+100 max life and +100 max mana
+			You regenerate life quickly and gain +30 defense while in lava
+			14% increased damage and increased critical strike chance
+			'''
 	}
 
 	BloodflareCore: {
@@ -99,6 +304,21 @@ Items: {
 			When below 50% life you gain 15% increased damage reduction, 10% increased damage, and 10% increased critical strike chance
 			When below 15% life you gain 30% increased damage reduction, 20% increased damage, and 20% increased critical strike chance
 			When below 100 defense you gain 15% increased damage
+			'''
+	}
+
+	BloodflareCuisses: {
+		DisplayName: Bloodflare Cuisses
+		Tooltip: 30% increased movement speed, 10% increased damage and increased critical strike chance
+	}
+
+	BloodflareMask: {
+		DisplayName: Bloodflare Mask
+		Tooltip:
+			'''
+			You can move freely through liquids and have temporary immunity to lava
+			10% increased melee damage and critical strike chance
+			18% increased melee attackspeed
 			'''
 	}
 
@@ -133,6 +353,16 @@ Items: {
 			You grow flowers on the grass beneath you, chance to grow very random dye plants on grassless dirt
 			'''
 		DisplayName: Bloom Stone
+	}
+
+	CalamityRing: {
+		DisplayName: Calamity Ring
+		Tooltip:
+			'''
+			Cursed?
+			15% increase to all damage
+			Brimstone fire rains down while invincibility is active
+			'''
 	}
 
 	CatastropheClaymore: {
@@ -252,6 +482,53 @@ Items: {
 			'''
 	}
 
+	DefenseBlade: {
+		DisplayName: Defense Blade
+		Tooltip:
+			'''
+			Legendary Weapon
+			Swinging will cause a shard of sunlight to home in before impacting the enemy, leaving damaging sparks below
+			Striking an enemy with the blade causes an earthen eruption
+			Scales through progression gaining additive damage boosts after defeating certain bosses
+			'''
+	}
+
+	DeificAmulet: {
+		DisplayName: Deific Amulet
+		Tooltip:
+			'''
+			Taking damage makes you move very fast for a short time
+			Increases armor penetration by 25 and immune time after being struck
+			Provides light underwater and causes stars to fall when damaged
+			Increases pickup range for mana stars and you restore mana when damaged
+			'''
+	}
+
+	DemonshadeBreastplate: {
+		DisplayName: Demonshade Breastplate
+		Tooltip:
+			'''
+			25% increased melee speed, 40% increased damage and 20% critical strike chance
+			Enemies take ungodly damage when they touch you
+			Increased max life by 1000 and mana by 500
+			Standing still lets you absorb the shadows and boost your life regen
+			'''
+	}
+
+	DemonshadeGreaves: {
+		DisplayName: Demonshade Greaves
+		Tooltip:
+			'''
+			Shadow speed
+			30% increased damage and 15% crit chance
+			'''
+	}
+
+	DemonshadeHelm: {
+		DisplayName: Demonshade Helm
+		Tooltip: 50% increased damage and crit chance, +10 max minions and +10 max turrets
+	}
+
 	Devastation: {
 		DisplayName: Devastation
 		Tooltip: Fires galaxy blasts that explode
@@ -263,6 +540,28 @@ Items: {
 			'''
 			Fires a spread of accelerating scythes with pitchforks from up and below
 			Spawns shadowflame explosions when striking with a true melee hit
+			'''
+	}
+
+	DragonRage: {
+		DisplayName: Dragon Rage
+		Tooltip:
+			'''
+			Spins a baton that causes explosions on enemy hits. The 10th hit will cause a ring of draconic fireballs to seek enemies that inflict Dragonfire.
+			Right click to spin the baton closer to you that summons fireballs at a slower pace, but without the need to hit enemies.
+			[c/ff8c1a:"This is my message to my master."]
+			'''
+	}
+
+	DrewsWings: {
+		DisplayName: Drew's Wings
+		Tooltip:
+			'''
+			Absolutely Fabulous
+			Horizontal speed: 12
+			Acceleration multiplier: 4
+			Flight time: 361
+			Excellent vertical speed
 			'''
 	}
 
@@ -335,14 +634,49 @@ Items: {
 			'''
 	}
 
+	FrigidBulwark: {
+		DisplayName: Frigid Bulwark
+		Tooltip:
+			'''
+			Absorbs 25% of damage done to players on your team
+			Only active above 25% life
+			Grants immunity to knockback
+			Puts a shell around the owner when below 30% life that reduces damage
+			The shell becomes more powerful when below 10% life and reduces damage even further
+			'''
+	}
+
+	FrostBarrier: {
+		DisplayName: Frost Barrier
+		Tooltip:
+			'''
+			You will freeze enemies near you when you are struck
+			You are immune to the chilled debuff
+			'''
+	}
+
 	FungalCarapace: {
 		DisplayName: Fungal Carapace
 		Tooltip: You emit a mushroom spore explosion when you are hit
 	}
 
+	FungalClump: {
+		DisplayName: Fungal Clump
+		Tooltip:
+			'''
+			Summons a fungal clump to fight for you
+			The clump latches onto enemies and steals their life for you
+			'''
+	}
+
 	GalacticaSingularity: {
 		DisplayName: Galactica Singularity
 		Tooltip: ""
+	}
+
+	Gehenna: {
+		DisplayName: Gehenna
+		Tooltip: Drops brimstone fireballs from the sky occasionally
 	}
 
 	GiantShell: {
@@ -360,6 +694,35 @@ Items: {
 			'''
 			10% reduced movement speed
 			Enemies take damage when they hit you
+			'''
+	}
+
+	GodSlayerChestplate: {
+		DisplayName: God Slayer Chestplate
+		Tooltip:
+			'''
+			+250 max life and +150 max mana
+			15% increased movement speed
+			15% increased damage and increased critical strike chance
+			Attacks have a 5% chance to do no damage to you
+			'''
+	}
+
+	GodSlayerHelm: {
+		DisplayName: God Slayer Helm
+		Tooltip:
+			'''
+			14% increased melee damage and critical strike chance
+			20% increased melee attackspeed
+			'''
+	}
+
+	GodSlayerLeggings: {
+		DisplayName: God Slayer Leggings
+		Tooltip:
+			'''
+			35% increased movement speed
+			11% increased damage and increased critical strike chance
 			'''
 	}
 
@@ -398,6 +761,22 @@ Items: {
 			Poison and Venom immunity
 			Honey life regen with no speed penalty
 			Most bee/hornet enemies and projectiles do half damage to you
+			'''
+	}
+
+	LeadCore: {
+		DisplayName: Lead Core
+		Tooltip: Grants immunity to the acid rain debuff
+	}
+
+	LeviathanAmbergris: {
+		DisplayName: Leviathan Ambergris
+		Tooltip:
+			'''
+			You leave behind poisonous seawater as you move
+			75% increased movement speed, 10% increase to all damage, and plus 20 defense while submerged in liquid
+			If you are damaged while submerged in liquid you will gain a damaging aura for a short time
+			Being outside of liquid increases all damage by 5% and increases damage reduction by 5%
 			'''
 	}
 
@@ -453,6 +832,15 @@ Items: {
 			'''
 	}
 
+	NeutronGlaive: {
+		DisplayName: Neutron Glaive
+		Tooltip:
+			'''
+			Swinging releases powerful gravitational sword waves
+			Waves causing a neutron star explosion upon hitting a target
+			'''
+	}
+
 	OldLordOathsword: {
 		DisplayName: Old Lord Oathsword
 		Tooltip: A relic of the ancient underworld
@@ -467,9 +855,63 @@ Items: {
 			'''
 	}
 
+	OmegaBlueChestplate: {
+		Tooltip:
+			'''
+			18% increased damage and 16% increased critical strike chance
+			Increases melee attack speed by 18%
+			Your attacks inflict Crush Depth
+			'''
+		DisplayName: Omega Blue Chestplate
+	}
+
+	OmegaBlueHelmet: {
+		Tooltip:
+			'''
+			You can move freely through liquids
+			12% increased damage and 8% increased critical strike chance
+			+2 max minions
+			'''
+		DisplayName: Omega Blue Helmet
+	}
+
+	OmegaBlueLeggings: {
+		Tooltip:
+			'''
+			30% increased movement speed
+			16% increased damage and 12% increased critical strike chance
+			'''
+		DisplayName: Omega Blue Leggings
+	}
+
+	PsychoticAmulet: {
+		DisplayName: Psychotic Amulet
+		Tooltip:
+			'''
+			Boosts ranged damage and critical strike chance by 5%
+			Grants a massive boost to these stats if you aren't moving
+			'''
+	}
+
 	RadiantOoze: {
 		DisplayName: Radiant Ooze
 		Tooltip: You emit light and regen life more quickly at night
+	}
+
+	RampartofDeities: {
+		DisplayName: Rampart of Deities
+		Tooltip:
+			'''
+			Taking damage makes you move very fast for a short time
+			Increases armor penetration by 50 and immune time after being struck
+			Provides light underwater and causes stars to fall when damaged
+			Increases pickup range for mana stars and you restore mana when damaged
+			Absorbs 25% of damage done to players on your team
+			Only active above 25% life
+			Grants immunity to knockback
+			Puts a shell around the owner when below 30% life that reduces damage
+			The shell becomes more powerful when below 10% life and reduces damage even further
+			'''
 	}
 
 	RoseStone: {
@@ -479,6 +921,16 @@ Items: {
 			Increases max life by 20, life regen by 1, and all damage by 3%
 			'''
 		DisplayName: Rose Stone
+	}
+
+	RottenBrain: {
+		DisplayName: Rotten Brain
+		Tooltip:
+			'''
+			15% increased damage when below 75% life
+			5% decreased movement speed when below 50% life
+			Shade rains down when you are hit
+			'''
 	}
 
 	SeaShell: {
@@ -498,6 +950,34 @@ Items: {
 			15% decreased mana usage
 			+100 max mana and reveals treasure locations
 			Reduces the cooldown of healing potions
+			'''
+	}
+
+	SilvaArmor: {
+		DisplayName: Silva Armor
+		Tooltip:
+			'''
+			+300 max life and +200 max mana
+			20% increased movement speed
+			18% increased damage and increased critical strike chance
+			'''
+	}
+
+	SilvaHelm: {
+		DisplayName: Silva Helm
+		Tooltip:
+			'''
+			13% increased melee damage and critical strike chance
+			19% increased melee attackspeed
+			'''
+	}
+
+	SilvaLeggings: {
+		DisplayName: Silva Leggings
+		Tooltip:
+			'''
+			45% increased movement speed
+			12% increased damage and increased critical strike chance
 			'''
 	}
 
@@ -556,403 +1036,6 @@ Items: {
 			'''
 	}
 
-	TheAbsorber: {
-		DisplayName: The Absorber
-		Tooltip:
-			'''
-			12% increased movement speed
-			120% increased jump speed
-			+30 max life and mana
-			Standing still boosts life and mana regen
-			Increased defense and damage reduction when submerged in liquid
-			Increased movement speed when submerged in liquid
-			Enemies take damage when they hit you
-			Taking a hit will make you move very fast for a short time
-			You emit a mushroom spore and spark explosion when you are hit
-			6% increased damage reduction
-			Enemy attacks will have part of their damage absorbed and used to heal you
-			'''
-	}
-
-	TheFirstShadowflame: {
-		DisplayName: The First Shadowflame
-		Tooltip: Grants shadowflame powers to all minions
-	}
-
-	TrueArkoftheAncients: {
-		DisplayName: True Ark of the Ancients
-		Tooltip: A heavenly blade forged to vanquish all evil
-	}
-
-	TrueBiomeBlade: {
-		DisplayName: True Biome Blade
-		Tooltip: Fires different projectiles based on what biome you're in
-	}
-
-	VitalJelly: {
-		DisplayName: Vital Jelly
-		Tooltip:
-			'''
-			10% increased movement speed
-			100% increased jump speed
-			'''
-	}
-
-	WifeinaBottle: {
-		Tooltip: Summons a sand elemental to fight for you
-		DisplayName: Elemental in a Bottle
-	}
-
-	WifeinaBottlewithBoobs: {
-		Tooltip: Summons a sand elemental to heal you
-		DisplayName: Rare Elemental in a Bottle
-	}
-
-	YharimsInsignia: {
-		DisplayName: Yharim's Insignia
-		Tooltip:
-			'''
-			10% increased damage when under 50% life
-			10% increased melee speed
-			10% increased melee damage and melee critical strike chance
-			Melee attacks and melee projectiles inflict holy fire
-			Increased invincibility after taking damage
-			Temporary immunity to lava
-			Increased melee knockback
-			'''
-	}
-
-	YharimsStimulants: {
-		DisplayName: Yharim's Stimulants
-		Tooltip: Gives decent buffs to all offensive and defensive stats
-	}
-
-	CalamityRing: {
-		DisplayName: Calamity Ring
-		Tooltip:
-			'''
-			Cursed?
-			15% increase to all damage
-			Brimstone fire rains down while invincibility is active
-			'''
-	}
-
-	Gehenna: {
-		DisplayName: Gehenna
-		Tooltip: Drops brimstone fireballs from the sky occasionally
-	}
-
-	VoidofExtinction: {
-		DisplayName: Void of Extinction
-		Tooltip:
-			'''
-			No longer cursed
-			Drops brimstone fireballs from the sky occasionally
-			15% increase to all damage
-			Brimstone fire rains down while invincibility is active
-			Temporary immunity to lava, greatly reduces lava burn damage, and 25% increased damage while in lava
-			'''
-	}
-
-	AmalgamatedBrain: {
-		DisplayName: Amalgamated Brain
-		Tooltip:
-			'''
-			10% increased damage and 5% increased critical strike chance
-			Shade rains down when you are hit
-			You will confuse nearby enemies when you are struck
-			Has a chance to create illusions and dodge an attack
-			'''
-	}
-
-	LeviathanAmbergris: {
-		DisplayName: Leviathan Ambergris
-		Tooltip:
-			'''
-			You leave behind poisonous seawater as you move
-			75% increased movement speed, 10% increase to all damage, and plus 20 defense while submerged in liquid
-			If you are damaged while submerged in liquid you will gain a damaging aura for a short time
-			Being outside of liquid increases all damage by 5% and increases damage reduction by 5%
-			'''
-	}
-
-	RottenBrain: {
-		DisplayName: Rotten Brain
-		Tooltip:
-			'''
-			15% increased damage when below 75% life
-			5% decreased movement speed when below 50% life
-			Shade rains down when you are hit
-			'''
-	}
-
-	TheAmalgam: {
-		DisplayName: The Amalgam
-		Tooltip:
-			'''
-			30% increased damage and 15% increased critical strike chance
-			Shade rains down when you are hit
-			You will confuse nearby enemies when you are struck
-			Drops brimstone fireballs from the sky occasionally
-			Brimstone fire rains down while invincibility is active
-			Temporary immunity to lava, greatly reduces lava burn damage, and 25% increased damage while in lava
-			Summons a fungal clump to fight for you
-			You leave behind poisonous seawater as you move
-			75% increased movement speed, 10% increase to all damage, and plus 40 defense while submerged
-			If you are damaged while submerged in liquid you will gain a damaging aura for a short time
-			Has a chance to create illusions and dodge an attack
-			'''
-	}
-
-	FungalClump: {
-		DisplayName: Fungal Clump
-		Tooltip:
-			'''
-			Summons a fungal clump to fight for you
-			The clump latches onto enemies and steals their life for you
-			'''
-	}
-
-	DemonshadeBreastplate: {
-		DisplayName: Demonshade Breastplate
-		Tooltip:
-			'''
-			25% increased melee speed, 40% increased damage and 20% critical strike chance
-			Enemies take ungodly damage when they touch you
-			Increased max life by 1000 and mana by 500
-			Standing still lets you absorb the shadows and boost your life regen
-			'''
-	}
-
-	DemonshadeGreaves: {
-		DisplayName: Demonshade Greaves
-		Tooltip:
-			'''
-			Shadow speed
-			30% increased damage and 15% crit chance
-			'''
-	}
-
-	DemonshadeHelm: {
-		DisplayName: Demonshade Helm
-		Tooltip: 50% increased damage and crit chance, +10 max minions and +10 max turrets
-	}
-
-	DefenseBlade: {
-		DisplayName: Defense Blade
-		Tooltip:
-			'''
-			Legendary Weapon
-			Swinging will cause a shard of sunlight to home in before impacting the enemy, leaving damaging sparks below
-			Striking an enemy with the blade causes an earthen eruption
-			Scales through progression gaining additive damage boosts after defeating certain bosses
-			'''
-	}
-
-	DrewsWings: {
-		DisplayName: Drew's Wings
-		Tooltip:
-			'''
-			Absolutely Fabulous
-			Horizontal speed: 12
-			Acceleration multiplier: 4
-			Flight time: 361
-			Excellent vertical speed
-			'''
-	}
-
-	TheCommunity: {
-		DisplayName: The Community
-		Tooltip:
-			'''
-			Legendary Accessory
-			The heart of the Terraria community
-			Starts off with weak buffs to all of your stats
-			The stat buffs become more powerful as you progress
-			Reduces the DoT effects of harmful debuffs inflicted on you
-			"Thank you to all of my supporters that made this mod a reality"
-			'''
-	}
-
-	DragonRage: {
-		DisplayName: Dragon Rage
-		Tooltip:
-			'''
-			Spins a baton that causes explosions on enemy hits. The 10th hit will cause a ring of draconic fireballs to seek enemies that inflict Dragonfire.
-			Right click to spin the baton closer to you that summons fireballs at a slower pace, but without the need to hit enemies.
-			[c/ff8c1a:"This is my message to my master."]
-			'''
-	}
-
-	DeificAmulet: {
-		DisplayName: Deific Amulet
-		Tooltip:
-			'''
-			Taking damage makes you move very fast for a short time
-			Increases armor penetration by 25 and immune time after being struck
-			Provides light underwater and causes stars to fall when damaged
-			Increases pickup range for mana stars and you restore mana when damaged
-			'''
-	}
-
-	RampartofDeities: {
-		DisplayName: Rampart of Deities
-		Tooltip:
-			'''
-			Taking damage makes you move very fast for a short time
-			Increases armor penetration by 50 and immune time after being struck
-			Provides light underwater and causes stars to fall when damaged
-			Increases pickup range for mana stars and you restore mana when damaged
-			Absorbs 25% of damage done to players on your team
-			Only active above 25% life
-			Grants immunity to knockback
-			Puts a shell around the owner when below 30% life that reduces damage
-			The shell becomes more powerful when below 10% life and reduces damage even further
-			'''
-	}
-
-	FrigidBulwark: {
-		DisplayName: Frigid Bulwark
-		Tooltip:
-			'''
-			Absorbs 25% of damage done to players on your team
-			Only active above 25% life
-			Grants immunity to knockback
-			Puts a shell around the owner when below 30% life that reduces damage
-			The shell becomes more powerful when below 10% life and reduces damage even further
-			'''
-	}
-
-	OmegaBlueLeggings: {
-		Tooltip:
-			'''
-			30% increased movement speed
-			16% increased damage and 12% increased critical strike chance
-			'''
-		DisplayName: Omega Blue Leggings
-	}
-
-	OmegaBlueHelmet: {
-		Tooltip:
-			'''
-			You can move freely through liquids
-			12% increased damage and 8% increased critical strike chance
-			+2 max minions
-			'''
-		DisplayName: Omega Blue Helmet
-	}
-
-	OmegaBlueChestplate: {
-		Tooltip:
-			'''
-			18% increased damage and 16% increased critical strike chance
-			Increases melee attack speed by 18%
-			Your attacks inflict Crush Depth
-			'''
-		DisplayName: Omega Blue Chestplate
-	}
-
-	BlackMatterStick: {
-		DisplayName: Black Matter Stick
-		Tooltip: ""
-	}
-
-	NeutronGlaive: {
-		DisplayName: Neutron Glaive
-		Tooltip:
-			'''
-			Swinging releases powerful gravitational sword waves
-			Waves causing a neutron star explosion upon hitting a target
-			'''
-	}
-
-	LeadCore: {
-		DisplayName: Lead Core
-		Tooltip: Grants immunity to the acid rain debuff
-	}
-
-	BloodflareBodyArmor: {
-		DisplayName: Bloodflare Body Armor
-		Tooltip:
-			'''
-			+100 max life and +100 max mana
-			You regenerate life quickly and gain +30 defense while in lava
-			14% increased damage and increased critical strike chance
-			'''
-	}
-
-	BloodflareCuisses: {
-		DisplayName: Bloodflare Cuisses
-		Tooltip: 30% increased movement speed, 10% increased damage and increased critical strike chance
-	}
-
-	BloodflareMask: {
-		DisplayName: Bloodflare Mask
-		Tooltip:
-			'''
-			You can move freely through liquids and have temporary immunity to lava
-			10% increased melee damage and critical strike chance
-			18% increased melee attackspeed
-			'''
-	}
-
-	GodSlayerChestplate: {
-		DisplayName: God Slayer Chestplate
-		Tooltip:
-			'''
-			+250 max life and +150 max mana
-			15% increased movement speed
-			15% increased damage and increased critical strike chance
-			Attacks have a 5% chance to do no damage to you
-			'''
-	}
-
-	GodSlayerHelm: {
-		DisplayName: God Slayer Helm
-		Tooltip:
-			'''
-			14% increased melee damage and critical strike chance
-			20% increased melee attackspeed
-			'''
-	}
-
-	GodSlayerLeggings: {
-		DisplayName: God Slayer Leggings
-		Tooltip:
-			'''
-			35% increased movement speed
-			11% increased damage and increased critical strike chance
-			'''
-	}
-
-	SilvaArmor: {
-		DisplayName: Silva Armor
-		Tooltip:
-			'''
-			+300 max life and +200 max mana
-			20% increased movement speed
-			18% increased damage and increased critical strike chance
-			'''
-	}
-
-	SilvaHelm: {
-		DisplayName: Silva Helm
-		Tooltip:
-			'''
-			13% increased melee damage and critical strike chance
-			19% increased melee attackspeed
-			'''
-	}
-
-	SilvaLeggings: {
-		DisplayName: Silva Leggings
-		Tooltip:
-			'''
-			45% increased movement speed
-			12% increased damage and increased critical strike chance
-			'''
-	}
-
 	TarragonBreastplate: {
 		DisplayName: Tarragon Breastplate
 		Tooltip:
@@ -985,265 +1068,239 @@ Items: {
 			'''
 	}
 
-	FrostBarrier: {
-		DisplayName: Frost Barrier
+	TheAbsorber: {
+		DisplayName: The Absorber
 		Tooltip:
 			'''
-			You will freeze enemies near you when you are struck
-			You are immune to the chilled debuff
+			12% increased movement speed
+			120% increased jump speed
+			+30 max life and mana
+			Standing still boosts life and mana regen
+			Increased defense and damage reduction when submerged in liquid
+			Increased movement speed when submerged in liquid
+			Enemies take damage when they hit you
+			Taking a hit will make you move very fast for a short time
+			You emit a mushroom spore and spark explosion when you are hit
+			6% increased damage reduction
+			Enemy attacks will have part of their damage absorbed and used to heal you
 			'''
 	}
 
-	PsychoticAmulet: {
-		DisplayName: Psychotic Amulet
+	TheAmalgam: {
+		DisplayName: The Amalgam
 		Tooltip:
 			'''
-			Boosts ranged damage and critical strike chance by 5%
-			Grants a massive boost to these stats if you aren't moving
+			30% increased damage and 15% increased critical strike chance
+			Shade rains down when you are hit
+			You will confuse nearby enemies when you are struck
+			Drops brimstone fireballs from the sky occasionally
+			Brimstone fire rains down while invincibility is active
+			Temporary immunity to lava, greatly reduces lava burn damage, and 25% increased damage while in lava
+			Summons a fungal clump to fight for you
+			You leave behind poisonous seawater as you move
+			75% increased movement speed, 10% increase to all damage, and plus 40 defense while submerged
+			If you are damaged while submerged in liquid you will gain a damaging aura for a short time
+			Has a chance to create illusions and dodge an attack
 			'''
 	}
 
-	AuricTeslaBodyArmor: {
-		DisplayName: Auric Tesla Body Armor
+	TheCommunity: {
+		DisplayName: The Community
 		Tooltip:
 			'''
-			+400 max life and +400 max mana
-			25% increased movement speed
-			Attacks have a 5% chance to do no damage to you
-			30% increased damage and increased critical strike chance
-			You will freeze enemies near you when you are struck
+			Legendary Accessory
+			The heart of the Terraria community
+			Starts off with weak buffs to all of your stats
+			The stat buffs become more powerful as you progress
+			Reduces the DoT effects of harmful debuffs inflicted on you
+			"Thank you to all of my supporters that made this mod a reality"
 			'''
 	}
 
-	AuricTeslaCuisses: {
-		DisplayName: Auric Tesla Cuisses
+	TheFirstShadowflame: {
+		DisplayName: The First Shadowflame
+		Tooltip: Grants shadowflame powers to all minions
+	}
+
+	TrueArkoftheAncients: {
+		DisplayName: True Ark of the Ancients
+		Tooltip: A heavenly blade forged to vanquish all evil
+	}
+
+	TrueBiomeBlade: {
+		DisplayName: True Biome Blade
+		Tooltip: Fires different projectiles based on what biome you're in
+	}
+
+	VitalJelly: {
+		DisplayName: Vital Jelly
 		Tooltip:
 			'''
-			50% increased movement speed
-			14% increased damage and increased critical strike chance
-			Magic carpet effect
+			10% increased movement speed
+			100% increased jump speed
 			'''
 	}
 
-	AuricTeslaHelm: {
-		DisplayName: Auric Tesla Helm
+	VoidofExtinction: {
+		DisplayName: Void of Extinction
 		Tooltip:
 			'''
-			20% increased melee damage and critical strike chance
-			28% increased melee attackspeed
-			Not moving boosts all damage and critical strike chance
+			No longer cursed
+			Drops brimstone fireballs from the sky occasionally
+			15% increase to all damage
+			Brimstone fire rains down while invincibility is active
+			Temporary immunity to lava, greatly reduces lava burn damage, and 25% increased damage while in lava
 			'''
 	}
-}
 
-Configs: {
-	CalamityDemutationConfigSystem: {
-		DisplayName: Calamity Demutation Config
-
-		PerformanceMode: {
-			Label: Performance Mode
-			Tooltip:
-				'''
-				Reduces rendering load by disabling the afterimage trail effect on this mod's projectiles.
-				When enabled, projectiles such as Eon Beams, Biome Orbs, Omega Biome Orbs, Galaxia orbs and Terra Balls are drawn without their layered trail afterimages, rendering only the base sprite.
-				This can noticeably improve the framerate during intense fights where many projectiles are on screen at once (e.g. boss battles, invasion events, or farming with heavy melee weapons).
-				Visual trade-off: projectiles lose their glowing motion trail, so their flight paths look less flashy and can be slightly harder to track.
-				Recommended: enable if you experience frame drops, use low-end hardware, or find the trails distracting.
-				Keep it off if you want the full visual effect and have no performance issues.
-				Default: Off.
-				'''
-		}
-
-		RevertVanillaNerfs: {
-			Label: Revert Vanilla Nerfs
-			Tooltip:
-				'''
-				Reverts Calamity's nerfs to vanilla player content.
-				Restores the original stats of vanilla weapons, armor, tools, wings, accessories, and buffs that Calamity weakens.
-				Also reverts the summoner cross-class damage penalty and the Shadow Armor / Soaring Insignia movement nerfs.
-				Only applies while the Calamity Mod is enabled.
-				Default: Off.
-				'''
-		}
-
-		EnableSwordLight: {
-			Label: Enable Sword Light
-			Tooltip:
-				'''
-				Toggles the sweeping slash trail (arc light) rendered behind this mod's sword-like held projectiles.
-				When on, melee swings such as the Dragon Rage draw a glowing motion trail that sweeps across the arc of the strike.
-				This effect relies on the KnifeRendering shader, so it also acts as a fallback toggle if that effect ever fails to load.
-				Turn it off if you dislike the effect, experience rendering glitches, or want to save some draw overhead.
-				Default: On.
-				'''
-		}
-
-		WeaponAdaptiveIllumination: {
-			Label: Weapon Adaptive Illumination
-			Tooltip:
-				'''
-				Controls whether the weapon sprite of this mod's sword-like held projectiles is tinted by the surrounding light level.
-				When on, the blade dims slightly in dark areas and brightens in lit ones, matching how the environment shades it.
-				When off, the weapon is always drawn at full brightness in plain white, ignoring light — useful if the blade looks too dark in caves or at night.
-				Default: On.
-				'''
-		}
-	}
-}
-
-Projectiles: {
-	BigBustyRose.DisplayName: Big Busty Rose
-	BiomeOrb.DisplayName: Biome Orb
-	BloodScythe.DisplayName: Blood Scythe
-	BrimstoneHellfireballFriendly.DisplayName: Hellfire
-	CactusHealOrb.DisplayName: Heal
-	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
-	CloudyWaifu.DisplayName: Cloudy Waifu
-	DemonFork.DisplayName: Demon Fork
-	DrewsSandyWaifu.DisplayName: Oxy's Waifu
-	ElementBall.DisplayName: Ball
-	EonBeam.DisplayName: Beam
-	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
-	FrostMistFriendly.DisplayName: Mist
-	Galaxia.DisplayName: Orb
-	GalaxyBlast.DisplayName: Galaxy Blast
-	HellfireExplosionFriendly.DisplayName: Explosion
-	NebulaDust.DisplayName: Dust
-	NebulaStar.DisplayName: Star
-	Oathblade.DisplayName: Oathblade
-	OathswordFlame.DisplayName: Oathsword Flame
-	OmegaBiomeOrb.DisplayName: Orb
-	SandBolt.DisplayName: Bolt
-	SandMark.DisplayName: Mark
-	SandTornado.DisplayName: Tornado
-	SandyWaifu.DisplayName: Waifu
-	SirenLure.DisplayName: Siren Lure
-	SirenSongFriendly.DisplayName: Song
-	Spark.DisplayName: Spark
-	TerraBall.DisplayName: Ball
-	TrueBiomeOrb.DisplayName: Orb
-	WaterSpearFriendly.DisplayName: Spear
-	FungalHeal.DisplayName: Fungal Heal
-	AuraRain.DisplayName: Aura Rain
-	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
-	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
-	BloodyBlade.DisplayName: Bloody Blade
-	ExoComet.DisplayName: Exo Comet
-	FungalClump.DisplayName: Fungal Clump
-	PoisonousSeawater.DisplayName: Poisonous Seawater
-	StandingFire.DisplayName: Standing Fire
-	RedDevil.DisplayName: Red Devil
-	FireBall.DisplayName: Fire Ball
-	BaseHeldProjCO.DisplayName: Base Held Proj C O
-	DefenseBeam.DisplayName: Defense Beam
-	DefenseBlast.DisplayName: Defense Blast
-	DefenseBlast2.DisplayName: Defense Blast2
-	DefenseFlame.DisplayName: Defense Flame
-	LaserFountains.DisplayName: Laser Fountains
-	DeathLaser.DisplayName: Death Laser
-	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
-	DragonRageHeld.DisplayName: Dragon Rage Held
-	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
-	NeutronExplode.DisplayName: Neutron Explode
-	NeutronGlaiveBeam.DisplayName: Neutron Glaive Beam
-	SilvaOrb.DisplayName: Silva Orb
-	AuricOrb.DisplayName: Auric Orb
-	GodSlayerDart.DisplayName: God Slayer Dart
-}
-
-Buffs: {
-	Afflicted: {
-		DisplayName: Afflicted
-		Description: Empowered by otherworldly spirits
+	WifeinaBottle: {
+		Tooltip: Summons a sand elemental to fight for you
+		DisplayName: Elemental in a Bottle
 	}
 
-	BrimstoneWaifu: {
-		Description: The brimstone elemental will protect you
-		DisplayName: Brimstone Elemental
+	WifeinaBottlewithBoobs: {
+		Tooltip: Summons a sand elemental to heal you
+		DisplayName: Rare Elemental in a Bottle
 	}
 
-	CloudyWaifu: {
-		Description: The cloud elemental will protect you
-		DisplayName: Cloud Elemental
+	YharimsInsignia: {
+		DisplayName: Yharim's Insignia
+		Tooltip:
+			'''
+			10% increased damage when under 50% life
+			10% increased melee speed
+			10% increased melee damage and melee critical strike chance
+			Melee attacks and melee projectiles inflict holy fire
+			Increased invincibility after taking damage
+			Temporary immunity to lava
+			Increased melee knockback
+			'''
 	}
 
-	DrewsSandyWaifu: {
-		Description: The sand elemental will heal you
-		DisplayName: Rare Sand Elemental
-	}
-
-	HotE: {
-		Description: All elementals will protect you
-		DisplayName: Heart of the Elements
-	}
-
-	SandyWaifu: {
-		Description: The sand elemental will protect you
-		DisplayName: Sand Elemental
-	}
-
-	ShellBoost: {
-		DisplayName: Shell Speed Boost
-		Description: Speed is boosted
-	}
-
-	SirenLure: {
-		Description: The siren will protect you
-		DisplayName: Siren
-	}
-
-	YharimPower: {
-		DisplayName: Yharim's Power
-		Description: You feel like you can break the world in two...with your bare hands!
-	}
-
-	FungalClump: {
-		DisplayName: Fungal Clump
-		Description: The fungal clump will protect you
-	}
-
-	DemonFlames: {
-		DisplayName: Demon Flames
-		Description: Another burning debuff
-	}
-
-	Enraged: {
-		DisplayName: Enraged
-		Description: Enemies are enraged
-	}
-
-	RedDevil: {
-		DisplayName: Red Devil
-		Description: The red devil will protect you
-	}
-
-	HellfireExplosion: {
-		DisplayName: Hellfire Explosion
-		Description: Burning fiercely
-	}
-
-	GodSlayerCooldown: {
-		DisplayName: God Slayer Cooldown
-		Description: 10% increase to all damage; godslayer effect is recharging
-	}
-
-	SilvaHysteresis: {
-		DisplayName: Silva Hysteresis
-		Description: Heavy yet crumbling
-	}
-
-	SilvaRevival: {
-		DisplayName: Silva Revival
-		Description: You are invulnerable
-	}
-
-	TarraLifeRegen: {
-		DisplayName: Tarra Life Regen
-		Description: Rapid healing
+	YharimsStimulants: {
+		DisplayName: Yharim's Stimulants
+		Tooltip: Gives decent buffs to all offensive and defensive stats
 	}
 }
 
 Keybinds: {
 	Demonshade.DisplayName: Demon Shade Enrage
+
 	GodslayerDash.DisplayName: God Slayer Dash
+}
+
+Projectiles: {
+	AuraRain.DisplayName: Aura Rain
+
+	AuricOrb.DisplayName: Auric Orb
+
+	BaseHeldProjCO.DisplayName: Base Held Proj C O
+
+	BigBustyRose.DisplayName: Big Busty Rose
+
+	BiomeOrb.DisplayName: Biome Orb
+
+	BloodScythe.DisplayName: Blood Scythe
+
+	BloodyBlade.DisplayName: Bloody Blade
+
+	BrimstoneHellfireballFriendly.DisplayName: Hellfire
+
+	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
+
+	CactusHealOrb.DisplayName: Heal
+
+	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
+
+	CloudyWaifu.DisplayName: Cloudy Waifu
+
+	DeathLaser.DisplayName: Death Laser
+
+	DefenseBeam.DisplayName: Defense Beam
+
+	DefenseBlast.DisplayName: Defense Blast
+
+	DefenseBlast2.DisplayName: Defense Blast2
+
+	DefenseFlame.DisplayName: Defense Flame
+
+	DemonFork.DisplayName: Demon Fork
+
+	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
+
+	DragonRageHeld.DisplayName: Dragon Rage Held
+
+	DrewsSandyWaifu.DisplayName: Oxy's Waifu
+
+	ElementBall.DisplayName: Ball
+
+	EonBeam.DisplayName: Beam
+
+	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
+
+	ExoComet.DisplayName: Exo Comet
+
+	FireBall.DisplayName: Fire Ball
+
+	FrostMistFriendly.DisplayName: Mist
+
+	FungalClump.DisplayName: Fungal Clump
+
+	FungalHeal.DisplayName: Fungal Heal
+
+	Galaxia.DisplayName: Orb
+
+	GalaxyBlast.DisplayName: Galaxy Blast
+
+	GodSlayerDart.DisplayName: God Slayer Dart
+
+	HellfireExplosionFriendly.DisplayName: Explosion
+
+	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
+
+	LaserFountains.DisplayName: Laser Fountains
+
+	NebulaDust.DisplayName: Dust
+
+	NebulaStar.DisplayName: Star
+
+	NeutronExplode.DisplayName: Neutron Explode
+
+	NeutronGlaiveBeam.DisplayName: Neutron Glaive Beam
+
+	Oathblade.DisplayName: Oathblade
+
+	OathswordFlame.DisplayName: Oathsword Flame
+
+	OmegaBiomeOrb.DisplayName: Orb
+
+	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
+
+	PoisonousSeawater.DisplayName: Poisonous Seawater
+
+	RedDevil.DisplayName: Red Devil
+
+	SandBolt.DisplayName: Bolt
+
+	SandMark.DisplayName: Mark
+
+	SandTornado.DisplayName: Tornado
+
+	SandyWaifu.DisplayName: Waifu
+
+	SilvaOrb.DisplayName: Silva Orb
+
+	SirenLure.DisplayName: Siren Lure
+
+	SirenSongFriendly.DisplayName: Song
+
+	Spark.DisplayName: Spark
+
+	StandingFire.DisplayName: Standing Fire
+
+	TerraBall.DisplayName: Ball
+
+	TrueBiomeOrb.DisplayName: Orb
+
+	WaterSpearFriendly.DisplayName: Spear
 }
