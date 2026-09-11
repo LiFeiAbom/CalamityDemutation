@@ -12,14 +12,28 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
     /// </summary>
     internal class DeathLaser : ModProjectile
     {
-        public override string Texture => "CalamityDemutation/Content/Projectiles/Ranged/RayBeam";
-        public int Time { get => (int)Projectile.ai[2]; set => Projectile.ai[2] = value; }
-        private ref float wit => ref Projectile.localAI[0];
+        // ── 属性 ──
+        /// <summary>
+        /// 光束长度（存于 localAI[1]）；为 0 时由 AI 初始化为 5000，可由生成方改写
+        /// </summary>
         public float Leng
         {
             get => Projectile.localAI[1];
             set => Projectile.localAI[1] = value;
         }
+        /// <summary>
+        /// 贴图路径：本体为 RayBeam，绘制时再拼 Body/Head/Don 后缀取三截光束贴图
+        /// </summary>
+        public override string Texture => "CalamityDemutation/Content/Projectiles/Ranged/RayBeam";
+        /// <summary>
+        /// 中段光束的滚动计时（存于 ai[2]），自增后驱动 Body 贴图的纵向采样偏移
+        /// </summary>
+        public int Time { get => (int)Projectile.ai[2]; set => Projectile.ai[2] = value; }
+        /// <summary>
+        /// 横向拉伸系数（存于 localAI[0]），由剩余时间推出，供 PreDraw 做光束收缩动画
+        /// </summary>
+        private ref float wit => ref Projectile.localAI[0];
+        // ── 生命周期方法 ──
         /// <summary>
         /// 静态设置：把 DrawScreenCheckFluff 提高到 5000，使这条超长光束即便远端在屏幕外很远也仍参与绘制判定，
         /// 避免被原版的屏幕裁剪提前剔除。
