@@ -295,8 +295,8 @@ namespace CalamityDemutation
                 debuffList.Add(buff26.Type);
             if (ModContent.TryFind("CalamityMod", "HolyInferno", out ModBuff buff27))
                 debuffList.Add(buff27.Type);
-            if (ModContent.TryFind("CalamityMod", "IcarusFolly", out ModBuff buff29))
-                debuffList.Add(buff29.Type);
+            if (ModContent.TryFind("CalamityMod", "IcarusFolly", out ModBuff buff28))
+                debuffList.Add(buff28.Type);
             if (ModContent.TryFind("CalamityModClassicPreTrailer", "BrimstoneFlames", out ModBuff buffC1))
                 debuffList.Add(buffC1.Type);
             if (ModContent.TryFind("CalamityModClassicPreTrailer", "BurningBlood", out ModBuff buffC2))
@@ -311,14 +311,14 @@ namespace CalamityDemutation
                 debuffList.Add(buffC6.Type);
             if (ModContent.TryFind("CalamityModClassicPreTrailer", "Plague", out ModBuff buffC7))
                 debuffList.Add(buffC7.Type);
-            if (ModContent.TryFind("CalamityModClassicPreTrailer", "AbyssalFlames", out ModBuff buffC9))
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "AbyssalFlames", out ModBuff buffC8))
+                debuffList.Add(buffC8.Type);
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "CrushDepth", out ModBuff buffC9))
                 debuffList.Add(buffC9.Type);
-            if (ModContent.TryFind("CalamityModClassicPreTrailer", "CrushDepth", out ModBuff buffC10))
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "Horror", out ModBuff buffC10))
                 debuffList.Add(buffC10.Type);
-            if (ModContent.TryFind("CalamityModClassicPreTrailer", "Horror", out ModBuff buffC11))
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "MarkedforDeath", out ModBuff buffC11))
                 debuffList.Add(buffC11.Type);
-            if (ModContent.TryFind("CalamityModClassicPreTrailer", "MarkedforDeath", out ModBuff buffC12))
-                debuffList.Add(buffC12.Type);
         }
         // ── 私有工具 ──
         /// <summary>
