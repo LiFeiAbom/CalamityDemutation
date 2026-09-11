@@ -143,7 +143,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             target.AddBuff(BuffID.Frostburn, 120);
         }
         /// <summary>
-        /// 配方：灾变阔剑 + 月亮锭 + 陨铁锭，在月亮工作台升阶（两版灾厄共用）
+        /// 配方：灾变阔剑 + 月亮锭 + 陨石锭，在月亮工作台升阶（两版灾厄共用）
         /// </summary>
         public override void AddRecipes()
         {

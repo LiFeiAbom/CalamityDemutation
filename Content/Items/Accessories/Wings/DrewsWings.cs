@@ -8,7 +8,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
 {
     /// <summary>
     /// 德鲁之翼（Drew's Wings） - 翅膀
-    /// 专家饰品翅膀；飞行数据为 361 帧飞行时间、水平加速 12、水平速度上限 4，
+    /// 专家饰品翅膀；飞行数据为 361 帧飞行时间、水平速度 12、水平加速度倍率 4
+    /// （WingStats 构造序为 FlyTime、AccRunSpeedOverride、AccRunAccelerationMult），
     /// 垂直飞行速度亦经强化（见 VerticalWingSpeeds）。
     /// 飞行时在身后洒落钻石色尘埃，仅视觉表现，无数值结算。
     /// </summary>
@@ -16,7 +17,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
     internal class DrewsWings:ModItem
     {
         /// <summary>
-        /// 注册翅膀统计数据：飞行时间 361 帧、水平加速 12、水平速度上限 4
+        /// 注册翅膀统计数据：飞行时间 361 帧、水平速度 12、水平加速度倍率 4
         /// （Item.wingSlot 由 AutoloadEquip(EquipType.Wings) 自动分配）
         /// </summary>
         public override void SetStaticDefaults()

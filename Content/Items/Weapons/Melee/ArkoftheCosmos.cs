@@ -334,6 +334,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         /// <summary>
+        /// 武器暴击率 +16%（原版对 SetDefaults 中过高的暴击值处理异常，故放到此回调里加成）
+        /// </summary>
+        // Terraria seems to really dislike high crit values in SetDefaults
+        public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 16;
+        /// <summary>
         /// 配方（分版本）：四季银河 + 元素方舟 + 星辉矿锭（现代版）；
         /// 经典版改用多种月后暗黑碎片/矿石材料在德拉肯锻造台合成
         /// </summary>
@@ -362,10 +367,5 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 recipe1.Register();
             }
         }
-        /// <summary>
-        /// 武器暴击率 +16%（原版对 SetDefaults 中过高的暴击值处理异常，故放到此回调里加成）
-        /// </summary>
-        // Terraria seems to really dislike high crit values in SetDefaults
-        public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 16;
     }
 }

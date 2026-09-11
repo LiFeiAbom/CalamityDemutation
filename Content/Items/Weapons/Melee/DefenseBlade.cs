@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
@@ -16,6 +16,46 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class DefenseBlade:ModItem
     {
+        // ── 静态字段 ──
+        /// <summary>
+        /// 传奇武器增伤进度表：石巨人 → 至尊灾厄（主线 18 档）。
+        /// 每项为 (是否已击败, 固定增伤)，加算累加，合计 +8.10，满配 9.10×。
+        /// 前中期增量小、终局增量大：反映难度递增，同时弥补伤害基数变大后固定增量的相对收益下降。
+        /// </summary>
+        private static readonly (Func<bool> Downed, float Increment)[] LegendaryBosses =
+        [
+            // —— 石巨人 → 月球领主 ——
+            (() => NPC.downedGolemBoss, 0.10f),                          // 石巨人 Golem
+            (() => CalamityDemulationBossSystem.Plaguebringer, 0.15f),   // 瘟疫使者歌莉娅 Plaguebringer Goliath
+            (() => CalamityDemulationBossSystem.Ravager, 0.15f),         // 毁灭魔像（掠夺者）Ravager
+            (() => NPC.downedAncientCultist, 0.10f),                     // 拜月教邪教徒 Lunatic Cultist
+            (() => CalamityDemulationBossSystem.AstrumDeus, 0.20f),      // 星神游龙 Astrum Deus
+            (() => NPC.downedMoonlord, 0.20f),                           // 月球领主 Moon Lord
+            // —— 月后 · 亵渎前 ——
+            (() => CalamityDemulationBossSystem.Guardians, 0.20f),       // 亵渎守卫 Profaned Guardians
+            (() => CalamityDemulationBossSystem.Dragonfolly, 0.20f),     // 丛林龙 Dragonfolly
+            // —— 亵渎 → 噬神 ——
+            (() => CalamityDemulationBossSystem.Providence, 0.40f),      // 亵渎天神 Providence
+            (() => CalamityDemulationBossSystem.CeaselessVoid || ClassicSentinelsDowned, 0.20f), // 无尽虚空 Ceaseless Void
+            (() => CalamityDemulationBossSystem.StormWeaver || ClassicSentinelsDowned, 0.20f),   // 风暴编织者 Storm Weaver
+            (() => CalamityDemulationBossSystem.Signus || ClassicSentinelsDowned, 0.20f),        // 西格纳斯 Signus
+            (() => CalamityDemulationBossSystem.Polterghast, 0.50f),     // 噬魂幽花 Polterghast
+            (() => CalamityDemulationBossSystem.OldDuke, 0.50f),         // 老公爵 Old Duke
+            (() => CalamityDemulationBossSystem.DevourerOfGods, 0.80f),  // 噬神者 Devourer of Gods
+            // —— 终局 ——
+            (() => CalamityDemulationBossSystem.Yharon, 2.0f),          // 犽戎 Yharon
+            (() => CalamityDemulationBossSystem.ExoMechs, 1.0f),        // 星流巨械 Exo Mechs
+            (() => CalamityDemulationBossSystem.SupremeCalamitas, 1.0f),// 至尊灾厄 Supreme Calamitas
+        ];
+        // ── 属性 ──
+        /// <summary>
+        /// 经典版三使者合并标记是否全部倒下。
+        /// 经典版没有单个使者的独立标记（只有 Sentinel1/2/3），因此在经典版下，
+        /// 三个使者条目退化为"三使者皆倒"时同时生效（各 +0.20，合计 +0.60）。
+        /// </summary>
+        private static bool ClassicSentinelsDowned =>
+            CalamityDemulationBossSystem.Sentinel1 && CalamityDemulationBossSystem.Sentinel2 && CalamityDemulationBossSystem.Sentinel3;
+        // ── 生命周期方法 ──
         /// <summary>静态属性：研究所解锁数量设为 1。</summary>
         public override void SetStaticDefaults()
         {
@@ -60,6 +100,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone) => Projectile.NewProjectile(player.GetSource_ItemUse(Item), target.Center, Vector2.Zero, ModContent.ProjectileType<DefenseBlast>(), Item.damage, Item.knockBack, Main.myPlayer);
         /// <summary>PvP 下剑身命中玩家时，同样在目标中心生成 DefenseBlast。</summary>
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo) => Projectile.NewProjectile(player.GetSource_ItemUse(Item), target.Center, Vector2.Zero, ModContent.ProjectileType<DefenseBlast>(), Item.damage, Item.knockBack, Main.myPlayer);
+        // ── 公开方法 ──
         /// <summary>按 LegendaryBosses 进度表加算累加，返回传奇武器伤害倍率（基础 1.00×，满配 9.10×）。</summary>
         public static float LegendaryDamage()
         {
@@ -72,42 +113,5 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
             return damageBuff;
         }
-        /// <summary>
-        /// 传奇武器增伤进度表：石巨人 → 至尊灾厄（主线 18 档）。
-        /// 每项为 (是否已击败, 固定增伤)，加算累加，合计 +8.10，满配 9.10×。
-        /// 前中期增量小、终局增量大：反映难度递增，同时弥补伤害基数变大后固定增量的相对收益下降。
-        /// </summary>
-        private static readonly (Func<bool> Downed, float Increment)[] LegendaryBosses =
-        [
-            // —— 石巨人 → 月球领主 ——
-            (() => NPC.downedGolemBoss, 0.10f),                          // 石巨人 Golem
-            (() => CalamityDemulationBossSystem.Plaguebringer, 0.15f),   // 瘟疫使者歌莉娅 Plaguebringer Goliath
-            (() => CalamityDemulationBossSystem.Ravager, 0.15f),         // 毁灭魔像（掠夺者）Ravager
-            (() => NPC.downedAncientCultist, 0.10f),                     // 拜月教邪教徒 Lunatic Cultist
-            (() => CalamityDemulationBossSystem.AstrumDeus, 0.20f),      // 星神游龙 Astrum Deus
-            (() => NPC.downedMoonlord, 0.20f),                           // 月球领主 Moon Lord
-            // —— 月后 · 亵渎前 ——
-            (() => CalamityDemulationBossSystem.Guardians, 0.20f),       // 亵渎守卫 Profaned Guardians
-            (() => CalamityDemulationBossSystem.Dragonfolly, 0.20f),     // 丛林龙 Dragonfolly
-            // —— 亵渎 → 噬神 ——
-            (() => CalamityDemulationBossSystem.Providence, 0.40f),      // 亵渎天神 Providence
-            (() => CalamityDemulationBossSystem.CeaselessVoid || ClassicSentinelsDowned, 0.20f), // 无尽虚空 Ceaseless Void
-            (() => CalamityDemulationBossSystem.StormWeaver || ClassicSentinelsDowned, 0.20f),   // 风暴编织者 Storm Weaver
-            (() => CalamityDemulationBossSystem.Signus || ClassicSentinelsDowned, 0.20f),        // 西格纳斯 Signus
-            (() => CalamityDemulationBossSystem.Polterghast, 0.50f),     // 噬魂幽花 Polterghast
-            (() => CalamityDemulationBossSystem.OldDuke, 0.50f),         // 老公爵 Old Duke
-            (() => CalamityDemulationBossSystem.DevourerOfGods, 0.80f),  // 噬神者 Devourer of Gods
-            // —— 终局 ——
-            (() => CalamityDemulationBossSystem.Yharon, 2.0f),          // 犽戎 Yharon
-            (() => CalamityDemulationBossSystem.ExoMechs, 1.0f),        // 星流巨械 Exo Mechs
-            (() => CalamityDemulationBossSystem.SupremeCalamitas, 1.0f),// 至尊灾厄 Supreme Calamitas
-        ];
-        /// <summary>
-        /// 经典版三使者合并标记是否全部倒下。
-        /// 经典版没有单个使者的独立标记（只有 Sentinel1/2/3），因此在经典版下，
-        /// 三个使者条目退化为"三使者皆倒"时同时生效（各 +0.20，合计 +0.60）。
-        /// </summary>
-        private static bool ClassicSentinelsDowned =>
-            CalamityDemulationBossSystem.Sentinel1 && CalamityDemulationBossSystem.Sentinel2 && CalamityDemulationBossSystem.Sentinel3;
     }
 }

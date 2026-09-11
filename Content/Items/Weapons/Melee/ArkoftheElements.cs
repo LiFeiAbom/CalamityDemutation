@@ -146,6 +146,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         /// <summary>
+        /// 武器暴击率 +10%（放在此回调而非 SetDefaults，避免原版对高暴击值的异常处理）
+        /// </summary>
+        public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 10;
+        /// <summary>
         /// 配方（分版本）：真·远古方舟 + 银河奇点 + 灾厄核心 + 生命合金/生命锭 + 月亮锭
         /// </summary>
         public override void AddRecipes()
@@ -173,9 +177,5 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 recipe1.Register();
             }
         }
-        /// <summary>
-        /// 武器暴击率 +10%（放在此回调而非 SetDefaults，避免原版对高暴击值的异常处理）
-        /// </summary>
-        public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 10;
     }
 }

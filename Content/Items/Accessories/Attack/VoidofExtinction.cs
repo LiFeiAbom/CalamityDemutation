@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
 {
     /// <summary>
     /// 虚空灭绝 - 攻击型专家饰品，由灾厄之戒 + 地狱火 + 黑曜石玫瑰进阶合成
-    /// 提供 +15% 通用伤害（身处岩浆时额外 +25%）、火焰免疫与 +240 秒岩浆安全时间；
+    /// 提供 +15% 通用伤害（身处岩浆时额外 +25%）、火焰免疫与 +240 帧（约 4 秒）岩浆安全时间；
     /// 受击无敌帧期间概率降下烈焰，并周期性从天空喷发更强力的虚空地狱火。
     /// </summary>
     internal class VoidofExtinction:ModItem

@@ -6,7 +6,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
 {
     /// <summary>
     /// 灾厄之戒 - 攻击型专家饰品（灾厄（克隆体）宝藏袋掉落）
-    /// 提供 +15% 通用伤害；受击进入无敌帧时有 10% 概率在敌人头顶降下烈焰。
+    /// 提供 +15% 通用伤害；受击处于无敌帧时，有 10% 概率在**玩家上方**（水平 ±400、高 500~800 像素，
+    /// 见 CalamityDemutationPlayer 的 calamityRing 分支）生成一团朝玩家方向落下的站火。
     /// 与灾厄之戒/虚空灭绝等同类增伤戒互相排斥。
     /// </summary>
     internal class CalamityRing:ModItem

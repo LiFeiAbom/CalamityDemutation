@@ -66,7 +66,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         private static bool loggedSetBonus;
         // ── 生命周期方法 ──
         /// <summary>
-        /// 物品基础属性：18x18、防御 54、售价 1 金 80 银，月后稀有度 20（彩虹闪烁名）
+        /// 物品基础属性：18x18、防御 54、价值 1 铂金 80 金（buyPrice 口径；游戏内售价为其 1/5），月后稀有度 20（彩虹闪烁名）
         /// </summary>
         public override void SetDefaults()
         {
@@ -92,8 +92,9 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         }
         /// <summary>
         /// 套装效果：一身承载塔拉贡/血焰/弑神者/席尔瓦四套，附加荆棘、岩浆延时、水下呼吸、
-        /// 血腥再生、仇恨提升与岩浆中额外防御/回血；随后尝试触发弑神者冲刺，
-        /// 并通过反射向灾厄（现代版/经典版）的 CalamityPlayer 写入 auricSet。
+        /// 血腥再生、仇恨提升与岩浆中额外防御/回血；随后尝试触发弑神者冲刺。
+        /// 末尾两段反射只把灾厄（现代版/经典版）CalamityPlayer.auricSet 读进局部变量便丢弃，
+        /// 并未写回，属无效残留代码（本文件下方注释亦明确不应写 auricSet）；如需灾厄侧生效须另行处理。
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
