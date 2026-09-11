@@ -43,7 +43,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         protected bool drawTrailHighlight = true;
         /// <summary>
-        /// 自发光
+        /// 自发光：为 true 时 DrawSwing 强制把刀身染成纯白，忽略环境光照。
+        /// 注意：本模组现有子类均未赋值，故恒为 false（编译器 CS0649 警告即此），
+        /// 目前只有配置项 WeaponAdaptiveIllumination 关闭时才会走纯白分支；
+        /// 将来某把武器要自发光，在它的 SetSwingProperty 里置位即可。
         /// </summary>
         public bool Incandescence;
         /// <summary>
@@ -51,7 +54,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         protected bool inDrawFlipdiagonally;
         /// <summary>
-        /// 刀光纹理倾斜采样
+        /// 刀光纹理倾斜采样：作为 shader 参数 obliqueSampling 传给 KnifeRendering。
+        /// 注意：本模组现有子类均未赋值，故恒为 false（CS0649），即倾斜采样实际未启用。
         /// </summary>
         public bool ObliqueSampling;
         /// <summary>
@@ -155,7 +159,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         protected float toProjCoreMode = 48;
         /// <summary>
-        /// 一个垂直于手臂的绘制矫正模长，默认为 0
+        /// 一个垂直于手臂的绘制矫正模长，默认为 0。
+        /// 注意：本模组现有子类均未赋值，故恒为 0（CS0649），DrawSwing 里的 offsetOwnerPos 因此恒为零向量，
+        /// 即该矫正当前不生效；将来需要在子类里赋非零值才会体现。
         /// </summary>
         protected float unitOffsetDrawZkMode;
         /// <summary>

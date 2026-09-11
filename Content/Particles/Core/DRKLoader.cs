@@ -21,70 +21,45 @@ namespace CalamityDemutation.Content.Particles.Core
     /// </summary>
     internal class DRKLoader : ModSystem
     {
-        internal static Dictionary<Type, int> ParticleTypesDic;                    // 粒子类型 → 类型 ID
-        internal static Dictionary<int, Asset<Texture2D>> ParticleIDToTexturesDic;  // 类型 ID → 贴图资源
-        internal static List<BaseParticle> CWRParticleCoreInds;                     // 旧版移植遗留容器
-        private static List<BaseParticle> particles;                               // 当前存活粒子
-        private static List<BaseParticle> particlesToKill;                         // 待删除粒子（Kill 时登记）
-        private static List<BaseParticle> batched_AlphaBlend_DRK;                   // 绘制批次：普通 alpha 混合
-        private static List<BaseParticle> batched_NonPremultiplied_DRK;             // 绘制批次：半透明非预乘混合
-        private static List<BaseParticle> batched_AdditiveBlend_DRK;                // 绘制批次：加法混合
-
+        // ── 静态字段 ──
         /// <summary>
-        /// 当前存活粒子总数
+        /// 绘制批次：加法混合粒子
         /// </summary>
-        public static int GetParticlesCount() => particles.Count;
+        private static List<BaseParticle> batched_AdditiveBlend_DRK;
         /// <summary>
-        /// 指定类型（fxType）的存活粒子数
+        /// 绘制批次：普通 alpha 混合粒子
         /// </summary>
-        public static int GetParticlesCount(int fxType) {
-            int num = 0;
-            foreach (var particle in particles) {
-                if (particle.Type == fxType) {
-                    num++;
-                }
-            }
-            return num;
-        }
+        private static List<BaseParticle> batched_AlphaBlend_DRK;
         /// <summary>
-        /// 距 targetPos 不超过 maxFindDistance 的粒子数
+        /// 绘制批次：半透明非预乘混合粒子
         /// </summary>
-        public static int GetParticlesCount(Vector2 targetPos, float maxFindDistance) {
-            int num = 0;
-            foreach (var particle in particles) {
-                if (particle.Position.Distance(targetPos) <= maxFindDistance) {
-                    num++;
-                }
-            }
-            return num;
-        }
+        private static List<BaseParticle> batched_NonPremultiplied_DRK;
         /// <summary>
-        /// 指定范围内且类型匹配的粒子数
+        /// 旧版移植遗留容器（当前无读写方，仅保留字段名以对齐 CWR）
         /// </summary>
-        public static int GetParticlesCount(Vector2 targetPos, float maxFindDistance, int fxType) {
-            int num = 0;
-            foreach (var particle in particles) {
-                if (particle.Position.Distance(targetPos) <= maxFindDistance && particle.Type == fxType) {
-                    num++;
-                }
-            }
-            return num;
-        }
+        internal static List<BaseParticle> CWRParticleCoreInds;
         /// <summary>
-        /// 每帧在世界更新完毕后驱动一次粒子系统（内部调用 Update）。
+        /// 类型 ID → 贴图资源
         /// </summary>
-        public override void PostUpdateEverything() => Update();
+        internal static Dictionary<int, Asset<Texture2D>> ParticleIDToTexturesDic;
         /// <summary>
-        /// 挂在 On_Main.DrawInfernoRings 上的绘制钩子：先绘制所有粒子，再执行原版方法。
+        /// 当前存活粒子
         /// </summary>
-        public static void CWRDrawForegroundParticles(Terraria.On_Main.orig_DrawInfernoRings orig, Main self) {
-            DrawAll(Main.spriteBatch);
-            orig(self);
-        }
+        private static List<BaseParticle> particles;
+        /// <summary>
+        /// 待删除粒子（由 RemoveParticle / Kill 登记，下一帧 Update 统一回收）
+        /// </summary>
+        private static List<BaseParticle> particlesToKill;
+        /// <summary>
+        /// 粒子类型 → 类型 ID
+        /// </summary>
+        internal static Dictionary<Type, int> ParticleTypesDic;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 模组加载时初始化所有粒子容器、注册内置粒子 DRK_Spark，并挂上绘制钩子。
         /// </summary>
-        public override void Load() {
+        public override void Load()
+        {
             particles = [];
             particlesToKill = [];
             ParticleTypesDic = [];
@@ -97,9 +72,14 @@ namespace CalamityDemutation.Content.Particles.Core
             On_Main.DrawInfernoRings += CWRDrawForegroundParticles;
         }
         /// <summary>
+        /// 每帧在世界更新完毕后驱动一次粒子系统（内部调用 Update）。
+        /// </summary>
+        public override void PostUpdateEverything() => Update();
+        /// <summary>
         /// 卸载时清空全部静态容器并解绑绘制钩子，防止热重载后残留引用。
         /// </summary>
-        public override void Unload() {
+        public override void Unload()
+        {
             particles = null;
             particlesToKill = null;
             ParticleTypesDic = null;
@@ -110,37 +90,18 @@ namespace CalamityDemutation.Content.Particles.Core
             batched_AdditiveBlend_DRK = null;
             On_Main.DrawInfernoRings -= CWRDrawForegroundParticles;
         }
-        /// <summary>
-        /// 显式注册单个粒子类型（替代 CWR 的反射枚举，DRK_Spark 无无参构造，故用未初始化对象读取 Texture）
-        /// </summary>
-        private static void RegisterParticle<T>() where T : BaseParticle {
-            BaseParticle sample = (BaseParticle)RuntimeHelpers.GetUninitializedObject(typeof(T));
-            Type type = typeof(T);
-            int ID = ParticleTypesDic.Count;
-            ParticleTypesDic[type] = ID;
-            string texturePath = sample.Texture;
-            if (texturePath == "") {
-                texturePath = type.Namespace.Replace('.', '/') + "/" + type.Name;
-            }
-            // 默认异步加载：ImmediateLoad 会在模组加载期阻塞(日志里的 "blocking on asset loading" 警告)
-            ParticleIDToTexturesDic[ID] = ModContent.Request<Texture2D>(texturePath);
-        }
-        /// <summary>
-        /// 取指定粒子类对应的类型 ID（注册顺序即 ID）。
-        /// </summary>
-        public static int GetParticleType<T>() where T : BaseParticle => ParticleTypesDic[typeof(T)];
-        /// <summary>
-        /// 按 Type 对象取粒子类型 ID（供非泛型场合使用）。
-        /// </summary>
-        public static int GetParticleType(Type sType) => ParticleTypesDic[sType];
+        // ── 公开方法 ──
         /// <summary>
         /// 生成提供给世界的粒子实例。达到粒子上限且非 Important 时忽略
         /// </summary>
-        public static void AddParticle(BaseParticle particle) {
-            if (Main.gamePaused || Main.dedServ || particles == null) {
+        public static void AddParticle(BaseParticle particle)
+        {
+            if (Main.gamePaused || Main.dedServ || particles == null)
+            {
                 return;
             }
-            if (particles.Count >= CalamityDemutationConstant.MaxParticleCount && !particle.Important) {
+            if (particles.Count >= CalamityDemutationConstant.MaxParticleCount && !particle.Important)
+            {
                 return;
             }
             particles.Add(particle);
@@ -148,64 +109,22 @@ namespace CalamityDemutation.Content.Particles.Core
             particle.SetDRK();
         }
         /// <summary>
-        /// 便捷入口：填好位置、速度、颜色、缩放与 ai 参数后交给 AddParticle 登记。
+        /// 挂在 On_Main.DrawInfernoRings 上的绘制钩子：先绘制所有粒子，再执行原版方法。
         /// </summary>
-        public static void NewParticle(BaseParticle particle, Vector2 position, Vector2 velocity
-            , Color color = default, float scale = 1f, int ai0 = 0, int ai1 = 0, int ai2 = 0) {
-            particle.Position = position;
-            particle.Velocity = velocity;
-            particle.Scale = scale;
-            particle.Color = color;
-            particle.ai[0] = ai0;
-            particle.ai[1] = ai1;
-            particle.ai[2] = ai2;
-            AddParticle(particle);
+        public static void CWRDrawForegroundParticles(Terraria.On_Main.orig_DrawInfernoRings orig, Main self)
+        {
+            DrawAll(Main.spriteBatch);
+            orig(self);
         }
-        /// <summary>
-        /// 粒子主循环：逐个叠加速度、累加存活时间、执行 AI，然后回收寿命到期（且允许自动移除）或已被 Kill 的粒子。
-        /// </summary>
-        public static void Update() {
-            if (Main.dedServ) {
-                return;
-            }
-            foreach (BaseParticle particle in particles) {
-                if (particle == null) {
-                    continue;
-                }
-                UpdateParticleVelocity(particle);
-                UpdateParticleTime(particle);
-                particle.AI();
-            }
-            ParticleGarbageCollection(ref particles);
-            particles.RemoveAll(particle => particle.Time >= particle.Lifetime && particle.SetLifetime || particlesToKill.Contains(particle));
-            particlesToKill.Clear();
-        }
-        /// <summary>
-        /// 批量回收判定：寿命耗尽（且 SetLifetime 为 true）或已被 RemoveParticle 标记的粒子。
-        /// </summary>
-        public static void ParticleGarbageCollection(ref List<BaseParticle> particles) {
-            bool isGC(BaseParticle p) => p.Time >= p.Lifetime && p.SetLifetime || particlesToKill.Contains(p);
-            particles.RemoveAll(isGC);
-        }
-        /// <summary>
-        /// 把速度叠加到位置（每帧一次）。
-        /// </summary>
-        public static void UpdateParticleVelocity(BaseParticle particle) => particle.Position += particle.Velocity;
-        /// <summary>
-        /// 粒子存活时间 +1 帧。
-        /// </summary>
-        public static void UpdateParticleTime(BaseParticle particle) => particle.Time++;
-        /// <summary>
-        /// 标记粒子为待删除（下一帧 Update 时统一回收）。
-        /// </summary>
-        public static void RemoveParticle(BaseParticle particle) => particlesToKill.Add(particle);
         /// <summary>
         /// 绘制全部粒子：先按混合模式把粒子分到三个批次，再逐批 Begin/End（各批次使用对应的 BlendState、
         /// 采样器与剪刀测试）；UseCustomDraw 的粒子走 CustomDraw，否则按贴图帧默认绘制；
         /// 最后清空批次并恢复默认渲染状态，避免影响原版后续绘制。
         /// </summary>
-        public static void DrawAll(SpriteBatch sb) {
-            if (particles.Count == 0) {
+        public static void DrawAll(SpriteBatch sb)
+        {
+            if (particles.Count == 0)
+            {
                 return;
             }
             sb.End();
@@ -213,71 +132,90 @@ namespace CalamityDemutation.Content.Particles.Core
             rasterizer.ScissorTestEnable = true;
             Main.instance.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
             Main.instance.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
-            foreach (BaseParticle particle in particles) {
-                if (particle == null) {
+            foreach (BaseParticle particle in particles)
+            {
+                if (particle == null)
+                {
                     continue;
                 }
-                if (particle.UseAdditiveBlend) {
+                if (particle.UseAdditiveBlend)
+                {
                     batched_AdditiveBlend_DRK.Add(particle);
                 }
-                else if (particle.UseHalfTransparency) {
+                else if (particle.UseHalfTransparency)
+                {
                     batched_NonPremultiplied_DRK.Add(particle);
                 }
-                else {
+                else
+                {
                     batched_AlphaBlend_DRK.Add(particle);
                 }
             }
-            if (batched_AlphaBlend_DRK.Count > 0) {
+            if (batched_AlphaBlend_DRK.Count > 0)
+            {
                 sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-                void defaultDraw(BaseParticle particle) {
+                void defaultDraw(BaseParticle particle)
+                {
                     Rectangle frame = ParticleIDToTexturesDic[particle.Type].Value.Frame(1, particle.FrameVariants, 0, particle.Variant);
                     sb.Draw(ParticleIDToTexturesDic[particle.Type].Value, particle.Position - Main.screenPosition, frame, particle.Color, particle.Rotation, frame.Size() * 0.5f,
                         particle.Scale, SpriteEffects.None, 0f);
                 }
-                foreach (BaseParticle particle in batched_AlphaBlend_DRK) {
-                    if (particle.UseCustomDraw) {
+                foreach (BaseParticle particle in batched_AlphaBlend_DRK)
+                {
+                    if (particle.UseCustomDraw)
+                    {
                         particle.CustomDraw(sb);
                     }
-                    else {
+                    else
+                    {
                         defaultDraw(particle);
                     }
                 }
                 sb.End();
             }
-            if (batched_NonPremultiplied_DRK.Count > 0) {
+            if (batched_NonPremultiplied_DRK.Count > 0)
+            {
                 rasterizer = Main.Rasterizer;
                 rasterizer.ScissorTestEnable = true;
                 Main.instance.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
                 Main.instance.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
                 sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-                void defaultDraw(BaseParticle particle) {
+                void defaultDraw(BaseParticle particle)
+                {
                     Rectangle frame = ParticleIDToTexturesDic[particle.Type].Value.Frame(1, particle.FrameVariants, 0, particle.Variant);
                     sb.Draw(ParticleIDToTexturesDic[particle.Type].Value, particle.Position - Main.screenPosition, frame, particle.Color, particle.Rotation, frame.Size() * 0.5f, particle.Scale, SpriteEffects.None, 0f);
                 }
-                foreach (BaseParticle particle in batched_NonPremultiplied_DRK) {
+                foreach (BaseParticle particle in batched_NonPremultiplied_DRK)
+                {
                     if (particle.UseCustomDraw)
                         particle.CustomDraw(sb);
-                    else {
+                    else
+                    {
                         defaultDraw(particle);
                     }
                 }
                 sb.End();
             }
-            if (batched_AdditiveBlend_DRK.Count > 0) {
+            if (batched_AdditiveBlend_DRK.Count > 0)
+            {
                 rasterizer = Main.Rasterizer;
                 rasterizer.ScissorTestEnable = true;
                 Main.instance.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
                 Main.instance.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
                 sb.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.Default, rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-                void defaultDraw(BaseParticle particle) {
+                void defaultDraw(BaseParticle particle)
+                {
                     Rectangle frame = ParticleIDToTexturesDic[particle.Type].Value.Frame(1, particle.FrameVariants, 0, particle.Variant);
                     sb.Draw(ParticleIDToTexturesDic[particle.Type].Value, particle.Position - Main.screenPosition, frame, particle.Color, particle.Rotation, frame.Size() * 0.5f, particle.Scale, SpriteEffects.None, 0f);
                 }
-                foreach (BaseParticle particle in batched_AdditiveBlend_DRK) {
-                    if (particle.UseCustomDraw) {
+                foreach (BaseParticle particle in batched_AdditiveBlend_DRK)
+                {
+                    if (particle.UseCustomDraw)
+                    {
                         particle.CustomDraw(sb);
                     }
-                    else {
+                    else
+                    {
                         defaultDraw(particle);
                     }
                 }
@@ -291,8 +229,142 @@ namespace CalamityDemutation.Content.Particles.Core
         /// <summary>
         /// 可用粒子槽数量
         /// </summary>
-        public static int FreeSpacesAvailable() {
+        public static int FreeSpacesAvailable()
+        {
             return Main.dedServ || particles == null ? 0 : CalamityDemutationConstant.MaxParticleCount - particles.Count();
+        }
+        /// <summary>
+        /// 取指定粒子类对应的类型 ID（注册顺序即 ID）。
+        /// </summary>
+        public static int GetParticleType<T>() where T : BaseParticle => ParticleTypesDic[typeof(T)];
+        /// <summary>
+        /// 按 Type 对象取粒子类型 ID（供非泛型场合使用）。
+        /// </summary>
+        public static int GetParticleType(Type sType) => ParticleTypesDic[sType];
+        /// <summary>
+        /// 当前存活粒子总数
+        /// </summary>
+        public static int GetParticlesCount() => particles.Count;
+        /// <summary>
+        /// 指定类型（fxType）的存活粒子数
+        /// </summary>
+        public static int GetParticlesCount(int fxType)
+        {
+            int num = 0;
+            foreach (var particle in particles)
+            {
+                if (particle.Type == fxType)
+                {
+                    num++;
+                }
+            }
+            return num;
+        }
+        /// <summary>
+        /// 距 targetPos 不超过 maxFindDistance 的粒子数
+        /// </summary>
+        public static int GetParticlesCount(Vector2 targetPos, float maxFindDistance)
+        {
+            int num = 0;
+            foreach (var particle in particles)
+            {
+                if (particle.Position.Distance(targetPos) <= maxFindDistance)
+                {
+                    num++;
+                }
+            }
+            return num;
+        }
+        /// <summary>
+        /// 指定范围内且类型匹配的粒子数
+        /// </summary>
+        public static int GetParticlesCount(Vector2 targetPos, float maxFindDistance, int fxType)
+        {
+            int num = 0;
+            foreach (var particle in particles)
+            {
+                if (particle.Position.Distance(targetPos) <= maxFindDistance && particle.Type == fxType)
+                {
+                    num++;
+                }
+            }
+            return num;
+        }
+        /// <summary>
+        /// 便捷入口：填好位置、速度、颜色、缩放与 ai 参数后交给 AddParticle 登记。
+        /// </summary>
+        public static void NewParticle(BaseParticle particle, Vector2 position, Vector2 velocity
+            , Color color = default, float scale = 1f, int ai0 = 0, int ai1 = 0, int ai2 = 0)
+        {
+            particle.Position = position;
+            particle.Velocity = velocity;
+            particle.Scale = scale;
+            particle.Color = color;
+            particle.ai[0] = ai0;
+            particle.ai[1] = ai1;
+            particle.ai[2] = ai2;
+            AddParticle(particle);
+        }
+        /// <summary>
+        /// 批量回收判定：寿命耗尽（且 SetLifetime 为 true）或已被 RemoveParticle 标记的粒子。
+        /// </summary>
+        public static void ParticleGarbageCollection(ref List<BaseParticle> particles)
+        {
+            bool isGC(BaseParticle p) => p.Time >= p.Lifetime && p.SetLifetime || particlesToKill.Contains(p);
+            particles.RemoveAll(isGC);
+        }
+        /// <summary>
+        /// 标记粒子为待删除（下一帧 Update 时统一回收）。
+        /// </summary>
+        public static void RemoveParticle(BaseParticle particle) => particlesToKill.Add(particle);
+        /// <summary>
+        /// 粒子主循环：逐个叠加速度、累加存活时间、执行 AI，然后回收寿命到期（且允许自动移除）或已被 Kill 的粒子。
+        /// </summary>
+        public static void Update()
+        {
+            if (Main.dedServ)
+            {
+                return;
+            }
+            foreach (BaseParticle particle in particles)
+            {
+                if (particle == null)
+                {
+                    continue;
+                }
+                UpdateParticleVelocity(particle);
+                UpdateParticleTime(particle);
+                particle.AI();
+            }
+            ParticleGarbageCollection(ref particles);
+            particles.RemoveAll(particle => particle.Time >= particle.Lifetime && particle.SetLifetime || particlesToKill.Contains(particle));
+            particlesToKill.Clear();
+        }
+        /// <summary>
+        /// 粒子存活时间 +1 帧。
+        /// </summary>
+        public static void UpdateParticleTime(BaseParticle particle) => particle.Time++;
+        /// <summary>
+        /// 把速度叠加到位置（每帧一次）。
+        /// </summary>
+        public static void UpdateParticleVelocity(BaseParticle particle) => particle.Position += particle.Velocity;
+        // ── 私有工具 ──
+        /// <summary>
+        /// 显式注册单个粒子类型（替代 CWR 的反射枚举，DRK_Spark 无无参构造，故用未初始化对象读取 Texture）
+        /// </summary>
+        private static void RegisterParticle<T>() where T : BaseParticle
+        {
+            BaseParticle sample = (BaseParticle)RuntimeHelpers.GetUninitializedObject(typeof(T));
+            Type type = typeof(T);
+            int ID = ParticleTypesDic.Count;
+            ParticleTypesDic[type] = ID;
+            string texturePath = sample.Texture;
+            if (texturePath == "")
+            {
+                texturePath = type.Namespace.Replace('.', '/') + "/" + type.Name;
+            }
+            // 默认异步加载：ImmediateLoad 会在模组加载期阻塞(日志里的 "blocking on asset loading" 警告)
+            ParticleIDToTexturesDic[ID] = ModContent.Request<Texture2D>(texturePath);
         }
     }
 }
