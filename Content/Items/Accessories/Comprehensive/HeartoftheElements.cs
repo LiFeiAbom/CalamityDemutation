@@ -98,26 +98,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             }
         }
         /// <summary>
-        /// 限数保护助手：销毁本玩家多于 keep 只的指定元素仆从（保留最早生成的 keep 只）。
-        /// 由 UpdateAccessory 的本地玩家分支每帧调用；只在计数超限时扫描，代价可控。
-        /// </summary>
-        private static void TrimExtraMinions(Player player, int minionType, int keep = 1)
-        {
-            if (player.ownedProjectileCounts[minionType] <= keep)
-                return;
-            int alive = 0;
-            for (int i = 0; i < Main.maxProjectiles; i++)
-            {
-                Projectile proj = Main.projectile[i];
-                if (proj.active && proj.owner == player.whoAmI && proj.type == minionType)
-                {
-                    alive++;
-                    if (alive > keep)
-                        proj.Kill();
-                }
-            }
-        }
-        /// <summary>
         /// 与构成元素之心的五个 waifu 饰品互斥：已装备任一者时禁止再装备，避免召唤物重复叠加。
         /// </summary>
         public override bool CanEquipAccessory(Player player, int slot, bool modded)/* tModPorter Suggestion: Consider using new hook CanAccessoryBeEquippedWith */
@@ -150,6 +130,26 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 recipe.AddIngredient<BloomStone>();
                 recipe.AddTile(TileID.LunarCraftingStation);
                 recipe.Register();
+            }
+        }
+        /// <summary>
+        /// 限数保护助手：销毁本玩家多于 keep 只的指定元素仆从（保留最早生成的 keep 只）。
+        /// 由 UpdateAccessory 的本地玩家分支每帧调用；只在计数超限时扫描，代价可控。
+        /// </summary>
+        private static void TrimExtraMinions(Player player, int minionType, int keep = 1)
+        {
+            if (player.ownedProjectileCounts[minionType] <= keep)
+                return;
+            int alive = 0;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile proj = Main.projectile[i];
+                if (proj.active && proj.owner == player.whoAmI && proj.type == minionType)
+                {
+                    alive++;
+                    if (alive > keep)
+                        proj.Kill();
+                }
             }
         }
     }
