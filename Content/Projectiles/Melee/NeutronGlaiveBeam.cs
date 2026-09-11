@@ -20,11 +20,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class NeutronGlaiveBeam : ModProjectile, IDrawWarp
     {
-        internal static Asset<Texture2D> warpTex;   // 扭曲遮罩贴图缓存（卸载时由 CalamityDemutation 置 null）
+        // ── 静态字段 ──
         /// <summary>
-        /// IDrawWarp：允许 EffectsSystem 在扭曲结果之上再调用 costomDraw 绘制本体
+        /// 扭曲遮罩贴图缓存（首次使用时懒加载；卸载时由 CalamityDemutation 置 null）
         /// </summary>
-        public bool canDraw() => true;
+        internal static Asset<Texture2D> warpTex;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 弹幕基础属性：32×32 判定箱、近战伤害、高速（MaxUpdates 3）
         /// </summary>
@@ -34,7 +35,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.friendly = true;                  // 友方弹幕
             Projectile.DamageType = DamageClass.Melee;   // 吃近战伤害加成
             Projectile.timeLeft = 120;                   // 存活 120 帧
-            Projectile.MaxUpdates = 3;                   // 每帧额外更新 3 次，飞行更快且判定更密
+            Projectile.MaxUpdates = 3;                   // 每帧更新 3 次（即 extraUpdates = 2），飞行更快且判定更密
         }
         /// <summary>
         /// 主 AI：切换 6 帧动画、打白光、按速度旋转（+45° 校正斜向贴图），
@@ -102,17 +103,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
         }
         /// <summary>
-        /// 消亡：先以 300 半径做一次范围伤害（CDUtil.Explode，音效 Item14 升调 0.45），
-        /// 再把中心随机偏移一下，另生成 NeutronExplode 继承伤害，负责爆炸的扭曲视觉。
-        /// </summary>
-        public override void OnKill(int timeLeft)
-        {
-            Projectile.Explode(300, SoundID.Item14 with { Pitch = 0.45f });   // 扩大判定箱结算一次范围伤害
-            Projectile.Center += CDUtil.randVr(64);   // 爆炸视觉位置随机偏移
-            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero
-                , ModContent.ProjectileType<NeutronExplode>(), Projectile.damage, 0);
-        }
-        /// <summary>
         /// 撞墙：以旧速度的 -0.6 倍反弹（不减速回弹），随机方向喷 73 颗浅蓝 DRK_Spark；
         /// 返回 false 表示不销毁弹幕，让它继续弹跳飞行。
         /// </summary>
@@ -129,9 +119,35 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             return false;
         }
         /// <summary>
+        /// 消亡：先以 300 半径做一次范围伤害（CDUtil.Explode，音效 Item14 升调 0.45），
+        /// 再把中心随机偏移一下，另生成 NeutronExplode 继承伤害，负责爆炸的扭曲视觉。
+        /// </summary>
+        public override void OnKill(int timeLeft)
+        {
+            Projectile.Explode(300, SoundID.Item14 with { Pitch = 0.45f });   // 扩大判定箱结算一次范围伤害
+            Projectile.Center += CDUtil.randVr(64);   // 爆炸视觉位置随机偏移
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero
+                , ModContent.ProjectileType<NeutronExplode>(), Projectile.damage, 0);
+        }
+        /// <summary>
         /// 本体不走普通绘制管线：改由 IDrawWarp 的 costomDraw 画在屏幕扭曲结果之上
         /// </summary>
         public override bool PreDraw(ref Color lightColor) => false;
+        // ── 公开方法 ──
+        /// <summary>
+        /// IDrawWarp：允许 EffectsSystem 在扭曲结果之上再调用 costomDraw 绘制本体
+        /// </summary>
+        public bool canDraw() => true;
+        /// <summary>
+        /// IDrawWarp：把弹幕本体画在扭曲结果之上；按 Projectile.frame 从 6 帧贴图取帧，
+        /// 用 CDUtil.GetRec/GetOrig 计算切片矩形与旋转中心，纯白描边不受光照影响。
+        /// </summary>
+        public void costomDraw(SpriteBatch spriteBatch)
+        {
+            Texture2D value = TextureAssets.Projectile[Type].Value;
+            Main.EntitySpriteDraw(value, Projectile.Center - Main.screenPosition, CDUtil.GetRec(value, Projectile.frame, 6)
+                , Color.White, Projectile.rotation, CDUtil.GetOrig(value, 6), Projectile.scale, SpriteEffects.None, 0);
+        }
         /// <summary>
         /// IDrawWarp：绘制屏幕扭曲遮罩。用 Masking/DiffusionCircle 贴图叠画 3 层，
         /// 每层旋转角为 ai[0] + i×2、缩放取 localAI[0]、整体由 ai[1] 控制透明度，
@@ -147,16 +163,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.spriteBatch.Draw(warpTex.Value, Projectile.Center - Main.screenPosition
                     , null, warpColor, Projectile.ai[0] + i * 2f, orig, Projectile.localAI[0], SpriteEffects.None, 0f);
             }
-        }
-        /// <summary>
-        /// IDrawWarp：把弹幕本体画在扭曲结果之上；按 Projectile.frame 从 6 帧贴图取帧，
-        /// 用 CDUtil.GetRec/GetOrig 计算切片矩形与旋转中心，纯白描边不受光照影响。
-        /// </summary>
-        public void costomDraw(SpriteBatch spriteBatch)
-        {
-            Texture2D value = TextureAssets.Projectile[Type].Value;
-            Main.EntitySpriteDraw(value, Projectile.Center - Main.screenPosition, CDUtil.GetRec(value, Projectile.frame, 6)
-                , Color.White, Projectile.rotation, CDUtil.GetOrig(value, 6), Projectile.scale, SpriteEffects.None, 0);
         }
     }
 }

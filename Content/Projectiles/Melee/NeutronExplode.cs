@@ -15,11 +15,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class NeutronExplode : ModProjectile, IDrawWarp
     {
+        // ── 属性 ──
         /// <summary>
         /// 贴图取遮罩资源 DiffusionCircle（CalamityDemutation/Assets/Masking/DiffusionCircle.png），
         /// 该贴图同时用作屏幕扭曲的遮罩。
         /// </summary>
         public override string Texture => CalamityDemutationConstant.Masking + "DiffusionCircle";
+        // ── 生命周期方法 ──
         /// <summary>
         /// 弹幕基础属性：200×200 的大范围判定框、存活 20 帧、自定义 AI（aiStyle=-1）。
         /// 未显式设置 DamageType，沿用弹幕默认伤害类型。
@@ -37,9 +39,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.usesLocalNPCImmunity = true;      // 每个敌人独立计算免疫计时
         }
         /// <summary>
-        /// 是否额外执行 costomDraw 绘制：本弹幕不需要，只走 Warp 扭曲。
+        /// 返回 false：本体不参与位置更新，爆炸固定在生成点。
         /// </summary>
-        public bool canDraw() => false;
+        public override bool ShouldUpdatePosition() => false;
         /// <summary>
         /// 视觉与生命周期逻辑：
         /// ai[2] 为粒子生成的一次性开关（首帧向四个方向喷出大量火花粒子）；
@@ -82,13 +84,18 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Lighting.AddLight(Projectile.Center, new Vector3(1, 1, 1));   // 纯白强光
         }
         /// <summary>
-        /// 返回 false：本体不参与位置更新，爆炸固定在生成点。
-        /// </summary>
-        public override bool ShouldUpdatePosition() => false;
-        /// <summary>
         /// 返回 false：禁用常规贴图绘制，外观完全交给 IDrawWarp 的 Warp 扭曲管线。
         /// </summary>
         public override bool PreDraw(ref Color lightColor) => false;
+        // ── 公开方法 ──
+        /// <summary>
+        /// 是否额外执行 costomDraw 绘制：本弹幕不需要，只走 Warp 扭曲。
+        /// </summary>
+        public bool canDraw() => false;
+        /// <summary>
+        /// 空实现：canDraw() 返回 false，本弹幕不做额外自定义绘制。
+        /// </summary>
+        public void costomDraw(SpriteBatch spriteBatch) { }
         /// <summary>
         /// 绘制屏幕扭曲遮罩：把 DiffusionCircle 贴图旋转着叠加 33 次，
         /// 形成同心圆环状的扭曲场，不透明度由 ai[1] 控制，膨胀期越画越大、消散期逐渐透明。
@@ -104,9 +111,5 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     , null, warpColor, Projectile.ai[0] + i * 2f, warpTex.Size() / 2, Projectile.localAI[0], SpriteEffects.None, 0f);
             }
         }
-        /// <summary>
-        /// 空实现：canDraw() 返回 false，本弹幕不做额外自定义绘制。
-        /// </summary>
-        public void costomDraw(SpriteBatch spriteBatch) { }
     }
 }
