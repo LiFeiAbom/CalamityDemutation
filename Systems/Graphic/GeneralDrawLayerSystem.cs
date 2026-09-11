@@ -5,8 +5,9 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
-    /// 绘制层系统（移植自灾厄的 GeneralDrawLayerSystem，裁剪到当前实际使用的 AfterDusts 层）。
-    /// 通过 On_Main.DrawDust 钩子在尘埃绘制后触发粒子绘制。
+    /// 绘制层系统（移植自灾厄的 GeneralDrawLayerSystem）。
+    /// 通过 On_Main.DrawDust 在尘埃绘制后触发 AfterDusts 层，
+    /// 通过 On_Main.DrawProjectiles 在弹幕绘制后触发 AfterProjectiles 层。
     /// </summary>
     internal sealed class GeneralDrawLayerSystem : ModSystem
     {
@@ -19,20 +20,24 @@ namespace CalamityDemutation.Systems.Graphic
         /// </summary>
         public static event Action OnPrepareDraw;
         /// <summary>
-        /// 加载时挂上两个 On_Main 钩子：CheckMonoliths（用于在绘制准备阶段触发 OnPrepareDraw）
-        /// 与 DrawDust（在尘埃绘制之后触发 AfterDusts 层的 OnDrawLayer）
+        /// 加载时挂上三个 On_Main 钩子：CheckMonoliths（触发 OnPrepareDraw 准备阶段）、
+        /// DrawProjectiles（弹幕绘制后触发 AfterProjectiles 层）与 DrawDust（尘埃绘制后触发 AfterDusts 层）
         /// </summary>
         public override void Load()
         {
             On_Main.CheckMonoliths += CheckMonoliths;
             On_Main.DrawDust += GeneralDrawLayer_DrawToLayer_AfterDusts;
+            On_Main.DrawProjectiles += GeneralDrawLayer_DrawToLayer_AfterProjectiles;
         }
         /// <summary>
-        /// 卸载时把 OnDrawLayer 事件置空，从而一次性清除所有订阅者（例如 GeneralParticleHandler 的绘制回调）
+        /// 卸载时把两个静态事件都置空，一次性清除所有订阅者。
+        /// OnDrawLayer 的订阅者多为静态方法，OnPrepareDraw 则有实例方法订阅者（MetaballManager.PrepareMetaballTargets），
+        /// 不置空会让静态事件一直挂住该 ModSystem 实例，触发 "mod class still using memory" 警告
         /// </summary>
         public override void Unload()
         {
             OnDrawLayer = null;
+            OnPrepareDraw = null;
         }
         /// <summary>
         /// On_Main.CheckMonoliths 钩子：先执行原版逻辑，再触发 OnPrepareDraw 通知订阅者做绘制前准备
@@ -44,12 +49,21 @@ namespace CalamityDemutation.Systems.Graphic
         }
         /// <summary>
         /// On_Main.DrawDust 钩子：先执行原版尘埃绘制，再触发 AfterDusts 层事件，
-        /// 让粒子等图形系统绘制在尘埃之后（当前唯一实际接线的绘制层）
+        /// 让粒子等图形系统绘制在尘埃之后
         /// </summary>
         private static void GeneralDrawLayer_DrawToLayer_AfterDusts(On_Main.orig_DrawDust orig, Main self)
         {
             orig(self);
             OnDrawLayer?.Invoke(GeneralDrawLayer.AfterDusts);
+        }
+        /// <summary>
+        /// On_Main.DrawProjectiles 钩子：先执行原版弹幕绘制，再触发 AfterProjectiles 层事件，
+        /// 让龙息 Metaball 等要求在弹幕之上合成的图形绘制在弹幕之后
+        /// </summary>
+        private static void GeneralDrawLayer_DrawToLayer_AfterProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
+        {
+            orig(self);
+            OnDrawLayer?.Invoke(GeneralDrawLayer.AfterProjectiles);
         }
     }
 }

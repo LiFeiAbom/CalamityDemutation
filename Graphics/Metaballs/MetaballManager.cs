@@ -73,8 +73,7 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// 合成阶段（由 GeneralDrawLayerSystem.OnDrawLayer 在对应层级触发）：
         /// 用 Immediate 模式把每个元球的各层离屏目标以 (-2,-2) 偏移贴回屏幕，贴图前先调用
         /// <see cref="Metaball.PrepareShaderForTarget"/> 应用边缘着色器。
-        /// 注意：当前 GeneralDrawLayerSystem 只触发 AfterDusts 层，而龙息元球的 DrawLayer 是 AfterProjectiles，
-        /// 因此现有龙息元球不会被此方法绘制。
+        /// 龙息元球声明的是 AfterProjectiles 层，由 GeneralDrawLayerSystem 在 On_Main.DrawProjectiles 之后触发。
         /// </summary>
         private static void DrawMetaballs(GeneralDrawLayer layerType)
         {

@@ -49,8 +49,7 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// </summary>
         public override bool AnythingToDraw => Particles.Any();
         /// <summary>
-        /// 绘制层级：AfterProjectiles
-        /// （注意：GeneralDrawLayerSystem 目前只触发 AfterDusts，故本元球实际不会被合成绘制，详见 MetaballManager.DrawMetaballs 的说明）
+        /// 绘制层级：AfterProjectiles，由 GeneralDrawLayerSystem 在 On_Main.DrawProjectiles 之后触发合成
         /// </summary>
         public override GeneralDrawLayer DrawLayer => GeneralDrawLayer.AfterProjectiles;
         /// <summary>
@@ -164,8 +163,7 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// </summary>
         public override bool AnythingToDraw => Particles.Any();
         /// <summary>
-        /// 绘制层级：AfterProjectiles
-        /// （注意：GeneralDrawLayerSystem 目前只触发 AfterDusts，故本元球实际不会被合成绘制，详见 MetaballManager.DrawMetaballs 的说明）
+        /// 绘制层级：AfterProjectiles，由 GeneralDrawLayerSystem 在 On_Main.DrawProjectiles 之后触发合成
         /// </summary>
         public override GeneralDrawLayer DrawLayer => GeneralDrawLayer.AfterProjectiles;
         /// <summary>
