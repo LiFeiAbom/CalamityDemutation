@@ -188,7 +188,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         }
         /// <summary>
         /// 配方：由塔拉贡头 + 血焰面具 + 席尔瓦头 + 弑神者头升阶，
-        /// 现代版灾厄用 10 个金之锭 + 宇宙砧，经典版用若干后期材料 + 德雷顿之炉。
+        /// 现代版灾厄用 10 个金之锭 + 宇宙砧，经典版用若干后期材料 + 德雷顿熔炉。
         /// </summary>
         public override void AddRecipes()
         {

@@ -36,7 +36,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         }
         /// <summary>
         /// 配方（分版本）：四件本模组素材（血蠕虫围巾、血契、血肉图腾、血耀核心）相同，
-        /// 现代版附加 CosmiliteBar + Necroplasm 在宇宙砧合成，经典版附加 CosmiliteBar + Phantoplasm 在德拉肯锻造台合成
+        /// 现代版附加 CosmiliteBar + Necroplasm 在宇宙砧合成，经典版附加 CosmiliteBar + Phantoplasm 在德雷顿熔炉合成
         /// </summary>
         public override void AddRecipes()
         {

@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             modPlayer.sponge = true;
         }
         /// <summary>
-        /// 配方（分版本）：吸收者 + 甘露安瓿 + 星辉矿锭 + 星云物质，在星宇锻造台/德拉肯锻造台合成
+        /// 配方（分版本）：吸收者 + 甘露安瓿 + 星辉矿锭 + Necroplasm（经典版改用 Phantoplasm），在宇宙砧/德雷顿熔炉合成
         /// </summary>
         public override void AddRecipes()
         {

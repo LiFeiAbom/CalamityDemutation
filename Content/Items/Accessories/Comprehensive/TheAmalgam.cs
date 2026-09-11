@@ -70,7 +70,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             return true;
         }
         /// <summary>
-        /// 配方：四件组件饰品 + 星辉/暗物质系材料，分别在现代版（星宇锻造台）与经典版（德拉肯锻造台）注册
+        /// 配方：四件组件饰品 + 星辉/暗物质系材料，分别在现代版（宇宙砧）与经典版（德雷顿熔炉）注册
         /// </summary>
         public override void AddRecipes()
         {

@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Materials
 {
     /// <summary>
     /// 黑物质棒（BlackMatterStick） - 材料物品。
-    /// 由四柱碎片 + 原版全部矿锭 + 对应版本灾厄的全部矿锭合成（现代版在宇宙砧、经典版在德拉贡锻造台），
+    /// 由四柱碎片 + 原版全部矿锭 + 对应版本灾厄的全部矿锭合成（现代版在宇宙砧、经典版在德雷顿熔炉），
     /// 目前是 NeutronGlaive 的制作材料（每件需 12 个）。物品使用灵魂式的垂直逐帧动画贴图。
     /// </summary>
     internal class BlackMatterStick : ModItem
@@ -35,7 +35,7 @@ namespace CalamityDemutation.Content.Items.Materials
         }
         /// <summary>
         /// 注册合成配方：两版灾厄的材料不同，分别注册——
-        /// 现代版(CalamityMod)用宇宙砧，经典版(CalamityModClassicPreTrailer)用德拉贡锻造台。
+        /// 现代版(CalamityMod)用宇宙砧，经典版(CalamityModClassicPreTrailer)用德雷顿熔炉。
         /// </summary>
         public override void AddRecipes()
         {

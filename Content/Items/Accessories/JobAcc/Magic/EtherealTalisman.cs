@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
         /// </summary>
         public override void AddRecipes()
         {
-            // 分别适配现代版（星宇锻造台）与经典版（德拉肯锻造台）灾厄的合成配方
+            // 分别适配现代版（宇宙砧）与经典版（德雷顿熔炉）灾厄的合成配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 Recipe recipe = CreateRecipe();

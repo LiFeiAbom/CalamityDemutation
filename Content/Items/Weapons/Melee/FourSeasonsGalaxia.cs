@@ -319,7 +319,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         /// <summary>
-        /// 配方（分版本）：Ω生物群系之剑 + 星辉矿锭/星云物质等，在星宇锻造台/德拉肯锻造台合成
+        /// 配方（分版本）：Ω生物群系之剑 + 星辉矿锭 + 暗黑碎片（现代版）/ Phantoplasm（经典版），在宇宙砧/德雷顿熔炉合成
         /// </summary>
         public override void AddRecipes()
         {

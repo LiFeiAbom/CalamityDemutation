@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootsEveryUse = true;
         }
         /// <summary>
-        /// 射击逻辑：向两侧各散射一发半伤害的誓言之刃弹幕
+        /// 射击逻辑：以正前方为基准，左右各偏 8° 散射共 3 发半伤害的誓言之刃弹幕
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

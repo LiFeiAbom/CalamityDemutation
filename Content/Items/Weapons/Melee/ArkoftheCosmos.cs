@@ -340,7 +340,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 16;
         /// <summary>
         /// 配方（分版本）：四季银河 + 元素方舟 + 星辉矿锭（现代版）；
-        /// 经典版改用多种月后暗黑碎片/矿石材料在德拉肯锻造台合成
+        /// 经典版改用多种月后暗黑碎片/矿石材料在德雷顿熔炉合成
         /// </summary>
         public override void AddRecipes()
         {
