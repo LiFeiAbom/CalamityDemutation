@@ -7,12 +7,12 @@ namespace CalamityDemutation.Systems
     /// 模组配置类，提供客户端侧的配置选项。
     /// 当前配置项：性能模式、挥砍刀光、武器自适应光照、原版数值回调。
     /// </summary>
-    internal class CalamityDemutationConfigSystem : ModConfig
+    internal class ConfigSystem : ModConfig
     {
         /// <summary>
         /// 当前生效的配置单例，由 OnLoaded 在配置载入后填充，供全局读取
         /// </summary>
-        public static CalamityDemutationConfigSystem Instance;
+        public static ConfigSystem Instance;
         /// <summary>
         /// 配置作用域：客户端侧，仅影响本机显示/性能类选项，不参与多人同步
         /// </summary>

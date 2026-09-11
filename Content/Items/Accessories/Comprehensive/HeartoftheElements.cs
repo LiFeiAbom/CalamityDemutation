@@ -56,7 +56,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 {
                     // 召唤物基础伤害随游戏进度提升：月后 600、月前 200；击败噬神者后伤害翻倍
                     int damage = NPC.downedMoonlord ? 600 : 200;
-                    float damageMult = CalamityDemulationBossSystem.DevourerOfGods ? 2f : 1f;
+                    float damageMult = BossSystem.DevourerOfGods ? 2f : 1f;
                     // 限数保护：若某类元素仆从异常超限（>1，多人/极端帧序导致），
                     // 直接销毁多余实例只保留一只，并正常维持 HotE 增益。
                     // 原实现仅靠"清 buff 不补"指望超限仆从自然消散，但仆从存活并不依赖该 buff，

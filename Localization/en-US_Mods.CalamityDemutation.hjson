@@ -91,7 +91,7 @@ Buffs: {
 }
 
 Configs: {
-	CalamityDemutationConfigSystem: {
+	ConfigSystem: {
 		DisplayName: Calamity Demutation Config
 
 		PerformanceMode: {
@@ -1185,122 +1185,65 @@ Items: {
 
 Keybinds: {
 	Demonshade.DisplayName: Demon Shade Enrage
-
 	GodslayerDash.DisplayName: God Slayer Dash
 }
 
 Projectiles: {
 	AuraRain.DisplayName: Aura Rain
-
 	AuricOrb.DisplayName: Auric Orb
-
 	BaseHeldProjCO.DisplayName: Base Held Proj C O
-
 	BigBustyRose.DisplayName: Big Busty Rose
-
 	BiomeOrb.DisplayName: Biome Orb
-
 	BloodScythe.DisplayName: Blood Scythe
-
 	BloodyBlade.DisplayName: Bloody Blade
-
 	BrimstoneHellfireballFriendly.DisplayName: Hellfire
-
 	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
-
 	CactusHealOrb.DisplayName: Heal
-
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
-
 	CloudyWaifu.DisplayName: Cloudy Waifu
-
 	DeathLaser.DisplayName: Death Laser
-
 	DefenseBeam.DisplayName: Defense Beam
-
 	DefenseBlast.DisplayName: Defense Blast
-
 	DefenseBlast2.DisplayName: Defense Blast2
-
 	DefenseFlame.DisplayName: Defense Flame
-
 	DemonFork.DisplayName: Demon Fork
-
 	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
-
 	DragonRageHeld.DisplayName: Dragon Rage Held
-
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
-
 	ElementBall.DisplayName: Ball
-
 	EonBeam.DisplayName: Beam
-
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
-
 	ExoComet.DisplayName: Exo Comet
-
 	FireBall.DisplayName: Fire Ball
-
 	FrostMistFriendly.DisplayName: Mist
-
 	FungalClump.DisplayName: Fungal Clump
-
 	FungalHeal.DisplayName: Fungal Heal
-
 	Galaxia.DisplayName: Orb
-
 	GalaxyBlast.DisplayName: Galaxy Blast
-
 	GodSlayerDart.DisplayName: God Slayer Dart
-
 	HellfireExplosionFriendly.DisplayName: Explosion
-
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
-
 	LaserFountains.DisplayName: Laser Fountains
-
 	NebulaDust.DisplayName: Dust
-
 	NebulaStar.DisplayName: Star
-
 	NeutronExplode.DisplayName: Neutron Explode
-
 	NeutronGlaiveBeam.DisplayName: Neutron Glaive Beam
-
 	Oathblade.DisplayName: Oathblade
-
 	OathswordFlame.DisplayName: Oathsword Flame
-
 	OmegaBiomeOrb.DisplayName: Orb
-
 	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
-
 	PoisonousSeawater.DisplayName: Poisonous Seawater
-
 	RedDevil.DisplayName: Red Devil
-
 	SandBolt.DisplayName: Bolt
-
 	SandMark.DisplayName: Mark
-
 	SandTornado.DisplayName: Tornado
-
 	SandyWaifu.DisplayName: Waifu
-
 	SilvaOrb.DisplayName: Silva Orb
-
 	SirenLure.DisplayName: Siren Lure
-
 	SirenSongFriendly.DisplayName: Song
-
 	Spark.DisplayName: Spark
-
 	StandingFire.DisplayName: Standing Fire
-
 	TerraBall.DisplayName: Ball
-
 	TrueBiomeOrb.DisplayName: Orb
-
 	WaterSpearFriendly.DisplayName: Spear
 }

@@ -176,7 +176,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         {
             get
             {
-                if (!CalamityDemutationConfigSystem.Instance.EnableSwordLight)
+                if (!ConfigSystem.Instance.EnableSwordLight)
                 {
                     return false;
                 }
@@ -777,7 +777,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
             }
             Vector2 drawPosValue = Projectile.Center - RodingToVer(toProjCoreMode, (Projectile.Center - Owner.Center).ToRotation()) + offsetOwnerPos;
             Color color = Projectile.GetAlpha(lightColor);
-            if (Incandescence || !CalamityDemutationConfigSystem.Instance.WeaponAdaptiveIllumination)
+            if (Incandescence || !ConfigSystem.Instance.WeaponAdaptiveIllumination)
             {
                 color = Color.White;
             }

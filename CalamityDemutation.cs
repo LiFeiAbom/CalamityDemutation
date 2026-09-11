@@ -101,7 +101,7 @@ namespace CalamityDemutation
         {
             if (!ModLoader.HasMod("CalamityMod"))
                 return;
-            if (Systems.CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true)
+            if (Systems.ConfigSystem.Instance?.RevertVanillaNerfs != true)
                 return;
             var stats = ArmorIDs.Wing.Sets.Stats;
             stats[9].FlyTime = 160;                                                       // FlameWings 火焰翅膀：飞行时间 130→160

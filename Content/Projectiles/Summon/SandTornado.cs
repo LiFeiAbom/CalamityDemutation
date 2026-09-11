@@ -31,8 +31,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 20 -
                 (NPC.downedGolemBoss ? 5 : 0) -
                 (NPC.downedMoonlord ? 5 : 0) -
-                (CalamityDemulationBossSystem.DevourerOfGods ? 4 : 0) -
-                (CalamityDemulationBossSystem.Yharon ? 3 : 0);
+                (BossSystem.DevourerOfGods ? 4 : 0) -
+                (BossSystem.Yharon ? 3 : 0);
         }
         /// <summary>
         /// 播放音效、依据地形延伸龙卷高度，并在无法命中玩家时提前结束

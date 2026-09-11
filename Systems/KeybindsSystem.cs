@@ -5,7 +5,7 @@ namespace CalamityDemutation.Systems
     /// 按键绑定系统：注册本模组的自定义快捷键，并在卸载时清空静态引用。
     /// 两个键都只在 Players/CalamityDemutationPlayer.ProcessTriggers 里被读取消费，本类不处理触发逻辑。
     /// </summary>
-    internal class CalamityDemulationKeybindsSystem:ModSystem
+    internal class KeybindsSystem:ModSystem
     {
         /// <summary>
         /// 套装主动技能快捷键，默认 Y。由 CalamityDemutationPlayer.ProcessTriggers 消费：

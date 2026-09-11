@@ -10,7 +10,7 @@ namespace CalamityDemutation.Systems
     /// 的击杀标记，向模组其余部分提供统一的 Boss 进度查询接口。
     /// 现代版优先，若两者皆不可用则对应查询返回 false。
     /// </summary>
-    internal class CalamityDemulationBossSystem
+    internal class BossSystem
     {
         // ── 静态字段 ──
         /// <summary>

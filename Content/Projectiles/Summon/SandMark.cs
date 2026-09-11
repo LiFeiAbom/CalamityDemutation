@@ -31,8 +31,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 30 -
                 (NPC.downedGolemBoss ? 5 : 0) -
                 (NPC.downedMoonlord ? 5 : 0) -
-                (CalamityDemulationBossSystem.DevourerOfGods ? 4 : 0) -
-                (CalamityDemulationBossSystem.Yharon ? 3 : 0);
+                (BossSystem.DevourerOfGods ? 4 : 0) -
+                (BossSystem.Yharon ? 3 : 0);
         }
         /// <summary>
         /// 印记 AI：播放音效、旋转喷沙、淡入淡出，第 60 帧生成沙尘龙卷后自毁。

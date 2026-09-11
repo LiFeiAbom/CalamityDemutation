@@ -173,7 +173,7 @@ namespace CalamityDemutation.Content.Items
             if (postMoonLordRarity != 0 && entity.rare != ItemRarityID.Red)
                 entity.rare = ItemRarityID.Red;
             // 回退灾厄对原版玩家装备的削弱：仅 Config 开启 + 现代版灾厄已加载时恢复原版数值
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
+            if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
                 RevertVanillaNerf(entity);
         }
         /// <summary>
@@ -247,7 +247,7 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodPact>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FleshTotem>(), 2));
-                    if (CalamityDemulationBossSystem.Providence)
+                    if (BossSystem.Providence)
                     {
                         itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodflareCore>(), 1));
                     }
@@ -318,7 +318,7 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodPact>(), 2));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FleshTotem>(), 2));
-                    if (CalamityDemulationBossSystem.Providence)
+                    if (BossSystem.Providence)
                     {
                         itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodflareCore>(), 1));
                     }
@@ -428,7 +428,7 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         public override void UpdateAccessory(Item item, Player player, bool hideVisual)
         {
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
+            if (ConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
                 return;
             switch (item.type)
             {
@@ -471,7 +471,7 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         public override void UpdateArmorSet(Player player, string set)
         {
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
+            if (ConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
                 return;
             if (set == "WizardHat")
                 player.GetCritChance<MagicDamageClass>() += 6;
@@ -483,7 +483,7 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         public override void UpdateEquip(Item item, Player player)
         {
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
+            if (ConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
                 return;
             switch (item.type)
             {
@@ -582,7 +582,7 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         public override void Update(int type, Player player, ref int buffIndex)
         {
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
+            if (ConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
                 return;
             switch (type)
             {

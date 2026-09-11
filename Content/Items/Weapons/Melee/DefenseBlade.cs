@@ -26,26 +26,26 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         [
             // —— 石巨人 → 月球领主 ——
             (() => NPC.downedGolemBoss, 0.10f),                          // 石巨人 Golem
-            (() => CalamityDemulationBossSystem.Plaguebringer, 0.15f),   // 瘟疫使者歌莉娅 Plaguebringer Goliath
-            (() => CalamityDemulationBossSystem.Ravager, 0.15f),         // 毁灭魔像（掠夺者）Ravager
+            (() => BossSystem.Plaguebringer, 0.15f),   // 瘟疫使者歌莉娅 Plaguebringer Goliath
+            (() => BossSystem.Ravager, 0.15f),         // 毁灭魔像（掠夺者）Ravager
             (() => NPC.downedAncientCultist, 0.10f),                     // 拜月教邪教徒 Lunatic Cultist
-            (() => CalamityDemulationBossSystem.AstrumDeus, 0.20f),      // 星神游龙 Astrum Deus
+            (() => BossSystem.AstrumDeus, 0.20f),      // 星神游龙 Astrum Deus
             (() => NPC.downedMoonlord, 0.20f),                           // 月球领主 Moon Lord
             // —— 月后 · 亵渎前 ——
-            (() => CalamityDemulationBossSystem.Guardians, 0.20f),       // 亵渎守卫 Profaned Guardians
-            (() => CalamityDemulationBossSystem.Dragonfolly, 0.20f),     // 丛林龙 Dragonfolly
+            (() => BossSystem.Guardians, 0.20f),       // 亵渎守卫 Profaned Guardians
+            (() => BossSystem.Dragonfolly, 0.20f),     // 丛林龙 Dragonfolly
             // —— 亵渎 → 噬神 ——
-            (() => CalamityDemulationBossSystem.Providence, 0.40f),      // 亵渎天神 Providence
-            (() => CalamityDemulationBossSystem.CeaselessVoid || ClassicSentinelsDowned, 0.20f), // 无尽虚空 Ceaseless Void
-            (() => CalamityDemulationBossSystem.StormWeaver || ClassicSentinelsDowned, 0.20f),   // 风暴编织者 Storm Weaver
-            (() => CalamityDemulationBossSystem.Signus || ClassicSentinelsDowned, 0.20f),        // 西格纳斯 Signus
-            (() => CalamityDemulationBossSystem.Polterghast, 0.50f),     // 噬魂幽花 Polterghast
-            (() => CalamityDemulationBossSystem.OldDuke, 0.50f),         // 老公爵 Old Duke
-            (() => CalamityDemulationBossSystem.DevourerOfGods, 0.80f),  // 噬神者 Devourer of Gods
+            (() => BossSystem.Providence, 0.40f),      // 亵渎天神 Providence
+            (() => BossSystem.CeaselessVoid || ClassicSentinelsDowned, 0.20f), // 无尽虚空 Ceaseless Void
+            (() => BossSystem.StormWeaver || ClassicSentinelsDowned, 0.20f),   // 风暴编织者 Storm Weaver
+            (() => BossSystem.Signus || ClassicSentinelsDowned, 0.20f),        // 西格纳斯 Signus
+            (() => BossSystem.Polterghast, 0.50f),     // 噬魂幽花 Polterghast
+            (() => BossSystem.OldDuke, 0.50f),         // 老公爵 Old Duke
+            (() => BossSystem.DevourerOfGods, 0.80f),  // 噬神者 Devourer of Gods
             // —— 终局 ——
-            (() => CalamityDemulationBossSystem.Yharon, 2.0f),          // 犽戎 Yharon
-            (() => CalamityDemulationBossSystem.ExoMechs, 1.0f),        // 星流巨械 Exo Mechs
-            (() => CalamityDemulationBossSystem.SupremeCalamitas, 1.0f),// 至尊灾厄 Supreme Calamitas
+            (() => BossSystem.Yharon, 2.0f),          // 犽戎 Yharon
+            (() => BossSystem.ExoMechs, 1.0f),        // 星流巨械 Exo Mechs
+            (() => BossSystem.SupremeCalamitas, 1.0f),// 至尊灾厄 Supreme Calamitas
         ];
         // ── 属性 ──
         /// <summary>
@@ -54,7 +54,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// 三个使者条目退化为"三使者皆倒"时同时生效（各 +0.20，合计 +0.60）。
         /// </summary>
         private static bool ClassicSentinelsDowned =>
-            CalamityDemulationBossSystem.Sentinel1 && CalamityDemulationBossSystem.Sentinel2 && CalamityDemulationBossSystem.Sentinel3;
+            BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
         // ── 生命周期方法 ──
         /// <summary>静态属性：研究所解锁数量设为 1。</summary>
         public override void SetStaticDefaults()

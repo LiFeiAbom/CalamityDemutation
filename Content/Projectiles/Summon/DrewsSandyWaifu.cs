@@ -44,8 +44,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 20 -
                 (NPC.downedGolemBoss ? 5 : 0) -
                 (NPC.downedMoonlord ? 5 : 0) -
-                (CalamityDemulationBossSystem.DevourerOfGods ? 4 : 0) -
-                (CalamityDemulationBossSystem.Yharon ? 3 : 0);
+                (BossSystem.DevourerOfGods ? 4 : 0) -
+                (BossSystem.Yharon ? 3 : 0);
         }
         /// <summary>
         /// 宠物 AI：校验饰品标志、喷吐沙尘、跟随玩家，并在冷却结束后生成治疗法珠。

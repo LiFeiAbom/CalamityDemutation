@@ -42,8 +42,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 20 -
                 (NPC.downedGolemBoss ? 5 : 0) -
                 (NPC.downedMoonlord ? 5 : 0) -
-                (CalamityDemulationBossSystem.DevourerOfGods ? 4 : 0) -
-                (CalamityDemulationBossSystem.Yharon ? 3 : 0);
+                (BossSystem.DevourerOfGods ? 4 : 0) -
+                (BossSystem.Yharon ? 3 : 0);
         }
         /// <summary>
         /// 召唤物 AI：校验饰品标志、喷吐粒子、空闲/攻击动画切换、追踪敌人并周期性发射沙之矢。

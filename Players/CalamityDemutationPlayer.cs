@@ -84,23 +84,23 @@ namespace CalamityDemutation.Players
         private static readonly Func<bool>[] CommunityBosses =
         [
             () => NPC.downedGolemBoss,                               // 石巨人 Golem
-            () => CalamityDemulationBossSystem.Plaguebringer,        // 瘟疫使者歌莉娅 Plaguebringer Goliath
-            () => CalamityDemulationBossSystem.Ravager,              // 毁灭魔像（掠夺者）Ravager
+            () => BossSystem.Plaguebringer,        // 瘟疫使者歌莉娅 Plaguebringer Goliath
+            () => BossSystem.Ravager,              // 毁灭魔像（掠夺者）Ravager
             () => NPC.downedAncientCultist,                          // 拜月教邪教徒 Lunatic Cultist
-            () => CalamityDemulationBossSystem.AstrumDeus,           // 星神游龙 Astrum Deus
+            () => BossSystem.AstrumDeus,           // 星神游龙 Astrum Deus
             () => NPC.downedMoonlord,                                // 月球领主 Moon Lord
-            () => CalamityDemulationBossSystem.Guardians,            // 亵渎守卫 Profaned Guardians
-            () => CalamityDemulationBossSystem.Dragonfolly,          // 丛林龙 Dragonfolly
-            () => CalamityDemulationBossSystem.Providence,           // 亵渎天神 Providence
-            () => CalamityDemulationBossSystem.CeaselessVoid || ClassicSentinelsDowned, // 无尽虚空 Ceaseless Void
-            () => CalamityDemulationBossSystem.StormWeaver || ClassicSentinelsDowned,   // 风暴编织者 Storm Weaver
-            () => CalamityDemulationBossSystem.Signus || ClassicSentinelsDowned,        // 西格纳斯 Signus
-            () => CalamityDemulationBossSystem.Polterghast,          // 噬魂幽花 Polterghast
-            () => CalamityDemulationBossSystem.OldDuke,              // 硫海遗爵（老公爵）Old Duke
-            () => CalamityDemulationBossSystem.DevourerOfGods,       // 噬神者 Devourer of Gods
-            () => CalamityDemulationBossSystem.Yharon,               // 犽戎 Yharon
-            () => CalamityDemulationBossSystem.ExoMechs,             // 星流巨械 Exo Mechs
-            () => CalamityDemulationBossSystem.SupremeCalamitas,     // 至尊灾厄 Supreme Calamitas
+            () => BossSystem.Guardians,            // 亵渎守卫 Profaned Guardians
+            () => BossSystem.Dragonfolly,          // 丛林龙 Dragonfolly
+            () => BossSystem.Providence,           // 亵渎天神 Providence
+            () => BossSystem.CeaselessVoid || ClassicSentinelsDowned, // 无尽虚空 Ceaseless Void
+            () => BossSystem.StormWeaver || ClassicSentinelsDowned,   // 风暴编织者 Storm Weaver
+            () => BossSystem.Signus || ClassicSentinelsDowned,        // 西格纳斯 Signus
+            () => BossSystem.Polterghast,          // 噬魂幽花 Polterghast
+            () => BossSystem.OldDuke,              // 硫海遗爵（老公爵）Old Duke
+            () => BossSystem.DevourerOfGods,       // 噬神者 Devourer of Gods
+            () => BossSystem.Yharon,               // 犽戎 Yharon
+            () => BossSystem.ExoMechs,             // 星流巨械 Exo Mechs
+            () => BossSystem.SupremeCalamitas,     // 至尊灾厄 Supreme Calamitas
         ];
         /// <summary>
         /// The Community 的 Debuff 缩减黑名单缓存：懒加载一次后复用。
@@ -112,7 +112,7 @@ namespace CalamityDemutation.Players
         /// 经典版三使者是否全部倒下（经典版无单个使者标记，只有 Sentinel1/2/3）。
         /// </summary>
         private static bool ClassicSentinelsDowned =>
-            CalamityDemulationBossSystem.Sentinel1 && CalamityDemulationBossSystem.Sentinel2 && CalamityDemulationBossSystem.Sentinel3;
+            BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
         /// <summary>
         /// 已装备风之石：+10% 移速、+2 跳跃力、+3% 通用增伤，青色照明
         /// </summary>
@@ -729,7 +729,7 @@ namespace CalamityDemutation.Players
             Player.runAcceleration *= runAccMult;
             Player.maxRunSpeed *= runSpeedMult;
             // 回退灾厄对原版移动的削弱（近似补偿）
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
+            if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
             {
                 // 暗影护甲：灾厄把移动加成从 1.75/1.15/1.15/1.75 削弱成 1.25/1.05/1.05/1.5，这里补回
                 if (Player.shadowArmor && !(Player.hasMagiluminescence && Player.velocity.Y == 0))
@@ -2048,11 +2048,11 @@ namespace CalamityDemutation.Players
                     Player.maxMinions += 1;      // 月亮领主：+1 召唤栏
                     Player.wingTimeMax *= 2;     // 月亮领主：最大飞行时间 ×2
                 }
-                if (CalamityDemulationBossSystem.OldDuke)
+                if (BossSystem.OldDuke)
                 {
                     Player.maxMinions += 2;      // 硫海遗爵（老公爵）：+2 召唤栏
                 }
-                if (CalamityDemulationBossSystem.ExoMechs || CalamityDemulationBossSystem.SupremeCalamitas)
+                if (BossSystem.ExoMechs || BossSystem.SupremeCalamitas)
                 {
                     Player.wingTime = 10000 * Player.wingTimeMax; // 星流巨械/至尊灾厄：每帧回满飞行时间 = 无限飞行
                 }
@@ -3173,7 +3173,7 @@ namespace CalamityDemutation.Players
             }
             modifiers.FinalDamage *= (float)damageMult;
             // 召唤师跨职业 nerf 近似回调：灾厄对手持非召唤武器时的召唤弹幕伤害 ×0.75，这里撤销
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod") && proj.CountsAsClass<SummonDamageClass>())
+            if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod") && proj.CountsAsClass<SummonDamageClass>())
             {
                 Item heldItem = Player.HeldItem;
                 bool heldNonSummonWeapon = heldItem.damage > 0
@@ -3414,7 +3414,7 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 ProcessTriggers 钩子：每帧处理按键触发，只在本地客户端（键位状态有效）有实际意义。
-        /// 消费两个自定义键位（定义于 Systems/CalamityDemulationKeybindsSystem）：
+        /// 消费两个自定义键位（定义于 Systems/KeybindsSystem）：
         /// 1) GodslayerDashHotKey（默认 H）——转发给 GodSlayerHelm.RequestGodslayerDash，由灾厄侧执行冲刺；
         /// 2) DemonshadeHotKey（默认 Y，套装主动技能）——依次判定：恶魔之影套装（播放音效/迸发吸魂尘埃、
         ///    自身获得 600 帧狂怒 buff，服务器端对 3000 距离内的敌人一并施加狂怒）、
@@ -3424,9 +3424,9 @@ namespace CalamityDemutation.Players
         {
             // 弑神者冲刺：本模组的键与灾厄自己的键(默认 H)都能触发；
             // GodSlayerHelm 会把灾厄的 godSlayer 标志置真，闸门与冲刺表现全由灾厄负责
-            if(CalamityDemulationKeybindsSystem.GodslayerDashHotKey.JustPressed)
+            if(KeybindsSystem.GodslayerDashHotKey.JustPressed)
                 Content.Items.Armors.GodSlayer.GodSlayerHelm.RequestGodslayerDash(Player);
-            if(CalamityDemulationKeybindsSystem.DemonshadeHotKey.JustPressed)
+            if(KeybindsSystem.DemonshadeHotKey.JustPressed)
             {
                 if (demonshadeSetBonus)
                 {
