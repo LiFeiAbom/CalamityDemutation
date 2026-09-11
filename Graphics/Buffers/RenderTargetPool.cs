@@ -14,8 +14,14 @@ namespace CalamityDemutation.Graphics.Buffers
         bool GenerateMipmaps
     )
     {
-        public static RenderTargetDescriptor Default { get; } = new(SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, false);   // 默认：彩色、无深度、内容每次丢弃
-        public static RenderTargetDescriptor DefaultPreserveContents { get; } = new(SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents, false);   // 默认但在切换目标时保留已有内容
+        /// <summary>
+        /// 默认描述符：彩色格式、无深度、不做多重采样、切换目标时丢弃内容、不生成 mipmap
+        /// </summary>
+        public static RenderTargetDescriptor Default { get; } = new(SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, false);
+        /// <summary>
+        /// 默认描述符但改用 PreserveContents：切换渲染目标时保留其已有内容
+        /// </summary>
+        public static RenderTargetDescriptor DefaultPreserveContents { get; } = new(SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents, false);
         /// <summary>
         /// 按本描述符的参数在指定设备上创建一个新的渲染目标
         /// </summary>
@@ -32,14 +38,22 @@ namespace CalamityDemutation.Graphics.Buffers
             return new RenderTargetDescriptor(target.Format, target.DepthStencilFormat, target.MultiSampleCount, RenderTargetUsage.DiscardContents, target.LevelCount > 1);
         }
     }
-
     /// <summary>
     /// 从池中租借的渲染目标（移植自灾厄 Daybreak 的 RenderTargetLease）
     /// </summary>
     public sealed class RenderTargetLease : IDisposable
     {
-        public RenderTarget2D Target { get; set; }
+        // ── 实例字段 ──
+        /// <summary>
+        /// 目标所属的池，Dispose 时据此归还
+        /// </summary>
         private readonly RenderTargetPool pool;
+        // ── 属性 ──
+        /// <summary>
+        /// 被租借的渲染目标本体
+        /// </summary>
+        public RenderTarget2D Target { get; set; }
+        // ── 构造函数 ──
         /// <summary>
         /// 记录被租借的目标与所属池，使 Dispose 能把目标归还到正确的池
         /// </summary>
@@ -48,6 +62,7 @@ namespace CalamityDemutation.Graphics.Buffers
             Target = target;
             this.pool = pool;
         }
+        // ── 公开方法 ──
         /// <summary>
         /// 归还目标（IDisposable 形式，便于 using 作用域自动归还）；由池决定回收缓存还是真正释放
         /// </summary>
@@ -56,14 +71,22 @@ namespace CalamityDemutation.Graphics.Buffers
             pool.Return(this);
         }
     }
-
     /// <summary>
     /// 渲染目标资源池基类（移植自灾厄 Daybreak 的 RenderTargetPool）
     /// </summary>
     public abstract class RenderTargetPool : IDisposable
     {
+        // ── 静态字段 ──
+        /// <summary>
+        /// 全局共享池实例
+        /// </summary>
         private static readonly SharedRenderTargetPool shared = new();
+        // ── 属性 ──
+        /// <summary>
+        /// 供全局使用的共享渲染目标池
+        /// </summary>
         public static RenderTargetPool Shared => shared;
+        // ── 公开方法 ──
         /// <summary>
         /// 借出一个渲染目标：优先复用池中同规格对象，无可用对象时新建，返回的租约需用 Dispose 归还
         /// </summary>
@@ -77,12 +100,64 @@ namespace CalamityDemutation.Graphics.Buffers
         /// </summary>
         public abstract void Dispose();
     }
-
     /// <summary>
     /// 共享渲染目标池实现（移植自灾厄 Daybreak 的 SharedRenderTargetPool）
     /// </summary>
     internal sealed class SharedRenderTargetPool : RenderTargetPool
     {
+        // ── 常量 ──
+        /// <summary>
+        /// 每种规格最多缓存的目标数量
+        /// </summary>
+        private const int max_per_key = 4;
+        /// <summary>
+        /// 全池缓存总量上限
+        /// </summary>
+        private const int max_total_targets = 128;
+        // ── 静态字段 ──
+        /// <summary>
+        /// 空闲超过该时长的缓存会被回收
+        /// </summary>
+        private static readonly TimeSpan max_idle_time = TimeSpan.FromSeconds(5);
+        /// <summary>
+        /// 两次回收尝试的最小间隔，避免每帧都遍历整个缓存
+        /// </summary>
+        private static readonly TimeSpan minimum_trim_time = TimeSpan.FromSeconds(1);
+        // ── 实例字段 ──
+        /// <summary>
+        /// 是否已释放，避免重复释放
+        /// </summary>
+        private bool disposed;
+        /// <summary>
+        /// 按（宽、高、描述符）规格分类的目标缓存
+        /// </summary>
+        private readonly Dictionary<Key, Entry> cache = new Dictionary<Key, Entry>();
+        /// <summary>
+        /// 最近一次执行超时回收的时间，配合 minimum_trim_time 限流
+        /// </summary>
+        private DateTime lastTrimmed = DateTime.UtcNow;
+        /// <summary>
+        /// 当前缓存的目标总数，配合 max_total_targets 限容
+        /// </summary>
+        private int totalCached;
+        // ── 嵌套类型 ──
+        /// <summary>
+        /// 同规格目标的一条缓存记录
+        /// </summary>
+        private sealed class Entry
+        {
+            /// <summary>
+            /// 同规格目标的空闲栈
+            /// </summary>
+            public Stack<RenderTarget2D> Targets { get; } = new Stack<RenderTarget2D>();
+            /// <summary>
+            /// 最近一次使用时间，用于超时清理
+            /// </summary>
+            public DateTime LastUsed { get; set; } = DateTime.UtcNow;
+        }
+        /// <summary>
+        /// 缓存键：尺寸 + 格式描述符
+        /// </summary>
         private readonly record struct Key(int Width, int Height, RenderTargetDescriptor Descriptor)
         {
             /// <summary>
@@ -93,23 +168,7 @@ namespace CalamityDemutation.Graphics.Buffers
                 return new Key(target.Width, target.Height, RenderTargetDescriptor.From(target));
             }
         }
-
-        private sealed class Entry
-        {
-            public Stack<RenderTarget2D> Targets { get; } = new Stack<RenderTarget2D>();   // 同规格目标的空闲栈
-            public DateTime LastUsed { get; set; } = DateTime.UtcNow;   // 最近一次使用时间，用于超时清理
-        }
-
-        private const int max_per_key = 4;   // 每种规格最多缓存 4 个目标
-        private const int max_total_targets = 128;   // 全池缓存总量上限
-        private static readonly TimeSpan max_idle_time = TimeSpan.FromSeconds(5);   // 空闲超过 5 秒的缓存会被回收
-        private static readonly TimeSpan minimum_trim_time = TimeSpan.FromSeconds(1);   // 两次回收尝试的最小间隔，避免每帧遍历
-
-        private readonly Dictionary<Key, Entry> cache = new Dictionary<Key, Entry>();
-        private DateTime lastTrimmed = DateTime.UtcNow;
-        private int totalCached;
-        private bool disposed;
-
+        // ── 公开方法 ──
         /// <summary>
         /// 借出（Rent）：校验参数与池状态后按规格查缓存，命中则弹出一个空闲目标，未命中则新建；
         /// 返回值用 RenderTargetLease 包裹（其 Dispose 即归还）。无论成功与否，最后都会尝试做一次超时回收。
@@ -148,7 +207,6 @@ namespace CalamityDemutation.Graphics.Buffers
                 TrimAged();
             }
         }
-
         /// <summary>
         /// 归还（Return）：目标按规格压回空闲栈复用；若该规格已缓存满（max_per_key）
         /// 或全池缓存量达上限（max_total_targets），则直接 Dispose 真正释放。
@@ -181,7 +239,6 @@ namespace CalamityDemutation.Graphics.Buffers
                 lease.Target.Dispose();   // 该规格缓存已满，直接释放
             }
         }
-
         /// <summary>
         /// 释放整个池：清空并 Dispose 所有缓存目标，置 disposed 标记避免重复释放
         /// </summary>
@@ -192,7 +249,7 @@ namespace CalamityDemutation.Graphics.Buffers
             Trim();
             disposed = true;
         }
-
+        // ── 私有工具 ──
         /// <summary>
         /// 释放并清空全部缓存目标（池销毁时调用）
         /// </summary>
@@ -208,7 +265,6 @@ namespace CalamityDemutation.Graphics.Buffers
             }
             cache.Clear();
         }
-
         /// <summary>
         /// 回收长时间未使用的缓存：受 minimum_trim_time 限流（至少间隔 1 秒才真正遍历），
         /// 清理掉超过 max_idle_time（5 秒）没被使用的规格。在每次 Rent 的 finally 中调用。

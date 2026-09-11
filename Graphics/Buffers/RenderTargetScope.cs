@@ -8,9 +8,14 @@ namespace CalamityDemutation.Graphics.Buffers
     /// </summary>
     public readonly struct RenderTargetScope : IDisposable
     {
+        /// <summary>
+        /// 目标所在的图形设备，Dispose 时用它还原绑定
+        /// </summary>
         private readonly GraphicsDevice graphicsDevice;
+        /// <summary>
+        /// 进入作用域前设备上已绑定的渲染目标数组，Dispose 时原样还原
+        /// </summary>
         private readonly RenderTargetBinding[] previous;
-
         /// <summary>
         /// 进入作用域：先记录当前绑定的渲染目标（previous），若 preserveContents 为真再尝试保留其内容
         /// （经 RenderTargetPreserver，目前为空实现），然后把 target 设为当前渲染目标；
@@ -27,7 +32,6 @@ namespace CalamityDemutation.Graphics.Buffers
             if (clearColor.HasValue)
                 graphicsDevice.Clear(clearColor.Value);
         }
-
         /// <summary>
         /// 离开 using 作用域时还原进入前的渲染目标绑定（RAII 的关键一步，务必保证被执行）
         /// </summary>
@@ -36,7 +40,6 @@ namespace CalamityDemutation.Graphics.Buffers
             graphicsDevice.SetRenderTargets(previous);
         }
     }
-
     /// <summary>
     /// 渲染目标作用域扩展（移植自灾厄 Daybreak 的 RenderTargetScopeExtensions）
     /// </summary>
