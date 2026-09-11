@@ -10,14 +10,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
     internal class ChaosAmulet:ModItem
     {
         /// <summary>
-        /// 物品基础属性：尺寸、生命回复、售价、稀有度与饰品标记
+        /// 物品基础属性：尺寸、生命回复、价值、稀有度与饰品标记
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 20;                          // 贴图宽（像素）
             Item.height = 24;                         // 贴图高（像素）
             Item.lifeRegen = 2;                       // 装备时 +2 生命回复
-            Item.value = Item.buyPrice(0, 15, 0, 0);  // 售价 15 金
+            Item.value = Item.buyPrice(0, 15, 0, 0);  // 价值 15 金
             Item.rare = ItemRarityID.Yellow;          // 稀有度：黄色
             Item.accessory = true;                    // 作为饰品装备
         }

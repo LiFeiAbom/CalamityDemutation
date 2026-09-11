@@ -26,7 +26,7 @@ namespace CalamityDemutation.Systems
         public bool PerformanceMode { get; set; }
         /// <summary>
         /// 回退灾厄削弱开关：启用后，在加载现代版灾厄（CalamityMod）时，
-        /// 把灾厄对原版玩家装备（武器/防具/工具/翅膀/饰品/售价）与部分原版增益 buff 的削弱恢复为原版数值。
+        /// 把灾厄对原版玩家装备（武器/防具/工具/翅膀/饰品/价值）与部分原版增益 buff 的削弱恢复为原版数值。
         /// </summary>
         [BackgroundColor(211, 211, 211, 192)]
         [DefaultValue(false)]

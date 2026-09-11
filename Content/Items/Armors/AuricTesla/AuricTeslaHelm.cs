@@ -66,7 +66,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         private static bool loggedSetBonus;
         // ── 生命周期方法 ──
         /// <summary>
-        /// 物品基础属性：18x18、防御 54、价值 1 铂金 80 金（buyPrice 口径；游戏内售价为其 1/5），月后稀有度 20（彩虹闪烁名）
+        /// 物品基础属性：18x18、防御 54、价值 1 铂金 80 金（buyPrice 口径；游戏内价值为其 1/5），月后稀有度 20（彩虹闪烁名）
         /// </summary>
         public override void SetDefaults()
         {

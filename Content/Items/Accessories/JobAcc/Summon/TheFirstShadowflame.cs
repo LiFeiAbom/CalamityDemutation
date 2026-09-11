@@ -10,13 +10,13 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
     internal class TheFirstShadowflame:ModItem
     {
         /// <summary>
-        /// 物品基础属性：贴图尺寸、售价、稀有度与饰品标记
+        /// 物品基础属性：贴图尺寸、价值、稀有度与饰品标记
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 26;                         // 贴图宽 26 像素
             Item.height = 26;                        // 贴图高 26 像素
-            Item.value = Item.buyPrice(0, 15, 0, 0); // 售价 15 金
+            Item.value = Item.buyPrice(0, 15, 0, 0); // 价值 15 金
             Item.rare = ItemRarityID.Pink;           // 稀有度：粉（Pink）
             Item.accessory = true;                   // 标记为饰品，可装备于饰品栏
         }

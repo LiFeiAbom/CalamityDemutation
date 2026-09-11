@@ -12,13 +12,13 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
     internal class EtherealTalisman:ModItem
     {
         /// <summary>
-        /// 物品基础属性：贴图尺寸、售价、饰品标记，并指定模组自定义的月后稀有度等级
+        /// 物品基础属性：贴图尺寸、价值、饰品标记，并指定模组自定义的月后稀有度等级
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 28;                        // 贴图宽 28 像素
             Item.height = 32;                       // 贴图高 32 像素
-            Item.value = Item.buyPrice(0, 90, 0, 0); // 售价 90 金
+            Item.value = Item.buyPrice(0, 90, 0, 0); // 价值 90 金
             Item.accessory = true;                  // 标记为饰品，可装备于饰品栏
             // 使用模组自定义的月后稀有度等级
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 20;

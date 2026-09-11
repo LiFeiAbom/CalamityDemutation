@@ -11,13 +11,13 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
     internal class SilvaLeggings:ModItem
     {
         /// <summary>
-        /// 物品基础属性：尺寸、售价、防御与月后自定义稀有度
+        /// 物品基础属性：尺寸、价值、防御与月后自定义稀有度
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
-            Item.value = Item.buyPrice(0, 54, 0, 0);  // 售价 54 金
+            Item.value = Item.buyPrice(0, 54, 0, 0);  // 价值 54 金
             Item.defense = 39;                        // 防御力
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后自定义稀有度 15 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }

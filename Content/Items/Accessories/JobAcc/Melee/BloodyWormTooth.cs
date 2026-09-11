@@ -10,13 +10,13 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
     internal class BloodyWormTooth:ModItem
     {
         /// <summary>
-        /// 物品基础属性：贴图尺寸、售价、专家专属与饰品标记
+        /// 物品基础属性：贴图尺寸、价值、专家专属与饰品标记
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 12;                        // 贴图宽 12 像素
             Item.height = 15;                       // 贴图高 15 像素
-            Item.value = Item.buyPrice(0, 9, 0, 0); // 售价 9 金
+            Item.value = Item.buyPrice(0, 9, 0, 0); // 价值 9 金
             Item.expert = true;                     // 专家模式专属物品
             Item.accessory = true;                  // 标记为饰品，可装备于饰品栏
         }

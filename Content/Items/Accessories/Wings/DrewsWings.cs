@@ -25,13 +25,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(361, 12f, 4f);
         }
         /// <summary>
-        /// 物品基础属性：尺寸、售价、专家品质与饰品标记
+        /// 物品基础属性：尺寸、价值、专家品质与饰品标记
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 22;                          // 贴图宽（像素）
             Item.height = 20;                         // 贴图高（像素）
-            Item.value = Item.buyPrice(1, 0, 0, 0);   // 售价 1 铂金
+            Item.value = Item.buyPrice(1, 0, 0, 0);   // 价值 1 铂金
             Item.expert = true;                       // 专家限定品质
             Item.accessory = true;                    // 作为饰品装备
         }

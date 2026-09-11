@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
     internal class AmalgamatedBrain:ModItem
     {
         /// <summary>
-        /// 基础属性：中尺寸贴图、专家限定、售价 15 金、作为饰品装备
+        /// 基础属性：中尺寸贴图、专家限定、价值 15 金、作为饰品装备
         /// </summary>
         public override void SetDefaults()
         {

@@ -15,13 +15,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
     internal class CoreOfTheBloodGod:ModItem
     {
         /// <summary>
-        /// 物品基础属性：尺寸、售价、专家物品与饰品标记
+        /// 物品基础属性：尺寸、价值、专家物品与饰品标记
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 26;                          // 贴图宽（像素）
             Item.height = 26;                         // 贴图高（像素）
-            Item.value = Item.buyPrice(0, 90, 0, 0);  // 售价 90 金
+            Item.value = Item.buyPrice(0, 90, 0, 0);  // 价值 90 金
             Item.expert = true;                       // 标记为专家物品（专家模式专属外观框）
             Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
         }

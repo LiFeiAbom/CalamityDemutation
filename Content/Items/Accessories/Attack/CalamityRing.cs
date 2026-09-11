@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
     internal class CalamityRing:ModItem
     {
         /// <summary>
-        /// 基础属性：小尺寸贴图、青柠稀有度、专家限定、售价 24 金、作为饰品装备
+        /// 基础属性：小尺寸贴图、青柠稀有度、专家限定、价值 24 金、作为饰品装备
         /// </summary>
         public override void SetDefaults()
         {

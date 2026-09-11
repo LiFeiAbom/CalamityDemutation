@@ -23,7 +23,7 @@ namespace CalamityDemutation.Content.Items
 {
     /// <summary>
     /// 全局物品类，管理自定义稀有度系统（postMoonLordRarity）和原版装备数值回调
-    /// （回退现代版灾厄对原版武器/护甲/饰品的伤害、攻速、弹速、防御、斧力、售价削弱）。
+    /// （回退现代版灾厄对原版武器/护甲/饰品的伤害、攻速、弹速、防御、斧力、价值削弱）。
     /// </summary>
     internal class CalamityDemutationGlobalItem : GlobalItem
     {
@@ -126,7 +126,8 @@ namespace CalamityDemutation.Content.Items
             { ItemID.StarCannon, 12 },
         };
         /// <summary>
-        /// 原版售价（ItemID -> 原版 value）。灾厄用 Worthless 把这些物品的售价归零。
+        /// 原版价值（ItemID -> 原版 value；数值用 Item.sellPrice 按"售价"口径书写，便于与原版表对照）。
+        /// 灾厄用 Worthless 把这些物品的价值归零。
         /// </summary>
         private static readonly Dictionary<int, int> VanillaValue = new()
         {
@@ -545,7 +546,7 @@ namespace CalamityDemutation.Content.Items
             return default;
         }
         /// <summary>
-        /// 按物品类型回退灾厄的字段削弱：把伤害/攻速/弹速/防御/斧力/售价恢复为原版值。
+        /// 按物品类型回退灾厄的字段削弱：把伤害/攻速/弹速/防御/斧力/价值恢复为原版值。
         /// </summary>
         private static void RevertVanillaNerf(Item item)
         {

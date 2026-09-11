@@ -27,13 +27,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             ItemID.Sets.AnimatesAsSoul[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：尺寸、售价、防御与饰品标记
+        /// 物品基础属性：尺寸、价值、防御与饰品标记
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 20;                          // 贴图宽（像素）
             Item.height = 20;                         // 贴图高（像素）
-            Item.value = Item.buyPrice(0, 60, 0, 0);  // 售价 60 金
+            Item.value = Item.buyPrice(0, 60, 0, 0);  // 价值 60 金
             Item.defense = 9;                         // 装备时 +9 防御
             Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
             // 使用模组自定义的月后稀有度等级

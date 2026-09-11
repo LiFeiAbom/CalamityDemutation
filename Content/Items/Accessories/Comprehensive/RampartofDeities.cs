@@ -16,13 +16,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
     internal class RampartofDeities:ModItem
     {
         /// <summary>
-        /// 物品基础属性：尺寸、售价、防御、饰品标记与月后稀有度
+        /// 物品基础属性：尺寸、价值、防御、饰品标记与月后稀有度
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 38;                          // 贴图宽（像素）
             Item.height = 44;                         // 贴图高（像素）
-            Item.value = Item.buyPrice(0, 90, 0, 0);  // 售价 90 金
+            Item.value = Item.buyPrice(0, 90, 0, 0);  // 价值 90 金
             Item.defense = 18;                        // 装备时 +18 防御
             Item.accessory = true;                    // 作为饰品装备
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;  // 月后稀有度 14：名称染蓝

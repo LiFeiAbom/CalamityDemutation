@@ -23,13 +23,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             ItemID.Sets.AnimatesAsSoul[Type] = true;                                  // 以灵魂样式漂浮渲染
         }
         /// <summary>
-        /// 物品基础属性：尺寸、售价、饰品标记与月后稀有度
+        /// 物品基础属性：尺寸、价值、饰品标记与月后稀有度
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 20;                          // 贴图宽（像素）
             Item.height = 20;                         // 贴图高（像素）
-            Item.value = Item.buyPrice(0, 60, 0, 0);  // 售价 60 金
+            Item.value = Item.buyPrice(0, 60, 0, 0);  // 价值 60 金
             Item.accessory = true;                    // 作为饰品装备
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 20;  // 月后稀有度 20：名称彩虹闪烁
         }

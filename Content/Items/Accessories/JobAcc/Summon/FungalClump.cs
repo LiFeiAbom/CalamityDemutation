@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
     internal class FungalClump:ModItem
     {
         /// <summary>
-        /// 基础属性：小尺寸贴图、专家限定、售价 9 金、作为饰品装备
+        /// 基础属性：小尺寸贴图、专家限定、价值 9 金、作为饰品装备
         /// </summary>
         public override void SetDefaults()
         {

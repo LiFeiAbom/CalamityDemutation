@@ -11,13 +11,13 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
     internal class BadgeofBravery : ModItem
     {
         /// <summary>
-        /// 物品基础属性：贴图尺寸、售价、饰品标记，并指定模组自定义的月后稀有度等级
+        /// 物品基础属性：贴图尺寸、价值、饰品标记，并指定模组自定义的月后稀有度等级
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 30;                         // 贴图宽 30 像素
             Item.height = 30;                        // 贴图高 30 像素
-            Item.value = Item.buyPrice(0, 21, 0, 0); // 售价 21 金
+            Item.value = Item.buyPrice(0, 21, 0, 0); // 价值 21 金
             Item.accessory = true;                   // 标记为饰品，可装备于饰品栏
             // 月后物品：稀有度颜色交由全局物品统一渲染
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;

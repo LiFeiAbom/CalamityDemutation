@@ -24,7 +24,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             ItemID.Sets.AnimatesAsSoul[Type] = true;
         }
         /// <summary>
-        /// 基础属性：中尺寸贴图、专家限定、售价 90 金、作为饰品装备
+        /// 基础属性：中尺寸贴图、专家限定、价值 90 金、作为饰品装备
         /// </summary>
         public override void SetDefaults()
         {

@@ -13,13 +13,13 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
     internal class DemonshadeBreastplate:ModItem
     {
         /// <summary>
-        /// 物品基础属性：尺寸、售价、防御与月后自定义稀有度
+        /// 物品基础属性：尺寸、价值、防御与月后自定义稀有度
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
-            Item.value = Item.buyPrice(4, 0, 0, 0);  // 售价 4 铂金
+            Item.value = Item.buyPrice(4, 0, 0, 0);  // 价值 4 铂金
             Item.defense = 62;        // 防御 62
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
