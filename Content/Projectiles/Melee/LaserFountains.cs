@@ -15,6 +15,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     {
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>
+        /// 发射节拍计数器（存于 ai[0]），每帧自增，每 12 帧触发一次激光发射
+        /// </summary>
+        public ref float Time => ref Projectile.ai[0];
+        /// <summary>
         /// 基础属性：4×4 的极小型隐形发射源、穿透无限、不碰撞物块、存活 60 帧、伤害类型为近战。
         /// </summary>
         public override void SetDefaults()
@@ -28,7 +32,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.timeLeft = 60;
             Projectile.DamageType = DamageClass.Melee;
         }
-        public ref float Time => ref Projectile.ai[0];
         /// <summary>
         /// 恒定返回 false：本体是隐形发射源，不造成任何伤害，只负责生成 DeathLaser。
         /// </summary>

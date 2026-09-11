@@ -115,14 +115,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
         }
         /// <summary>
-        /// 拖尾宽度函数：整体宽度随弹幕缩放变化，基准 30 像素。
-        /// </summary>
-        public float PrimitiveWidthFunction(float completionRatio, Vector2 _) => Projectile.scale * 30f;
-        /// <summary>
-        /// 拖尾颜色函数：统一使用金色，透明度跟随弹幕淡入淡出。
-        /// </summary>
-        public Color PrimitiveColorFunction(float _, Vector2 vertexPosition) => Color.Gold * Projectile.Opacity;
-        /// <summary>
         /// 自定义绘制：屏蔽默认贴图绘制，改用 HeavenlyGaleTrail 着色器（Effects/HeavenlyGaleTrailShader.fx）
         /// 沿 oldPos 历史点渲染金色渐变光带拖尾。identity 偏移让不同弹幕的流光相位错开，观感更自然。
         /// </summary>
@@ -144,5 +136,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, new PrimitiveSettings(PrimitiveWidthFunction, PrimitiveColorFunction, (float _, Vector2 _) => trailOffset, smoothen: true, pixelate: false, GameShaders.Misc["CalamityDemutation:HeavenlyGaleTrail"]), 53);
             return true;
         }
+        /// <summary>
+        /// 拖尾颜色函数：统一使用金色，透明度跟随弹幕淡入淡出。
+        /// </summary>
+        public Color PrimitiveColorFunction(float _, Vector2 vertexPosition) => Color.Gold * Projectile.Opacity;
+        /// <summary>
+        /// 拖尾宽度函数：整体宽度随弹幕缩放变化，基准 30 像素。
+        /// </summary>
+        public float PrimitiveWidthFunction(float completionRatio, Vector2 _) => Projectile.scale * 30f;
     }
 }
