@@ -38,7 +38,7 @@ namespace CalamityDemutation.Players
     /// 另含天界洋葱/翅膀洋葱的永久解锁标志（extraAccessoryML / extraWingSlot），
     /// 并由 SaveData / LoadData 负责这两个字段的持久化。
     /// </summary>
-    internal class CalamityDemutationPlayer : ModPlayer
+    internal partial class CalamityDemutationPlayer : ModPlayer
     {
         // ── 常量 ──
         /// <summary>
@@ -753,6 +753,8 @@ namespace CalamityDemutation.Players
                 if (Player.empressBrooch)
                     Player.runAcceleration *= 1.75f / 1.25f;
             }
+            // 弑神者冲刺：状态机与位移（移植自灾厄的 PlayerDashEffect 体系，实现在 partial 文件里）
+            GodSlayerDashMovement();
         }
         /// <summary>
         /// tModLoader 的 PostUpdateMiscEffects 钩子：每帧在装备更新之后调用。
@@ -3334,17 +3336,17 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// tModLoader 的 ProcessTriggers 钩子：每帧处理按键触发，只在本地客户端（键位状态有效）有实际意义。
         /// 消费两个自定义键位（定义于 Systems/KeybindsSystem）：
-        /// 1) GodslayerDashHotKey（默认 H）——转发给 GodSlayerHelm.RequestGodslayerDash，由灾厄侧执行冲刺；
+        /// 1) GodslayerDashHotKey（默认 H）——交给本模组自持的弑神者冲刺（RequestGodSlayerDash）；
         /// 2) DemonshadeHotKey（默认 Y，套装主动技能）——依次判定：恶魔之影套装（播放音效/迸发吸魂尘埃、
         ///    自身获得 600 帧狂怒 buff，服务器端对 3000 距离内的敌人一并施加狂怒）、
         ///    欧米伽蓝套装（冷却 1800 帧，净化粉末尘埃爆发）、塔拉近战（tarraCooldown 归零时置位 tarraDefense）。
         /// </summary>
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            // 弑神者冲刺：本模组的键与灾厄自己的键(默认 H)都能触发；
-            // GodSlayerHelm 会把灾厄的 godSlayer 标志置真，闸门与冲刺表现全由灾厄负责
-            if(KeybindsSystem.GodslayerDashHotKey.JustPressed)
-                Content.Items.Armors.GodSlayer.GodSlayerHelm.RequestGodslayerDash(Player);
+            // 弑神者冲刺：本模组自持实现（见 CalamityDemutationPlayer.GodSlayerDash.cs），
+            // 不再借用灾厄的 dash 框架，闸门/位移/命中/冷却均由本模组结算
+            if (KeybindsSystem.GodslayerDashHotKey.JustPressed)
+                RequestGodSlayerDash();
             if(KeybindsSystem.DemonshadeHotKey.JustPressed)
             {
                 if (demonshadeSetBonus)
