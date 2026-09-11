@@ -13,6 +13,9 @@ namespace CalamityDemutation.Graphics.Metaballs
     /// </summary>
     public class DragonsBreathFlameMetaball : DragonsBreathMetaball
     {
+        /// <summary>
+        /// 边缘色：橙色
+        /// </summary>
         public override Color EdgeColor => Color.Orange;
         /// <summary>
         /// 绘制本形态的所有粒子实例：透明度 0.03，白热阈值传 -1 表示走「按尺寸插值到暗橙」而非白色分支
@@ -25,6 +28,9 @@ namespace CalamityDemutation.Graphics.Metaballs
     /// </summary>
     public class DragonsBreathFlameMetaball2 : DragonsBreathMetaball2
     {
+        /// <summary>
+        /// 边缘色：橙红
+        /// </summary>
         public override Color EdgeColor => Color.OrangeRed;
         /// <summary>
         /// 绘制本形态的所有粒子实例：透明度 0.03，白热阈值传 -1 表示走「按尺寸插值到暗橙」而非白色分支
@@ -37,9 +43,43 @@ namespace CalamityDemutation.Graphics.Metaballs
     /// </summary>
     public abstract class DragonsBreathMetaball : Metaball
     {
+        // ── 属性 ──
+        /// <summary>
+        /// 当前是否还有存活的龙息粒子
+        /// </summary>
+        public override bool AnythingToDraw => Particles.Any();
+        /// <summary>
+        /// 绘制层级：AfterProjectiles
+        /// （注意：GeneralDrawLayerSystem 目前只触发 AfterDusts，故本元球实际不会被合成绘制，详见 MetaballManager.DrawMetaballs 的说明）
+        /// </summary>
+        public override GeneralDrawLayer DrawLayer => GeneralDrawLayer.AfterProjectiles;
+        /// <summary>
+        /// 图层贴图序列（仅一层），使用共用的 InvisibleProj 占位贴图
+        /// </summary>
+        public override IEnumerable<Texture2D> Layers
+        {
+            get
+            {
+                yield return ModContent.Request<Texture2D>("CalamityDemutation/Content/Projectiles/InvisibleProj").Value;
+            }
+        }
+        /// <summary>
+        /// 存活的龙息粒子列表
+        /// </summary>
+        public List<DragonsBreathParticle> Particles { get; private set; } = new List<DragonsBreathParticle>();
+        // ── 嵌套类型 ──
+        /// <summary>
+        /// 单个龙息粒子：记录世界坐标中心与当前尺寸
+        /// </summary>
         public class DragonsBreathParticle
         {
+            /// <summary>
+            /// 世界坐标中心
+            /// </summary>
             public Vector2 Center;
+            /// <summary>
+            /// 当前尺寸（同时作为绘制缩放与消散判定的依据）
+            /// </summary>
             public float Size;
             /// <summary>
             /// 记录粒子的世界坐标中心与初始尺寸（尺寸同时作为绘制缩放与消散判定的依据）
@@ -60,42 +100,7 @@ namespace CalamityDemutation.Graphics.Metaballs
                     Size = Size * 0.8f - 1f;   // 尾段加速衰减，缩短小粒子拖尾
             }
         }
-
-        public List<DragonsBreathParticle> Particles { get; private set; } = new List<DragonsBreathParticle>();
-        public override bool AnythingToDraw => Particles.Any();
-        public override IEnumerable<Texture2D> Layers
-        {
-            get
-            {
-                yield return ModContent.Request<Texture2D>("CalamityDemutation/Content/Projectiles/InvisibleProj").Value;
-            }
-        }
-        public override GeneralDrawLayer DrawLayer => GeneralDrawLayer.AfterProjectiles;
-        /// <summary>
-        /// 每帧推进所有粒子运动并清理已收缩到 2 像素以下的粒子
-        /// </summary>
-        public override void Update()
-        {
-            for (int i = 0; i < Particles.Count; i++)
-                Particles[i].Update();
-            Particles.RemoveAll(p => p.Size <= 2f);   // 尺寸过小已无视觉贡献，直接移除
-        }
-        /// <summary>
-        /// 为龙息元球准备加法混合边缘着色器：只使用屏幕尺寸参数，层级偏移与逐帧屏幕偏移均归零（不分层滚动）
-        /// </summary>
-        public override void PrepareShaderForTarget(int layerIndex)
-        {
-            var metaballShader = EffectLoader.AdditiveMetaballEdgeShader;   // 加法混合版边缘着色器
-            Vector2 screenSize = new(Main.screenWidth, Main.screenHeight);
-            metaballShader.Value.Parameters["screenArea"]?.SetValue(screenSize);
-            metaballShader.Value.Parameters["layerOffset"]?.SetValue(Vector2.Zero);
-            metaballShader.Value.Parameters["singleFrameScreenOffset"]?.SetValue(Vector2.Zero);
-            metaballShader.Value.CurrentTechnique.Passes[0].Apply();
-        }
-        /// <summary>
-        /// 在世界坐标 position 处生成一个指定初始尺寸的龙息粒子（由弹幕等调用方传入）
-        /// </summary>
-        public void SpawnParticle(Vector2 position, float size) => Particles.Add(new DragonsBreathParticle(position, size));
+        // ── 公开方法 ──
         /// <summary>
         /// 实际绘制入口：把 MetaballMessy 贴图按每个粒子的中心与尺寸画到当前渲染目标，由各形态的 DrawInstances 调用。
         /// 调用前外部必须已 Begin 过 spriteBatch。
@@ -121,6 +126,31 @@ namespace CalamityDemutation.Graphics.Metaballs
                 Main.spriteBatch.Draw(tex, drawPosition, null, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
             }
         }
+        /// <summary>
+        /// 为龙息元球准备加法混合边缘着色器：只使用屏幕尺寸参数，层级偏移与逐帧屏幕偏移均归零（不分层滚动）
+        /// </summary>
+        public override void PrepareShaderForTarget(int layerIndex)
+        {
+            var metaballShader = EffectLoader.AdditiveMetaballEdgeShader;   // 加法混合版边缘着色器
+            Vector2 screenSize = new(Main.screenWidth, Main.screenHeight);
+            metaballShader.Value.Parameters["screenArea"]?.SetValue(screenSize);
+            metaballShader.Value.Parameters["layerOffset"]?.SetValue(Vector2.Zero);
+            metaballShader.Value.Parameters["singleFrameScreenOffset"]?.SetValue(Vector2.Zero);
+            metaballShader.Value.CurrentTechnique.Passes[0].Apply();
+        }
+        /// <summary>
+        /// 在世界坐标 position 处生成一个指定初始尺寸的龙息粒子（由弹幕等调用方传入）
+        /// </summary>
+        public void SpawnParticle(Vector2 position, float size) => Particles.Add(new DragonsBreathParticle(position, size));
+        /// <summary>
+        /// 每帧推进所有粒子运动并清理已收缩到 2 像素以下的粒子
+        /// </summary>
+        public override void Update()
+        {
+            for (int i = 0; i < Particles.Count; i++)
+                Particles[i].Update();
+            Particles.RemoveAll(p => p.Size <= 2f);   // 尺寸过小已无视觉贡献，直接移除
+        }
     }
 
     /// <summary>
@@ -128,9 +158,43 @@ namespace CalamityDemutation.Graphics.Metaballs
     /// </summary>
     public abstract class DragonsBreathMetaball2 : Metaball
     {
+        // ── 属性 ──
+        /// <summary>
+        /// 当前是否还有存活的龙息粒子
+        /// </summary>
+        public override bool AnythingToDraw => Particles.Any();
+        /// <summary>
+        /// 绘制层级：AfterProjectiles
+        /// （注意：GeneralDrawLayerSystem 目前只触发 AfterDusts，故本元球实际不会被合成绘制，详见 MetaballManager.DrawMetaballs 的说明）
+        /// </summary>
+        public override GeneralDrawLayer DrawLayer => GeneralDrawLayer.AfterProjectiles;
+        /// <summary>
+        /// 图层贴图序列（仅一层），使用共用的 InvisibleProj 占位贴图
+        /// </summary>
+        public override IEnumerable<Texture2D> Layers
+        {
+            get
+            {
+                yield return ModContent.Request<Texture2D>("CalamityDemutation/Content/Projectiles/InvisibleProj").Value;
+            }
+        }
+        /// <summary>
+        /// 存活的龙息粒子列表
+        /// </summary>
+        public List<DragonsBreathParticle2> Particles { get; private set; } = new List<DragonsBreathParticle2>();
+        // ── 嵌套类型 ──
+        /// <summary>
+        /// 第二形态的单个龙息粒子：记录世界坐标中心与当前尺寸
+        /// </summary>
         public class DragonsBreathParticle2
         {
+            /// <summary>
+            /// 世界坐标中心
+            /// </summary>
             public Vector2 Center;
+            /// <summary>
+            /// 当前尺寸（同时作为绘制缩放与消散判定的依据）
+            /// </summary>
             public float Size;
             /// <summary>
             /// 记录粒子的世界坐标中心与初始尺寸（尺寸同时作为绘制缩放与消散判定的依据）
@@ -151,42 +215,7 @@ namespace CalamityDemutation.Graphics.Metaballs
                     Size = Size * 0.8f - 1f;   // 尾段加速衰减，第二形态的阈值比第一形态高
             }
         }
-
-        public List<DragonsBreathParticle2> Particles { get; private set; } = new List<DragonsBreathParticle2>();
-        public override bool AnythingToDraw => Particles.Any();
-        public override IEnumerable<Texture2D> Layers
-        {
-            get
-            {
-                yield return ModContent.Request<Texture2D>("CalamityDemutation/Content/Projectiles/InvisibleProj").Value;
-            }
-        }
-        public override GeneralDrawLayer DrawLayer => GeneralDrawLayer.AfterProjectiles;
-        /// <summary>
-        /// 每帧推进所有粒子运动并清理已收缩到 2 像素以下的粒子
-        /// </summary>
-        public override void Update()
-        {
-            for (int i = 0; i < Particles.Count; i++)
-                Particles[i].Update();
-            Particles.RemoveAll(p => p.Size <= 2f);   // 尺寸过小已无视觉贡献，直接移除
-        }
-        /// <summary>
-        /// 为第二形态元球准备加法混合边缘着色器：只用屏幕尺寸参数，层级偏移与逐帧屏幕偏移均归零
-        /// </summary>
-        public override void PrepareShaderForTarget(int layerIndex)
-        {
-            var metaballShader = EffectLoader.AdditiveMetaballEdgeShader;   // 加法混合版边缘着色器
-            Vector2 screenSize = new(Main.screenWidth, Main.screenHeight);
-            metaballShader.Value.Parameters["screenArea"]?.SetValue(screenSize);
-            metaballShader.Value.Parameters["layerOffset"]?.SetValue(Vector2.Zero);
-            metaballShader.Value.Parameters["singleFrameScreenOffset"]?.SetValue(Vector2.Zero);
-            metaballShader.Value.CurrentTechnique.Passes[0].Apply();
-        }
-        /// <summary>
-        /// 在世界坐标 position 处生成一个指定初始尺寸的第二形态龙息粒子
-        /// </summary>
-        public void SpawnParticle(Vector2 position, float size) => Particles.Add(new DragonsBreathParticle2(position, size));
+        // ── 公开方法 ──
         /// <summary>
         /// 实际绘制入口：把 MetaballMessy 贴图按每个粒子的中心与尺寸画到当前渲染目标，由各形态的 DrawInstances 调用。
         /// 调用前外部必须已 Begin 过 spriteBatch。
@@ -211,6 +240,31 @@ namespace CalamityDemutation.Graphics.Metaballs
                     drawColor = Color.Lerp(EdgeColor, Color.DarkOrange, Utils.GetLerpValue(60f, 100f, particle.Size, true) * 0.3f);   // 第二形态加深幅度更小
                 Main.spriteBatch.Draw(tex, drawPosition, null, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
             }
+        }
+        /// <summary>
+        /// 为第二形态元球准备加法混合边缘着色器：只用屏幕尺寸参数，层级偏移与逐帧屏幕偏移均归零
+        /// </summary>
+        public override void PrepareShaderForTarget(int layerIndex)
+        {
+            var metaballShader = EffectLoader.AdditiveMetaballEdgeShader;   // 加法混合版边缘着色器
+            Vector2 screenSize = new(Main.screenWidth, Main.screenHeight);
+            metaballShader.Value.Parameters["screenArea"]?.SetValue(screenSize);
+            metaballShader.Value.Parameters["layerOffset"]?.SetValue(Vector2.Zero);
+            metaballShader.Value.Parameters["singleFrameScreenOffset"]?.SetValue(Vector2.Zero);
+            metaballShader.Value.CurrentTechnique.Passes[0].Apply();
+        }
+        /// <summary>
+        /// 在世界坐标 position 处生成一个指定初始尺寸的第二形态龙息粒子
+        /// </summary>
+        public void SpawnParticle(Vector2 position, float size) => Particles.Add(new DragonsBreathParticle2(position, size));
+        /// <summary>
+        /// 每帧推进所有粒子运动并清理已收缩到 2 像素以下的粒子
+        /// </summary>
+        public override void Update()
+        {
+            for (int i = 0; i < Particles.Count; i++)
+                Particles[i].Update();
+            Particles.RemoveAll(p => p.Size <= 2f);   // 尺寸过小已无视觉贡献，直接移除
         }
     }
 }

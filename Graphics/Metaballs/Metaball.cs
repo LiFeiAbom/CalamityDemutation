@@ -14,15 +14,16 @@ namespace CalamityDemutation.Graphics.Metaballs
     /// </summary>
     public abstract class Metaball : ModType
     {
+        // ── 实例字段 ──
+        /// <summary>
+        /// 每个图层对应的离屏渲染目标租约（Register 中租借，Dispose 中归还）
+        /// </summary>
         internal List<RenderTargetLease> LayerTargets = new List<RenderTargetLease>();
+        // ── 属性 ──
         /// <summary>
         /// 当前是否有内容需要绘制：为 false 时管理器会跳过本元球的更新与渲染
         /// </summary>
         public abstract bool AnythingToDraw { get; }
-        /// <summary>
-        /// 参与叠加的图层贴图序列：每层对应一个离屏渲染目标，逐层用不同参数合成
-        /// </summary>
-        public abstract IEnumerable<Texture2D> Layers { get; }
         /// <summary>
         /// 该元球挂在哪个绘制层级（由 GeneralDrawLayerSystem 分发时按此过滤）
         /// </summary>
@@ -32,33 +33,63 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// </summary>
         public abstract Color EdgeColor { get; }
         /// <summary>
-        /// 逐层颜色覆盖（可空）：第 i 层取第 i 个值，用不满或未设置时回退为白色
+        /// 为 true 时忽略世界滚动，图层按屏幕空间固定采样（不随屏幕位置偏移）
         /// </summary>
-        public virtual List<Vector4> LayerColors { get; set; } = new List<Vector4>();
+        public virtual bool FixedToScreen => false;
         /// <summary>
         /// 为 true 时无需等待暂停/帧率限制，每帧 PostUpdateEverything 都更新
         /// </summary>
         public virtual bool IgnoreFPS => false;
         /// <summary>
-        /// 为 true 时忽略世界滚动，图层按屏幕空间固定采样（不随屏幕位置偏移）
+        /// 逐层颜色覆盖（可空）：第 i 层取第 i 个值，用不满或未设置时回退为白色
         /// </summary>
-        public virtual bool FixedToScreen => false;
+        public virtual List<Vector4> LayerColors { get; set; } = new List<Vector4>();
         /// <summary>
-        /// 清空所有实例（世界卸载时由 MetaballManager.OnWorldUnload 调用）
+        /// 参与叠加的图层贴图序列：每层对应一个离屏渲染目标，逐层用不同参数合成
         /// </summary>
-        public virtual void ClearInstances() { }
+        public abstract IEnumerable<Texture2D> Layers { get; }
+        // ── 生命周期方法 ──
         /// <summary>
-        /// 每帧更新实例状态；FPS 类元球在 PostUpdateEverything 中更新，其余在准备渲染目标时更新
+        /// tModLoader ModType 注册回调：注册到 ModTypeLookup、加入管理器列表，
+        /// 并在主线程为每个图层从屏幕空间池租借一个渲染目标（尺寸比屏幕各多 4 像素，用于容纳边缘溢出）。
+        /// 服务端（dedServ）直接跳过渲染目标分配。
         /// </summary>
-        public virtual void Update() { }
+        protected sealed override void Register()
+        {
+            ModTypeLookup<Metaball>.Register(this);
+            if (!MetaballManager.metaballs.Contains(this))
+                MetaballManager.metaballs.Add(this);
+            if (Main.dedServ)
+                return;
+            Main.QueueMainThreadAction(() =>
+            {
+                int layerCount = Layers.Count();
+                for (int i = 0; i < layerCount; i++)
+                    LayerTargets.Add(ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice, (width, height) => (width + 4, height + 4)));
+            });
+        }
+        // ── 公开方法 ──
         /// <summary>
         /// 指定图层的额外手动滚动偏移，叠加在 screenPosition/screenSize 之上
         /// </summary>
         public virtual Vector2 CalculateManualOffsetForLayer(int layerIndex) => Vector2.Zero;
         /// <summary>
-        /// 绘制实例前的 spriteBatch 定制钩子（例如切换混合状态），默认为空
+        /// 清空所有实例（世界卸载时由 MetaballManager.OnWorldUnload 调用）
         /// </summary>
-        public virtual void PrepareSpriteBatch(SpriteBatch spriteBatch) { }
+        public virtual void ClearInstances() { }
+        /// <summary>
+        /// 释放所有租借的图层渲染目标（归还至池）。由 MetaballManager.Unload 在主线程统一调用，
+        /// 与 <see cref="Register"/> 中的 Rent 配对。
+        /// </summary>
+        public void Dispose()
+        {
+            for (int i = 0; i < LayerTargets.Count; i++)
+                LayerTargets[i]?.Dispose();
+        }
+        /// <summary>
+        /// 把实例绘制进当前渲染目标（由 MetaballManager 在准备阶段逐层调用，需自行保证 spriteBatch 已 Begin）
+        /// </summary>
+        public abstract void DrawInstances();
         /// <summary>
         /// 为第 layerIndex 层的合成准备默认边缘着色器：写入图层尺寸、屏幕尺寸、图层滚动偏移、
         /// 边缘色、逐帧屏幕偏移与图层颜色，并把该层贴图绑到 1 号纹理槽（线性循环采样）。
@@ -84,36 +115,12 @@ namespace CalamityDemutation.Graphics.Metaballs
             metaballShader.Value.CurrentTechnique.Passes[0].Apply();
         }
         /// <summary>
-        /// 把实例绘制进当前渲染目标（由 MetaballManager 在准备阶段逐层调用，需自行保证 spriteBatch 已 Begin）
+        /// 绘制实例前的 spriteBatch 定制钩子（例如切换混合状态），默认为空
         /// </summary>
-        public abstract void DrawInstances();
+        public virtual void PrepareSpriteBatch(SpriteBatch spriteBatch) { }
         /// <summary>
-        /// tModLoader ModType 注册回调：注册到 ModTypeLookup、加入管理器列表，
-        /// 并在主线程为每个图层从屏幕空间池租借一个渲染目标（尺寸比屏幕各多 4 像素，用于容纳边缘溢出）。
-        /// 服务端（dedServ）直接跳过渲染目标分配。
+        /// 每帧更新实例状态；FPS 类元球在 PostUpdateEverything 中更新，其余在准备渲染目标时更新
         /// </summary>
-        protected sealed override void Register()
-        {
-            ModTypeLookup<Metaball>.Register(this);
-            if (!MetaballManager.metaballs.Contains(this))
-                MetaballManager.metaballs.Add(this);
-            if (Main.dedServ)
-                return;
-            Main.QueueMainThreadAction(() =>
-            {
-                int layerCount = Layers.Count();
-                for (int i = 0; i < layerCount; i++)
-                    LayerTargets.Add(ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice, (width, height) => (width + 4, height + 4)));
-            });
-        }
-        /// <summary>
-        /// 释放所有租借的图层渲染目标（归还至池）。由 MetaballManager.Unload 在主线程统一调用，
-        /// 与 <see cref="Register"/> 中的 Rent 配对。
-        /// </summary>
-        public void Dispose()
-        {
-            for (int i = 0; i < LayerTargets.Count; i++)
-                LayerTargets[i]?.Dispose();
-        }
+        public virtual void Update() { }
     }
 }
