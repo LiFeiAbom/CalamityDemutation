@@ -11,19 +11,26 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles
 {
     /// <summary>
-    /// 全局弹幕类：处理元素箭袋的箭矢分裂等弹幕级效果
+    /// 全局弹幕类：处理元素箭袋的箭矢分裂，以及套装在弹幕命中时的吸血与 debuff 施加
+    /// （女巫 / 奥瑞克套装的弹幕吸血，亚利姆徽章 / 元素手套 / omega 蓝套装的 PvP debuff）。
     /// </summary>
     internal class CalamityDemutationGlobalProjectile:GlobalProjectile
     {
-        public int defExtraUpdates = -1;
+        // ── 实例字段 ──
         /// <summary>
-        /// 不受特殊效果影响（BaseSwingCO 挥砍弹幕标记）
+        /// 不受特殊效果影响：BaseSwingCO 挥砍弹幕置位，置位后跳过外部的特殊效果处理
         /// </summary>
         public bool NotSubjectToSpecialEffects;
+        /// <summary>
+        /// 弹幕"原始 extraUpdates"缓存：-1 表示尚未记录。
+        /// ProjUtil 需要临时改动 extraUpdates 时会先缓存原值，用完再写回，避免叠加修改后无法还原。
+        /// </summary>
+        public int defExtraUpdates = -1;
         /// <summary>
         /// 灾厄穿透计数的软依赖等价物（对应原 CalamityGlobalProjectile.timesPierced）
         /// </summary>
         public int timesPierced;
+        // ── 属性 ──
         /// <summary>
         /// 弹幕按实例保存状态，故开启 per-entity
         /// </summary>
@@ -34,6 +41,7 @@ namespace CalamityDemutation.Content.Projectiles
                 return true;
             }
         }
+        // ── 生命周期方法 ──
         /// <summary>
         /// 元素箭袋的箭矢分裂效果：
         /// 装备元素箭袋时，友好的箭类弹幕有约 0.5% 概率（每帧 Next(200) 仅返回 199 时触发）
@@ -71,16 +79,17 @@ namespace CalamityDemutation.Content.Projectiles
         }
         /// <summary>
         /// tModLoader 的 OnHitNPC 钩子：弹幕命中 NPC 后调用。
-        /// 女巫套装（silvaSet）生效时实现弹幕吸血：吸血比例随该弹幕命中次数递减
-        /// （0.03 - numHits × 0.015，降至 0 即放弃），治疗量 = 弹幕伤害 × 该比例，
-        /// 并从本次弹幕的 lifeSteal 额度中扣除 1.5 倍作为消耗。
-        /// 随后在 1200 像素内挑出存活且生命缺口最大的队友，于弹幕位置生成 SilvaOrb 弹幕
+        /// 按玩家套装触发弹幕吸血，两条分支逻辑同构、仅数值不同：
+        /// - 女巫套装（silvaSet）：吸血比例 = 0.03 - numHits × 0.015；
+        /// - 奥瑞克套装（auricSet）：吸血比例 = 0.05 - numHits × 0.025。
+        /// 比例降至 0 即放弃；治疗量 = 弹幕伤害 × 该比例，并从本次弹幕的 lifeSteal 额度中扣除 1.5 倍作为消耗。
+        /// 随后在 1200 像素内挑出存活且生命缺口最大的队友，于弹幕位置生成 SilvaOrb / AuricOrb 弹幕
         /// （写入目标玩家索引与治疗量）为其回血。原版 canGhostHeal 限制已被移除，任意敌人均可触发。
         /// </summary>
         public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet)// && target.canGhostHeal
-            {// 解除敌人的canghost限制
+            {// 解除 target.canGhostHeal 限制：任意敌人都可触发吸血
                 float num11 = 0.03f;
                 num11 -= (float)projectile.numHits * 0.015f;
                 if (num11 <= 0f)
@@ -114,7 +123,7 @@ namespace CalamityDemutation.Content.Projectiles
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)// && target.canGhostHeal
-            {
+            {// 解除 target.canGhostHeal 限制：任意敌人都可触发吸血
                 float num11 = 0.05f;
                 num11 -= (float)projectile.numHits * 0.025f;
                 if (num11 <= 0f)
@@ -149,7 +158,12 @@ namespace CalamityDemutation.Content.Projectiles
             }
         }
         /// <summary>
-        /// 近战弹幕命中玩家（PvP）时，按攻击者实际装备给目标施加对应 debuff（亚利姆徽章/元素手套）
+        /// 近战弹幕命中玩家（PvP）时，按攻击者实际装备/套装给目标施加效果：
+        /// - 亚利姆徽章：随机 120/240/360 帧神圣火（现代版）与圣光（经典版）；
+        /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 灾厄现代/经典两版本）；
+        /// - omega 蓝套装（omegaBlueSet）：240 帧 HadopelagicPressure / CrushDepth；
+        /// - 女巫套装（silvaSet）/ 奥瑞克套装（auricSet）：与 OnHitNPC 同构的吸血逻辑
+        ///   （比例 0.03 / 0.05 起，随弹幕命中次数递减，降至 0 即放弃）。
         /// </summary>
         public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info)
         {
@@ -188,11 +202,13 @@ namespace CalamityDemutation.Content.Projectiles
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GlacialState", 120);
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GodSlayerInferno", 120);
             }
+            // 攻击者穿着 omega 蓝套装：施加 240 帧水压 / 压碎深度
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().omegaBlueSet)
             {
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HadopelagicPressure", 240);
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "CrushDepth", 240);
             }
+            // 女巫套装（silvaSet）：弹幕吸血，比例 0.03 起随命中次数递减
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet)
             {
                 float num11 = 0.03f;
@@ -227,6 +243,7 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
+            // 奥瑞克套装（auricSet）：弹幕吸血，比例 0.05 起随命中次数递减
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)
             {
                 float num11 = 0.05f;

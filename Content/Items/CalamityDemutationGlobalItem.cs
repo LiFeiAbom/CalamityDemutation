@@ -1,4 +1,4 @@
-using CalamityDemutation.Content.Items.Accessories.Attack;
+﻿using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Content.Items.Accessories.Defense;
@@ -22,10 +22,127 @@ using CalamityDemutation.Content.Items.Accessories.Wings;
 namespace CalamityDemutation.Content.Items
 {
     /// <summary>
-    /// 全局物品类，管理自定义稀有度系统和原版装备数值回调
+    /// 全局物品类，管理自定义稀有度系统（postMoonLordRarity）和原版装备数值回调
+    /// （回退现代版灾厄对原版武器/护甲/饰品的伤害、攻速、弹速、防御、斧力、售价削弱）。
     /// </summary>
     internal class CalamityDemutationGlobalItem : GlobalItem
     {
+        // ── 静态字段 ──
+        /// <summary>
+        /// 原版斧力（ItemID -> 原版 axe 内部值 = 显示百分比 / 5）。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaAxe = new()
+        {
+            { ItemID.AcornAxe, 30 },
+            { ItemID.SawtoothShark, 14 },
+        };
+        /// <summary>
+        /// 原版伤害（ItemID -> 原版 damage）。灾厄用 DamageExact/DamageRatio 调低了这些武器/弹药的伤害。
+        /// 含少量「混合条目」里被调低的伤害（如 Flamethrower、RainbowRod、Seedler）。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaDamage = new()
+        {
+            { ItemID.AquaScepter, 27 },
+            { ItemID.BeesKnees, 23 },
+            { ItemID.BlizzardStaff, 58 },
+            { ItemID.Boomstick, 14 },
+            { ItemID.ChristmasTreeSword, 86 },
+            { ItemID.Code2, 54 },
+            { ItemID.CrystalBullet, 9 },
+            { ItemID.DaedalusStormbow, 38 },
+            { ItemID.DayBreak, 150 },
+            { ItemID.DD2SquireBetsySword, 180 },
+            { ItemID.DemonBow, 14 },
+            { ItemID.DemonScythe, 35 },
+            { ItemID.EmpressBlade, 90 },
+            { ItemID.Flamarang, 49 },
+            { ItemID.Flamethrower, 35 },
+            { ItemID.FlowerofFire, 48 },
+            { ItemID.Gradient, 49 },
+            { ItemID.IchorBullet, 13 },
+            { ItemID.InfluxWaver, 100 },
+            { ItemID.Kraken, 95 },
+            { ItemID.LaserMachinegun, 60 },
+            { ItemID.LastPrism, 100 },
+            { ItemID.Minishark, 6 },
+            { ItemID.MoonlordBullet, 20 },
+            { ItemID.MoonlordTurretStaff, 100 },
+            { ItemID.Musket, 31 },
+            { ItemID.NailGun, 85 },
+            { ItemID.RainbowRod, 50 },
+            { ItemID.RavenStaff, 55 },
+            { ItemID.Razorpine, 48 },
+            { ItemID.RedsYoyo, 70 },
+            { ItemID.ScourgeoftheCorruptor, 70 },
+            { ItemID.Seedler, 50 },
+            { ItemID.SilverBullet, 9 },
+            { ItemID.StardustDragonStaff, 40 },
+            { ItemID.TendonBow, 19 },
+            { ItemID.Terragrim, 17 },
+            { ItemID.Terrarian, 190 },
+            { ItemID.TheEyeOfCthulhu, 115 },
+            { ItemID.TheUndertaker, 19 },
+            { ItemID.ThunderStaff, 20 },
+            { ItemID.Tsunami, 53 },
+            { ItemID.TungstenBullet, 9 },
+            { ItemID.UnholyTrident, 88 },
+            { ItemID.ValkyrieYoyo, 70 },
+            { ItemID.Yelets, 60 },
+        };
+        /// <summary>
+        /// 原版防御（ItemID -> 原版 defense）。灾厄用 DefenseDelta 调低了 Valhalla Knight 套装的防御。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaDefense = new()
+        {
+            { ItemID.SquireAltHead, 20 },
+            { ItemID.SquireAltPants, 24 },
+            { ItemID.SquireAltShirt, 24 },
+            { ItemID.SquireGreatHelm, 13 },
+            { ItemID.SquireGreaves, 18 },
+            { ItemID.SquirePlating, 27 },
+        };
+        /// <summary>
+        /// 原版弹速（ItemID -> 原版 shootSpeed）。
+        /// </summary>
+        private static readonly Dictionary<int, float> VanillaShootSpeed = new()
+        {
+            { ItemID.IceBoomerang, 11.5f },
+        };
+        /// <summary>
+        /// 原版攻速（ItemID -> 原版 useTime）。灾厄用 UseExact 同时调高了 useTime 与 useAnimation。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaUseTime = new()
+        {
+            { ItemID.BeesKnees, 23 },
+            { ItemID.ChristmasTreeSword, 23 },
+            { ItemID.CoinGun, 8 },
+            { ItemID.DayBreak, 16 },
+            { ItemID.Handgun, 15 },
+            { ItemID.IceBoomerang, 20 },
+            { ItemID.InfluxWaver, 20 },
+            { ItemID.MoltenFury, 22 },
+            { ItemID.PhoenixBlaster, 14 },
+            { ItemID.Sandgun, 16 },
+            { ItemID.StarCannon, 12 },
+        };
+        /// <summary>
+        /// 原版售价（ItemID -> 原版 value）。灾厄用 Worthless 把这些物品的售价归零。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaValue = new()
+        {
+            { ItemID.Mushroom, Item.sellPrice(copper: 5) },
+            { ItemID.GlowingMushroom, Item.sellPrice(copper: 10) },
+            { ItemID.VileMushroom, Item.sellPrice(silver: 2, copper: 50) },
+            { ItemID.ViciousMushroom, Item.sellPrice(silver: 2, copper: 50) },
+            { ItemID.EncumberingStone, Item.sellPrice(gold: 1) },
+            { ItemID.UncumberingStone, Item.sellPrice(gold: 1) },
+        };
+        // ── 实例字段 ──
+        /// <summary>
+        /// 月后自定义稀有度等级（0=未设置，12~22=各级对应不同颜色）
+        /// </summary>
+        public int postMoonLordRarity = 0;
+        // ── 属性 ──
         /// <summary>
         /// 联机同步时按实例克隆，保证稀有度等级随物品单独传输
         /// </summary>
@@ -46,10 +163,7 @@ namespace CalamityDemutation.Content.Items
                 return true;
             }
         }
-        /// <summary>
-        /// 月后自定义稀有度等级（0=未设置，12~22=各级对应不同颜色）
-        /// </summary>
-        public int postMoonLordRarity = 0;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 将自定义稀有度物品的基础稀有度统一设为红色（真正的名称颜色覆盖由 ModifyTooltips 完成）
         /// </summary>
@@ -60,49 +174,6 @@ namespace CalamityDemutation.Content.Items
             // 回退灾厄对原版玩家装备的削弱：仅 Config 开启 + 现代版灾厄已加载时恢复原版数值
             if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
                 RevertVanillaNerf(entity);
-        }
-        /// <summary>
-        /// PvP：近战武器直接挥砍命中玩家时，按攻击者装备给受害者施加 debuff。
-        /// 仅近战挥击触发（文档明确 "melee weapon hits a player"），近战弹幕走 GlobalProjectile.OnHitPlayer。
-        /// </summary>
-        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
-        {
-            // player = 攻击者 A，target = 被打中的 B；直接查 A 实际装备（不依赖 ModPlayer 标志位）
-            if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<YharimsInsignia>()))
-            {
-                // 亚利姆徽章：给受害者施加圣焰（现代版）/圣光（经典版），随机时长
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
-            }
-            if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<ElementalGauntlet>()))
-            {
-                // 元素手套：给受害者施加全套元素 debuff（原版 + 两灾厄变体）
-                target.AddBuff(BuffID.Poisoned, 120, false);
-                target.AddBuff(BuffID.OnFire, 120, false);
-                target.AddBuff(BuffID.CursedInferno, 120, false);
-                target.AddBuff(BuffID.Frostburn, 120, false);
-                target.AddBuff(BuffID.Ichor, 120, false);
-                target.AddBuff(BuffID.Venom, 120, false);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "Voidfrost", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "Nightwither", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "Plague", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "SulphuricPoisoning", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "GodSlayerInferno", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "ElementalMix", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "AbyssalFlames", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "Plague", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "BrimstoneFlames", 120);
-                if (Main.rand.NextBool(5))
-                    CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GlacialState", 120);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GodSlayerInferno", 120);
-            }
-            if(player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueSet)
-            {
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HadopelagicPressure", 240);
-                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "CrushDepth", 240);
-            }
         }
         /// <summary>
         /// 保存/同步自定义稀有度等级（SaveData 存档、NetSend 联机同步）
@@ -159,15 +230,6 @@ namespace CalamityDemutation.Content.Items
                     _ => default,                      // 其余等级无颜色覆盖
                 };
             }
-        }
-        /// <summary>
-        /// 17 级传奇武器名称颜色：按具体武器返回其专属颜色（本模组自有的传奇武器）。
-        /// </summary>
-        private static Color GetLegendaryWeaponColor(int itemType)
-        {
-            if (itemType == ModContent.ItemType<DefenseBlade>())
-                return new Color(255, Main.DiscoG, 53);
-            return default;
         }
         /// <summary>
         /// 向灾厄各 Boss 宝藏袋注入本模组的饰品掉落，兼容现代版（CalamityMod）与经典预发布版（CalamityModClassicPreTrailer）两套灾厄
@@ -316,136 +378,91 @@ namespace CalamityDemutation.Content.Items
                 }
             }
         }
-        #region 原版削弱回调
         /// <summary>
-        /// 原版伤害（ItemID -> 原版 damage）。灾厄用 DamageExact/DamageRatio 调低了这些武器/弹药的伤害。
-        /// 含少量「混合条目」里被调低的伤害（如 Flamethrower、RainbowRod、Seedler）。
+        /// PvP：近战武器直接挥砍命中玩家时，按攻击者装备给受害者施加 debuff。
+        /// 仅近战挥击触发（文档明确 "melee weapon hits a player"），近战弹幕走 GlobalProjectile.OnHitPlayer。
         /// </summary>
-        private static readonly Dictionary<int, int> VanillaDamage = new()
+        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
-            { ItemID.AquaScepter, 27 },
-            { ItemID.BeesKnees, 23 },
-            { ItemID.BlizzardStaff, 58 },
-            { ItemID.Boomstick, 14 },
-            { ItemID.ChristmasTreeSword, 86 },
-            { ItemID.Code2, 54 },
-            { ItemID.CrystalBullet, 9 },
-            { ItemID.DaedalusStormbow, 38 },
-            { ItemID.DayBreak, 150 },
-            { ItemID.DD2SquireBetsySword, 180 },
-            { ItemID.DemonBow, 14 },
-            { ItemID.DemonScythe, 35 },
-            { ItemID.EmpressBlade, 90 },
-            { ItemID.Flamarang, 49 },
-            { ItemID.Flamethrower, 35 },
-            { ItemID.FlowerofFire, 48 },
-            { ItemID.Gradient, 49 },
-            { ItemID.IchorBullet, 13 },
-            { ItemID.InfluxWaver, 100 },
-            { ItemID.Kraken, 95 },
-            { ItemID.LaserMachinegun, 60 },
-            { ItemID.LastPrism, 100 },
-            { ItemID.Minishark, 6 },
-            { ItemID.MoonlordBullet, 20 },
-            { ItemID.MoonlordTurretStaff, 100 },
-            { ItemID.Musket, 31 },
-            { ItemID.NailGun, 85 },
-            { ItemID.RainbowRod, 50 },
-            { ItemID.RavenStaff, 55 },
-            { ItemID.Razorpine, 48 },
-            { ItemID.RedsYoyo, 70 },
-            { ItemID.ScourgeoftheCorruptor, 70 },
-            { ItemID.Seedler, 50 },
-            { ItemID.SilverBullet, 9 },
-            { ItemID.StardustDragonStaff, 40 },
-            { ItemID.TendonBow, 19 },
-            { ItemID.Terragrim, 17 },
-            { ItemID.Terrarian, 190 },
-            { ItemID.TheEyeOfCthulhu, 115 },
-            { ItemID.TheUndertaker, 19 },
-            { ItemID.ThunderStaff, 20 },
-            { ItemID.Tsunami, 53 },
-            { ItemID.TungstenBullet, 9 },
-            { ItemID.UnholyTrident, 88 },
-            { ItemID.ValkyrieYoyo, 70 },
-            { ItemID.Yelets, 60 },
-        };
-        /// <summary>
-        /// 原版攻速（ItemID -> 原版 useTime）。灾厄用 UseExact 同时调高了 useTime 与 useAnimation。
-        /// </summary>
-        private static readonly Dictionary<int, int> VanillaUseTime = new()
-        {
-            { ItemID.BeesKnees, 23 },
-            { ItemID.ChristmasTreeSword, 23 },
-            { ItemID.CoinGun, 8 },
-            { ItemID.DayBreak, 16 },
-            { ItemID.Handgun, 15 },
-            { ItemID.IceBoomerang, 20 },
-            { ItemID.InfluxWaver, 20 },
-            { ItemID.MoltenFury, 22 },
-            { ItemID.PhoenixBlaster, 14 },
-            { ItemID.Sandgun, 16 },
-            { ItemID.StarCannon, 12 },
-        };
-        /// <summary>
-        /// 原版弹速（ItemID -> 原版 shootSpeed）。
-        /// </summary>
-        private static readonly Dictionary<int, float> VanillaShootSpeed = new()
-        {
-            { ItemID.IceBoomerang, 11.5f },
-        };
-        /// <summary>
-        /// 原版防御（ItemID -> 原版 defense）。灾厄用 DefenseDelta 调低了 Valhalla Knight 套装的防御。
-        /// </summary>
-        private static readonly Dictionary<int, int> VanillaDefense = new()
-        {
-            { ItemID.SquireAltHead, 20 },
-            { ItemID.SquireAltPants, 24 },
-            { ItemID.SquireAltShirt, 24 },
-            { ItemID.SquireGreatHelm, 13 },
-            { ItemID.SquireGreaves, 18 },
-            { ItemID.SquirePlating, 27 },
-        };
-        /// <summary>
-        /// 原版斧力（ItemID -> 原版 axe 内部值 = 显示百分比 / 5）。
-        /// </summary>
-        private static readonly Dictionary<int, int> VanillaAxe = new()
-        {
-            { ItemID.AcornAxe, 30 },
-            { ItemID.SawtoothShark, 14 },
-        };
-        /// <summary>
-        /// 原版售价（ItemID -> 原版 value）。灾厄用 Worthless 把这些物品的售价归零。
-        /// </summary>
-        private static readonly Dictionary<int, int> VanillaValue = new()
-        {
-            { ItemID.Mushroom, Item.sellPrice(copper: 5) },
-            { ItemID.GlowingMushroom, Item.sellPrice(copper: 10) },
-            { ItemID.VileMushroom, Item.sellPrice(silver: 2, copper: 50) },
-            { ItemID.ViciousMushroom, Item.sellPrice(silver: 2, copper: 50) },
-            { ItemID.EncumberingStone, Item.sellPrice(gold: 1) },
-            { ItemID.UncumberingStone, Item.sellPrice(gold: 1) },
-        };
-        /// <summary>
-        /// 按物品类型回退灾厄的字段削弱：把伤害/攻速/弹速/防御/斧力/售价恢复为原版值。
-        /// </summary>
-        private static void RevertVanillaNerf(Item item)
-        {
-            if (VanillaDamage.TryGetValue(item.type, out int damage))
-                item.damage = damage;
-            if (VanillaUseTime.TryGetValue(item.type, out int useTime))
+            // player = 攻击者 A，target = 被打中的 B；直接查 A 实际装备（不依赖 ModPlayer 标志位）
+            if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<YharimsInsignia>()))
             {
-                item.useTime = useTime;
-                item.useAnimation = useTime;
+                // 亚利姆徽章：给受害者施加圣焰（现代版）/圣光（经典版），随机时长
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
             }
-            if (VanillaShootSpeed.TryGetValue(item.type, out float shootSpeed))
-                item.shootSpeed = shootSpeed;
-            if (VanillaDefense.TryGetValue(item.type, out int defense))
-                item.defense = defense;
-            if (VanillaAxe.TryGetValue(item.type, out int axe))
-                item.axe = axe;
-            if (VanillaValue.TryGetValue(item.type, out int value))
-                item.value = value;
+            if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<ElementalGauntlet>()))
+            {
+                // 元素手套：给受害者施加全套元素 debuff（原版 + 两灾厄变体）
+                target.AddBuff(BuffID.Poisoned, 120, false);
+                target.AddBuff(BuffID.OnFire, 120, false);
+                target.AddBuff(BuffID.CursedInferno, 120, false);
+                target.AddBuff(BuffID.Frostburn, 120, false);
+                target.AddBuff(BuffID.Ichor, 120, false);
+                target.AddBuff(BuffID.Venom, 120, false);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "Voidfrost", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "Nightwither", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "Plague", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "SulphuricPoisoning", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "GodSlayerInferno", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "ElementalMix", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "AbyssalFlames", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "Plague", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "BrimstoneFlames", 120);
+                if (Main.rand.NextBool(5))
+                    CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GlacialState", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GodSlayerInferno", 120);
+            }
+            if(player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueSet)
+            {
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HadopelagicPressure", 240);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "CrushDepth", 240);
+            }
+        }
+        // ── 原版削弱回调 ──
+        /// <summary>
+        /// 回退灾厄对原版饰品的削弱（侦察镜/狙击镜/手套系/日月石系）。
+        /// </summary>
+        public override void UpdateAccessory(Item item, Player player, bool hideVisual)
+        {
+            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
+                return;
+            switch (item.type)
+            {
+                case ItemID.ReconScope:
+                    player.GetCritChance<RangedDamageClass>() += 5;
+                    break;
+                case ItemID.SniperScope:
+                    player.GetDamage<RangedDamageClass>() += 0.1f;
+                    break;
+                case ItemID.FeralClaws:
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                    break;
+                case ItemID.PowerGlove:
+                case ItemID.BerserkerGlove:
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                    break;
+                case ItemID.MechanicalGlove:
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                    break;
+                case ItemID.FireGauntlet:
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                    break;
+                case ItemID.SunStone:
+                    if (Main.dayTime)
+                        player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
+                    break;
+                case ItemID.MoonStone:
+                    if (!Main.dayTime || Main.eclipse)
+                        player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
+                    break;
+                case ItemID.CelestialStone:
+                case ItemID.CelestialShell:
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
+                    break;
+            }
         }
         /// <summary>
         /// 回退灾厄对原版护甲套装的削弱（WizardHat 魔法暴击、MagicHat 最大法力）。
@@ -517,49 +534,37 @@ namespace CalamityDemutation.Content.Items
                     break;
             }
         }
+        // ── 私有工具 ──
         /// <summary>
-        /// 回退灾厄对原版饰品的削弱（侦察镜/狙击镜/手套系/日月石系）。
+        /// 17 级传奇武器名称颜色：按具体武器返回其专属颜色（本模组自有的传奇武器）。
         /// </summary>
-        public override void UpdateAccessory(Item item, Player player, bool hideVisual)
+        private static Color GetLegendaryWeaponColor(int itemType)
         {
-            if (CalamityDemutationConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
-                return;
-            switch (item.type)
-            {
-                case ItemID.ReconScope:
-                    player.GetCritChance<RangedDamageClass>() += 5;
-                    break;
-                case ItemID.SniperScope:
-                    player.GetDamage<RangedDamageClass>() += 0.1f;
-                    break;
-                case ItemID.FeralClaws:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.PowerGlove:
-                case ItemID.BerserkerGlove:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.MechanicalGlove:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.FireGauntlet:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.SunStone:
-                    if (Main.dayTime)
-                        player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
-                    break;
-                case ItemID.MoonStone:
-                    if (!Main.dayTime || Main.eclipse)
-                        player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
-                    break;
-                case ItemID.CelestialStone:
-                case ItemID.CelestialShell:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
-                    break;
-            }
+            if (itemType == ModContent.ItemType<DefenseBlade>())
+                return new Color(255, Main.DiscoG, 53);
+            return default;
         }
-        #endregion
+        /// <summary>
+        /// 按物品类型回退灾厄的字段削弱：把伤害/攻速/弹速/防御/斧力/售价恢复为原版值。
+        /// </summary>
+        private static void RevertVanillaNerf(Item item)
+        {
+            if (VanillaDamage.TryGetValue(item.type, out int damage))
+                item.damage = damage;
+            if (VanillaUseTime.TryGetValue(item.type, out int useTime))
+            {
+                item.useTime = useTime;
+                item.useAnimation = useTime;
+            }
+            if (VanillaShootSpeed.TryGetValue(item.type, out float shootSpeed))
+                item.shootSpeed = shootSpeed;
+            if (VanillaDefense.TryGetValue(item.type, out int defense))
+                item.defense = defense;
+            if (VanillaAxe.TryGetValue(item.type, out int axe))
+                item.axe = axe;
+            if (VanillaValue.TryGetValue(item.type, out int value))
+                item.value = value;
+        }
     }
     /// <summary>
     /// 全局增益类：回退现代版灾厄（CalamityMod）对原版增益 buff 的数值削弱。
