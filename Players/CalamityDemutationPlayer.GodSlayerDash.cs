@@ -17,7 +17,7 @@ namespace CalamityDemutation.Players
     /// 与灾厄实现的两点区别：
     /// 1) 不依赖灾厄的 dash 框架与反射——状态、位移、命中、阻拦原版冲刺全由本模组结算；
     /// 2) 冷却改用一个 ModBuff（<see cref="GodSlayerDashCooldown"/>，45 秒），不使用灾厄的 cooldown 系统。
-    /// 冲刺朝向由鼠标光标决定，起步 80、自持上限 40，命中 3000 基础伤害（吃通用职业加成）
+    /// 冲刺为八方向（朝向由方向键组合决定，与灾厄一致），起步 80、自持上限 40，命中 3000 基础伤害（吃通用职业加成）
     /// 并附加 300 帧 GodSlayerInferno。视觉与音效已按灾厄原文完整移植：
     /// 起手 1 个 DirectionalPulseRing + 16 颗尘，前 20 帧每帧一对 Jaws（洋红 + 青色）、
     /// 全程环形尘环 + 每帧 2 颗火花，第 21 帧补两层 DirectionalPulseRing；音效为吞噬者死亡/冲击音。
@@ -65,9 +65,8 @@ namespace CalamityDemutation.Players
         // ── 公开方法 ──
         /// <summary>
         /// 冲刺请求入口，由 ProcessTriggers 在按下 GodslayerDashHotKey 时调用。
-        /// 闸门：需穿着弑神者套（godSlayer 标记）、非滑轮/钩爪/被舌卷/坐骑、
-        /// 原版 dashDelay 为 0，且不在本模组的冲刺冷却中。
-        /// 朝向由鼠标光标决定（见 StartGodSlayerDash），因此不要求按方向键。
+        /// 闸门照抄灾厄：需穿着弑神者套（godSlayer 标记）、正按住任一方向键、
+        /// 非滑轮/钩爪/被舌卷/坐骑，原版 dashDelay 为 0，且不在本模组的冲刺冷却中。
         /// </summary>
         public void RequestGodSlayerDash()
         {
@@ -78,6 +77,8 @@ namespace CalamityDemutation.Players
             if (Player.pulley || Player.grappling[0] != -1 || Player.tongued || Player.mount.Active)
                 return;
             if (Player.dashDelay != 0)
+                return;
+            if (!Player.controlUp && !Player.controlDown && !Player.controlLeft && !Player.controlRight)
                 return;
             godSlayerDashQueued = true;
         }
@@ -105,14 +106,23 @@ namespace CalamityDemutation.Players
         }
         // ── 私有工具 ──
         /// <summary>
-        /// 冲刺起步：取「玩家中心 → 鼠标世界坐标」的单位向量作为朝向（朝光标冲刺），
+        /// 冲刺起步：把方向键组合归一化成八方向单位向量作为朝向（与灾厄一致），
         /// 速度直接置为 DashStartSpeed，并把 Player.dashDelay 置 -1 表示"冲刺中"；
         /// 随后播放吞噬者死亡音效（句柄留用以便每帧跟随玩家）、喷 16 颗暗紫尘与 1 个紫色定向脉冲环，并挂上冷却 buff。
         /// 与灾厄一致：若正前方有实心块，水平速度减半，避免一头撞墙飞出。
         /// </summary>
         private void StartGodSlayerDash()
         {
-            Vector2 direction = (Main.MouseWorld - Player.Center).SafeNormalize(new Vector2(Player.direction, 0f));
+            Vector2 direction = Vector2.Zero;
+            if (Player.controlUp)
+                direction.Y -= 1f;
+            if (Player.controlDown)
+                direction.Y += 1f;
+            if (Player.controlLeft)
+                direction.X -= 1f;
+            if (Player.controlRight)
+                direction.X += 1f;
+            direction = direction.SafeNormalize(new Vector2(Player.direction, 0f));
             Player.velocity = direction * DashStartSpeed;
             Player.dashDelay = -1;
             godSlayerDashElapsed = 1;
