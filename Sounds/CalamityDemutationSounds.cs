@@ -8,6 +8,10 @@ namespace CalamityDemutation.Sounds
     {
         /// <summary>至尊灾厄大挥砍（CatastropheSwing）</summary>
         public static readonly SoundStyle CatastropheSwing = new("CalamityDemutation/Sounds/Custom/SCalSounds/CatastropheResonanceSlash");
+        /// <summary>弑神者冲刺起手：吞噬者死亡动画音效（DevourerDeath）</summary>
+        public static readonly SoundStyle DevourerDeath = new("CalamityDemutation/Sounds/Custom/SCalSounds/DevourerDeath");
+        /// <summary>弑神者冲刺命中：吞噬者死亡冲击音效（DevourerDeathImpact）</summary>
+        public static readonly SoundStyle DevourerDeathImpact = new("CalamityDemutation/Sounds/Custom/SCalSounds/DevourerDeathImpact");
         /// <summary>肉感斩击（MeatySlash）</summary>
         public static readonly SoundStyle MeatySlashSound = new("CalamityDemutation/Sounds/Custom/MeatySlash");
         /// <summary>村正大挥砍（BigSwing）</summary>

@@ -88,6 +88,11 @@ Buffs: {
 		DisplayName: Yharim's Power
 		Description: You feel like you can break the world in two...with your bare hands!
 	}
+
+	GodSlayerDashCooldown: {
+		DisplayName: God Slayer Dash Cooldown
+		Description: Mods.CalamityDemutation.Buffs.GodSlayerDashCooldown.Description
+	}
 }
 
 Configs: {
