@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
