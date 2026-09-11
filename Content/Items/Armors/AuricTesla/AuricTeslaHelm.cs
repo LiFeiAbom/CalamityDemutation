@@ -4,6 +4,7 @@ using CalamityDemutation.Content.Items.Armors.GodSlayer;
 using CalamityDemutation.Content.Items.Armors.Silva;
 using CalamityDemutation.Content.Items.Armors.Tarragon;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using System;
 using System.Linq;
 using Terraria;
@@ -56,7 +57,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                 "Melee Tarragon, Bloodflare, God Slayer, and Silva armor effects\n" +
                 "All projectiles spawn healing auric orbs on enemy hits\n" +
                 "Max run speed and acceleration boosted by 10%\n" +
-                "Your melee damage is multiplied based on how high your HP is; at full HP this effect is at max";
+                "Your melee damage is multiplied based on how high your HP is; at full HP this effect is at max\n" +
+                $"Press [{KeybindsSystem.GodslayerDashKeyDisplay}] to dash towards the cursor\n" +
+                "Dealing great damage and inflicting the God Slayer Inferno debuff on contact\n" +
+                "This effect has a 45-second cooldown";
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.tarraSet = true;
             modPlayer.tarraMelee = true;
