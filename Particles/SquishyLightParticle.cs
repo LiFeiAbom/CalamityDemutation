@@ -10,15 +10,25 @@ namespace CalamityDemutation.Particles
     /// </summary>
     public class SquishyLightParticle : Particle
     {
-        public override string Texture => "CalamityDemutation/Particles/Light";
-        public override bool UseAdditiveBlend => true;
-        public override bool UseCustomDraw => true;
+        // ── 实例字段 ──
+        /// <summary>每帧色相偏移量（在 Update 中累加到 HSL 的 H 分量）</summary>
+        public float HueShift;
+        /// <summary>拉伸倍率上限</summary>
+        public float MaxSquish;
+        /// <summary>当前整体透明度（Update 中随生存进度变化）</summary>
+        public float Opacity;
+        /// <summary>拉伸强度：越大越容易随速度拉长</summary>
+        public float SquishStrenght;
+        // ── 属性 ──
+        /// <summary>寿命到期由 GeneralParticleHandler 自动移除</summary>
         public override bool SetLifetime => true;
-        public float Opacity;          // 当前整体透明度（Update 中随生存进度变化）
-        public float SquishStrenght;   // 拉伸强度：越大越容易随速度拉长
-        public float MaxSquish;        // 拉伸倍率上限
-        public float HueShift;         // 每帧色相偏移量（在 Update 中累加到 HSL 的 H 分量）
-
+        /// <summary>使用 Particles/Light 贴图</summary>
+        public override string Texture => "CalamityDemutation/Particles/Light";
+        /// <summary>使用加法混合</summary>
+        public override bool UseAdditiveBlend => true;
+        /// <summary>走 CustomDraw 自定义绘制</summary>
+        public override bool UseCustomDraw => true;
+        // ── 构造函数 ──
         /// <summary>
         /// 构造柔和发光粒子：写入位置、速度、缩放、颜色、寿命与拉伸/色相参数，初始旋转为 0。
         /// </summary>
@@ -44,19 +54,7 @@ namespace CalamityDemutation.Particles
             MaxSquish = maxSquish;
             HueShift = hueShift;
         }
-        /// <summary>
-        /// 每帧由 GeneralParticleHandler 调用：前 34% 寿命轻微提速（×1.02），之后减速（×0.93）；
-        /// 透明度在寿命过半后加 0.8 的基值做 sin 衰减，前半程为纯 sin；缩放每帧 ×0.95；
-        /// 最后按 HueShift 对颜色做色相循环
-        /// </summary>
-        public override void Update()
-        {
-            Velocity *= (LifetimeCompletion >= 0.34f) ? 0.93f : 1.02f;
-            Opacity = LifetimeCompletion > 0.5f ? (float)Math.Sin(LifetimeCompletion * MathHelper.Pi) * 0.2f + 0.8f : (float)Math.Sin(LifetimeCompletion * MathHelper.Pi);
-            Scale *= 0.95f;
-            Vector3 hsl = Main.rgbToHsl(Color);
-            Color = Main.hslToRgb(hsl.X + HueShift, hsl.Y, hsl.Z);
-        }
+        // ── 公开方法 ──
         /// <summary>
         /// 自定义绘制（UseCustomDraw=true 时被调用）：先画 BloomCircle 光晕底，再叠两层 Light 贴图。
         /// 拉伸量由速度大小算出并夹在 [1, MaxSquish]，旋转对齐速度方向，横向随拉伸收窄、
@@ -75,6 +73,19 @@ namespace CalamityDemutation.Particles
             Main.spriteBatch.Draw(bloomTex, drawPosition, null, Color * Opacity * 0.8f, rot, bloomTex.Size() / 2f, scale * 2 * properBloomSize, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(tex, drawPosition, null, Color * Opacity * 0.8f, rot, origin, scale * 1.1f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(tex, drawPosition, null, Color.White * Opacity * 0.9f, rot, origin, scale, SpriteEffects.None, 0f);
+        }
+        /// <summary>
+        /// 每帧由 GeneralParticleHandler 调用：前 34% 寿命轻微提速（×1.02），之后减速（×0.93）；
+        /// 透明度在寿命过半后加 0.8 的基值做 sin 衰减，前半程为纯 sin；缩放每帧 ×0.95；
+        /// 最后按 HueShift 对颜色做色相循环
+        /// </summary>
+        public override void Update()
+        {
+            Velocity *= (LifetimeCompletion >= 0.34f) ? 0.93f : 1.02f;
+            Opacity = LifetimeCompletion > 0.5f ? (float)Math.Sin(LifetimeCompletion * MathHelper.Pi) * 0.2f + 0.8f : (float)Math.Sin(LifetimeCompletion * MathHelper.Pi);
+            Scale *= 0.95f;
+            Vector3 hsl = Main.rgbToHsl(Color);
+            Color = Main.hslToRgb(hsl.X + HueShift, hsl.Y, hsl.Z);
         }
     }
 }

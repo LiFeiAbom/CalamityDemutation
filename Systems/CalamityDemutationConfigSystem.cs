@@ -5,7 +5,7 @@ namespace CalamityDemutation.Systems
 {
     /// <summary>
     /// 模组配置类，提供客户端侧的配置选项。
-    /// 当前配置项：原版数值回调开关。
+    /// 当前配置项：性能模式、挥砍刀光、武器自适应光照、原版数值回调。
     /// </summary>
     internal class CalamityDemutationConfigSystem : ModConfig
     {
@@ -17,13 +17,6 @@ namespace CalamityDemutation.Systems
         /// 配置作用域：客户端侧，仅影响本机显示/性能类选项，不参与多人同步
         /// </summary>
         public override ConfigScope Mode => ConfigScope.ClientSide;
-        /// <summary>
-        /// 配置加载完成钩子：由 tModLoader 在配置读入后自动调用，缓存配置单例
-        /// </summary>
-        public override void OnLoaded()
-        {
-            Instance = this;
-        }
         /// <summary>
         /// 性能模式开关：启用后禁用弹幕残影/拖尾渲染，
         /// 在弹幕数量庞大时可显著降低绘制开销（详见 DrawAfterimages 的实现）。
@@ -50,5 +43,12 @@ namespace CalamityDemutation.Systems
         [BackgroundColor(192, 54, 94, 192)]
         [DefaultValue(true)]
         public bool WeaponAdaptiveIllumination { get; set; }
+        /// <summary>
+        /// 配置加载完成钩子：由 tModLoader 在配置读入后自动调用，缓存配置单例
+        /// </summary>
+        public override void OnLoaded()
+        {
+            Instance = this;
+        }
     }
 }

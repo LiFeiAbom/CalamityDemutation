@@ -10,7 +10,13 @@ namespace CalamityDemutation.Systems.Graphic
     /// </summary>
     internal sealed class GeneralDrawLayerSystem : ModSystem
     {
+        /// <summary>
+        /// 在指定绘制层级触发的事件；订阅者（如 GeneralParticleHandler、MetaballManager）据此挂接绘制
+        /// </summary>
         public static event Action<GeneralDrawLayer> OnDrawLayer;
+        /// <summary>
+        /// 绘制前准备阶段的事件，在 On_Main.CheckMonoliths 之后触发；订阅者（如 MetaballManager）据此预渲染到离屏目标
+        /// </summary>
         public static event Action OnPrepareDraw;
         /// <summary>
         /// 加载时挂上两个 On_Main 钩子：CheckMonoliths（用于在绘制准备阶段触发 OnPrepareDraw）
@@ -22,19 +28,19 @@ namespace CalamityDemutation.Systems.Graphic
             On_Main.DrawDust += GeneralDrawLayer_DrawToLayer_AfterDusts;
         }
         /// <summary>
+        /// 卸载时把 OnDrawLayer 事件置空，从而一次性清除所有订阅者（例如 GeneralParticleHandler 的绘制回调）
+        /// </summary>
+        public override void Unload()
+        {
+            OnDrawLayer = null;
+        }
+        /// <summary>
         /// On_Main.CheckMonoliths 钩子：先执行原版逻辑，再触发 OnPrepareDraw 通知订阅者做绘制前准备
         /// </summary>
         private static void CheckMonoliths(On_Main.orig_CheckMonoliths orig)
         {
             orig();
             OnPrepareDraw?.Invoke();
-        }
-        /// <summary>
-        /// 卸载时把 OnDrawLayer 事件置空，从而一次性清除所有订阅者（例如 GeneralParticleHandler 的绘制回调）
-        /// </summary>
-        public override void Unload()
-        {
-            OnDrawLayer = null;
         }
         /// <summary>
         /// On_Main.DrawDust 钩子：先执行原版尘埃绘制，再触发 AfterDusts 层事件，
