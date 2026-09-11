@@ -20,6 +20,52 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
     [AutoloadEquip(EquipType.Head)]
     internal class GodSlayerHelm:ModItem
     {
+        // ── 静态字段 ──
+        /// <summary>
+        /// 反射到的灾厄 CalamityPlayer 类型（现代版），仅解析一次；未装灾厄或失败时为 null
+        /// </summary>
+        private static Type calamityPlayerType;
+        /// <summary>
+        /// 是否已尝试过灾厄 dash 反射解析，避免每帧重复解析
+        /// </summary>
+        private static bool calamityResolveDone;
+        /// <summary>
+        /// 灾厄 CalamityPlayer.cooldowns 字段（冲刺冷却表）
+        /// </summary>
+        private static FieldInfo cooldownsField;
+        /// <summary>
+        /// 灾厄 CalamityPlayer.DeferredDashID 字段（下次冲刺使用的 dash ID）
+        /// </summary>
+        private static FieldInfo deferredDashIDField;
+        /// <summary>
+        /// 缓存的 Player.GetModPlayer 泛型方法（已绑定灾厄 CalamityPlayer）
+        /// </summary>
+        private static MethodInfo getModPlayerMethod;
+        /// <summary>
+        /// 灾厄 CalamityPlayer.godSlayerDashHotKeyPressed 字段
+        /// </summary>
+        private static FieldInfo godSlayerDashHotKeyPressedField;
+        /// <summary>
+        /// 灾厄 GodslayerArmorDash.ID 的值（弑神者冲刺的 dash 标识）
+        /// </summary>
+        private static string godslayerDashID;
+        /// <summary>
+        /// 灾厄 CalamityPlayer.godSlayer 字段（置真后灾厄会按弑神者套处理冲刺）
+        /// </summary>
+        private static FieldInfo godSlayerField;
+        /// <summary>
+        /// 灾厄 CalamityPlayer.LastUsedDashID 字段
+        /// </summary>
+        private static FieldInfo lastUsedDashIDField;
+        /// <summary>
+        /// 是否已打印过「写入 DeferredDashID」的诊断日志（仅打印一次）
+        /// </summary>
+        private static bool loggedDashWrite;
+        /// <summary>
+        /// 是否已打印过「进入 UpdateArmorSet」的诊断日志（仅打印一次）
+        /// </summary>
+        private static bool loggedSetBonus;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 物品基础属性：尺寸、售价、防御与月后自定义稀有度
         /// </summary>
@@ -101,19 +147,45 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
                 recipe1.Register();
             }
         }
-        // 以下静态字段缓存反射结果：灾厄 CalamityPlayer 的类型、字段、方法以及一次性的解析/日志标志。
-        // 只解析一次，避免每帧反射的开销；未装灾厄或解析失败时全为 null，冲刺静默失效。
-        private static Type calamityPlayerType;
-        private static FieldInfo godSlayerField;
-        private static FieldInfo godSlayerDashHotKeyPressedField;
-        private static FieldInfo lastUsedDashIDField;
-        private static FieldInfo deferredDashIDField;
-        private static FieldInfo cooldownsField;
-        private static string godslayerDashID;
-        private static MethodInfo getModPlayerMethod;
-        private static bool calamityResolveDone;
-        private static bool loggedSetBonus;
-        private static bool loggedDashWrite;
+        // ── 公开方法 ──
+        /// <summary>
+        /// 本模组自己的冲刺键入口：直接把灾厄的 godSlayerDashHotKeyPressed 置真，
+        /// 之后的流程与灾厄自己的按键完全一致(由 TryTriggerGodslayerDash 每帧消费)。
+        /// 闸门照抄灾厄 CalamityPlayer 的按键判定，冷却检查用于防止绕过 45 秒冷却。
+        /// </summary>
+        internal static void RequestGodslayerDash(Player player)
+        {
+            if (player.whoAmI != Main.myPlayer || !TryGetCalamityPlayer(player, out ModPlayer calamityPlayer))
+                return;
+            if (player.pulley || player.grappling[0] != -1 || player.tongued || player.mount.Active || player.dashDelay != 0)
+                return;
+            if (HasCalamityCooldown(calamityPlayer, "GodSlayerDash"))
+                return;
+            godSlayerDashHotKeyPressedField.SetValue(calamityPlayer, true);
+        }
+        // ── 私有工具 ──
+        /// <summary>
+        /// 取灾厄 GodslayerArmorDash.ID：先找静态字段，找不到再退回静态属性。
+        /// </summary>
+        private static string FindGodslayerDashID(Type[] calamityTypes)
+        {
+            Type dashType = calamityTypes.FirstOrDefault(t => t.Name == "GodslayerArmorDash");
+            if (dashType == null)
+                return null;
+            const BindingFlags stat = BindingFlags.Public | BindingFlags.Static;
+            if (dashType.GetField("ID", stat) is FieldInfo idField)
+                return idField.GetValue(null) as string;
+            if (dashType.GetProperty("ID", stat) is PropertyInfo idProperty)
+                return idProperty.GetValue(null) as string;
+            return null;
+        }
+        /// <summary>
+        /// 读灾厄 CalamityPlayer.cooldowns 字典判断冷却是否在走，防止绕过 45 秒冷却。
+        /// </summary>
+        private static bool HasCalamityCooldown(ModPlayer calamityPlayer, string id)
+        {
+            return cooldownsField.GetValue(calamityPlayer) is IDictionary cooldowns && cooldowns.Contains(id);
+        }
         /// <summary>
         /// 反射解析灾厄(现代版) CalamityPlayer 上冲刺所需的成员，只解析一次后缓存。
         /// 灾厄经典版没有这套 dash 框架，未安装灾厄时返回 false，冲刺静默失效。
@@ -146,21 +218,6 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
                     + $", cooldowns={cooldownsField != null}, GodslayerArmorDashID={godslayerDashID}"
                     + $", GetModPlayer={getModPlayerMethod != null})，冲刺已禁用。");
             return ok;
-        }
-        /// <summary>
-        /// 取灾厄 GodslayerArmorDash.ID：先找静态字段，找不到再退回静态属性。
-        /// </summary>
-        private static string FindGodslayerDashID(Type[] calamityTypes)
-        {
-            Type dashType = calamityTypes.FirstOrDefault(t => t.Name == "GodslayerArmorDash");
-            if (dashType == null)
-                return null;
-            const BindingFlags stat = BindingFlags.Public | BindingFlags.Static;
-            if (dashType.GetField("ID", stat) is FieldInfo idField)
-                return idField.GetValue(null) as string;
-            if (dashType.GetProperty("ID", stat) is PropertyInfo idProperty)
-                return idProperty.GetValue(null) as string;
-            return null;
         }
         /// <summary>
         /// 取出玩家对应的灾厄 CalamityPlayer 实例（通过反射缓存的方法调用）。
@@ -202,28 +259,6 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
                 loggedDashWrite = true;
                 Main.NewText("[CD诊断] 已写入 DeferredDashID = " + godslayerDashID); // TODO 确认可触发后删除
             }
-        }
-        /// <summary>
-        /// 本模组自己的冲刺键入口：直接把灾厄的 godSlayerDashHotKeyPressed 置真，
-        /// 之后的流程与灾厄自己的按键完全一致(由 TryTriggerGodslayerDash 每帧消费)。
-        /// 闸门照抄灾厄 CalamityPlayer 的按键判定，冷却检查用于防止绕过 45 秒冷却。
-        /// </summary>
-        internal static void RequestGodslayerDash(Player player)
-        {
-            if (player.whoAmI != Main.myPlayer || !TryGetCalamityPlayer(player, out ModPlayer calamityPlayer))
-                return;
-            if (player.pulley || player.grappling[0] != -1 || player.tongued || player.mount.Active || player.dashDelay != 0)
-                return;
-            if (HasCalamityCooldown(calamityPlayer, "GodSlayerDash"))
-                return;
-            godSlayerDashHotKeyPressedField.SetValue(calamityPlayer, true);
-        }
-        /// <summary>
-        /// 读灾厄 CalamityPlayer.cooldowns 字典判断冷却是否在走，防止绕过 45 秒冷却。
-        /// </summary>
-        private static bool HasCalamityCooldown(ModPlayer calamityPlayer, string id)
-        {
-            return cooldownsField.GetValue(calamityPlayer) is IDictionary cooldowns && cooldowns.Contains(id);
         }
     }
 }

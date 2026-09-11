@@ -20,7 +20,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
             Item.value = Item.buyPrice(5, 0, 0, 0);  // 售价 5 铂金
-            Item.defense = 55; //15
+            Item.defense = 55; //15（原值记录，当前实际生效 55）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
         /// <summary>
@@ -37,16 +37,6 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.armorEffectDrawShadow = true;
             player.armorEffectDrawOutlines = true;
-        }
-        /// <summary>
-        /// 单件装备加成：召唤上限、通用伤害与暴击
-        /// </summary>
-        public override void UpdateEquip(Player player)
-        {
-            player.maxMinions += 10;                            // 仆从栏上限 +10
-            player.maxTurrets += 10;                            // 哨兵栏上限 +10
-            player.GetDamage<GenericDamageClass>() += 0.5f;     // 全类型伤害 +50%
-            player.GetCritChance<GenericDamageClass>() += 50;   // 全类型暴击率 +50%
         }
         /// <summary>
         /// 套装激活：置位 demonshadeSetBonus 与 redDevil 标记，补上红魔 buff 并召唤红魔，
@@ -80,6 +70,16 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
                 Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.RedDevil>(), redDevilDamage, 0f, Main.myPlayer, 0f, 0f);  // 场上无红魔时召唤一只
             }
             player.GetDamage<GenericDamageClass>() += 1f;  // 全类型伤害 +100%
+        }
+        /// <summary>
+        /// 单件装备加成：召唤上限、通用伤害与暴击
+        /// </summary>
+        public override void UpdateEquip(Player player)
+        {
+            player.maxMinions += 10;                            // 仆从栏上限 +10
+            player.maxTurrets += 10;                            // 哨兵栏上限 +10
+            player.GetDamage<GenericDamageClass>() += 0.5f;     // 全类型伤害 +50%
+            player.GetCritChance<GenericDamageClass>() += 50;   // 全类型暴击率 +50%
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）

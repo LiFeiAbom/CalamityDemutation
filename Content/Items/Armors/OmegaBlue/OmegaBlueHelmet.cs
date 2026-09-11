@@ -29,18 +29,6 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;  // 月后稀有度 13（荧光绿名）
         }
         /// <summary>
-        /// 单件属性：免疫溺水、全伤害 / 暴击、最大仆从数
-        /// </summary>
-        public override void UpdateEquip(Player player)
-        {
-            player.ignoreWater = true;   // 免疫溺水
-            const float damageUp = 0.12f;
-            const int critUp = 8;
-            player.GetDamage<GenericDamageClass>() += damageUp;   // 全伤害 +12%
-            player.GetCritChance<GenericDamageClass>() += critUp;  // 全暴击 +8%
-            player.maxMinions += 2;      // 最大仆从 +2
-        }
-        /// <summary>
         /// 判定套装：头部 + 奥米加蓝胸甲 + 奥米加蓝护腿
         /// </summary>
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -97,6 +85,18 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
                 Main.dust[d].fadeIn = 1f;
                 Main.dust[d].velocity *= 3f;
             }
+        }
+        /// <summary>
+        /// 单件属性：免疫溺水、全伤害 / 暴击、最大仆从数
+        /// </summary>
+        public override void UpdateEquip(Player player)
+        {
+            player.ignoreWater = true;   // 免疫溺水
+            const float damageUp = 0.12f;
+            const int critUp = 8;
+            player.GetDamage<GenericDamageClass>() += damageUp;   // 全伤害 +12%
+            player.GetCritChance<GenericDamageClass>() += critUp;  // 全暴击 +8%
+            player.maxMinions += 2;      // 最大仆从 +2
         }
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，分别注册，均在原版月球工作台合成。
