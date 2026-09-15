@@ -1421,3 +1421,84 @@ Keybinds: {
 	Demonshade.DisplayName: 恶魔阴影狂怒
 	GodslayerDash.DisplayName: 弑神者冲刺
 }
+
+Projectiles: {
+	AuraRain.DisplayName: 光环之雨
+	AuricOrb.DisplayName: 金源光球
+	BaseHeldProjCO.DisplayName: 手持弹幕基类
+	BigBustyRose.DisplayName: 硕大玫瑰
+	BiomeOrb.DisplayName: 环境能量
+	BloodScythe.DisplayName: 血镰
+	BloodyBlade.DisplayName: 血刃
+	BrimstoneHellfireballFriendly.DisplayName: 地狱火
+	BrimstoneHellfireballFriendly2.DisplayName: 硫磺地狱火球 2
+	CactusHealOrb.DisplayName: 治疗
+	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
+	CloudyWaifu.DisplayName: 云元素
+	DeathLaser.DisplayName: 死亡激光
+	DefenseBeam.DisplayName: 防御光束
+	DefenseBlast.DisplayName: 防御爆裂
+	DefenseBlast2.DisplayName: 防御爆裂 2
+	DefenseFlame.DisplayName: 防御烈焰
+	DemonFork.DisplayName: 恶魔叉
+	DragonRageFireOrb.DisplayName: 巨龙之怒火球
+	DragonRageHeld.DisplayName: 巨龙之怒（手持）
+	DrewsSandyWaifu.DisplayName: 稀有沙元素
+	ElementBall.DisplayName: 元素球
+	EonBeam.DisplayName: 远古光束
+	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
+	EXNeutronExplode.DisplayName: 中子大爆点
+	ExoComet.DisplayName: 终焉彗星
+	FireBall.DisplayName: 火球
+	FrostMistFriendly.DisplayName: 冰雾
+	FungalClump.DisplayName: 真菌团块
+	FungalHeal.DisplayName: 真菌治疗
+	Galaxia.DisplayName: 银河之星光球
+	GalaxyBlast.DisplayName: 星系爆弹
+	GodSlayerDart.DisplayName: 弑神者飞镖
+	HellfireExplosionFriendly.DisplayName: 地狱火爆炸
+	HellfireExplosionFriendly2.DisplayName: 地狱火爆炸 2
+	LaserFountains.DisplayName: 激光喷泉
+	NebulaDust.DisplayName: 星云之尘
+	NebulaStar.DisplayName: 星云之星
+	NeutronExplode.DisplayName: 中子爆点
+	NeutronGlaiveBeam.DisplayName: 中子长戟光束
+	NeutronGlaiveHeld.DisplayName: 中子长戟
+	NeutronsOrb.DisplayName: 中子球
+	Oathblade.DisplayName: 誓约之刃
+	OathswordFlame.DisplayName: 誓约剑之焰
+	OmegaBiomeOrb.DisplayName: 欧米茄环境能量
+	OmegaBlueTentacle.DisplayName: 蓝色欧米茄触手
+	PoisonousSeawater.DisplayName: 有毒海水
+	RedDevil.DisplayName: 红色恶魔
+	SandBolt.DisplayName: 沙弹
+	SandMark.DisplayName: 沙之印记
+	SandTornado.DisplayName: 沙尘暴
+	SandyWaifu.DisplayName: 沙元素
+	SilvaOrb.DisplayName: 始源林海光球
+	SirenLure.DisplayName: 塞壬诱惑
+	SirenSongFriendly.DisplayName: 塞壬之歌
+	Spark.DisplayName: 火花
+	StandingFire.DisplayName: 滞留火焰
+	TerraBall.DisplayName: 泰拉球
+	TrueBiomeOrb.DisplayName: 真·环境能量
+	WaterSpearFriendly.DisplayName: 水流长矛
+	MiniGuardianAttack.DisplayName: 进攻守护者
+	MiniGuardianDefense.DisplayName: 防御守护者
+	MiniGuardianHealer.DisplayName: 治愈守护者
+	MiniGuardianHolyRay.DisplayName: 神圣射线
+	MiniGuardianRock.DisplayName: 亵渎岩石
+	MiniGuardianSpear.DisplayName: 亵渎长矛
+	MiniGuardianStars.DisplayName: 亵渎星辰
+	MiniGuardianFireball.DisplayName: 迷你守护者火球
+	MiniGuardianFireballSplit.DisplayName: 迷你守护者分裂火球
+	ProfanedCrystalMageFireball.DisplayName: 神圣火球
+	ProfanedCrystalMageFireballSplit.DisplayName: 神圣烈焰
+	ProfanedCrystalMeleeSpear.DisplayName: 神圣长矛
+	ProfanedCrystalRangedHuges.DisplayName: 神圣回旋刃
+	ProfanedCrystalRangedSmalls.DisplayName: 神圣回旋光球
+	ProfanedCrystalRogueShard.DisplayName: 神圣水晶碎片
+	ProfanedCrystalWhip.DisplayName: 亵渎水晶鞭
+	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
+	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
+}
