@@ -583,7 +583,7 @@ Items: {
 	}
 
 	DefenseBlade: {
-		DisplayName: 守护之刃
+		DisplayName: 庇护之刃
 		Tooltip:
 			'''
 			传奇武器
