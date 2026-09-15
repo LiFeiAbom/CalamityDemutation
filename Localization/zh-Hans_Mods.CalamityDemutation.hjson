@@ -1,0 +1,191 @@
+Buffs: {
+	Afflicted: {
+		DisplayName: 侵蚀
+		Description: 受异界魂灵强化
+	}
+
+	BrimstoneWaifu: {
+		Description: 硫磺元素会保护你
+		DisplayName: 硫磺元素
+	}
+
+	CloudyWaifu: {
+		Description: 云元素会保护你
+		DisplayName: 云元素
+	}
+
+	DemonFlames: {
+		DisplayName: 恶魔烈焰
+		Description: 又一种灼烧减益
+	}
+
+	DrewsSandyWaifu: {
+		Description: 沙元素会为你治疗
+		DisplayName: 稀有沙元素
+	}
+
+	Enraged: {
+		DisplayName: 狂怒
+		Description: 敌怪陷入狂怒
+	}
+
+	FungalClump: {
+		DisplayName: 真菌团块
+		Description: 真菌团块会保护你
+	}
+
+	GodSlayerCooldown: {
+		DisplayName: 弑神者冷却
+		Description: 所有伤害提高 10%；弑神者效果正在充能
+	}
+
+	HellfireExplosion: {
+		DisplayName: 地狱火爆炸
+		Description: 来自地狱的火焰
+	}
+
+	HotE: {
+		Description: 所有元素都会保护你
+		DisplayName: 元素之心
+	}
+
+	RedDevil: {
+		DisplayName: 红色恶魔
+		Description: 红色恶魔会保护你
+	}
+
+	SandyWaifu: {
+		Description: 沙元素会保护你
+		DisplayName: 沙元素
+	}
+
+	ShellBoost: {
+		DisplayName: 甲壳加速
+		Description: 移动速度提升
+	}
+
+	SilvaHysteresis: {
+		DisplayName: 始源林迟滞
+		Description: 沉重却正在崩解
+	}
+
+	SilvaRevival: {
+		DisplayName: 始源林复苏
+		Description: 你处于无敌状态
+	}
+
+	SirenLure: {
+		Description: 塞壬会保护你
+		DisplayName: 塞壬
+	}
+
+	TarraLifeRegen: {
+		DisplayName: 龙蒿生命再生
+		Description: 快速治疗
+	}
+
+	VoidErosion: {
+		DisplayName: 虚空侵蚀
+		Description: 虚无正在吞噬你
+	}
+
+	YharimPower: {
+		DisplayName: 亚利姆之力
+		Description: 你感觉自己能徒手把世界撕成两半！
+	}
+
+	GodSlayerDashCooldown: {
+		DisplayName: 弑神者冲刺冷却
+		Description: 弑神者的力量正在汇聚
+	}
+
+	Cadence: {
+		DisplayName: 韵律
+		Description: 你的心灵纯洁无瑕
+	}
+
+	Revivify: {
+		DisplayName: 重振精神
+		Description: 敌怪对你造成的伤害有一小部分会转化为治疗
+	}
+
+	TitanScale: {
+		DisplayName: 泰坦之鳞
+		Description: 你感觉坚不可摧
+	}
+
+	HolyWrath: {
+		DisplayName: 神圣之怒
+		Description: 伤害提升，移动与飞行速度提升，所有攻击附带神圣之火
+	}
+
+	Triumph: {
+		DisplayName: 胜利
+		Description: 敌怪接触伤害降低，其生命值越低降幅越大
+	}
+
+	ArmorCrumbling: {
+		DisplayName: 护甲崩裂
+		Description: 击碎敌怪护甲
+	}
+
+	ArmorShattering: {
+		DisplayName: 护甲粉碎
+		Description: 击碎敌怪护甲
+	}
+
+	Bounding: {
+		DisplayName: 弹跳
+		Description: 跳跃高度与跳跃速度提升，摔落伤害抗性提高
+	}
+
+	Photosynthesis: {
+		DisplayName: 光合作用
+		Description: 生命再生提升，白天效果更强，红心治疗量提高
+	}
+
+	ProfanedRage: {
+		DisplayName: 渎神之怒
+		Description: 暴击率提升，移动与飞行速度提升
+	}
+
+	Soaring: {
+		DisplayName: 翱翔
+		Description: 翅膀飞行时间与速度提升
+	}
+
+	DraconicSurgeBuff: {
+		DisplayName: 龙之涌动
+		Description: 巨龙之力在你血脉中奔涌
+	}
+
+	Calcium: {
+		DisplayName: 钙质
+		Description: 你免疫摔落伤害
+	}
+
+	CeaselessHunger: {
+		DisplayName: 无尽饥饿
+		Description: 你正在吸取所有物品
+	}
+
+	ProfanedSoulGuardians: {
+		DisplayName: 亵渎之魂
+		Description: 亵渎守护者为你而战并保护你
+	}
+
+	ProfanedCrystalBuff: {
+		DisplayName: 虔诚
+		Description: 你体内的亵渎之魂已被至高女巫的强大魔法所玷污
+	}
+
+	ProfanedCrystalWhipBuff: {
+		DisplayName: 亵渎水晶鞭强化
+		Description: 守护者已被亵渎水晶鞭强化
+	}
+
+	ProfanedCrystalWhipDebuff: {
+		DisplayName: 亵渎水晶鞭减益
+		Description: 你的血肉被亵渎的水晶鞭撕开！
+	}
+}
