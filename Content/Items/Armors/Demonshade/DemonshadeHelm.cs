@@ -72,7 +72,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             {
                 Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.RedDevil>(), redDevilDamage, 0f, Main.myPlayer, 0f, 0f);  // 场上无红魔时召唤一只
             }
-            player.GetDamage<GenericDamageClass>() += 1f;  // 全类型伤害 +100%
+            player.GetDamage<SummonDamageClass>() += 1f;  // 召唤伤害 +100%（套装奖励原文的 "100% increased damage" 指召唤伤害）
         }
         /// <summary>
         /// 单件装备加成：召唤上限、通用伤害与暴击
@@ -92,17 +92,23 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("ShadowspecBar").Type, 40);  // 现代版灾厄：ShadowspecBar×40
-                recipe.AddTile(calamity.Find<ModTile>("DraedonsForge").Type);            // 现代版灾厄：德雷顿熔炉
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar) && calamity.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(shadowspecBar.Type, 40);  // 现代版灾厄：ShadowspecBar×40
+                    recipe.AddTile(draedonsForge.Type);            // 现代版灾厄：德雷顿熔炉
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ShadowspecBar").Type, 40);  // 经典版灾厄：ShadowspecBar×40
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);            // 经典版灾厄：德雷顿熔炉
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(classicShadowspecBar.Type, 40);  // 经典版灾厄：ShadowspecBar×40
+                    recipe1.AddTile(classicDraedonsForge.Type);            // 经典版灾厄：德雷顿熔炉
+                    recipe1.Register();
+                }
             }
         }
     }

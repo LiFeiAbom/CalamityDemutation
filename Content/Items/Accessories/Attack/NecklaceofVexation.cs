@@ -40,19 +40,25 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
             // 分别适配现代版与经典版灾厄的合成配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("PerennialBar").Type, 2);
-                recipe.AddIngredient(ItemID.AvengerEmblem);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("PerennialBar", out ModItem perennialBar1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(perennialBar1.Type, 2);
+                    recipe.AddIngredient(ItemID.AvengerEmblem);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DraedonBar").Type, 2);
-                recipe1.AddIngredient(ItemID.AvengerEmblem);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("DraedonBar", out ModItem draedonBar1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(draedonBar1.Type, 2);
+                    recipe1.AddIngredient(ItemID.AvengerEmblem);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

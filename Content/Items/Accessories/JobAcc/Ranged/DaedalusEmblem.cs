@@ -40,21 +40,27 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
             // 兼容灾厄现代版与经典版：两者材料名不同，需分别注册配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(ItemID.CelestialStone);
-                recipe.AddIngredient(calamity.Find<ModItem>("CoreofCalamity").Type);
-                recipe.AddIngredient(ItemID.RangerEmblem);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.CelestialStone);
+                    recipe.AddIngredient(coreofCalamity1.Type);
+                    recipe.AddIngredient(ItemID.RangerEmblem);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.CelestialStone);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofCalamity").Type);
-                recipe1.AddIngredient(ItemID.RangerEmblem);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ItemID.CelestialStone);
+                    recipe1.AddIngredient(coreofCalamity2.Type);
+                    recipe1.AddIngredient(ItemID.RangerEmblem);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

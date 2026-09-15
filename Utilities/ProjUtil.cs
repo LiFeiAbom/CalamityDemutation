@@ -47,7 +47,7 @@ namespace CalamityDemutation.Utilities
             if (proj.spriteDirection == -1)
                 spriteEffects = SpriteEffects.FlipHorizontally;
             bool failedToDrawAfterimages = false;
-            if (!ConfigSystem.Instance.PerformanceMode)
+            if (ConfigSystem.Instance?.PerformanceMode != true)
             {
                 Vector2 centerOffset = proj.Size / 2f;
                 Color alphaColor = proj.GetAlpha(lightColor);
@@ -101,7 +101,7 @@ namespace CalamityDemutation.Utilities
                 }
             }
             // 性能模式 / 弹幕未登记残影缓存 / 模式非法时：只绘制弹幕本体（无拖尾）
-            if (ConfigSystem.Instance.PerformanceMode || ProjectileID.Sets.TrailCacheLength[proj.type] <= 0 || failedToDrawAfterimages)
+            if (ConfigSystem.Instance?.PerformanceMode == true || ProjectileID.Sets.TrailCacheLength[proj.type] <= 0 || failedToDrawAfterimages)
             {
                 Vector2 startPos = proj.Center;
                 Main.spriteBatch.Draw(texture, startPos - Main.screenPosition + new Vector2(0f, proj.gfxOffY), rectangle, proj.GetAlpha(lightColor), rotation, origin, scale, spriteEffects, 0f);

@@ -27,8 +27,8 @@ namespace CalamityDemutation.Systems
         {
             get
             {
-                List<string> assigned = GodslayerDashHotKey.GetAssignedKeys(InputMode.Keyboard);
-                return assigned.Count > 0 ? string.Join("/", assigned) : "H";
+                List<string> assigned = GodslayerDashHotKey?.GetAssignedKeys(InputMode.Keyboard);
+                return assigned != null && assigned.Count > 0 ? string.Join("/", assigned) : "H";
             }
         }
         /// <summary>模组加载时注册两个快捷键：注册名与默认键位字符串。</summary>

@@ -117,11 +117,13 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                target.AddBuff(calamity.Find<ModBuff>("GodSlayerInferno").Type, 180);
+                if (calamity.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                    target.AddBuff(godSlayerInferno.Type, 180);
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                target.AddBuff(calamity1.Find<ModBuff>("GodSlayerInferno").Type, 180);
+                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff classicGodSlayerInferno))
+                    target.AddBuff(classicGodSlayerInferno.Type, 180);
             }
         }
         /// <summary>
@@ -131,11 +133,13 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                target.AddBuff(calamity.Find<ModBuff>("GodSlayerInferno").Type, 180);
+                if (calamity.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                    target.AddBuff(godSlayerInferno.Type, 180);
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                target.AddBuff(calamity1.Find<ModBuff>("GodSlayerInferno").Type, 180);
+                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff classicGodSlayerInferno))
+                    target.AddBuff(classicGodSlayerInferno.Type, 180);
             }
         }
     }

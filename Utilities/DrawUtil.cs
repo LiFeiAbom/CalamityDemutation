@@ -47,6 +47,25 @@ namespace CalamityDemutation.Utilities
             spriteBatch.Draw(glowmaskTexture, item.Center - Main.screenPosition, null, Color.White, rotation, glowmaskTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
         }
         /// <summary>
+        /// 十向偏移背光：以弹幕中心为基准绕一圈 10 个方向各叠画一次贴图，形成发光描边
+        /// （移植自灾厄 ProjectileUtils.DrawBackglow 的单色版本）。帧取 Main.projFrames 的当前帧，
+        /// 因此单帧贴图与多帧动画贴图都能正确取样；贴图留空时取弹幕自身的贴图。
+        /// </summary>
+        public static void DrawBackglow(this Projectile projectile, Color backglowColor, float backglowArea, Texture2D texture = null)
+        {
+            texture ??= TextureAssets.Projectile[projectile.type].Value;
+            Rectangle frame = texture.Frame(1, Main.projFrames[projectile.type], 0, projectile.frame);
+            Vector2 drawPosition = projectile.Center - Main.screenPosition;
+            Vector2 origin = frame.Size() * 0.5f;
+            Color backAfterimageColor = backglowColor * projectile.Opacity;
+            SpriteEffects spriteEffects = projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            for (int i = 0; i < 10; i++)
+            {
+                Vector2 drawOffset = (MathHelper.TwoPi * i / 10f).ToRotationVector2() * backglowArea;
+                Main.spriteBatch.Draw(texture, drawPosition + drawOffset, frame, backAfterimageColor, projectile.rotation, origin, projectile.scale, spriteEffects, 0f);
+            }
+        }
+        /// <summary>
         /// 多色渐变插值：按 <paramref name="increment"/>（0-1 递增）在多个颜色间循环过渡。
         /// </summary>
         public static Color MulticolorLerp(float increment, params Color[] colors)

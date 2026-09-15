@@ -1,3 +1,4 @@
+using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using CalamityDemutation.Utilities;
@@ -119,11 +120,29 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             return false;
         }
         /// <summary>
+        /// 命中敌怪：附加虚空侵蚀（VoidErosion）减益 1200 tick（20 秒）。
+        /// </summary>
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<VoidErosion>(), 1200);
+        }
+        /// <summary>
+        /// 命中玩家（PvP）：附加虚空侵蚀（VoidErosion）减益 1200 tick（20 秒），与 OnHitNPC 对称。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<VoidErosion>(), 1200);
+        }
+        /// <summary>
         /// 消亡：先以 300 半径做一次范围伤害（CDUtil.Explode，音效 Item14 升调 0.45），
         /// 再把中心随机偏移一下，另生成 NeutronExplode 继承伤害，负责爆炸的扭曲视觉。
         /// </summary>
         public override void OnKill(int timeLeft)
         {
+            // 仅在主人端结算：范围伤害与 NeutronExplode 都会作用于敌人，非主人端重复执行会叠加伤害；
+            // NeutronExplode 带 netImportant，会由主人端同步到其他端显示，视觉不受影响
+            if (Projectile.owner != Main.myPlayer)
+                return;
             Projectile.Explode(300, SoundID.Item14 with { Pitch = 0.45f });   // 扩大判定箱结算一次范围伤害
             Projectile.Center += CDUtil.randVr(64);   // 爆炸视觉位置随机偏移
             Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero

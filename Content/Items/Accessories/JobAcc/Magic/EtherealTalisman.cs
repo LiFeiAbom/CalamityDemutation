@@ -40,25 +40,31 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
             // 分别适配现代版（宇宙砧）与经典版（德雷顿熔炉）灾厄的合成配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<SigilofCalamitas>();
-                recipe.AddIngredient(ItemID.ManaFlower);
-                recipe.AddIngredient(calamity.Find<ModItem>("Necroplasm").Type, 20);
-                recipe.AddIngredient(calamity.Find<ModItem>("NightmareFuel").Type, 20);
-                recipe.AddIngredient(calamity.Find<ModItem>("EndothermicEnergy").Type, 20);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("Necroplasm", out ModItem necroplasm1) && calamity.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel1) && calamity.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy1) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<SigilofCalamitas>();
+                    recipe.AddIngredient(ItemID.ManaFlower);
+                    recipe.AddIngredient(necroplasm1.Type, 20);
+                    recipe.AddIngredient(nightmareFuel1.Type, 20);
+                    recipe.AddIngredient(endothermicEnergy1.Type, 20);
+                    recipe.AddTile(cosmicAnvil1.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<SigilofCalamitas>();
-                recipe1.AddIngredient(ItemID.ManaFlower);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Phantoplasm").Type, 20);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("NightmareFuel").Type, 20);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EndothermicEnergy").Type, 20);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm1) && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel2) && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy2) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<SigilofCalamitas>();
+                    recipe1.AddIngredient(ItemID.ManaFlower);
+                    recipe1.AddIngredient(phantoplasm1.Type, 20);
+                    recipe1.AddIngredient(nightmareFuel2.Type, 20);
+                    recipe1.AddIngredient(endothermicEnergy2.Type, 20);
+                    recipe1.AddTile(draedonsForge1.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

@@ -28,6 +28,17 @@ namespace CalamityDemutation.Graphics.Metaballs
         {
             GeneralDrawLayerSystem.OnPrepareDraw += PrepareMetaballTargets;
             GeneralDrawLayerSystem.OnDrawLayer += DrawMetaballs;
+            // 分辨率变化（改窗口大小/切全屏）时按新屏幕尺寸重建各元球的图层渲染目标，
+            // 否则离屏目标仍是旧尺寸，合成会裁剪错位
+            Main.OnResolutionChanged += ResizeMetaballTargets;
+        }
+        /// <summary>
+        /// 分辨率变化回调：让所有元球按当前屏幕尺寸重建图层渲染目标（Main.OnResolutionChanged 在主线程触发）
+        /// </summary>
+        private static void ResizeMetaballTargets(Vector2 size)
+        {
+            foreach (Metaball metaball in metaballs)
+                metaball.ResizeLayerTargets();
         }
         /// <summary>
         /// 世界卸载时清空所有元球的实例数据，避免带着旧世界的粒子进入新世界
@@ -56,6 +67,7 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// </summary>
         public override void Unload()
         {
+            Main.OnResolutionChanged -= ResizeMetaballTargets;
             Main.QueueMainThreadAction(() =>
             {
                 foreach (Metaball metaball in metaballs)

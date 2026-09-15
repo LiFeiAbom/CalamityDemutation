@@ -56,7 +56,7 @@ namespace CalamityDemutation.Content.Particles.Core
         internal static Dictionary<Type, int> ParticleTypesDic;
         // ── 生命周期方法 ──
         /// <summary>
-        /// 模组加载时初始化所有粒子容器、注册内置粒子 DRK_Spark，并挂上绘制钩子。
+        /// 模组加载时初始化所有粒子容器、注册内置粒子 DRK_Spark、DRK_HeavenfallStar 与 FlameParticle，并挂上绘制钩子。
         /// </summary>
         public override void Load()
         {
@@ -69,6 +69,9 @@ namespace CalamityDemutation.Content.Particles.Core
             batched_NonPremultiplied_DRK = [];
             batched_AdditiveBlend_DRK = [];
             RegisterParticle<DRK_Spark>();
+            RegisterParticle<DRK_HeavenfallStar>();
+            RegisterParticle<FlameParticle>();
+            RegisterParticle<ManaDrainStreak>();
             On_Main.DrawInfernoRings += CWRDrawForegroundParticles;
         }
         /// <summary>
@@ -326,8 +329,12 @@ namespace CalamityDemutation.Content.Particles.Core
             {
                 return;
             }
-            foreach (BaseParticle particle in particles)
+            // 用计数上限的 for 循环：粒子 AI 可能通过 AddParticle 向同一列表追加，foreach 会抛“集合已修改”。
+            // 本帧只更新进入循环前已存在的粒子，本帧新加的粒子留到下一帧处理。
+            int particleCount = particles.Count;
+            for (int i = 0; i < particleCount; i++)
             {
+                BaseParticle particle = particles[i];
                 if (particle == null)
                 {
                     continue;
@@ -337,7 +344,6 @@ namespace CalamityDemutation.Content.Particles.Core
                 particle.AI();
             }
             ParticleGarbageCollection(ref particles);
-            particles.RemoveAll(particle => particle.Time >= particle.Lifetime && particle.SetLifetime || particlesToKill.Contains(particle));
             particlesToKill.Clear();
         }
         /// <summary>

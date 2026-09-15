@@ -40,22 +40,33 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("ReaperTooth").Type, 4);
-                recipe.AddIngredient(calamity.Find<ModItem>("DepthCells").Type, 20);
-                recipe.AddIngredient(calamity.Find<ModItem>("RuinousSoul").Type, 2);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("ReaperTooth", out ModItem reaperTooth)
+                    && calamity.TryFind<ModItem>("DepthCells", out ModItem depthCells)
+                    && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(reaperTooth.Type, 4);
+                    recipe.AddIngredient(depthCells.Type, 20);
+                    recipe.AddIngredient(ruinousSoul.Type, 2);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ReaperTooth").Type, 13);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Lumenite").Type, 6);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Tenebris").Type, 6);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("RuinousSoul").Type, 3);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("ReaperTooth", out ModItem classicReaperTooth)
+                    && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite)
+                    && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris)
+                    && calamity1.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(classicReaperTooth.Type, 13);
+                    recipe1.AddIngredient(lumenite.Type, 6);
+                    recipe1.AddIngredient(tenebris.Type, 6);
+                    recipe1.AddIngredient(classicRuinousSoul.Type, 3);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

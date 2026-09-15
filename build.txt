@@ -1,4 +1,4 @@
 displayName = CalamityDemutation
 author = LF
 version = 0.1
-weakReferences = CalamityMod
+weakReferences = CalamityMod, CalamityModClassicPreTrailer

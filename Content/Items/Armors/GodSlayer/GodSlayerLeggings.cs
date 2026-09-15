@@ -1,5 +1,4 @@
-﻿using CalamityDemutation.Content.Items.Accessories.Function;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.GodSlayer
 {
@@ -39,20 +38,31 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("CosmiliteBar").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("AscendantSpiritEssence").Type, 3);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(cosmiliteBar.Type, 15);
+                    recipe.AddIngredient(ascendantSpiritEssence.Type, 3);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CosmiliteBar").Type, 18);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("NightmareFuel").Type, 9);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EndothermicEnergy").Type, 9);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(classicCosmiliteBar.Type, 18);
+                    recipe1.AddIngredient(nightmareFuel.Type, 9);
+                    recipe1.AddIngredient(endothermicEnergy.Type, 9);
+                    recipe1.AddTile(draedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

@@ -42,30 +42,36 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄：灾厄材料用 StarblightSoot
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(ItemID.CelestialCuffs);
-                recipe.AddIngredient(ItemID.JellyfishNecklace);
-                recipe.AddIngredient(ItemID.PanicNecklace);
-                recipe.AddIngredient(ItemID.SharkToothNecklace);
-                recipe.AddIngredient(ItemID.StarVeil);
-                recipe.AddIngredient(calamity.Find<ModItem>("StarblightSoot").Type, 25);
-                recipe.AddIngredient(ItemID.MeteoriteBar, 25);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.CelestialCuffs);
+                    recipe.AddIngredient(ItemID.JellyfishNecklace);
+                    recipe.AddIngredient(ItemID.PanicNecklace);
+                    recipe.AddIngredient(ItemID.SharkToothNecklace);
+                    recipe.AddIngredient(ItemID.StarVeil);
+                    recipe.AddIngredient(starblightSoot.Type, 25);
+                    recipe.AddIngredient(ItemID.MeteoriteBar, 25);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄：对应材料为 Stardust
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.CelestialCuffs);
-                recipe1.AddIngredient(ItemID.JellyfishNecklace);
-                recipe1.AddIngredient(ItemID.PanicNecklace);
-                recipe1.AddIngredient(ItemID.SharkToothNecklace);
-                recipe1.AddIngredient(ItemID.StarVeil);
-                recipe1.AddIngredient(calamity.Find<ModItem>("Stardust").Type, 25);
-                recipe1.AddIngredient(ItemID.MeteoriteBar, 25);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ItemID.CelestialCuffs);
+                    recipe1.AddIngredient(ItemID.JellyfishNecklace);
+                    recipe1.AddIngredient(ItemID.PanicNecklace);
+                    recipe1.AddIngredient(ItemID.SharkToothNecklace);
+                    recipe1.AddIngredient(ItemID.StarVeil);
+                    recipe1.AddIngredient(stardust.Type, 25);
+                    recipe1.AddIngredient(ItemID.MeteoriteBar, 25);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

@@ -121,11 +121,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                target.AddBuff(calamity.Find<ModBuff>("GodSlayerInferno").Type, 500);
+                if (calamity.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                    target.AddBuff(godSlayerInferno.Type, 500);
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                target.AddBuff(calamity1.Find<ModBuff>("GodSlayerInferno").Type, 500);
+                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff classicGodSlayerInferno))
+                    target.AddBuff(classicGodSlayerInferno.Type, 500);
             }
         }
         /// <summary>
@@ -135,11 +137,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                target.AddBuff(calamity.Find<ModBuff>("GodSlayerInferno").Type, 500);
+                if (calamity.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                    target.AddBuff(godSlayerInferno.Type, 500);
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                target.AddBuff(calamity1.Find<ModBuff>("GodSlayerInferno").Type, 500);
+                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff classicGodSlayerInferno))
+                    target.AddBuff(classicGodSlayerInferno.Type, 500);
             }
         }
         /// <summary>
@@ -250,6 +254,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public void MountDark(Projectile projectile, ref int firerelay, ref int hasfirecount)
         {
+            // 仅主人端生成子飞镖：本方法由各端 AI 调用，不设限会让每个客户端各生一整套（重复弹幕/不同步）
+            if (projectile.owner != Main.myPlayer)
+                return;
             Player Owner = Main.player[projectile.owner];
             Vector2 armPosition = Owner.RotatedRelativePoint(Owner.MountedCenter, true);   // 玩家旋转后的出膛点
             var source = projectile.GetSource_FromThis(); ;

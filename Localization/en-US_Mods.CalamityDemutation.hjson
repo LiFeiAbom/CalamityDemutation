@@ -41,7 +41,7 @@ Buffs: {
 
 	HellfireExplosion: {
 		DisplayName: Hellfire Explosion
-		Description: Burning fiercely
+		Description: Fire from hell
 	}
 
 	HotE: {
@@ -84,6 +84,11 @@ Buffs: {
 		Description: Rapid healing
 	}
 
+	VoidErosion: {
+		DisplayName: Void Erosion
+		Description: The nothingness is eating you away
+	}
+
 	YharimPower: {
 		DisplayName: Yharim's Power
 		Description: You feel like you can break the world in two...with your bare hands!
@@ -92,6 +97,96 @@ Buffs: {
 	GodSlayerDashCooldown: {
 		DisplayName: God Slayer Dash Cooldown
 		Description: The God Slayer's power is gathering
+	}
+
+	Cadence: {
+		DisplayName: Cadence
+		Description: Your heart is pure
+	}
+
+	Revivify: {
+		DisplayName: Revivify
+		Description: Causes enemy attacks to heal you for a fraction of their damage
+	}
+
+	TitanScale: {
+		DisplayName: Titan Scale
+		Description: You feel tanky
+	}
+
+	HolyWrath: {
+		DisplayName: Holy Wrath
+		Description: Increased damage, increased movement and flight speed, and all attacks inflict holy fire
+	}
+
+	Triumph: {
+		DisplayName: Triumph
+		Description: Enemy contact damage is reduced, the lower their health the greater the reduction
+	}
+
+	ArmorCrumbling: {
+		DisplayName: Armor Crumbling
+		Description: Break enemy armor
+	}
+
+	ArmorShattering: {
+		DisplayName: Armor Shattering
+		Description: Break enemy armor
+	}
+
+	Bounding: {
+		DisplayName: Bounding
+		Description: Increased jump height, jump speed, and fall damage resistance
+	}
+
+	Photosynthesis: {
+		DisplayName: Photosynthesis
+		Description: Life regen boosted, more during daytime, and hearts heal more HP
+	}
+
+	ProfanedRage: {
+		DisplayName: Profaned Rage
+		Description: Increased crit chance, increased movement and flight speed
+	}
+
+	Soaring: {
+		DisplayName: Soaring
+		Description: Increased wing flight time and speed
+	}
+
+	DraconicSurgeBuff: {
+		DisplayName: Draconic Surge Buff
+		Description: The power of a dragon courses through your veins
+	}
+
+	Calcium: {
+		DisplayName: Calcium
+		Description: You are immune to fall damage
+	}
+
+	CeaselessHunger: {
+		DisplayName: Ceaseless Hunger
+		Description: You are sucking up all the items
+	}
+
+	ProfanedSoulGuardians: {
+		DisplayName: The Profaned Soul
+		Description: The profaned guardians fight for and protect you
+	}
+
+	ProfanedCrystalBuff: {
+		DisplayName: Devotion
+		Description: The profaned soul within has been defiled by the powerful magic of a supreme witch
+	}
+
+	ProfanedCrystalWhipBuff: {
+		DisplayName: Profaned Crystal Whip Empowerment
+		Description: The guardians have been empowered by the profaned crystal whip
+	}
+
+	ProfanedCrystalWhipDebuff: {
+		DisplayName: Profaned Crystal Whip Debuff
+		Description: Your flesh has been torn asunder by a profaned crystalline whip!
 	}
 }
 
@@ -1186,6 +1281,138 @@ Items: {
 		DisplayName: Yharim's Stimulants
 		Tooltip: Gives decent buffs to all offensive and defensive stats
 	}
+
+	CadencePotion: {
+		DisplayName: Cadence Potion
+		Tooltip:
+			'''
+			Gives the cadence buff which reduces shop prices and enemy aggro
+			Increases life regen and increases max life by 20%
+			Increases heart pickup range
+			'''
+	}
+
+	RevivifyPotion: {
+		DisplayName: Revivify Potion
+		Tooltip: Causes enemy attacks to heal you for a fraction of their damage
+	}
+
+	TitanScalePotion: {
+		DisplayName: Titan Scale Potion
+		Tooltip: Increases knockback, defense by 5, and damage reduction by 5%
+	}
+
+	HolyWrathPotion: {
+		DisplayName: Holy Wrath Potion
+		Tooltip:
+			'''
+			Increases damage by 12% and increases movement and horizontal flight speed by 5%
+			Attacks inflict holy fire
+			'''
+	}
+
+	TriumphPotion: {
+		DisplayName: Triumph Potion
+		Tooltip: Enemy contact damage is reduced, the lower their health the more it is reduced
+	}
+
+	BoundingPotion: {
+		DisplayName: Bounding Potion
+		Tooltip: Increases jump height, jump speed, and fall damage resistance
+	}
+
+	CrumblingPotion: {
+		DisplayName: Crumbling Potion
+		Tooltip:
+			'''
+			Increases critical strike chance by 5%
+			Attacks break enemy armor
+			'''
+	}
+
+	PhotosynthesisPotion: {
+		DisplayName: Photosynthesis Potion
+		Tooltip:
+			'''
+			You regen life quickly while not moving, this effect is five times as strong during daytime
+			Dropped hearts heal more HP
+			'''
+	}
+
+	ProfanedRagePotion: {
+		DisplayName: Profaned Rage Potion
+		Tooltip: Increases critical strike chance by 12% and increases movement and horizontal flight speed by 5%
+	}
+
+	ShatteringPotion: {
+		DisplayName: Shattering Potion
+		Tooltip:
+			'''
+			Increases damage and critical strike chance by 8%
+			Attacks break enemy armor
+			'''
+	}
+
+	SoaringPotion: {
+		DisplayName: Soaring Potion
+		Tooltip: Increases flight time and horizontal flight speed by 10%
+	}
+
+	CalciumPotion: {
+		DisplayName: Calcium Potion
+		Tooltip: Grants immunity to fall damage
+	}
+
+	CeaselessHungerPotion: {
+		DisplayName: Ceaseless Hunger Potion
+		Tooltip: Causes you to suck up all items in the world
+	}
+
+	DraconicElixir: {
+		DisplayName: Draconic Elixir
+		Tooltip:
+			'''
+			Greatly increases wing flight time and speed and increases defense by 16
+			God slayer revival heals you to full HP instead of 300 HP when triggered
+			Silva invincibility heals you to full HP when triggered
+			If you trigger the above heals you cannot drink this potion again for 30 seconds
+			'''
+	}
+
+	ProfanedSoulArtifact: {
+		DisplayName: Profaned Soul Artifact
+		Tooltip:
+			'''
+			Purity
+			Summons three profaned guardians which accompany you in battle
+			The healer guardian heals you for a small amount of health every few seconds
+			The defensive guardian increases your movement speed and damage resistance
+			The offensive guardian increases your summon damage and grants an extra minion slot
+			Your summons inflict Holy Flames on struck enemies
+			Provides a small durability shield which recharges after it breaks
+			'''
+	}
+
+	ProfanedSoulCrystal: {
+		DisplayName: Profaned Soul Crystal
+		Tooltip:
+			'''
+			Devotion
+			Summons three profaned guardians which accompany you in battle
+			Your guardians are empowered, dealing far more damage and attacking far more often
+			Provides a large durability shield which recharges after it breaks
+			Increases your summon damage by 15% and wing flight time by 10%
+			During the day, your summons gain knockback and you move and attack faster
+			At night, you gain damage reduction, defense and life regeneration
+			Grants immunity to lava and fire
+			Weapons additionally fire profaned crystal projectiles, empowered if no minions are active
+			[c/ffa680:Melee] [c/ffd2bf:attacks additionally hurl a barrage of spears]
+			[c/99ffa7:Ranged] [c/bfffc8:attacks additionally hurl fireballs and meteors]
+			[c/8cbeff:Magic] [c/bfdbff:attacks additionally hurl a giant splitting fireball, costing 100 mana]
+			[c/d791f2:Whips] [c/e1b6f2:attacks additionally lash with profaned crystal]
+			[c/f285a2:Summoner] [c/f2b6c6:attacks additionally unleash a deadly crystalline spiral]
+			'''
+	}
 }
 
 Keybinds: {
@@ -1251,4 +1478,22 @@ Projectiles: {
 	TerraBall.DisplayName: Ball
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
+	MiniGuardianAttack.DisplayName: Offensive Guardian
+	MiniGuardianDefense.DisplayName: Defensive Guardian
+	MiniGuardianHealer.DisplayName: Healer Guardian
+	MiniGuardianHolyRay.DisplayName: Holy Ray
+	MiniGuardianRock.DisplayName: Profaned Rock
+	MiniGuardianSpear.DisplayName: Profaned Spear
+	MiniGuardianStars.DisplayName: Profaned Star
+	MiniGuardianFireball.DisplayName: Mini Guardian Fireball
+	MiniGuardianFireballSplit.DisplayName: Mini Guardian Fireball Split
+	ProfanedCrystalMageFireball.DisplayName: Holy Bab Fireball
+	ProfanedCrystalMageFireballSplit.DisplayName: Holy Bab Fire
+	ProfanedCrystalMeleeSpear.DisplayName: Holy Friendly Spear
+	ProfanedCrystalRangedHuges.DisplayName: Holy Bab Boomer
+	ProfanedCrystalRangedSmalls.DisplayName: Holy Bab Boomer Orb
+	ProfanedCrystalRogueShard.DisplayName: Holy Bab Crystal Shard
+	ProfanedCrystalWhip.DisplayName: Profaned Crystal Whip
+	PscTransformAnimation.DisplayName: Psc Transform Animation
+	PscTransformRocks.DisplayName: Psc Transform Rocks
 }

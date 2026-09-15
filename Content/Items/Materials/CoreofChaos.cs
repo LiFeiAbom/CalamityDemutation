@@ -36,11 +36,14 @@ namespace CalamityDemutation.Content.Items.Materials
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe(3);
-                recipe.AddIngredient(calamity.Find<ModItem>("EssenceofHavoc").Type);
-                recipe.AddIngredient(ItemID.Ectoplasm);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("EssenceofHavoc", out ModItem essenceofHavoc))
+                {
+                    Recipe recipe = CreateRecipe(3);
+                    recipe.AddIngredient(essenceofHavoc.Type);
+                    recipe.AddIngredient(ItemID.Ectoplasm);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
         }
     }

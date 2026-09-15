@@ -35,23 +35,29 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<AncientFossil>();
-                recipe.AddIngredient(ItemID.AncientChisel);
-                recipe.AddIngredient(calamity.Find<ModItem>("AncientBoneDust").Type, 3);
-                recipe.AddIngredient(ItemID.Bone, 15);
-                recipe.AddTile(TileID.Anvils);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<AncientFossil>();
+                    recipe.AddIngredient(ItemID.AncientChisel);
+                    recipe.AddIngredient(ancientBoneDust1.Type, 3);
+                    recipe.AddIngredient(ItemID.Bone, 15);
+                    recipe.AddTile(TileID.Anvils);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<AncientFossil>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DemonicBoneAsh").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("AncientBoneDust").Type, 3);
-                recipe1.AddIngredient(ItemID.RottenChunk, 10);
-                recipe1.AddTile(TileID.Anvils);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("DemonicBoneAsh", out ModItem demonicBoneAsh1) && calamity1.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<AncientFossil>();
+                    recipe1.AddIngredient(demonicBoneAsh1.Type);
+                    recipe1.AddIngredient(ancientBoneDust2.Type, 3);
+                    recipe1.AddIngredient(ItemID.RottenChunk, 10);
+                    recipe1.AddTile(TileID.Anvils);
+                    recipe1.Register();
+                }
             }
         }
     }

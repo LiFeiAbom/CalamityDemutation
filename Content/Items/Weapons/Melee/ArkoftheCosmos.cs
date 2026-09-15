@@ -202,7 +202,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    player.AddBuff(calamity.Find<ModBuff>("GravityNormalizerBuff").Type, 600);
+                                    if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    {
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                    }
                                 }
                             }
                         }
@@ -325,7 +328,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    player.AddBuff(calamity.Find<ModBuff>("GravityNormalizerBuff").Type, 600);
+                                    if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    {
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                    }
                                 }
                             }
                         }
@@ -346,25 +352,36 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<FourSeasonsGalaxia>();
-                recipe.AddIngredient<ArkoftheElements>();
-                recipe.AddIngredient(calamity.Find<ModItem>("AuricBar").Type, 5);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<FourSeasonsGalaxia>();
+                    recipe.AddIngredient<ArkoftheElements>();
+                    recipe.AddIngredient(auricBar.Type, 5);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<FourSeasonsGalaxia>();
-                recipe1.AddIngredient<ArkoftheElements>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("NightmareFuel").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EndothermicEnergy").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("HellcasterFragment").Type, 3);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DarksunFragment").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("AuricOre").Type, 25);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && calamity1.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
+                    && calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<FourSeasonsGalaxia>();
+                    recipe1.AddIngredient<ArkoftheElements>();
+                    recipe1.AddIngredient(nightmareFuel.Type, 5);
+                    recipe1.AddIngredient(endothermicEnergy.Type, 5);
+                    recipe1.AddIngredient(hellcasterFragment.Type, 3);
+                    recipe1.AddIngredient(darksunFragment.Type, 5);
+                    recipe1.AddIngredient(auricOre.Type, 25);
+                    recipe1.AddTile(draedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

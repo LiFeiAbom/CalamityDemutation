@@ -52,53 +52,65 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
             // 腐化与猩红两种世界分别提供不同合成配方（邪水/血水）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(ItemID.CharmofMyths);
-                recipe.AddIngredient(ItemID.SorcererEmblem);
-                recipe.AddIngredient(ItemID.CrystalShard, 20);
-                recipe.AddIngredient(calamity.Find<ModItem>("AshesofCalamity").Type, 5);
-                recipe.AddIngredient<CoreofChaos>(5);
-                recipe.AddIngredient(ItemID.SpellTome);
-                recipe.AddIngredient<ChaosAmulet>();
-                recipe.AddIngredient(ItemID.UnholyWater, 10);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
-                recipe = CreateRecipe();
-                recipe.AddIngredient(ItemID.CharmofMyths);
-                recipe.AddIngredient(ItemID.SorcererEmblem);
-                recipe.AddIngredient(ItemID.CrystalShard, 20);
-                recipe.AddIngredient(calamity.Find<ModItem>("AshesofCalamity").Type, 5);
-                recipe.AddIngredient<CoreofChaos>(5);
-                recipe.AddIngredient(ItemID.SpellTome);
-                recipe.AddIngredient<ChaosAmulet>();
-                recipe.AddIngredient(ItemID.BloodWater, 10);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("AshesofCalamity", out ModItem ashesOfCalamity1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.CharmofMyths);
+                    recipe.AddIngredient(ItemID.SorcererEmblem);
+                    recipe.AddIngredient(ItemID.CrystalShard, 20);
+                    recipe.AddIngredient(ashesOfCalamity1.Type, 5);
+                    recipe.AddIngredient<CoreofChaos>(5);
+                    recipe.AddIngredient(ItemID.SpellTome);
+                    recipe.AddIngredient<ChaosAmulet>();
+                    recipe.AddIngredient(ItemID.UnholyWater, 10);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
+                if (calamity.TryFind<ModItem>("AshesofCalamity", out ModItem ashesOfCalamity2))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.CharmofMyths);
+                    recipe.AddIngredient(ItemID.SorcererEmblem);
+                    recipe.AddIngredient(ItemID.CrystalShard, 20);
+                    recipe.AddIngredient(ashesOfCalamity2.Type, 5);
+                    recipe.AddIngredient<CoreofChaos>(5);
+                    recipe.AddIngredient(ItemID.SpellTome);
+                    recipe.AddIngredient<ChaosAmulet>();
+                    recipe.AddIngredient(ItemID.BloodWater, 10);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.CharmofMyths);
-                recipe1.AddIngredient(ItemID.SorcererEmblem);
-                recipe1.AddIngredient(ItemID.CrystalShard, 20);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CalamityDust").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofChaos").Type, 5);
-                recipe1.AddIngredient(ItemID.SpellTome);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ChaosAmulet").Type);
-                recipe1.AddIngredient(ItemID.UnholyWater, 10);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
-                recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.CharmofMyths);
-                recipe1.AddIngredient(ItemID.SorcererEmblem);
-                recipe1.AddIngredient(ItemID.CrystalShard, 20);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CalamityDust").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofChaos").Type, 5);
-                recipe1.AddIngredient(ItemID.SpellTome);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ChaosAmulet").Type);
-                recipe1.AddIngredient(ItemID.BloodWater, 10);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CalamityDust", out ModItem calamityDust1) && calamity1.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos1) && calamity1.TryFind<ModItem>("ChaosAmulet", out ModItem chaosAmulet1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ItemID.CharmofMyths);
+                    recipe1.AddIngredient(ItemID.SorcererEmblem);
+                    recipe1.AddIngredient(ItemID.CrystalShard, 20);
+                    recipe1.AddIngredient(calamityDust1.Type, 5);
+                    recipe1.AddIngredient(coreofChaos1.Type, 5);
+                    recipe1.AddIngredient(ItemID.SpellTome);
+                    recipe1.AddIngredient(chaosAmulet1.Type);
+                    recipe1.AddIngredient(ItemID.UnholyWater, 10);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
+                if (calamity1.TryFind<ModItem>("CalamityDust", out ModItem calamityDust2) && calamity1.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos2) && calamity1.TryFind<ModItem>("ChaosAmulet", out ModItem chaosAmulet2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ItemID.CharmofMyths);
+                    recipe1.AddIngredient(ItemID.SorcererEmblem);
+                    recipe1.AddIngredient(ItemID.CrystalShard, 20);
+                    recipe1.AddIngredient(calamityDust2.Type, 5);
+                    recipe1.AddIngredient(coreofChaos2.Type, 5);
+                    recipe1.AddIngredient(ItemID.SpellTome);
+                    recipe1.AddIngredient(chaosAmulet2.Type);
+                    recipe1.AddIngredient(ItemID.BloodWater, 10);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

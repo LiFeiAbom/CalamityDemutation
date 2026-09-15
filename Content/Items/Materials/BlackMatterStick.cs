@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Materials
 {
     /// <summary>
     /// 黑物质棒（BlackMatterStick） - 材料物品。
-    /// 由四柱碎片 + 原版全部矿锭 + 对应版本灾厄的全部矿锭合成（现代版在宇宙砧、经典版在德雷顿熔炉），
+    /// 由四柱碎片 + 原版全部矿锭 + 对应版本灾厄的全部矿锭合成（现代版和经典版均在德雷顿熔炉）
     /// 目前是 NeutronGlaive 的制作材料（每件需 12 个）。物品使用灵魂式的垂直逐帧动画贴图。
     /// </summary>
     internal class BlackMatterStick : ModItem
@@ -35,7 +35,7 @@ namespace CalamityDemutation.Content.Items.Materials
         }
         /// <summary>
         /// 注册合成配方：两版灾厄的材料不同，分别注册——
-        /// 现代版(CalamityMod)用宇宙砧，经典版(CalamityModClassicPreTrailer)用德雷顿熔炉。
+        /// 现代版(CalamityMod)和经典版(CalamityModClassicPreTrailer)均使用德雷顿熔炉。
         /// </summary>
         public override void AddRecipes()
         {
@@ -70,16 +70,20 @@ namespace CalamityDemutation.Content.Items.Materials
                 recipe.AddIngredient(ItemID.SpectreBar);
                 recipe.AddIngredient(ItemID.LunarBar);
                 // 灾厄现代版全部矿锭
-                recipe.AddIngredient(calamity.Find<ModItem>("AerialiteBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("AstralBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("AuricBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("CosmiliteBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("CryonicBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("PerennialBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("ScoriaBar").Type);
-                recipe.AddIngredient(calamity.Find<ModItem>("UelibloomBar").Type);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if(calamity.TryFind<ModItem>("AerialiteBar", out ModItem aerialiteBar1) && calamity.TryFind<ModItem>("AstralBar", out ModItem astralBar1) && calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar1) && calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar) && calamity.TryFind<ModItem>("PerennialBar", out ModItem perennialBar) && calamity.TryFind<ModItem>("ScoriaBar", out ModItem scoriaBar) && calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar1) && calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar) && calamity.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
+                {
+                    recipe.AddIngredient(aerialiteBar1.Type);
+                    recipe.AddIngredient(astralBar1.Type);
+                    recipe.AddIngredient(auricBar.Type);
+                    recipe.AddIngredient(cosmiliteBar1.Type);
+                    recipe.AddIngredient(cryonicBar.Type);
+                    recipe.AddIngredient(perennialBar.Type);
+                    recipe.AddIngredient(scoriaBar.Type);
+                    recipe.AddIngredient(shadowspecBar1.Type, 50);
+                    recipe.AddIngredient(uelibloomBar.Type);
+                    recipe.AddTile(draedonsForge1.Type);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))// 经典版灾厄已加载
             {
@@ -112,19 +116,23 @@ namespace CalamityDemutation.Content.Items.Materials
                 recipe1.AddIngredient(ItemID.SpectreBar);
                 recipe1.AddIngredient(ItemID.LunarBar);
                 // 灾厄经典版全部矿锭
-                recipe1.AddIngredient(calamity1.Find<ModItem>("AerialiteBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("AstralBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BarofLife").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CosmiliteBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CruptixBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CryoBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DraedonBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("MeldiateBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("UeliaceBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("VerstaltiteBar").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("VictideBar").Type);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("AerialiteBar", out ModItem aerialiteBar2) && calamity1.TryFind<ModItem>("AstralBar", out ModItem astralBar2) && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife) && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && calamity1.TryFind<ModItem>("CruptixBar", out ModItem cruptixBar) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar) && calamity1.TryFind<ModItem>("DraedonBar", out ModItem draedonBar) && calamity1.TryFind<ModItem>("MeldiateBar", out ModItem meldiateBar) && calamity1.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar2) && calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar) && calamity1.TryFind<ModItem>("VerstaltiteBar", out ModItem verstaltiteBar) && calamity1.TryFind<ModItem>("VictideBar", out ModItem victideBar) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge2))
+                {
+                    recipe1.AddIngredient(aerialiteBar2.Type);
+                    recipe1.AddIngredient(astralBar2.Type);
+                    recipe1.AddIngredient(barofLife.Type);
+                    recipe1.AddIngredient(cosmiliteBar2.Type);
+                    recipe1.AddIngredient(cruptixBar.Type);
+                    recipe1.AddIngredient(cryoBar.Type);
+                    recipe1.AddIngredient(draedonBar.Type);
+                    recipe1.AddIngredient(meldiateBar.Type);
+                    recipe1.AddIngredient(shadowspecBar2.Type);
+                    recipe1.AddIngredient(ueliaceBar.Type);
+                    recipe1.AddIngredient(verstaltiteBar.Type);
+                    recipe1.AddIngredient(victideBar.Type);
+                    recipe1.AddTile(draedonsForge2.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

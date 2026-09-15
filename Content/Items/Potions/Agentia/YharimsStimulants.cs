@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             Item.width = 28;
             Item.height = 18;
             Item.useTurn = true;
-            Item.maxStack = 30;
+            Item.maxStack = 999;
             Item.rare = ItemRarityID.Orange;
             Item.useAnimation = 17;
             Item.useTime = 17;
@@ -44,11 +44,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                 recipe.AddIngredient(ItemID.TitanPotion);
                 recipe.AddTile(TileID.AlchemyTable);
                 recipe.Register();
-                recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("BloodOrb").Type, 50);
-                recipe.AddIngredient(ItemID.BottledWater);
-                recipe.AddTile(TileID.AlchemyTable);
-                recipe.Register();
+                if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
+                {
+                    recipe = CreateRecipe();
+                    recipe.AddIngredient(bloodOrb1.Type, 50);
+                    recipe.AddIngredient(ItemID.BottledWater);
+                    recipe.AddTile(TileID.AlchemyTable);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
@@ -61,11 +64,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                 recipe1.AddIngredient(ItemID.TitanPotion);
                 recipe1.AddTile(TileID.AlchemyTable);
                 recipe1.Register();
-                recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BloodOrb").Type, 50);
-                recipe1.AddIngredient(ItemID.BottledWater);
-                recipe1.AddTile(TileID.AlchemyTable);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                {
+                    recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(bloodOrb2.Type, 50);
+                    recipe1.AddIngredient(ItemID.BottledWater);
+                    recipe1.AddTile(TileID.AlchemyTable);
+                    recipe1.Register();
+                }
             }
         }
     }

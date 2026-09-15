@@ -46,7 +46,6 @@ namespace CalamityDemutation
         {
             Instance = this;
             FindMod();
-            SetupLists();
             Content.Projectiles.Melee.Core.SwingSystem.Load();
             if (!Main.dedServ)
             {
@@ -81,15 +80,31 @@ namespace CalamityDemutation
             byte msgType = reader.ReadByte();
             if (msgType == Players.CalamityDemutationPlayer.MsgPermanentUnlock)
             {
-                int targetWho = reader.ReadInt32();
+                int reported = reader.ReadInt32();
                 bool acc = reader.ReadBoolean();
                 bool wing = reader.ReadBoolean();
-                if (targetWho >= 0 && targetWho < Main.player.Length && Main.player[targetWho].active)
+                if (Main.netMode == NetmodeID.Server)
                 {
-                    Players.CalamityDemutationPlayer modPlayer = Main.player[targetWho].GetModPlayer<Players.CalamityDemutationPlayer>();
-                    modPlayer.extraAccessoryML = acc;
-                    modPlayer.extraWingSlot = wing;
-                    NetMessage.SendData(MessageID.SyncPlayer, -1, -1, null, targetWho);
+                    // 服务端以发送者 whoAmI 为准：包内自报的玩家索引不可信（客户端可伪造）
+                    if (whoAmI < 0 || whoAmI >= Main.player.Length || !Main.player[whoAmI].active)
+                        return;
+                    Players.CalamityDemutationPlayer serverPlayer = Main.player[whoAmI].GetModPlayer<Players.CalamityDemutationPlayer>();
+                    serverPlayer.extraAccessoryML = acc;
+                    serverPlayer.extraWingSlot = wing;
+                    // 代播给其余客户端：ModPlayer 没有可用的整包同步钩子，故由服务端把本消息转发一遍
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)Players.CalamityDemutationPlayer.MsgPermanentUnlock);
+                    packet.Write(whoAmI);
+                    packet.Write(acc);
+                    packet.Write(wing);
+                    packet.Send(-1, whoAmI);
+                }
+                else if (reported >= 0 && reported < Main.player.Length && Main.player[reported].active)
+                {
+                    // 客户端收到服务端代播：把标志写到对应玩家的 ModPlayer 副本，其他玩家的栏位才能正确显示
+                    Players.CalamityDemutationPlayer localCopy = Main.player[reported].GetModPlayer<Players.CalamityDemutationPlayer>();
+                    localCopy.extraAccessoryML = acc;
+                    localCopy.extraWingSlot = wing;
                 }
             }
         }
@@ -99,6 +114,9 @@ namespace CalamityDemutation
         /// </summary>
         public override void PostSetupContent()
         {
+            // 蜂类列表要按名字查找两个灾厄版本的弹幕/敌人，必须等所有模组内容注册完毕，
+            // 故放在 PostSetupContent 而非 Load（Load 期经典版内容尚未注册，TryFind 会静默失败）
+            SetupLists();
             if (!ModLoader.HasMod("CalamityMod"))
                 return;
             if (Systems.ConfigSystem.Instance?.RevertVanillaNerfs != true)

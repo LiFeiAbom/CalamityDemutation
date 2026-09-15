@@ -88,20 +88,28 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄配方（UelibloomBar + DivineGeode）
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("UelibloomBar").Type, 12);
-                recipe.AddIngredient(calamity.Find<ModItem>("DivineGeode").Type, 6);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar)
+                    && calamity.TryFind<ModItem>("DivineGeode", out ModItem divineGeode))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(uelibloomBar.Type, 12);
+                    recipe.AddIngredient(divineGeode.Type, 6);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄配方（UeliaceBar + DivineGeode）
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("UeliaceBar").Type, 7);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DivineGeode").Type, 6);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar)
+                    && calamity1.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ueliaceBar.Type, 7);
+                    recipe1.AddIngredient(classicDivineGeode.Type, 6);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

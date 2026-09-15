@@ -31,7 +31,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.height = 154;   // 贴图高（像素）
             Item.width = 154;    // 贴图宽（像素）
-            Item.damage = 1368; //855 * 1.6 = 1368
+            Item.damage = 3420; // 855 * 4 = 3420
             Item.DamageType = DamageClass.Melee;   // 归属近战伤害
             Item.useAnimation = Item.useTime = 14; // 使用动画与冷却同为 14 帧（很快）
             Item.useTurn = true;                   // 挥砍时可转向
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<NeutronGlaiveBeam>();  // 挥砍时发射的弹幕
             Item.shootSpeed = 18f;                       // 弹幕初速度
             Item.shootsEveryUse = true;                  // 每次使用都发射（而非仅第一次）
-            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后自定义稀有度等级 15
+            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后自定义稀有度等级 16
         }
         /// <summary>
         /// 近战挥舞特效：仅调用 CDUtil.BetterSwing 修正武器挥舞位置，使巨剑类挥舞更贴合视觉。
@@ -55,26 +55,32 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             CDUtil.BetterSwing(player);
         }
         /// <summary>
-        /// 注册配方：兼容灾厄现代版与经典版，两版所需工作台不同，故分别注册配方。
+        /// 注册配方：兼容灾厄现代版与经典版，两版所需工作台名字一致但是具体对应不同，故分别注册配方。
         /// 两版均消耗 12 个黑物质棒。
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：宇宙砧（CosmicAnvil）
+            // 现代版灾厄：德雷顿熔炉（DraedonsForge）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<BlackMatterStick>(12);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<BlackMatterStick>(12);
+                    recipe.AddTile(draedonsForge.Type);
+                    recipe.Register();
+                }
             }
             // 经典版灾厄：德雷顿熔炉（DraedonsForge）
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<BlackMatterStick>(12);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<BlackMatterStick>(12);
+                    recipe1.AddTile(classicDraedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

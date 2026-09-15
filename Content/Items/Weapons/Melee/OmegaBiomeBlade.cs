@@ -74,25 +74,34 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<TrueBiomeBlade>();
-                recipe.AddIngredient(calamity.Find<ModItem>("CoreofCalamity").Type,3);
-                recipe.AddIngredient(calamity.Find<ModItem>("LifeAlloy").Type,3);
-                recipe.AddIngredient<GalacticaSingularity>(3);
-                recipe.AddIngredient(ItemID.LunarBar, 5);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
+                    && calamity.TryFind<ModItem>("LifeAlloy", out ModItem lifeAlloy))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<TrueBiomeBlade>();
+                    recipe.AddIngredient(coreofCalamity.Type,3);
+                    recipe.AddIngredient(lifeAlloy.Type,3);
+                    recipe.AddIngredient<GalacticaSingularity>(3);
+                    recipe.AddIngredient(ItemID.LunarBar, 5);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<TrueBiomeBlade>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofCalamity").Type, 3);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BarofLife").Type, 3);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("GalacticaSingularity").Type, 3);
-                recipe1.AddIngredient(ItemID.LunarBar, 5);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
+                    && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife)
+                    && calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<TrueBiomeBlade>();
+                    recipe1.AddIngredient(classicCoreofCalamity.Type, 3);
+                    recipe1.AddIngredient(barofLife.Type, 3);
+                    recipe1.AddIngredient(galacticaSingularity.Type, 3);
+                    recipe1.AddIngredient(ItemID.LunarBar, 5);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

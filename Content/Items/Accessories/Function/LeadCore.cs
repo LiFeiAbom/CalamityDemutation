@@ -30,12 +30,18 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄：Irradiated
-                player.buffImmune[calamity.Find<ModBuff>("Irradiated").Type] = true;
+                if(calamity.TryFind<ModBuff>("Irradiated", out ModBuff irradiated1))
+                {
+                    player.buffImmune[irradiated1.Type] = true;
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄：同名 Irradiated
-                player.buffImmune[calamity1.Find<ModBuff>("Irradiated").Type] = true;
+                if(calamity1.TryFind<ModBuff>("Irradiated", out ModBuff irradiated2))
+                {
+                    player.buffImmune[irradiated2.Type] = true;
+                }
             }
         }
     }

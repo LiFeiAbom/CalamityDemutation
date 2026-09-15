@@ -187,7 +187,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    player.AddBuff(calamity.Find<ModBuff>("GravityNormalizerBuff").Type, 600);
+                                    if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    {
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                    }
                                 }
                             }
                         }
@@ -310,7 +313,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    player.AddBuff(calamity.Find<ModBuff>("GravityNormalizerBuff").Type, 600);
+                                    if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    {
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                    }
                                 }
                             }
                         }
@@ -325,21 +331,31 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<OmegaBiomeBlade>();
-                recipe.AddIngredient(calamity.Find<ModItem>("CosmiliteBar").Type, 8);
-                recipe.AddIngredient(calamity.Find<ModItem>("DarksunFragment").Type, 8);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && calamity.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<OmegaBiomeBlade>();
+                    recipe.AddIngredient(cosmiliteBar.Type, 8);
+                    recipe.AddIngredient(darksunFragment.Type, 8);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<OmegaBiomeBlade>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CosmiliteBar").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Phantoplasm").Type, 5);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
+                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<OmegaBiomeBlade>();
+                    recipe1.AddIngredient(classicCosmiliteBar.Type, 10);
+                    recipe1.AddIngredient(phantoplasm.Type, 5);
+                    recipe1.AddTile(draedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

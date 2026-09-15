@@ -1,4 +1,6 @@
-﻿using CalamityDemutation.Content.Items.Accessories.Attack;
+﻿using CalamityDemutation.Content.Buffs.NegativeBuffs;
+using CalamityDemutation.Content.Buffs.PositiveBuffs;
+using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Content.Items.Accessories.Defense;
@@ -7,8 +9,10 @@ using CalamityDemutation.Content.Items.Accessories.JobAcc.Magic;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Summon;
 using CalamityDemutation.Content.Items.Accessories.StatLife;
+using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -294,7 +298,7 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FungalClump>(), 1));
                 }
-                if (calamity0.TryFind<ModItem>("LeviathanBag", out ModItem leviathanAmbergrisBag) && item.type == leviathanAmbergrisBag.Type)
+                if (calamity0.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LeviathanAmbergris>(), 1));
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<TheCommunity>(), 100));
@@ -303,9 +307,10 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DefenseBlade>(), 100));
                 }
-                if (calamity0.TryFind<ModItem>("YharonBag", out ModItem drewWingsBag) && item.type == drewWingsBag.Type)
+                if (calamity0.TryFind<ModItem>("YharonBag", out ModItem yharonBag) && item.type == yharonBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
                 }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
@@ -365,7 +370,7 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FungalClump>(), 1));
                 }
-                if (calamity1.TryFind<ModItem>("LeviathanBag", out ModItem leviathanAmbergrisBag) && item.type == leviathanAmbergrisBag.Type)
+                if (calamity1.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LeviathanAmbergris>(), 1));
                 }
@@ -373,19 +378,47 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DefenseBlade>(), 100));
                 }
-                if (calamity1.TryFind<ModItem>("YharonBag", out ModItem drewWingsBag) && item.type == drewWingsBag.Type)
+                if (calamity1.TryFind<ModItem>("YharonBag", out ModItem yharonsBag) && item.type == yharonsBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
                 }
             }
         }
+        public override bool OnPickup(Item item, Player player)
+        {
+            if (item.type == ItemID.Heart || item.type == ItemID.CandyApple || item.type == ItemID.CandyCane)
+            {
+                // 解除BOSS至尊灾厄的限制
+                bool boostedHeart = player.GetModPlayer<CalamityDemutationPlayer>().photosynthesis;
+                if (boostedHeart)
+                {
+                    player.statLife += 5;
+                    if (Main.myPlayer == player.whoAmI)
+                    {
+                        player.HealEffect(5, true);
+                    }
+                }
+            }
+            return true;
+        }
         /// <summary>
-        /// PvP：近战武器直接挥砍命中玩家时，按攻击者装备给受害者施加 debuff。
+        /// PvP：近战武器直接挥砍命中玩家时，按攻击者的装备 / 套装 / 身上的 buff 给受害者施加效果，
+        /// 效果集合与 OnHitNPCWithItem 对齐：
+        /// - 亚利姆徽章：随机 120/240/360 帧神圣火（现代版）与圣光（经典版）；
+        /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 灾厄现代/经典两版本）；
+        /// - 神圣之怒 buff（HolyWrath）：120 帧神圣火与圣光；
+        /// - omega 蓝胸甲（omegaBlueChestplate）：240 帧 HadopelagicPressure / CrushDepth；
+        /// - 恶魔残影套装（demonshadeSetBonus）：随机 360/240/120 帧恶魔烈焰；
+        /// - 血焰套装（bloodflareMelee）/ 弑神近战（godSlayerMelee）：作用在攻击者自身
+        ///   （累计命中并本端小额回血 / 生成弑神飞镖）。
         /// 仅近战挥击触发（文档明确 "melee weapon hits a player"），近战弹幕走 GlobalProjectile.OnHitPlayer。
         /// </summary>
         public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
-            // player = 攻击者 A，target = 被打中的 B；直接查 A 实际装备（不依赖 ModPlayer 标志位）
+            // player = 攻击者 A，target = 被打中的 B
+            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
+            // 亚利姆徽章 / 元素手套：直接查 A 的实际装备（不依赖 ModPlayer 标志位）
             if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<YharimsInsignia>()))
             {
                 // 亚利姆徽章：给受害者施加圣焰（现代版）/圣光（经典版），随机时长
@@ -416,10 +449,56 @@ namespace CalamityDemutation.Content.Items
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GlacialState", 120);
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GodSlayerInferno", 120);
             }
-            if(player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueSet)
+            // omega 蓝套装：与 NPC 侧（OnHitNPCWithItem）判定口径统一，取胸甲单件标记 omegaBlueChestplate
+            if (modPlayer.omegaBlueChestplate)
             {
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HadopelagicPressure", 240);
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "CrushDepth", 240);
+            }
+            // 神圣之怒（HolyWrath）：给受害者施加 120 帧神圣火（现代版）与圣光（经典版）。
+            // holyWrath 由 HolyWrath buff 置位（非饰品），故查攻击者的 buff 列表（跨端同步），不用 IsAccessoryEquipped
+            if (player.HasBuff(ModContent.BuffType<HolyWrath>()))
+            {
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
+            }
+            // 恶魔残影套装（demonshadeSetBonus）：随机 360/240/120 帧恶魔烈焰
+            if (modPlayer.demonshadeSetBonus)
+            {
+                if (Main.rand.NextBool(4))
+                    target.AddBuff(ModContent.BuffType<DemonFlames>(), 360, false);
+                else if (Main.rand.NextBool(2))
+                    target.AddBuff(ModContent.BuffType<DemonFlames>(), 240, false);
+                else
+                    target.AddBuff(ModContent.BuffType<DemonFlames>(), 120, false);
+            }
+            // 血焰套装（bloodflareMelee）：累计命中数并在本端小额回血（与 OnHitNPCWithItem 同构）
+            if (modPlayer.bloodflareMelee)
+            {
+                if (modPlayer.bloodflareMeleeHits < 15 && modPlayer.bloodflareFrenzyTimer <= 0 && modPlayer.bloodflareFrenzyCooldown <= 0)
+                {
+                    modPlayer.bloodflareMeleeHits++;
+                }
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    int healAmount = Main.rand.Next(3) + 1;
+                    player.statLife += healAmount;
+                    player.HealEffect(healAmount);
+                }
+            }
+            // 弑神近战（godSlayerMelee）：生成弑神飞镖（与 OnHitNPCWithItem 同构）
+            if (modPlayer.godSlayerMelee && modPlayer.godSlayerMeleefireCD <= 0)
+            {
+                int finalDamage = 500 + player.HeldItem.damage / 2;
+                Vector2 spawnPos = new(player.Center.X, player.Center.Y);
+                Vector2 velocity = CDUtil.GiveVelocity(200f);
+                Projectile.NewProjectile(player.GetSource_FromThis(), spawnPos, velocity * 4f, ModContent.ProjectileType<GodSlayerDart>(), finalDamage, 0f, player.whoAmI);
+                modPlayer.godSlayerMeleefireCD = 60;
+            }
+            if (modPlayer.armorShattering || modPlayer.armorCrumbling)
+            {
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "ArmorCrunch", 240);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "ArmorCrunch", 240);
             }
         }
         // ── 原版削弱回调 ──
@@ -534,6 +613,18 @@ namespace CalamityDemutation.Content.Items
                     player.GetCritChance<RangedDamageClass>() += 2;
                     break;
             }
+        }
+        public override void HorizontalWingSpeeds(Item item, Player player, ref float speed, ref float acceleration)
+        {
+            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
+            float flightSpeedMult = 1f 
+                                    + (modPlayer.holyWrath ? 0.05f : 0f) 
+                                    + (modPlayer.soaring ? 0.1f : 0f)
+                                    + (modPlayer.profanedRage ? 0.05f : 0f)
+                                    + (modPlayer.draconicSurge ? 0.15f : 0f);
+            float flightAccMult = 1f + (modPlayer.draconicSurge ? 0.15f : 0f);
+            speed *= flightSpeedMult;
+            acceleration *= flightAccMult;
         }
         // ── 私有工具 ──
         /// <summary>

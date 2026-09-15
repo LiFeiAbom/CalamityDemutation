@@ -10,6 +10,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
     /// 集齐头/胸/腿后由 UpdateArmorSet 置位 bloodflareSet、bloodflareMelee，
     /// 套装效果最终在 CalamityDemutationPlayer 与 CalamityDemutationGlobalNPC 中结算。
     /// </summary>
+    [AutoloadEquip(EquipType.Head)]
     internal class BloodflareMask:ModItem
     {
         /// <summary>
@@ -87,21 +88,30 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("Bloodstone").Type, 25);
-                recipe.AddIngredient(calamity.Find<ModItem>("BloodOrb").Type, 10);
-                recipe.AddIngredient(calamity.Find<ModItem>("RuinousSoul").Type, 2);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("Bloodstone", out ModItem bloodstone)
+                    && calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb)
+                    && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(bloodstone.Type, 25);
+                    recipe.AddIngredient(bloodOrb.Type, 10);
+                    recipe.AddIngredient(ruinousSoul.Type, 2);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄材料：BloodstoneCore×11、RuinousSoul×2
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BloodstoneCore").Type, 11);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("RuinousSoul").Type, 2);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
+                    && calamity1.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(bloodstoneCore.Type, 11);
+                    recipe1.AddIngredient(classicRuinousSoul.Type, 2);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

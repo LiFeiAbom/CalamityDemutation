@@ -115,15 +115,25 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             target.AddBuff(BuffID.Frostburn, 120);
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
             {
-                target.AddBuff(calamity0.Find<ModBuff>("HolyFlames").Type, 120);
-                target.AddBuff(calamity0.Find<ModBuff>("BrimstoneFlames").Type, 120);
-                target.AddBuff(calamity0.Find<ModBuff>("Plague").Type, 120);
+                if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)
+                    && calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)
+                    && calamity0.TryFind<ModBuff>("Plague", out ModBuff plague))
+                {
+                    target.AddBuff(holyFlames.Type, 120);
+                    target.AddBuff(brimstoneFlames.Type, 120);
+                    target.AddBuff(plague.Type, 120);
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                target.AddBuff(calamity1.Find<ModBuff>("HolyLight").Type, 120);
-                target.AddBuff(calamity1.Find<ModBuff>("BrimstoneFlames").Type, 120);
-                target.AddBuff(calamity1.Find<ModBuff>("Plague").Type, 120);
+                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)
+                    && calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff classicBrimstoneFlames)
+                    && calamity1.TryFind<ModBuff>("Plague", out ModBuff classicPlague))
+                {
+                    target.AddBuff(holyLight.Type, 120);
+                    target.AddBuff(classicBrimstoneFlames.Type, 120);
+                    target.AddBuff(classicPlague.Type, 120);
+                }
             }
         }
         /// <summary>
@@ -134,15 +144,25 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             target.AddBuff(BuffID.Frostburn, 120);
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
             {
-                target.AddBuff(calamity0.Find<ModBuff>("HolyFlames").Type, 120);
-                target.AddBuff(calamity0.Find<ModBuff>("BrimstoneFlames").Type, 120);
-                target.AddBuff(calamity0.Find<ModBuff>("Plague").Type, 120);
+                if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)
+                    && calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)
+                    && calamity0.TryFind<ModBuff>("Plague", out ModBuff plague))
+                {
+                    target.AddBuff(holyFlames.Type, 120);
+                    target.AddBuff(brimstoneFlames.Type, 120);
+                    target.AddBuff(plague.Type, 120);
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                target.AddBuff(calamity1.Find<ModBuff>("HolyLight").Type, 120);
-                target.AddBuff(calamity1.Find<ModBuff>("BrimstoneFlames").Type, 120);
-                target.AddBuff(calamity1.Find<ModBuff>("Plague").Type, 120);
+                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)
+                    && calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff classicBrimstoneFlames)
+                    && calamity1.TryFind<ModBuff>("Plague", out ModBuff classicPlague))
+                {
+                    target.AddBuff(holyLight.Type, 120);
+                    target.AddBuff(classicBrimstoneFlames.Type, 120);
+                    target.AddBuff(classicPlague.Type, 120);
+                }
             }
         }
         /// <summary>
@@ -156,25 +176,34 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<TrueArkoftheAncients>();
-                recipe.AddIngredient<GalacticaSingularity>(5);
-                recipe.AddIngredient(calamity.Find<ModItem>("CoreofCalamity").Type, 5);
-                recipe.AddIngredient(calamity.Find<ModItem>("LifeAlloy").Type, 5);
-                recipe.AddIngredient(ItemID.LunarBar, 5);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
+                    && calamity.TryFind<ModItem>("LifeAlloy", out ModItem lifeAlloy))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<TrueArkoftheAncients>();
+                    recipe.AddIngredient<GalacticaSingularity>(5);
+                    recipe.AddIngredient(coreofCalamity.Type, 5);
+                    recipe.AddIngredient(lifeAlloy.Type, 5);
+                    recipe.AddIngredient(ItemID.LunarBar, 5);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<TrueArkoftheAncients>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("GalacticaSingularity").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofCalamity").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BarofLife").Type, 10);
-                recipe1.AddIngredient(ItemID.LunarBar, 15);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity)
+                    && calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
+                    && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<TrueArkoftheAncients>();
+                    recipe1.AddIngredient(galacticaSingularity.Type, 5);
+                    recipe1.AddIngredient(classicCoreofCalamity.Type, 5);
+                    recipe1.AddIngredient(barofLife.Type, 10);
+                    recipe1.AddIngredient(ItemID.LunarBar, 15);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

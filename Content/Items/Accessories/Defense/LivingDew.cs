@@ -44,14 +44,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ManeaterBulb").Type, 2);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("TrapperBulb").Type, 2);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("MurkyPaste").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("GypsyPowder").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BeetleJuice").Type, 3);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("ManeaterBulb", out ModItem maneaterBulb1) && calamity1.TryFind<ModItem>("TrapperBulb", out ModItem trapperBulb1) && calamity1.TryFind<ModItem>("MurkyPaste", out ModItem murkyPaste1) && calamity1.TryFind<ModItem>("GypsyPowder", out ModItem gypsyPowder1) && calamity1.TryFind<ModItem>("BeetleJuice", out ModItem beetleJuice1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(maneaterBulb1.Type, 2);
+                    recipe1.AddIngredient(trapperBulb1.Type, 2);
+                    recipe1.AddIngredient(murkyPaste1.Type, 5);
+                    recipe1.AddIngredient(gypsyPowder1.Type);
+                    recipe1.AddIngredient(beetleJuice1.Type, 3);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

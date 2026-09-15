@@ -86,11 +86,12 @@ namespace CalamityDemutation.Utilities
             return new Rectangle(0, singleFrameY * frame, value.Width, singleFrameY);
         }
         /// <summary>
-        /// 按资源路径立即加载并返回一张 Texture2D
+        /// 按资源路径加载并返回一张 Texture2D；asyncLoad 为 true 时改用异步加载（默认同步立即加载，
+        /// 以保证调用方拿到返回值时贴图已就绪）
         /// </summary>
-        public static Texture2D GetT2DValue(string texture, bool immediateLoad = false)
+        public static Texture2D GetT2DValue(string texture, bool asyncLoad = false)
         {
-            return ModContent.Request<Texture2D>(texture, immediateLoad ? AssetRequestMode.AsyncLoad : AssetRequestMode.ImmediateLoad).Value;
+            return ModContent.Request<Texture2D>(texture, asyncLoad ? AssetRequestMode.AsyncLoad : AssetRequestMode.ImmediateLoad).Value;
         }
         /// <summary>
         /// 检测玩家是否按下左/右键（对应 CWR 的 PressKey，netCed 为 true 时仅在本地玩家生效）

@@ -2,10 +2,14 @@ using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Buffs.PositiveBuffs;
 using CalamityDemutation.Content.Buffs.SummonBuffs;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
+using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Content.Projectiles.Typeless;
+using CalamityDemutation.Sounds;
+using CalamityDemutation.Systems.Cooldowns;
 using CalamityDemutation.Particles;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
@@ -167,6 +171,8 @@ namespace CalamityDemutation.Players
         /// 已装备远古粉末：身处地下/洞穴/地狱层时获得 +3 防御、+7% 减伤与挖掘提速
         /// </summary>
         public bool archaicPowder = false;
+        public bool armorCrumbling = false;
+        public bool armorShattering = false;
         public bool auricBoost = false;
         public bool auricSet = false;
         /// <summary>
@@ -205,14 +211,18 @@ namespace CalamityDemutation.Players
         /// 并造成小额伤害，且脚底会自动生长草/花/染料植物
         /// </summary>
         public bool bloomStone = false;
+        public bool bounding = false;
         /// <summary>
         /// 硫磺娘（大胸玫瑰 BigBustyRose）仆从在场标记：由 BrimstoneWaifu 召唤增益每帧置位
         /// </summary>
         public bool brimstoneWaifu = false;
+        public bool cadence = false;
+        public bool calcium = false;
         /// <summary>
         /// 已装备灾厄之戒：+15% 通用伤害，免疫受击期间概率在玩家附近降下站火弹幕
         /// </summary>
         public bool calamityRing = false;
+        public bool ceaselessHunger = false;
         /// <summary>
         /// 已装备混沌石：+50 魔力上限、魔力消耗 ×0.95、+3% 通用伤害，红色照明
         /// </summary>
@@ -253,6 +263,8 @@ namespace CalamityDemutation.Players
         public bool darkSunRing = false;
         public bool deificAmulet = false;
         public bool demonshadeSetBonus = false;
+        public bool draconicSurge = false;
+        public int draconicSurgeCooldown = 0;
         /// <summary>
         /// 德鲁沙之娘（DrewsSandyWaifu）仆从在场标记：由对应召唤增益每帧置位，受瓶中波霸妻子驱动
         /// </summary>
@@ -345,6 +357,8 @@ namespace CalamityDemutation.Players
         /// 元素之心"隐藏视觉"版标记（数值约为完整版一半）：由 HeartoftheElements.cs 依据配置置位
         /// </summary>
         public bool heartoftheElementshideVisual = false;
+        public bool hellfireExplosion = false;
+        public bool holyWrath = false;
         /// <summary>
         /// 已装备蜜露：丛林区获得回血/防御/减伤，免疫蜂蜜与中毒，并附加蜂蜜式生命回复
         /// </summary>
@@ -384,7 +398,9 @@ namespace CalamityDemutation.Players
         public bool omegaBlueSet = false;
         public bool omegaBlueHentai = false;
         public int omegaBlueCooldown = 0;
+        public bool photosynthesis = false;
         public bool psychoticAmulet = false;
+        public bool profanedRage = false;
         /// <summary>
         /// 已装备辐射软泥：夜间发出暖黄光并提供生命回复
         /// </summary>
@@ -392,6 +408,7 @@ namespace CalamityDemutation.Players
         public bool rampartofDeities = false;
         public bool redDevil = false;
         public bool redDevil2 = false;
+        public bool revivify = false;
         /// <summary>
         /// 已装备玫瑰石：生命回复/上限、+3% 通用增伤与粉色照明（同时驱动玫瑰娘召唤物）
         /// </summary>
@@ -427,6 +444,7 @@ namespace CalamityDemutation.Players
         /// 塞壬娘（SirenLure）仆从在场标记：由 SirenLure 召唤增益每帧置位，受魅惑之饵驱动
         /// </summary>
         public bool sirenLureWaifu = false;
+        public bool soaring = false;
         /// <summary>
         /// 已装备海绵：大量生存属性、静止回复与溺水免疫，受击时回血并迸发电火花与孢子弹幕
         /// </summary>
@@ -460,6 +478,102 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool theAbsorber = false;
         /// <summary>
+        /// 已装备亵渎之魂神器（ProfanedSoulArtifact）：三守护者召唤、治疗与护盾的结算依据
+        /// </summary>
+        public bool profanedSoulArtifact = false;
+        /// <summary>
+        /// 亵渎之魂守护者标记（对应 ProfanedSoulGuardians buff）与治疗守护者的回血计时
+        /// </summary>
+        public bool profanedSoulGuardians = false;
+        public int profanedSoulHealCounter = 300;
+        /// <summary>
+        /// 已装备亵渎之魂水晶（ProfanedSoulCrystal）：水晶四态属性、守护者强化与护盾增强的结算依据
+        /// </summary>
+        public bool profanedCrystal = false;
+        /// <summary>
+        /// 水晶激活态（pscState &gt;= Buffs）：决定护盾/守护者用哪套水晶常量；
+        /// 每帧在 PostUpdateMiscEffects 重算（不是跨帧计时器，故可随 pscState 一起刷新）
+        /// </summary>
+        public bool profanedCrystalBuffs = false;
+        /// <summary>
+        /// 水晶四态（0=Vanity 1=Buffs 2=Enraged 3=Empowered，对应 ProfanedSoulCrystal.ProfanedSoulCrystalState）：
+        /// 每帧在 PostUpdateMiscEffects 由 GetPscStateFor 刷新
+        /// </summary>
+        public int pscState = 0;
+        /// <summary>
+        /// 上一帧的水晶四态（对应灾厄 2.2.2 的 profanedCrystalStatePrevious）：在 ResetEffects 里保存，
+        /// 供水晶鞭 buff（UpdateBuffs 阶段，早于本帧四态重算）判断"离开水晶态即自清"
+        /// </summary>
+        public int profanedCrystalStatePrevious = 0;
+        /// <summary>
+        /// 上一帧是否装备水晶（对应灾厄 2.2.2 的 profanedCrystalPrevious）：在 ResetEffects 里保存，
+        /// 用于检测"首次装备"并触发变身动画
+        /// </summary>
+        public bool profanedCrystalPrevious = false;
+        /// <summary>
+        /// 亵渎之魂水晶的武器转化计数器（对应灾厄 2.2.2 的 profanedSoulWeaponUsage）：
+        /// 按"每次成功使用武器"累加，各职业分支用取模/阈值决定这一击是否额外发射转化弹幕。
+        /// 换职业（profanedSoulWeaponType 变化）或累加到 370 时归零。跨帧累积，不能放进 ResetEffects
+        /// </summary>
+        public int profanedSoulWeaponUsage = 0;
+        /// <summary>
+        /// 上一次触发转化的武器职业（1=近战 2=远程 3=魔法 4=召唤（原版为盗贼） 5=鞭，
+        /// 对应灾厄 2.2.2 的 profanedSoulWeaponType）：与本次不同即清零计数器，避免职业节奏互相污染
+        /// </summary>
+        public int profanedSoulWeaponType = 0;
+        /// <summary>
+        /// 变身动画剩余帧数（120 → 1 递减，-1 表示无动画）：由 PscTransformAnimation 每帧写入，
+        /// 卸载/死亡时复位为 -1。跨帧计时器，**不能**放进 ResetEffects（每帧清零会立刻结束动画）
+        /// </summary>
+        public int profanedCrystalAnim = -1;
+        /// <summary>
+        /// 变身翅膀动画计数器（对应灾厄 2.2.2 的 profanedCrystalWingCounter）：Key=当前帧号、
+        /// Value=该帧剩余停留帧数；Enraged 及以上档 5 帧循环、否则 8 帧循环。
+        /// 跨帧计时器，**不能**放进 ResetEffects（每帧清零会导致每帧切换翅帧）
+        /// </summary>
+        public KeyValuePair<int, int> profanedCrystalWingCounter = new KeyValuePair<int, int>(1, 10);
+        /// <summary>
+        /// 变身腿部动画计数器（对应灾厄 2.2.2 的 profanedCrystalAnimCounter）：
+        /// Key=帧号（0..7 待机 / 8 跳跃 / 9..21 行走）、Value=该帧剩余停留帧数。跨帧计时器，**不能**放进 ResetEffects
+        /// </summary>
+        public KeyValuePair<int, int> profanedCrystalAnimCounter = new KeyValuePair<int, int>(0, 10);
+        /// <summary>
+        /// 亵渎之魂护盾：是否可见、当前耐久、破盾后的回充延迟与回充进度
+        /// （本工程自实现替代灾厄的着色器护盾，无 UI 条）
+        /// </summary>
+        public bool profanedSoulShieldVisible = false;
+        /// <summary>
+        /// 亵渎之魂水晶的**变身外观**是否显示（对应饰品的可见性开关）：
+        /// 装在饰品栏且"显示"（hideVisual == false）时为 true，放在时装栏时也为 true，其余（隐藏/未装备）为 false。
+        /// 由 ProfanedSoulCrystal.UpdateAccessory / UpdateVanity 每帧置位，FrameEffects 据此覆写头/身/腿/翅四个装备槽。
+        /// 不能复用 profanedSoulShieldVisible——神器也会置位那个标记，复用会让穿神器时也显示水晶外观
+        /// </summary>
+        public bool profanedCrystalVisible = false;
+        public int profanedSoulShieldDurability = 0;
+        public int profanedSoulShieldRechargeDelay = 0;
+        public float profanedSoulShieldRechargeProgress = 0f;
+        /// <summary>
+        /// 本次"护盾被打空"是否已排入回充延迟：一次性闸门，避免延迟走完后每帧重启回充（对齐灾厄
+        /// "回充冷却不在场才 AddCooldown"的语义）
+        /// </summary>
+        private bool profanedSoulShieldRechargeArmed = false;
+        /// <summary>
+        /// 本次受击是否已被亵渎之魂护盾"完全吸收"（对应原版 freeDodgeFromShieldAbsorption）：
+        /// 由 ModifyHurtInfo_ProfanedShield 置位、由 FreeDodge 消费并复位。
+        /// 置位后 FreeDodge 返回 true，取消这次受击的伤害/击退/减益（原版就是这么做的）
+        /// </summary>
+        private bool profanedSoulShieldFreeDodge = false;
+        /// <summary>
+        /// 护盾受击音效的节流计时（对应原版 2.2.2 的 hurtSoundTimer）：护盾在位时每次受击替换成
+        /// 守护者护盾关闭音，并把这个计时置 20 帧，避免连续受击时音效叠在一起。每帧在 ResetEffects 里递减
+        /// </summary>
+        private int profanedSoulShieldHurtSoundTimer = 0;
+        /// <summary>
+        /// 冷却机架数据：按字符串 ID 索引的全部冷却实例（对应灾厄 CalamityPlayer.cooldowns），
+        /// 每帧在 PostUpdateMiscEffects 末尾统一 tick，到期后执行 OnCompleted 并移除
+        /// </summary>
+        public Dictionary<string, CooldownInstance> cooldowns = new Dictionary<string, CooldownInstance>(16);
+        /// <summary>
         /// 已装备大杂烩（The Amalgam）：聚合大脑、灾厄之戒、吞噬者、炼狱、虚空之烬、
         /// 利维坦龙涎香、真菌团块等多个高级饰品的"全都要"终极形态
         /// </summary>
@@ -474,6 +588,8 @@ namespace CalamityDemutation.Players
         /// 已装备最初暗影焰（召唤饰品）：召唤物命中敌人时施加 5 秒暗影焰
         /// </summary>
         public bool theFirstShadowflame = false;
+        public bool titanScale = false;
+        public bool triumph = false;
         /// <summary>
         /// 已装备活力凝胶：+10% 移速与 +1 跳跃力
         /// </summary>
@@ -519,19 +635,25 @@ namespace CalamityDemutation.Players
             amidiasSpark = false;
             ancientFossil = false;
             archaicPowder = false;
+            armorCrumbling = false;
+            armorShattering = false;
             auricBoost = false;
             auricSet = false;
+            badgeOfBravery = false;
             beeResist = false;
             bloodflareCore = false;
             bloodflareMelee = false;
             bloodflareSet = false;
             bloomStone = false;
-            badgeOfBravery = false;
             bloodPact = false;
             bloodyWormScarf = false;
             bloodyWormTooth = false;
+            bounding = false;
             brimstoneWaifu = false;
+            cadence = false;
             calamityRing = false;
+            calcium = false;
+            ceaselessHunger = false;
             chaosStone = false;
             cloudWaifu = false;
             coreOfTheBloodGod = false;
@@ -543,6 +665,7 @@ namespace CalamityDemutation.Players
             darkSunRing = false;
             deificAmulet = false;
             demonshadeSetBonus = false;
+            draconicSurge = false;
             drewsSandyWaifu = false;
             elementalGauntlet = false;
             elementalQuiver = false;
@@ -565,6 +688,8 @@ namespace CalamityDemutation.Players
             grandGelatin = false;
             heartoftheElements = false;
             heartoftheElementshideVisual = false;
+            hellfireExplosion = false;
+            holyWrath = false;
             honeyDew = false;
             levianthanAmbergris = false;
             lifeJelly = false;
@@ -576,11 +701,28 @@ namespace CalamityDemutation.Players
             omegaBlueChestplate = false;
             omegaBlueSet = false;
             omegaBlueHentai = false;
+            photosynthesis = false;
             psychoticAmulet = false;
+            profanedRage = false;
+            // 先保存上一帧的水晶状态再清零（对齐 2.2.2 ResetEffects 里的 previous 赋值）：
+            // profanedCrystalStatePrevious 供水晶鞭 buff 在 UpdateBuffs 阶段判断是否已离开水晶态
+            profanedCrystalStatePrevious = pscState;
+            profanedCrystalPrevious = profanedCrystal;
+            profanedCrystal = false;
+            profanedSoulArtifact = false;
+            profanedSoulGuardians = false;
+            // 注意：profanedSoulHealCounter 是跨帧计时器，**不能**在此重置（每帧清零会导致每帧回血）；
+            // 原版灾厄只在 UpdateDead 里把它复位为 300
+            profanedSoulShieldVisible = false;
+            profanedCrystalVisible = false;
+            // 护盾受击音效的节流计时（对齐 2.2.2 的 hurtSoundTimer）：每帧递减，见 ModifyHurt
+            if (profanedSoulShieldHurtSoundTimer > 0)
+                profanedSoulShieldHurtSoundTimer--;
             radiantOoze = false;
             rampartofDeities = false;
             redDevil = false;
             redDevil2 = false;
+            revivify = false;
             roseStone = false;
             rottenBrain = false;
             sandyWaifu = false;
@@ -592,6 +734,7 @@ namespace CalamityDemutation.Players
             silvaMelee = false;
             silvaSet = false;
             sirenLureWaifu = false;
+            soaring = false;
             sponge = false;
             statisBlessing = false;
             statisBeltOfCurses = false;
@@ -603,6 +746,8 @@ namespace CalamityDemutation.Players
             theAbsorber = false;
             theCommunity = false;
             theFirstShadowflame = false;
+            titanScale = false;
+            triumph = false;
             vitalJelly = false;
             voidofExtinction = false;
             wifeinaBottle = false;
@@ -624,9 +769,12 @@ namespace CalamityDemutation.Players
             amidiasSpark = false;
             ancientFossil = false;
             archaicPowder = false;
+            armorCrumbling = false;
+            armorShattering = false;
             auricBoost = false;
             auricSet = false;
             beeResist = false;
+            badgeOfBravery = false;
             bloodflareCore = false;
             bloodflareFrenzyTimer = 0;
             bloodflareFrenzyCooldown = 0;
@@ -636,12 +784,15 @@ namespace CalamityDemutation.Players
             bloodflareMeleeHits = 0;
             bloodflareSet = false;
             bloomStone = false;
-            badgeOfBravery = false;
             bloodPact = false;
             bloodyWormScarf = false;
             bloodyWormTooth = false;
+            bounding = false;
             brimstoneWaifu = false;
+            cadence = false;
             calamityRing = false;
+            calcium = false;
+            ceaselessHunger = false;
             chaosStone = false;
             cloudWaifu = false;
             coreOfTheBloodGod = false;
@@ -653,6 +804,8 @@ namespace CalamityDemutation.Players
             darkSunRing = false;
             deificAmulet = false;
             demonshadeSetBonus = false;
+            draconicSurge = false;
+            draconicSurgeCooldown = 0;
             drewsSandyWaifu = false;
             elementalGauntlet = false;
             elementalQuiver = false;
@@ -668,7 +821,7 @@ namespace CalamityDemutation.Players
             giantShell = false;
             giantTortoiseShell = false;
             godSlayer = false;
-            godSlayerCooldown = false;;
+            godSlayerCooldown = false;
             godSlayerDamageProtect = false;
             godSlayerMelee = false;
             godSlayerReflect = false;
@@ -676,6 +829,8 @@ namespace CalamityDemutation.Players
             hasSilvaEffect = false;
             heartoftheElements = false;
             heartoftheElementshideVisual = false;
+            hellfireExplosion = false;
+            holyWrath = false;
             honeyDew = false;
             levianthanAmbergris = false;
             lifeJelly = false;
@@ -687,11 +842,23 @@ namespace CalamityDemutation.Players
             omegaBlueChestplate = false;
             omegaBlueSet = false;
             omegaBlueCooldown = 0;
+            photosynthesis = false;
             psychoticAmulet = false;
+            profanedRage = false;
+            profanedCrystal = false;
+            profanedCrystalAnim = -1;                                      // 死亡时结束变身动画计时
+            profanedCrystalWingCounter = new KeyValuePair<int, int>(1, 10); // 翅动画计数器复位（跨帧计时器只能在此/卸装时复位）
+            profanedCrystalAnimCounter = new KeyValuePair<int, int>(0, 10); // 腿动画计数器复位
+            profanedSoulArtifact = false;
+            profanedSoulGuardians = false;
+            profanedSoulHealCounter = 300;   // 死亡时复位治疗计时器（对齐灾厄 UpdateDead 的 healCounter = 300）
+            profanedSoulShieldVisible = false;
+            profanedCrystalVisible = false;
             radiantOoze = false;
             rampartofDeities = false;
             redDevil = false;
             redDevil2 = false;
+            revivify = false;
             roseStone = false;
             rottenBrain = false;
             sandyWaifu = false;
@@ -705,6 +872,7 @@ namespace CalamityDemutation.Players
             silvaMelee = false;
             silvaSet = false;
             sirenLureWaifu = false;
+            soaring = false;
             sponge = false;
             statisBlessing = false;
             statisBeltOfCurses = false;
@@ -719,6 +887,8 @@ namespace CalamityDemutation.Players
             theAbsorber = false;
             theCommunity = false;
             theFirstShadowflame = false;
+            titanScale = false;
+            triumph = false;
             vitalJelly = false;
             voidofExtinction = false;
             wifeinaBottle = false;
@@ -773,6 +943,7 @@ namespace CalamityDemutation.Players
             // 改到本方法（每帧全饰品结算中心）保证增益期全程生效。
             if (shellBoost)
             {
+                Player.panic = false;// 禁用掉恐慌的效果
                 Player.moveSpeed += 0.9f;
             }
             // 血耀核心：防御不足 100 时 +15% 通用伤害；低血时获得额外减伤与增伤
@@ -816,14 +987,14 @@ namespace CalamityDemutation.Players
                 Player.GetAttackSpeed<MeleeDamageClass>() += 0.05f;
             }
             // 血蠕虫围巾：+10% 近战伤害、+10% 近战攻速、+15% 伤害减免
-            if(bloodyWormScarf)
+            if (bloodyWormScarf)
             {
                 Player.GetDamage<MeleeDamageClass>() += 0.1f;
                 Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
                 Player.endurance += 0.15f;
             }
             // 血蠕虫牙：半血以下效果翻倍（+10% vs +5%）
-            if(bloodyWormTooth)
+            if (bloodyWormTooth)
             {
                 if (Player.statLife < (int)(Player.statLifeMax2 * 0.5))
                 {
@@ -897,7 +1068,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 代达罗斯纹章：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
-            if(daedalusEmblem)
+            if (daedalusEmblem)
             {
                 Player.GetDamage<RangedDamageClass>() += 0.15f;
                 Player.GetCritChance<RangedDamageClass>() += 10;
@@ -906,7 +1077,7 @@ namespace CalamityDemutation.Players
                 Player.pickSpeed -= 0.15f;
             }
             // 元素箭袋：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
-            if(elementalQuiver)
+            if (elementalQuiver)
             {
                 Player.GetDamage<RangedDamageClass>() += 0.2f;
                 Player.GetCritChance<RangedDamageClass>() += 20;
@@ -915,7 +1086,7 @@ namespace CalamityDemutation.Players
                 Player.pickSpeed -= 0.3f;
             }
             // 灾厄符印：魔法增伤/暴击/魔力上限与减耗，附带寻宝/药剂
-            if(sigilofCalamitas)
+            if (sigilofCalamitas)
             {
                 Player.GetDamage<MagicDamageClass>() += 0.15f;
                 Player.GetCritChance<MagicDamageClass>() += 10;
@@ -925,7 +1096,7 @@ namespace CalamityDemutation.Players
                 Player.pStone = true;
             }
             // 虚灵护符：魔法增伤/暴击/魔力上限与减耗，附带寻宝/药剂/魔力花
-            if(etherealTalisman)
+            if (etherealTalisman)
             {
                 Player.GetDamage<MagicDamageClass>() += 0.2f;
                 Player.GetCritChance<MagicDamageClass>() += 20;
@@ -936,14 +1107,14 @@ namespace CalamityDemutation.Players
                 Player.manaFlower = true;
             }
             // 时滞祝福：召唤增伤/击退 + 3 召唤栏
-            if(statisBlessing)
+            if (statisBlessing)
             {
                 Player.GetKnockback<SummonDamageClass>().Base += 2.5f;
                 Player.GetDamage<SummonDamageClass>() += 0.1f;
                 Player.maxMinions += 3;
             }
             // 时滞诅咒：召唤增伤/击退 + 3 召唤栏，鞭子范围与召唤近战攻速提升
-            if(statisCurse)
+            if (statisCurse)
             {
                 Player.GetKnockback<SummonDamageClass>().Base += 2.5f;
                 Player.GetDamage<SummonDamageClass>() += 0.1f;
@@ -952,7 +1123,7 @@ namespace CalamityDemutation.Players
                 Player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.1f;
             }
             // 时滞诅咒腰带：召唤增伤/栏位 + 鞭子范围，外加移动/跳跃/闪避/冲刺
-            if(statisBeltOfCurses)
+            if (statisBeltOfCurses)
             {
                 Player.GetKnockback<SummonDamageClass>().Base += 2.5f;
                 Player.GetDamage<SummonDamageClass>() += 0.2f;
@@ -967,7 +1138,7 @@ namespace CalamityDemutation.Players
                 Player.spikedBoots = 2;
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
-            if(darkSunRing)
+            if (darkSunRing)
             {
                 Player.maxMinions += 2;
                 Player.GetDamage<GenericDamageClass>() += 0.12f;
@@ -984,13 +1155,13 @@ namespace CalamityDemutation.Players
                 }
             }
             // 星云核心：+20% 通用增伤/暴击（免死回血见 PreKill）
-            if(nebulousCore)
+            if (nebulousCore)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.2f;
                 Player.GetCritChance<GenericDamageClass>() += 20;
             }
             // 亚利姆之力：通用/近战/召唤全面增伤 + 生存属性大礼包
-            if(yharimPower)
+            if (yharimPower)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.22f;
                 Player.GetCritChance<GenericDamageClass>() += 10;
@@ -1002,7 +1173,7 @@ namespace CalamityDemutation.Players
                 Player.moveSpeed += 0.5f;
             }
             // 苦难状态/饰品：大额通用增伤 + 防御/减伤/生命上限/生命回复
-            if(afflicted || affliction)
+            if (afflicted || affliction)
             {
                 Player.noKnockback = true;
                 Player.GetDamage<GenericDamageClass>() += 0.15f;
@@ -1012,7 +1183,7 @@ namespace CalamityDemutation.Players
                 Player.lifeRegen += 8;
             }
             // 苦难饰品附加光环：每 10 帧向同队（非本人）玩家刷一次 Afflicted 增益
-            if(affliction && Player.miscCounter % 10 == 0)
+            if (affliction && Player.miscCounter % 10 == 0)
             {
                 for (int i = 0; i < Main.maxPlayers; i++)
                 {
@@ -1024,7 +1195,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 玫瑰石：粉色照明 + 生命回复/上限/3% 通用增伤
-            if(roseStone)
+            if (roseStone)
             {
                 Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0.6f, 0f, 0.25f);
                 Player.lifeRegen += 2;
@@ -1032,7 +1203,7 @@ namespace CalamityDemutation.Players
                 Player.GetDamage<GenericDamageClass>() += 0.03f;
             }
             // 风之石：青色照明 + 移速/跳跃提升 + 3% 通用增伤
-            if(aeroStone)
+            if (aeroStone)
             {
                 Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0f, 0.425f, 0.425f);
                 Player.moveSpeed += 0.1f;
@@ -1040,14 +1211,14 @@ namespace CalamityDemutation.Players
                 Player.GetDamage<GenericDamageClass>() += 0.03f;
             }
             // 寒晶石：蓝色照明 + 减伤 + 3% 通用增伤
-            if(cryoStone)
+            if (cryoStone)
             {
                 Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0f, 0.25f, 0.6f);
                 Player.endurance += 0.05f;
                 Player.GetDamage<GenericDamageClass>() += 0.03f;
             }
             // 混沌石：红色照明 + 魔力上限/减耗 + 3% 通用增伤
-            if(chaosStone)
+            if (chaosStone)
             {
                 Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0.85f, 0f, 0f);
                 Player.statManaMax2 += 50;
@@ -1056,7 +1227,7 @@ namespace CalamityDemutation.Players
             }
             // 绽放之石：绿色照明 + 少量通用增伤/暴击；光环给周围敌人上 debuff，
             // 站立地面时还会让脚下空砖长出草/花/染料植物（装饰）
-            if(bloomStone)
+            if (bloomStone)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.02f;
                 Player.GetCritChance<GenericDamageClass>() += 2;
@@ -1194,7 +1365,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 元素之心：全属性大礼包；站立地面时脚下长出草/花，并驱动五个娘化召唤物
-            if(heartoftheElements)
+            if (heartoftheElements)
             {
                 Player.lifeRegen += 6;
                 Player.manaRegen += 6;
@@ -1377,7 +1548,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 远古粉末：地下/洞穴/地狱层防御与减伤 + 挖掘提速
-            if(archaicPowder)
+            if (archaicPowder)
             {
                 if (Player.ZoneDirtLayerHeight || Player.ZoneRockLayerHeight || Player.ZoneUnderworldHeight)
                 {
@@ -1387,7 +1558,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 辐射软泥：夜间暖黄照明 + 生命回复
-            if(radiantOoze)
+            if (radiantOoze)
             {
                 if (!Main.dayTime)
                 {
@@ -1396,7 +1567,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 蜜露：丛林区回血/防御/减伤；免疫蜂蜜与中毒，额外附加蜂蜜式回复
-            if(honeyDew)
+            if (honeyDew)
             {
                 if (Player.ZoneJungle)
                 {
@@ -1418,7 +1589,7 @@ namespace CalamityDemutation.Players
                 Player.lifeRegen += 2;
             }
             // 活露：身处丛林时获得回血/防御/减伤
-            if(livingDew)
+            if (livingDew)
             {
                 if (Player.ZoneJungle)
                 {
@@ -1428,7 +1599,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 仙馐药瓶：减伤/挖速/回血，免疫冰系与毒系 debuff，蜂蜜式回复
-            if(ambrosialAmpoule)
+            if (ambrosialAmpoule)
             {
                 Player.endurance += 0.12f;
                 Player.pickSpeed -= 0.5f;
@@ -1449,7 +1620,7 @@ namespace CalamityDemutation.Players
                 Player.lifeRegenTime += 2;
             }
             // 魔力凝胶：+20 魔力上限，静止时额外回蓝
-            if(manaJelly)
+            if (manaJelly)
             {
                 Player.statManaMax2 += 20;
                 if ((double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
@@ -1458,7 +1629,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 生命凝胶：+20 生命上限，静止时额外回血
-            if(lifeJelly)
+            if (lifeJelly)
             {
                 Player.statLifeMax2 += 20;
                 if ((double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
@@ -1467,13 +1638,13 @@ namespace CalamityDemutation.Players
                 }
             }
             // 活力凝胶：移速/跳跃提升
-            if(vitalJelly)
+            if (vitalJelly)
             {
                 Player.moveSpeed += 0.1f;
                 Player.jumpSpeedBoost += 1.0f;
             }
             // 大凝胶：移速/跳跃/生命/魔力上限，静止时回血回蓝
-            if(grandGelatin)
+            if (grandGelatin)
             {
                 Player.moveSpeed += 0.1f;
                 Player.jumpSpeedBoost += 1.0f;
@@ -1486,7 +1657,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 海贝壳：浸水时加防/减伤/移速并可水中呼吸
-            if(seaShell)
+            if (seaShell)
             {
                 if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
                 {
@@ -1497,19 +1668,19 @@ namespace CalamityDemutation.Players
                 }
             }
             // 爬虫甲壳：减伤 + 荆棘反伤
-            if(crawCarapace)
+            if (crawCarapace)
             {
                 Player.endurance += 0.05f;
                 Player.thorns = 0.25f;
             }
             // 巨型陆龟壳：减速 + 荆棘反伤
-            if(giantTortoiseShell)
+            if (giantTortoiseShell)
             {
                 Player.moveSpeed -= 0.1f;
                 Player.thorns = 0.25f;
             }
             // 吞噬者：生命/魔力/移速/荆棘/减伤/静止回复 + 浸水增益
-            if(theAbsorber)
+            if (theAbsorber)
             {
                 Player.statLifeMax2 += 30;
                 Player.statManaMax2 += 30;
@@ -1531,12 +1702,12 @@ namespace CalamityDemutation.Players
                 }
             }
             // 巨龟壳：常驻减速；受伤后的爆发效果见 OnHurt（触发 ShellBoost）
-            if(giantShell)
+            if (giantShell)
             {
                 Player.moveSpeed -= 0.15f;
             }
             // 海绵：大量生存属性/静止回复/溺水免疫，受击反制见 ModifyHurt/PostHurt
-            if(sponge)
+            if (sponge)
             {
                 Player.lifeRegen += 6;
                 Player.endurance += 0.18f;
@@ -1575,7 +1746,7 @@ namespace CalamityDemutation.Players
             }
             // 腐坏大脑：免伤期间 1/8 概率在头顶召唤 AuraRain 落下；
             // 血量低于 75% 时增伤、低于 50% 时减速
-            if(rottenBrain)
+            if (rottenBrain)
             {
                 if (Player.immune)
                 {
@@ -1613,7 +1784,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 聚合大脑：常驻增伤/暴击；免伤期间概率降下 AuraRain；受伤困惑敌人见 OnHurt
-            if(amalgamatedBrain)
+            if (amalgamatedBrain)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.1f;
                 Player.GetCritChance<GenericDamageClass>() += 5;
@@ -1645,7 +1816,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 灾厄之戒：常驻增伤；免伤期间概率在头顶召唤站火（StandingFire）
-            if(calamityRing)
+            if (calamityRing)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.15f;
                 if (Player.whoAmI == Main.myPlayer)
@@ -1675,7 +1846,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 炼狱：每 600 帧（10 秒）从高空向玩家瞄准方向齐射一轮扇形地狱火流星雨
-            if(gehenna)
+            if (gehenna)
             {
                 // 首次装备将倒计时初始化为 600，之后每帧递减，归零即发射
                 if (gehennaFireCountdown == 0)
@@ -1712,12 +1883,12 @@ namespace CalamityDemutation.Players
                 }
             }
             // 虚空之烬：常驻增伤/熔岩免疫；每 10 秒地狱火齐射，免伤期间再召唤高伤站火
-            if(voidofExtinction)
+            if (voidofExtinction)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.15f;
                 Player.lavaRose = true;
                 Player.lavaMax += 240;
-                if(Player.lavaWet)
+                if (Player.lavaWet)
                 {
                     Player.GetDamage<GenericDamageClass>() += 0.25f;
                 }
@@ -1781,7 +1952,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 利维坦龙涎香：免疫溺水、水下作战；移动时制造毒海水，并周期对近身敌人施毒
-            if(levianthanAmbergris)
+            if (levianthanAmbergris)
             {
                 Player.ignoreWater = true;
                 if (!Player.lavaWet && !Player.honeyWet)
@@ -1843,7 +2014,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 大杂烩（The Amalgam）：聚合上述多种高级饰品的全部结算，属终极饰品（数值更高）
-            if(theAmalgam)
+            if (theAmalgam)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.3f;
                 Player.GetCritChance<GenericDamageClass>() += 15;
@@ -1882,21 +2053,25 @@ namespace CalamityDemutation.Players
                     }
                     if (Main.rand.NextBool(10))
                     {
-                        for (int l = 0; l < 1; l++)
+                        // 仅本地端生成：非主机客户端也生成会重复创建弹幕、造成不同步
+                        if (Player.whoAmI == Main.myPlayer)
                         {
-                            float x = Player.position.X + (float)Main.rand.Next(-400, 400);
-                            float y = Player.position.Y - (float)Main.rand.Next(500, 800);
-                            Vector2 vector = new(x, y);
-                            float num15 = Player.position.X + (float)(Player.width / 2) - vector.X;
-                            float num16 = Player.position.Y + (float)(Player.height / 2) - vector.Y;
-                            num15 += (float)Main.rand.Next(-100, 101);
-                            int num17 = 22;
-                            float num18 = (float)Math.Sqrt((double)(num15 * num15 + num16 * num16));
-                            num18 = (float)num17 / num18;
-                            num15 *= num18;
-                            num16 *= num18;
-                            int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), 360, 5f, Player.whoAmI, 0f, 0f);
-                            Main.projectile[num19].ai[1] = Player.position.Y;
+                            for (int l = 0; l < 1; l++)
+                            {
+                                float x = Player.position.X + (float)Main.rand.Next(-400, 400);
+                                float y = Player.position.Y - (float)Main.rand.Next(500, 800);
+                                Vector2 vector = new(x, y);
+                                float num15 = Player.position.X + (float)(Player.width / 2) - vector.X;
+                                float num16 = Player.position.Y + (float)(Player.height / 2) - vector.Y;
+                                num15 += (float)Main.rand.Next(-100, 101);
+                                int num17 = 22;
+                                float num18 = (float)Math.Sqrt((double)(num15 * num15 + num16 * num16));
+                                num18 = (float)num17 / num18;
+                                num15 *= num18;
+                                num16 *= num18;
+                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), 360, 5f, Player.whoAmI, 0f, 0f);
+                                Main.projectile[num19].ai[1] = Player.position.Y;
+                            }
                         }
                     }
                 }
@@ -1999,21 +2174,21 @@ namespace CalamityDemutation.Players
                 {
                     // 进度系数：击败 1 档（石巨人）= 0（初始值），全清 18 档 = 1（满配值）
                     float t = (defeated - 1) / 17f;
-                    float damage     = InitDamage     + (MaxDamage     - InitDamage)     * t;
-                    float crit       = InitCrit       + (MaxCrit       - InitCrit)       * t;
+                    float damage = InitDamage + (MaxDamage - InitDamage) * t;
+                    float crit = InitCrit + (MaxCrit - InitCrit) * t;
                     float meleeSpeed = InitMeleeSpeed + (MaxMeleeSpeed - InitMeleeSpeed) * t;
-                    float endurance  = InitEndurance  + (MaxEndurance  - InitEndurance)  * t;
-                    float moveSpeed  = InitMoveSpeed  + (MaxMoveSpeed  - InitMoveSpeed)  * t;
-                    float lifePct    = InitLifePct    + (MaxLifePct    - InitLifePct)    * t;
-                    float manaPct    = InitManaPct    + (MaxManaPct    - InitManaPct)    * t;
+                    float endurance = InitEndurance + (MaxEndurance - InitEndurance) * t;
+                    float moveSpeed = InitMoveSpeed + (MaxMoveSpeed - InitMoveSpeed) * t;
+                    float lifePct = InitLifePct + (MaxLifePct - InitLifePct) * t;
+                    float manaPct = InitManaPct + (MaxManaPct - InitManaPct) * t;
                     int lifeRegen = (int)(InitLifeRegen + (MaxLifeRegen - InitLifeRegen) * t);
                     int manaRegen = (int)(InitManaRegen + (MaxManaRegen - InitManaRegen) * t);
-                    int defense   = (int)(InitDefense   + (MaxDefense   - InitDefense)   * t);
-                    float jumpPct   = InitJumpPct   + (MaxJumpPct   - InitJumpPct)   * t;
-                    float minePct   = InitMinePct   + (MaxMinePct   - InitMinePct)   * t;
-                    float costPct   = InitCostPct   + (MaxCostPct   - InitCostPct)   * t;
+                    int defense = (int)(InitDefense + (MaxDefense - InitDefense) * t);
+                    float jumpPct = InitJumpPct + (MaxJumpPct - InitJumpPct) * t;
+                    float minePct = InitMinePct + (MaxMinePct - InitMinePct) * t;
+                    float costPct = InitCostPct + (MaxCostPct - InitCostPct) * t;
                     float thornsPct = InitThornsPct + (MaxThornsPct - InitThornsPct) * t;
-                    float luckPct   = InitLuckPct   + (MaxLuckPct   - InitLuckPct)   * t;
+                    float luckPct = InitLuckPct + (MaxLuckPct - InitLuckPct) * t;
                     Player.GetDamage<GenericDamageClass>() += damage;
                     Player.GetCritChance<GenericDamageClass>() += crit;
                     Player.GetAttackSpeed<MeleeDamageClass>() += meleeSpeed;
@@ -2069,18 +2244,18 @@ namespace CalamityDemutation.Players
                     Player.wingTime = 10000 * Player.wingTimeMax; // 星流巨械/至尊灾厄：每帧回满飞行时间 = 无限飞行
                 }
             }
-            if(deificAmulet)
+            if (deificAmulet)
             {
                 Player.panic = true;
                 Player.manaMagnet = true;
                 Player.magicCuffs = true;
                 Player.GetArmorPenetration<GenericDamageClass>() += 25;
-                if(Player.wet)
+                if (Player.wet)
                 {
                     Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 1.35f, 0.3f, 0.9f);
                 }
             }
-            if(frigidBulwark)
+            if (frigidBulwark)
             {
                 Player.noKnockback = true;
                 if (Player.statLife > (int)((double)Player.statLifeMax2 * 0.25))
@@ -2109,7 +2284,7 @@ namespace CalamityDemutation.Players
                     Player.endurance += 0.05f;
                 }
             }
-            if(rampartofDeities)
+            if (rampartofDeities)
             {
                 Player.panic = true;
                 Player.manaMagnet = true;
@@ -2304,7 +2479,7 @@ namespace CalamityDemutation.Players
                     Player.statLifeMax2 = 400;
                     if (silvaCountdown > 0)
                     {
-                        if (Player.FindBuffIndex(ModContent.BuffType<SilvaRevival>()) > -1) { Player.ClearBuff(Mod.Find<ModBuff>("SilvaRevival").Type); }
+                        if (Player.FindBuffIndex(ModContent.BuffType<SilvaRevival>()) > -1) { Player.ClearBuff(ModContent.BuffType<SilvaRevival>()); }
                         SoundEngine.PlaySound(new SoundStyle("CalamityDemutation/Sounds/Custom/SilvaDispel"), Player.position);
                     }
                     silvaCountdown = 0;
@@ -2334,12 +2509,438 @@ namespace CalamityDemutation.Players
             {
                 Player.buffImmune[46] = true;
             }
-            if(psychoticAmulet)
+            if (psychoticAmulet)
             {
                 Player.GetDamage<RangedDamageClass>() += 0.05f;
                 Player.GetCritChance<RangedDamageClass>() += 5;
                 Player.shroomiteStealth = true;
             }
+            if (titanScale)
+            {
+                Player.endurance += 0.05f;
+                Player.statDefense += 5;
+                Player.kbBuff = true;
+            }
+            if (cadence)
+            {
+                Player.discountAvailable = true;
+                Player.lifeMagnet = true;
+                Player.calmed = true;
+                Player.loveStruck = true;
+                Player.lifeRegen += 4;
+                Player.statLifeMax2 += (int)(Player.statLifeMax2 * 0.2);
+            }
+            if (holyWrath)
+            {
+                Player.GetDamage<GenericDamageClass>() += 0.12f;
+                Player.moveSpeed += 0.05f;
+            }
+            if (armorShattering)
+            {
+                Player.GetCritChance<GenericDamageClass>() += 8;
+                Player.GetDamage<GenericDamageClass>() += 0.08f;
+            }
+            if (armorCrumbling)
+            {
+                Player.GetCritChance<GenericDamageClass>() += 5;
+            }
+            if (bounding)
+            {
+                Player.jumpSpeedBoost += 0.5f;
+                Player.jumpHeight += 10;
+                Player.extraFall += 25;
+            }
+            if (soaring) Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.1);// 解除处于飞行状态的限制
+            if (profanedRage)
+            {
+                Player.GetCritChance<GenericDamageClass>() += 12;
+                Player.moveSpeed += 0.05f;
+            }
+            if (ceaselessHunger)
+            {
+                for (int j = 0; j < 400; j++)
+                {
+                    if (Main.item[j].active && Main.item[j].noGrabDelay == 0 && Main.item[j].playerIndexTheItemIsReservedFor == Player.whoAmI)
+                    {
+                        int num = Main.maxTilesX;
+                        if (new Rectangle((int)Player.position.X - num, (int)Player.position.Y - num, Player.width + num * 2, Player.height + num * 2).Intersects(new Rectangle((int)Main.item[j].position.X, (int)Main.item[j].position.Y, Main.item[j].width, Main.item[j].height)))
+                        {
+                            Main.item[j].beingGrabbed = true;
+                            if ((double)Player.position.X + (double)Player.width * 0.5 > (double)Main.item[j].position.X + (double)Main.item[j].width * 0.5)
+                            {
+                                if (Main.item[j].velocity.X < 40f + Player.velocity.X)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.X = item.velocity.X + 4.5f;
+                                }
+                                if (Main.item[j].velocity.X < 0f)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.X = item.velocity.X + 4.5f * 0.75f;
+                                }
+                            }
+                            else
+                            {
+                                if (Main.item[j].velocity.X > -40f + Player.velocity.X)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.X = item.velocity.X - 4.5f;
+                                }
+                                if (Main.item[j].velocity.X > 0f)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.X = item.velocity.X - 4.5f * 0.75f;
+                                }
+                            }
+                            if ((double)Player.position.Y + (double)Player.height * 0.5 > (double)Main.item[j].position.Y + (double)Main.item[j].height * 0.5)
+                            {
+                                if (Main.item[j].velocity.Y < 40f)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.Y = item.velocity.Y + 4.5f;
+                                }
+                                if (Main.item[j].velocity.Y < 0f)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.Y = item.velocity.Y + 4.5f * 0.75f;
+                                }
+                            }
+                            else
+                            {
+                                if (Main.item[j].velocity.Y > -40f)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.Y = item.velocity.Y - 4.5f;
+                                }
+                                if (Main.item[j].velocity.Y > 0f)
+                                {
+                                    Item item = Main.item[j];
+                                    item.velocity.Y = item.velocity.Y - 4.5f * 0.75f;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (draconicSurgeCooldown > 0)
+                draconicSurgeCooldown--;
+            if (draconicSurge)
+            {
+                Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.35);
+                Player.statDefense += 16;
+            }
+            if (calcium)
+            {
+                Player.noFallDmg = true;
+            }
+            // 亵渎之魂神器/水晶：维持三守护者、治疗与仆从栏加成
+            // 数值口径：神器 = 伤害 52 / 投矛 15f / ai[0]=0；水晶 = 伤害 750 / 投矛 480f / ai[0]=1
+            if (profanedSoulArtifact)
+            {
+                Player.maxMinions++;   // 攻击守护者常驻 +1 仆从栏
+                if (Player.whoAmI == Main.myPlayer)
+                {
+                    if (Player.FindBuffIndex(ModContent.BuffType<ProfanedSoulGuardians>()) == -1)
+                        Player.AddBuff(ModContent.BuffType<ProfanedSoulGuardians>(), 3600, true);   // 补上守护者 buff（3600 帧 = 60 秒）
+                    profanedSoulGuardians = true;   // 置位标记，供 buff 与其它结算读取
+                    // 守护者攻击基值：神器 52 / 水晶 1000。水晶档按用户口径「回调削弱前」取最高档 1000——
+                    // 灾厄旧值是 800/900/1000（随击败神明吞噬者 / 犽戎逐档提升），本工程去掉了进度门槛，故取最高档；
+                    // 2.2.2 源码里这一项是 346（比 1.5.0.001 的削弱后值还低，是另一次削弱）。
+                    // 三只都必须回写 originalDamage，否则各族弹幕按 originalDamage 派生的伤害全为 0（星弹齐射会完全没伤害）。
+                    // 原版还会过 ApplyArmorAccDamageBonusesTo，本工程无该方法故跳过。
+                    int babDamage = profanedCrystal ? 1000 : 52;
+                    float babCheck = profanedCrystal ? 1f : 0f;            // ai[0]：1 = 由水晶形态召唤
+                    float spearCounter = profanedCrystal ? 480f : 15f;     // 攻击守护者 ai[1]：投矛计时（水晶 480 = 60*8，神器 15）
+                    if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianHealer>()] < 1)
+                    {
+                        Projectile babH = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, Vector2.UnitY * -6f, ModContent.ProjectileType<MiniGuardianHealer>(), 0, 0f, Main.myPlayer, babCheck);   // 治疗守护者：本体不造成伤害
+                        babH.originalDamage = babDamage;
+                    }
+                    if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianDefense>()] < 1)
+                    {
+                        Projectile babD = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, Vector2.UnitY * -3f, ModContent.ProjectileType<MiniGuardianDefense>(), 1, 1f, Main.myPlayer, babCheck);   // 防御守护者
+                        babD.originalDamage = babDamage;
+                    }
+                    if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianAttack>()] < 1)
+                    {
+                        Projectile babO = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, Vector2.UnitY * -1f, ModContent.ProjectileType<MiniGuardianAttack>(), 1, 1f, Main.myPlayer, babCheck, spearCounter);   // 攻击守护者：ai[0] 形态标记、ai[1] 投矛计时
+                        babO.originalDamage = babDamage;
+                    }
+                }
+                if (profanedSoulHealCounter > 0)
+                    profanedSoulHealCounter--;
+                if (profanedSoulHealCounter <= 0)
+                {
+                    profanedSoulHealCounter = 300;   // 每 300 帧（5 秒）触发一次治疗
+                    if (Player.whoAmI == Main.myPlayer)
+                        Player.Heal(10);   // 治疗守护者：每次为玩家回复 10 点生命（对应 2.2.2 的 HealPlayer(10)）
+                }
+            }
+            // 亵渎之魂水晶：每帧刷新四态（不靠绘制/同步包）并结算水晶态属性块（对齐 2.2.2 CalamityPlayerMiscEffects 4149-4188）
+            if (profanedCrystal)
+            {
+                pscState = (int)ProfanedSoulCrystal.GetPscStateFor(Player);
+                profanedCrystalBuffs = pscState >= (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Buffs;
+                if (Player.FindBuffIndex(ModContent.BuffType<ProfanedCrystalBuff>()) == -1)
+                    Player.AddBuff(ModContent.BuffType<ProfanedCrystalBuff>(), 3600, true);   // "Devotion" 标记 buff（装备期间由 buff 自身续期）
+                // 本工程装备即非 Vanity（无 Boss/仆从栏门槛），故非 Vanity == profanedCrystalBuffs
+                if (profanedCrystalBuffs)
+                {
+                    bool empowered = pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Empowered;
+                    bool day = empowered || pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Buffs;     // 白天或强化档
+                    bool night = empowered || pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Enraged; // 夜晚或强化档
+                    Player.lavaImmune = true;                    // 免疫岩浆
+                    Player.fireWalk = true;                      // 可在岩浆上行走
+                    Player.buffImmune[BuffID.OnFire] = true;     // 免疫着火了
+                    Player.buffImmune[BuffID.Burning] = true;    // 免疫燃烧
+                    Player.buffImmune[BuffID.Daybreak] = true;   // 免疫破晓（对齐灾厄的 Daybroken，本工程取原版同名 Daybreak）
+                    if (day)   // 白天档免疫圣焰（现代版 HolyFlames / 经典版 HolyLight）
+                    {
+                        AddCalamityBuffImmune(Player, "CalamityMod", "HolyFlames");
+                        AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "HolyLight");
+                    }
+                    else if (night)   // 夜晚档免疫夜霜（仅现代版有名）
+                    {
+                        AddCalamityBuffImmune(Player, "CalamityMod", "Nightwither");
+                    }
+                    if (Player.wingTimeMax > 0)
+                        Player.wingTimeMax = (int)(Player.wingTimeMax * 1.1D);        // 无条件：飞行时间 ×1.1
+                    Player.GetDamage<SummonDamageClass>() += 0.15f;                   // 无条件：召唤伤害 +15%
+                    if (day)   // 白天档
+                    {
+                        Player.GetKnockback<SummonDamageClass>() += 0.15f;            // 仆从击退 +15%
+                        Player.moveSpeed += 0.1f;                                     // 移速 +10%
+                        Player.ignoreWater = true;                                    // 水中不受阻
+                        Player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) += 1f;    // 召唤近战攻速 +1（只影响 PSC 鞭）
+                    }
+                    else if (night)   // 夜晚档
+                    {
+                        Player.endurance += 0.05f;   // 减伤 +5%
+                        Player.statDefense += 15;    // 防御 +15
+                        Player.lifeRegen += 5;       // 生命回复 +5
+                    }
+                    // 按四态给玩家点光源（对齐 2.2.2：夜晚 1.2/0.21、白天 1/0.2，强化档因同时算 day+night 而取夜晚色）。
+                    // 原版还有 !ZoneAbyss 的守卫（灾厄深渊区域），本工程无该区域判定故省略
+                    Lighting.AddLight(Player.Center, night ? 1.2f : day ? 1f : 0.2f, night ? 0.21f : day ? 0.2f : 0.01f, 0f);
+                }
+            }
+            else
+            {
+                // 未装备水晶：清掉派生状态，避免残留上一帧的四态
+                profanedCrystalBuffs = false;
+                pscState = 0;
+            }
+            // 亵渎之魂护盾：维护耐久池。神器档 25（延迟 5 秒 / 回充 2 秒），水晶档 200（延迟 5 秒 / 回充 4 秒）。
+            // 注意：水晶档 200 是用户指定的口径，2.2.2 源码里该常量是 100（ProfanedSoulCrystal.ShieldDurabilityMax）
+            int profanedShieldMax = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldDurabilityMax : ProfanedSoulArtifact.ShieldDurabilityMax;
+            int profanedShieldDelay = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldRechargeDelay : ProfanedSoulArtifact.ShieldRechargeDelay;
+            int profanedShieldRechargeTime = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldRechargeTime : ProfanedSoulArtifact.ShieldRechargeTime;
+            if (!profanedSoulArtifact)
+            {
+                profanedSoulShieldDurability = 0;
+                profanedSoulShieldRechargeDelay = 0;
+                profanedSoulShieldRechargeProgress = 0f;
+                profanedSoulShieldRechargeArmed = false;
+            }
+            else
+            {
+                // 护盾为空且本次尚未排入回充：开始一次回充延迟（一次性，延迟走完后不得重启）
+                if (profanedSoulShieldDurability <= 0 && !profanedSoulShieldRechargeArmed)
+                {
+                    profanedSoulShieldRechargeArmed = true;
+                    profanedSoulShieldRechargeDelay = profanedShieldDelay;
+                    profanedSoulShieldRechargeProgress = 0f;
+                }
+                // 耐久重新长出（开始逐帧回充）后解除闸门，下次被打空才会重新计时
+                if (profanedSoulShieldDurability > 0)
+                    profanedSoulShieldRechargeArmed = false;
+                if (profanedSoulShieldDurability < profanedShieldMax)
+                {
+                    if (profanedSoulShieldRechargeDelay > 0)
+                        profanedSoulShieldRechargeDelay--;
+                    else
+                    {
+                        profanedSoulShieldRechargeProgress += profanedShieldMax / (float)profanedShieldRechargeTime;   // 逐帧累计充能进度
+                        int recharged = (int)profanedSoulShieldRechargeProgress;
+                        if (recharged > 0)
+                        {
+                            profanedSoulShieldRechargeProgress -= recharged;
+                            profanedSoulShieldDurability = Math.Min(profanedSoulShieldDurability + recharged, profanedShieldMax);
+                        }
+                    }
+                }
+            }
+            // 冷却机架：只有本地玩家需要冷却条 UI（护盾耐久未做网络同步，与护罩绘制同一口径）
+            if (Player.whoAmI == Main.myPlayer)
+            {
+                // 耐久条：装备神器且护盾大于 0 时存在；duration 固定为耐久上限，timeLeft 始终等于当前耐久（耐久变化即同步）
+                if (profanedSoulArtifact && profanedSoulShieldDurability > 0)
+                {
+                    if (!cooldowns.TryGetValue(ProfanedSoulShield.ID, out CooldownInstance durabilityCD))
+                        durabilityCD = Player.AddCooldown(ProfanedSoulShield.ID, profanedShieldMax);
+                    if (durabilityCD is not null)
+                    {
+                        durabilityCD.duration = profanedShieldMax;   // 总长恒为耐久上限，不随当前耐久变化
+                        durabilityCD.timeLeft = profanedSoulShieldDurability;               // 剩余量 = 当前耐久，驱动圆环长度
+                    }
+                }
+                else if (cooldowns.ContainsKey(ProfanedSoulShield.ID))
+                    cooldowns.Remove(ProfanedSoulShield.ID);                                 // 未装备或护盾归零：撤掉耐久条
+                // 回充条：只在回充延迟期间同步显示剩余延迟；延迟结束后不再同步，让它自然到期（到期时播结束音效并被移除）。
+                // 注意：本工程护盾回充完全由上面的耐久逻辑逐帧完成，这里不再像灾厄 OnCompleted 那样额外赠 1 点耐久
+                if (profanedSoulArtifact && profanedSoulShieldDurability <= 0 && profanedSoulShieldRechargeDelay > 0)
+                {
+                    if (!cooldowns.TryGetValue(ProfanedSoulShieldRecharge.ID, out CooldownInstance rechargeCD))
+                        rechargeCD = Player.AddCooldown(ProfanedSoulShieldRecharge.ID, profanedShieldDelay);
+                    if (rechargeCD is not null)
+                    {
+                        rechargeCD.duration = profanedShieldDelay;
+                        rechargeCD.timeLeft = profanedSoulShieldRechargeDelay;               // 与剩余回充延迟同步
+                    }
+                }
+                // 注：卸下神器时**故意不撤掉**回充条——灾厄如此（防热插拔蹭回充），让它自然到期即可；
+                // ShouldPlayEndSound 已限定只有装备状态才播结束音效
+                // 逐帧结算所有冷却：允许倒计时者递减，Tick 恒执行，到期（timeLeft < 0）时执行 OnCompleted、播结束音效并移除
+                IList<string> expiredCooldowns = new List<string>(16);
+                var cdIterator = cooldowns.GetEnumerator();
+                while (cdIterator.MoveNext())
+                {
+                    KeyValuePair<string, CooldownInstance> kv = cdIterator.Current;
+                    string cdID = kv.Key;
+                    CooldownInstance cdInstance = kv.Value;
+                    CooldownHandler cdHandler = cdInstance.handler;
+                    if (cdHandler.CanTickDown)
+                        --cdInstance.timeLeft;   // 亵渎护盾耐久条自带同步，不依赖此处的递减
+                    cdHandler.Tick();
+                    if (cdInstance.timeLeft < 0)
+                    {
+                        cdHandler.OnCompleted();
+                        if (cdHandler.EndSound != null && cdHandler.ShouldPlayEndSound)
+                            SoundEngine.PlaySound(cdHandler.EndSound.GetValueOrDefault(), Player.Center);
+                        expiredCooldowns.Add(cdID);
+                    }
+                }
+                cdIterator.Dispose();
+                foreach (string expiredID in expiredCooldowns)
+                    cooldowns.Remove(expiredID);
+            }
+        }
+        // ── 亵渎之魂水晶：变身外观（对齐 2.2.2 的 TransformFrameEffects / TransformPostUpdate） ──
+        /// <summary>变身腿部动画的三态（对应灾厄的 AnimationType）</summary>
+        private enum AnimationType
+        {
+            Idle,
+            Jump,
+            Walk
+        }
+        /// <summary>
+        /// tModLoader 的 FrameEffects 钩子：每帧在可见装备结算之后调用。
+        /// 本工程没有 IL，故不照搬灾厄 TransformationAccessory 扫描饰品栏的做法，
+        /// 而是在**变身外观可见时**（饰品可见性打开，或水晶放在时装栏）直接把 player.head/body/legs/wings
+        /// 写成昼夜两套变身装备槽（身体只有白天一套，夜晚沿用，与 2.2.2 的 EquipSlots 一致），随后执行变身翅膀动画。
+        /// 注意：这里只看 profanedCrystalVisible，不看 profanedCrystal——水晶放时装栏时后者为 false，
+        /// 但外观照样要显示（且不给任何属性加成）
+        /// </summary>
+        public override void FrameEffects()
+        {
+            if (!profanedCrystalVisible)
+                return;
+            Player.head = Main.dayTime ? ProfanedSoulCrystal.DayHeadSlot : ProfanedSoulCrystal.NightHeadSlot;    // 昼夜头贴图
+            Player.body = ProfanedSoulCrystal.DayBodySlot;                                                       // 身体：夜晚沿用白天贴图
+            Player.legs = Main.dayTime ? ProfanedSoulCrystal.DayLegsSlot : ProfanedSoulCrystal.NightLegsSlot;    // 昼夜腿贴图
+            Player.wings = Main.dayTime ? ProfanedSoulCrystal.DayWingsSlot : ProfanedSoulCrystal.NightWingsSlot; // 昼夜翅贴图
+            bool enrage = pscState >= (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Enraged;
+            // 翅动画：当前帧停留帧数归零就换下一帧（4 帧循环），每帧停留 Enraged 及以上 5 帧、平常 8 帧
+            if (profanedCrystalWingCounter.Value == 0)
+            {
+                int key = profanedCrystalWingCounter.Key;
+                profanedCrystalWingCounter = new KeyValuePair<int, int>(key == 3 ? 0 : key + 1, enrage ? 5 : 8);
+            }
+            Player.wingFrame = profanedCrystalWingCounter.Key;
+            profanedCrystalWingCounter = new KeyValuePair<int, int>(profanedCrystalWingCounter.Key, profanedCrystalWingCounter.Value - 1);
+            Player.armorEffectDrawOutlines = true;
+            if (profanedCrystalBuffs)
+            {
+                Player.armorEffectDrawShadow = true;
+                if (enrage)
+                    Player.armorEffectDrawOutlinesForbidden = true;
+            }
+        }
+        /// <summary>
+        /// tModLoader 的 PostUpdate 钩子：每帧在玩家更新末尾调用，执行变身腿部动画（对齐 2.2.2 的 TransformPostUpdate）。
+        /// 腿槽为本水晶的变身贴图时，按三态（待机 / 跳跃 / 行走）推进帧号并写 player.legFrame.Y。
+        /// 与 FrameEffects 同口径：只要求"外观可见"（时装栏也算），腿槽是不是变身贴图由 validEquipSlot 再兜一层
+        /// </summary>
+        public override void PostUpdate()
+        {
+            if (!profanedCrystalVisible)
+                return;
+            bool validEquipSlot = Player.legs == ProfanedSoulCrystal.DayLegsSlot || Player.legs == ProfanedSoulCrystal.NightLegsSlot;
+            if (!validEquipSlot)
+                return;
+            bool usingCarpet = Player.carpetTime > 0 && Player.controlJump;   // 飞毯：有实地时按待机处理，用跳跃帧说不通
+            AnimationType animType = AnimationType.Walk;
+            if ((Player.sliding || Player.velocity.Y != 0f || Player.mount.Active || Player.grappling[0] != -1 || !OnSolidGround(Player) || Player.GoingDownWithGrapple) && !usingCarpet)
+                animType = AnimationType.Jump;
+            else if (Player.velocity.X == 0f || usingCarpet)
+                animType = AnimationType.Idle;
+            int frame = HandlePscAnimationFrames(animType);
+            Player.legFrame.Y = Player.legFrame.Height * frame;
+        }
+        /// <summary>
+        /// 玩家是否站在实心地面上（复刻灾厄 PlayerUtils.CheckSolidGround 的无参版本）：
+        /// 纵向速度必须为 0，且脚下那一格是实心块（IsTileSolidGround：含平台等 tileSolidTop 命中物）
+        /// </summary>
+        private static bool OnSolidGround(Player player)
+        {
+            if (player.velocity.Y != 0f)
+                return false;
+            int tileX = (int)player.Center.X / 16;
+            int tileY = (int)(player.position.Y + player.height - 1f) / 16 + 1;
+            if (!WorldGen.InWorld(tileX, tileY, 1))
+                return false;
+            Tile tile = Main.tile[tileX, tileY];
+            return tile != null && tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]);
+        }
+        /// <summary>
+        /// 判断当前动作能否切到新动作（移植自 2.2.2 的 IsValidTransitionFrame）：
+        /// 跳跃之间的切换立即生效；待机↔行走只在指定过渡帧（待机→行走 2/6；行走→待机 11/15/19）且计时归零时切换，
+        /// 其余情况先跑完当前动作，避免切换时帧号跳变
+        /// </summary>
+        private bool IsValidTransitionFrame(AnimationType currentAnim, AnimationType newAnim, int frame, int counter)
+        {
+            bool result = newAnim != AnimationType.Jump && currentAnim != AnimationType.Jump;
+            if (currentAnim == AnimationType.Walk && newAnim == AnimationType.Idle)
+                result = counter <= 0 && (frame == 11 || frame == 15 || frame == 19);
+            else if (currentAnim == AnimationType.Idle && newAnim == AnimationType.Walk)
+                result = counter <= 0 && (frame == 2 || frame == 6);
+            return currentAnim != newAnim && result; // 切跳跃要即时，不必等计时归零
+        }
+        /// <summary>
+        /// 推进变身腿部动画帧（移植自 2.2.2 的 HandlePSCAnimationFrames）：
+        /// 帧号 0..7 待机、8 跳跃、9..21 行走；行走动作或"水晶态且生命 ≤ 50%"时每帧停留 7 帧、其余 10 帧；
+        /// 计时归零或允许切换时推进帧号，越界则回到该动作的起始帧
+        /// </summary>
+        private int HandlePscAnimationFrames(AnimationType newType)
+        {
+            int key = profanedCrystalAnimCounter.Key;   // 0 基帧号
+            int value = profanedCrystalAnimCounter.Value - 1;
+            AnimationType currentType = key < 8 ? AnimationType.Idle : key == 8 ? AnimationType.Jump : AnimationType.Walk;
+            bool isInvalidTransFrame = !IsValidTransitionFrame(currentType, newType, key, value);   // 待机↔行走要挑过渡帧，切换才顺滑
+            AnimationType type = isInvalidTransFrame ? newType : currentType;
+            int frameCount = type == AnimationType.Walk || (profanedCrystal && Player.statLife <= (int)(Player.statLifeMax2 * 0.5)) ? 7 : 10;
+            int lowerRange = type == AnimationType.Idle ? 0 : type == AnimationType.Jump ? 8 : 9;
+            int upperRange = type == AnimationType.Idle ? 7 : type == AnimationType.Jump ? 8 : 22;
+            if (value <= 0 || !isInvalidTransFrame)
+            {
+                value = frameCount;
+                if (key >= lowerRange && key < upperRange)
+                    key++;
+                else
+                    key = lowerRange;
+            }
+            profanedCrystalAnimCounter = new KeyValuePair<int, int>(key, value);
+            return profanedCrystalAnimCounter.Key;
         }
         public override void ModifyWeaponKnockback(Item item, ref StatModifier knockback)
         {
@@ -2455,12 +3056,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void UpdateLifeRegen()
         {
+            bool areThereAnyDamnBosses = AnyBossNPCS();
+            int lifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 900 : 3600);
+            int lifeRegenMaxBoost = (areThereAnyDamnBosses ? 2 : 8);
+            float lifeRegenLifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 16 : 60);
+            // 解除饰品闪亮石的限制
             if (shadeRegen && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
             {
-                bool areThereAnyDamnBosses = AnyBossNPCS();
-                int lifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 900 : 3600);
-                int lifeRegenMaxBoost = (areThereAnyDamnBosses ? 2 : 8);
-                float lifeRegenLifeRegenTimeMaxBoost = (areThereAnyDamnBosses ? 16 : 60);
                 if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < lifeRegenTimeMaxBoost)
                 {
                     Player.lifeRegenTime = lifeRegenTimeMaxBoost;
@@ -2496,6 +3098,46 @@ namespace CalamityDemutation.Players
                     }
                 }
             }
+            if(photosynthesis && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
+            {
+                int lifeRegenTimeMaxBoost2 = Main.dayTime ? lifeRegenTimeMaxBoost : (lifeRegenTimeMaxBoost / 5);
+                int lifeRegenMaxBoost2 = Main.dayTime ? lifeRegenMaxBoost : (lifeRegenMaxBoost / 5);
+                float lifeRegenLifeRegenTimeMaxBoost2 = Main.dayTime ? lifeRegenLifeRegenTimeMaxBoost : (lifeRegenLifeRegenTimeMaxBoost / 5);
+                if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < lifeRegenTimeMaxBoost2)
+                {
+                    Player.lifeRegenTime = lifeRegenTimeMaxBoost2;
+                }
+                Player.lifeRegenTime += lifeRegenMaxBoost2;
+                Player.lifeRegen += lifeRegenMaxBoost2;
+                float num3 = (float)((double)Player.lifeRegenTime * 2.5); //lifeRegenTime max is 3600
+                num3 /= 300f;
+                if (num3 > 0f)
+                {
+                    if (num3 > lifeRegenLifeRegenTimeMaxBoost2)
+                    {
+                        num3 = lifeRegenLifeRegenTimeMaxBoost2;
+                    }
+                    Player.lifeRegen += (int)num3;
+                }
+                if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
+                {
+                    Player.lifeRegenCount++;
+                    if ((Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.NextBool(2)))
+                    {
+                        int num5 = Dust.NewDust(Player.position, Player.width, Player.height, DustID.CopperCoin, 0f, 0f, 200, default(Color), 1f);
+                        Main.dust[num5].noGravity = true;
+                        Main.dust[num5].velocity *= 0.75f;
+                        Main.dust[num5].fadeIn = 1.3f;
+                        Vector2 vector = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
+                        vector.Normalize();
+                        vector *= (float)Main.rand.Next(50, 100) * 0.04f;
+                        Main.dust[num5].velocity = vector;
+                        vector.Normalize();
+                        vector *= 34f;
+                        Main.dust[num5].position = Player.Center - vector;
+                    }
+                }
+            }
             if (tarraLifeRegen)
             {
                 Player.lifeRegen += 10;
@@ -2513,6 +3155,15 @@ namespace CalamityDemutation.Players
             {
                 if (Player.lifeRegen < 0)
                     Player.lifeRegen = 0;
+            }
+            if (hellfireExplosion)
+            {
+                if (Player.lifeRegen > 0)
+                {
+                    Player.lifeRegen = 0;
+                }
+                Player.lifeRegenTime = 0;
+                Player.lifeRegen -= 120;
             }
         }
         /// <summary>
@@ -2879,10 +3530,17 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 FreeDodge 钩子：完全闪避伤害（不受常规闪避冷却影响）。
-        /// 聚合大脑 1/8、大杂烩（The Amalgam）1/4 概率完全免伤。
+        /// 聚合大脑 1/8、大杂烩（The Amalgam）1/4 概率完全免伤；
+        /// 亵渎之魂护盾把本次伤害全额吃下时也走这条路（对应原版 freeDodgeFromShieldAbsorption），
+        /// 让击退与减益一并落空——无敌帧已在 ModifyHurtInfo_ProfanedShield 里给过。
         /// </summary>
         public override bool FreeDodge(Player.HurtInfo info)
         {
+            if (profanedSoulShieldFreeDodge)
+            {
+                profanedSoulShieldFreeDodge = false;
+                return true;
+            }
             if(amalgamatedBrain && Main.rand.NextBool(8))
             {
                 return true;
@@ -2901,10 +3559,12 @@ namespace CalamityDemutation.Players
             return false;
         }
         /// <summary>
-        /// 被 NPC 接触命中前触发：
-        /// 血肉图腾生效时将本次接触伤害减半，并启动 20 秒冷却。
-        /// 注意：这里改用 modifiers.FinalDamage 仅作用于"本次"伤害，
-        /// 避免直接改写 npc.damage（那样会永久污染 NPC 的全局伤害并影响其他玩家）。
+        /// 被 NPC 接触命中前触发，统一通过乘算 modifiers.FinalDamage 施加本模组的接触减伤：
+        /// 血肉图腾生效时减半并启动 20 秒冷却；泰拉套装近战（tarraDefense+tarraMelee）减半；
+        /// 炎血狂怒期间减半；森林近战效果（silvaMelee）减至 0.8 倍；
+        /// 凯旋药水（triumph）按该 NPC 剩余生命比例减伤，最高 25%。
+        /// 注意：这些都必须改写 modifiers（仅作用于"本次"伤害），
+        /// 直接改写 npc.damage 会永久污染 NPC 的全局伤害、逐次累积并影响其他玩家。
         /// </summary>
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {
@@ -2915,15 +3575,20 @@ namespace CalamityDemutation.Players
             }
             if (tarraDefense && tarraMelee)
             {
-                npc.damage /= 2;
+                modifiers.FinalDamage *= 0.5f;   // 泰拉套装接触减伤：本次伤害减半
             }
             if (bloodflareMelee && bloodflareFrenzyTimer > 0)
             {
-                npc.damage /= 2;
+                modifiers.FinalDamage *= 0.5f;   // 炎血狂怒期间接触减伤：本次伤害减半
             }
             if (silvaMelee && silvaCountdown <= 0 && hasSilvaEffect)
             {
-                npc.damage = (int)((double)npc.damage * 0.8);
+                modifiers.FinalDamage *= 0.8f;   // 森林近战减伤：本次伤害 ×0.8
+            }
+            if (triumph)
+            {
+                double HPMultiplier = 0.25 * (1.0 - ((double)npc.life / (double)npc.lifeMax));   // 目标血线越低减伤越高，最高 25%
+                modifiers.FinalDamage *= 1f - (float)HPMultiplier;
             }
         }
         /// <summary>
@@ -2957,6 +3622,26 @@ namespace CalamityDemutation.Players
                 Player.statLife += healAmt;
                 Player.HealEffect(healAmt);
             }
+            if (profanedSoulArtifact)
+            {
+                // 每次受击都暂停回充：神器档 10 秒、水晶档 5 秒（对齐灾厄 HitHurt 的 60*10 / 60*5）：
+                // 未破盾的普通受击同样打断回充，但已累积的耐久保留
+                profanedSoulShieldRechargeArmed = true;
+                profanedSoulShieldRechargeDelay = profanedCrystal ? ProfanedSoulCrystal.ShieldRechargeDelayOnHit : ProfanedSoulArtifact.ShieldRechargeDelayOnHit;
+                profanedSoulShieldRechargeProgress = 0f;
+                profanedSoulShieldFreeDodge = false;   // 每次受击先复位；由 ModifyHurtInfo 置位、由 FreeDodge 消费
+                // 护盾的实际吸收挂在 HurtInfo 定稿阶段（对齐灾厄把吸收挂到 modifiers.ModifyHurtInfo 上的做法）：
+                // 那里拿到的 info.Damage 已定稿，且能安全地写无敌帧与"整次命中作废"标记，见 ModifyHurtInfo_ProfanedShield
+                modifiers.ModifyHurtInfo += ModifyHurtInfo_ProfanedShield;
+                // 受击音效（对齐 2.2.2 的 ProfanedSoulCrystal.HurtSound）：护盾在位播守护者护盾关闭音，
+                // 护盾为零时改播亵渎天神受击音；两者都用 20 帧节流避免连续受击叠音
+                if (profanedSoulShieldHurtSoundTimer == 0)
+                {
+                    modifiers.DisableSound();
+                    SoundEngine.PlaySound(profanedSoulShieldDurability > 0 ? CalamityDemutationSounds.GuardianShieldDeactivate : CalamityDemutationSounds.ProvidenceHurt, Player.Center);
+                    profanedSoulShieldHurtSoundTimer = 20;
+                }
+            }
             if (godSlayerReflect && Main.rand.NextBool(20))
             {
                 Player.immuneNoBlink = true;
@@ -2967,7 +3652,130 @@ namespace CalamityDemutation.Players
                 modifiers.SourceDamage.Base = 1f;
             }
         }
-
+        /// <summary>
+        /// 亵渎之魂护盾的实际吸收（由 ModifyHurt 挂到 modifiers.ModifyHurtInfo 上，对齐灾厄 2.2.2 的
+        /// ModifyHurtInfo_Calamity）：从定稿伤害 info.Damage 里扣掉耐久能吃下的部分。
+        /// 完全吃下时补原版无敌帧并置"整次命中作废"标记，再由 FreeDodge 返回 true 取消这次受击——
+        /// 伤害、击退、减益一并免除。本工程此前只把伤害归零，击退与减益仍会落到玩家身上。
+        /// </summary>
+        private void ModifyHurtInfo_ProfanedShield(ref Player.HurtInfo info)
+        {
+            if (!profanedSoulArtifact || profanedSoulShieldDurability <= 0)
+                return;
+            bool fullyAbsorbed = profanedSoulShieldDurability >= info.Damage;   // 这一盾能否吃下全部伤害
+            int blocked = Math.Min(profanedSoulShieldDurability, info.Damage);
+            profanedSoulShieldDurability -= info.Damage;                        // 对齐原版：先全额扣，再夹到 0
+            if (profanedSoulShieldDurability < 0)
+                profanedSoulShieldDurability = 0;
+            // 护盾受击反馈（对齐灾厄 HitHurt 的 shieldsTookHit 段，部分吸收同样触发）：
+            // 战斗文字显示本次被护盾吃下的伤害（原版为 CombatText.NewText(玩家上方 16 像素的矩形, Color.LightBlue, 被吸收量)）
+            Rectangle shieldTextArea = new Rectangle((int)Player.position.X, (int)Player.position.Y - 16, Player.width, Player.height);
+            CombatText.NewText(shieldTextArea, Color.LightBlue, (-blocked).ToString());
+            // 护盾受击粉尘：4~8 颗、初速以 3.5 为半径随机、整体上飘 1~3、缩放 1.15~1.45（照抄原版）
+            // 原为灾厄 CalamityDusts.ProfanedFire，本工程按既有映射（MiniGuardianHealer.HolyDustType）改用原版 DustID.GoldFlame
+            for (int i = 0; i < Main.rand.Next(4, 8); i++)
+            {
+                Dust dust = Dust.NewDustDirect(Player.position, Player.width, Player.height, DustID.GoldFlame);
+                dust.velocity = Main.rand.NextVector2Circular(3.5f, 3.5f);
+                dust.velocity.Y -= Main.rand.NextFloat(1f, 3f);
+                dust.scale = Main.rand.NextFloat(1.15f, 1.45f);
+            }
+            // 原版此处还会加屏幕震动（Player.Calamity().GeneralScreenShakePower += 2f，破盾时 0.5f）：本工程无该体系，未实现
+            if (profanedSoulShieldDurability <= 0)
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath, Player.Center);   // 破盾音效（原版贝茜喷火）；回充暂停已由 ModifyHurt 处理
+            info.Damage -= blocked;                                             // 扣掉护盾吃下的部分，余下的继续打玩家
+            if (fullyAbsorbed)
+            {
+                // 完全吸收：补原版无敌帧，并置标记让 FreeDodge 取消整次命中。
+                // 原版走的是灾厄扩展 Player.ComputeHitIFrames / Player.GiveIFrames（Utilities/PlayerUtils.cs），
+                // 本工程内联其等价实现：帧数 = 原版默认 40 + 十字项链加成 40（灾厄还会叠加神之护身符等额外帧数，未移植）；
+                // 写帧数时必须同时写 hurtCooldowns[槽位]（原版 GiveIFrames 的关键一步，只写 immuneTime 会被原版覆盖）
+                int shieldHitIFrames = 40 + (Player.longInvince ? 40 : 0);
+                int cooldownSlot = info.CooldownCounter;
+                bool anyIFramesWouldBeGiven = cooldownSlot < 0 ? Player.immuneTime < shieldHitIFrames : Player.hurtCooldowns[cooldownSlot] < shieldHitIFrames;
+                if (anyIFramesWouldBeGiven)
+                {
+                    Player.immune = true;
+                    Player.immuneNoBlink = false;   // 原版 GiveIFrames(..., blink: true)
+                    if (cooldownSlot < 0)
+                    {
+                        if (Player.immuneTime < shieldHitIFrames)
+                            Player.immuneTime = shieldHitIFrames;
+                    }
+                    else if (Player.hurtCooldowns[cooldownSlot] < shieldHitIFrames)
+                        Player.hurtCooldowns[cooldownSlot] = shieldHitIFrames;
+                }
+                profanedSoulShieldFreeDodge = true;
+            }
+        }
+        /// <summary>
+        /// 亵渎之魂的"追加长矛"（移植自灾厄 2.2.2 的 CalamityPlayer.rollBabSpears）：
+        /// 以 1/randAmt 的概率（randAmt ≤ 0 或目标不可追击则直接跳过）从**进攻守护者**身上朝四周喷一圈长矛——
+        /// 水晶态 12 枚、每枚按守护者的 originalDamage 全额；神器态 6 枚、每枚只 1/4 伤害。
+        /// 长矛以 ai[0] = 当前四态、ai[1] = 0 生成（ai[0] 决定神圣配色，ai[1] = 0 让它走"蓄势→加速→索敌"的自导流程）。
+        /// 只在主人本机执行；最多取两名守护者当发射源（对齐原版 spearsFired == 2 的闸门）。
+        /// 由各转化弹幕与守护者本体在命中时调用（见 MiniGuardianAttack 与 ProfanedCrystal* 各处）
+        /// </summary>
+        internal void rollBabSpears(int randAmt, bool chaseable)
+        {
+            if (Player.whoAmI != Main.myPlayer || randAmt <= 0 || !chaseable)
+                return;
+            if (!Main.rand.NextBool(randAmt))
+                return;
+            var source = Player.GetSource_ItemUse(Player.HeldItem);
+            int spearsFired = 0;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile guardian = Main.projectile[i];
+                // 原版用 foreach + 计数闸门，语义等价：凑够两名发射源就不再往下找
+                if (spearsFired >= 2)
+                    return;
+                if (!guardian.active || guardian.owner != Player.whoAmI || !guardian.friendly)
+                    continue;
+                if (guardian.type != ModContent.ProjectileType<MiniGuardianAttack>())
+                    continue;
+                int numSpears = profanedCrystalBuffs ? 12 : 6;
+                int damage = (int)(guardian.originalDamage * (profanedCrystalBuffs ? 1f : 0.25f));
+                for (int x = 0; x < numSpears; x++)
+                {
+                    float angle = MathHelper.TwoPi / numSpears * x;
+                    int proj = Projectile.NewProjectile(source, guardian.Center, angle.ToRotationVector2().RotatedBy(Math.Atan(-45f)) * 8f, ModContent.ProjectileType<MiniGuardianSpear>(), damage, 0f, Player.whoAmI, pscState, 0f);
+                    if (Main.projectile.IndexInRange(proj))
+                        Main.projectile[proj].originalDamage = damage;
+                }
+                spearsFired++;
+            }
+        }
+        /// <summary>
+        /// tModLoader 的 PostItemCheck 钩子：每帧在玩家的物品使用检查之后调用（**每帧都会调，与武器是否处于挥砍动画无关**）。
+        /// 亵渎之魂水晶的武器转化派发放在这里，是为了还原原版的**每帧**节奏：
+        /// 灾厄原版在 CanUseItem 里派发、并且 return false **把武器顶替掉**——正因为武器被顶替，
+        /// itemAnimation 永远是 0，vanilla 才会每帧重新去问 CanUseItem，于是 TransformItemUsage 里的计数器
+        /// （近战 6、魔法 20/25、鞭 10、盗贼 120/360，全都按帧）才能跑出"每秒十几发"的密度。
+        /// 本工程保留原武器：一旦武器开始挥砍，CanUseItem 就只在"这刀砍完、准备下一刀"的那一帧被调一次，
+        /// 密度会掉到原版的 1/useTime（实测确认），故必须挪到本钩子。
+        /// 触发条件：持有水晶且处于激活态 + 按住攻击键 + 未被控制 + 右键未参与 + 非矿井钻头挖矿
+        /// + 非镐/斧/锤、不空手 + 属于五类职业武器之一。
+        /// 原版还有一条 `autoReuse || 鞭` 的连发闸门，本工程按用户口径**去掉**：
+        /// 否则多数召唤法杖（本工程用召唤槽承接原版盗贼槽的"水晶螺旋"）会被挡在门外。
+        /// 代价：无 autoReuse 的武器按住不放时，武器本身只挥一下、转化弹幕却会持续输出（原版不存在这个问题，
+        /// 因为它把武器顶替掉了，压根没有"武器自己挥几下"的概念）。
+        /// </summary>
+        public override void PostItemCheck()
+        {
+            if (!profanedCrystalBuffs || !Player.controlUseItem || Player.CCed || Player.altFunctionUse != 0)
+                return;
+            // 骑矿井钻头（DCU）挖矿时，按住使用键同样会每帧走到这里；原版专门为此早退
+            // （灾厄源码注释：用 DCU 时"下面的检查会 EVERY FRAME 地跑，包括用 PSC 攻击"），否则挖矿会顺带狂喷转化弹幕
+            if (Player.mount.Type == MountID.Drill)
+                return;
+            Item item = Player.HeldItem;
+            if (item.IsAir || item.pick > 0 || item.axe > 0 || item.hammer > 0)
+                return;
+            if (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<RangedDamageClass>() || item.CountsAsClass<MagicDamageClass>()
+                || item.CountsAsClass<SummonMeleeSpeedDamageClass>() || item.CountsAsClass<SummonDamageClass>())
+                ProfanedSoulCrystal.TransformItemUsage(item, Player);
+        }
         /// <summary>
         /// tModLoader 的 OnHurt 钩子：玩家受到伤害后调用。
         /// 吞噬者/巨壳/海绵受击触发龟壳爆发（ShellBoost）增益；
@@ -3047,6 +3855,11 @@ namespace CalamityDemutation.Players
                         }
                     }
                 }
+            }
+            if(revivify)
+            {
+                int healAmt = (int)(info.Damage / 15D);
+                Player.Heal(healAmt);
             }
         }
         /// <summary>
@@ -3503,10 +4316,20 @@ namespace CalamityDemutation.Players
             if (godSlayerMelee && godSlayerMeleefireCD <= 0 && (hit.DamageType == DamageClass.Melee || hit.DamageType == DamageClass.MeleeNoSpeed))
             {
                 int finalDamage = 500 + weaponDamage / 2;
-                Vector2 getSpwanPos = new(Player.Center.Y, Player.Center.X);
+                Vector2 getSpwanPos = new(Player.Center.X, Player.Center.Y);
                 Vector2 velocity = CDUtil.GiveVelocity(200f);
                 Projectile.NewProjectile(Player.GetSource_FromThis(), getSpwanPos, velocity * 4f, ModContent.ProjectileType<GodSlayerDart>(), finalDamage, 0f, Player.whoAmI);
                 godSlayerMeleefireCD = 60;
+            }
+            if (holyWrath)
+            {
+                ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
+                ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
+            }
+            if (armorShattering || armorCrumbling)
+            {
+                ApplyCalamityBuff(target, "CalamityMod", "ArmorCrunch", 240);
+                ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "ArmorCrunch", 240);
             }
         }
         /// <summary>
@@ -3581,6 +4404,19 @@ namespace CalamityDemutation.Players
             {
                 target.AddBuff(BuffID.ShadowFlame, 300);
             }
+            // 亵渎之魂：召唤类（非鞭）或本水晶体系的弹幕命中时施加圣焰；水晶态 600 帧、神器态 300 帧
+            // （对齐灾厄 CalamityPlayerOnHit 里 summon && !whip 的分支，水晶档原为 600；经典版灾厄该 buff 名为 HolyLight。
+            // IsPscProjectile 现收录三只守护者、其从属弹幕与全部武器转化弹幕）
+            if ((proj.CountsAsClass<SummonDamageClass>() && !proj.CountsAsClass<SummonMeleeSpeedDamageClass>())
+                || ProfanedSoulCrystal.IsPscProjectile(proj))
+            {
+                int profanedHolyFlameFrames = profanedCrystal ? 600 : profanedSoulArtifact ? 300 : 0;
+                if (profanedHolyFlameFrames > 0)
+                {
+                    ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", profanedHolyFlameFrames);
+                    ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", profanedHolyFlameFrames);
+                }
+            }
             if (demonshadeSetBonus)
             {
                 if (Main.rand.NextBool(4))
@@ -3626,6 +4462,16 @@ namespace CalamityDemutation.Players
                 Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, velocity * 4f, ModContent.ProjectileType<GodSlayerDart>(), finalDamage, 0f, Player.whoAmI);
                 godSlayerMeleefireCD = 60;
             }
+            if(holyWrath)
+            {
+                ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
+                ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
+            }
+            if(armorShattering || armorCrumbling)
+            {
+                ApplyCalamityBuff(target, "CalamityMod", "ArmorCrunch", 240);
+                ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "ArmorCrunch", 240);
+            }
         }
         /// <summary>
         /// tModLoader 的 PreKill 钩子：玩家即将死亡前调用。
@@ -3669,6 +4515,20 @@ namespace CalamityDemutation.Players
                 {
                     SoundEngine.PlaySound(new SoundStyle("CalamityDemutation/Sounds/Custom/SilvaActivation"), Player.position);
                     Player.AddBuff(ModContent.BuffType<SilvaRevival>(), 600);
+                    if (draconicSurge)
+                    {
+                        Player.statLife += Player.statLifeMax2;
+                        Player.HealEffect(Player.statLifeMax2);
+                        if (Player.statLife > Player.statLifeMax2)
+                        {
+                            Player.statLife = Player.statLifeMax2;
+                        }
+                        if (Player.FindBuffIndex(ModContent.BuffType<DraconicSurgeBuff>()) > -1)
+                        {
+                            Player.ClearBuff(ModContent.BuffType<DraconicSurgeBuff>());
+                            draconicSurgeCooldown = 1800;
+                        }
+                    }
                 }
                 hasSilvaEffect = true;
                 if (Player.statLife < 1)
@@ -3695,15 +4555,30 @@ namespace CalamityDemutation.Players
                         Main.dust[num].scale *= 1f + (float)Main.rand.Next(40) * 0.01f;
                     }
                 }
-                int heal = 300;//1.3.2:300->150
+                int heal = draconicSurge ? Player.statLifeMax2 : 300;
                 Player.statLife += heal;
                 Player.HealEffect(heal);
                 if (Player.statLife > Player.statLifeMax2)
                 {
                     Player.statLife = Player.statLifeMax2;
                 }
+                if (Player.FindBuffIndex(ModContent.BuffType<DraconicSurgeBuff>()) > -1)
+                {
+                    Player.ClearBuff(ModContent.BuffType<DraconicSurgeBuff>());
+                    draconicSurgeCooldown = 1800;
+                }
                 Player.AddBuff(ModContent.BuffType<GodSlayerCooldown>(), 2700);
                 return false;
+            }
+            if (hellfireExplosion)
+            {
+                damageSource = PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was slain in hell."));
+            }
+            // 水晶态变身期间死亡：换成亵渎死因（对齐 2.2.2 挂在 Item Sources 段的 Status.Death.ProfanedSoulCrystal，
+            // 原文即 "{0} was summoned too soon."；原版还要求 Transformation 为水晶本身，本工程水晶态即等价条件）
+            if (profanedCrystalBuffs)
+            {
+                damageSource = PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was summoned too soon."));
             }
             return true;
         }
@@ -3850,6 +4725,16 @@ namespace CalamityDemutation.Players
                 type = buff.Type;
             buffTypeCache[(modName, buffName)] = type;
             return type;
+        }
+        /// <summary>
+        /// 给玩家添加对指定灾厄 buff 的免疫（水晶态属性块用）。
+        /// 走 GetBuffType 的缓存软依赖，对应模组缺该名（type == 0）时静默跳过，避免误置 buffImmune[0]
+        /// </summary>
+        private static void AddCalamityBuffImmune(Player player, string modName, string buffName)
+        {
+            int type = GetBuffType(modName, buffName);
+            if (type > 0)
+                player.buffImmune[type] = true;
         }
         /// <summary>
         /// 判断指定 buff 是否在 The Community 的 Debuff 缩减黑名单内。

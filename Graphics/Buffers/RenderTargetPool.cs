@@ -275,6 +275,7 @@ namespace CalamityDemutation.Graphics.Buffers
             if (now - lastTrimmed < minimum_trim_time)
                 return;
             lastTrimmed = now;
+            List<Key> expired = null;
             foreach (var pair in cache)
             {
                 if (now - pair.Value.LastUsed <= max_idle_time)
@@ -284,7 +285,13 @@ namespace CalamityDemutation.Graphics.Buffers
                     pair.Value.Targets.Pop().Dispose();
                     totalCached--;
                 }
-                cache.Remove(pair.Key);
+                // 先收集待删键：在 foreach 内直接 Remove 会抛集合已修改异常
+                (expired ??= []).Add(pair.Key);
+            }
+            if (expired != null)
+            {
+                foreach (Key key in expired)
+                    cache.Remove(key);
             }
         }
     }

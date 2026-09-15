@@ -82,20 +82,31 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("CosmiliteBar").Type, 10);
-                recipe.AddIngredient(calamity.Find<ModItem>("AscendantSpiritEssence").Type, 2);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(cosmiliteBar.Type, 10);
+                    recipe.AddIngredient(ascendantSpiritEssence.Type, 2);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CosmiliteBar").Type, 14);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("NightmareFuel").Type, 8);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EndothermicEnergy").Type, 8);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(classicCosmiliteBar.Type, 14);
+                    recipe1.AddIngredient(nightmareFuel.Type, 8);
+                    recipe1.AddIngredient(endothermicEnergy.Type, 8);
+                    recipe1.AddTile(draedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

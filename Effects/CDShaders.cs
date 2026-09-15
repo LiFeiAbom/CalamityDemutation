@@ -21,6 +21,10 @@ namespace CalamityDemutation.Effects
         /// 注册进 GameShaders.Misc 时统一使用的模组名前缀
         /// </summary>
         private const string ShaderPrefix = "CalamityDemutation:";
+        /// <summary>
+        /// 环形冷却进度着色器的注册名，Cooldowns/CooldownHandler.cs 绘制冷却条时按此名取用
+        /// </summary>
+        public const string CircularBarShaderName = ShaderPrefix + "CircularBarShader";
         // ── 静态字段 ──
         /// <summary>
         /// HeavenlyGale 硬光箭的拖尾着色器（原灾厄 HeavenlyGaleTrail，PiercePass）
@@ -30,11 +34,17 @@ namespace CalamityDemutation.Effects
         /// PrimitiveRenderer 未指定着色器时的默认兜底着色器（仅输出顶点色）
         /// </summary>
         internal static Asset<Effect> StandardPrimitiveShader;
+        /// <summary>
+        /// 环形冷却进度条着色器（原灾厄 CalamityMod:CircularBarShader），
+        /// 冷却机架 UI 在展开模式下用 uColor/uSecondaryColor 按完成度画出环形进度
+        /// </summary>
+        internal static Asset<Effect> CircularBarShader;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
-        /// 分别以 HeavenlyGaleTrail（PiercePass）与 StandardPrimitiveShader（PrimitivePass）为名
-        /// 注册进 GameShaders.Misc，供弹幕/拖尾绘制时通过 GameShaders.Misc["CalamityDemutation:xxx"] 取用
+        /// 分别以 HeavenlyGaleTrail（PiercePass）、StandardPrimitiveShader（PrimitivePass）、
+        /// CircularBarShader（Pass0）为名注册进 GameShaders.Misc，
+        /// 供弹幕/拖尾/冷却条绘制时通过 GameShaders.Misc["CalamityDemutation:xxx"] 取用
         /// </summary>
         public override void PostSetupContent()
         {
@@ -46,6 +56,9 @@ namespace CalamityDemutation.Effects
             RegisterMiscShader(HeavenlyGaleTrailShader, "PiercePass", "HeavenlyGaleTrail");
             StandardPrimitiveShader = LoadShader("StandardPrimitiveShader");
             RegisterMiscShader(StandardPrimitiveShader, "PrimitivePass", "StandardPrimitiveShader");
+            // 环形冷却进度条：与灾厄 CalamityShaders 的注册方式一致，第二参数取 .fx 里的 pass 名（Pass0）
+            CircularBarShader = LoadShader("CircularBarShader");
+            RegisterMiscShader(CircularBarShader, "Pass0", "CircularBarShader");
         }
         /// <summary>
         /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
@@ -57,8 +70,10 @@ namespace CalamityDemutation.Effects
             // 对应日志里的 "mod class still using memory" 警告
             GameShaders.Misc.Remove($"{ShaderPrefix}HeavenlyGaleTrail");
             GameShaders.Misc.Remove($"{ShaderPrefix}StandardPrimitiveShader");
+            GameShaders.Misc.Remove(CircularBarShaderName);
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
+            CircularBarShader = null;
         }
         // ── 私有工具 ──
         /// <summary>

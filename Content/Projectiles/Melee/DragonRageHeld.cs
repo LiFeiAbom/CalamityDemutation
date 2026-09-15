@@ -338,7 +338,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             {
                 Projectile.alpha = 0;
             }
-            canDrawSlashTrail = Projectile.ai[0] != 3;
+            CanDrawSlashTrail = Projectile.ai[0] != 3;
             inDrawFlipdiagonally = Projectile.ai[0] == 1 || Projectile.ai[0] == 5;
         }
         /// <summary>
@@ -358,7 +358,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
                 GeneralParticleHandler.SpawnParticle(new GenericBloom(target.Center, Vector2.Zero, Color.OrangeRed, orbSize + 0.6f, 8, true));
                 GeneralParticleHandler.SpawnParticle(new GenericBloom(target.Center, Vector2.Zero, Color.White, orbSize + 0.2f, 8, true));
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<FireBall>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
+                // 仅在主人端生成伤害弹幕，避免多人下各端各生一枚造成重复伤害（同方法下方分支亦如此判定）
+                if (Projectile.IsOwnedByLocalPlayer())
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<FireBall>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
                 target.AddBuff(ModContent.BuffType<HellfireExplosion>(), 300);
             }
             else if (Projectile.ai[0] == 6 && Projectile.IsOwnedByLocalPlayer() && Projectile.numHits % 3 == 0 && (Main.zenithWorld || Main.getGoodWorld || Main.drunkWorld))

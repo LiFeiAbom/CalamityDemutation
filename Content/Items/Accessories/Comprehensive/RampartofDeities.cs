@@ -46,25 +46,31 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄：材料为 AuricBar 与 AscendantSpiritEssence，在 CosmicAnvil 合成
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<FrigidBulwark>();
-                recipe.AddIngredient<DeificAmulet>();
-                recipe.AddIngredient(calamity.Find<ModItem>("AuricBar").Type, 5);
-                recipe.AddIngredient(calamity.Find<ModItem>("AscendantSpiritEssence").Type, 4);
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if(calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<FrigidBulwark>();
+                    recipe.AddIngredient<DeificAmulet>();
+                    recipe.AddIngredient(auricBar.Type, 5);
+                    recipe.AddIngredient(ascendantSpiritEssence.Type, 4);
+                    recipe.AddTile(cosmicAnvil1.Type);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄：材料为 GalacticaSingularity、DivineGeode 与 CosmiliteBar，在 DraedonsForge 合成
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<FrigidBulwark>();
-                recipe1.AddIngredient<DeificAmulet>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("GalacticaSingularity").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DivineGeode").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CosmiliteBar").Type, 20);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity) && calamity1.TryFind<ModItem>("DivineGeode", out ModItem divineGeode) && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<FrigidBulwark>();
+                    recipe1.AddIngredient<DeificAmulet>();
+                    recipe1.AddIngredient(galacticaSingularity.Type, 5);
+                    recipe1.AddIngredient(divineGeode.Type, 10);
+                    recipe1.AddIngredient(cosmiliteBar2.Type, 20);
+                    recipe1.AddTile(draedonsForge1.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

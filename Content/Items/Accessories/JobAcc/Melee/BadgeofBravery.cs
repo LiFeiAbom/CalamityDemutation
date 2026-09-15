@@ -39,21 +39,27 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
             // 兼容灾厄现代版与经典版：两者材料名不同，需分别注册配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(ItemID.FeralClaws);
-                recipe.AddIngredient(ItemID.WarriorEmblem);
-                recipe.AddIngredient(calamity.Find<ModItem>("UelibloomBar").Type, 4);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.FeralClaws);
+                    recipe.AddIngredient(ItemID.WarriorEmblem);
+                    recipe.AddIngredient(uelibloomBar1.Type, 4);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.FeralClaws);
-                recipe1.AddIngredient(ItemID.WarriorEmblem);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("UeliaceBar").Type, 4);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ItemID.FeralClaws);
+                    recipe1.AddIngredient(ItemID.WarriorEmblem);
+                    recipe1.AddIngredient(ueliaceBar1.Type, 4);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

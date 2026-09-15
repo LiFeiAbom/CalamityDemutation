@@ -40,57 +40,69 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<GrandGelatin>();
-                recipe.AddIngredient<SeaShell>();
-                recipe.AddIngredient<CrawCarapace>();
-                recipe.AddIngredient<FungalCarapace>();
-                recipe.AddIngredient<GiantTortoiseShell>();
-                recipe.AddIngredient<AmidiasSpark>();
-                recipe.AddIngredient(calamity.Find<ModItem>("DepthCells").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("Lumenyl").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("PlantyMush").Type, 5);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
-                recipe = CreateRecipe();
-                recipe.AddIngredient<GrandGelatin>();
-                recipe.AddIngredient<SeaShell>();
-                recipe.AddIngredient<GiantShell>();
-                recipe.AddIngredient<FungalCarapace>();
-                recipe.AddIngredient<GiantTortoiseShell>();
-                recipe.AddIngredient<AmidiasSpark>();
-                recipe.AddIngredient(calamity.Find<ModItem>("DepthCells").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("Lumenyl").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("PlantyMush").Type, 5);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if(calamity.TryFind<ModItem>("DepthCells", out ModItem depthCells1) && calamity.TryFind<ModItem>("Lumenyl", out ModItem lumenyl1) && calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<GrandGelatin>();
+                    recipe.AddIngredient<SeaShell>();
+                    recipe.AddIngredient<CrawCarapace>();
+                    recipe.AddIngredient<FungalCarapace>();
+                    recipe.AddIngredient<GiantTortoiseShell>();
+                    recipe.AddIngredient<AmidiasSpark>();
+                    recipe.AddIngredient(depthCells1.Type, 15);
+                    recipe.AddIngredient(lumenyl1.Type, 15);
+                    recipe.AddIngredient(plantyMush1.Type, 5);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
+                if(calamity.TryFind<ModItem>("DepthCells", out ModItem depthCells2) && calamity.TryFind<ModItem>("Lumenyl", out ModItem lumenyl2) && calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush2))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<GrandGelatin>();
+                    recipe.AddIngredient<SeaShell>();
+                    recipe.AddIngredient<GiantShell>();
+                    recipe.AddIngredient<FungalCarapace>();
+                    recipe.AddIngredient<GiantTortoiseShell>();
+                    recipe.AddIngredient<AmidiasSpark>();
+                    recipe.AddIngredient(depthCells2.Type, 15);
+                    recipe.AddIngredient(lumenyl2.Type, 15);
+                    recipe.AddIngredient(plantyMush2.Type, 5);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<GrandGelatin>();
-                recipe1.AddIngredient<SeaShell>();
-                recipe1.AddIngredient<CrawCarapace>();
-                recipe1.AddIngredient<FungalCarapace>();
-                recipe1.AddIngredient<GiantTortoiseShell>();
-                recipe1.AddIngredient<AmidiasSpark>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DepthCells").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Lumenite").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Tenebris").Type, 5);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
-                recipe1 = CreateRecipe();
-                recipe1.AddIngredient<GrandGelatin>();
-                recipe1.AddIngredient<SeaShell>();
-                recipe1.AddIngredient<GiantShell>();
-                recipe1.AddIngredient<FungalCarapace>();
-                recipe1.AddIngredient<GiantTortoiseShell>();
-                recipe1.AddIngredient<AmidiasSpark>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DepthCells").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Lumenite").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Tenebris").Type, 5);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("DepthCells", out ModItem depthCells3) && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite1) && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<GrandGelatin>();
+                    recipe1.AddIngredient<SeaShell>();
+                    recipe1.AddIngredient<CrawCarapace>();
+                    recipe1.AddIngredient<FungalCarapace>();
+                    recipe1.AddIngredient<GiantTortoiseShell>();
+                    recipe1.AddIngredient<AmidiasSpark>();
+                    recipe1.AddIngredient(depthCells3.Type, 15);
+                    recipe1.AddIngredient(lumenite1.Type, 15);
+                    recipe1.AddIngredient(tenebris1.Type, 5);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
+                if(calamity1.TryFind<ModItem>("DepthCells", out ModItem depthCells4) && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite2) && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<GrandGelatin>();
+                    recipe1.AddIngredient<SeaShell>();
+                    recipe1.AddIngredient<GiantShell>();
+                    recipe1.AddIngredient<FungalCarapace>();
+                    recipe1.AddIngredient<GiantTortoiseShell>();
+                    recipe1.AddIngredient<AmidiasSpark>();
+                    recipe1.AddIngredient(depthCells4.Type, 15);
+                    recipe1.AddIngredient(lumenite2.Type, 15);
+                    recipe1.AddIngredient(tenebris2.Type, 5);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

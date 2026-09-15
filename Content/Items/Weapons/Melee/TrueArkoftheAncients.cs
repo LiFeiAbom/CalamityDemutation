@@ -143,11 +143,17 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
-                    target.AddBuff(calamity0.Find<ModBuff>("CrushDepth").Type, 300);
+                    if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth))
+                    {
+                        target.AddBuff(crushDepth.Type, 300);
+                    }
                 }
                 if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
                 {
-                    target.AddBuff(calamity1.Find<ModBuff>("CrushDepth").Type, 300);
+                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff classicCrushDepth))
+                    {
+                        target.AddBuff(classicCrushDepth.Type, 300);
+                    }
                 }
             }
         }
@@ -160,11 +166,17 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
-                    target.AddBuff(calamity0.Find<ModBuff>("CrushDepth").Type, 300);
+                    if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth))
+                    {
+                        target.AddBuff(crushDepth.Type, 300);
+                    }
                 }
                 if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
                 {
-                    target.AddBuff(calamity1.Find<ModBuff>("CrushDepth").Type, 300);
+                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff classicCrushDepth))
+                    {
+                        target.AddBuff(classicCrushDepth.Type, 300);
+                    }
                 }
             }
         }
@@ -175,22 +187,29 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<ArkoftheAncients>();
-                recipe.AddIngredient(calamity.Find<ModItem>("CoreofCalamity").Type);
-                recipe.AddIngredient(ItemID.BrokenHeroSword);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<ArkoftheAncients>();
+                    recipe.AddIngredient(coreofCalamity.Type);
+                    recipe.AddIngredient(ItemID.BrokenHeroSword);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<ArkoftheAncients>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofCalamity").Type);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("LivingShard").Type, 3);
-                recipe1.AddIngredient(ItemID.BrokenHeroSword);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
+                    && calamity1.TryFind<ModItem>("LivingShard", out ModItem livingShard))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<ArkoftheAncients>();
+                    recipe1.AddIngredient(classicCoreofCalamity.Type);
+                    recipe1.AddIngredient(livingShard.Type, 3);
+                    recipe1.AddIngredient(ItemID.BrokenHeroSword);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

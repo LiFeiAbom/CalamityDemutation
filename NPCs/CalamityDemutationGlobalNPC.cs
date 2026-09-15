@@ -1,3 +1,4 @@
+using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.Defense;
@@ -12,6 +13,7 @@ using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -33,10 +35,12 @@ namespace CalamityDemutation.NPCs
         /// 狂怒标记：由 Enraged buff 在敌怪侧置位，仅用于 GlobalNPC.GetAlpha 染色
         /// </summary>
         public bool enraged = false;
+        public bool hellfireExplosion = false;
         /// <summary>
         /// 女巫眩晕标记：由 SilvaHysteresis debuff 在敌怪侧置位，用于减速等结算
         /// </summary>
         public bool silvaHysteresis = false;
+        public bool voidErosion = false;
         // ── 属性 ──
         /// <summary>
         /// 按实例启用，避免多个 NPC 共享全局状态
@@ -59,7 +63,9 @@ namespace CalamityDemutation.NPCs
         {
             demonFlames = false;
             enraged = false;
+            hellfireExplosion = false;
             silvaHysteresis = false;
+            voidErosion = false;
         }
         /// <summary>
         /// 玩家受到 NPC 攻击命中时触发：若玩家拥有“蜂抗”状态且攻击者属于蜂类单位，
@@ -81,81 +87,88 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            // 我需要与灾厄模组加载有关了
+            // ===== 原版实体（原版 NPC / 原版 Boss）掉落：与灾厄是否安装无关，只注册一次、始终生效 =====
+            // 本条链放在两个灾厄分支之前无条件执行，保证同时安装现代版与经典版灾厄时原版怪也只注册一遍掉落
             LeadingConditionRule isExpert = new(new Conditions.IsExpert());
             // 非专家模式下额外掉落的规则
             LeadingConditionRule notExpert = new(new Conditions.NotExpert());
+            if (npc.type == NPCID.SandElemental)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WifeinaBottle>(), 7, 5));
+                npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsExpert(), ModContent.ItemType<WifeinaBottlewithBoobs>(), 20));
+            }
+            else if (npc.type == NPCID.Demon)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<BladecrestOathsword>(), 25, 20));
+            }
+            else if (npc.type == NPCID.BoneSerpentHead)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<OldLordOathsword>(), 25, 20));
+            }
+            else if (npc.type == NPCID.BlueJellyfish)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<ManaJelly>(), 7, 5));
+            }
+            else if (npc.type == NPCID.PinkJellyfish)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LifeJelly>(), 7, 5));
+            }
+            else if (npc.type == NPCID.GreenJellyfish)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<VitalJelly>(), 7, 5));
+            }
+            else if (npc.type == NPCID.GoblinSummoner)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<TheFirstShadowflame>(), 7, 5));
+            }
+            else if (npc.type == NPCID.SeaSnail)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<SeaShell>(), 3, 2));
+            }
+            else if (npc.type == NPCID.Crawdad || npc.type == NPCID.Crawdad2)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<CrawCarapace>(), 7, 5));
+            }
+            else if (npc.type == NPCID.AnomuraFungus)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<FungalCarapace>(), 7, 5));
+            }
+            // 巨型陆龟：专家/非专家分别以不同保底系数（200、203）的选项池规则掉落巨龟壳
+            else if (npc.type == NPCID.GiantTortoise)
+            {
+                isExpert.OnSuccess(new OneFromOptionsDropRule(200, 2,
+                [
+                        ModContent.ItemType<GiantTortoiseShell>(),
+            ]));
+                notExpert.OnSuccess(new OneFromOptionsDropRule(203, 2,
+                [
+                        ModContent.ItemType<GiantTortoiseShell>(),
+            ]));
+                npcLoot.Add(isExpert);
+                npcLoot.Add(notExpert);
+            }
+            else if (npc.type == NPCID.GiantShelly || npc.type == NPCID.GiantShelly2)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<GiantShell>(), 7, 5));
+            }
+            else if (npc.type == NPCID.MoonLordCore)
+            {
+                npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialOnion>(), 1));
+            }
+            else if (npc.type == NPCID.WallofFlesh)
+            {
+                npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialWingsOnion>(), 1));
+            }
+            // 被附身铠甲属于原版怪，其掉落随原版链注册
+            else if (npc.type == NPCID.PossessedArmor)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<PsychoticAmulet>(), 200, 150));
+            }
             // ===== 现代版灾厄（CalamityMod）：仅灾厄专属 NPC 的掉落规则（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
             {
-                // ===== 原版实体（原版 NPC / 原版 Boss）掉落：与灾厄是否安装无关，只注册一次、始终生效 =====
-                if (npc.type == NPCID.SandElemental)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WifeinaBottle>(), 7, 5));
-                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsExpert(), ModContent.ItemType<WifeinaBottlewithBoobs>(), 20));
-                }
-                else if (npc.type == NPCID.Demon)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<BladecrestOathsword>(), 25, 20));
-                }
-                else if (npc.type == NPCID.BoneSerpentHead)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<OldLordOathsword>(), 25, 20));
-                }
-                else if (npc.type == NPCID.BlueJellyfish)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<ManaJelly>(), 7, 5));
-                }
-                else if (npc.type == NPCID.PinkJellyfish)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LifeJelly>(), 7, 5));
-                }
-                else if (npc.type == NPCID.GreenJellyfish)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<VitalJelly>(), 7, 5));
-                }
-                else if (npc.type == NPCID.GoblinSummoner)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<TheFirstShadowflame>(), 7, 5));
-                }
-                else if (npc.type == NPCID.SeaSnail)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<SeaShell>(), 3, 2));
-                }
-                else if (npc.type == NPCID.Crawdad || npc.type == NPCID.Crawdad2)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<CrawCarapace>(), 7, 5));
-                }
-                else if (npc.type == NPCID.AnomuraFungus)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<FungalCarapace>(), 7, 5));
-                }
-                // 巨型陆龟：专家/非专家分别以不同保底系数（200、203）的选项池规则掉落巨龟壳
-                else if (npc.type == NPCID.GiantTortoise)
-                {
-                    isExpert.OnSuccess(new OneFromOptionsDropRule(200, 2,
-                    [
-                            ModContent.ItemType<GiantTortoiseShell>(),
-                ]));
-                    notExpert.OnSuccess(new OneFromOptionsDropRule(203, 2,
-                    [
-                            ModContent.ItemType<GiantTortoiseShell>(),
-                ]));
-                    npcLoot.Add(isExpert);
-                    npcLoot.Add(notExpert);
-                }
-                else if (npc.type == NPCID.GiantShelly || npc.type == NPCID.GiantShelly2)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<GiantShell>(), 7, 5));
-                }
-                else if (npc.type == NPCID.MoonLordCore)
-                {
-                    npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialOnion>(), 1));
-                }
-                else if (npc.type == NPCID.WallofFlesh)
-                {
-                    npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialWingsOnion>(), 1));
-                }
+                // 本分支专用的非专家条件规则，不与经典版分支共用实例
+                LeadingConditionRule notExpert0 = new(new Conditions.NotExpert());
                 if (calamity0.TryFind<ModNPC>("Anahita", out ModNPC anahita) && npc.type == anahita.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LureofEnthrallment>(), 7, 5));
@@ -166,23 +179,23 @@ namespace CalamityDemutation.NPCs
                 }
                 else if (calamity0.TryFind<ModNPC>("BrimstoneElemental", out ModNPC brimstoneElemental) && npc.type == brimstoneElemental.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
+                    npcLoot.Add(notExpert0);
                 }
                 else if (calamity0.TryFind<ModNPC>("Cryogen", out ModNPC cryogen) && npc.type == cryogen.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
+                    npcLoot.Add(notExpert0);
                 }
                 else if (calamity0.TryFind<ModNPC>("CalamitasClone", out ModNPC calamitasClone) && npc.type == calamitasClone.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
+                    npcLoot.Add(notExpert0);
                 }
                 else if(calamity0.TryFind<ModNPC>("PlaguebringerGoliath", out ModNPC plaguebringerGoliath) && npc.type == plaguebringerGoliath.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
+                    npcLoot.Add(notExpert0);
                 }
                 else if(calamity0.TryFind<ModNPC>("Cnidrion", out ModNPC cnidrion) && npc.type == cnidrion.Type)
                 {
@@ -196,82 +209,12 @@ namespace CalamityDemutation.NPCs
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
                 }
-                else if (npc.type == NPCID.PossessedArmor)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<PsychoticAmulet>(), 200, 150));
-                }
             }
             // ===== 经典版灾厄（CalamityModClassicPreTrailer）：Boss 命名不同，掉落规则保持一致（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                // ===== 原版实体（原版 NPC / 原版 Boss）掉落：与灾厄是否安装无关，只注册一次、始终生效 =====
-                if (npc.type == NPCID.SandElemental)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WifeinaBottle>(), 7, 5));
-                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsExpert(), ModContent.ItemType<WifeinaBottlewithBoobs>(), 20));
-                }
-                else if (npc.type == NPCID.Demon)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<BladecrestOathsword>(), 25, 20));
-                }
-                else if (npc.type == NPCID.BoneSerpentHead)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<OldLordOathsword>(), 25, 20));
-                }
-                else if (npc.type == NPCID.BlueJellyfish)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<ManaJelly>(), 7, 5));
-                }
-                else if (npc.type == NPCID.PinkJellyfish)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LifeJelly>(), 7, 5));
-                }
-                else if (npc.type == NPCID.GreenJellyfish)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<VitalJelly>(), 7, 5));
-                }
-                else if (npc.type == NPCID.GoblinSummoner)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<TheFirstShadowflame>(), 7, 5));
-                }
-                else if (npc.type == NPCID.SeaSnail)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<SeaShell>(), 3, 2));
-                }
-                else if (npc.type == NPCID.Crawdad || npc.type == NPCID.Crawdad2)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<CrawCarapace>(), 7, 5));
-                }
-                else if (npc.type == NPCID.AnomuraFungus)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<FungalCarapace>(), 7, 5));
-                }
-                // 巨型陆龟：专家/非专家分别以不同保底系数（200、203）的选项池规则掉落巨龟壳
-                else if (npc.type == NPCID.GiantTortoise)
-                {
-                    isExpert.OnSuccess(new OneFromOptionsDropRule(200, 2,
-                    [
-                            ModContent.ItemType<GiantTortoiseShell>(),
-                ]));
-                    notExpert.OnSuccess(new OneFromOptionsDropRule(203, 2,
-                    [
-                            ModContent.ItemType<GiantTortoiseShell>(),
-                ]));
-                    npcLoot.Add(isExpert);
-                    npcLoot.Add(notExpert);
-                }
-                else if (npc.type == NPCID.GiantShelly || npc.type == NPCID.GiantShelly2)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<GiantShell>(), 7, 5));
-                }
-                else if (npc.type == NPCID.MoonLordCore)
-                {
-                    npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialOnion>(), 1));
-                }
-                else if (npc.type == NPCID.WallofFlesh)
-                {
-                    npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialWingsOnion>(), 1));
-                }
+                // 本分支专用的非专家条件规则，不与现代版分支共用实例
+                LeadingConditionRule notExpert1 = new(new Conditions.NotExpert());
                 if (calamity1.TryFind<ModNPC>("Siren", out ModNPC siren) && npc.type == siren.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LureofEnthrallment>(), 7, 5));
@@ -282,18 +225,18 @@ namespace CalamityDemutation.NPCs
                 }
                 else if (calamity1.TryFind<ModNPC>("Cryogen", out ModNPC cryogen) && npc.type == cryogen.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
+                    npcLoot.Add(notExpert1);
                 }
                 else if (calamity1.TryFind<ModNPC>("Calamitas", out ModNPC calamitas) && npc.type == calamitas.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
+                    npcLoot.Add(notExpert1);
                 }
                 else if (calamity1.TryFind<ModNPC>("PlaguebringerGoliath", out ModNPC plaguebringerGoliath) && npc.type == plaguebringerGoliath.Type)
                 {
-                    notExpert.OnSuccess(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
-                    npcLoot.Add(notExpert);
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
+                    npcLoot.Add(notExpert1);
                 }
                 else if (calamity1.TryFind<ModNPC>("Cnidrion", out ModNPC cnidrion) && npc.type == cnidrion.Type)
                 {
@@ -306,10 +249,6 @@ namespace CalamityDemutation.NPCs
                 else if (calamity1.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
-                }
-                else if (npc.type == NPCID.PossessedArmor)
-                {
-                    npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<PsychoticAmulet>(), 200, 150));
                 }
             }
         }
@@ -353,6 +292,45 @@ namespace CalamityDemutation.NPCs
                     damage = 400;
                 }
             }
+            if(hellfireExplosion)
+            {
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+                npc.lifeRegen -= 1000;
+                if(damage < 450)
+                {
+                    damage = 450;
+                }
+            }
+            if(voidErosion)
+            {
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+                npc.lifeRegen -= 10000;
+                if (damage < 5000)
+                {
+                    damage = 5000;
+                }
+            }
+        }
+        /// <summary>
+        /// tModLoader 的 DrawEffects 钩子：NPC 绘制前调用，可修改 drawColor 并生成粒子。
+        /// 虚空侵蚀（voidErosion）生效时把红色通道压到 100（整体偏青），并在敌怪四周喷射星屑。
+        /// 该标记由 VoidErosion debuff 在敌怪侧置位。
+        /// </summary>
+        public override void DrawEffects(NPC npc, ref Color drawColor)
+        {
+            if (voidErosion)
+            {
+                drawColor.R = 100;
+                // 仅在本地玩家附近喷射星屑：远处敌人本就不可见，避免多只被侵蚀敌怪挤占全局粒子上限
+                if (Vector2.DistanceSquared(npc.Center, Main.LocalPlayer.Center) < 1600f * 1600f)
+                    VoidErosion.SpanStar(npc, CDUtil.randVr(npc.width / 2));
+            }
         }
         /// <summary>
         /// tModLoader 的 GetAlpha 钩子：NPC 绘制时决定叠加颜色。返回 null 表示保持默认着色；
@@ -386,9 +364,9 @@ namespace CalamityDemutation.NPCs
             {
                 if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].GetModPlayer<CalamityDemutationPlayer>().bloodflareSet)
                 {
-                    if (!npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && Main.rand.NextBool(2) && Main.bloodMoon && npc.HasPlayerTarget && (double)(npc.position.Y / 16f) < Main.worldSurface)
+                    if (calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb) && !npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && Main.rand.NextBool(2) && Main.bloodMoon && npc.HasPlayerTarget && (double)(npc.position.Y / 16f) < Main.worldSurface)
                     {
-                        Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, calamity.Find<ModItem>("BloodOrb").Type, 1, false, 0, false, false);
+                        Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, bloodOrb.Type, 1, false, 0, false, false);
                     }
                 }
             }
@@ -396,9 +374,9 @@ namespace CalamityDemutation.NPCs
             {
                 if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].GetModPlayer<CalamityDemutationPlayer>().bloodflareSet)
                 {
-                    if (!npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && Main.rand.NextBool(2) && Main.bloodMoon && npc.HasPlayerTarget && (double)(npc.position.Y / 16f) < Main.worldSurface)
+                    if (calamity1.TryFind<ModItem>("BloodOrb", out ModItem classicBloodOrb) && !npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && Main.rand.NextBool(2) && Main.bloodMoon && npc.HasPlayerTarget && (double)(npc.position.Y / 16f) < Main.worldSurface)
                     {
-                        Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, calamity1.Find<ModItem>("BloodOrb").Type, 1, false, 0, false, false);
+                        Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, classicBloodOrb.Type, 1, false, 0, false, false);
                     }
                 }
             }
@@ -436,6 +414,9 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
+            // 无主/敌意弹幕（owner = 255 = Main.maxPlayers）会越界，先做范围校验
+            if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers)
+                return;
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().bloodflareSet)
             {
                 if (!npc.SpawnedFromStatue && npc.damage > 0 && ((double)npc.life < (double)npc.lifeMax * 0.5) &&

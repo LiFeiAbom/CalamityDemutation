@@ -42,45 +42,57 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<CorruptFlask>();
-                recipe.AddIngredient<ArchaicPowder>();
-                recipe.AddIngredient<RadiantOoze>();
-                recipe.AddIngredient<HoneyDew>();
-                recipe.AddIngredient(calamity.Find<ModItem>("StarblightSoot").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("CryonicBar").Type, 5);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
-                recipe = CreateRecipe();
-                recipe.AddIngredient<CrimsonFlask>();
-                recipe.AddIngredient<ArchaicPowder>();
-                recipe.AddIngredient<RadiantOoze>();
-                recipe.AddIngredient<HoneyDew>();
-                recipe.AddIngredient(calamity.Find<ModItem>("StarblightSoot").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("CryonicBar").Type, 5);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if(calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot1) && calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<CorruptFlask>();
+                    recipe.AddIngredient<ArchaicPowder>();
+                    recipe.AddIngredient<RadiantOoze>();
+                    recipe.AddIngredient<HoneyDew>();
+                    recipe.AddIngredient(starblightSoot1.Type, 15);
+                    recipe.AddIngredient(cryonicBar1.Type, 5);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
+                if(calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot2) && calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar2))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<CrimsonFlask>();
+                    recipe.AddIngredient<ArchaicPowder>();
+                    recipe.AddIngredient<RadiantOoze>();
+                    recipe.AddIngredient<HoneyDew>();
+                    recipe.AddIngredient(starblightSoot2.Type, 15);
+                    recipe.AddIngredient(cryonicBar2.Type, 5);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<CorruptFlask>();
-                recipe1.AddIngredient<ArchaicPowder>();
-                recipe1.AddIngredient<RadiantOoze>();
-                recipe1.AddIngredient<HoneyDew>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Stardust").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CryoBar").Type, 5);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
-                recipe1 = CreateRecipe();
-                recipe1.AddIngredient<CrimsonFlask>();
-                recipe1.AddIngredient<ArchaicPowder>();
-                recipe1.AddIngredient<RadiantOoze>();
-                recipe1.AddIngredient<HoneyDew>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Stardust").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CryoBar").Type, 5);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust1) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<CorruptFlask>();
+                    recipe1.AddIngredient<ArchaicPowder>();
+                    recipe1.AddIngredient<RadiantOoze>();
+                    recipe1.AddIngredient<HoneyDew>();
+                    recipe1.AddIngredient(stardust1.Type, 15);
+                    recipe1.AddIngredient(cryoBar1.Type, 5);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
+                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust2) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<CrimsonFlask>();
+                    recipe1.AddIngredient<ArchaicPowder>();
+                    recipe1.AddIngredient<RadiantOoze>();
+                    recipe1.AddIngredient<HoneyDew>();
+                    recipe1.AddIngredient(stardust2.Type, 15);
+                    recipe1.AddIngredient(cryoBar2.Type, 5);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using CalamityDemutation.Players;
-using System.Security.Policy;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Demonshade
@@ -45,17 +44,23 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("ShadowspecBar").Type, 50);  // 现代版灾厄：ShadowspecBar×50
-                recipe.AddTile(calamity.Find<ModTile>("DraedonsForge").Type);            // 现代版灾厄：德雷顿熔炉
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar) && calamity.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(shadowspecBar.Type, 50);  // 现代版灾厄：ShadowspecBar×50
+                    recipe.AddTile(draedonsForge.Type);            // 现代版灾厄：德雷顿熔炉
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ShadowspecBar").Type, 50);  // 经典版灾厄：ShadowspecBar×50
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);            // 经典版灾厄：德雷顿熔炉
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(classicShadowspecBar.Type, 50);  // 经典版灾厄：ShadowspecBar×50
+                    recipe1.AddTile(classicDraedonsForge.Type);            // 经典版灾厄：德雷顿熔炉
+                    recipe1.Register();
+                }
             }
         }
     }

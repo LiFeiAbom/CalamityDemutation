@@ -39,21 +39,30 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄材料：Bloodstone×35、BloodOrb×15、RuinousSoul×3
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("Bloodstone").Type, 35);
-                recipe.AddIngredient(calamity.Find<ModItem>("BloodOrb").Type, 15);
-                recipe.AddIngredient(calamity.Find<ModItem>("RuinousSoul").Type, 3);
-                recipe.AddTile(TileID.LunarCraftingStation);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("Bloodstone", out ModItem bloodstone)
+                    && calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb)
+                    && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(bloodstone.Type, 35);
+                    recipe.AddIngredient(bloodOrb.Type, 15);
+                    recipe.AddIngredient(ruinousSoul.Type, 3);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄材料：BloodstoneCore×13、RuinousSoul×3
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BloodstoneCore").Type, 13);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("RuinousSoul").Type, 3);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
+                    && calamity1.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(bloodstoneCore.Type, 13);
+                    recipe1.AddIngredient(classicRuinousSoul.Type, 3);
+                    recipe1.AddTile(TileID.LunarCraftingStation);
+                    recipe1.Register();
+                }
             }
         }
     }

@@ -1,3 +1,4 @@
+using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using Microsoft.Xna.Framework;
@@ -82,6 +83,20 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.localAI[1] += 0.07f;   // 本弹幕未使用该值（保留的通用计时器）
             Projectile.ai[1] = Math.Clamp(Projectile.ai[1], 0f, 1f);   // 不透明度钳制在 0~1
             Lighting.AddLight(Projectile.Center, new Vector3(1, 1, 1));   // 纯白强光
+        }
+        /// <summary>
+        /// 命中敌怪：附加虚空侵蚀（VoidErosion）减益 1200 tick（20 秒）。
+        /// </summary>
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<VoidErosion>(), 1200);
+        }
+        /// <summary>
+        /// 命中玩家（PvP）：附加虚空侵蚀（VoidErosion）减益 1200 tick（20 秒），与 OnHitNPC 对称。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<VoidErosion>(), 1200);
         }
         /// <summary>
         /// 返回 false：禁用常规贴图绘制，外观完全交给 IDrawWarp 的 Warp 扭曲管线。

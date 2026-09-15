@@ -38,27 +38,42 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 现代版灾厄配方（合成站 CosmicAnvil）
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("PlantyMush").Type, 60);
-                recipe.AddIngredient(calamity.Find<ModItem>("EffulgentFeather").Type, 10);
-                recipe.AddIngredient(calamity.Find<ModItem>("AscendantSpiritEssence").Type, 3);
-                recipe.AddIngredient<LeadCore>();
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
+                    && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
+                    && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(plantyMush.Type, 60);
+                    recipe.AddIngredient(effulgentFeather.Type, 10);
+                    recipe.AddIngredient(ascendantSpiritEssence.Type, 3);
+                    recipe.AddIngredient<LeadCore>();
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄配方（合成站 DraedonsForge）
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DarksunFragment").Type, 7);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EffulgentFeather").Type, 7);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CosmiliteBar").Type, 7);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Tenebris").Type, 9);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("NightmareFuel").Type, 15);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EndothermicEnergy").Type, 15);
-                recipe1.AddIngredient<LeadCore>();
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && calamity1.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
+                    && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris)
+                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(darksunFragment.Type, 7);
+                    recipe1.AddIngredient(classicEffulgentFeather.Type, 7);
+                    recipe1.AddIngredient(cosmiliteBar.Type, 7);
+                    recipe1.AddIngredient(tenebris.Type, 9);
+                    recipe1.AddIngredient(nightmareFuel.Type, 15);
+                    recipe1.AddIngredient(endothermicEnergy.Type, 15);
+                    recipe1.AddIngredient<LeadCore>();
+                    recipe1.AddTile(draedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }

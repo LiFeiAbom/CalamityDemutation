@@ -53,19 +53,25 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             // 分别适配现代版与经典版灾厄的合成配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("UelibloomBar").Type, 10);
-                recipe.AddIngredient(calamity.Find<ModItem>("DarksunFragment").Type, 100);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar) && calamity.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(uelibloomBar.Type, 10);
+                    recipe.AddIngredient(darksunFragment1.Type, 100);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("UeliaceBar").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DarksunFragment").Type, 100);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar) && calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ueliaceBar.Type, 10);
+                    recipe1.AddIngredient(darksunFragment2.Type, 100);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

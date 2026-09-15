@@ -57,28 +57,39 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<BiomeBlade>();
-                recipe.AddIngredient(ItemID.BrokenHeroSword);
-                recipe.AddIngredient(ItemID.Ectoplasm, 5);
-                recipe.AddIngredient(calamity.Find<ModItem>("DepthCells").Type, 10);
-                recipe.AddIngredient(calamity.Find<ModItem>("Lumenyl").Type, 10);
-                recipe.AddIngredient(calamity.Find<ModItem>("Voidstone").Type, 5);
-                recipe.AddTile(TileID.MythrilAnvil);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("DepthCells", out ModItem depthCells)
+                    && calamity.TryFind<ModItem>("Lumenyl", out ModItem lumenyl)
+                    && calamity.TryFind<ModItem>("Voidstone", out ModItem voidstone))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<BiomeBlade>();
+                    recipe.AddIngredient(ItemID.BrokenHeroSword);
+                    recipe.AddIngredient(ItemID.Ectoplasm, 5);
+                    recipe.AddIngredient(depthCells.Type, 10);
+                    recipe.AddIngredient(lumenyl.Type, 10);
+                    recipe.AddIngredient(voidstone.Type, 5);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<BiomeBlade>();
-                recipe1.AddIngredient(ItemID.BrokenHeroSword);
-                recipe1.AddIngredient(ItemID.Ectoplasm, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("LivingShard").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DepthCells").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Lumenite").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Tenebris").Type, 5);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("LivingShard", out ModItem livingShard)
+                    && calamity1.TryFind<ModItem>("DepthCells", out ModItem classicDepthCells)
+                    && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite)
+                    && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<BiomeBlade>();
+                    recipe1.AddIngredient(ItemID.BrokenHeroSword);
+                    recipe1.AddIngredient(ItemID.Ectoplasm, 5);
+                    recipe1.AddIngredient(livingShard.Type, 5);
+                    recipe1.AddIngredient(classicDepthCells.Type, 10);
+                    recipe1.AddIngredient(lumenite.Type, 10);
+                    recipe1.AddIngredient(tenebris.Type, 5);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

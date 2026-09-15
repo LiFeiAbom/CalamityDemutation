@@ -35,19 +35,25 @@ namespace CalamityDemutation.Content.Items.Accessories.StatLife
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("BlightedGel").Type, 5);
-                recipe.AddIngredient(calamity.Find<ModItem>("PurifiedGel").Type, 15);
-                recipe.AddTile(TileID.Anvils);
-                recipe.Register();
+                if(calamity.TryFind<ModItem>("BlightedGel", out ModItem blightedGel) && calamity.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel1))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(blightedGel.Type, 5);
+                    recipe.AddIngredient(purifiedGel1.Type, 15);
+                    recipe.AddTile(TileID.Anvils);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("MurkySludge").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("PurifiedGel").Type, 15);
-                recipe1.AddTile(TileID.Anvils);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("MurkySludge", out ModItem murkySludge) && calamity1.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel2))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(murkySludge.Type, 5);
+                    recipe1.AddIngredient(purifiedGel2.Type, 15);
+                    recipe1.AddTile(TileID.Anvils);
+                    recipe1.Register();
+                }
             }
         }
     }

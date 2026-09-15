@@ -61,12 +61,7 @@ namespace CalamityDemutation.Graphics.Metaballs
                 MetaballManager.metaballs.Add(this);
             if (Main.dedServ)
                 return;
-            Main.QueueMainThreadAction(() =>
-            {
-                int layerCount = Layers.Count();
-                for (int i = 0; i < layerCount; i++)
-                    LayerTargets.Add(ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice, (width, height) => (width + 4, height + 4)));
-            });
+            Main.QueueMainThreadAction(ResizeLayerTargets);
         }
         // ── 公开方法 ──
         /// <summary>
@@ -81,6 +76,22 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// 释放所有租借的图层渲染目标（归还至池）。由 MetaballManager.Unload 在主线程统一调用，
         /// 与 <see cref="Register"/> 中的 Rent 配对。
         /// </summary>
+        /// <summary>
+        /// 按当前屏幕尺寸重建全部图层渲染目标（分辨率变化/切换全屏时由 MetaballManager 调用）。
+        /// 屏幕空间池不做复用缓存，目标尺寸在租借瞬间固定，故必须整体释放后重新租借；
+        /// 否则窗口放大后合成会按旧尺寸裁剪，元球错位缺角。必须在主线程调用。
+        /// </summary>
+        internal void ResizeLayerTargets()
+        {
+            if (Main.dedServ)
+                return;
+            foreach (RenderTargetLease lease in LayerTargets)
+                lease?.Dispose();
+            LayerTargets.Clear();
+            int layerCount = Layers.Count();
+            for (int i = 0; i < layerCount; i++)
+                LayerTargets.Add(ScreenspaceTargetPool.Shared.Rent(Main.instance.GraphicsDevice, (width, height) => (width + 4, height + 4)));
+        }
         public void Dispose()
         {
             for (int i = 0; i < LayerTargets.Count; i++)

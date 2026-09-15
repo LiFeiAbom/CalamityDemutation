@@ -162,32 +162,40 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(calamity.Find<ModItem>("EssenceofSunlight").Type, 3);
-                recipe.AddIngredient(calamity.Find<ModItem>("EssenceofEleum").Type, 3);
-                recipe.AddIngredient(ItemID.Starfury);
-                recipe.AddIngredient(ItemID.EnchantedSword);
-                recipe.AddTile(TileID.Anvils);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight)
+                    && calamity.TryFind<ModItem>("EssenceofEleum", out ModItem essenceofEleum))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(essenceofSunlight.Type, 3);
+                    recipe.AddIngredient(essenceofEleum.Type, 3);
+                    recipe.AddIngredient(ItemID.Starfury);
+                    recipe.AddIngredient(ItemID.EnchantedSword);
+                    recipe.AddTile(TileID.Anvils);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EssenceofCinder").Type, 3);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EssenceofEleum").Type, 3);
-                recipe1.AddIngredient(ItemID.Starfury);
-                recipe1.AddIngredient(ItemID.EnchantedSword);
-                recipe1.AddIngredient(ItemID.Excalibur);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
-                recipe1 = CreateRecipe();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EssenceofCinder").Type, 3);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EssenceofEleum").Type, 3);
-                recipe1.AddIngredient(ItemID.Starfury);
-                recipe1.AddIngredient(ItemID.Arkhalis);
-                recipe1.AddIngredient(ItemID.Excalibur);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder)
+                    && calamity1.TryFind<ModItem>("EssenceofEleum", out ModItem classicEssenceofEleum))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(essenceofCinder.Type, 3);
+                    recipe1.AddIngredient(classicEssenceofEleum.Type, 3);
+                    recipe1.AddIngredient(ItemID.Starfury);
+                    recipe1.AddIngredient(ItemID.EnchantedSword);
+                    recipe1.AddIngredient(ItemID.Excalibur);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                    recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(essenceofCinder.Type, 3);
+                    recipe1.AddIngredient(classicEssenceofEleum.Type, 3);
+                    recipe1.AddIngredient(ItemID.Starfury);
+                    recipe1.AddIngredient(ItemID.Arkhalis);
+                    recipe1.AddIngredient(ItemID.Excalibur);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

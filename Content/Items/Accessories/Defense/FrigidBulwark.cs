@@ -52,12 +52,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 // 经典版灾厄：从灾厄经典版查找同名 CoreofEleum
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.PaladinsShield);
-                recipe1.AddIngredient(ItemID.FrozenTurtleShell);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofEleum").Type, 5);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                if(calamity1.TryFind<ModItem>("CoreofEleum", out ModItem coreofEleum1))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient(ItemID.PaladinsShield);
+                    recipe1.AddIngredient(ItemID.FrozenTurtleShell);
+                    recipe1.AddIngredient(coreofEleum1.Type, 5);
+                    recipe1.AddTile(TileID.MythrilAnvil);
+                    recipe1.Register();
+                }
             }
         }
     }

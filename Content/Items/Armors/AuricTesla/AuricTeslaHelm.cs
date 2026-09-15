@@ -151,35 +151,50 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient<TarragonHelm>();
-                recipe.AddIngredient<BloodflareMask>();
-                recipe.AddIngredient<SilvaHelm>();
-                recipe.AddIngredient<GodSlayerHelm>();
-                recipe.AddIngredient(calamity.Find<ModItem>("AuricBar").Type, 10);
-                recipe.AddIngredient<PsychoticAmulet>();
-                recipe.AddTile(calamity.Find<ModTile>("CosmicAnvil").Type);
-                recipe.Register();
+                if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<TarragonHelm>();
+                    recipe.AddIngredient<BloodflareMask>();
+                    recipe.AddIngredient<SilvaHelm>();
+                    recipe.AddIngredient<GodSlayerHelm>();
+                    recipe.AddIngredient(auricBar.Type, 10);
+                    recipe.AddIngredient<PsychoticAmulet>();
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<TarragonHelm>();
-                recipe1.AddIngredient<BloodflareMask>();
-                recipe1.AddIngredient<SilvaHelm>();
-                recipe1.AddIngredient<GodSlayerHelm>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("AuricOre").Type, 60);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("EndothermicEnergy").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("NightmareFuel").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("Phantoplasm").Type, 8);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("DarksunFragment").Type, 10);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("BarofLife").Type, 6);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("HellcasterFragment").Type, 5);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("CoreofCalamity").Type, 2);
-                recipe1.AddIngredient(calamity1.Find<ModItem>("GalacticaSingularity").Type);
-                recipe1.AddIngredient<PsychoticAmulet>();
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                if (calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
+                    && calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife)
+                    && calamity1.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
+                    && calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
+                    && calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity)
+                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipe1 = CreateRecipe();
+                    recipe1.AddIngredient<TarragonHelm>();
+                    recipe1.AddIngredient<BloodflareMask>();
+                    recipe1.AddIngredient<SilvaHelm>();
+                    recipe1.AddIngredient<GodSlayerHelm>();
+                    recipe1.AddIngredient(auricOre.Type, 60);
+                    recipe1.AddIngredient(endothermicEnergy.Type, 10);
+                    recipe1.AddIngredient(nightmareFuel.Type, 10);
+                    recipe1.AddIngredient(phantoplasm.Type, 8);
+                    recipe1.AddIngredient(darksunFragment.Type, 6);
+                    recipe1.AddIngredient(barofLife.Type, 5);
+                    recipe1.AddIngredient(hellcasterFragment.Type, 5);
+                    recipe1.AddIngredient(coreofCalamity.Type, 2);
+                    recipe1.AddIngredient(galacticaSingularity.Type);
+                    recipe1.AddIngredient<PsychoticAmulet>();
+                    recipe1.AddTile(draedonsForge.Type);
+                    recipe1.Register();
+                }
             }
         }
     }
