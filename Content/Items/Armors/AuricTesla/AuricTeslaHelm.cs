@@ -53,14 +53,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "\n" +
-                "Melee Tarragon, Bloodflare, God Slayer, and Silva armor effects\n" +
-                "All projectiles spawn healing auric orbs on enemy hits\n" +
-                "Max run speed and acceleration boosted by 10%\n" +
-                "Your melee damage is multiplied based on how high your HP is; at full HP this effect is at max\n" +
-                $"Press [{KeybindsSystem.GodslayerDashKeyDisplay}] to dash in any of eight directions\n" +
-                "Dealing great damage and inflicting the God Slayer Inferno debuff on contact\n" +
-                "This effect has a 45-second cooldown";
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.tarraSet = true;
             modPlayer.tarraMelee = true;

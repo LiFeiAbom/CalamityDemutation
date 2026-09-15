@@ -56,12 +56,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.tarraSet = true;    // 套装标记（红心拾取范围/额外红心掉落）
             modPlayer.tarraMelee = true;  // 近战侧标记（受击回血 buff / 按 Y 减伤）
-            player.setBonus = "\n" +
-                "Increased heart pickup range\n" +
-                "Enemies have a chance to drop extra hearts on death\n" +
-                "You have a 25% chance to gain a life regen buff when you take damage\n" +
-                "Press Y to cloak yourself in life energy that heavily reduces enemy contact damage for 10 seconds\n" +
-                "This has a 30 second cooldown";
+            player.setBonus = this.GetLocalizedValue("SetBonus");
         }
         /// <summary>
         /// 穿戴时的属性加成：近战面板、减伤、岩浆与水下生存、若干 debuff 免疫

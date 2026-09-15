@@ -52,16 +52,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.godSlayer = true;
             modPlayer.godSlayerMelee = true;
-            player.setBonus = "\n" +
-                "You will survive fatal damage and will be healed 300 HP if an attack would have killed you\n" +
-                "This effect can only occur once every 45 seconds\n" +
-                "While the cooldown for this effect is active you gain a 10% increase to all damage\n" +
-                "Taking over 80 damage in one hit will cause you to release a swarm of high-damage god killer darts\n" +
-                "Enemies take a lot of damage when they hit you\n" +
-                "An attack that would deal 80 damage or less will have its damage reduced to 1\n" +
-                $"Press [{KeybindsSystem.GodslayerDashKeyDisplay}] to dash in any of eight directions\n" +
-                "Dealing great damage and inflicting the God Slayer Inferno debuff on contact\n" +
-                "This effect has a 45-second cooldown\n";
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);
             player.thorns += 2.5f;  // 反伤倍率 +2.5（与胸甲的 +0.9 叠加）
         }
         /// <summary>

@@ -49,13 +49,7 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "\n" +
-                              "Increases armor penetration by 50\n" +
-                              "10% increased damage and critical strike chance\n" +
-                              "Short-ranged tentacles heal you by sucking enemy life\n" +
-                              "Press Y to activate abyssal madness for 5 seconds\n" +
-                              "Abyssal madness increases damage, critical strike chance, and tentacle aggression/range\n" +
-                              "This effect has a 30 second cooldown";
+            player.setBonus = this.GetLocalizedValue("SetBonus");
             player.GetArmorPenetration<GenericDamageClass>() += 50;  // 护甲穿透 +50
             //raise rev caps（置位套装标记；+10% 伤害/暴击与触手召唤在 CalamityDemutationPlayer 统一结算）
             player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueSet = true;

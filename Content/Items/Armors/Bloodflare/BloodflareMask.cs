@@ -55,16 +55,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.bloodflareSet = true;
             modPlayer.bloodflareMelee = true;
-            player.setBonus = "+\n" +
-                "Greatly increases life regen\n" +
-                "Enemies are more likely to target you\n" +
-                "Enemies below 50% life have a chance to drop hearts when struck\n" +
-                "Enemies above 50% life have a chance to drop mana stars when struck\n" +
-                "Enemies killed during a Blood Moon have a much higher chance to drop Blood Orbs\n" +
-                "True melee strikes will heal you\n" +
-                "After striking an enemy 15 times with true melee you will enter a blood frenzy for 5 seconds\n" +
-                "During this you will gain 25% increased melee damage, critical strike chance, and contact damage is halved\n" +
-                "This effect has a 30 second cooldown";
+            player.setBonus = this.GetLocalizedValue("SetBonus");
             player.crimsonRegen = true;  // 猩红回血：提升生命回复
             player.aggro += 900;         // 大幅提高仇恨，敌人更倾向以你为目标
         }

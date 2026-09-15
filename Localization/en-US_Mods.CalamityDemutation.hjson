@@ -358,6 +358,17 @@ Items: {
 			28% increased melee attackspeed
 			Not moving boosts all damage and critical strike chance
 			'''
+		SetBonus:
+			'''
+
+			Melee Tarragon, Bloodflare, God Slayer, and Silva armor effects
+			All projectiles spawn healing auric orbs on enemy hits
+			Max run speed and acceleration boosted by 10%
+			Your melee damage is multiplied based on how high your HP is; at full HP this effect is at max
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
 	}
 
 	BadgeofBravery: {
@@ -419,6 +430,19 @@ Items: {
 			You can move freely through liquids and have temporary immunity to lava
 			10% increased melee damage and critical strike chance
 			18% increased melee attackspeed
+			'''
+		SetBonus:
+			'''
+			+
+			Greatly increases life regen
+			Enemies are more likely to target you
+			Enemies below 50% life have a chance to drop hearts when struck
+			Enemies above 50% life have a chance to drop mana stars when struck
+			Enemies killed during a Blood Moon have a much higher chance to drop Blood Orbs
+			True melee strikes will heal you
+			After striking an enemy 15 times with true melee you will enter a blood frenzy for 5 seconds
+			During this you will gain 25% increased melee damage, critical strike chance, and contact damage is halved
+			This effect has a 30 second cooldown
 			'''
 	}
 
@@ -627,6 +651,16 @@ Items: {
 	DemonshadeHelm: {
 		DisplayName: Demonshade Helm
 		Tooltip: 50% increased damage and crit chance, +10 max minions and +10 max turrets
+		SetBonus:
+			'''
+
+			100% increased damage
+			All attacks inflict the demon flame debuff and vulnerability hex debuffs
+			Shadowbeams and demon scythes will fire down when you are hit
+			A friendly red devil follows you around
+			Press Y to enrage nearby enemies with a dark magic spell for 10 seconds
+			This makes them do 25% more damage but they also take 125% more damage
+			'''
 	}
 
 	Devastation: {
@@ -815,6 +849,19 @@ Items: {
 			14% increased melee damage and critical strike chance
 			20% increased melee attackspeed
 			'''
+		SetBonus:
+			'''
+
+			You will survive fatal damage and will be healed 300 HP if an attack would have killed you
+			This effect can only occur once every 45 seconds
+			While the cooldown for this effect is active you gain a 10% increase to all damage
+			Taking over 80 damage in one hit will cause you to release a swarm of high-damage god killer darts
+			Enemies take a lot of damage when they hit you
+			An attack that would deal 80 damage or less will have its damage reduced to 1
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
 	}
 
 	GodSlayerLeggings: {
@@ -975,6 +1022,16 @@ Items: {
 			+2 max minions
 			'''
 		DisplayName: Omega Blue Helmet
+		SetBonus:
+			'''
+
+			Increases armor penetration by 50
+			10% increased damage and critical strike chance
+			Short-ranged tentacles heal you by sucking enemy life
+			Press Y to activate abyssal madness for 5 seconds
+			Abyssal madness increases damage, critical strike chance, and tentacle aggression/range
+			This effect has a 30 second cooldown
+			'''
 	}
 
 	OmegaBlueLeggings: {
@@ -1072,6 +1129,20 @@ Items: {
 			13% increased melee damage and critical strike chance
 			19% increased melee attackspeed
 			'''
+		SetBonus:
+			'''
+
+			You are immune to almost all debuffs
+			All projectiles spawn healing leaf orbs on enemy hits
+			Max run speed and acceleration boosted by 5%
+			If you are reduced to 1 HP you will not die from any further damage for 10 seconds
+			If you get reduced to 1 HP again while this effect is active you will lose 100 max life
+			This effect only triggers once per life and if you are reduced to 400 max life the invincibility effect will stop
+			Your max life will return to normal if you die
+			True melee strikes have a 25% chance to do five times damage
+			After the silva invincibility is over you will take 20% less contact damage
+			Melee projectiles have a 25% chance to stun enemies for a very brief moment
+			'''
 	}
 
 	SilvaLeggings: {
@@ -1157,6 +1228,15 @@ Items: {
 			5% increased damage reduction
 			10% increased melee damage and critical strike chance, 15% increased melee attackspeed
 			"Helm of the disciple of ancients"
+			'''
+		SetBonus:
+			'''
+
+			Increased heart pickup range
+			Enemies have a chance to drop extra hearts on death
+			You have a 25% chance to gain a life regen buff when you take damage
+			Press Y to cloak yourself in life energy that heavily reduces enemy contact damage for 10 seconds
+			This has a 30 second cooldown
 			'''
 	}
 
@@ -1501,4 +1581,13 @@ Projectiles: {
 	ProfanedCrystalWhip.DisplayName: Profaned Crystal Whip
 	PscTransformAnimation.DisplayName: Psc Transform Animation
 	PscTransformRocks.DisplayName: Psc Transform Rocks
+}
+
+Systems: {
+	UI: {
+		Cooldowns: {
+			ProfanedSoulShieldDurability: Profaned Soul Shield Durability
+			ProfanedSoulShieldRecharge: Profaned Soul Shield Recharge
+		}
+	}
 }

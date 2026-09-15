@@ -54,13 +54,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         public override void UpdateArmorSet(Player player)
         {
             int redDevilDamage = (int)player.GetDamage<GenericDamageClass>().ApplyTo(10000);  // 红魔弹幕伤害：以玩家通用伤害对 10000 基准换算
-            player.setBonus = "\n" +
-                "100% increased damage\n" +
-                "All attacks inflict the demon flame debuff and vulnerability hex debuffs\n" +
-                "Shadowbeams and demon scythes will fire down when you are hit\n" +
-                "A friendly red devil follows you around\n" +
-                "Press Y to enrage nearby enemies with a dark magic spell for 10 seconds\n" +
-                "This makes them do 25% more damage but they also take 125% more damage";
+            player.setBonus = this.GetLocalizedValue("SetBonus");
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.demonshadeSetBonus = true;  // 置位套装总标记
             modPlayer.redDevil = true;            // 置位红魔标记，供红魔弹幕判断去留
