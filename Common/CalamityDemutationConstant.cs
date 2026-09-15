@@ -14,6 +14,10 @@ namespace CalamityDemutation
         /// </summary>
         public const string Masking = "CalamityDemutation/Assets/Masking/";
         /// <summary>
+        /// UI 贴图完整路径前缀（配 ModContent.Request 使用）
+        /// </summary>
+        public const string UI = "CalamityDemutation/Assets/UIs/";
+        /// <summary>
         /// 粒子上限（DRK 粒子系统使用）
         /// </summary>
         public const int MaxParticleCount = 10000;

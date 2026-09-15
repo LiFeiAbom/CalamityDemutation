@@ -938,6 +938,8 @@ Items: {
 			'''
 			Swinging releases powerful gravitational sword waves
 			Waves causing a neutron star explosion upon hitting a target
+			Right-click to charge the blade, releasing a large neutron star explosion when fully charged
+			Releasing early causes the energy to spill out
 			'''
 	}
 
@@ -1445,6 +1447,7 @@ Projectiles: {
 	ElementBall.DisplayName: Ball
 	EonBeam.DisplayName: Beam
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
+	EXNeutronExplode.DisplayName: EX Neutron Explode
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
 	FrostMistFriendly.DisplayName: Mist
@@ -1460,6 +1463,8 @@ Projectiles: {
 	NebulaStar.DisplayName: Star
 	NeutronExplode.DisplayName: Neutron Explode
 	NeutronGlaiveBeam.DisplayName: Neutron Glaive Beam
+	NeutronGlaiveHeld.DisplayName: Neutron Glaive
+	NeutronsOrb.DisplayName: Neutrons Orb
 	Oathblade.DisplayName: Oathblade
 	OathswordFlame.DisplayName: Oathsword Flame
 	OmegaBiomeOrb.DisplayName: Orb

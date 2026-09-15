@@ -36,6 +36,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.useAnimation = Item.useTime = 14; // 使用动画与冷却同为 14 帧（很快）
             Item.useTurn = true;                   // 挥砍时可转向
             Item.useStyle = ItemUseStyleID.Swing;  // 挥砍式使用
+            Item.noMelee = true;                   // 无近战挥砍判定（右键为手持蓄力模式）
             Item.knockBack = 7.5f;                 // 击退力
             Item.UseSound = SoundID.Item60;        // 挥砍音效
             Item.autoReuse = true;                 // 长按可自动连续挥砍
@@ -46,6 +47,43 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 18f;                       // 弹幕初速度
             Item.shootsEveryUse = true;                  // 每次使用都发射（而非仅第一次）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后自定义稀有度等级 16
+        }
+        /// <summary>
+        /// 使用条件：左键正常挥砍；右键切换到手持蓄力模式（改音效与无近战/无使用贴图），
+        /// 并限制场上只能同时存在一把 NeutronGlaiveHeld
+        /// </summary>
+        public override bool CanUseItem(Player player)
+        {
+            Item.noMelee = false;
+            Item.noUseGraphic = false;
+            Item.UseSound = SoundID.Item60;
+            if (player.altFunctionUse == 2)
+            {
+                Item.noMelee = true;
+                Item.noUseGraphic = true;
+                Item.UseSound = SoundID.AbigailAttack;
+            }
+            return player.ownedProjectileCounts[ModContent.ProjectileType<NeutronGlaiveHeld>()] == 0;
+        }
+        /// <summary>
+        /// 允许右键副功能（altFunctionUse == 2）
+        /// </summary>
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+        /// <summary>
+        /// 发射逻辑：右键（altFunctionUse == 2）生成手持弹幕 NeutronGlaiveHeld 并拦截默认发射；
+        /// 左键走基类默认发射 NeutronGlaiveBeam
+        /// </summary>
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<NeutronGlaiveHeld>(), damage, knockback, player.whoAmI);
+                return false;
+            }
+            return base.Shoot(player, source, position, velocity, type, damage, knockback);
         }
         /// <summary>
         /// 近战挥舞特效：仅调用 CDUtil.BetterSwing 修正武器挥舞位置，使巨剑类挥舞更贴合视觉。
