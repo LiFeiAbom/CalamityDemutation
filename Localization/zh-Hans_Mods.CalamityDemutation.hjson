@@ -65,12 +65,12 @@ Buffs: {
 	}
 
 	SilvaHysteresis: {
-		DisplayName: 始源林迟滞
+		DisplayName: 始源林海迟滞
 		Description: 沉重却正在崩解
 	}
 
 	SilvaRevival: {
-		DisplayName: 始源林复苏
+		DisplayName: 始源林海复苏
 		Description: 你处于无敌状态
 	}
 
@@ -199,7 +199,7 @@ Configs: {
 			Tooltip:
 				'''
 				关闭本模组弹幕的残影拖尾，以降低渲染负担。
-				开启后，远古光束、环境能量、欧米伽环境能量、银河之星与泰拉球等弹幕不再绘制多层残影拖尾，只显示本体贴图。
+				开启后，远古光束、环境能量、欧米茄环境能量、银河之星与泰拉球等弹幕不再绘制多层残影拖尾，只显示本体贴图。
 				在弹幕密集的激烈战斗中（例如 Boss 战、入侵事件，或手持重型近战武器刷怪时），这可明显提升帧率。
 				代价是弹幕会失去发光拖尾，飞行轨迹不再炫目，也更难追踪。
 				建议在掉帧、使用低配电脑，或觉得拖尾干扰视线时开启。
@@ -242,6 +242,1178 @@ Configs: {
 				默认：开启。
 				'''
 		}
+	}
+}
+
+Items: {
+	AeroStone: {
+		Tooltip:
+			'''
+			远古遗物之一
+			移动速度提高 10%，跳跃速度提高 200%，所有伤害提高 3%
+			'''
+		DisplayName: 疾风石
+	}
+
+	Affliction: {
+		DisplayName: 苦难
+		Tooltip:
+			'''
+			为你和队伍中所有其他玩家提供强力增益，并免疫击退
+			生命再生 +4，最大生命提高 20%，伤害减免 8%，防御 +45，伤害提高 15%
+			'''
+	}
+
+	AmalgamatedBrain: {
+		DisplayName: 聚合之脑
+		Tooltip:
+			'''
+			伤害提高 10%，暴击率提高 5%
+			受击时天降暗影
+			受击时使附近敌怪陷入混乱
+			有几率制造幻象并闪避攻击
+			'''
+	}
+
+	AmbrosialAmpoule: {
+		DisplayName: 百草天香瓶
+		Tooltip:
+			'''
+			挖矿速度提高 50%
+			你自身发光
+			伤害减免提高 12%，生命再生提升
+			免疫中毒、冰冻、寒冷、霜燃与毒液
+			获得蜂蜜的生命再生，且没有减速惩罚
+			大多数蜜蜂与黄蜂类敌怪及弹幕对你只造成一半伤害
+			'''
+	}
+
+	AmidiasSpark: {
+		DisplayName: 阿米迪亚斯之火花
+		Tooltip:
+			'''
+			受到伤害时释放一圈火花爆裂
+			火花在困难模式下造成更高伤害
+			'''
+	}
+
+	AncientFossil: {
+		DisplayName: 远古化石
+		Tooltip: 在地下时挖掘速度提高 35%
+	}
+
+	ArchaicPowder: {
+		DisplayName: 太古粉末
+		Tooltip: 在地下或地狱时挖矿速度提高 50%，伤害减免 7%，防御 +3
+	}
+
+	ArkoftheAncients: {
+		DisplayName: 远古方舟
+		Tooltip: 为荡涤一切邪恶而锻造的天堂之刃
+	}
+
+	ArkoftheCosmos: {
+		DisplayName: 鸿蒙方舟
+		Tooltip:
+			'''
+			根据你所处环境发射不同的追踪弹幕
+			击中敌人时根据所处环境给予你增益
+			弹幕还会随月亮事件变化
+			「当你肉身修炼至巅峰，所获之力足以将神明撕裂」
+			'''
+	}
+
+	ArkoftheElements: {
+		DisplayName: 元素方舟
+		Tooltip: 注入了泰拉瑞亚精华的天堂之刃
+	}
+
+	AuricTeslaBodyArmor: {
+		DisplayName: 古圣金源盔甲
+		Tooltip:
+			'''
+			最大生命 +400，最大法力 +400
+			移动速度提高 25%
+			你受到的攻击有 5% 的几率完全无效
+			伤害提高 30%，暴击率提高
+			受击时冻结附近的敌怪
+			'''
+	}
+
+	AuricTeslaCuisses: {
+		DisplayName: 古圣金源腿甲
+		Tooltip:
+			'''
+			移动速度提高 50%
+			伤害提高 14%，暴击率提高
+			获得魔法地毯效果
+			'''
+	}
+
+	AuricTeslaHelm: {
+		DisplayName: 古圣金源头盔
+		Tooltip:
+			'''
+			近战伤害与暴击率提高 20%
+			近战攻击速度提高 28%
+			静止不动时提升所有伤害与暴击率
+			'''
+	}
+
+	BadgeofBravery: {
+		DisplayName: 勇武徽章
+		Tooltip:
+			'''
+			近战伤害提高 10%
+			近战暴击率提高 10%
+			近战护甲穿透提高 5
+			近战攻击速度提高 5%
+			'''
+	}
+
+	BiomeBlade: {
+		DisplayName: 环境之刃
+		Tooltip: 根据你所处环境发射不同的弹幕
+	}
+
+	BlackMatterStick: {
+		DisplayName: 黑物质棒
+		Tooltip: ""
+	}
+
+	BladecrestOathsword: {
+		DisplayName: 刃冠誓约剑
+		Tooltip: 远古恶魔领主的剑
+	}
+
+	BloodflareBodyArmor: {
+		DisplayName: 血炎胸甲
+		Tooltip:
+			'''
+			最大生命 +100，最大法力 +100
+			身处岩浆中时快速恢复生命，并获得防御 +30
+			伤害提高 14%，暴击率提高
+			'''
+	}
+
+	BloodflareCore: {
+		DisplayName: 血炎晶核
+		Tooltip:
+			'''
+			你周围环绕着具有伤害性的吸血光环
+			生命低于 50% 时，伤害减免提高 15%，伤害提高 10%，暴击率提高 10%
+			生命低于 15% 时，伤害减免提高 30%，伤害提高 20%，暴击率提高 20%
+			防御低于 100 时，伤害提高 15%
+			'''
+	}
+
+	BloodflareCuisses: {
+		DisplayName: 血炎护腿
+		Tooltip: 移动速度提高 30%，伤害提高 10%，暴击率提高
+	}
+
+	BloodflareMask: {
+		DisplayName: 血炎面具
+		Tooltip:
+			'''
+			你可以在液体中自由移动，并获得暂时的岩浆免疫
+			近战伤害与暴击率提高 10%
+			近战攻击速度提高 18%
+			'''
+	}
+
+	BloodPact: {
+		DisplayName: 血契
+		Tooltip:
+			'''
+			最大生命翻倍
+			你有 25% 的几率被暴击
+			'''
+	}
+
+	BloodyWormScarf: {
+		DisplayName: 血腥蠕虫围巾
+		Tooltip: 伤害减免提高 15%，近战属性提升
+	}
+
+	BloodyWormTooth: {
+		DisplayName: 血腥蠕虫牙
+		Tooltip:
+			'''
+			伤害减免提高 5%，近战属性提升
+			生命低于 50% 时，伤害减免与近战属性提高 10%
+			'''
+	}
+
+	BloomStone: {
+		Tooltip:
+			'''
+			远古遗物之一
+			靠近你的敌怪会受到伤害，所有伤害与暴击率提高 2%
+			你脚下的草地上会长出花朵，无草泥土上有几率长出随机的染料植物
+			'''
+		DisplayName: 繁花石
+	}
+
+	CalamityRing: {
+		DisplayName: 灾厄之环
+		Tooltip:
+			'''
+			被诅咒了？
+			所有伤害提高 15%
+			无敌期间天降硫磺火
+			'''
+	}
+
+	CatastropheClaymore: {
+		DisplayName: 灾变斩剑
+		Tooltip: 发射火花，造成霜冻、地狱火或脓血减益
+	}
+
+	CelestialOnion: {
+		DisplayName: 天界洋葱
+		Tooltip:
+			'''
+			获得一个额外的饰品栏
+			食用后会产生不可逆转的后果
+			'''
+	}
+
+	CelestialWingsOnion: {
+		DisplayName: 天界之翼洋葱
+		Tooltip:
+			'''
+			获得一个额外的翅膀栏
+			食用后会产生不可逆转的后果
+			'''
+	}
+
+	ChaosAmulet: {
+		DisplayName: 混沌护符
+		Tooltip: 洞穴探险效果
+	}
+
+	ChaosStone: {
+		Tooltip:
+			'''
+			远古遗物之一
+			最大法力提高 50，所有伤害提高 3%，法力消耗降低 5%
+			'''
+		DisplayName: 混沌石
+	}
+
+	CoreofChaos: {
+		DisplayName: 混沌核心
+		Tooltip: ""
+	}
+
+	CoreofCinder: {
+		DisplayName: 余烬核心
+		Tooltip: ""
+	}
+
+	CoreofEleum: {
+		DisplayName: 寒霜核心
+		Tooltip: ""
+	}
+
+	CoreOfTheBloodGod: {
+		DisplayName: 血神核心
+		Tooltip:
+			'''
+			最大生命提高 10%
+			伤害减免提高 10%
+			伤害提高 12%，暴击率提高
+			防御低于 100 时，伤害提高 15%
+			敌怪的接触伤害减半
+			受到接触伤害后，该效果有 20 秒冷却
+			你周围环绕着具有伤害性的吸血光环
+			'''
+	}
+
+	CorruptFlask: {
+		DisplayName: 腐化之瓶
+		Tooltip: 身处腐化之地时伤害减免提高 7%，防御 +3
+	}
+
+	CrawCarapace: {
+		DisplayName: 巨蟹甲壳
+		Tooltip:
+			'''
+			伤害减免提高 5%
+			敌怪接触你时会受到伤害
+			'''
+	}
+
+	CrimsonFlask: {
+		DisplayName: 猩红之瓶
+		Tooltip: 身处猩红之地时伤害减免提高 7%，防御 +3
+	}
+
+	CryoStone: {
+		Tooltip:
+			'''
+			远古遗物之一
+			伤害减免提高 5%，所有伤害提高 3%
+			'''
+		DisplayName: 冰晶石
+	}
+
+	DaedalusEmblem: {
+		DisplayName: 代达罗斯纹章
+		Tooltip:
+			'''
+			远程伤害提高 15%，远程暴击率提高 10%
+			弹药消耗降低 20%
+			提升生命再生、仆从击退、防御与挖掘速度
+			'''
+	}
+
+	DarkSunRing: {
+		DisplayName: 暗日之戒
+		Tooltip:
+			'''
+			伤害、仆从击退与近战速度提高 12%
+			暴击率提高 5%
+			生命再生 +1，挖掘速度提高 15%，最大仆从数 +2
+			白天时生命再生 +3
+			夜晚时防御 +30
+			「蕴含着暗日之力」
+			'''
+	}
+
+	DefenseBlade: {
+		DisplayName: 守护之刃
+		Tooltip:
+			'''
+			传奇武器
+			挥砍时会释放一缕阳光追踪敌人后命中，并在下方留下具有伤害的火花
+			用刀刃击中敌人会引发大地喷发
+			随流程成长，击败特定 Boss 后可获得额外伤害加成
+			'''
+	}
+
+	DeificAmulet: {
+		DisplayName: 神圣护符
+		Tooltip:
+			'''
+			受到伤害后短时间内移动速度大幅提升
+			护甲穿透提高 25，受击后的无敌时间延长
+			在水下提供照明，受伤时天降星辰
+			提升法力星的拾取范围，并且受伤时恢复法力
+			'''
+	}
+
+	DemonshadeBreastplate: {
+		DisplayName: 魔影胸甲
+		Tooltip:
+			'''
+			近战速度提高 25%，伤害提高 40%，暴击率提高 20%
+			敌怪接触你时会受到极其恐怖的伤害
+			最大生命提高 1000，最大法力提高 500
+			静止不动时，你可以吸收暗影并提升生命再生
+			'''
+	}
+
+	DemonshadeGreaves: {
+		DisplayName: 魔影护腿
+		Tooltip:
+			'''
+			暗影速度
+			伤害提高 30%，暴击率提高 15%
+			'''
+	}
+
+	DemonshadeHelm: {
+		DisplayName: 魔影头盔
+		Tooltip: 伤害与暴击率提高 50%，最大仆从数 +10，最大哨兵数 +10
+	}
+
+	Devastation: {
+		DisplayName: 毁灭
+		Tooltip: 发射会爆炸的星系爆弹
+	}
+
+	DevilsDevastation: {
+		DisplayName: 恶魔的毁灭
+		Tooltip:
+			'''
+			发射一片加速的镰刀，上方与下方还会飞出干草叉
+			以真实近战命中敌人时生成暗影焰爆炸
+			'''
+	}
+
+	DragonRage: {
+		DisplayName: 巨龙之怒
+		Tooltip:
+			'''
+			旋转一根短棍，命中敌人时引发爆炸。第 10 次命中会召唤一圈龙焰火球追踪敌人，并施加龙焰减益。
+			右键可将短棍贴近自身旋转，召唤火球的节奏更慢，但无需命中敌人。
+			[c/ff8c1a:「这是我给主人的讯息。」]
+			'''
+	}
+
+	DrewsWings: {
+		DisplayName: 德鲁之翼
+		Tooltip:
+			'''
+			绝对惊艳
+			水平速度：12
+			加速倍率：4
+			飞行时间：361
+			极佳的垂直速度
+			'''
+	}
+
+	ElementalGauntlet: {
+		DisplayName: 元素之握
+		Tooltip:
+			'''
+			近战攻击与弹幕造成大多数减益
+			近战速度、伤害与近战暴击率提高 20%
+			受到伤害后的无敌时间延长
+			暂时的岩浆免疫
+			近战击退提高
+			'''
+	}
+
+	ElementalQuiver: {
+		DisplayName: 元素箭袋
+		Tooltip:
+			'''
+			远程伤害提高 20%，远程暴击率提高 20%
+			远程箭矢弹幕有几率分裂
+			更强的代达罗斯纹章效果
+			'''
+	}
+
+	EtherealTalisman: {
+		DisplayName: 空灵护符
+		Tooltip:
+			'''
+			魔法伤害提高 20%，魔法暴击率提高 20%
+			法力消耗降低 20%
+			最大法力 +150
+			显示宝藏位置
+			缩短治疗药水的冷却
+			需要时自动使用法力药水
+			'''
+	}
+
+	ExaltedOathblade: {
+		DisplayName: 崇高誓约之刃
+		Tooltip: 远古恶魔之神的剑
+	}
+
+	EyeoftheStorm: {
+		Tooltip: 召唤一个云元素为你作战
+		DisplayName: 风暴之眼
+	}
+
+	FleshTotem: {
+		DisplayName: 血肉图腾
+		Tooltip:
+			'''
+			敌怪的接触伤害减半
+			受到接触伤害后，该效果有 20 秒冷却
+			'''
+	}
+
+	ForbiddenOathblade: {
+		DisplayName: 禁忌誓约之刃
+		Tooltip: 远古恶魔之神的剑
+	}
+
+	FourSeasonsGalaxia: {
+		DisplayName: 四季银河之星
+		Tooltip:
+			'''
+			发射追踪弹幕，根据你所处环境造成不同减益
+			击中敌人时根据所处环境给予你增益
+			弹幕还会随月亮事件变化
+			'''
+	}
+
+	FrigidBulwark: {
+		DisplayName: 寒冰壁垒
+		Tooltip:
+			'''
+			吸收队伍中玩家所受伤害的 25%
+			仅在生命值高于 25% 时生效
+			免疫击退
+			生命低于 30% 时，在持有者周围形成一层减伤外壳
+			生命低于 10% 时外壳更强，减伤效果进一步提升
+			'''
+	}
+
+	FrostBarrier: {
+		DisplayName: 寒霜屏障
+		Tooltip:
+			'''
+			受击时冻结附近的敌怪
+			免疫寒冷减益
+			'''
+	}
+
+	FungalCarapace: {
+		DisplayName: 真菌甲壳
+		Tooltip: 受击时释放蘑菇孢子爆炸
+	}
+
+	FungalClump: {
+		DisplayName: 真菌团块
+		Tooltip:
+			'''
+			召唤一个真菌团块为你作战
+			团块会附着在敌怪身上，为你吸取它们的生命
+			'''
+	}
+
+	GalacticaSingularity: {
+		DisplayName: 银河奇点
+		Tooltip: ""
+	}
+
+	Gehenna: {
+		DisplayName: 焦热地狱
+		Tooltip: 偶尔从天而降硫磺火球
+	}
+
+	GiantShell: {
+		DisplayName: 巨型贝壳
+		Tooltip:
+			'''
+			移动速度降低 15%
+			受到攻击后短时间内移动速度大幅提升
+			'''
+	}
+
+	GiantTortoiseShell: {
+		DisplayName: 巨型陆龟壳
+		Tooltip:
+			'''
+			移动速度降低 10%
+			敌怪击中你时会受到伤害
+			'''
+	}
+
+	GodSlayerChestplate: {
+		DisplayName: 弑神者胸甲
+		Tooltip:
+			'''
+			最大生命 +250，最大法力 +150
+			移动速度提高 15%
+			伤害提高 15%，暴击率提高
+			你受到的攻击有 5% 的几率完全无效
+			'''
+	}
+
+	GodSlayerHelm: {
+		DisplayName: 弑神者头盔
+		Tooltip:
+			'''
+			近战伤害与暴击率提高 14%
+			近战攻击速度提高 20%
+			'''
+	}
+
+	GodSlayerLeggings: {
+		DisplayName: 弑神者腿甲
+		Tooltip:
+			'''
+			移动速度提高 35%
+			伤害提高 11%，暴击率提高
+			'''
+	}
+
+	GrandGelatin: {
+		DisplayName: 绚彩凝胶
+		Tooltip:
+			'''
+			移动速度提高 10%
+			跳跃速度提高 100%
+			最大生命与法力 +20
+			静止不动时提升生命与法力再生
+			'''
+	}
+
+	HeartoftheElements: {
+		Tooltip:
+			'''
+			世界之心
+			最大生命提高 50，生命再生提高 3，所有伤害提高 10%
+			移动速度提高 10%，跳跃速度提高 200%
+			伤害减免提高 5%
+			最大法力提高 50，法力消耗降低 15%
+			你脚下的草地上会长出花朵，无草泥土上有几率长出随机的染料植物
+			召唤所有元素保护你
+			切换该饰品的可见性可同时开关这些元素
+			关闭元素时，属性加成会略微提高
+			'''
+		DisplayName: 元灵之心
+	}
+
+	HoneyDew: {
+		DisplayName: 蜜露
+		Tooltip:
+			'''
+			身处丛林时伤害减免提高 10%，防御 +5，生命再生提升
+			免疫中毒与毒液
+			获得蜂蜜的生命再生，且没有减速惩罚
+			大多数蜜蜂与黄蜂类敌怪及弹幕对你只造成一半伤害
+			'''
+	}
+
+	LeadCore: {
+		DisplayName: 铅核
+		Tooltip: 免疫酸雨减益
+	}
+
+	LeviathanAmbergris: {
+		DisplayName: 利维坦龙涎香
+		Tooltip:
+			'''
+			移动时会在身后留下有毒海水
+			浸没在液体中时移动速度提高 75%，所有伤害提高 10%，防御 +20
+			浸没在液体中时受到伤害，会短时间获得具有伤害的光环
+			身处液体之外时，所有伤害提高 5%，伤害减免提高 5%
+			'''
+	}
+
+	LifeJelly: {
+		DisplayName: 生命凝胶
+		Tooltip:
+			'''
+			最大生命 +20
+			静止不动时提升生命再生
+			'''
+	}
+
+	LivingDew: {
+		DisplayName: 生命之露
+		Tooltip: 身处丛林时伤害减免提高 10%，防御 +5，生命再生提升
+	}
+
+	LureofEnthrallment: {
+		Tooltip:
+			'''
+			召唤一个塞壬为你作战
+			塞壬停留在你上方，向附近的敌怪射出水流长矛、冰雾与高音谱号
+			'''
+		DisplayName: 魅惑之珠
+	}
+
+	ManaJelly: {
+		DisplayName: 法力凝胶
+		Tooltip:
+			'''
+			最大法力 +20
+			静止不动时提升法力再生
+			'''
+	}
+
+	NebulousCore: {
+		DisplayName: 星云核心
+		Tooltip:
+			'''
+			伤害提高 20%，暴击率提高 20%
+			召唤漂浮的星云之星保护你
+			有 20% 的几率在致命攻击下存活
+			该效果触发时会为你恢复 100 点生命
+			'''
+	}
+
+	NecklaceofVexation: {
+		DisplayName: 烦扰项链
+		Tooltip:
+			'''
+			伤害提高 5%
+			生命低于 50% 时伤害提高 10%
+			'''
+	}
+
+	NeutronGlaive: {
+		DisplayName: 中子长戟
+		Tooltip:
+			'''
+			挥砍时释放强力的引力剑波
+			剑波命中目标时引发中子星爆炸
+			右键可为刀刃充能，充满时释放大规模中子星爆炸
+			提前松手会导致能量外溢
+			'''
+	}
+
+	OldLordOathsword: {
+		DisplayName: 旧日领主誓约剑
+		Tooltip: 远古地狱的遗物
+	}
+
+	OmegaBiomeBlade: {
+		DisplayName: 欧米茄环境之刃
+		Tooltip:
+			'''
+			根据你所处环境发射不同的追踪弹幕
+			弹幕还会随月亮事件变化
+			'''
+	}
+
+	OmegaBlueChestplate: {
+		Tooltip:
+			'''
+			伤害提高 18%，暴击率提高 16%
+			近战攻击速度提高 18%
+			你的攻击会施加深海重压
+			'''
+		DisplayName: 蓝色欧米茄胸甲
+	}
+
+	OmegaBlueHelmet: {
+		Tooltip:
+			'''
+			你可以在液体中自由移动
+			伤害提高 12%，暴击率提高 8%
+			最大仆从数 +2
+			'''
+		DisplayName: 蓝色欧米茄头盔
+	}
+
+	OmegaBlueLeggings: {
+		Tooltip:
+			'''
+			移动速度提高 30%
+			伤害提高 16%，暴击率提高 12%
+			'''
+		DisplayName: 蓝色欧米茄护腿
+	}
+
+	PsychoticAmulet: {
+		DisplayName: 疯狂护符
+		Tooltip:
+			'''
+			远程伤害与暴击率提高 5%
+			静止不动时，这些属性会获得大幅提升
+			'''
+	}
+
+	RadiantOoze: {
+		DisplayName: 辉光软泥
+		Tooltip: 你自身发光，并在夜晚更快地恢复生命
+	}
+
+	RampartofDeities: {
+		DisplayName: 神之壁垒
+		Tooltip:
+			'''
+			受到伤害后短时间内移动速度大幅提升
+			护甲穿透提高 50，受击后的无敌时间延长
+			在水下提供照明，受伤时天降星辰
+			提升法力星的拾取范围，并且受伤时恢复法力
+			吸收队伍中玩家所受伤害的 25%
+			仅在生命值高于 25% 时生效
+			免疫击退
+			生命低于 30% 时，在持有者周围形成一层减伤外壳
+			生命低于 10% 时外壳更强，减伤效果进一步提升
+			'''
+	}
+
+	RoseStone: {
+		Tooltip:
+			'''
+			远古遗物之一
+			最大生命提高 20，生命再生提高 1，所有伤害提高 3%
+			'''
+		DisplayName: 玫瑰石
+	}
+
+	RottenBrain: {
+		DisplayName: 腐烂之脑
+		Tooltip:
+			'''
+			生命低于 75% 时伤害提高 15%
+			生命低于 50% 时移动速度降低 5%
+			受击时天降暗影
+			'''
+	}
+
+	SeaShell: {
+		DisplayName: 海螺壳
+		Tooltip:
+			'''
+			浸没在液体中时防御与伤害减免提升
+			浸没在液体中时移动速度提升
+			'''
+	}
+
+	SigilofCalamitas: {
+		DisplayName: 灾厄之印
+		Tooltip:
+			'''
+			魔法伤害提高 15%，远程暴击率提高 10%
+			法力消耗降低 15%
+			最大法力 +100，并显示宝藏位置
+			缩短治疗药水的冷却
+			'''
+	}
+
+	SilvaArmor: {
+		DisplayName: 始源林海盔甲
+		Tooltip:
+			'''
+			最大生命 +300，最大法力 +200
+			移动速度提高 20%
+			伤害提高 18%，暴击率提高
+			'''
+	}
+
+	SilvaHelm: {
+		DisplayName: 始源林海战盔
+		Tooltip:
+			'''
+			近战伤害与暴击率提高 13%
+			近战攻击速度提高 19%
+			'''
+	}
+
+	SilvaLeggings: {
+		DisplayName: 始源林海护胫
+		Tooltip:
+			'''
+			移动速度提高 45%
+			伤害提高 12%，暴击率提高
+			'''
+	}
+
+	Sponge: {
+		DisplayName: 海绵
+		Tooltip:
+			'''
+			挖矿速度提高 50%，你自身发光
+			伤害减免提高 18%，生命再生提升
+			免疫中毒、冰冻、寒冷、霜燃与毒液
+			获得蜂蜜的生命再生，且没有减速惩罚
+			大多数蜜蜂与黄蜂类敌怪及弹幕对你只造成一半伤害
+			跳跃速度提高 120%，移动速度提高 12%
+			最大生命与法力 +50
+			静止不动时提升生命与法力再生
+			浸没在液体中时防御与伤害减免提升
+			浸没在液体中时移动速度提升
+			敌怪接触你时会受到伤害
+			受到攻击后短时间内移动速度大幅提升
+			受击时释放蘑菇孢子与火花爆炸
+			敌怪的攻击会有一部分伤害被吸收，并用于治疗你
+			'''
+	}
+
+	StatisBeltOfCurses: {
+		DisplayName: 斯塔提斯诅咒腰带
+		Tooltip:
+			'''
+			最大仆从数 +4
+			仆从伤害提高 20%，鞭子范围提高 20%，鞭子速度提高 20%
+			赋予所有仆从暗影焰之力
+			仆从命中敌人时使其哭泣
+			提升跳跃速度，并允许连续跳跃
+			可以爬墙、冲刺并闪避攻击
+			'''
+	}
+
+	StatisBlessing: {
+		DisplayName: 斯塔提斯的祝福
+		Tooltip:
+			'''
+			最大仆从数 +3，仆从伤害提高 10%
+			仆从击退提高
+			仆从命中敌人时使其哭泣
+			'''
+	}
+
+	StatisCurse: {
+		DisplayName: 斯塔提斯的诅咒
+		Tooltip:
+			'''
+			最大仆从数 +3
+			仆从伤害提高 10%，鞭子范围提高 10%，鞭子速度提高 10%
+			赋予所有仆从暗影焰之力
+			仆从命中敌人时使其哭泣
+			'''
+	}
+
+	TarragonBreastplate: {
+		DisplayName: 龙蒿护甲
+		Tooltip:
+			'''
+			伤害提高 10%，暴击率提高
+			生命再生 +3，最大生命 +150，最大法力 +100
+			「流放者的护甲」
+			'''
+	}
+
+	TarragonHelm: {
+		DisplayName: 龙蒿战盔
+		Tooltip:
+			'''
+			暂时免疫岩浆，免疫诅咒地狱火、着火、诅咒与寒冷减益
+			可以在液体中自由移动
+			伤害减免提高 5%
+			近战伤害与暴击率提高 10%，近战攻击速度提高 15%
+			「远古之道弟子的头盔」
+			'''
+	}
+
+	TarragonLeggings: {
+		DisplayName: 龙蒿护腿
+		Tooltip:
+			'''
+			移动速度提高 20%；生命值越低，加成越高
+			伤害与暴击率提高 10%
+			「传说探险家的护腿」
+			'''
+	}
+
+	TheAbsorber: {
+		DisplayName: 阴阳吸星石
+		Tooltip:
+			'''
+			移动速度提高 12%
+			跳跃速度提高 120%
+			最大生命与法力 +30
+			静止不动时提升生命与法力再生
+			浸没在液体中时防御与伤害减免提升
+			浸没在液体中时移动速度提升
+			敌怪接触你时会受到伤害
+			受到攻击后短时间内移动速度大幅提升
+			受击时释放蘑菇孢子与火花爆炸
+			伤害减免提高 6%
+			敌怪的攻击会有一部分伤害被吸收，并用于治疗你
+			'''
+	}
+
+	TheAmalgam: {
+		DisplayName: 融合体
+		Tooltip:
+			'''
+			伤害提高 30%，暴击率提高 15%
+			受击时天降暗影
+			受击时使附近敌怪陷入混乱
+			偶尔从天而降硫磺火球
+			无敌期间天降硫磺火
+			暂时免疫岩浆，大幅降低岩浆灼烧伤害，身处岩浆中时伤害提高 25%
+			召唤一个真菌团块为你作战
+			移动时会在身后留下有毒海水
+			浸没时移动速度提高 75%，所有伤害提高 10%，防御 +40
+			浸没在液体中时受到伤害，会短时间获得具有伤害的光环
+			有几率制造幻象并闪避攻击
+			'''
+	}
+
+	TheCommunity: {
+		DisplayName: 社区
+		Tooltip:
+			'''
+			传奇饰品
+			泰拉瑞亚社区之心
+			初始为你的所有属性提供微弱增益
+			随着你的进度推进，这些属性增益会变得更强
+			降低施加于你的有害减益的持续伤害效果
+			「感谢所有让这个模组成为现实的支持者们」
+			'''
+	}
+
+	TheFirstShadowflame: {
+		DisplayName: 初代暗影焰
+		Tooltip: 赋予所有仆从暗影焰之力
+	}
+
+	TrueArkoftheAncients: {
+		DisplayName: 真·远古方舟
+		Tooltip: 为荡涤一切邪恶而锻造的天堂之刃
+	}
+
+	TrueBiomeBlade: {
+		DisplayName: 真·环境之刃
+		Tooltip: 根据你所处环境发射不同的弹幕
+	}
+
+	VitalJelly: {
+		DisplayName: 活力凝胶
+		Tooltip:
+			'''
+			移动速度提高 10%
+			跳跃速度提高 100%
+			'''
+	}
+
+	VoidofExtinction: {
+		DisplayName: 终结虚空
+		Tooltip:
+			'''
+			不再被诅咒
+			偶尔从天而降硫磺火球
+			所有伤害提高 15%
+			无敌期间天降硫磺火
+			暂时免疫岩浆，大幅降低岩浆灼烧伤害，身处岩浆中时伤害提高 25%
+			'''
+	}
+
+	WifeinaBottle: {
+		Tooltip: 召唤一个沙元素为你作战
+		DisplayName: 瓶装沙元素
+	}
+
+	WifeinaBottlewithBoobs: {
+		Tooltip: 召唤一个沙元素为你治疗
+		DisplayName: 稀有瓶装沙元素
+	}
+
+	YharimsInsignia: {
+		DisplayName: 魔君之证章
+		Tooltip:
+			'''
+			生命低于 50% 时伤害提高 10%
+			近战速度提高 10%
+			近战伤害与近战暴击率提高 10%
+			近战攻击与近战弹幕施加神圣之火
+			受到伤害后的无敌时间延长
+			暂时的岩浆免疫
+			近战击退提高
+			'''
+	}
+
+	YharimsStimulants: {
+		DisplayName: 魔君牌兴奋剂
+		Tooltip: 为所有进攻与防御属性提供不错的增益
+	}
+
+	CadencePotion: {
+		DisplayName: 韵律药水
+		Tooltip:
+			'''
+			获得韵律增益，降低商店价格与敌怪仇恨
+			提升生命再生，最大生命提高 20%
+			提升红心拾取范围
+			'''
+	}
+
+	RevivifyPotion: {
+		DisplayName: 新生药水
+		Tooltip: 敌怪的攻击会按其伤害的一小部分治疗你
+	}
+
+	TitanScalePotion: {
+		DisplayName: 泰坦之鳞药水
+		Tooltip: 击退提高，防御 +5，伤害减免提高 5%
+	}
+
+	HolyWrathPotion: {
+		DisplayName: 神圣之怒药水
+		Tooltip:
+			'''
+			伤害提高 12%，移动与水平飞行速度提高 5%
+			攻击附带神圣之火
+			'''
+	}
+
+	TriumphPotion: {
+		DisplayName: 胜利药水
+		Tooltip: 敌怪接触伤害降低，其生命值越低降幅越大
+	}
+
+	BoundingPotion: {
+		DisplayName: 弹跳药水
+		Tooltip: 跳跃高度与跳跃速度提升，摔落伤害抗性提高
+	}
+
+	CrumblingPotion: {
+		DisplayName: 崩裂药水
+		Tooltip:
+			'''
+			暴击率提高 5%
+			攻击会击碎敌怪护甲
+			'''
+	}
+
+	PhotosynthesisPotion: {
+		DisplayName: 光合作用药水
+		Tooltip:
+			'''
+			静止不动时快速恢复生命，白天该效果为五倍强度
+			掉落的红心治疗量提高
+			'''
+	}
+
+	ProfanedRagePotion: {
+		DisplayName: 渎神之怒药水
+		Tooltip: 暴击率提高 12%，移动与水平飞行速度提高 5%
+	}
+
+	ShatteringPotion: {
+		DisplayName: 粉碎药水
+		Tooltip:
+			'''
+			伤害与暴击率提高 8%
+			攻击会击碎敌怪护甲
+			'''
+	}
+
+	SoaringPotion: {
+		DisplayName: 翱翔药水
+		Tooltip: 飞行时间与水平飞行速度提高 10%
+	}
+
+	CalciumPotion: {
+		DisplayName: 钙质药水
+		Tooltip: 免疫摔落伤害
+	}
+
+	CeaselessHungerPotion: {
+		DisplayName: 无尽饥饿药水
+		Tooltip: 使你吸取世界上的所有物品
+	}
+
+	DraconicElixir: {
+		DisplayName: 龙魂秘药
+		Tooltip:
+			'''
+			大幅提升翅膀飞行时间与速度，防御 +16
+			弑神者复苏触发时，将你恢复至满生命，而非 300 点生命
+			始源林海无敌触发时，将你恢复至满生命
+			若触发了上述治疗，30 秒内无法再次饮用此药水
+			'''
+	}
+
+	ProfanedSoulArtifact: {
+		DisplayName: 亵渎之魂神器
+		Tooltip:
+			'''
+			纯净
+			召唤三个亵渎守护者随你作战
+			治愈守护者每隔几秒为你恢复少量生命
+			防御守护者提升你的移动速度与伤害抗性
+			进攻守护者提升你的召唤伤害，并给予一个额外的仆从栏
+			你的召唤物会对击中的敌人施加神圣烈焰
+			提供一个碎裂后会自动充能的小型耐久护盾
+			'''
+	}
+
+	ProfanedSoulCrystal: {
+		DisplayName: 亵渎之魂水晶
+		Tooltip:
+			'''
+			虔诚
+			召唤三个亵渎守护者随你作战
+			你的守护者得到强化，造成远超以往的伤害，攻击也更为频繁
+			提供一个碎裂后会自动充能的大型耐久护盾
+			你的召唤伤害提高 15%，翅膀飞行时间提高 10%
+			白天时，你的召唤物获得击退，你的移动与攻击速度提升
+			夜晚时，你获得伤害减免、防御与生命再生
+			免疫岩浆与火焰
+			武器会额外发射亵渎水晶弹幕；没有仆从在场时弹幕会被强化
+			[c/ffa680:近战] [c/ffd2bf:攻击时额外掷出一连串长矛]
+			[c/99ffa7:远程] [c/bfffc8:攻击时额外掷出火球与陨石]
+			[c/8cbeff:魔法] [c/bfdbff:攻击时额外掷出一枚巨大的分裂火球，消耗 100 点法力]
+			[c/d791f2:鞭子] [c/e1b6f2:攻击时额外以亵渎水晶鞭打]
+			[c/f285a2:召唤] [c/f2b6c6:攻击时额外释放致命的结晶螺旋]
+			'''
 	}
 }
 
