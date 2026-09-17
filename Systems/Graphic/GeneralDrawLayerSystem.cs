@@ -6,8 +6,9 @@ namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 绘制层系统（移植自灾厄的 GeneralDrawLayerSystem）。
-    /// 通过 On_Main.DrawDust 在尘埃绘制后触发 AfterDusts 层，
-    /// 通过 On_Main.DrawProjectiles 在弹幕绘制后触发 AfterProjectiles 层。
+    /// 通过 On_Main.DrawProjectiles 在弹幕绘制后触发 AfterProjectiles 层，
+    /// 通过 On_Main.DrawPlayers_AfterProjectiles 在玩家绘制后触发 AfterPlayers 层，
+    /// 通过 On_Main.DrawDust 在尘埃绘制后触发 AfterDusts 层。
     /// </summary>
     internal sealed class GeneralDrawLayerSystem : ModSystem
     {
@@ -20,14 +21,16 @@ namespace CalamityDemutation.Systems.Graphic
         /// </summary>
         public static event Action OnPrepareDraw;
         /// <summary>
-        /// 加载时挂上三个 On_Main 钩子：CheckMonoliths（触发 OnPrepareDraw 准备阶段）、
-        /// DrawProjectiles（弹幕绘制后触发 AfterProjectiles 层）与 DrawDust（尘埃绘制后触发 AfterDusts 层）
+        /// 加载时挂上四个 On_Main 钩子：CheckMonoliths（触发 OnPrepareDraw 准备阶段）、
+        /// DrawProjectiles（弹幕绘制后触发 AfterProjectiles 层）、DrawPlayers_AfterProjectiles（玩家绘制后触发 AfterPlayers 层）
+        /// 与 DrawDust（尘埃绘制后触发 AfterDusts 层）
         /// </summary>
         public override void Load()
         {
             On_Main.CheckMonoliths += CheckMonoliths;
             On_Main.DrawDust += GeneralDrawLayer_DrawToLayer_AfterDusts;
             On_Main.DrawProjectiles += GeneralDrawLayer_DrawToLayer_AfterProjectiles;
+            On_Main.DrawPlayers_AfterProjectiles += GeneralDrawLayer_DrawToLayer_AfterPlayers;
         }
         /// <summary>
         /// 卸载时把两个静态事件都置空，一次性清除所有订阅者。
@@ -64,6 +67,15 @@ namespace CalamityDemutation.Systems.Graphic
         {
             orig(self);
             OnDrawLayer?.Invoke(GeneralDrawLayer.AfterProjectiles);
+        }
+        /// <summary>
+        /// On_Main.DrawPlayers_AfterProjectiles 钩子：先执行原版玩家绘制，再触发 AfterPlayers 层事件，
+        /// 让亵渎之魂护盾等要求在玩家之上绘制的图形画在玩家之后（不被玩家身体遮挡）
+        /// </summary>
+        private static void GeneralDrawLayer_DrawToLayer_AfterPlayers(On_Main.orig_DrawPlayers_AfterProjectiles orig, Main self)
+        {
+            orig(self);
+            OnDrawLayer?.Invoke(GeneralDrawLayer.AfterPlayers);
         }
     }
 }

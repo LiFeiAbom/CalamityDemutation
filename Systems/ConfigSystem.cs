@@ -32,6 +32,12 @@ namespace CalamityDemutation.Systems
         [DefaultValue(false)]
         public bool RevertVanillaNerfs { get; set; }
         /// <summary>
+        /// 回退灾厄内容削弱开关：启用后，在加载现代版灾厄（CalamityMod）时，回退灾厄对自身内容的削弱。
+        /// </summary>
+        [BackgroundColor(211, 211, 211, 192)]
+        [DefaultValue(false)]
+        public bool RevertCalamityContentNerfs { get; set; }
+        /// <summary>
         /// 是否启用挥砍刀光（BaseSwingCO 弧光渲染开关）
         /// </summary>
         [BackgroundColor(192, 54, 94, 192)]

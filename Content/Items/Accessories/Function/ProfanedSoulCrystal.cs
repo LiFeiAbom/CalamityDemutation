@@ -158,6 +158,21 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
                 modPlayer.profanedCrystalAnim = maxPscAnimTime;             // 变身动画计时置满
                 Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<PscTransformAnimation>(), 0, 0f, player.whoAmI);
             }
+            // 常规属性加成区（本工程新增、装备即生效的通用全能加成，与四态无关；灾厄 2.2.2 无此段）
+            player.statLifeMax2 += (int)(player.statLifeMax2 * 0.08f);
+            player.statManaMax2 += (int)(player.statManaMax2 * 0.08f);
+            player.GetDamage<GenericDamageClass>() += 0.16f;
+            player.GetCritChance<GenericDamageClass>() += 16;
+            player.endurance += 0.08f;
+            player.statDefense += 8;
+            player.lifeRegen += 8;
+            player.manaRegen += 8;
+            player.moveSpeed += 0.08f;
+            player.jumpSpeedBoost += 0.8f;
+            player.GetArmorPenetration<GenericDamageClass>() += 16;
+            player.manaCost *= 0.84f;
+            player.pickSpeed -= 0.16f;
+            Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 1.4f, 0.3f, 0.9f);
         }
         /// <summary>
         /// 戴在时装栏时只给外观（不给任何加成）：护盾与变身外观都显示。

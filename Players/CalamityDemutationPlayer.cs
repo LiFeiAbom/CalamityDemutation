@@ -8,6 +8,7 @@ using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Content.Projectiles.Typeless;
+using CalamityDemutation.Enums;
 using CalamityDemutation.Sounds;
 using CalamityDemutation.Systems.Cooldowns;
 using CalamityDemutation.Particles;
@@ -74,6 +75,24 @@ namespace CalamityDemutation.Players
         /// 由主类 CalamityDemutation.HandlePacket 处理。
         /// </summary>
         public const byte MsgPermanentUnlock = 0;
+        /// <summary>
+        /// 自定义网络消息码：盾牌冲刺的开始/结束广播（见 CalamityDemutationPlayer.ShieldSlamDash.cs），
+        /// 由主类 CalamityDemutation.HandlePacket 处理。载荷 = 玩家索引 + 冲刺种类（None 表示本次冲刺结束）。
+        /// </summary>
+        public const byte MsgShieldSlamDash = 1;
+        /// <summary>
+        /// 自定义网络消息码：盾牌冲刺的撞击广播（同上文件），让其他客户端也刷一遍撞击粒子。
+        /// 载荷 = 玩家索引 + 冲刺种类 + 被打的敌人索引（short）。
+        /// </summary>
+        public const byte MsgShieldSlamDashHit = 2;
+        /// <summary>
+        /// 自定义网络消息码：弑神者冲刺的开始广播（同上文件）。载荷 = 玩家索引（冲刺固定 25 帧，故不需要结束包）。
+        /// </summary>
+        public const byte MsgGodSlayerDash = 3;
+        /// <summary>
+        /// 自定义网络消息码：弑神者冲刺的命中广播（同上文件）。载荷 = 玩家索引（命中尘喷在冲刺者身上，与敌人无关）。
+        /// </summary>
+        public const byte MsgGodSlayerDashHit = 4;
         // ── 静态字段 ──
         /// <summary>
         /// 按"模组名/技能名"缓存 buff type，避免每次命中都 TryGetMod + Find。
@@ -569,6 +588,19 @@ namespace CalamityDemutation.Players
         /// </summary>
         private int profanedSoulShieldHurtSoundTimer = 0;
         /// <summary>
+        /// 灾厄饰品类型缓存（元素手套/核生成及其下位饰品），供"还原灾厄内容削弱"回调扫描饰品栏用。
+        /// 首次调用 RevertCalamityContentNerfs 时 TryFind 填充（-1 未初始化，0 表示灾厄未安装或未找到）
+        /// </summary>
+        private static int eGauntletType = -1;
+        private static int nucleogenesisType = -1;
+        private static int starTaintedGeneratorType = -1;
+        private static int statisCurseType = -1;
+        private static int statisBlessingType = -1;
+        private static int theFirstShadowflameType = -1;
+        private static int starbusterCoreType = -1;
+        private static int voltaicJellyType = -1;
+        private static int jellyChargedBatteryType = -1;
+        /// <summary>
         /// 冷却机架数据：按字符串 ID 索引的全部冷却实例（对应灾厄 CalamityPlayer.cooldowns），
         /// 每帧在 PostUpdateMiscEffects 末尾统一 tick，到期后执行 OnCompleted 并移除
         /// </summary>
@@ -730,6 +762,7 @@ namespace CalamityDemutation.Players
             shellBoost = false;
             shadeRegen = false;
             shadowSpeed = false;
+            shieldSlamDash = ShieldSlamDash.None;
             sigilofCalamitas = false;
             silvaMelee = false;
             silvaSet = false;
@@ -866,6 +899,8 @@ namespace CalamityDemutation.Players
             shadeRegen = false;
             shadowSpeed = false;
             shellBoost = false;
+            shieldSlamDash = ShieldSlamDash.None;
+            shieldSlamDashElapsed = 0;
             sigilofCalamitas = false;
             silvaCountdown = 600;
             silvaHitCounter = 0;
@@ -925,6 +960,8 @@ namespace CalamityDemutation.Players
             }
             // 弑神者冲刺：状态机与位移（移植自灾厄的 PlayerDashEffect 体系，实现在 partial 文件里）
             GodSlayerDashMovement();
+            // 盾牌冲刺（阿斯加德之庇护系列）：同一个钩子，状态机同样在 partial 文件里
+            ShieldSlamDashMovement();
         }
         /// <summary>
         /// tModLoader 的 PostUpdateMiscEffects 钩子：每帧在装备更新之后调用。
@@ -978,13 +1015,12 @@ namespace CalamityDemutation.Players
             {
                 Player.statLifeMax2 += Player.statLifeMax2;
             }
-            // 勇士徽章：+10%近战伤害、+10%近战暴击率、+5近战穿透
+            // 勇士徽章：+10%近战伤害、+10%近战暴击率、+10近战穿透
             if (badgeOfBravery)
             {
                 Player.GetDamage<MeleeDamageClass>() += 0.1f;
                 Player.GetCritChance<MeleeDamageClass>() += 10;
-                Player.GetArmorPenetration<MeleeDamageClass>() += 5;
-                Player.GetAttackSpeed<MeleeDamageClass>() += 0.05f;
+                Player.GetArmorPenetration<MeleeDamageClass>() += 10;
             }
             // 血蠕虫围巾：+10% 近战伤害、+10% 近战攻速、+15% 伤害减免
             if (bloodyWormScarf)
@@ -2823,6 +2859,72 @@ namespace CalamityDemutation.Players
                 cdIterator.Dispose();
                 foreach (string expiredID in expiredCooldowns)
                     cooldowns.Remove(expiredID);
+            }
+            RevertCalamityContentNerfs();
+        }
+        // ── 还原灾厄内容削弱 ──
+        /// <summary>
+        /// 回退灾厄内容削弱（RevertCalamityContentNerfs）：撤销元素手套与核生成"无法与下位饰品叠加属性"的限制。
+        /// 扫描玩家饰品栏，检测上位饰品与其下位是否同时装备，补回被灾厄 gloveLevel 取最高 / nucleogenesis 覆盖吞掉的属性：
+        /// 元素手套补回下位手套攻速（火手套 14% / 机械手套 12% / 力量·狂战士手套 12% / 野性爪 10%），
+        /// 核生成补回下位饰品仆从栏（星染发生器 +2 / 静滞诅咒 +3 / 静滞祝福 +2 / 初影焰 +1 / 星爆核心 +1 / 伏特水母 +1 / 带电水母电池 +1）。
+        /// 仅在开启配置且加载现代版灾厄时生效。
+        /// </summary>
+        private void RevertCalamityContentNerfs()
+        {
+            if (ConfigSystem.Instance?.RevertCalamityContentNerfs != true || !ModLoader.HasMod("CalamityMod"))
+                return;
+            // 懒加载灾厄饰品类型（首次调用时 TryFind 一次，之后复用）
+            if (eGauntletType == -1)
+            {
+                eGauntletType = ModContent.TryFind("CalamityMod", "ElementalGauntlet", out ModItem eg) ? eg.Type : 0;
+                nucleogenesisType = ModContent.TryFind("CalamityMod", "Nucleogenesis", out ModItem nu) ? nu.Type : 0;
+                starTaintedGeneratorType = ModContent.TryFind("CalamityMod", "StarTaintedGenerator", out ModItem st) ? st.Type : 0;
+                statisCurseType = ModContent.TryFind("CalamityMod", "StatisCurse", out ModItem sc) ? sc.Type : 0;
+                statisBlessingType = ModContent.TryFind("CalamityMod", "StatisBlessing", out ModItem sb) ? sb.Type : 0;
+                theFirstShadowflameType = ModContent.TryFind("CalamityMod", "TheFirstShadowflame", out ModItem sf) ? sf.Type : 0;
+                starbusterCoreType = ModContent.TryFind("CalamityMod", "StarbusterCore", out ModItem sbc) ? sbc.Type : 0;
+                voltaicJellyType = ModContent.TryFind("CalamityMod", "VoltaicJelly", out ModItem vj) ? vj.Type : 0;
+                jellyChargedBatteryType = ModContent.TryFind("CalamityMod", "JellyChargedBattery", out ModItem jcb) ? jcb.Type : 0;
+            }
+            bool hasEGauntlet = false, hasNucleo = false, hasStarTainted = false, hasStatisCurse = false;
+            bool hasStatisBlessing = false, hasFirstShadowflame = false, hasStarbusterCore = false, hasVoltaicJelly = false, hasJellyBattery = false;
+            bool hasFireGauntlet = false, hasMechanicalGlove = false, hasPowerGlove = false, hasFeralClaws = false;
+            for (int i = 3; i < 8 + Player.extraAccessorySlots; i++)
+            {
+                int type = Player.armor[i].type;
+                if (type == eGauntletType) hasEGauntlet = true;
+                else if (type == nucleogenesisType) hasNucleo = true;
+                else if (type == starTaintedGeneratorType) hasStarTainted = true;
+                else if (type == statisCurseType) hasStatisCurse = true;
+                else if (type == statisBlessingType) hasStatisBlessing = true;
+                else if (type == theFirstShadowflameType) hasFirstShadowflame = true;
+                else if (type == starbusterCoreType) hasStarbusterCore = true;
+                else if (type == voltaicJellyType) hasVoltaicJelly = true;
+                else if (type == jellyChargedBatteryType) hasJellyBattery = true;
+                else if (type == ItemID.FireGauntlet) hasFireGauntlet = true;
+                else if (type == ItemID.MechanicalGlove) hasMechanicalGlove = true;
+                else if (type == ItemID.PowerGlove || type == ItemID.BerserkerGlove) hasPowerGlove = true;
+                else if (type == ItemID.FeralClaws) hasFeralClaws = true;
+            }
+            // 元素手套：补回下位手套被 gloveLevel 取最高覆盖的攻速
+            if (hasEGauntlet)
+            {
+                if (hasFireGauntlet) Player.GetAttackSpeed<MeleeDamageClass>() += 0.14f;
+                if (hasMechanicalGlove) Player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                if (hasPowerGlove) Player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                if (hasFeralClaws) Player.GetAttackSpeed<MeleeDamageClass>() += 0.10f;
+            }
+            // 核生成：补回下位饰品被 nucleogenesis 覆盖的仆从栏
+            if (hasNucleo)
+            {
+                if (hasStarTainted) Player.maxMinions += 2;
+                if (hasStatisCurse) Player.maxMinions += 3;   // shadowMinions +1 + statisMinions +2
+                if (hasStatisBlessing) Player.maxMinions += 2;
+                if (hasFirstShadowflame) Player.maxMinions += 1;
+                if (hasStarbusterCore) Player.maxMinions += 1;
+                if (hasVoltaicJelly) Player.maxMinions += 1;
+                if (hasJellyBattery) Player.maxMinions += 1;
             }
         }
         // ── 亵渎之魂水晶：变身外观（对齐 2.2.2 的 TransformFrameEffects / TransformPostUpdate） ──

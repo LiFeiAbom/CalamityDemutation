@@ -71,10 +71,14 @@ namespace CalamityDemutation
             Content.Projectiles.Melee.NeutronGlaiveHeld.UnloadTextures();
         }
         /// <summary>
-        /// 处理客户端发来的自定义网络消息。当前仅有洋葱永久解锁上报
-        /// （MsgPermanentUnlock）：非主机客户端吃了洋葱后，其本地标志服务器并不知道，
-        /// 这里更新服务器上对应玩家的 ModPlayer 副本，再广播该玩家完整状态给所有端，
-        /// 使其它客户端也能看到该玩家已解锁的额外饰品栏。
+        /// 处理客户端发来的自定义网络消息。当前有两条：
+        /// 1) 洋葱永久解锁上报（MsgPermanentUnlock）：非主机客户端吃了洋葱后，其本地标志服务器并不知道，
+        ///    这里更新服务器上对应玩家的 ModPlayer 副本，再广播该玩家完整状态给所有端，
+        ///    使其它客户端也能看到该玩家已解锁的额外饰品栏；
+        /// 2) 盾牌冲刺开始/结束（MsgShieldSlamDash）与撞击（MsgShieldSlamDashHit）；
+        /// 3) 弑神者冲刺开始（MsgGodSlayerDash）与命中（MsgGodSlayerDashHit）。
+        /// 2/3 都由服务端代播给其余客户端，让其他客户端也能看到别人冲刺时的尘与粒子
+        /// （本模组的粒子系统是纯客户端的，不靠弹幕同步）。
         /// </summary>
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
@@ -106,6 +110,67 @@ namespace CalamityDemutation
                     Players.CalamityDemutationPlayer localCopy = Main.player[reported].GetModPlayer<Players.CalamityDemutationPlayer>();
                     localCopy.extraAccessoryML = acc;
                     localCopy.extraWingSlot = wing;
+                }
+            }
+            // 盾牌冲刺的开始/结束广播：让其他客户端也能看到别人冲刺时的拖尾尘
+            else if (msgType == Players.CalamityDemutationPlayer.MsgShieldSlamDash)
+            {
+                int dashOwner = reader.ReadByte();
+                byte dashType = reader.ReadByte();
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    // 服务端只做代播（服务端不跑表现，也不需要留状态）：玩家索引以 whoAmI 为准，包内自报的不可信
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)Players.CalamityDemutationPlayer.MsgShieldSlamDash);
+                    packet.Write((byte)whoAmI);
+                    packet.Write(dashType);
+                    packet.Send(-1, whoAmI);
+                }
+                else if (dashOwner >= 0 && dashOwner < Main.player.Length && Main.player[dashOwner].active)
+                {
+                    Main.player[dashOwner].GetModPlayer<Players.CalamityDemutationPlayer>().ReceiveShieldSlamDash((Enums.ShieldSlamDash)dashType);
+                }
+            }
+            // 盾牌冲刺的撞击广播：让其他客户端也刷一遍撞击粒子
+            else if (msgType == Players.CalamityDemutationPlayer.MsgShieldSlamDashHit)
+            {
+                int hitOwner = reader.ReadByte();
+                byte hitDashType = reader.ReadByte();
+                int hitNPC = reader.ReadInt16();
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)Players.CalamityDemutationPlayer.MsgShieldSlamDashHit);
+                    packet.Write((byte)whoAmI);
+                    packet.Write(hitDashType);
+                    packet.Write((short)hitNPC);
+                    packet.Send(-1, whoAmI);
+                }
+                else if (hitOwner >= 0 && hitOwner < Main.player.Length && Main.player[hitOwner].active)
+                {
+                    Main.player[hitOwner].GetModPlayer<Players.CalamityDemutationPlayer>().ReceiveShieldSlamDashHit((Enums.ShieldSlamDash)hitDashType, hitNPC);
+                }
+            }
+            // 弑神者冲刺的开始/命中广播：让其他客户端也看到别人的龙颚、尘环、火花与命中尘。
+            // 两条消息载荷形状相同（只有玩家索引），故合并成一个分支。
+            else if (msgType == Players.CalamityDemutationPlayer.MsgGodSlayerDash || msgType == Players.CalamityDemutationPlayer.MsgGodSlayerDashHit)
+            {
+                int dashOwner = reader.ReadByte();
+                bool isHit = msgType == Players.CalamityDemutationPlayer.MsgGodSlayerDashHit;
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    ModPacket packet = GetPacket();
+                    packet.Write(msgType);
+                    packet.Write((byte)whoAmI);
+                    packet.Send(-1, whoAmI);
+                }
+                else if (dashOwner >= 0 && dashOwner < Main.player.Length && Main.player[dashOwner].active)
+                {
+                    Players.CalamityDemutationPlayer ownerPlayer = Main.player[dashOwner].GetModPlayer<Players.CalamityDemutationPlayer>();
+                    if (isHit)
+                        ownerPlayer.ReceiveGodSlayerDashHit();
+                    else
+                        ownerPlayer.ReceiveGodSlayerDash();
                 }
             }
         }

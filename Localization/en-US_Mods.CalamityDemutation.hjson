@@ -220,6 +220,16 @@ Configs: {
 				'''
 		}
 
+		RevertCalamityContentNerfs: {
+			Label: Revert Calamity Content Nerfs
+			Tooltip:
+				'''
+				Reverts Calamity's nerfs to its own content.
+				Only applies while the modern Calamity Mod is enabled.
+				Default: Off.
+				'''
+		}
+
 		EnableSwordLight: {
 			Label: Enable Sword Light
 			Tooltip:
@@ -377,8 +387,7 @@ Items: {
 			'''
 			Increases melee damage by 10%
 			Increases melee critical strike chance by 10%
-			Increases melee armor penetration by 5
-			Increases melee attack speed by 5%
+			Increases melee armor penetration by 10
 			'''
 	}
 
@@ -856,6 +865,7 @@ Items: {
 			This effect can only occur once every 45 seconds
 			While the cooldown for this effect is active you gain a 10% increase to all damage
 			Taking over 80 damage in one hit will cause you to release a swarm of high-damage god killer darts
+			Hitting enemies with melee weapons or projectiles periodically releases high-damage god killer darts
 			Enemies take a lot of damage when they hit you
 			An attack that would deal 80 damage or less will have its damage reduced to 1
 			Press [{0}] to dash in any of eight directions
@@ -1483,6 +1493,7 @@ Items: {
 			Summons three profaned guardians which accompany you in battle
 			Your guardians are empowered, dealing far more damage and attacking far more often
 			Provides a large durability shield which recharges after it breaks
+			Grants a comprehensive boost to your base stats
 			Increases your summon damage by 15% and wing flight time by 10%
 			During the day, your summons gain knockback and you move and attack faster
 			At night, you gain damage reduction, defense and life regeneration
@@ -1515,6 +1526,7 @@ Projectiles: {
 	CactusHealOrb.DisplayName: Heal
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
 	CloudyWaifu.DisplayName: Cloudy Waifu
+	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion
 	DeathLaser.DisplayName: Death Laser
 	DefenseBeam.DisplayName: Defense Beam
 	DefenseBlast.DisplayName: Defense Blast
@@ -1538,6 +1550,7 @@ Projectiles: {
 	GodSlayerDart.DisplayName: God Slayer Dart
 	HellfireExplosionFriendly.DisplayName: Explosion
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
+	HolyExplosionSupreme.DisplayName: Supreme Holy Explosion
 	LaserFountains.DisplayName: Laser Fountains
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star

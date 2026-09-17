@@ -220,6 +220,16 @@ Configs: {
 				'''
 		}
 
+		RevertCalamityContentNerfs: {
+			Label: 还原灾厄内容削弱
+			Tooltip:
+				'''
+				还原灾厄对自身内容的削弱。
+				仅在启用现代版灾厄模组时生效。
+				默认：关闭。
+				'''
+		}
+
 		EnableSwordLight: {
 			Label: 启用剑光
 			Tooltip:
@@ -377,8 +387,7 @@ Items: {
 			'''
 			近战伤害提高 10%
 			近战暴击率提高 10%
-			近战护甲穿透提高 5
-			近战攻击速度提高 5%
+			近战护甲穿透提高 10
 			'''
 	}
 
@@ -856,6 +865,7 @@ Items: {
 			该效果每 45 秒只能触发一次
 			该效果冷却期间，你的所有伤害提高 10%
 			单次受到超过 80 点伤害时，会释放一群高伤害的弑神飞镖
+			近战武器和弹幕击中敌人时会周期性地释放高伤害的弑神飞镖
 			敌怪击中你时会受到大量伤害
 			本应造成 80 点或更低伤害的攻击，伤害会被削减为 1
 			按 [{0}] 可向八个方向冲刺
@@ -1102,7 +1112,7 @@ Items: {
 	}
 
 	SigilofCalamitas: {
-		DisplayName: 灾厄之印
+		DisplayName: 灾厄符章
 		Tooltip:
 			'''
 			魔法伤害提高 15%，远程暴击率提高 10%
@@ -1287,7 +1297,7 @@ Items: {
 	}
 
 	TheCommunity: {
-		DisplayName: 社区
+		DisplayName: 归一心元石
 		Tooltip:
 			'''
 			传奇饰品
@@ -1462,7 +1472,7 @@ Items: {
 	}
 
 	ProfanedSoulArtifact: {
-		DisplayName: 亵渎之魂神器
+		DisplayName: 渎魂神物
 		Tooltip:
 			'''
 			纯净
@@ -1476,13 +1486,14 @@ Items: {
 	}
 
 	ProfanedSoulCrystal: {
-		DisplayName: 亵渎之魂水晶
+		DisplayName: 渎神魂晶
 		Tooltip:
 			'''
 			虔诚
 			召唤三个亵渎守护者随你作战
 			你的守护者得到强化，造成远超以往的伤害，攻击也更为频繁
 			提供一个碎裂后会自动充能的大型耐久护盾
+			给予你全面的基础属性增幅
 			你的召唤伤害提高 15%，翅膀飞行时间提高 10%
 			白天时，你的召唤物获得击退，你的移动与攻击速度提升
 			夜晚时，你获得伤害减免、防御与生命再生
@@ -1515,6 +1526,7 @@ Projectiles: {
 	CactusHealOrb.DisplayName: 治疗
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
 	CloudyWaifu.DisplayName: 云元素
+	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
 	DeathLaser.DisplayName: 死亡激光
 	DefenseBeam.DisplayName: 防御光束
 	DefenseBlast.DisplayName: 防御爆裂
@@ -1538,6 +1550,7 @@ Projectiles: {
 	GodSlayerDart.DisplayName: 弑神者飞镖
 	HellfireExplosionFriendly.DisplayName: 地狱火爆炸
 	HellfireExplosionFriendly2.DisplayName: 地狱火爆炸 2
+	HolyExplosionSupreme.DisplayName: 至圣神圣爆炸
 	LaserFountains.DisplayName: 激光喷泉
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星

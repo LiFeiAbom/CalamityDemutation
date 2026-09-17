@@ -21,6 +21,10 @@ namespace CalamityDemutation.Players
     /// 并附加 300 帧 GodSlayerInferno。视觉与音效已按灾厄原文完整移植：
     /// 起手 1 个 DirectionalPulseRing + 16 颗尘，前 20 帧每帧一对 Jaws（洋红 + 青色）、
     /// 全程环形尘环 + 每帧 2 颗火花，第 21 帧补两层 DirectionalPulseRing；音效为吞噬者死亡/冲击音。
+    /// 联机：本机玩家的冲刺由自己结算，另用 MsgGodSlayerDash / MsgGodSlayerDashHit 两条消息
+    /// （见主类 CalamityDemutation.HandlePacket）把"开始"与"命中"广播给其他客户端，让别人屏幕上也有完整的冲刺表现；
+    /// 位移与原版一样由玩家网络同步负责，各客户端不模拟别人的物理。冲刺定长 25 帧，故不需要结束包。
+    /// 视觉部分（起手/每帧/命中）已抽成不带物理的共用方法，本机与远端各跑一份，改配色只需改一处。
     /// </summary>
     internal partial class CalamityDemutationPlayer : ModPlayer
     {
@@ -62,6 +66,17 @@ namespace CalamityDemutation.Players
         private bool godSlayerDashHitSounded;
         /// <summary>起手音效的播放句柄，用于每帧把声源位置跟到玩家身上</summary>
         private SlotId godSlayerDashSoundSlot;
+        // ── 远端玩家的冲刺表现（联机） ──
+        /// <summary>远端玩家冲刺已表现的帧数；0 表示没在表现。冲刺固定 25 帧，故不需要结束包</summary>
+        private int remoteGodSlayerDashElapsed;
+        /// <summary>远端玩家冲刺的表现相位（对应本机那套 godSlayerDashTime）</summary>
+        private int remoteGodSlayerDashTime;
+        /// <summary>远端玩家冲刺的龙颚缩放（对应本机那套 godSlayerDashSize）</summary>
+        private float remoteGodSlayerDashSize;
+        /// <summary>远端玩家本次冲刺是否已播过命中音效</summary>
+        private bool remoteGodSlayerDashHitSounded;
+        /// <summary>远端玩家起手音效的播放句柄（同样每帧跟随）</summary>
+        private SlotId remoteGodSlayerDashSoundSlot;
         // ── 公开方法 ──
         /// <summary>
         /// 冲刺请求入口，由 ProcessTriggers 在按下 GodslayerDashHotKey 时调用。
@@ -78,6 +93,9 @@ namespace CalamityDemutation.Players
                 return;
             if (Player.dashDelay != 0)
                 return;
+            // 与盾牌冲刺（见 CalamityDemutationPlayer.ShieldSlamDash.cs）互斥：灾厄只有一个 DashID，不会同时跑两个冲刺
+            if (shieldSlamDashElapsed > 0)
+                return;
             if (!Player.controlUp && !Player.controlDown && !Player.controlLeft && !Player.controlRight)
                 return;
             godSlayerDashQueued = true;
@@ -89,7 +107,10 @@ namespace CalamityDemutation.Players
         public void GodSlayerDashMovement()
         {
             if (Player.whoAmI != Main.myPlayer)
+            {
+                GodSlayerDashRemoteVisuals();
                 return;
+            }
             if (godSlayerDashQueued)
             {
                 godSlayerDashQueued = false;
@@ -108,8 +129,9 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 冲刺起步：把方向键组合归一化成八方向单位向量作为朝向（与灾厄一致），
         /// 速度直接置为 DashStartSpeed，并把 Player.dashDelay 置 -1 表示"冲刺中"；
-        /// 随后播放吞噬者死亡音效（句柄留用以便每帧跟随玩家）、喷 16 颗暗紫尘与 1 个紫色定向脉冲环，并挂上冷却 buff。
-        /// 与灾厄一致：若正前方有实心块，水平速度减半，避免一头撞墙飞出。
+        /// 随后播放吞噬者死亡音效（句柄留用以便每帧跟随玩家）、插起手表现（见 <see cref="GodSlayerDashStartVisuals"/>）、
+        /// 广播给其他客户端，并挂上冷却 buff。
+        /// 与灾厄一致：若正前方有实心块，水平速度减半，避免一头撞墙飞出（起手表现用的是减半前的速度）。
         /// </summary>
         private void StartGodSlayerDash()
         {
@@ -131,67 +153,25 @@ namespace CalamityDemutation.Players
             godSlayerDashHitSounded = false;
             Player.AddBuff(ModContent.BuffType<GodSlayerDashCooldown>(), DashCooldownFrames);
             godSlayerDashSoundSlot = SoundEngine.PlaySound(CalamityDemutationSounds.DevourerDeath, Player.Center);
-            GeneralParticleHandler.SpawnParticle(new DirectionalPulseRing(Player.Center, Vector2.Zero, Color.Orchid
-                , new Vector2(2f, 2f), Main.rand.NextFloat(12f, 25f), 0.1f, 12f, 18));
-            for (int i = 0; i <= 15; i++)
-            {
-                Dust dust = Dust.NewDustPerfect(Player.position, DustID.GiantCursedSkullBolt, -Player.velocity.RotatedByRandom(MathHelper.ToRadians(35f)) * Main.rand.NextFloat(0.3f, 0.9f), 0, default, Main.rand.NextFloat(3.1f, 3.9f));
-                dust.noGravity = false;
-            }
+            GodSlayerDashStartVisuals();
+            SendGodSlayerDashPacket();
             // 正前方是实心块时把水平速度减半，防止贴墙冲刺时被弹飞
             Point ahead = (Player.Center + new Vector2(MathHelper.Clamp(direction.X, -1f, 1f) * Player.width / 2f + 2f, 0f)).ToTileCoordinates();
             if (WorldGen.SolidOrSlopedTile(ahead.X, ahead.Y))
                 Player.velocity.X /= 2f;
         }
         /// <summary>
-        /// 冲刺期间的每帧表现（顺序与灾厄 MidDashEffects 一致）：
-        /// 音效跟随玩家 → Time 自增、龙颚尺寸每帧 -0.04、垂直下落放宽到 50 →
-        /// 前 20 帧每帧一对龙颚（洋红在下、青色在上且略小）→ 环形尘环（第 2~2.5 帧淡入到满半径）+ 随体尘 →
-        /// 每帧 2 颗火花（缩放随龙颚尺寸 ×1.3）→ 第 21 帧补两层定向脉冲环并把 Time 推到 111 使其只触发一次 →
-        /// 按速度档做两级衰减。
+        /// 冲刺期间的每帧结算（顺序与灾厄 MidDashEffects 一致）：
+        /// 音效跟随玩家 → 垂直下落放宽到 50 → 走共用表现 <see cref="GodSlayerDashVisuals"/>（Time 自增、龙颚尺寸每帧 -0.04、
+        /// 前 20 帧每帧一对龙颚、环形尘环 + 随体尘、每帧 2 颗火花、第 21 帧补两层定向脉冲环并把 Time 推到 111）→
+        /// 按速度档做两级衰减。物理项（下落放宽、衰减）留在这里，不上远端。
         /// </summary>
         private void GodSlayerDashEffects()
         {
             if (SoundEngine.TryGetActiveSound(godSlayerDashSoundSlot, out var dashSound) && dashSound.IsPlaying)
                 dashSound.Position = Player.Center;
-            godSlayerDashTime++;
-            godSlayerDashSize -= 0.04f;
             Player.maxFallSpeed = 50f;
-            if (godSlayerDashTime < 20)
-            {
-                GeneralParticleHandler.SpawnParticle(new Jaws(Player.Center + Player.velocity * 0.5f, Player.velocity, Color.Fuchsia
-                    , new Vector2(0.8f, 1f), Player.velocity.ToRotation() + MathHelper.PiOver2, godSlayerDashSize, godSlayerDashSize, 2));
-                GeneralParticleHandler.SpawnParticle(new Jaws(Player.Center + Player.velocity * 0.45f, Player.velocity, Color.Aqua
-                    , new Vector2(0.8f, 1f), Player.velocity.ToRotation() + MathHelper.PiOver2, godSlayerDashSize - 0.3f, godSlayerDashSize - 0.3f, 2));
-            }
-            float radiusFactor = MathHelper.Lerp(0f, 1f, Utils.GetLerpValue(2f, 2.5f, godSlayerDashTime, true));
-            for (int i = 0; i < 9; i++)
-            {
-                float offsetRotationAngle = Player.velocity.ToRotation() + godSlayerDashTime / 20f;
-                float radius = (30f + (float)Math.Cos(godSlayerDashTime / 3f) * 24f) * radiusFactor;
-                Vector2 ringPosition = Player.Center + Player.velocity * 0.8f;
-                ringPosition += offsetRotationAngle.ToRotationVector2().RotatedBy(i / 5f * MathHelper.TwoPi) * radius;
-                Dust ring = Dust.NewDustPerfect(ringPosition, Main.rand.NextBool(5) ? DustID.GiantCursedSkullBolt : DustID.CorruptTorch);
-                ring.noGravity = true;
-                ring.velocity = Player.velocity * 0.5f;
-                ring.scale = Main.rand.NextFloat(2.7f, 3f);
-                Dust trail = Dust.NewDustPerfect(Player.Center + new Vector2(Main.rand.NextFloat(-6f, 6f), Main.rand.NextFloat(-15f, 15f)) + Player.velocity * 0.5f
-                    , Main.rand.NextBool(14) ? DustID.DungeonSpirit : DustID.CorruptTorch, -Player.velocity.RotatedByRandom(MathHelper.ToRadians(30f)) * Main.rand.NextFloat(0.1f, 0.8f), 0, default, Main.rand.NextFloat(2.7f, 3.9f));
-                trail.noGravity = true;
-            }
-            float sparkScale = godSlayerDashSize * 1.3f;
-            Vector2 sparkVelocity = Player.velocity.RotatedBy(Player.direction * -4) * 0.08f - Player.velocity / 2f;
-            DRKLoader.AddParticle(new DRK_Spark(Player.Center + Player.velocity.RotatedBy(2f * Player.direction) * 1.2f, sparkVelocity, false, Main.rand.Next(11, 13), sparkScale, Main.rand.NextBool(3) ? Color.Aqua : Color.Fuchsia));
-            Vector2 sparkVelocity2 = Player.velocity.RotatedBy(Player.direction * 4) * 0.08f - Player.velocity / 2f;
-            DRKLoader.AddParticle(new DRK_Spark(Player.Center + Player.velocity.RotatedBy(-2f * Player.direction) * 1.2f, sparkVelocity2, false, Main.rand.Next(11, 13), sparkScale, Main.rand.NextBool(3) ? Color.Aqua : Color.Fuchsia));
-            if (godSlayerDashTime > 20 && godSlayerDashTime < 100)
-            {
-                GeneralParticleHandler.SpawnParticle(new DirectionalPulseRing(Player.Center - Player.velocity * 0.52f, Player.velocity / 1.5f, Color.Fuchsia
-                    , new Vector2(1f, 2f), Player.velocity.ToRotation(), 0.82f, 0.32f, 60));
-                GeneralParticleHandler.SpawnParticle(new DirectionalPulseRing(Player.Center - Player.velocity * 0.4f, Player.velocity / 1.5f * 0.9f, Color.Aqua
-                    , new Vector2(0.8f, 1.5f), Player.velocity.ToRotation(), 0.58f, 0.28f, 50));
-                godSlayerDashTime = 111;
-            }
+            GodSlayerDashVisuals(ref godSlayerDashTime, ref godSlayerDashSize);
             float runSpeed = Math.Max(Player.accRunSpeed, Player.maxRunSpeed);
             if (Player.velocity.Length() > DashMidSpeed)
                 Player.velocity *= DashSpeedDeceleration;
@@ -233,12 +213,158 @@ namespace CalamityDemutation.Players
                     godSlayerDashHitSounded = true;
                     SoundEngine.PlaySound(CalamityDemutationSounds.DevourerDeathImpact, Player.Center);
                 }
-                for (int i = 0; i <= 25; i++)
-                {
-                    Dust dust = Dust.NewDustPerfect(Player.position, Main.rand.NextBool(3) ? DustID.Electric : DustID.WitherLightning, Player.velocity.RotatedByRandom(MathHelper.ToRadians(15f)) * Main.rand.NextFloat(0.1f, 0.5f), 0, default, Main.rand.NextFloat(2.1f, 2.9f));
-                    dust.noGravity = false;
-                }
+                GodSlayerDashHitVisuals();
+                SendGodSlayerDashHitPacket();
             }
+        }
+        // ── 共用表现（本机与远端各跑一份） ──
+        /// <summary>
+        /// 冲刺起手的表现（1 个紫色脉冲环 + 16 颗暗紫尘），不含位移/冷却/音效句柄，本机与远端共用。
+        /// 尘的初速取玩家速度的反向，故调用时 Player.velocity 必须已是本次冲刺的速度。
+        /// </summary>
+        private void GodSlayerDashStartVisuals()
+        {
+            GeneralParticleHandler.SpawnParticle(new DirectionalPulseRing(Player.Center, Vector2.Zero, Color.Orchid
+                , new Vector2(2f, 2f), Main.rand.NextFloat(12f, 25f), 0.1f, 12f, 18));
+            for (int i = 0; i <= 15; i++)
+            {
+                Dust dust = Dust.NewDustPerfect(Player.position, DustID.GiantCursedSkullBolt, -Player.velocity.RotatedByRandom(MathHelper.ToRadians(35f)) * Main.rand.NextFloat(0.3f, 0.9f), 0, default, Main.rand.NextFloat(3.1f, 3.9f));
+                dust.noGravity = false;
+            }
+        }
+        /// <summary>
+        /// 冲刺的每帧表现（龙颚 → 环形尘环 + 随体尘 → 每帧 2 颗火花 → 第 21 帧两层脉冲环），
+        /// 不含音效跟随、垂直下落放宽与速度衰减，本机与远端共用：
+        /// 相位与龙颚缩放由 ref 传入（本机传自己的那套，远端传 remote 那套），中段脉冲后把相位推到 111 使其只触发一次。
+        /// </summary>
+        private void GodSlayerDashVisuals(ref int time, ref float size)
+        {
+            time++;
+            size -= 0.04f;
+            if (time < 20)
+            {
+                GeneralParticleHandler.SpawnParticle(new Jaws(Player.Center + Player.velocity * 0.5f, Player.velocity, Color.Fuchsia
+                    , new Vector2(0.8f, 1f), Player.velocity.ToRotation() + MathHelper.PiOver2, size, size, 2));
+                GeneralParticleHandler.SpawnParticle(new Jaws(Player.Center + Player.velocity * 0.45f, Player.velocity, Color.Aqua
+                    , new Vector2(0.8f, 1f), Player.velocity.ToRotation() + MathHelper.PiOver2, size - 0.3f, size - 0.3f, 2));
+            }
+            float radiusFactor = MathHelper.Lerp(0f, 1f, Utils.GetLerpValue(2f, 2.5f, time, true));
+            for (int i = 0; i < 9; i++)
+            {
+                float offsetRotationAngle = Player.velocity.ToRotation() + time / 20f;
+                float radius = (30f + (float)Math.Cos(time / 3f) * 24f) * radiusFactor;
+                Vector2 ringPosition = Player.Center + Player.velocity * 0.8f;
+                ringPosition += offsetRotationAngle.ToRotationVector2().RotatedBy(i / 5f * MathHelper.TwoPi) * radius;
+                Dust ring = Dust.NewDustPerfect(ringPosition, Main.rand.NextBool(5) ? DustID.GiantCursedSkullBolt : DustID.CorruptTorch);
+                ring.noGravity = true;
+                ring.velocity = Player.velocity * 0.5f;
+                ring.scale = Main.rand.NextFloat(2.7f, 3f);
+                Dust trail = Dust.NewDustPerfect(Player.Center + new Vector2(Main.rand.NextFloat(-6f, 6f), Main.rand.NextFloat(-15f, 15f)) + Player.velocity * 0.5f
+                    , Main.rand.NextBool(14) ? DustID.DungeonSpirit : DustID.CorruptTorch, -Player.velocity.RotatedByRandom(MathHelper.ToRadians(30f)) * Main.rand.NextFloat(0.1f, 0.8f), 0, default, Main.rand.NextFloat(2.7f, 3.9f));
+                trail.noGravity = true;
+            }
+            float sparkScale = size * 1.3f;
+            Vector2 sparkVelocity = Player.velocity.RotatedBy(Player.direction * -4) * 0.08f - Player.velocity / 2f;
+            DRKLoader.AddParticle(new DRK_Spark(Player.Center + Player.velocity.RotatedBy(2f * Player.direction) * 1.2f, sparkVelocity, false, Main.rand.Next(11, 13), sparkScale, Main.rand.NextBool(3) ? Color.Aqua : Color.Fuchsia));
+            Vector2 sparkVelocity2 = Player.velocity.RotatedBy(Player.direction * 4) * 0.08f - Player.velocity / 2f;
+            DRKLoader.AddParticle(new DRK_Spark(Player.Center + Player.velocity.RotatedBy(-2f * Player.direction) * 1.2f, sparkVelocity2, false, Main.rand.Next(11, 13), sparkScale, Main.rand.NextBool(3) ? Color.Aqua : Color.Fuchsia));
+            if (time > 20 && time < 100)
+            {
+                GeneralParticleHandler.SpawnParticle(new DirectionalPulseRing(Player.Center - Player.velocity * 0.52f, Player.velocity / 1.5f, Color.Fuchsia
+                    , new Vector2(1f, 2f), Player.velocity.ToRotation(), 0.82f, 0.32f, 60));
+                GeneralParticleHandler.SpawnParticle(new DirectionalPulseRing(Player.Center - Player.velocity * 0.4f, Player.velocity / 1.5f * 0.9f, Color.Aqua
+                    , new Vector2(0.8f, 1.5f), Player.velocity.ToRotation(), 0.58f, 0.28f, 50));
+                time = 111;
+            }
+        }
+        /// <summary>
+        /// 冲刺命中的表现（喷 26 颗电光/凋灵尘），不含伤害/减益/音效，本机与远端共用。
+        /// </summary>
+        private void GodSlayerDashHitVisuals()
+        {
+            for (int i = 0; i <= 25; i++)
+            {
+                Dust dust = Dust.NewDustPerfect(Player.position, Main.rand.NextBool(3) ? DustID.Electric : DustID.WitherLightning, Player.velocity.RotatedByRandom(MathHelper.ToRadians(15f)) * Main.rand.NextFloat(0.1f, 0.5f), 0, default, Main.rand.NextFloat(2.1f, 2.9f));
+                dust.noGravity = false;
+            }
+        }
+        // ── 远端玩家的冲刺表现（联机） ──
+        /// <summary>
+        /// 远端玩家的冲刺表现：本机不是该玩家主人，位移由原版玩家网络同步负责、命中由主人那边结算，
+        /// 这里只按收到的 MsgGodSlayerDash / MsgGodSlayerDashHit 跑视觉。冲刺固定 25 帧，跑满即收尾。
+        /// </summary>
+        private void GodSlayerDashRemoteVisuals()
+        {
+            if (remoteGodSlayerDashElapsed <= 0)
+                return;
+            // 该玩家中途死亡/离场就直接收尾，不要对着残影继续喷尘
+            if (!Player.active || Player.dead)
+            {
+                remoteGodSlayerDashElapsed = 0;
+                return;
+            }
+            if (SoundEngine.TryGetActiveSound(remoteGodSlayerDashSoundSlot, out var dashSound) && dashSound.IsPlaying)
+                dashSound.Position = Player.Center;
+            GodSlayerDashVisuals(ref remoteGodSlayerDashTime, ref remoteGodSlayerDashSize);
+            if (++remoteGodSlayerDashElapsed > DashDuration)
+                remoteGodSlayerDashElapsed = 0;
+        }
+        /// <summary>
+        /// 收到其他玩家的弑神者冲刺开始消息（由主类 CalamityDemutation.HandlePacket 分流过来）：
+        /// 播起手音效与起手表现，并从第一帧开始跑视觉。不含位移、冷却与无敌帧。
+        /// </summary>
+        public void ReceiveGodSlayerDash()
+        {
+            remoteGodSlayerDashElapsed = 1;
+            remoteGodSlayerDashTime = 0;
+            remoteGodSlayerDashSize = DashJawsStartSize;
+            remoteGodSlayerDashHitSounded = false;
+            remoteGodSlayerDashSoundSlot = SoundEngine.PlaySound(CalamityDemutationSounds.DevourerDeath, Player.Center);
+            GodSlayerDashStartVisuals();
+        }
+        /// <summary>
+        /// 收到其他玩家的弑神者冲刺命中消息：在对方身上刷一遍命中尘，本次冲刺的首次命中还会播冲击音效。
+        /// 伤害与减益由主人那边的 ApplyDamageToNPC 与 NPC.AddBuff 自己同步，这里不重复做。
+        /// </summary>
+        public void ReceiveGodSlayerDashHit()
+        {
+            GodSlayerDashHitVisuals();
+            if (!remoteGodSlayerDashHitSounded)
+            {
+                remoteGodSlayerDashHitSounded = true;
+                SoundEngine.PlaySound(CalamityDemutationSounds.DevourerDeathImpact, Player.Center);
+            }
+        }
+        /// <summary>
+        /// 广播本机弑神者冲刺的开始（冲刺固定 25 帧，故不需要结束包）。
+        /// 主机自己就近广播给其他客户端；纯客户端发给服务端、由服务端代播给其余客户端。单人游戏不发包。
+        /// </summary>
+        private void SendGodSlayerDashPacket()
+        {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+            ModPacket packet = Mod.GetPacket();
+            packet.Write(MsgGodSlayerDash);
+            packet.Write((byte)Player.whoAmI);
+            if (Main.netMode == NetmodeID.Server)
+                packet.Send(-1, Player.whoAmI);
+            else
+                packet.Send();
+        }
+        /// <summary>
+        /// 广播本机弑神者冲刺的一次命中。载荷只需玩家索引：命中表现是喷在冲刺者身上的尘，与具体敌人无关。
+        /// </summary>
+        private void SendGodSlayerDashHitPacket()
+        {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+            ModPacket packet = Mod.GetPacket();
+            packet.Write(MsgGodSlayerDashHit);
+            packet.Write((byte)Player.whoAmI);
+            if (Main.netMode == NetmodeID.Server)
+                packet.Send(-1, Player.whoAmI);
+            else
+                packet.Send();
         }
         /// <summary>
         /// 冲刺期间阻拦原版冲刺（照抄灾厄 ForceVariousEffects 的做法）：

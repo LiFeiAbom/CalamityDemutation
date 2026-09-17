@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.knockBack = 7.5f;                 // 击退力
             Item.UseSound = SoundID.Item60;        // 挥砍音效
             Item.autoReuse = true;                 // 长按可自动连续挥砍
-            Item.value = Item.buyPrice(13, 53, 75, 0);   // 价值 13 铂金 53 金 75 银
+            Item.value = Item.buyPrice(1, 50, 75, 10);   // 价值 1 铂金 50 金 75 银 10 铜
             Item.rare = ItemRarityID.Red;                // 基础稀有度红色
             Item.crit = 8;                               // 额外暴击率 +8%
             Item.shoot = ModContent.ProjectileType<NeutronGlaiveBeam>();  // 挥砍时发射的弹幕

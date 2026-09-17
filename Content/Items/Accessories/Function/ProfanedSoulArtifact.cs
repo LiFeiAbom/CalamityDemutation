@@ -77,7 +77,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
         }
         // ── 护盾可见表现 ──
         /// <summary>
-        /// 加载时把护盾绘制挂到 AfterProjectiles 绘制层（灾厄原版用 IL 钩子把护盾画在 Inferno Ring 之前）
+        /// 加载时把护盾绘制挂到 AfterPlayers 绘制层（玩家之后，对齐灾厄；灾厄原版用 IL 钩子把护盾画在 Inferno Ring 之前）
         /// </summary>
         public override void Load()
         {
@@ -91,14 +91,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
             GeneralDrawLayerSystem.OnDrawLayer -= DrawShieldOnLayer;
         }
         /// <summary>
-        /// 在 AfterProjectiles 层为护盾可见的玩家绘制亵渎护罩，视觉与灾厄一致：
+        /// 在 AfterPlayers 层（玩家绘制之后）为护盾可见的玩家绘制亵渎护罩，视觉与灾厄一致：
         /// 第一段用 RoverDriveShield 着色器把 Neurons2 噪声贴图扭曲成护罩气泡，
         /// 第二段把 GreyscaleOpenCircle 边框圆叠四层做双环发光。
         /// 与灾厄的区别：强度改由本工程护盾耐久占比驱动（并开方）；护盾的耐久/回充冷却条由 Systems/Cooldowns 那套 UI 负责。
         /// </summary>
         private static void DrawShieldOnLayer(GeneralDrawLayer layer)
         {
-            if (layer != GeneralDrawLayer.AfterProjectiles)
+            if (layer != GeneralDrawLayer.AfterPlayers)
                 return;
             Asset<Effect> shaderAsset = EffectLoader.RoverDriveShieldShader;
             if (shaderAsset == null || !shaderAsset.IsLoaded)
