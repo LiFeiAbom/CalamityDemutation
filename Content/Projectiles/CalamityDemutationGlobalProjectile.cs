@@ -1,7 +1,7 @@
 ﻿using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Buffs.PositiveBuffs;
 using CalamityDemutation.Content.Buffs.SummonBuffs;
-using CalamityDemutation.Content.Items.Accessories.Function;
+using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Projectiles.Healing;
 using CalamityDemutation.Content.Projectiles.Melee;

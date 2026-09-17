@@ -9,7 +9,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories.Function
+namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 亵渎之魂水晶（Profaned Soul Crystal） - 亵渎之魂神器的上位召唤饰品（移植自灾厄 2.2.2，本步做骨架数值 + 变身外观视觉层）。
@@ -81,7 +81,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
         {
             if (Main.netMode == NetmodeID.Server)
                 return;
-            const string path = "CalamityDemutation/Content/Items/Accessories/Function/";
+            const string path = "CalamityDemutation/Content/Items/Accessories/Comprehensive/";
             EquipLoader.AddEquipTexture(Mod, path + "ProfanedSoulTrans_Head", EquipType.Head, this, Name);    // 白天头（EquipName = 物品 Name）
             EquipLoader.AddEquipTexture(Mod, path + "ProfanedSoulTrans_Body", EquipType.Body, this, Name);    // 白天身体（夜晚继续沿用）
             EquipLoader.AddEquipTexture(Mod, path + "ProfanedSoulTrans_Legs", EquipType.Legs, this, Name);    // 白天腿

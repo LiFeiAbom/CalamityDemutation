@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using CalamityDemutation.Content.Items.Accessories.Function;
+using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;

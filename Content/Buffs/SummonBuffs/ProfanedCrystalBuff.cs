@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Content.Items.Accessories.Function;
+﻿using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;

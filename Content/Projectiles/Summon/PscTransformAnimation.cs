@@ -1,5 +1,5 @@
 ﻿using System;
-using CalamityDemutation.Content.Items.Accessories.Function;
+using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using CalamityDemutation.Particles;

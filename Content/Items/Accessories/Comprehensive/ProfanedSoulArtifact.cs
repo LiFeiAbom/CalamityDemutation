@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories.Function
+namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 亵渎之魂神器（Profaned Soul Artifact） - 召唤向综合饰品（移植自灾厄 2.2.2，护盾为自实现替代）

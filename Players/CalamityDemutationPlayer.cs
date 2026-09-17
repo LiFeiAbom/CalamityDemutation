@@ -192,6 +192,7 @@ namespace CalamityDemutation.Players
         public bool archaicPowder = false;
         public bool armorCrumbling = false;
         public bool armorShattering = false;
+        public bool asgardsValor = false;
         public bool auricBoost = false;
         public bool auricSet = false;
         /// <summary>
@@ -417,6 +418,7 @@ namespace CalamityDemutation.Players
         public bool omegaBlueSet = false;
         public bool omegaBlueHentai = false;
         public int omegaBlueCooldown = 0;
+        public bool ornateShield = false;
         public bool photosynthesis = false;
         public bool psychoticAmulet = false;
         public bool profanedRage = false;
@@ -450,6 +452,7 @@ namespace CalamityDemutation.Players
         /// 龟壳爆发（ShellBoost 正面增益）激活标记：受击后置位，提供 +90% 移速
         /// </summary>
         public bool shellBoost = false;
+        public bool shieldoftheOcean = false;
         /// <summary>
         /// 已装备灾厄符印：+15% 魔法伤害/+10% 魔法暴击、+100 魔力上限、魔力消耗 ×0.85，
         /// 附带寻宝与药剂效果
@@ -669,6 +672,7 @@ namespace CalamityDemutation.Players
             archaicPowder = false;
             armorCrumbling = false;
             armorShattering = false;
+            asgardsValor = false;
             auricBoost = false;
             auricSet = false;
             badgeOfBravery = false;
@@ -733,6 +737,7 @@ namespace CalamityDemutation.Players
             omegaBlueChestplate = false;
             omegaBlueSet = false;
             omegaBlueHentai = false;
+            ornateShield = false;
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
@@ -762,6 +767,7 @@ namespace CalamityDemutation.Players
             shellBoost = false;
             shadeRegen = false;
             shadowSpeed = false;
+            shieldoftheOcean = false;
             shieldSlamDash = ShieldSlamDash.None;
             sigilofCalamitas = false;
             silvaMelee = false;
@@ -804,6 +810,7 @@ namespace CalamityDemutation.Players
             archaicPowder = false;
             armorCrumbling = false;
             armorShattering = false;
+            asgardsValor = false;
             auricBoost = false;
             auricSet = false;
             beeResist = false;
@@ -875,6 +882,7 @@ namespace CalamityDemutation.Players
             omegaBlueChestplate = false;
             omegaBlueSet = false;
             omegaBlueCooldown = 0;
+            ornateShield = false;
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
@@ -899,6 +907,7 @@ namespace CalamityDemutation.Players
             shadeRegen = false;
             shadowSpeed = false;
             shellBoost = false;
+            shieldoftheOcean = false;
             shieldSlamDash = ShieldSlamDash.None;
             shieldSlamDashElapsed = 0;
             sigilofCalamitas = false;
@@ -2418,7 +2427,7 @@ namespace CalamityDemutation.Players
                         Main.dust[num].noGravity = true;
                         Main.dust[num].scale *= 1f + (float)Main.rand.Next(40) * 0.01f;
                         Main.dust[num].shader = GameShaders.Armor.GetSecondaryShader(Player.cWaist, Player);
-                        if (Main.rand.Next(2) == 0)
+                        if (Main.rand.NextBool(2))
                         {
                             Main.dust[num].scale *= 1f + (float)Main.rand.Next(40) * 0.01f;
                         }
@@ -2861,6 +2870,59 @@ namespace CalamityDemutation.Players
                     cooldowns.Remove(expiredID);
             }
             RevertCalamityContentNerfs();
+            if(ornateShield)
+            {
+                Player.dashType = 0;
+                Player.lifeRegen += 8;
+                Player.statLifeMax2 += 20;
+                if(Player.statLife < (int)(Player.statLifeMax2 * 0.25))
+                {
+                    Player.statDefense += 8;
+                }
+            }
+            if(shieldoftheOcean)
+            {
+                if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
+                {
+                    Player.statDefense += 5;
+                }
+            }
+            if(asgardsValor)
+            {
+                Player.dashType = 0;
+                Player.noKnockback = true;
+                Player.fireWalk = true;
+                Player.statLifeMax2 += 50;
+                Player.buffImmune[BuffID.Chilled] = true;
+                Player.buffImmune[BuffID.Frostburn] = true;
+                Player.buffImmune[BuffID.Frostburn2] = true;
+                Player.buffImmune[BuffID.Frozen] = true;
+                Player.buffImmune[BuffID.Weak] = true;
+                Player.buffImmune[BuffID.BrokenArmor] = true;
+                Player.buffImmune[BuffID.Bleeding] = true;
+                Player.buffImmune[BuffID.Poisoned] = true;
+                Player.buffImmune[BuffID.Slow] = true;
+                Player.buffImmune[BuffID.Confused] = true;
+                Player.buffImmune[BuffID.Silenced] = true;
+                Player.buffImmune[BuffID.Cursed] = true;
+                Player.buffImmune[BuffID.Darkness] = true;
+                Player.buffImmune[BuffID.WindPushed] = true;
+                Player.buffImmune[BuffID.Stoned] = true;
+                Player.buffImmune[BuffID.Daybreak] = true;
+                Player.buffImmune[BuffID.OnFire] = true;
+                Player.buffImmune[BuffID.OnFire3] = true;
+                // 走 AddCalamityBuffImmune（内部 TryFind + 缓存），对应模组缺该名时静默跳过而不是抛异常
+                AddCalamityBuffImmune(Player, "CalamityMod", "SearingLava");
+                AddCalamityBuffImmune(Player, "CalamityMod", "HolyFlames");
+                AddCalamityBuffImmune(Player, "CalamityMod", "BrimstoneFlames");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "GlacialState");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "HolyLight");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "BrimstoneFlames");
+                if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
+                {
+                    Player.endurance += 0.12f;
+                }
+            }
         }
         // ── 还原灾厄内容削弱 ──
         /// <summary>

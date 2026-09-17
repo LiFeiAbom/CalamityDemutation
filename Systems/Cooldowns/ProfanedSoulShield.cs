@@ -1,5 +1,5 @@
 ﻿using System;
-using CalamityDemutation.Content.Items.Accessories.Function;
+using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Effects;
 using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;

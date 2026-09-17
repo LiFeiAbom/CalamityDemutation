@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CalamityDemutation.Content.Buffs.SummonBuffs;
-using CalamityDemutation.Content.Items.Accessories.Function;
+using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
