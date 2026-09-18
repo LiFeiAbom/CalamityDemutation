@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 namespace CalamityDemutation.Utilities
@@ -436,6 +437,32 @@ namespace CalamityDemutation.Utilities
         public static Vector2 UnitVector(this Vector2 vr)
         {
             return vr.SafeNormalize(Vector2.Zero);
+        }
+        /// <summary>
+        /// 弹幕齐射（移植自灾厄 CalamityUtils.ProjectileBarrage）：在 originVec 附近的随机点生成一颗弹幕并射向 targetPos。
+        /// 生成点：X 偏移取 [xOffsetMin, xOffsetMax] 的随机值、正负由 fromRight 决定（它只是符号，不是真的"从右侧"）；
+        /// Y 偏移取 [yOffsetMin, yOffsetMax] 的随机值、正负再随机一次，故上下都会出。
+        /// 速度：先按目标方向求出向量、加 inaccuracyOffset 抖动，单位化后乘 projSpeed。
+        /// clamped 为 true 时速度先 ×150、再把两个分量各自夹在 ±15 内——形成"只能沿近似斜向飞且打不准"的散射观感
+        /// （灾厄的 InfernalBlade / LiquidBlade / AstralPikeProj 都用这个口径）。
+        /// </summary>
+        /// <returns>生成出的弹幕实例</returns>
+        public static Projectile ProjectileBarrage(IEntitySource source, Vector2 originVec, Vector2 targetPos, bool fromRight, float xOffsetMin, float xOffsetMax, float yOffsetMin, float yOffsetMax, float projSpeed, int projType, int damage, float knockback, int owner, bool clamped = false, float inaccuracyOffset = 5f)
+        {
+            float xPos = originVec.X + Main.rand.NextFloat(xOffsetMin, xOffsetMax) * fromRight.ToDirectionInt();
+            float yPos = originVec.Y + Main.rand.NextFloat(yOffsetMin, yOffsetMax) * Main.rand.NextBool().ToDirectionInt();
+            Vector2 spawnPosition = new Vector2(xPos, yPos);
+            Vector2 velocity = targetPos - spawnPosition;
+            velocity.X += Main.rand.NextFloat(-inaccuracyOffset, inaccuracyOffset);
+            velocity.Y += Main.rand.NextFloat(-inaccuracyOffset, inaccuracyOffset);
+            velocity.Normalize();
+            velocity *= projSpeed * (clamped ? 150f : 1f);
+            if (clamped)
+            {
+                velocity.X = MathHelper.Clamp(velocity.X, -15f, 15f);
+                velocity.Y = MathHelper.Clamp(velocity.Y, -15f, 15f);
+            }
+            return Projectile.NewProjectileDirect(source, spawnPosition, velocity, projType, damage, knockback, owner);
         }
     }
 }

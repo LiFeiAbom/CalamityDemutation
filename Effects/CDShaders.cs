@@ -39,6 +39,14 @@ namespace CalamityDemutation.Effects
         /// 冷却机架 UI 在展开模式下用 uColor/uSecondaryColor 按完成度画出环形进度
         /// </summary>
         internal static Asset<Effect> CircularBarShader;
+        /// <summary>
+        /// 元素王者激光着色器（原灾厄 ArtemisLaser，TrailPass）：ElementalExcaliburRay 沿激光线拉出光束时使用
+        /// </summary>
+        internal static Asset<Effect> ArtemisLaserShader;
+        /// <summary>
+        /// 元素王者魔力阵着色器（原灾厄 ExoVortex，VortexPass）：ElementalExcaliburMagicCircle 绘制噪声法阵时使用
+        /// </summary>
+        internal static Asset<Effect> ExoVortexShader;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
@@ -59,6 +67,11 @@ namespace CalamityDemutation.Effects
             // 环形冷却进度条：与灾厄 CalamityShaders 的注册方式一致，第二参数取 .fx 里的 pass 名（Pass0）
             CircularBarShader = LoadShader("CircularBarShader");
             RegisterMiscShader(CircularBarShader, "Pass0", "CircularBarShader");
+            // 元素王者之剑系列：激光光束（TrailPass）与魔力阵噪声（VortexPass）
+            ArtemisLaserShader = LoadShader("ArtemisLaserShader");
+            RegisterMiscShader(ArtemisLaserShader, "TrailPass", "ArtemisLaser");
+            ExoVortexShader = LoadShader("ExoVortexShader");
+            RegisterMiscShader(ExoVortexShader, "VortexPass", "ExoVortex");
         }
         /// <summary>
         /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
@@ -71,9 +84,13 @@ namespace CalamityDemutation.Effects
             GameShaders.Misc.Remove($"{ShaderPrefix}HeavenlyGaleTrail");
             GameShaders.Misc.Remove($"{ShaderPrefix}StandardPrimitiveShader");
             GameShaders.Misc.Remove(CircularBarShaderName);
+            GameShaders.Misc.Remove($"{ShaderPrefix}ArtemisLaser");
+            GameShaders.Misc.Remove($"{ShaderPrefix}ExoVortex");
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
             CircularBarShader = null;
+            ArtemisLaserShader = null;
+            ExoVortexShader = null;
         }
         // ── 私有工具 ──
         /// <summary>

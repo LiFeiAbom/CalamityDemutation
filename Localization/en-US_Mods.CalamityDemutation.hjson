@@ -745,6 +745,16 @@ Items: {
 			'''
 	}
 
+	ElementalExcalibur: {
+		DisplayName: Elemental Excalibur
+		Tooltip:
+			'''
+			True melee strikes freeze enemies and heal you
+			Fires rainbow beams that change their behavior based on their color
+			Right click to charge and unleash an Elemental Excalibur laser
+			'''
+	}
+
 	ElementalGauntlet: {
 		DisplayName: Elemental Gauntlet
 		Tooltip:
@@ -1638,6 +1648,10 @@ Projectiles: {
 	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PoisonousSeawater.DisplayName: Poisonous Seawater
+	ElementalExcaliburBreakerHoldout.DisplayName: Elemental Excalibur
+	ElementalExcaliburMagicCircle.DisplayName: Elemental Excalibur Magic Circle
+	ElementalExcaliburRay.DisplayName: Elemental Excalibur Ray
+	ElementalExcaliburWave.DisplayName: Elemental Excalibur Wave
 	RedDevil.DisplayName: Red Devil
 	SandBolt.DisplayName: Bolt
 	SandMark.DisplayName: Mark
@@ -1669,6 +1683,7 @@ Projectiles: {
 	ProfanedCrystalWhip.DisplayName: Profaned Crystal Whip
 	PscTransformAnimation.DisplayName: Psc Transform Animation
 	PscTransformRocks.DisplayName: Psc Transform Rocks
+	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
 }
 
 Systems: {
