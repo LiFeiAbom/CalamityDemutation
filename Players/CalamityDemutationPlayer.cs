@@ -146,6 +146,15 @@ namespace CalamityDemutation.Players
             BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
         // ── 实例字段 ──
         /// <summary>
+        /// 已装备阿巴顿（Abaddon）：+8% 通用暴击，暴击命中时炸出硫磺爆炸，并免疫硫磺火减益。
+        /// 灾厄原版第三条是"大幅降低硫磺火 DoT 伤害"（30 → 10），本工程按用户口径改成完全免疫。
+        /// </summary>
+        public bool abaddon = false;
+        /// <summary>
+        /// 阿巴顿暴击爆炸的冷却（帧）：触发一次置 15，每帧递减（跨帧计时器，只在 UpdateDead 复位）
+        /// </summary>
+        public int abaddonCritCooldown = 0;
+        /// <summary>
         /// 已装备风之石：+10% 移速、+2 跳跃力、+3% 通用增伤，青色照明
         /// </summary>
         public bool aeroStone = false;
@@ -661,6 +670,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void ResetEffects()
         {
+            abaddon = false;
             aeroStone = false;
             afflicted = false;
             affliction = false;
@@ -799,6 +809,8 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void UpdateDead()
         {
+            abaddon = false;
+            abaddonCritCooldown = 0;
             aeroStone = false;
             afflicted = false;
             affliction = false;
@@ -1891,6 +1903,13 @@ namespace CalamityDemutation.Players
                 }
             }
             // 炼狱：每 600 帧（10 秒）从高空向玩家瞄准方向齐射一轮扇形地狱火流星雨
+            // 阿巴顿：+8% 通用暴击，免疫硫磺火减益（走双版本软依赖查找）
+            if (abaddon)
+            {
+                Player.GetCritChance<GenericDamageClass>() += 8;
+                AddCalamityBuffImmune(Player, "CalamityMod", "BrimstoneFlames");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "BrimstoneFlames");
+            }
             if (gehenna)
             {
                 // 首次装备将倒计时初始化为 600，之后每帧递减，归零即发射
@@ -2550,6 +2569,8 @@ namespace CalamityDemutation.Players
             }
             if (godSlayerMeleefireCD > 0)
                 godSlayerMeleefireCD--;
+            if (abaddonCritCooldown > 0)
+                abaddonCritCooldown--;
             if (frostBarrier)
             {
                 Player.buffImmune[46] = true;
@@ -4618,6 +4639,14 @@ namespace CalamityDemutation.Players
                 target.AddBuff(ModContent.BuffType<SilvaHysteresis>(), 20);
             Player player = Main.player[proj.owner];
             int weaponDamage = player.HeldItem.damage;
+            // 阿巴顿：暴击命中时在敌人中心炸出硫磺爆炸（与灾厄一致只在弹幕命中分支触发，真近战命中的 item 分支不触发）
+            // 伤害 = 触发弹幕基础伤害的 3%，经软上限折算（上限 25）；15 帧冷却
+            if (abaddon && hit.Crit && abaddonCritCooldown <= 0)
+            {
+                abaddonCritCooldown = 15;
+                int abaddonDamage = DamageSoftCap(proj.damage * 0.03f, 25);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<AbaddonCrit>(), abaddonDamage, 0f, Player.whoAmI);
+            }
             //弑神飞镖
             if (godSlayerMelee && godSlayerMeleefireCD <= 0 && (proj.CountsAsClass<MeleeDamageClass>() || proj.CountsAsClass<MeleeNoSpeedDamageClass>()))
             {
@@ -4828,6 +4857,18 @@ namespace CalamityDemutation.Players
             return false;
         }
         // ── 私有工具 ──
+        /// <summary>
+        /// 伤害软上限（内联灾厄 CalamityUtils.DamageSoftCap）：未超上限时原样返回；
+        /// 超过后按 sqrt(超出倍数)/1.25 + 0.2 折算，抑制超模伤害线性堆叠（阿巴顿暴击爆炸用，上限 25）。
+        /// </summary>
+        private static int DamageSoftCap(double dmgInput, int cap)
+        {
+            if (dmgInput < cap)
+                return (int)dmgInput;
+            double overpoweredRatio = dmgInput / cap;
+            double cappedRatio = Math.Pow(overpoweredRatio, 0.5) / 1.25 + 0.2;
+            return (int)(cap * cappedRatio);
+        }
         /// <summary>
         /// 移植自灾厄的 areThereAnyDamnBosses（影之再生据此选择回血速率）：判定场上是否正有 Boss 存活。
         /// 口径取灾厄两版本 AnyBossNPCS() 的并集——npc.boss（排除日耀飞碟核心）、世界吞噬者的头/身/尾，

@@ -256,6 +256,16 @@ Configs: {
 }
 
 Items: {
+	Abaddon: {
+		DisplayName: Abaddon
+		Tooltip:
+			'''
+			8% increased critical strike chance
+			Critical strikes explode, causing nearby enemies to ignite with Brimstone Flames
+			Grants immunity to Brimstone Flames
+			'''
+	}
+
 	AeroStone: {
 		Tooltip:
 			'''
@@ -1514,6 +1524,7 @@ Keybinds: {
 }
 
 Projectiles: {
+	AbaddonCrit.DisplayName: Brimstone Blast
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
 	BaseHeldProjCO.DisplayName: Base Held Proj C O

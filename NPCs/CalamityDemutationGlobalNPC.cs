@@ -101,6 +101,10 @@ namespace CalamityDemutation.NPCs
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<BladecrestOathsword>(), 25, 20));
             }
+            else if (npc.type == NPCID.RedDevil)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<Abaddon>(), 12, 7));
+            }
             else if (npc.type == NPCID.BoneSerpentHead)
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<OldLordOathsword>(), 25, 20));

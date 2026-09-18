@@ -256,6 +256,16 @@ Configs: {
 }
 
 Items: {
+	Abaddon: {
+		DisplayName: 阿巴顿
+		Tooltip:
+			'''
+			暴击率提高 8%
+			暴击时产生爆炸，使附近敌人燃起硫磺火
+			免疫硫磺火减益
+			'''
+	}
+
 	AeroStone: {
 		Tooltip:
 			'''
@@ -1514,6 +1524,7 @@ Keybinds: {
 }
 
 Projectiles: {
+	AbaddonCrit.DisplayName: 硫磺爆裂
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
 	BaseHeldProjCO.DisplayName: 手持弹幕基类
