@@ -525,6 +525,11 @@ Items: {
 		DisplayName: Bloom Stone
 	}
 
+	BrokenHilt: {
+		DisplayName: Broken Hilt
+		Tooltip: "[c/c4ff3b:An unremarkable, rotting handle...]"
+	}
+
 	CalamityRing: {
 		DisplayName: Calamity Ring
 		Tooltip:
@@ -1606,6 +1611,7 @@ Projectiles: {
 	BloodyBlade.DisplayName: Bloody Blade
 	BrimstoneHellfireballFriendly.DisplayName: Hellfire
 	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
+	BrokenHiltHeld.DisplayName: Broken Hilt
 	CactusHealOrb.DisplayName: Heal
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
 	CloudyWaifu.DisplayName: Cloudy Waifu

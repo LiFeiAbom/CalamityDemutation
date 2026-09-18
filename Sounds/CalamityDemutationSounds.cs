@@ -32,5 +32,7 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle TeslaCannonFire = new("CalamityDemutation/Sounds/Item/TeslaCannonFire");
         /// <summary>永世之刃冲刺撞击（ExobladeDashImpact）：元素王者激光命中时播放（灾厄原为 PrismaticRay.HitSound）</summary>
         public static readonly SoundStyle ExobladeDashImpact = new("CalamityDemutation/Sounds/Item/ExobladeDashImpact") { Volume = 0.8f };
+        /// <summary>破碎剑柄挥砍（HiltAttack）：分形系列 BrokenHilt 每次挥砍播放（CE 原为 CEUtils.PlaySound("HiltAttack")）</summary>
+        public static readonly SoundStyle HiltAttack = new("CalamityDemutation/Sounds/Item/HiltAttack");
     }
 }

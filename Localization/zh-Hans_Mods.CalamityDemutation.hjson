@@ -525,6 +525,11 @@ Items: {
 		DisplayName: 繁花石
 	}
 
+	BrokenHilt: {
+		DisplayName: 破碎剑柄
+		Tooltip: "[c/c4ff3b:远古神剑的一部分]"
+	}
+
 	CalamityRing: {
 		DisplayName: 灾厄之环
 		Tooltip:
@@ -1606,6 +1611,7 @@ Projectiles: {
 	BloodyBlade.DisplayName: 血刃
 	BrimstoneHellfireballFriendly.DisplayName: 地狱火
 	BrimstoneHellfireballFriendly2.DisplayName: 硫磺地狱火球 2
+	BrokenHiltHeld.DisplayName: 破碎剑柄
 	CactusHealOrb.DisplayName: 治疗
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
 	CloudyWaifu.DisplayName: 云元素
