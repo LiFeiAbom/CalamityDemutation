@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Particles.Core
     /// 2) PostUpdateEverything 每帧驱动全部粒子：叠加速度、累加存活时间、调用粒子 AI，并回收寿命耗尽或被 Kill 的粒子。
     /// 3) DrawAll 按混合模式（AlphaBlend / NonPremultiplied / Additive）分组批量绘制，避免逐粒子切换渲染状态。
     /// 粒子上限由 CalamityDemutationConstant.MaxParticleCount（10000）控制，超限时忽略非 Important 粒子。
-    /// 注：类名与 CWR* 字段名沿用旧版移植（CWR 系列已废弃），仅作为容器保留。
+    /// 注：类名与部分成员名沿用旧版移植（CWR 系列已废弃），仅作为容器保留。
     /// </summary>
     internal class DRKLoader : ModSystem
     {
@@ -35,9 +35,9 @@ namespace CalamityDemutation.Content.Particles.Core
         /// </summary>
         private static List<BaseParticle> batched_NonPremultiplied_DRK;
         /// <summary>
-        /// 旧版移植遗留容器（当前无读写方，仅保留字段名以对齐 CWR）
+        /// 旧版移植遗留容器（当前无读写方）
         /// </summary>
-        internal static List<BaseParticle> CWRParticleCoreInds;
+        internal static List<BaseParticle> ParticleCoreInds;
         /// <summary>
         /// 类型 ID → 贴图资源
         /// </summary>
@@ -64,7 +64,7 @@ namespace CalamityDemutation.Content.Particles.Core
             particlesToKill = [];
             ParticleTypesDic = [];
             ParticleIDToTexturesDic = [];
-            CWRParticleCoreInds = [];
+            ParticleCoreInds = [];
             batched_AlphaBlend_DRK = [];
             batched_NonPremultiplied_DRK = [];
             batched_AdditiveBlend_DRK = [];
@@ -72,7 +72,7 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<DRK_HeavenfallStar>();
             RegisterParticle<FlameParticle>();
             RegisterParticle<ManaDrainStreak>();
-            On_Main.DrawInfernoRings += CWRDrawForegroundParticles;
+            On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
         /// <summary>
         /// 每帧在世界更新完毕后驱动一次粒子系统（内部调用 Update）。
@@ -87,11 +87,11 @@ namespace CalamityDemutation.Content.Particles.Core
             particlesToKill = null;
             ParticleTypesDic = null;
             ParticleIDToTexturesDic = null;
-            CWRParticleCoreInds = null;
+            ParticleCoreInds = null;
             batched_AlphaBlend_DRK = null;
             batched_NonPremultiplied_DRK = null;
             batched_AdditiveBlend_DRK = null;
-            On_Main.DrawInfernoRings -= CWRDrawForegroundParticles;
+            On_Main.DrawInfernoRings -= DrawForegroundParticles;
         }
         // ── 公开方法 ──
         /// <summary>
@@ -114,7 +114,7 @@ namespace CalamityDemutation.Content.Particles.Core
         /// <summary>
         /// 挂在 On_Main.DrawInfernoRings 上的绘制钩子：先绘制所有粒子，再执行原版方法。
         /// </summary>
-        public static void CWRDrawForegroundParticles(Terraria.On_Main.orig_DrawInfernoRings orig, Main self)
+        public static void DrawForegroundParticles(Terraria.On_Main.orig_DrawInfernoRings orig, Main self)
         {
             DrawAll(Main.spriteBatch);
             orig(self);

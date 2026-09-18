@@ -215,7 +215,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// <summary>
         /// 挥舞索引（存于 ModPlayer，用于区分同一玩家连续的多段挥舞）
         /// </summary>
-        public ref int SwingIndex => ref Owner.CWR().SwingIndex;
+        public ref int SwingIndex => ref Owner.CD().SwingIndex;
         /// <summary>
         /// 刀光贴图
         /// </summary>

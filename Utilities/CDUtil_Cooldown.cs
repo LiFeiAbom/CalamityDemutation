@@ -20,7 +20,7 @@ namespace CalamityDemutation.Utilities
         {
             if (p is null)
                 return false;
-            CalamityDemutationPlayer modPlayer = p.CWR();
+            CalamityDemutationPlayer modPlayer = p.CD();
             return !(modPlayer is null) && modPlayer.cooldowns.ContainsKey(id);
         }
         /// <summary>
@@ -32,7 +32,7 @@ namespace CalamityDemutation.Utilities
             var cd = CooldownRegistry.Get(id);
             CooldownInstance instance = new CooldownInstance(p, cd, duration);
             if (!p.HasCooldown(id) || overwrite)
-                p.CWR().cooldowns[id] = instance;
+                p.CD().cooldowns[id] = instance;
             return instance;
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Utilities
             var cd = CooldownRegistry.Get(id);
             CooldownInstance instance = new CooldownInstance(p, cd, duration, handlerArgs);
             if (!p.HasCooldown(id) || overwrite)
-                p.CWR().cooldowns[id] = instance;
+                p.CD().cooldowns[id] = instance;
             return instance;
         }
         /// <summary>
@@ -53,7 +53,7 @@ namespace CalamityDemutation.Utilities
         /// </summary>
         public static void ClearCooldown(this Player p, string id)
         {
-            p.CWR().cooldowns.Remove(id);
+            p.CD().cooldowns.Remove(id);
         }
         /// <summary>
         /// 取出玩家身上所有需要显示的冷却实例（handler.ShouldDisplay 为 true 的项）
@@ -63,7 +63,7 @@ namespace CalamityDemutation.Utilities
             List<CooldownInstance> ret = new List<CooldownInstance>(16);
             if (p is null)
                 return ret;
-            foreach (CooldownInstance instance in p.CWR().cooldowns.Values)
+            foreach (CooldownInstance instance in p.CD().cooldowns.Values)
                 if (instance.handler.ShouldDisplay)
                     ret.Add(instance);
             return ret;

@@ -10,7 +10,7 @@ namespace CalamityDemutation.Utilities
 {
     /// <summary>
     /// 通用工具类（挥砍武器部分）：提供 BaseSwingCO 所需的纹理/帧动画/向量扩展，
-    /// 以及 CWR()/Calamity() 的软依赖等价扩展（返回本模组自身的 ModPlayer/GlobalProjectile）。
+    /// 以及 CD() 的软依赖等价扩展（返回本模组自身的 ModPlayer/GlobalProjectile）。
     /// </summary>
     internal static partial class CDUtil
     {
@@ -37,16 +37,16 @@ namespace CalamityDemutation.Utilities
             }
         }
         /// <summary>
-        /// 获取本模组玩家数据（对应 CWR 的 Player.CWR()，承载 SwingIndex 等挥砍状态）
+        /// 获取本模组玩家数据（承载 SwingIndex 等挥砍状态），形态对齐灾厄的 Player.Calamity()
         /// </summary>
-        public static CalamityDemutationPlayer CWR(this Player player)
+        public static CalamityDemutationPlayer CD(this Player player)
         {
             return player.GetModPlayer<CalamityDemutationPlayer>();
         }
         /// <summary>
-        /// 获取本模组弹幕数据（对应 CWR 的 Projectile.CWR()）
+        /// 获取本模组弹幕数据，形态对齐灾厄的 Projectile.Calamity()
         /// </summary>
-        public static CalamityDemutationGlobalProjectile CWR(this Projectile projectile)
+        public static CalamityDemutationGlobalProjectile CD(this Projectile projectile)
         {
             return projectile.GetGlobalProjectile<CalamityDemutationGlobalProjectile>();
         }

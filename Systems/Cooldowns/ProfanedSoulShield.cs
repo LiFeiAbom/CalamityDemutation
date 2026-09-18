@@ -24,7 +24,7 @@ namespace CalamityDemutation.Systems.Cooldowns
         /// <summary>
         /// 本模组玩家数据（护盾耐久字段的持有者）
         /// </summary>
-        private CalamityDemutationPlayer CalPlayer => instance.player.CWR();
+        private CalamityDemutationPlayer CalPlayer => instance.player.CD();
         /// <summary>
         /// 环形进度条的起点/终点颜色（对应灾厄神器形态的 GetColor(true) / GetColor(false)）
         /// </summary>
@@ -156,6 +156,6 @@ namespace CalamityDemutation.Systems.Cooldowns
         /// <summary>
         /// 仅在装备神器时播放结束音效
         /// </summary>
-        public override bool ShouldPlayEndSound => instance.player.CWR().profanedSoulArtifact;
+        public override bool ShouldPlayEndSound => instance.player.CD().profanedSoulArtifact;
     }
 }
