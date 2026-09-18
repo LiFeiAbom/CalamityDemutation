@@ -195,14 +195,14 @@ namespace CalamityDemutation.Players
         }
         // ── 起手 ──
         /// <summary>
-        /// 起手判定（对应灾厄 DoADash → HandleHorizontalDash）：只在有冲刺、原版 dashDelay 归零、且没骑坐骑时进行。
+        /// 起手判定（对应灾厄 DoADash → HandleHorizontalDash）：只在有冲刺、冷却归零、且没骑坐骑时进行。
         /// 左右方向键各按一次开始计时，15 帧内再按同向即触发该方向的水平冲刺——即灾厄非全向冲刺的双击手感。
         /// 本工程没有盾牌冲刺快捷键，故始终走灾厄「未绑定快捷键」那条分支。
         /// 另外与弑神者冲刺互斥：它正在冲刺时不接受盾牌冲刺的起手（灾厄只有一个 DashID，天然不会同时跑两个）。
         /// </summary>
         private void UpdateShieldSlamDashInput()
         {
-            if (shieldSlamDash == ShieldSlamDash.None || godSlayerDashElapsed > 0 || Player.dashDelay != 0 || shieldSlamDashCooldown > 0 || Player.mount.Active)
+            if (shieldSlamDash == ShieldSlamDash.None || godSlayerDashElapsed > 0 || shieldSlamDashCooldown > 0 || Player.mount.Active)
                 return;
             bool rightInput = Player.controlRight && Player.releaseRight;
             bool leftInput = Player.controlLeft && Player.releaseLeft;
@@ -365,11 +365,12 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// 冲刺收尾（对应灾厄 ModDashMovement 里速度落回跑步区间后的分支）：
-        /// 置 30 帧的冷却计数器（原版 dashDelay 会被清零，不可当冷却用），把水平速度钳到跑步速度，并清空冲刺状态。
+        /// 置 30 帧的冷却计数器、复位原版 dashDelay（否则卡在起步的 -1 会阻塞下次起手），把水平速度钳到跑步速度，并清空冲刺状态。
         /// </summary>
         private void EndShieldSlamDash(float runSpeed)
         {
             shieldSlamDashCooldown = ShieldSlamCooldown;
+            Player.dashDelay = 0;
             if (Player.velocity.X < 0f)
                 Player.velocity.X = -runSpeed;
             else if (Player.velocity.X > 0f)

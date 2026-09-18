@@ -930,6 +930,7 @@ namespace CalamityDemutation.Players
             shieldoftheOcean = false;
             shieldSlamDash = ShieldSlamDash.None;
             shieldSlamDashElapsed = 0;
+            shieldSlamDashCooldown = 0;
             sigilofCalamitas = false;
             silvaCountdown = 600;
             silvaHitCounter = 0;

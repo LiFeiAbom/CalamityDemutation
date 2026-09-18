@@ -1106,6 +1106,7 @@ Items: {
 
 	OrnateShield: {
 		DisplayName: 华丽盾
+		// Tooltip: ""
 	}
 
 	PsychoticAmulet: {
@@ -1168,6 +1169,7 @@ Items: {
 
 	ShieldoftheOcean: {
 		DisplayName: 海之盾
+		// Tooltip: ""
 	}
 
 	SigilofCalamitas: {

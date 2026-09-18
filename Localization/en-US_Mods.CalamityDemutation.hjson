@@ -1106,6 +1106,7 @@ Items: {
 
 	OrnateShield: {
 		DisplayName: Ornate Shield
+		Tooltip: ""
 	}
 
 	PsychoticAmulet: {
@@ -1168,6 +1169,7 @@ Items: {
 
 	ShieldoftheOcean: {
 		DisplayName: Shield of the Ocean
+		Tooltip: ""
 	}
 
 	SigilofCalamitas: {
