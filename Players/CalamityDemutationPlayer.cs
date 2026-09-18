@@ -1104,12 +1104,12 @@ namespace CalamityDemutation.Players
                     Player.GetDamage<GenericDamageClass>() += 0.15f;
                 }
             }
-            // 亚利姆徽章：+10%近战伤害、+10%近战暴击率、+10%近战攻速、烈火手套击退、+240熔岩免疫时间，半血以下额外+10%通用伤害
+            // 亚利姆徽章：+14%近战伤害、+14%近战暴击率、+14%近战攻速、烈火手套击退、+240熔岩免疫时间，半血以下额外+10%通用伤害
             if (yharimsInsignia)
             {
-                Player.GetDamage<MeleeDamageClass>() += 0.1f;
-                Player.GetCritChance<MeleeDamageClass>() += 10;
-                Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
+                Player.GetDamage<MeleeDamageClass>() += 0.14f;
+                Player.GetCritChance<MeleeDamageClass>() += 14;
+                Player.GetAttackSpeed<MeleeDamageClass>() += 0.14f;
                 Player.longInvince = true;
                 Player.kbGlove = true;
                 Player.lavaMax += 240;

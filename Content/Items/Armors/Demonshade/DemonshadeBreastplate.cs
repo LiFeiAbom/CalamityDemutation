@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.GetCritChance<GenericDamageClass>() += 20;       // 全类型暴击率 +20%
             player.GetAttackSpeed<MeleeDamageClass>() += 0.25f;     // 近战攻速 +25%
             player.statLifeMax2 += 1000;                            // 最大生命 +1000
-            player.statManaMax2 += 500;                             // 最大魔力 +500
+            player.statManaMax2 += 1000;                            // 最大魔力 +1000
             player.thorns = 200f;//100=>200
         }
         /// <summary>
