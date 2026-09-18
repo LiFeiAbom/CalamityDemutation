@@ -14,7 +14,7 @@ namespace CalamityDemutation.Players
     /// 盾牌冲刺系统（ShieldSlam，移植自灾厄 2.0.3.9 的 CalPlayer/Dashes 下四个 CollisionType=ShieldSlam 的冲刺类）。
     /// 与灾厄实现的三点区别：
     /// 1) 不依赖灾厄的 dash 框架与反射注册——状态、位移、命中、阻拦原版冲刺全由本模组结算；
-    /// 2) 冷却照搬灾厄的 ShieldSlam 口径（收尾时写 Player.dashDelay = 30 帧），不额外做 ModBuff；
+    /// 2) 冷却用自带计数器（收尾时置 30 帧）——原版 Player.dashDelay 会被 DashMovement 每帧清零（dashType 恒 0），不能当冷却用；
     /// 3) 灾厄扩展方法一律内联：ApplyArmorAccDamageBonusesTo 在本工程恒等（没有 Old Fashioned）故省略，
     ///    GetBestClassDamage 内联为「通用加成 + 近战/远程/魔法/召唤×0.75 取最高」（本工程没有盗贼职业）。
     /// 冲刺为灾厄的非全向型：纯水平、保留垂直速度，靠左右方向键双击触发（15 帧双击窗口），不使用快捷键。
@@ -32,7 +32,7 @@ namespace CalamityDemutation.Players
         private const float ShieldRunSpeedDeceleration = 0.94f;
         /// <summary>过程速度上限的默认值（灾厄默认 dashSpeed = 12f）：阿斯加德之英勇不覆写，即用此值</summary>
         private const float DefaultMidDashSpeed = 12f;
-        /// <summary>收尾写回的原版 dashDelay，即灾厄的 UniversalShieldSlamCooldown = 30 帧</summary>
+        /// <summary>冲刺收尾后的冷却帧数，即灾厄的 UniversalShieldSlamCooldown = 30 帧（用自带计数器承载，不写原版 dashDelay）</summary>
         private const int ShieldSlamCooldown = 30;
         /// <summary>双击判定窗口帧数，对应灾厄 HandleHorizontalDash 里的 dashTimeMod = ±15</summary>
         private const int DoubleTapWindow = 15;
@@ -56,6 +56,8 @@ namespace CalamityDemutation.Players
         // ── 私有字段 ──
         /// <summary>冲刺已进行的帧数；0 表示当前没有在冲刺（用自带计时器而非 Player.dashDelay，免受原版时序干扰）</summary>
         private int shieldSlamDashElapsed;
+        /// <summary>冲刺收尾后的冷却剩余帧数；大于 0 时拒绝再次起手（原版 dashDelay 会被 DashMovement 清零，故用自带计数器）</summary>
+        private int shieldSlamDashCooldown;
         /// <summary>双击窗口：正数=刚敲过右键、负数=刚敲过左键，每帧朝 0 靠拢（对应灾厄的 dashTimeMod）</summary>
         private int shieldSlamDashTimeMod;
         /// <summary>本次冲刺是否已触发过震屏（震屏只在每次冲刺的首个命中触发一次）</summary>
@@ -82,6 +84,8 @@ namespace CalamityDemutation.Players
                 ShieldSlamDashRemoteVisuals();
                 return;
             }
+            if (shieldSlamDashCooldown > 0)
+                shieldSlamDashCooldown--;
             // 双击窗口每帧朝 0 靠拢。灾厄把它放在 DoADash 开头（只有装了冲刺才会走），
             // 这里无条件递减：没装冲刺时窗口也能自然过期，不会留下一个陈旧的可触发状态
             if (shieldSlamDashTimeMod != 0)
@@ -120,6 +124,8 @@ namespace CalamityDemutation.Players
         /// </summary>
         private void ShieldSlamDashRemoteVisuals()
         {
+            if (Main.dedServ)
+                return;
             if (remoteShieldSlamElapsed <= 0)
                 return;
             // 该玩家中途死亡/离场就直接收尾，不要对着残影继续喷尘
@@ -196,7 +202,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         private void UpdateShieldSlamDashInput()
         {
-            if (shieldSlamDash == ShieldSlamDash.None || godSlayerDashElapsed > 0 || Player.dashDelay != 0 || Player.mount.Active)
+            if (shieldSlamDash == ShieldSlamDash.None || godSlayerDashElapsed > 0 || Player.dashDelay != 0 || shieldSlamDashCooldown > 0 || Player.mount.Active)
                 return;
             bool rightInput = Player.controlRight && Player.releaseRight;
             bool leftInput = Player.controlLeft && Player.releaseLeft;
@@ -359,11 +365,11 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// 冲刺收尾（对应灾厄 ModDashMovement 里速度落回跑步区间后的分支）：
-        /// 写回 30 帧的原版 dashDelay 当作冷却，把水平速度钳到跑步速度，并清空冲刺状态。
+        /// 置 30 帧的冷却计数器（原版 dashDelay 会被清零，不可当冷却用），把水平速度钳到跑步速度，并清空冲刺状态。
         /// </summary>
         private void EndShieldSlamDash(float runSpeed)
         {
-            Player.dashDelay = ShieldSlamCooldown;
+            shieldSlamDashCooldown = ShieldSlamCooldown;
             if (Player.velocity.X < 0f)
                 Player.velocity.X = -runSpeed;
             else if (Player.velocity.X > 0f)
@@ -403,7 +409,8 @@ namespace CalamityDemutation.Players
                 Player.ApplyDamageToNPC(npc, dashDamage, dashKnockback, hitDirection, critical, DamageClass.Melee, true);
                 if (npc.immune[Player.whoAmI] < MinShieldNPCImmunityFrames)
                     npc.immune[Player.whoAmI] = MinShieldNPCImmunityFrames;
-                Player.GiveImmuneTimeForCollisionAttack(ShieldHitImmunityFrames);
+                if (Player.immuneTime < ShieldHitImmunityFrames)
+                    Player.immuneTime = ShieldHitImmunityFrames;   // 不用原版 GiveImmuneTimeForCollisionAttack：它带反作弊，20 tick 内第 3 次起克扣无敌帧
                 ShieldSlamDashHitEffects(npc, profile);
             }
         }

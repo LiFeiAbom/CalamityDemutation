@@ -19,10 +19,6 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public static Asset<Effect> KnifeDistortion;
         /// <summary>
-        /// 刀光渲染着色器，BaseSwingCO / DragonRageHeld 绘制挥舞弧光时使用
-        /// </summary>
-        public static Asset<Effect> KnifeRendering;
-        /// <summary>
         /// 变形球边缘着色器（普通版本），Metaball 绘制时使用
         /// </summary>
         public static Asset<Effect> MetaballEdgeShader;
@@ -43,7 +39,6 @@ namespace CalamityDemutation.Common.Effects
             // 用默认的异步加载：ImmediateLoad 会在模组加载期阻塞(日志里的 "blocking on asset loading" 警告)，
             // 改为只持有 Asset，在真正使用(绘制期)时才取 .Value。
             var assets = CalamityDemutation.Instance.Assets;
-            KnifeRendering = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering");
             KnifeDistortion = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeDistortion");
             WarpShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "WarpShader");
             MetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/MetaballEdgeShader");
@@ -55,7 +50,6 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public static void UnLoad()
         {
-            KnifeRendering = null;
             KnifeDistortion = null;
             WarpShader = null;
             MetaballEdgeShader = null;

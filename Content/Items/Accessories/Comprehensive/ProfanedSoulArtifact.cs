@@ -47,7 +47,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             ItemID.Sets.AnimatesAsSoul[Type] = true;                             // 按灵魂类物品处理（浮动/发光表现）
         }
         /// <summary>
-        /// 物品基础属性：32x40、饰品、价值 1 铂金 40 金、稀有度红色、月后自定义稀有度 21 级
+        /// 物品基础属性：32x40、饰品、价值 1 铂金 50 金、稀有度红色、月后自定义稀有度 21 级
         /// </summary>
         public override void SetDefaults()
         {
@@ -68,6 +68,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             modPlayer.profanedSoulArtifact = true;             // 置位神器标记，供守护者召唤与加成结算读取
             modPlayer.profanedSoulShieldVisible = !hideVisual;  // 隐藏装备时不显示护盾
         }
+        /// <summary>
+        /// 互斥：不允许与上位饰品亵渎之魂水晶同时装备（与水晶侧 CanAccessoryBeEquippedWith 互为反向，封死"先戴神器再装水晶"）
+        /// </summary>
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<ProfanedSoulCrystal>();
         /// <summary>
         /// 戴在时装栏时同样让护盾可见（但不提供任何加成）
         /// </summary>

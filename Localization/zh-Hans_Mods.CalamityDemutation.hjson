@@ -391,6 +391,33 @@ Items: {
 			'''
 	}
 
+	AsgardianAegis: {
+		DisplayName: 阿斯加德之庇护
+		Tooltip:
+			'''
+			允许发动冲撞冲刺，由宇宙地狱火强化
+			该冲刺可以撞穿敌人而不受伤害
+			最大生命值提高 150，生命回复提高 8
+			免疫击退、岩浆与火焰
+			免疫几乎所有减益，包括弑神者地狱火
+			处于液体中时获得 12% 伤害减免
+			生命值低于 25% 时防御提高 10
+			'''
+	}
+
+	AsgardsValor: {
+		DisplayName: 阿斯加德之英勇
+		Tooltip:
+			'''
+			允许发动冲撞冲刺
+			该冲刺可以撞穿敌人而不受伤害
+			最大生命值提高 50
+			免疫击退、岩浆与火焰
+			免疫大部分减益，包括多数冰霜与烈焰类减益
+			处于液体中时获得 12% 伤害减免
+			'''
+	}
+
 	BadgeofBravery: {
 		DisplayName: 勇气勋章
 		Tooltip:
@@ -740,6 +767,20 @@ Items: {
 			'''
 	}
 
+	ElysianAegis: {
+		DisplayName: 极乐之庇护
+		Tooltip:
+			'''
+			允许发动冲撞冲刺，由神圣烈焰强化
+			该冲刺可以撞穿敌人而不受伤害
+			最大生命值提高 100，生命回复提高 8
+			免疫击退、岩浆与火焰
+			免疫大部分火焰类减益，包括神圣烈焰与昼炎
+			按 [KEY] 切换守护状态
+			守护状态会持续消耗护盾充能，并按消耗量转化为伤害、暴击率、仇恨与防御，代价是移动速度下降
+			'''
+	}
+
 	EtherealTalisman: {
 		DisplayName: 空灵护符
 		Tooltip:
@@ -1063,6 +1104,10 @@ Items: {
 		DisplayName: 蓝色欧米茄护腿
 	}
 
+	OrnateShield: {
+		DisplayName: 华丽盾
+	}
+
 	PsychoticAmulet: {
 		DisplayName: 疯狂护符
 		Tooltip:
@@ -1119,6 +1164,10 @@ Items: {
 			浸没在液体中时防御与伤害减免提升
 			浸没在液体中时移动速度提升
 			'''
+	}
+
+	ShieldoftheOcean: {
+		DisplayName: 海之盾
 	}
 
 	SigilofCalamitas: {
@@ -1520,14 +1569,16 @@ Items: {
 
 Keybinds: {
 	Demonshade.DisplayName: 恶魔阴影狂怒
+	Elysian.DisplayName: 极乐之庇护守护状态
 	GodslayerDash.DisplayName: 弑神者冲刺
+	OmegaBlue.DisplayName: 蓝色欧米茄套装技能
+	Tarragon.DisplayName: 龙蒿防御形态
 }
 
 Projectiles: {
 	AbaddonCrit.DisplayName: 硫磺爆裂
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
-	BaseHeldProjCO.DisplayName: 手持弹幕基类
 	BigBustyRose.DisplayName: 硕大玫瑰
 	BiomeOrb.DisplayName: 环境能量
 	BloodScythe.DisplayName: 血镰

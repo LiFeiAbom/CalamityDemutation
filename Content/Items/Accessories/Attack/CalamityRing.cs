@@ -1,4 +1,5 @@
-﻿using CalamityDemutation.Players;
+﻿using CalamityDemutation.Content.Items.Accessories.Comprehensive;
+using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,16 +34,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
         }
         /// <summary>
         /// 互斥判定：本饰品已并入虚空灭绝/大杂烩（其效果含灾厄之戒），
-        /// 禁止与灾厄之戒/虚空灭绝/大杂烩同装备，避免 +15% 通用伤害叠加
+        /// 禁止与灾厄之戒/虚空灭绝/大杂烩同装备，避免 +15% 通用伤害叠加。
+        /// 改用 CanAccessoryBeEquippedWith，双向互斥且不再自检自己的标记
         /// </summary>
-        public override bool CanEquipAccessory(Player player, int slot, bool modded)/* tModPorter Suggestion: Consider using new hook CanAccessoryBeEquippedWith */
-        {
-            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            if (modPlayer.calamityRing || modPlayer.voidofExtinction || modPlayer.theAmalgam)
-            {
-                return false;
-            }
-            return true;
-        }
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<CalamityRing>() && incomingItem.type != ModContent.ItemType<VoidofExtinction>() && incomingItem.type != ModContent.ItemType<TheAmalgam>();
     }
 }

@@ -79,7 +79,7 @@ namespace CalamityDemutation.Content.Items.Materials
                     recipe.AddIngredient(cryonicBar.Type);
                     recipe.AddIngredient(perennialBar.Type);
                     recipe.AddIngredient(scoriaBar.Type);
-                    recipe.AddIngredient(shadowspecBar1.Type, 50);
+                    recipe.AddIngredient(shadowspecBar1.Type);
                     recipe.AddIngredient(uelibloomBar.Type);
                     recipe.AddTile(draedonsForge1.Type);
                     recipe.Register();

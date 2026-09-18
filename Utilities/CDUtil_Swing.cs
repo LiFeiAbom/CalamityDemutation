@@ -23,13 +23,6 @@ namespace CalamityDemutation.Utilities
         /// </summary>
         public static bool Alives(this Player player) => player != null && player.active && !player.dead;
         /// <summary>
-        /// 灾厄原生 Calamity() 的软依赖等价物：返回本模组弹幕数据（承载 timesPierced）
-        /// </summary>
-        public static CalamityDemutationGlobalProjectile Calamity(this Projectile projectile)
-        {
-            return projectile.GetGlobalProjectile<CalamityDemutationGlobalProjectile>();
-        }
-        /// <summary>
         /// 整帧间隔切换动画帧，到达最大帧后回绕
         /// </summary>
         public static void ClockFrame(ref int frameCounter, int intervalFrame, int maxFrame)

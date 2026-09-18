@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.width = 74;
             Item.height = 74;
-            Item.value = Item.value = Item.buyPrice(1, 80, 0, 0);
+            Item.value = Item.buyPrice(1, 80, 0, 0);
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAnimation = 32;
             Item.useTime = 32;

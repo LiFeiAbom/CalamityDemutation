@@ -49,8 +49,7 @@ namespace CalamityDemutation.Content.Items.Materials
             if (player.itemAnimation > 0 && !modPlayer.extraAccessoryML && player.itemTime == 0)   // itemAnimation>0 处于使用动画中；itemTime==0 保证本帧只结算一次
             {
                 player.itemTime = Item.useTime;   // 设置使用冷却，避免重复触发
-                modPlayer.extraAccessoryML = true;   // 永久解锁额外饰品栏（存档持久化）
-                NetMessage.SendData(MessageID.SyncPlayer, -1, -1, null, 0, player.whoAmI, 0f, 0f, 0, 0, 0);   // 广播玩家状态，使其他端看到新栏位
+                modPlayer.extraAccessoryML = true;   // 永久解锁额外饰品栏（存档持久化；跨端同步由 SendClientChanges → MsgPermanentUnlock 通路完成）
             }
             return true;   // 返回 true 交回原版继续消耗物品
         }

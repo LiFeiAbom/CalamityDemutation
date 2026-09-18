@@ -33,7 +33,7 @@ namespace CalamityDemutation.Systems.Cooldowns
         /// <summary>
         /// 按耐久上限（而非 duration）计算的完成度，令条形长度精确对应剩余耐久
         /// </summary>
-        private float AdjustedCompletion => instance.timeLeft / (float)ProfanedSoulArtifact.ShieldDurabilityMax;
+        private float AdjustedCompletion => instance.timeLeft / (float)(CalPlayer.profanedCrystal ? ProfanedSoulCrystal.ShieldDurabilityMax : ProfanedSoulArtifact.ShieldDurabilityMax);
         /// <summary>
         /// 冷却的唯一字符串 ID（灾厄原值即 ProfanedSoulShieldDurability）
         /// </summary>

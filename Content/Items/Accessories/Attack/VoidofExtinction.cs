@@ -1,4 +1,5 @@
-﻿using CalamityDemutation.Players;
+﻿using CalamityDemutation.Content.Items.Accessories.Comprehensive;
+using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,17 +31,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
             player.GetModPlayer<CalamityDemutationPlayer>().voidofExtinction = true;
         }
         /// <summary>
-        /// 互斥判定：本饰品已继承灾厄之戒，故禁止与灾厄之戒或大杂烩同装备，避免效果叠加
+        /// 互斥判定：本饰品已继承灾厄之戒，故禁止与灾厄之戒或大杂烩同装备，避免效果叠加。
+        /// 改用 CanAccessoryBeEquippedWith，双向互斥且不再自检自己的标记
         /// </summary>
-        public override bool CanEquipAccessory(Player player, int slot, bool modded)/* tModPorter Suggestion: Consider using new hook CanAccessoryBeEquippedWith */
-        {
-            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            if (modPlayer.calamityRing || modPlayer.theAmalgam)
-            {
-                return false;
-            }
-            return true;
-        }
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<CalamityRing>() && incomingItem.type != ModContent.ItemType<TheAmalgam>();
         /// <summary>
         /// 配方：黑曜石玫瑰 + 地狱火 + 灾厄之戒在秘银砧合成（兼容现代版与经典版灾厄）
         /// </summary>

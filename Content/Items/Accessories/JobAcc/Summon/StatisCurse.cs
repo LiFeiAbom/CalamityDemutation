@@ -34,12 +34,12 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
             modPlayer.statisCurse = true;
         }
         /// <summary>
-        /// 配方：以凝滞祝福与第一暗影焰为核心材料（两版灾厄配方相同），兼容现代版与经典版分别注册
+        /// 配方：以凝滞祝福与第一暗影焰为核心材料（不涉及灾厄材料），任一版本灾厄加载时注册一次
         /// </summary>
         public override void AddRecipes()
         {
-            // 本件配方不涉及灾厄材料，两版写法完全一致；分支只是沿用统一的"双版本注册"结构
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+            // 配方不涉及灾厄材料，两版写法完全一致；用 || 合并，避免同时装两版时重复注册
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) || ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient<StatisBlessing>();
@@ -47,15 +47,6 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
                 recipe.AddIngredient(ItemID.FragmentStardust, 10);
                 recipe.AddTile(TileID.LunarCraftingStation);
                 recipe.Register();
-            }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
-            {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<StatisBlessing>();
-                recipe1.AddIngredient<TheFirstShadowflame>();
-                recipe1.AddIngredient(ItemID.FragmentStardust, 10);
-                recipe1.AddTile(TileID.LunarCraftingStation);
-                recipe1.Register();
             }
         }
     }

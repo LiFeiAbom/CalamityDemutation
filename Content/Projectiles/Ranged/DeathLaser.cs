@@ -43,7 +43,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 5000;
         }
         /// <summary>
-        /// 基础属性：32×32 碰撞盒、穿透无限、timeLeft 仅 10（短命光束）、本地无敌帧 12 帧。
+        /// 基础属性：32×32 碰撞盒、穿透无限、timeLeft 仅 10（短命光束）、本地无敌帧 10 帧。
         /// 实际光束长度与命中范围由 <see cref="Colliding"/> 的线判定覆盖，默认碰撞盒基本不参与。
         /// </summary>
         public override void SetDefaults()
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             Projectile.penetrate = -1;
             Projectile.timeLeft = 10;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 12;
+            Projectile.localNPCHitCooldown = 10;   // = timeLeft，收紧冗余冷却值（原 12 > 10）
         }
         /// <summary>
         /// 固定位置：本弹幕不随速度移动，仅原地按朝向绘制与判定。

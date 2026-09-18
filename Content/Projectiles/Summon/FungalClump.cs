@@ -50,7 +50,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
-            bool flag64 = Projectile.type == ModContent.ProjectileType<Projectiles.Summon.FungalClump>();
             Player player = Main.player[Projectile.owner];
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 未装备真菌团块/大杂烩饰品时直接消失，避免残留仆从
@@ -59,14 +58,11 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.active = false;
                 return;
             }
-            if (flag64)
+            // 主人死亡：不再续命，仆从随 timeLeft（当前约 2 帧）自然消散
+            if (!player.dead)
             {
-                // 主人死亡：不再续命，仆从随 timeLeft（当前约 2 帧）自然消散
-                if (!player.dead)
-                {
-                    // 主人存活且召唤源在身：持续刷新存活时间，实现常驻跟随
-                    Projectile.timeLeft = 2;
-                }
+                // 主人存活且召唤源在身：持续刷新存活时间，实现常驻跟随
+                Projectile.timeLeft = 2;
             }
             // 出生瞬间迸发一圈蓝色妖精粉尘作为登场特效（localAI[0] 保证只执行一次）
             if (Projectile.localAI[0] == 0f)

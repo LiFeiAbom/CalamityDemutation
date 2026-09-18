@@ -52,7 +52,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
-            bool flag64 = Projectile.type == ModContent.ProjectileType<DrewsSandyWaifu>();
             Player player = Main.player[Projectile.owner];
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 未装备瓶中老婆且未开启"全体老婆"时直接消失
@@ -61,17 +60,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.active = false;
                 return;
             }
-            if (flag64)
+            if (player.dead)
             {
-                if (player.dead)
-                {
-                    modPlayer.drewsSandyWaifu = false;
-                }
-                // 召唤标志有效时持续刷新存活时间，实现常驻跟随
-                if (modPlayer.drewsSandyWaifu)
-                {
-                    Projectile.timeLeft = 2;
-                }
+                modPlayer.drewsSandyWaifu = false;
+            }
+            // 召唤标志有效时持续刷新存活时间，实现常驻跟随
+            if (modPlayer.drewsSandyWaifu)
+            {
+                Projectile.timeLeft = 2;
             }
             dust--;
             if (dust >= 0)

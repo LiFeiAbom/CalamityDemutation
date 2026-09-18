@@ -50,7 +50,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
-            bool flag64 = Projectile.type == ModContent.ProjectileType<CloudyWaifu>();
             Player player = Main.player[Projectile.owner];
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 未装备风暴之眼且未开启"全体老婆"时直接消失，避免残留召唤物
@@ -59,17 +58,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.active = false;
                 return;
             }
-            if (flag64)
+            if (player.dead)
             {
-                if (player.dead)
-                {
-                    modPlayer.cloudWaifu = false;
-                }
-                // 召唤标志有效时持续刷新存活时间，实现常驻跟随
-                if (modPlayer.cloudWaifu)
-                {
-                    Projectile.timeLeft = 2;
-                }
+                modPlayer.cloudWaifu = false;
+            }
+            // 召唤标志有效时持续刷新存活时间，实现常驻跟随
+            if (modPlayer.cloudWaifu)
+            {
+                Projectile.timeLeft = 2;
             }
             dust--;
             if (dust >= 0)

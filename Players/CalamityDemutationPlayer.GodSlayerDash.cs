@@ -19,7 +19,7 @@ namespace CalamityDemutation.Players
     /// 2) 冷却改用一个 ModBuff（<see cref="GodSlayerDashCooldown"/>，45 秒），不使用灾厄的 cooldown 系统。
     /// 冲刺为八方向（朝向由方向键组合决定，与灾厄一致），起步 80、自持上限 40，命中 3000 基础伤害（吃通用职业加成）
     /// 并附加 300 帧 GodSlayerInferno。视觉与音效已按灾厄原文完整移植：
-    /// 起手 1 个 DirectionalPulseRing + 16 颗尘，前 20 帧每帧一对 Jaws（洋红 + 青色）、
+    /// 起手 1 个 DirectionalPulseRing + 16 颗尘，前 19 帧每帧一对 Jaws（洋红 + 青色）、
     /// 全程环形尘环 + 每帧 2 颗火花，第 21 帧补两层 DirectionalPulseRing；音效为吞噬者死亡/冲击音。
     /// 联机：本机玩家的冲刺由自己结算，另用 MsgGodSlayerDash / MsgGodSlayerDashHit 两条消息
     /// （见主类 CalamityDemutation.HandlePacket）把"开始"与"命中"广播给其他客户端，让别人屏幕上也有完整的冲刺表现；
@@ -155,15 +155,16 @@ namespace CalamityDemutation.Players
             godSlayerDashSoundSlot = SoundEngine.PlaySound(CalamityDemutationSounds.DevourerDeath, Player.Center);
             GodSlayerDashStartVisuals();
             SendGodSlayerDashPacket();
-            // 正前方是实心块时把水平速度减半，防止贴墙冲刺时被弹飞
-            Point ahead = (Player.Center + new Vector2(MathHelper.Clamp(direction.X, -1f, 1f) * Player.width / 2f + 2f, 0f)).ToTileCoordinates();
-            if (WorldGen.SolidOrSlopedTile(ahead.X, ahead.Y))
+            // 正前方或斜上方是实心块时把水平速度减半，防止贴墙冲刺时被弹飞（对齐灾厄起步的 upward + ahead 双检查）
+            Point upwardTilePoint = (Player.Center + new Vector2(MathHelper.Clamp(direction.X, -1f, 1f) * Player.width / 2f + 2f, Player.gravDir * -Player.height / 2f + Player.gravDir * 2f)).ToTileCoordinates();
+            Point aheadTilePoint = (Player.Center + new Vector2(MathHelper.Clamp(direction.X, -1f, 1f) * Player.width / 2f + 2f, 0f)).ToTileCoordinates();
+            if (WorldGen.SolidOrSlopedTile(upwardTilePoint.X, upwardTilePoint.Y) || WorldGen.SolidOrSlopedTile(aheadTilePoint.X, aheadTilePoint.Y))
                 Player.velocity.X /= 2f;
         }
         /// <summary>
         /// 冲刺期间的每帧结算（顺序与灾厄 MidDashEffects 一致）：
         /// 音效跟随玩家 → 垂直下落放宽到 50 → 走共用表现 <see cref="GodSlayerDashVisuals"/>（Time 自增、龙颚尺寸每帧 -0.04、
-        /// 前 20 帧每帧一对龙颚、环形尘环 + 随体尘、每帧 2 颗火花、第 21 帧补两层定向脉冲环并把 Time 推到 111）→
+        /// 前 19 帧每帧一对龙颚、环形尘环 + 随体尘、每帧 2 颗火花、第 21 帧补两层定向脉冲环并把 Time 推到 111）→
         /// 按速度档做两级衰减。物理项（下落放宽、衰减）留在这里，不上远端。
         /// </summary>
         private void GodSlayerDashEffects()
@@ -205,7 +206,8 @@ namespace CalamityDemutation.Players
                 Player.ApplyDamageToNPC(npc, dashDamage, dashKnockback, hitDirection, critical, DamageClass.Generic);
                 if (npc.immune[Player.whoAmI] < DashHitImmunityFrames)
                     npc.immune[Player.whoAmI] = DashHitImmunityFrames;
-                Player.GiveImmuneTimeForCollisionAttack(DashHitImmunityFrames);
+                if (Player.immuneTime < DashHitImmunityFrames)
+                    Player.immuneTime = DashHitImmunityFrames;   // 不用原版 GiveImmuneTimeForCollisionAttack：它带反作弊，20 tick 内第 3 次起克扣无敌帧
                 ApplyCalamityBuff(npc, "CalamityMod", "GodSlayerInferno", DashInfernoFrames);
                 ApplyCalamityBuff(npc, "CalamityModClassicPreTrailer", "GodSlayerInferno", DashInfernoFrames);
                 if (!godSlayerDashHitSounded)
@@ -295,6 +297,8 @@ namespace CalamityDemutation.Players
         /// </summary>
         private void GodSlayerDashRemoteVisuals()
         {
+            if (Main.dedServ)
+                return;
             if (remoteGodSlayerDashElapsed <= 0)
                 return;
             // 该玩家中途死亡/离场就直接收尾，不要对着残影继续喷尘

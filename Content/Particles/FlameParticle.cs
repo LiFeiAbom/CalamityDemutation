@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Particles
             Position = position;
             Velocity = Vector2.Zero;
             Velocity.X = Main.rand.NextFloat(1f, -1f);
-            Variant = Main.rand.Next(3);   // 灾厄原样保留；本贴图为单帧（FrameVariants 恒为 1），该值不参与绘制
+            Variant = Main.rand.Next(3);   // 灾厄原样保留；该值会作为 frameY 传入 Frame，但 FrameVariants 恒为 1，取模后归 0，视觉上无差异
             Scale = scale;
             Lifetime = lifetime;
             RelativePower = relativePower;

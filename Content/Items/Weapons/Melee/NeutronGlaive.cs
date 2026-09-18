@@ -25,7 +25,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Main.RegisterItemAnimation(Type, new DrawAnimationVertical(5, 6));// 垂直动画：6 帧、每 5 tick 换一帧
         }
         /// <summary>
-        /// 物品基础属性：巨型挥砍武器，14 帧出手、必定发射中子光束弹幕，自定义月后稀有度 15。
+        /// 物品基础属性：巨型挥砍武器，14 帧出手、必定发射中子光束弹幕，自定义月后稀有度 16。
         /// </summary>
         public override void SetDefaults()
         {

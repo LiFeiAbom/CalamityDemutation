@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>
-        /// 弹幕基础属性：小范围判定框、无限穿透、10 帧独立命中间隔的瞬时爆破。
+        /// 弹幕基础属性：小范围判定框、无限穿透、5 帧独立命中间隔的瞬时爆破。
         /// </summary>
         public override void SetDefaults()
         {
@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.timeLeft = 5;         // 存活仅 5 帧，属于瞬时爆点
             Projectile.DamageType = DamageClass.Melee;  // 普通近战伤害（吃攻速加成）
             Projectile.usesLocalNPCImmunity = true;  // 每个敌人独立计算免疫计时
-            Projectile.localNPCHitCooldown = 10;     // 同一敌人 10 帧内只受击一次
+            Projectile.localNPCHitCooldown = 5;      // 同一敌人 5 帧内只受击一次（= 存活帧，收紧冗余冷却值）
         }
         /// <summary>
         /// 视觉逻辑：快速衰减的金色尘粒爆点（无音效）。

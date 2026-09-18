@@ -217,10 +217,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         public ref int SwingIndex => ref Owner.CWR().SwingIndex;
         /// <summary>
-        /// 目标物品 ID
-        /// </summary>
-        public virtual int TargetID => ItemID.None;
-        /// <summary>
         /// 刀光贴图
         /// </summary>
         public virtual Texture2D TextureValue => CDUtil.GetT2DValue(Texture);
@@ -318,7 +314,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
                 Projectile.friendly = true;
                 Projectile.penetrate = -1;
                 Rotation = MathHelper.ToRadians(3);
-                Projectile.CWR().NotSubjectToSpecialEffects = true;
                 SetSwingProperty();
             }
             PostSwingProperty();
@@ -558,7 +553,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
             {
                 dirs = Projectile.spriteDirection = Owner.direction;
             }
-            Projectile.Calamity().timesPierced = 0;
             Owner.heldProj = Projectile.whoAmI;
             Owner.itemTime = 2;
             Owner.itemAnimation = 2;

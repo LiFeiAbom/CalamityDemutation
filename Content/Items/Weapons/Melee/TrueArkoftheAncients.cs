@@ -54,6 +54,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             {
                 beam.localNPCHitCooldown = 14;
                 beam.penetrate = 2;
+                beam.ai[0] = 1f;   // 标记为真·远古方舟光束：命中时不附加元素 debuff（EonBeam.OnHitNPC/OnHitPlayer 读此位豁免）
                 beam.ai[1] = Main.rand.Next(1, 3);
             }
             int i = Main.myPlayer;

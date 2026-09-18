@@ -58,17 +58,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         }
         /// <summary>
         /// 互斥判定：大杂烩已包含四个组件饰品的全部效果，禁止再单独装备其中任意一个；
-        /// 另因虚空灭绝已并入灾厄之戒效果，灾厄之戒同样不得与其同装，避免单向叠加漏洞
+        /// 另因虚空灭绝已并入灾厄之戒效果，灾厄之戒同样不得与其同装，避免单向叠加漏洞。
+        /// 改用 CanAccessoryBeEquippedWith（在已装备饰品上调用），双向互斥且不再自检自己的标记
         /// </summary>
-        public override bool CanEquipAccessory(Player player, int slot, bool modded)/* tModPorter Suggestion: Consider using new hook CanAccessoryBeEquippedWith */
-        {
-            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            if (modPlayer.amalgamatedBrain || modPlayer.voidofExtinction || modPlayer.calamityRing || modPlayer.fungalClump || modPlayer.levianthanAmbergris)
-            {
-                return false;
-            }
-            return true;
-        }
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<AmalgamatedBrain>() && incomingItem.type != ModContent.ItemType<VoidofExtinction>() && incomingItem.type != ModContent.ItemType<CalamityRing>() && incomingItem.type != ModContent.ItemType<FungalClump>() && incomingItem.type != ModContent.ItemType<LeviathanAmbergris>();
         /// <summary>
         /// 配方：四件组件饰品 + 星辉/暗物质系材料，分别在现代版（宇宙砧）与经典版（德雷顿熔炉）注册
         /// </summary>

@@ -47,7 +47,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
-            bool flag64 = Projectile.type == ModContent.ProjectileType<RedDevil>();   // 恒为 true，此判定移植自灾厄原逻辑
             Player player = Main.player[Projectile.owner];
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 套装标志失效（卸下恶魔罩头部/玩家重置）时直接消失，避免残留召唤物
@@ -56,17 +55,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.active = false;
                 return;
             }
-            if (flag64)
+            if (player.dead)
             {
-                if (player.dead)
-                {
-                    modPlayer.redDevil2 = false;   // 玩家死亡时清空维持标志
-                }
-                // 维持标志有效（RedDevil Buff 检测到场上存在本弹幕）时每帧刷新存活时间，实现常驻跟随
-                if (modPlayer.redDevil2)
-                {
-                    Projectile.timeLeft = 2;
-                }
+                modPlayer.redDevil2 = false;   // 玩家死亡时清空维持标志
+            }
+            // 维持标志有效（RedDevil Buff 检测到场上存在本弹幕）时每帧刷新存活时间，实现常驻跟随
+            if (modPlayer.redDevil2)
+            {
+                Projectile.timeLeft = 2;
             }
             dust--;   // 计数器递减，<0 后不再喷发
             if (dust >= 0)

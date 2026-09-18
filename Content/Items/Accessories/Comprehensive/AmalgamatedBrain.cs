@@ -30,6 +30,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             player.GetModPlayer<CalamityDemutationPlayer>().amalgamatedBrain = true;
         }
         /// <summary>
+        /// 互斥：大杂烩已包含合体大脑效果，禁止反向与大杂烩同装（与大杂烩侧互为双向）
+        /// </summary>
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<TheAmalgam>();
+        /// <summary>
         /// 配方：腐化脑 + 混乱大脑在秘银砧合成（兼容现代版与经典版灾厄，材料判定不区分灾厄版本）
         /// </summary>
         public override void AddRecipes()

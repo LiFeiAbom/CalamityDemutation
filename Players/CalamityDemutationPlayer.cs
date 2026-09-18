@@ -134,10 +134,6 @@ namespace CalamityDemutation.Players
         /// 由 AnyBossNPCS 首次调用时按名字软依赖解析并缓存
         /// </summary>
         private static HashSet<int> extraBossTypes;
-        /// <summary>
-        /// 额外赐予的召唤栏数量（固定 +1），由天界洋葱类物品在解锁后累加
-        /// </summary>
-        public static int MinionsAddition = 1;
         // ── 属性 ──
         /// <summary>
         /// 经典版三使者是否全部倒下（经典版无单个使者标记，只有 Sentinel1/2/3）。
@@ -201,6 +197,7 @@ namespace CalamityDemutation.Players
         public bool archaicPowder = false;
         public bool armorCrumbling = false;
         public bool armorShattering = false;
+        public bool asgardianAegis = false;
         public bool asgardsValor = false;
         public bool auricBoost = false;
         public bool auricSet = false;
@@ -307,6 +304,9 @@ namespace CalamityDemutation.Players
         /// 且 40% 概率不消耗弹药
         /// </summary>
         public bool elementalQuiver = false;
+        public bool elysianAegis = false;
+        public bool elysianAegispower = false;
+        public bool elysianGuard = false;
         public bool enraged = false;
         /// <summary>
         /// 已装备虚灵护符：+20% 魔法伤害/+20% 魔法暴击、+150 魔力上限、魔力消耗 ×0.8，
@@ -389,7 +389,7 @@ namespace CalamityDemutation.Players
         public bool hellfireExplosion = false;
         public bool holyWrath = false;
         /// <summary>
-        /// 已装备蜜露：丛林区获得回血/防御/减伤，免疫蜂蜜与中毒，并附加蜂蜜式生命回复
+        /// 已装备蜜露：丛林区获得回血/防御/减伤，免疫毒液与中毒，并附加蜂蜜式生命回复
         /// </summary>
         public bool honeyDew = false;
         /// <summary>
@@ -461,6 +461,7 @@ namespace CalamityDemutation.Players
         /// 龟壳爆发（ShellBoost 正面增益）激活标记：受击后置位，提供 +90% 移速
         /// </summary>
         public bool shellBoost = false;
+        public float shieldInvinc = 5f;
         public bool shieldoftheOcean = false;
         /// <summary>
         /// 已装备灾厄符印：+15% 魔法伤害/+10% 魔法暴击、+100 魔力上限、魔力消耗 ×0.85，
@@ -682,6 +683,7 @@ namespace CalamityDemutation.Players
             archaicPowder = false;
             armorCrumbling = false;
             armorShattering = false;
+            asgardianAegis = false;
             asgardsValor = false;
             auricBoost = false;
             auricSet = false;
@@ -715,6 +717,8 @@ namespace CalamityDemutation.Players
             drewsSandyWaifu = false;
             elementalGauntlet = false;
             elementalQuiver = false;
+            elysianAegis = false;
+            elysianAegispower = false;
             enraged = false;
             etherealTalisman = false;
             eyeoftheStorm = false;
@@ -822,6 +826,7 @@ namespace CalamityDemutation.Players
             archaicPowder = false;
             armorCrumbling = false;
             armorShattering = false;
+            asgardianAegis = false;
             asgardsValor = false;
             auricBoost = false;
             auricSet = false;
@@ -861,6 +866,9 @@ namespace CalamityDemutation.Players
             drewsSandyWaifu = false;
             elementalGauntlet = false;
             elementalQuiver = false;
+            elysianAegis = false;
+            elysianAegispower = false;
+            elysianGuard = false;
             etherealTalisman = false;
             eyeoftheStorm = false;
             fleshTotem = false;
@@ -955,13 +963,19 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// tModLoader 的 PostUpdateRunSpeeds 钩子：每帧在玩家基础跑动速度/加速度计算完成后调用，
         /// 用于对最终值做乘算修正。本模组在此结算移速类加成——恶魔之影护腿（shadowSpeed）+50%、
-        /// 女巫套装（silvaSet）+5%，同时乘算 runAcceleration 与 maxRunSpeed。
+        /// 女巫套装（silvaSet）+5%、金之特斯拉套装（auricSet）+10%，同时乘算 runAcceleration 与 maxRunSpeed；
+        /// 极乐之庇护守护态（elysianGuard）再整体 ×0.85。
         /// 若开启"回退原版削弱"且安装现代版灾厄，再补偿灾厄对暗影护甲与腾飞徽章移动属性的削弱。
         /// </summary>
         public override void PostUpdateRunSpeeds()
         {
             float runAccMult = 1f + (shadowSpeed ? 0.5f : 0f) + (silvaSet ? 0.05f : 0f) + (auricSet ? 0.1f : 0f);
             float runSpeedMult = 1f + (shadowSpeed ? 0.5f : 0f) + (silvaSet ? 0.05f : 0f) + (auricSet ? 0.1f : 0f);
+            if (elysianGuard)
+            {
+                runAccMult *= 0.85f;
+                runSpeedMult *= 0.85f;
+            }
             Player.runAcceleration *= runAccMult;
             Player.maxRunSpeed *= runSpeedMult;
             // 回退灾厄对原版移动的削弱（近似补偿）
@@ -1623,7 +1637,7 @@ namespace CalamityDemutation.Players
                     Player.lifeRegen += 2;
                 }
             }
-            // 蜜露：丛林区回血/防御/减伤；免疫蜂蜜与中毒，额外附加蜂蜜式回复
+            // 蜜露：丛林区回血/防御/减伤；免疫毒液与中毒，额外附加蜂蜜式回复
             if (honeyDew)
             {
                 if (Player.ZoneJungle)
@@ -1902,7 +1916,6 @@ namespace CalamityDemutation.Players
                     }
                 }
             }
-            // 炼狱：每 600 帧（10 秒）从高空向玩家瞄准方向齐射一轮扇形地狱火流星雨
             // 阿巴顿：+8% 通用暴击，免疫硫磺火减益（走双版本软依赖查找）
             if (abaddon)
             {
@@ -1910,6 +1923,7 @@ namespace CalamityDemutation.Players
                 AddCalamityBuffImmune(Player, "CalamityMod", "BrimstoneFlames");
                 AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "BrimstoneFlames");
             }
+            // 炼狱：每 600 帧（10 秒）从高空向玩家瞄准方向齐射一轮扇形地狱火流星雨
             if (gehenna)
             {
                 // 首次装备将倒计时初始化为 600，之后每帧递减，归零即发射
@@ -2704,11 +2718,11 @@ namespace CalamityDemutation.Players
             if (profanedSoulArtifact)
             {
                 Player.maxMinions++;   // 攻击守护者常驻 +1 仆从栏
+                profanedSoulGuardians = true;   // 置位标记，供 buff 与其它结算读取（须在所有端置位，否则联机下别人的守护者 60 秒后消散）
                 if (Player.whoAmI == Main.myPlayer)
                 {
                     if (Player.FindBuffIndex(ModContent.BuffType<ProfanedSoulGuardians>()) == -1)
                         Player.AddBuff(ModContent.BuffType<ProfanedSoulGuardians>(), 3600, true);   // 补上守护者 buff（3600 帧 = 60 秒）
-                    profanedSoulGuardians = true;   // 置位标记，供 buff 与其它结算读取
                     // 守护者攻击基值：神器 52 / 水晶 1000。水晶档按用户口径「回调削弱前」取最高档 1000——
                     // 灾厄旧值是 800/900/1000（随击败神明吞噬者 / 犽戎逐档提升），本工程去掉了进度门槛，故取最高档；
                     // 2.2.2 源码里这一项是 346（比 1.5.0.001 的削弱后值还低，是另一次削弱）。
@@ -2942,6 +2956,166 @@ namespace CalamityDemutation.Players
                 if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
                 {
                     Player.endurance += 0.12f;
+                }
+            }
+            if (elysianAegis)
+            {
+                Player.dashType = 0;
+                Player.noKnockback = true;
+                Player.fireWalk = true;
+                Player.statLifeMax2 += 100;
+                Player.lifeRegen += 8;
+                Player.buffImmune[BuffID.CursedInferno] = true;
+                Player.buffImmune[BuffID.ShadowFlame] = true;
+                Player.buffImmune[BuffID.Daybreak] = true;
+                Player.buffImmune[BuffID.OnFire] = true;
+                Player.buffImmune[BuffID.OnFire3] = true;
+                AddCalamityBuffImmune(Player, "CalamityMod", "HolyFlames");
+                AddCalamityBuffImmune(Player, "CalamityMod", "BrimstoneFlames");
+                AddCalamityBuffImmune(Player, "CalamityMod", "WeakPetrification");
+                AddCalamityBuffImmune(Player, "CalamityMod", "Nightwither");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "GlacialState");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "HolyLight");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "BrimstoneFlames");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "WhisperingDeath");
+            }
+            if(elysianAegispower)
+            {
+                bool flag14 = false;
+                if (elysianGuard)
+                {
+                    float num29 = shieldInvinc;
+                    shieldInvinc -= 0.08f;
+                    if (shieldInvinc < 0f)
+                    {
+                        shieldInvinc = 0f;
+                    }
+                    else
+                    {
+                        flag14 = true;
+                    }
+                    if (shieldInvinc == 0f && num29 != shieldInvinc && Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        NetMessage.SendData(MessageID.PlayerStealth, -1, -1, null, Player.whoAmI, 0f, 0f, 0f, 0, 0, 0);
+                    }
+                    float damageBoost = (5f - shieldInvinc) * 0.03f;
+                    Player.GetDamage<GenericDamageClass>() += damageBoost;
+                    int critBoost = (int)((5f - shieldInvinc) * 2f);
+                    Player.GetCritChance<GenericDamageClass>() += critBoost;
+                    Player.aggro += (int)((5f - shieldInvinc) * 220f);
+                    Player.statDefense += (int)((5f - shieldInvinc) * 4f);
+                    Player.moveSpeed *= 0.85f;
+                    if (Player.mount.Active)
+                    {
+                        elysianGuard = false;
+                    }
+                }
+                else
+                {
+                    float num30 = shieldInvinc;
+                    shieldInvinc += 0.08f;
+                    if (shieldInvinc > 5f)
+                    {
+                        shieldInvinc = 5f;
+                    }
+                    else
+                    {
+                        flag14 = true;
+                    }
+                    if (shieldInvinc == 5f && num30 != shieldInvinc && Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        NetMessage.SendData(MessageID.PlayerStealth, -1, -1, null, Player.whoAmI, 0f, 0f, 0f, 0, 0, 0);
+                    }
+                }
+                if (flag14)
+                {
+                    if (Main.rand.NextBool(2))
+                    {
+                        Vector2 vector = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+                        Dust dust = Main.dust[Dust.NewDust(Player.Center - vector * 30f, 0, 0, DustID.CopperCoin, 0f, 0f, 0, default(Color), 1f)];
+                        dust.noGravity = true;
+                        dust.position = Player.Center - vector * (float)Main.rand.Next(5, 11);
+                        dust.velocity = vector.RotatedBy(1.5707963705062866, default(Vector2)) * 4f;
+                        dust.scale = 0.5f + Main.rand.NextFloat();
+                        dust.fadeIn = 0.5f;
+                    }
+                    if (Main.rand.NextBool(2))
+                    {
+                        Vector2 vector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+                        Dust dust2 = Main.dust[Dust.NewDust(Player.Center - vector2 * 30f, 0, 0, DustID.GoldCoin, 0f, 0f, 0, default(Color), 1f)];
+                        dust2.noGravity = true;
+                        dust2.position = Player.Center - vector2 * 12f;
+                        dust2.velocity = vector2.RotatedBy(-1.5707963705062866, default(Vector2)) * 2f;
+                        dust2.scale = 0.5f + Main.rand.NextFloat();
+                        dust2.fadeIn = 0.5f;
+                    }
+                }
+            }
+            else
+            {
+                elysianGuard = false;
+            }
+            // 金之特斯拉套把飞毯贴图覆写为自定义贴图；脱装时还原为原版默认，否则会残留自定义贴图
+            if (auricSet)
+            {
+                TextureAssets.FlyingCarpet = ModContent.Request<Texture2D>("CalamityDemutation/Assets/ExtraTextures/AuricCarpet");
+            }
+            else
+            {
+                TextureAssets.FlyingCarpet = Main.Assets.Request<Texture2D>("Images/FlyingCarpet");
+            }
+            if(asgardianAegis)
+            {
+                Player.dashType = 0;
+                Player.noKnockback = true;
+                Player.fireWalk = true;
+                Player.statLifeMax2 += 150;
+                Player.lifeRegen += 8;
+                Player.buffImmune[BuffID.Chilled] = true;
+                Player.buffImmune[BuffID.Frostburn] = true;
+                Player.buffImmune[BuffID.Frostburn2] = true;
+                Player.buffImmune[BuffID.Frozen] = true;
+                Player.buffImmune[BuffID.Weak] = true;
+                Player.buffImmune[BuffID.BrokenArmor] = true;
+                Player.buffImmune[BuffID.Bleeding] = true;
+                Player.buffImmune[BuffID.Poisoned] = true;
+                Player.buffImmune[BuffID.Slow] = true;
+                Player.buffImmune[BuffID.Confused] = true;
+                Player.buffImmune[BuffID.Silenced] = true;
+                Player.buffImmune[BuffID.Cursed] = true;
+                Player.buffImmune[BuffID.Darkness] = true;
+                Player.buffImmune[BuffID.WindPushed] = true;
+                Player.buffImmune[BuffID.Stoned] = true;
+                Player.buffImmune[BuffID.Daybreak] = true;
+                Player.buffImmune[BuffID.OnFire] = true;
+                Player.buffImmune[BuffID.OnFire3] = true;
+                Player.buffImmune[BuffID.CursedInferno] = true;
+                Player.buffImmune[BuffID.ShadowFlame] = true;
+                Player.buffImmune[BuffID.Venom] = true;
+                Player.buffImmune[BuffID.Webbed] = true;
+                Player.buffImmune[BuffID.Blackout] = true;
+                AddCalamityBuffImmune(Player, "CalamityMod", "HolyFlames");
+                AddCalamityBuffImmune(Player, "CalamityMod", "BrimstoneFlames");
+                AddCalamityBuffImmune(Player, "CalamityMod", "WeakPetrification");
+                AddCalamityBuffImmune(Player, "CalamityMod", "Nightwither");
+                AddCalamityBuffImmune(Player, "CalamityMod", "GodSlayerInferno");
+                AddCalamityBuffImmune(Player, "CalamityMod", "ArmorCrunch");
+                AddCalamityBuffImmune(Player, "CalamityMod", "SulphuricPoisoning");
+                AddCalamityBuffImmune(Player, "CalamityMod", "BrainRot");
+                AddCalamityBuffImmune(Player, "CalamityMod", "BurningBlood");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "GlacialState");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "HolyLight");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "BrimstoneFlames");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "WhisperingDeath");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "GodSlayerInferno");
+                AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "ArmorCrunch");
+                if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
+                {
+                    Player.endurance += 0.12f;
+                }
+                if (Player.statLife < (int)(Player.statLifeMax2 * 0.25))
+                {
+                    Player.statDefense += 10;
                 }
             }
         }
@@ -3698,7 +3872,7 @@ namespace CalamityDemutation.Players
             }
         }
         /// <summary>
-        /// 近战挥砍特效：修正武器挥舞位置，元素手套生效时附带彩虹粒子
+        /// 近战挥砍特效：元素手套生效时附带彩虹粒子（无位置修正，仅粒子表现）
         /// </summary>
         public override void MeleeEffects(Item item, Rectangle hitbox)
         {
@@ -4254,7 +4428,7 @@ namespace CalamityDemutation.Players
                     Main.projectile[num19].ai[1] = Player.position.Y;
                 }
             }
-            if(deificAmulet)
+            if (deificAmulet)
             {
                 if (info.Damage == 1.0)
                 {
@@ -4282,7 +4456,7 @@ namespace CalamityDemutation.Players
                     Main.projectile[num17].localNPCHitCooldown = 5;
                 }
             }
-            if(rampartofDeities)
+            if (rampartofDeities)
             {
                 if (info.Damage == 1.0)
                 {
@@ -4345,7 +4519,7 @@ namespace CalamityDemutation.Players
             // 不再借用灾厄的 dash 框架，闸门/位移/命中/冷却均由本模组结算
             if (KeybindsSystem.GodslayerDashHotKey.JustPressed)
                 RequestGodSlayerDash();
-            if(KeybindsSystem.DemonshadeHotKey.JustPressed)
+            if (KeybindsSystem.DemonshadeHotKey.JustPressed)
             {
                 if (demonshadeSetBonus)
                 {
@@ -4383,7 +4557,17 @@ namespace CalamityDemutation.Players
                         }
                     }
                 }
-                if(omegaBlueSet && omegaBlueCooldown <= 0)
+            }
+            if (KeybindsSystem.TarragonHotKey.JustPressed)
+            {
+                if (tarraMelee && tarraCooldown <= 0)
+                {
+                    tarraDefense = true;
+                }
+            }
+            if (KeybindsSystem.OmegaBlueHotKey.JustPressed)
+            {
+                if (omegaBlueSet && omegaBlueCooldown <= 0)
                 {
                     omegaBlueCooldown = 1800;
                     SoundEngine.PlaySound(SoundID.Zombie104, Player.position);
@@ -4396,14 +4580,12 @@ namespace CalamityDemutation.Players
                         Main.dust[d].velocity *= 6.6f;
                     }
                 }
-                if (tarraMelee && tarraCooldown <= 0)
+            }
+            if (KeybindsSystem.ElysianHotKey.JustPressed)
+            {
+                if (elysianAegispower && !Player.mount.Active)
                 {
-                    tarraDefense = true;
-                }
-                if (auricSet)
-                {
-                    Asset<Texture2D> carpetAuric = ModContent.Request<Texture2D>("CalamityDemutation/Assets/ExtraTextures/AuricCarpet");
-                    if (auricSet) { TextureAssets.FlyingCarpet = carpetAuric; }
+                    elysianGuard = !elysianGuard;
                 }
             }
         }
@@ -4583,7 +4765,6 @@ namespace CalamityDemutation.Players
                 ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 120);
                 target.AddBuff(BuffID.ShadowFlame, 120);
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 120);
-                target.AddBuff(BuffID.ShadowFlame, 120);
             }
             if(theFirstShadowflame && (proj.CountsAsClass<SummonDamageClass>() || proj.CountsAsClass<SummonMeleeSpeedDamageClass>()))
             {
@@ -4950,8 +5131,8 @@ namespace CalamityDemutation.Players
         {
             if (communityDebuffBlacklist == null)
             {
-                communityDebuffBlacklist = new HashSet<int>
-                {
+                communityDebuffBlacklist =
+                [
                     ModContent.BuffType<Enraged>(),                                  // 本模组 Enraged
                     GetBuffType("CalamityMod", "AdrenalineMode"),                   // 灾厄现代版 肾上腺素
                     GetBuffType("CalamityMod", "RageMode"),                         // 灾厄现代版 怒气
@@ -4959,7 +5140,7 @@ namespace CalamityDemutation.Players
                     GetBuffType("CalamityModClassicPreTrailer", "AdrenalineMode"),  // 灾厄经典版 肾上腺素
                     GetBuffType("CalamityModClassicPreTrailer", "RageMode"),        // 灾厄经典版 怒气
                     GetBuffType("CalamityModClassicPreTrailer", "Enraged"),         // 灾厄经典版 Enraged
-                };
+                ];
             }
             return communityDebuffBlacklist.Contains(buffType);
         }

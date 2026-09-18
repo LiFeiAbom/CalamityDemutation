@@ -55,8 +55,8 @@ namespace CalamityDemutation.NPCs
         // ── 生命周期方法 ──
         /// <summary>
         /// tModLoader 的 ResetEffects 钩子：每帧重置 NPC 状态时调用（本类已按实例启用）。
-        /// 把本模组在 NPC 上使用的三个标记——恶魔烈焰 demonFlames、狂怒 enraged、
-        /// 女巫眩晕 silvaHysteresis——全部复位，随后由对应的 debuff Update 在同帧重新置位，
+        /// 把本模组在 NPC 上使用的五个标记——恶魔烈焰 demonFlames、狂怒 enraged、地狱火爆炸 hellfireExplosion、
+        /// 女巫眩晕 silvaHysteresis、虚空侵蚀 voidErosion——全部复位，随后由对应的 debuff Update 在同帧重新置位，
         /// 从而保证标记不会跨帧残留。
         /// </summary>
         public override void ResetEffects(NPC npc)
@@ -213,6 +213,10 @@ namespace CalamityDemutation.NPCs
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
                 }
+                else if (calamity0.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
+                {
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
+                }
             }
             // ===== 经典版灾厄（CalamityModClassicPreTrailer）：Boss 命名不同，掉落规则保持一致（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
@@ -253,6 +257,10 @@ namespace CalamityDemutation.NPCs
                 else if (calamity1.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
+                }
+                else if (calamity1.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
+                {
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
                 }
             }
         }

@@ -511,7 +511,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// 注册配方（按灾厄 2.2.2 原配方 + 本工程下位饰品）：
         /// 亵渎之魂神器 ×1 + ShadowspecBar×5 + DivineGeode×50 + UnholyEssence×100，站台 ProfanedCrucible。
         /// 灾厄原配方另带 DecraftCondition（击败 SCal / ExoMechs），本工程去掉全部门槛故不注册；
-        /// 现代版与经典版灾厄分别按同名物守卫查找，任一名字缺失则整条跳过
+        /// 仅现代版灾厄有 ProfanedCrucible 工作台与水晶本体（经典版两者皆无），故只注册现代分支
         /// </summary>
         public override void AddRecipes()
         {
@@ -529,22 +529,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.AddIngredient(unholyEssence.Type, 100);
                     recipe.AddTile(profanedCrucible.Type);
                     recipe.Register();
-                }
-            }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
-            {
-                if (calamity1.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar)
-                    && calamity1.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode)
-                    && calamity1.TryFind<ModItem>("UnholyEssence", out ModItem classicUnholyEssence)
-                    && calamity1.TryFind<ModTile>("ProfanedCrucible", out ModTile classicProfanedCrucible))
-                {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<ProfanedSoulArtifact>();
-                    recipe1.AddIngredient(classicShadowspecBar.Type, 5);
-                    recipe1.AddIngredient(classicDivineGeode.Type, 50);
-                    recipe1.AddIngredient(classicUnholyEssence.Type, 100);
-                    recipe1.AddTile(classicProfanedCrucible.Type);
-                    recipe1.Register();
                 }
             }
         }

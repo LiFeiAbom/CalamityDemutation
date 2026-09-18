@@ -391,6 +391,33 @@ Items: {
 			'''
 	}
 
+	AsgardianAegis: {
+		DisplayName: Asgardian Aegis
+		Tooltip:
+			'''
+			Allows the ability to ram dash, empowered by the cosmic inferno
+			This dash can slam through enemies without taking damage
+			Increases maximum life by 150 and life regeneration by 8
+			Grants immunity to knockback, lava and fire
+			Grants immunity to the vast majority of debuffs, including God Slayer Inferno
+			Grants 12% damage reduction while submerged in liquid
+			Grants 10 defense while below 25% life
+			'''
+	}
+
+	AsgardsValor: {
+		DisplayName: Asgard's Valor
+		Tooltip:
+			'''
+			Allows the ability to ram dash
+			This dash can slam through enemies without taking damage
+			Increases maximum life by 50
+			Grants immunity to knockback, lava and fire
+			Grants immunity to most debuffs, including most forms of frost and flame
+			Grants 12% damage reduction while submerged in liquid
+			'''
+	}
+
 	BadgeofBravery: {
 		DisplayName: Badge of Bravery
 		Tooltip:
@@ -740,6 +767,20 @@ Items: {
 			'''
 	}
 
+	ElysianAegis: {
+		DisplayName: Elysian Aegis
+		Tooltip:
+			'''
+			Allows the ability to ram dash, empowered by holy fire
+			This dash can slam through enemies without taking damage
+			Increases maximum life by 100 and life regeneration by 8
+			Grants immunity to knockback, lava and fire
+			Grants immunity to most fire debuffs, including Holy Flames and Daybreak
+			Press [KEY] to toggle the guardian stance
+			The stance drains your shield charge over time and converts it into damage, critical strike chance, aggro and defense, at the cost of movement speed
+			'''
+	}
+
 	EtherealTalisman: {
 		DisplayName: Ethereal Talisman
 		Tooltip:
@@ -1063,6 +1104,10 @@ Items: {
 		DisplayName: Omega Blue Leggings
 	}
 
+	OrnateShield: {
+		DisplayName: Ornate Shield
+	}
+
 	PsychoticAmulet: {
 		DisplayName: Psychotic Amulet
 		Tooltip:
@@ -1119,6 +1164,10 @@ Items: {
 			Increased defense and damage reduction when submerged in liquid
 			Increased movement speed when submerged in liquid
 			'''
+	}
+
+	ShieldoftheOcean: {
+		DisplayName: Shield of the Ocean
 	}
 
 	SigilofCalamitas: {
@@ -1520,14 +1569,16 @@ Items: {
 
 Keybinds: {
 	Demonshade.DisplayName: Demon Shade Enrage
+	Elysian.DisplayName: Elysian Aegis Stance
 	GodslayerDash.DisplayName: God Slayer Dash
+	OmegaBlue.DisplayName: Omega Blue Set Ability
+	Tarragon.DisplayName: Tarragon Defense Mode
 }
 
 Projectiles: {
 	AbaddonCrit.DisplayName: Brimstone Blast
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
-	BaseHeldProjCO.DisplayName: Base Held Proj C O
 	BigBustyRose.DisplayName: Big Busty Rose
 	BiomeOrb.DisplayName: Biome Orb
 	BloodScythe.DisplayName: Blood Scythe

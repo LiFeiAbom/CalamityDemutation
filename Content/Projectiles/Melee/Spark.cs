@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override void AI()
         {
-            // 速度出现 NaN（v != v 即成立）时乘以负小数尝试"翻转"纠偏，防止弹幕卡死
+            // 照抄经典版的 NaN 自愈分支：NaN × 负数仍是 NaN，无法纠偏（该分支实际无效，属反编译遗留）
             if (Projectile.velocity.X != Projectile.velocity.X)
             {
                 Projectile.velocity.X = Projectile.velocity.X * -0.1f;
@@ -94,7 +94,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
         }
         /// <summary>
-        /// 穿透耗尽后碰撞地形时销毁弹幕
+        /// 照抄经典版：penetrate 恒为 -1（无限穿透），penetrate == 0 分支不可达，撞墙实际不销毁
         /// </summary>
         public override bool OnTileCollide(Vector2 oldVelocity)
         {

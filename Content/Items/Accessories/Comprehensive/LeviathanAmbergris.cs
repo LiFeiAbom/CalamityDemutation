@@ -29,5 +29,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         {
             player.GetModPlayer<CalamityDemutationPlayer>().levianthanAmbergris = true;
         }
+        /// <summary>
+        /// 互斥：大杂烩已包含利维坦龙涎香效果，禁止反向与大杂烩同装（与大杂烩侧互为双向）
+        /// </summary>
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<TheAmalgam>();
     }
 }

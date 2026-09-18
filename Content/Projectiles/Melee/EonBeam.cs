@@ -142,11 +142,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             return false;
         }
         /// <summary>
-        /// 固定青色（53, 迪斯科绿, 255）着色，透明度跟随 alpha
+        /// 返回 PreDraw 按 ai[1] 选好的颜色（透明度跟随 alpha），使选色链路生效——原先固定青色会让选色整体失效
         /// </summary>
         public override Color? GetAlpha(Color lightColor)
         {
-            return new Color(53, Main.DiscoG, 255, Projectile.alpha);
+            return lightColor;
         }
     }
 }

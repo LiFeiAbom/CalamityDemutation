@@ -1,4 +1,5 @@
-﻿using CalamityDemutation.Players;
+﻿using CalamityDemutation.Content.Items.Accessories.Comprehensive;
+using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
@@ -43,16 +44,9 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
             }
         }
         /// <summary>
-        /// 互斥判定：已装备真菌团块，或已装备大杂烩（其已包含真菌团块）时禁止重复装备
+        /// 互斥判定：已装备真菌团块，或已装备大杂烩（其已包含真菌团块）时禁止重复装备。
+        /// 改用 CanAccessoryBeEquippedWith，双向互斥且不再自检自己的标记
         /// </summary>
-        public override bool CanEquipAccessory(Player player, int slot, bool modded)/* tModPorter Suggestion: Consider using new hook CanAccessoryBeEquippedWith */
-        {
-            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            if (modPlayer.fungalClump || modPlayer.theAmalgam)
-            {
-                return false;
-            }
-            return true;
-        }
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<FungalClump>() && incomingItem.type != ModContent.ItemType<TheAmalgam>();
     }
 }

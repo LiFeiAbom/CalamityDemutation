@@ -24,9 +24,9 @@ namespace CalamityDemutation.Graphics.Buffers
         private readonly Dictionary<RenderTargetLease, GetTargetSize> cache = new Dictionary<RenderTargetLease, GetTargetSize>();
         // ── 属性 ──
         /// <summary>
-        /// 本池的单例实例（隐藏基类的共享池）
+        /// 本池的单例实例
         /// </summary>
-        public new static ScreenspaceTargetPool Shared { get; } = new();
+        public static ScreenspaceTargetPool Shared { get; } = new();
         // ── 嵌套类型 ──
         /// <summary>
         /// 渲染目标尺寸回调：由调用方根据当前屏幕状态决定要创建的宽高。

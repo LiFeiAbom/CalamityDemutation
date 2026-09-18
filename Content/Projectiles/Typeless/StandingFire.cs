@@ -31,7 +31,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
         /// </summary>
         public override void AI()
         {
-            // 速度出现 NaN（v != v 即成立）时乘以负小数尝试"翻转"纠偏，防止卡死
+            // 照抄经典版的 NaN 自愈分支：NaN × 负数仍是 NaN，无法纠偏（该分支实际无效，属反编译遗留）
             if (Projectile.velocity.X != Projectile.velocity.X)
             {
                 Projectile.velocity.X = Projectile.velocity.X * -0.1f;

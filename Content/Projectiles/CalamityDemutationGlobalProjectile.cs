@@ -24,18 +24,10 @@ namespace CalamityDemutation.Content.Projectiles
     {
         // ── 实例字段 ──
         /// <summary>
-        /// 不受特殊效果影响：BaseSwingCO 挥砍弹幕置位，置位后跳过外部的特殊效果处理
-        /// </summary>
-        public bool NotSubjectToSpecialEffects;
-        /// <summary>
         /// 弹幕"原始 extraUpdates"缓存：-1 表示尚未记录。
         /// ProjUtil 需要临时改动 extraUpdates 时会先缓存原值，用完再写回，避免叠加修改后无法还原。
         /// </summary>
         public int defExtraUpdates = -1;
-        /// <summary>
-        /// 灾厄穿透计数的软依赖等价物（对应原 CalamityGlobalProjectile.timesPierced）
-        /// </summary>
-        public int timesPierced;
         // ── 属性 ──
         /// <summary>
         /// 弹幕按实例保存状态，故开启 per-entity
@@ -156,7 +148,7 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
-            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)// && target.canGhostHeal
+            else if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)// AuricTeslaHelm 同时置 silva/auric 两标记，else if 防双倍吸血
             {// 解除 target.canGhostHeal 限制：任意敌人都可触发吸血
                 float num11 = 0.05f;
                 num11 -= (float)projectile.numHits * 0.025f;
@@ -252,7 +244,6 @@ namespace CalamityDemutation.Content.Projectiles
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 120);
                     target.AddBuff(BuffID.ShadowFlame, 120);
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 120);
-                    target.AddBuff(BuffID.ShadowFlame, 120);
                 }
                 // 原初暗影焰（theFirstShadowflame）：300 帧暗影焰
                 if (modPlayer.theFirstShadowflame)
@@ -369,8 +360,8 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
-            // 奥瑞克套装（auricSet）：弹幕吸血，比例 0.05 起随命中次数递减
-            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)
+            // 奥瑞克套装（auricSet）：弹幕吸血，比例 0.05 起随命中次数递减（与 silvaSet 互斥：AuricTeslaHelm 同时置两标记，else if 防双倍吸血）
+            else if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)
             {
                 float num11 = 0.05f;
                 num11 -= (float)projectile.numHits * 0.025f;

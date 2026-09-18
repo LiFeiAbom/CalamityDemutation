@@ -193,13 +193,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
-                            if (field != null)
+                            if (prop != null)
                             {
-                                bool ZoneAstral = (bool)field.GetValue(calPlayer);
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
                                     if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
@@ -319,13 +319,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
-                            if (field != null)
+                            if (prop != null)
                             {
-                                bool ZoneAstral = (bool)field.GetValue(calPlayer);
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
                                     if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
