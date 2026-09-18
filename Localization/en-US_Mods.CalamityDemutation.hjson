@@ -835,8 +835,8 @@ Items: {
 			Absorbs 25% of damage done to players on your team
 			Only active above 25% life
 			Grants immunity to knockback
-			Puts a shell around the owner when below 30% life that reduces damage
-			The shell becomes more powerful when below 10% life and reduces damage even further
+			Puts a shell around the owner when below 50% life that reduces damage
+			Damage reduction is increased by a further 5% when below 15% life
 			'''
 	}
 
@@ -1134,8 +1134,8 @@ Items: {
 			Absorbs 25% of damage done to players on your team
 			Only active above 25% life
 			Grants immunity to knockback
-			Puts a shell around the owner when below 30% life that reduces damage
-			The shell becomes more powerful when below 10% life and reduces damage even further
+			Puts a shell around the owner when below 50% life that reduces damage
+			Damage reduction is increased by a further 5% when below 15% life
 			'''
 	}
 
