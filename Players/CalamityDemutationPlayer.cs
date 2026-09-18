@@ -1593,19 +1593,10 @@ namespace CalamityDemutation.Players
                     }
                 }
             }
-            // 腐化烧瓶：腐化之地内 +3 防御与 +7% 减伤
-            if (corruptFlask)
+            // 腐化烧瓶/猩红烧瓶：对应邪恶生态内 +3 防御与 +7% 减伤（两件效果相同，合并结算）
+            if (corruptFlask || crimsonFlask)
             {
-                if (Player.ZoneCorrupt)
-                {
-                    Player.statDefense += 3;
-                    Player.endurance += 0.07f;
-                }
-            }
-            // 猩红烧瓶：猩红之地内 +3 防御与 +7% 减伤
-            if (crimsonFlask)
-            {
-                if (Player.ZoneCrimson)
+                if (Player.ZoneCorrupt || Player.ZoneCrimson)
                 {
                     Player.statDefense += 3;
                     Player.endurance += 0.07f;
