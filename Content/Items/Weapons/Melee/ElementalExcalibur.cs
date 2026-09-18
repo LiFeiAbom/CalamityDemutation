@@ -153,10 +153,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            // 解除限制，允许无条件回血
+            // 真近战命中回血：超上限的部分夹回最大值，否则血条会先冲高再被原版夹回，出现血量跳变
             int healAmount = Main.rand.Next(3) + 10;
             player.statLife += healAmount;
             player.HealEffect(healAmount);
+            if (player.statLife > player.statLifeMax2)
+                player.statLife = player.statLifeMax2;
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModBuff>("VulnerabilityHex", out ModBuff vulnerabilityHex))
@@ -178,9 +180,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
         {
+            // 同 OnHitNPC：真近战命中回血，超上限则夹回最大值
             int healAmount = Main.rand.Next(3) + 10;
             player.statLife += healAmount;
             player.HealEffect(healAmount);
+            if (player.statLife > player.statLifeMax2)
+                player.statLife = player.statLifeMax2;
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModBuff>("VulnerabilityHex", out ModBuff vulnerabilityHex))

@@ -235,9 +235,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
                     target.AddBuff(holyLight.Type, 600);
             }
-            int healAmount = Main.rand.Next(3) + 1;
-            Main.LocalPlayer.statLife += healAmount;
-            Main.LocalPlayer.HealEffect(healAmount);
         }
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
@@ -267,9 +264,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
                     target.AddBuff(holyLight.Type, 600);
             }
-            int healAmount = Main.rand.Next(3) + 1;
-            Main.LocalPlayer.statLife += healAmount;
-            Main.LocalPlayer.HealEffect(healAmount);
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {

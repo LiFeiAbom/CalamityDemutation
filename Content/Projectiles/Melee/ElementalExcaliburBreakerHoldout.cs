@@ -80,9 +80,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (!CDUtil.AnyProjectiles(ModContent.ProjectileType<ElementalExcaliburMagicCircle>()))
                     Projectile.Kill();
             }
-            // 按住不放时不再按总时长自毁：否则手持弹幕会重生、进而重复生成魔力阵与激光；
-            // 只在松开后按"蓄力 + 激光寿命"的总时长收尾
-            if (Owner.HoldoutReleased() && Timer > LaserChargeTime + LaserLifetime)
+            // 到"蓄力 + 激光寿命"总时长无条件自毁（灾厄口径）：自毁后仍按住右键会重新生成手持弹幕、重新蓄力，
+            // 持续输出因此被蓄力空窗切成一段段，这就是右键的"衰减"。不能用 HoldoutReleased 门控，
+            // 否则手持弹幕永不自毁、法阵与激光被无限续期
+            if (Timer > LaserChargeTime + LaserLifetime)
                 Projectile.Kill();
             Timer++;
             if (Timer <= LaserChargeTime)

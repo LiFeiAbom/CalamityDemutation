@@ -757,6 +757,7 @@ Items: {
 			True melee strikes freeze enemies and heal you
 			Fires rainbow beams that change their behavior based on their color
 			Right click to charge and unleash an Elemental Excalibur laser
+			The laser fades after a time and must be charged again
 			'''
 	}
 

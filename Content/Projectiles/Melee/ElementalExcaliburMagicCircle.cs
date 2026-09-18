@@ -54,11 +54,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (Projectile.timeLeft > 30)
                     Projectile.timeLeft = 30;
             }
-            else
-            {
-                // 按住不放：持续续命，法阵与激光随持握常驻（松开后走上面那条 30 帧快速收束）
-                Projectile.timeLeft = Lifetime;
-            }
             if (Owner.active && !Owner.dead)
                 Projectile.Center = Owner.Center + Projectile.velocity.SafeNormalize(Vector2.UnitX) * 60f;
             Vector2 aimVector = (Main.MouseWorld - Owner.RotatedRelativePoint(Owner.MountedCenter, true)).SafeNormalize(Vector2.UnitY);

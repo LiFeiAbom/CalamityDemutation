@@ -37,12 +37,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override float MaxScale => 5f;
         /// <summary>激光长度上限</summary>
         public override float MaxLaserLength => 2400f;
-        /// <summary>激光寿命帧数（也是按住时每帧续期到的值）</summary>
+        /// <summary>激光寿命帧数</summary>
         private const float RayLifetimeFrames = 360f;
         /// <summary>
-        /// 存活帧数：按住不放时视为无限（由 AttachToSomething 每帧续期），松开后回到 360 触发收尾
+        /// 存活帧数：恒为 360——基类 Behavior 到寿即自毁，末 30 帧再由 DetermineScale 随剩余时间收细，
+        /// 也就是激光会"衰减"消失，想再放必须重新蓄力（灾厄口径）
         /// </summary>
-        public override float Lifetime => Owner.HoldoutReleased() ? RayLifetimeFrames : float.MaxValue;
+        public override float Lifetime => RayLifetimeFrames;
         /// <summary>光束叠加色取迪斯科色（随全局时间循环变色）</summary>
         public override Color LaserOverlayColor => Main.DiscoColor;
         /// <summary>撞击音效的节流剩余帧数</summary>
@@ -78,11 +79,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             {
                 if (Projectile.timeLeft > 30)
                     Projectile.timeLeft = 30;
-            }
-            else
-            {
-                // 按住不放：持续续命，使收尾缩放曲线不启动（否则 30 帧后光束会开始变细）
-                Projectile.timeLeft = (int)RayLifetimeFrames;
             }
             if (Owner.active && !Owner.dead)
                 Projectile.Center = Owner.Center + Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20f;
