@@ -26,8 +26,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     {
         /// <summary>直接复用武器本体的贴图（灾厄也是从关联物品推导贴图路径）</summary>
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Melee/ElementalExcalibur";
-        /// <summary>本体距手臂的距离</summary>
-        public override float MaxOffsetLengthFromArm => 40f;
+        /// <summary>
+        /// 本体距手臂的距离。灾厄原值是 40（其物品贴图 50 宽），本武器贴图 112 宽，
+        /// 按同一比例放大到约 90——否则 112 宽的剑以贴图中心为原点、只有 40 的离手距离，
+        /// 会有一半压在玩家身上，观感变成"抱着大剑"而不是"持械前指"。
+        /// 注意：发射口 GunTipPosition 由 Projectile.Center 派生，故推远后激光起点仍落在剑尖上。
+        /// </summary>
+        public override float MaxOffsetLengthFromArm => 90f;
         /// <summary>存在帧数（存于 ai[0]）</summary>
         public ref float Timer => ref Projectile.ai[0];
         /// <summary>蓄满所需的帧数</summary>
