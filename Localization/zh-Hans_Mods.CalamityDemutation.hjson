@@ -945,6 +945,15 @@ Items: {
 			'''
 	}
 
+	GreatswordofJudgement: {
+		DisplayName: 制裁大剑
+		Tooltip:
+			'''
+			发射一道审判光束，命中敌人时飞散出追踪白球
+			「剑身回荡着微弱而令人安心的低语」
+			'''
+	}
+
 	HeartoftheElements: {
 		Tooltip:
 			'''
@@ -1615,6 +1624,7 @@ Projectiles: {
 	HellfireExplosionFriendly.DisplayName: 地狱火爆炸
 	HellfireExplosionFriendly2.DisplayName: 地狱火爆炸 2
 	HolyExplosionSupreme.DisplayName: 至圣神圣爆炸
+	JudgementBeam.DisplayName: 审判光束
 	LaserFountains.DisplayName: 激光喷泉
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星
@@ -1626,6 +1636,7 @@ Projectiles: {
 	OathswordFlame.DisplayName: 誓约剑之焰
 	OmegaBiomeOrb.DisplayName: 欧米茄环境能量
 	OmegaBlueTentacle.DisplayName: 蓝色欧米茄触手
+	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PoisonousSeawater.DisplayName: 有毒海水
 	RedDevil.DisplayName: 红色恶魔
 	SandBolt.DisplayName: 沙弹

@@ -77,6 +77,27 @@ namespace CalamityDemutation.Utilities
             return Color.Lerp(currentColor, nextColor, increment * colors.Length % 1f);
         }
         /// <summary>
+        /// 多段颜色插值（移植自灾厄大修的 MultiStepColorLerp）：把 [0,1] 的 percent 均分给 colors.Length - 1 段，
+        /// 在相邻两色之间逐段插值。与 <see cref="MulticolorLerp"/> 的"循环取色"不同——本方法是首尾不循环的单向扫过，
+        /// 故两者并存、不可互相替代。
+        /// </summary>
+        public static Color MultiStepColorLerp(float percent, params Color[] colors)
+        {
+            if (colors == null)
+            {
+                return Color.White;
+            }
+            float per = 1f / (colors.Length - 1f);
+            float total = per;
+            int currentID = 0;
+            while (percent / total > 1f && currentID < colors.Length - 2)
+            {
+                total += per;
+                currentID++;
+            }
+            return Color.Lerp(colors[currentID], colors[currentID + 1], (percent - (per * currentID)) / per);
+        }
+        /// <summary>
         /// 计算顶点着色器使用的透视矩阵（视野矩阵 + 投影矩阵），
         /// 供 PrimitiveRenderer 等 GPU 图元绘制使用，已处理屏幕尺寸、缩放与重力翻转。
         /// </summary>

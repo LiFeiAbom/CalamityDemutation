@@ -945,6 +945,15 @@ Items: {
 			'''
 	}
 
+	GreatswordofJudgement: {
+		DisplayName: Greatsword of Judgement
+		Tooltip:
+			'''
+			Fires a Judgement Beam that scatters homing white orbs on hit
+			'Faint yet comforting whispers emanate from the blade'
+			'''
+	}
+
 	HeartoftheElements: {
 		Tooltip:
 			'''
@@ -1615,6 +1624,7 @@ Projectiles: {
 	HellfireExplosionFriendly.DisplayName: Explosion
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
 	HolyExplosionSupreme.DisplayName: Supreme Holy Explosion
+	JudgementBeam.DisplayName: Judgement Beam
 	LaserFountains.DisplayName: Laser Fountains
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
@@ -1626,6 +1636,7 @@ Projectiles: {
 	OathswordFlame.DisplayName: Oathsword Flame
 	OmegaBiomeOrb.DisplayName: Orb
 	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
+	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PoisonousSeawater.DisplayName: Poisonous Seawater
 	RedDevil.DisplayName: Red Devil
 	SandBolt.DisplayName: Bolt

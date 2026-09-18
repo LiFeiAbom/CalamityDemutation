@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CalamityDemutation.Content.Projectiles;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
@@ -85,6 +86,24 @@ namespace CalamityDemutation.Utilities
         public static Texture2D GetT2DValue(string texture, bool asyncLoad = false)
         {
             return ModContent.Request<Texture2D>(texture, asyncLoad ? AssetRequestMode.AsyncLoad : AssetRequestMode.ImmediateLoad).Value;
+        }
+        /// <summary>
+        /// 从贴图提取调色板：遍历全部像素，收集"非透明且非纯黑非纯白"的颜色，按像素顺序返回。
+        /// 供弹幕按寿命在做多段颜色插值时使用（配合 <see cref="MulticolorLerp"/>）。
+        /// </summary>
+        public static Color[] GetColorDate(Texture2D tex)
+        {
+            Color[] colors = new Color[tex.Width * tex.Height];
+            tex.GetData(colors);
+            List<Color> nonTransparentColors = new List<Color>();
+            foreach (Color color in colors)
+            {
+                if ((color.A > 0 || color.R > 0 || color.G > 0 || color.B > 0) && color != Color.White && color != Color.Black)
+                {
+                    nonTransparentColors.Add(color);
+                }
+            }
+            return nonTransparentColors.ToArray();
         }
         /// <summary>
         /// 检测玩家是否按下左/右键（对应 CWR 的 PressKey，netCed 为 true 时仅在本地玩家生效）
