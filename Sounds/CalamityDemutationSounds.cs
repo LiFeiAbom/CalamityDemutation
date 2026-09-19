@@ -52,5 +52,7 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle FractalStarSplit = new("CalamityDemutation/Sounds/Item/bne_hit");
         /// <summary>分形渊星消散（CE 原名 metalhit，名字不可读故按用途命名）：FractalStarblight 消失时播放</summary>
         public static readonly SoundStyle FractalBlightFade = new("CalamityDemutation/Sounds/Item/metalhit");
+        /// <summary>元素分形掷出剑影（CE 原名 zypshot2，名字不可读故按用途命名）：ElementalFractalHeld 刺出式射出 ElementalFractalThrown 时播放</summary>
+        public static readonly SoundStyle FractalThrow = new("CalamityDemutation/Sounds/Item/zypshot2");
     }
 }

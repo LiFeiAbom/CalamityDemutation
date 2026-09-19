@@ -903,6 +903,16 @@ Items: {
 		Tooltip: A singularity condensed from the fragments of the four celestial pillars
 	}
 
+	ElementalFractal: {
+		DisplayName: Elemental Fractal
+		Tooltip:
+			'''
+			Spins the sword around you, summoning small homing stars, before firing a sword apparition to pierce foes
+			Attacks inflict Elemental Mix
+			'[c/ff00a6:You have infused primoridial essence into this blade...]'
+			'''
+	}
+
 	Gehenna: {
 		DisplayName: Gehenna
 		Tooltip: Drops brimstone fireballs from the sky occasionally
@@ -1686,6 +1696,8 @@ Projectiles: {
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
 	ElementBall.DisplayName: Ball
+	ElementalFractalHeld.DisplayName: Elemental Fractal Held
+	ElementalFractalThrown.DisplayName: Elemental Fractal Thrown
 	EonBeam.DisplayName: Beam
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
 	EXNeutronExplode.DisplayName: EX Neutron Explode

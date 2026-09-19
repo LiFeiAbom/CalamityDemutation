@@ -902,6 +902,15 @@ Items: {
 		Tooltip: 四柱碎片凝成的奇点
 	}
 
+	ElementalFractal: {
+		DisplayName: 元素分形
+		Tooltip:
+			'''
+			旋转挥舞并生成许多元素光星，随后发射一道强力的剑影
+			[c/ff00a6:剑上闪耀着元素之光]
+			'''
+	}
+
 	Gehenna: {
 		DisplayName: 焦热地狱
 		Tooltip: 偶尔从天而降硫磺火球
@@ -1687,6 +1696,8 @@ Projectiles: {
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
 	ElementBall.DisplayName: 元素球
+	ElementalFractalHeld.DisplayName: 元素分形
+	ElementalFractalThrown.DisplayName: 元素分形
 	EonBeam.DisplayName: 远古光束
 	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
 	EXNeutronExplode.DisplayName: 中子大爆点
