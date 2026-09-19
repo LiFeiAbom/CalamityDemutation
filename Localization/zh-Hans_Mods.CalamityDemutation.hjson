@@ -435,7 +435,7 @@ Items: {
 
 	BlackMatterStick: {
 		DisplayName: 中子锭
-		Tooltip: ""
+		Tooltip: 万物之重，聚合指尖
 	}
 
 	BladecrestOathsword: {
@@ -579,17 +579,17 @@ Items: {
 
 	CoreofChaos: {
 		DisplayName: 混沌核心
-		Tooltip: ""
+		Tooltip: 混沌精华凝成的核心
 	}
 
 	CoreofCinder: {
 		DisplayName: 余烬核心
-		Tooltip: ""
+		Tooltip: 烈日精华凝成的核心
 	}
 
 	CoreofEleum: {
 		DisplayName: 寒霜核心
-		Tooltip: ""
+		Tooltip: 极寒精华凝成的核心
 	}
 
 	CoreOfTheBloodGod: {
@@ -881,7 +881,7 @@ Items: {
 
 	GalacticaSingularity: {
 		DisplayName: 银河奇点
-		Tooltip: ""
+		Tooltip: 四柱碎片凝成的奇点
 	}
 
 	Gehenna: {
@@ -1131,7 +1131,13 @@ Items: {
 
 	OrnateShield: {
 		DisplayName: 华丽盾
-		// Tooltip: ""
+		Tooltip:
+			'''
+			允许冲刺
+			冲刺撞击敌人时不会受到伤害
+			生命再生提高 8，最大生命提高 20
+			生命值低于 25% 时防御提高 8
+			'''
 	}
 
 	PsychoticAmulet: {
@@ -1194,7 +1200,7 @@ Items: {
 
 	ShieldoftheOcean: {
 		DisplayName: 海之盾
-		// Tooltip: ""
+		Tooltip: 浸没在液体中时防御提高 5
 	}
 
 	SigilofCalamitas: {
@@ -1690,7 +1696,7 @@ Projectiles: {
 	ProfanedCrystalWhip.DisplayName: 亵渎水晶鞭
 	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
 	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
-	// ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
+	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
 }
 
 Systems: {

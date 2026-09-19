@@ -435,7 +435,7 @@ Items: {
 
 	BlackMatterStick: {
 		DisplayName: Black Matter Stick
-		Tooltip: ""
+		Tooltip: The weight of all things, gathered at your fingertips
 	}
 
 	BladecrestOathsword: {
@@ -579,17 +579,17 @@ Items: {
 
 	CoreofChaos: {
 		DisplayName: Core of Chaos
-		Tooltip: ""
+		Tooltip: A core condensed from the essence of chaos
 	}
 
 	CoreofCinder: {
 		DisplayName: Core of Cinder
-		Tooltip: ""
+		Tooltip: A core condensed from the essence of sunlight
 	}
 
 	CoreofEleum: {
 		DisplayName: Core of Eleum
-		Tooltip: ""
+		Tooltip: A core condensed from the essence of eleum
 	}
 
 	CoreOfTheBloodGod: {
@@ -881,7 +881,7 @@ Items: {
 
 	GalacticaSingularity: {
 		DisplayName: Galactica Singularity
-		Tooltip: ""
+		Tooltip: A singularity condensed from the fragments of the four celestial pillars
 	}
 
 	Gehenna: {
@@ -1131,7 +1131,13 @@ Items: {
 
 	OrnateShield: {
 		DisplayName: Ornate Shield
-		Tooltip: ""
+		Tooltip:
+			'''
+			Allows the ability to dash
+			This dash can ram through enemies without taking damage
+			Increases max life by 20 and life regen by 8
+			Increases defense by 8 when below 25% life
+			'''
 	}
 
 	PsychoticAmulet: {
@@ -1194,7 +1200,7 @@ Items: {
 
 	ShieldoftheOcean: {
 		DisplayName: Shield of the Ocean
-		Tooltip: ""
+		Tooltip: Increased defense by 5 when submerged in liquid
 	}
 
 	SigilofCalamitas: {
