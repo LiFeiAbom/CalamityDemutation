@@ -6,10 +6,16 @@ namespace CalamityDemutation.Common.Effects
     /// <summary>
     /// 着色器加载器：请求并托管本模组全部 .fx 资源——
     /// 刀光 KnifeRendering / KnifeDistortion、屏幕扭曲 WarpShader、
-    /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader、亵渎之魂护盾 RoverDriveShieldShader。
+    /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader、亵渎之魂护盾 RoverDriveShieldShader、
+    /// 深渊裂隙合成 cabyss。
     /// </summary>
     public class EffectLoader
     {
+        /// <summary>
+        /// 深渊裂隙合成着色器（移植自 CalamityEntropy 的 cabyss）：EffectsSystem 把深渊裂隙的白色遮罩
+        /// 合成为蓝色深渊裂缝时使用，需配合 AwSky1 噪声贴图（tex1）与 clr 颜色参数
+        /// </summary>
+        public static Asset<Effect> AbyssShader;
         /// <summary>
         /// 变形球边缘着色器（加法混合版），DragonsBreathMetaball 绘制时使用
         /// </summary>
@@ -44,6 +50,7 @@ namespace CalamityDemutation.Common.Effects
             MetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/MetaballEdgeShader");
             AdditiveMetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/AdditiveMetaballEdgeShader");
             RoverDriveShieldShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "RoverDriveShield");
+            AbyssShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "cabyss");
         }
         /// <summary>
         /// 卸载时把所有着色器 Asset 引用置空，便于热重载回收（注意方法名按既有约定写作 UnLoad）
@@ -55,6 +62,7 @@ namespace CalamityDemutation.Common.Effects
             MetaballEdgeShader = null;
             AdditiveMetaballEdgeShader = null;
             RoverDriveShieldShader = null;
+            AbyssShader = null;
         }
     }
 }

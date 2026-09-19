@@ -266,6 +266,16 @@ Items: {
 			'''
 	}
 
+	AbyssFractal: {
+		DisplayName: Abyssal Fractal
+		Tooltip:
+			'''
+			Releases three homing abyssal blobs and a bluewater slash
+			Inflicts Crush Depth
+			'[c/7045ff:It only gets darker the longer you look at it...]'
+			'''
+	}
+
 	AeroStone: {
 		Tooltip:
 			'''
@@ -1638,6 +1648,9 @@ Keybinds: {
 
 Projectiles: {
 	AbaddonCrit.DisplayName: Brimstone Blast
+	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
+	AbyssalBullet.DisplayName: Abyssal Bullet
+	AbyssalCrack.DisplayName: Abyssal Crack
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
 	BigBustyRose.DisplayName: Big Busty Rose
@@ -1667,6 +1680,7 @@ Projectiles: {
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
 	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
+	FractalAbyssalBlade.DisplayName: Fractal Abyssal Blade
 	FractalBeam.DisplayName: Fractal Beam
 	FractalBlight.DisplayName: Fractal Blight
 	FractalFeather.DisplayName: Fractal Feather

@@ -46,5 +46,7 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle FractalThrustHit = new("CalamityDemutation/Sounds/Item/FractalThrustHit");
         /// <summary>破碎分形命中附加音（CE 原名 FractalHit）：普通挥砍式命中时额外叠加播放</summary>
         public static readonly SoundStyle FractalImpact = new("CalamityDemutation/Sounds/Item/FractalImpact");
+        /// <summary>分形深渊刃冲刺启动（CE 原名 AbyssalBladeLaunch）：深渊分形的 FractalAbyssalBlade 锁定目标冲出时播放</summary>
+        public static readonly SoundStyle AbyssalBladeLaunch = new("CalamityDemutation/Sounds/Item/AbyssalBladeLaunch");
     }
 }

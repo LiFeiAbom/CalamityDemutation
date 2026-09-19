@@ -266,6 +266,15 @@ Items: {
 			'''
 	}
 
+	AbyssFractal: {
+		DisplayName: 深渊分形
+		Tooltip:
+			'''
+			发射追踪渊蚀弹与能撕开空间的剑影
+			[c/7045ff:剑身仿佛深不见底的深渊]
+			'''
+	}
+
 	AeroStone: {
 		Tooltip:
 			'''
@@ -1640,6 +1649,9 @@ Keybinds: {
 
 Projectiles: {
 	AbaddonCrit.DisplayName: 硫磺爆裂
+	AbyssFractalHeld.DisplayName: 深渊分形
+	AbyssalBullet.DisplayName: 渊水弹
+	AbyssalCrack.DisplayName: 深渊裂隙
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
 	BigBustyRose.DisplayName: 硕大玫瑰
@@ -1669,6 +1681,7 @@ Projectiles: {
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
 	BrilliantFractalHeld.DisplayName: 光辉分形
+	FractalAbyssalBlade.DisplayName: 分形深渊刃
 	FractalBeam.DisplayName: 分形射线
 	FractalBlight.DisplayName: 分形光星
 	FractalFeather.DisplayName: 分形之羽

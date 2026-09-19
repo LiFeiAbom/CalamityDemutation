@@ -43,9 +43,9 @@ namespace CalamityDemutation.Content.Particles.Core
         /// </summary>
         internal static Dictionary<int, Asset<Texture2D>> ParticleIDToTexturesDic;
         /// <summary>
-        /// 当前存活粒子
+        /// 当前存活粒子（对模组内可见：深渊裂隙的上屏合成需要遍历它筛出 <see cref="AbyssalParticle"/>）
         /// </summary>
-        private static List<BaseParticle> particles;
+        internal static List<BaseParticle> particles;
         /// <summary>
         /// 待删除粒子（由 RemoveParticle / Kill 登记，下一帧 Update 统一回收）
         /// </summary>
@@ -73,6 +73,7 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<FlameParticle>();
             RegisterParticle<ManaDrainStreak>();
             RegisterParticle<GlowSpark>();
+            RegisterParticle<AbyssalParticle>();
             On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
         /// <summary>
