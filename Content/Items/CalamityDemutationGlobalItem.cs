@@ -9,6 +9,7 @@ using CalamityDemutation.Content.Items.Accessories.JobAcc.Magic;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Summon;
 using CalamityDemutation.Content.Items.Accessories.StatLife;
+using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
@@ -259,6 +260,9 @@ namespace CalamityDemutation.Content.Items
                 if (calamity0.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<NebulousCore>(), 1));
+                    // 虚无双子系（CE 的 NihilityTwinBag，档位=月后，故挂到神明吞噬者）：无星之夜 1/5 概率一次 3 把，虚无碎片必掉 32~40
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<StarlessNight>(), 5, 1, 1, 3));
+                    itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<NihilityFragments>(), 1, 32, 40));
                 }
                 if (calamity0.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
@@ -285,6 +289,8 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CalamityRing>(), 1));
+                    // 先知系（CE 的 ProphetBag，血肉量≈灾厄之影）：符文之歌 1/5 概率一次 3 把
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<RuneSong>(), 5, 1, 1, 3));
                 }
                 if (calamity0.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
                 {
@@ -331,6 +337,9 @@ namespace CalamityDemutation.Content.Items
                 if (calamity1.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<NebulousCore>(), 1));
+                    // 虚无双子系（CE 的 NihilityTwinBag，档位=月后，故挂到神明吞噬者）：无星之夜 1/5 概率一次 3 把，虚无碎片必掉 32~40
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<StarlessNight>(), 5, 1, 1, 3));
+                    itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<NihilityFragments>(), 1, 32, 40));
                 }
                 if (calamity1.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
@@ -357,6 +366,8 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CalamityRing>(), 1));
+                    // 先知系（CE 的 ProphetBag，血肉量≈灾厄之影）：符文之歌 1/5 概率一次 3 把
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<RuneSong>(), 5, 1, 1, 3));
                 }
                 if (calamity1.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
                 {

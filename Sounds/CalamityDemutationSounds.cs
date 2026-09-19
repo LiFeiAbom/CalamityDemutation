@@ -54,5 +54,23 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle FractalBlightFade = new("CalamityDemutation/Sounds/Item/metalhit");
         /// <summary>元素分形掷出剑影（CE 原名 zypshot2，名字不可读故按用途命名）：ElementalFractalHeld 刺出式射出 ElementalFractalThrown 时播放</summary>
         public static readonly SoundStyle FractalThrow = new("CalamityDemutation/Sounds/Item/zypshot2");
+        /// <summary>无星之夜命中（CE 原名 he1，名字不可读故按用途命名）：StarlessNightProj 命中敌人时随机播这一种或其变体</summary>
+        public static readonly SoundStyle StarlessNightHit1 = new("CalamityDemutation/Sounds/Item/he1");
+        /// <summary>无星之夜命中变体（CE 原名 he3）：同上，与 he1 随机二选一</summary>
+        public static readonly SoundStyle StarlessNightHit3 = new("CalamityDemutation/Sounds/Item/he3");
+        /// <summary>无星之夜挥砍（CE 原名 sn_swing）：StarlessNightProj 蓄势起手的两段挥砍音</summary>
+        public static readonly SoundStyle StarlessNightSwing = new("CalamityDemutation/Sounds/Item/sn_swing");
+        /// <summary>符文之歌蓄力完毕（CE 原名 runesong3）：RuneSongHeld 第一段蓄势结束时播放</summary>
+        public static readonly SoundStyle RuneSongCharge = new("CalamityDemutation/Sounds/Item/runesong3");
+        /// <summary>符文之歌二段斩击（CE 原名 HellkiteSwing1）：命中后弹开、转入大范围多段斩时播放</summary>
+        public static readonly SoundStyle RuneSongSwing1 = new("CalamityDemutation/Sounds/Item/HellkiteSwing1");
+        /// <summary>符文之歌二段斩击变体（CE 原名 HellkiteSwing2）：与 HellkiteSwing1 随机二选一</summary>
+        public static readonly SoundStyle RuneSongSwing2 = new("CalamityDemutation/Sounds/Item/HellkiteSwing2");
+        /// <summary>符文脉冲束射出（CE 原名 scholarStaffImpact）：RuneSongHeld 未命中时的收招、发出 RuneBolt 时播放</summary>
+        public static readonly SoundStyle RuneSongBoltImpact = new("CalamityDemutation/Sounds/Item/scholarStaffImpact");
+        /// <summary>符文之歌命中（CE 原名 runesonghit）：RuneSongHeld 命中敌人时播放</summary>
+        public static readonly SoundStyle RuneSongHit = new("CalamityDemutation/Sounds/Item/runesonghit");
+        /// <summary>符文脉冲束命中（CE 原名 beast_lavaball_rise1，名字不可读故按用途命名）：RuneBolt 命中敌人时播放</summary>
+        public static readonly SoundStyle RuneBoltHit = new("CalamityDemutation/Sounds/Item/beast_lavaball_rise1");
     }
 }

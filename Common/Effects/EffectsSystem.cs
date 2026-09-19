@@ -12,15 +12,20 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Common.Effects
 {
     /// <summary>
-    /// 上屏合成系统（移植自 CWR 的 EffectsSystem）：钩入 FilterManager.EndCapture，在屏幕捕获末尾做两层后期——
+    /// 上屏合成系统（移植自 CWR 的 EffectsSystem）：钩入 FilterManager.EndCapture，在屏幕捕获末尾做四层后期——
     /// ① warp 扭曲：收集所有实现 IDrawWarp 的活跃弹幕，把它们的 Warp() 画到 screenTargetSwap 作为位移遮罩，
     /// 再用 WarpShader 合成扭曲后的屏幕；
     /// ② 深渊裂隙：收集活跃的 <see cref="AbyssalCrack"/> 与 <see cref="AbyssalParticle"/>，把裂隙折线与
-    /// 粒子遮罩画到 screenTargetSwap，再用 cabyss 着色器合成为蓝色深渊裂缝叠回屏幕。
+    /// 粒子遮罩画到 screenTargetSwap，再用 cabyss 着色器合成为蓝色深渊裂缝叠回屏幕；
+    /// ③ 全屏闪白：<c>CalamityDemutation.FlashEffectStrength</c> 为正时，以屏幕中心为轴叠 16 层逐级放大的
+    /// 画面（CE 的 ApplyFinalShader，符文之歌收招放大招时用）；
+    /// ④ 无星之夜剑体：把 <see cref="StarlessNightProj"/> 的剑体画在所有弹幕之上（CE 把它的 drawSword
+    /// 放在这一层调用，见 ApplyFinalShader 末尾）。
     /// <para>
     /// 注意 EndCapture 只在**滤镜管线被激活时**才会被调用，因此本系统额外注册了一个以原版 FilterMiniTower
-    /// 为背书的"透明滤镜"，仅在场上存在裂隙或深渊粒子时激活它（见 <see cref="PostUpdateEverything"/>），
-    /// 其余时间保持关闭，既保证管线跑到，又不对画面与性能产生影响。
+    /// 为背书的"透明滤镜"，仅在场上存在裂隙/深渊粒子/无星之夜弹幕，或有闪白待播时激活它
+    /// （见 <see cref="PostUpdateEverything"/>），其余时间保持关闭，既保证管线跑到，又不对画面与性能产生影响。
+    /// 后三项的效果强度也在这个每帧钩子里递减（分别对应 CE 的 PostUpdateNPCs / PostUpdateDusts 那两处衰减）。
     /// </para>
     /// </summary>
     [Autoload(Side = ModSide.Client)]
@@ -28,7 +33,11 @@ namespace CalamityDemutation.Common.Effects
     {
         // ── 常量 ──
         /// <summary>强制开启捕获管线的透明滤镜注册键</summary>
-        private const string AbyssFilterKey = "CalamityDemutation:AbyssCrack";
+        private const string OverlayFilterKey = "CalamityDemutation:ScreenOverlay";
+        /// <summary>屏幕震动的每帧衰减量（CE 在 PostUpdateNPCs 里减 0.5）</summary>
+        private const float ScreenShakeDecay = 0.5f;
+        /// <summary>全屏闪白的每帧衰减量（CE 在 PostUpdateDusts 里减 0.02）</summary>
+        private const float FlashDecay = 0.02f;
         /// <summary>深渊粒子的遮罩贴图（CE 的 cvmask）</summary>
         private const string AbyssMaskTexture = "CalamityDemutation/Assets/ExtraTextures/cvmask";
         /// <summary>cabyss 着色器采样用的噪声贴图（CE 的 AwSky1）</summary>
@@ -40,7 +49,7 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         internal static RenderTarget2D screen;
         /// <summary>上面那个透明滤镜的实例（注册后持有，用于判活与开关）</summary>
-        private static Filter abyssFilter;
+        private static Filter overlayFilter;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册那个"透明滤镜"：借原版 FilterMiniTower 着色器做背书（颜色透明、不透明度 0，
@@ -48,27 +57,36 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public override void PostSetupContent()
         {
-            abyssFilter = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(Color.Transparent).UseOpacity(0f), EffectPriority.VeryHigh);
-            Filters.Scene[AbyssFilterKey] = abyssFilter;
+            overlayFilter = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(Color.Transparent).UseOpacity(0f), EffectPriority.VeryHigh);
+            Filters.Scene[OverlayFilterKey] = overlayFilter;
         }
         /// <summary>
-        /// 每帧世界更新完毕后按需开关透明滤镜：只要场上还有深渊裂隙或深渊粒子就保持激活，
-        /// 两者都消失后立刻关闭（关闭后捕获管线不再启动，本系统的钩子自然也不会做事）。
+        /// 每帧世界更新完毕后：先衰减屏幕震动与全屏闪白这两个全局强度，再按需开关透明滤镜——
+        /// 只要场上还有深渊裂隙/深渊粒子/无星之夜弹幕，或还有闪白待播，就保持激活（关闭后捕获管线不再启动，
+        /// 本系统的钩子自然也不会做事）。
         /// </summary>
         public override void PostUpdateEverything()
         {
-            if (Main.dedServ || abyssFilter == null)
+            if (CalamityDemutation.ScreenShakeAmp > 0f)
+            {
+                CalamityDemutation.ScreenShakeAmp -= ScreenShakeDecay;
+            }
+            if (CalamityDemutation.FlashEffectStrength > 0f)
+            {
+                CalamityDemutation.FlashEffectStrength -= FlashDecay;
+            }
+            if (Main.dedServ || overlayFilter == null)
             {
                 return;
             }
-            bool needed = HasAbyssContent();
-            if (needed && !abyssFilter.IsActive())
+            bool needed = HasAbyssContent() || HasStarlessNightContent() || CalamityDemutation.FlashEffectStrength > 0f;
+            if (needed && !overlayFilter.IsActive())
             {
-                abyssFilter.Activate(Vector2.Zero);
+                overlayFilter.Activate(Vector2.Zero);
             }
-            else if (!needed && abyssFilter.IsActive())
+            else if (!needed && overlayFilter.IsActive())
             {
-                abyssFilter.Deactivate();
+                overlayFilter.Deactivate();
             }
         }
         /// <summary>
@@ -88,13 +106,13 @@ namespace CalamityDemutation.Common.Effects
         {
             On_FilterManager.EndCapture -= FilterManager_EndCapture;
             Main.OnResolutionChanged -= Main_OnResolutionChanged;
-            if (abyssFilter != null)
+            if (overlayFilter != null)
             {
-                if (abyssFilter.IsActive())
+                if (overlayFilter.IsActive())
                 {
-                    abyssFilter.Deactivate();
+                    overlayFilter.Deactivate();
                 }
-                abyssFilter = null;
+                overlayFilter = null;
             }
             // Unload() 由后台线程调用，而 FNA3D 的图形调用(含 RenderTarget2D.Dispose)必须在主线程执行，
             // 否则会抛 ThreadStateException 导致本模组卸载失败、tModLoader 被迫重启。
@@ -161,6 +179,15 @@ namespace CalamityDemutation.Common.Effects
             {
                 DrawAbyssCrack();
             }
+            // 全屏闪白与无星之夜剑体：CE 把这两件事都放在它的 ApplyFinalShader 末尾按「先闪白、后剑体」执行
+            if (CalamityDemutation.FlashEffectStrength > 0f)
+            {
+                DrawFlash();
+            }
+            if (HasStarlessNightContent())
+            {
+                DrawStarlessNightSwords();
+            }
             orig.Invoke(self, finalTexture, screenTarget1, screenTarget2, clearColor);
         }
         /// <summary>
@@ -217,6 +244,69 @@ namespace CalamityDemutation.Common.Effects
             Main.spriteBatch.Draw(Main.screenTargetSwap, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f,
                 Main.LocalPlayer.gravDir < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
             Main.spriteBatch.End();
+        }
+        /// <summary>
+        /// 全屏闪白（CE 的 ApplyFinalShader）：① 把当前画面备份到 screen；② 把屏幕本体原样还原回去；
+        /// ③ 以屏幕中心为轴、把备份叠 16 层——每层透明度按 16/i 递减、缩放按 1+强度×0.08×i 递增，
+        /// 由内向外糊开一层白雾。强度越高叠得越大越亮。
+        /// </summary>
+        private void DrawFlash()
+        {
+            GraphicsDevice graphicsDevice = Main.instance.GraphicsDevice;
+            // 1. 备份当前屏幕
+            graphicsDevice.SetRenderTarget(screen);
+            graphicsDevice.Clear(Color.Transparent);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            Main.spriteBatch.Draw(Main.screenTarget, Vector2.Zero, Color.White);
+            Main.spriteBatch.End();
+            // 2. 还原屏幕本体（CE 用 RT 中转了一遍，画面上等于不变）
+            graphicsDevice.SetRenderTarget(Main.screenTarget);
+            graphicsDevice.Clear(Color.Transparent);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            Main.spriteBatch.Draw(screen, Vector2.Zero, Color.White);
+            Main.spriteBatch.End();
+            // 3. 以中心为轴加法叠加放大的备份，形成由中心扩散的白闪
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            Vector2 center = screen.Size() / 2f;
+            for (float i = 1; i <= 16; i++)
+            {
+                Main.spriteBatch.Draw(screen, center, null,
+                    Color.White * ((16f / i) * 0.1f * CalamityDemutation.FlashEffectStrength), 0f, center,
+                    1 + CalamityDemutation.FlashEffectStrength * 0.08f * i, SpriteEffects.None, 0);
+            }
+            Main.spriteBatch.End();
+        }
+        /// <summary>
+        /// 把所有活跃 <see cref="StarlessNightProj"/> 的剑体画在当前画面上（所有弹幕之后）。
+        /// CE 在它的全局绘制层里逐个调 drawSword，本模组改到上屏阶段做同一件事，
+        /// 这样剑体同样不会被别的弹幕/物块压住。
+        /// </summary>
+        private static void DrawStarlessNightSwords()
+        {
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState,
+                DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            foreach (Projectile projectile in Main.projectile)
+            {
+                if (projectile.active && projectile.ModProjectile is StarlessNightProj sword)
+                {
+                    sword.DrawSword();
+                }
+            }
+            Main.spriteBatch.End();
+        }
+        /// <summary>
+        /// 是否还有无星之夜的手持弹幕在场（决定要不要跑剑体的全局绘制层）。
+        /// </summary>
+        private static bool HasStarlessNightContent()
+        {
+            foreach (Projectile projectile in Main.projectile)
+            {
+                if (projectile.active && projectile.ModProjectile is StarlessNightProj)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         /// <summary>
         /// 是否还有需要上屏合成的东西：任一活跃的深渊裂隙，或任一存活的深渊粒子。

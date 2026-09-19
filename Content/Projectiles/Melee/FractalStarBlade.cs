@@ -1,3 +1,4 @@
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -13,7 +14,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// 同时从上方砸下 3 颗 <see cref="AstralStarMelee"/> 星陨。
     /// <para>
     /// 与 CE 原版的差异：① CE 用 <c>player.Entropy().MouseWorld</c>（它自研的各端可见鼠标坐标），
-    /// 本机没有该系统，按本工程既有口径改用 <c>Main.MouseWorld</c>，并删掉配套的 <c>MouseWorldListener</c> 标志；
+    /// 本模组走同口径的 <see cref="CalamityDemutationPlayer.GetMouseWorld"/>（同样会置位每帧的监听标记）；
     /// ② <c>GetOwner()</c>/<c>GetTexture()</c> 换成 <c>Main.player[owner]</c> 与 TextureAssets；
     /// ③ <c>CEUtils.FindTarget_HomingProj</c> / <c>RotateTowardsAngle</c> / <c>randomPointInCircle</c> /
     /// <c>normalize</c> 在 CE 侧属于工具库，这里内联；④ 减益不新建——现代版灾厄取 <c>AstralInfectionDebuff</c>，
@@ -70,6 +71,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
+            // 各端可见的鼠标坐标（CE 在这里置的是 player.Entropy().MouseWorldListener，本模组同一套口径）
+            Vector2 mouseWorld = owner.GetModPlayer<CalamityDemutationPlayer>().GetMouseWorld();
             if (init)
             {
                 rotSpeed = Projectile.ai[1] * 0.1f;
@@ -83,7 +86,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 pg = counter / (46 * Projectile.MaxUpdates);
                 Projectile.rotation += rotSpeed * (1 - pg);
                 rotSpeed *= 0.99f;
-                Projectile.rotation = RotateTowardsAngle(Projectile.rotation, (Main.MouseWorld - Projectile.Center).ToRotation(), 0.022f * pg, false);
+                Projectile.rotation = RotateTowardsAngle(Projectile.rotation, (mouseWorld - Projectile.Center).ToRotation(), 0.022f * pg, false);
             }
             else
             {
@@ -101,7 +104,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             if (counter == 46 * Projectile.MaxUpdates)
             {
-                Projectile.rotation = (Main.MouseWorld - Projectile.Center).ToRotation();
+                Projectile.rotation = (mouseWorld - Projectile.Center).ToRotation();
                 Projectile.velocity = Projectile.rotation.ToRotationVector2() * 12;
             }
             counter++;

@@ -1103,6 +1103,11 @@ Items: {
 			'''
 	}
 
+	NihilityFragments: {
+		DisplayName: 虚无残片
+		Tooltip: ""
+	}
+
 	OldLordOathsword: {
 		DisplayName: 旧日领主誓约剑
 		Tooltip: 远古地狱的遗物
@@ -1216,6 +1221,17 @@ Items: {
 			'''
 	}
 
+	RuneSong: {
+		DisplayName: 符文之歌
+		Tooltip:
+			'''
+			经过短暂的充能随后进行一次大范围的挥舞
+			如果命中了敌人，剑身会弹开，随后进行一次更大范围的多段斩击
+			如果没有命中则剑会指向光标方向并发射一道符文脉冲束
+			所有攻击造成护甲碎裂
+			'''
+	}
+
 	SeaShell: {
 		DisplayName: 海螺壳
 		Tooltip:
@@ -1312,6 +1328,15 @@ Items: {
 			受到攻击后短时间内移动速度大幅提升
 			受击时释放蘑菇孢子与火花爆炸
 			敌怪的攻击会有一部分伤害被吸收，并用于治疗你
+			'''
+	}
+
+	StarlessNight: {
+		DisplayName: 无星之夜
+		Tooltip:
+			'''
+			击中后释放虚空新星
+			“砍碎太阳！”
 			'''
 	}
 
@@ -1741,6 +1766,8 @@ Projectiles: {
 	ElementalExcaliburRay.DisplayName: 元素圣剑激光
 	ElementalExcaliburWave.DisplayName: 元素圣剑之波
 	RedDevil.DisplayName: 红色恶魔
+	RuneBolt.DisplayName: 符文脉冲束
+	RuneSongHeld.DisplayName: 符文之歌
 	SandBolt.DisplayName: 沙弹
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
@@ -1749,11 +1776,13 @@ Projectiles: {
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
+	StarlessNightProj.DisplayName: 无星之夜
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
 	StarlitFractalHeld.DisplayName: 星熠分形
 	TerraBall.DisplayName: 泰拉球
 	TrueBiomeOrb.DisplayName: 真·环境能量
+	VoidStarF.DisplayName: 虚空新星
 	WaterSpearFriendly.DisplayName: 水流长矛
 	WelkinFractalHeld.DisplayName: 苍穹分形
 	MiniGuardianAttack.DisplayName: 进攻守护者

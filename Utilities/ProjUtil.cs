@@ -391,6 +391,36 @@ namespace CalamityDemutation.Utilities
             return velocity;
         }
         /// <summary>
+        /// 判断一条线段是否与矩形相交（移植自灾厄熵的 CEUtils.LineThroughRect）：
+        /// 两端点任一落在矩形内即算命中，否则按线宽做线段-AABB 相交测试。
+        /// </summary>
+        public static bool LineThroughRect(Vector2 start, Vector2 end, Rectangle rect, int lineWidth = 4)
+        {
+            float point = 0f;
+            return rect.Contains((int)start.X, (int)start.Y) || rect.Contains((int)end.X, (int)end.Y)
+                || Collision.CheckAABBvLineCollision(rect.TopLeft(), rect.Size(), start, end, lineWidth, ref point);
+        }
+        /// <summary>
+        /// 按比例或定速转向目标角度（移植自灾厄熵的 CEUtils.RotateTowardsAngle）：
+        /// 先把两角都归一化到 [-π, π]，<paramref name="useFixedSpeed"/> 为真时单帧转角夹在
+        /// ±<paramref name="rotateSpeed"/> 弧度内，否则按 <paramref name="rotateSpeed"/> 的比例插值。
+        /// </summary>
+        public static float RotateTowardsAngle(float currentRadians, float targetRadians, float rotateSpeed, bool useFixedSpeed = true)
+        {
+            currentRadians = MathHelper.WrapAngle(currentRadians);
+            targetRadians = MathHelper.WrapAngle(targetRadians);
+            float turnAmount = MathHelper.WrapAngle(targetRadians - currentRadians);
+            if (useFixedSpeed)
+            {
+                turnAmount = MathHelper.Clamp(turnAmount, -rotateSpeed, rotateSpeed);
+            }
+            else
+            {
+                turnAmount *= MathHelper.Clamp(rotateSpeed, 0f, 1f);
+            }
+            return currentRadians + turnAmount;
+        }
+        /// <summary>
         /// 随机角度平滑转向：把当前角度向目标角度最多旋转 <paramref name="maxChange"/> 弧度。
         /// 移植自 CWR 的 RotTowards，供 ChasingBehavior2 等追踪逻辑使用。
         /// </summary>

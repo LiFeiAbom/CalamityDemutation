@@ -107,6 +107,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 屏幕震动：每帧把玩家身上累积的震动强度换成一次随机圆内偏移加到屏幕位置，再线性衰减 0.185 并钳在 0~20。
         /// 与灾厄 CalamityPlayer.ModifyScreenPosition 一致（灾厄多一个 Screenshake 总开关，本工程未加配置项）。
+        /// 另外叠加一层全局震动 <c>CalamityDemutation.ScreenShakeAmp</c>（CE 的 screenShakeAmp 口径）。
         /// </summary>
         public override void ModifyScreenPosition()
         {
@@ -114,6 +115,14 @@ namespace CalamityDemutation.Players
             {
                 Main.screenPosition += Main.rand.NextVector2Circular(GeneralScreenShakePower, GeneralScreenShakePower);
                 GeneralScreenShakePower = MathHelper.Clamp(GeneralScreenShakePower - 0.185f, 0f, 20f);
+            }
+            // 全局屏幕震动：横轴抖幅是纵轴的 8 倍（CE 原式），衰减在 EffectsSystem 里每帧 -0.5。
+            // CE 那句没有归属判断，而本钩子对每个活跃玩家各调一次，多人下整屏会被叠加好几遍；
+            // 这里限定只由本地玩家施加一次——单机下与 CE 完全一致。
+            if (Player.whoAmI == Main.myPlayer && CalamityDemutation.ScreenShakeAmp > 0f)
+            {
+                float amp = CalamityDemutation.ScreenShakeAmp;
+                Main.screenPosition += new Vector2(Main.rand.Next((int)-amp * 8, (int)amp * 8 + 1), Main.rand.Next((int)-amp, (int)amp + 1));
             }
         }
         // ── 远端玩家的冲刺表现（联机） ──

@@ -75,8 +75,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 与 CE 原版的差异：① 音效走本模组的 <see cref="CalamityDemutationSounds"/>（映射同前几把：
     /// sf_use→FractalSwing、sf_hit→FractalSwingHit、FractalHit→FractalImpact，新增 zypshot2→FractalThrow），
     /// 音高按既有口径取 CE 值减 1（0.6 → -0.4），<c>CEUtils.WeapSound</c> 按 1.0；
-    /// ② CE 的 <c>owner.mouseWorld()</c>（它自研的各端可见鼠标坐标）本机没有，按本工程既有口径改用
-    /// <c>Main.MouseWorld</c>；③ <c>GetOwner()</c>/<c>GetTexture()</c> 换成 <c>Main.player[owner]</c> 与 TextureAssets，
+    /// ② CE 的 <c>owner.mouseWorld()</c>（它自研的各端可见鼠标坐标）走本模组同口径的
+    /// <see cref="CalamityDemutationPlayer.GetMouseWorld"/>；③ <c>GetOwner()</c>/<c>GetTexture()</c> 换成 <c>Main.player[owner]</c> 与 TextureAssets，
     /// <c>CEExtraAssets.SemiCircularSmear</c>/<c>StarTexture</c> 换成本模组 Assets/ExtraTextures 下的同名贴图，
     /// 星芒贴图的静态缓存改为按需请求；④ <c>CEUtils.GetRepeatedCosFromZeroToOne</c> 与 <c>randomPointInCircle</c> 内联；
     /// ⑤ 去掉 CE 里只记录、从不读取的 odr 旋转历史与配套的 TrailingMode/TrailCacheLength 设置；
@@ -181,9 +181,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
             else
             {
-                // 刺出：速度方向始终指向鼠标，转体分三段（前摆 → 横扫 → 收势）
-                Projectile.velocity = new Vector2(Projectile.velocity.Length(), 0).RotatedBy((Main.MouseWorld - Projectile.Center).ToRotation());
-                float aim = (Main.MouseWorld - Projectile.Center).ToRotation();
+                // 刺出：速度方向始终指向鼠标（取跨端可见的那份坐标，CE 用的是 owner.mouseWorld()），转体分三段（前摆 → 横扫 → 收势）
+                Vector2 mouseWorld = owner.GetModPlayer<CalamityDemutationPlayer>().GetMouseWorld();
+                Projectile.velocity = new Vector2(Projectile.velocity.Length(), 0).RotatedBy((mouseWorld - Projectile.Center).ToRotation());
+                float aim = (mouseWorld - Projectile.Center).ToRotation();
                 int flip = Projectile.velocity.X > 0 ? -1 : 1;
                 if (progress < 0.34f)
                 {

@@ -807,6 +807,7 @@ namespace CalamityDemutation.Players
             wifeinaBottlewithBoobs = false;
             yharimsInsignia = false;
             yharimPower = false;
+            UpdateMouseWorldSync();
         }
         /// <summary>
         /// 玩家死亡时清空所有饰品标记与冷却

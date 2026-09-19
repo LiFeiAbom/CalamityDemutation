@@ -31,6 +31,18 @@ namespace CalamityDemutation
         /// 模组单例：供全局静态访问当前 Mod 实例
         /// </summary>
         public static CalamityDemutation Instance;
+        /// <summary>
+        /// 全屏闪白强度（移植自 CE 的 CalamityEntropy.FlashEffectStrength，值越大闪得越亮越大）：
+        /// 任意效果置一个正值即可，由 EffectsSystem 每帧衰减 0.02，
+        /// 并在上屏阶段以屏幕中心为轴叠 16 层逐级放大的画面形成白闪。
+        /// </summary>
+        public static float FlashEffectStrength;
+        /// <summary>
+        /// 屏幕震动强度（移植自 CE 的 CalamityEntropy.Instance.screenShakeAmp）：
+        /// 任意效果置一个正值即可，由 EffectsSystem 每帧衰减 0.5，
+        /// 应用点在 CalamityDemutationPlayer.ModifyScreenPosition（横轴抖幅是纵轴的 8 倍）。
+        /// </summary>
+        public static float ScreenShakeAmp;
         // ── 实例字段 ──
         /// <summary>
         /// GravityDontFlipScreen 模组的软依赖引用（未安装时为 null）。
@@ -171,6 +183,27 @@ namespace CalamityDemutation
                         ownerPlayer.ReceiveGodSlayerDashHit();
                     else
                         ownerPlayer.ReceiveGodSlayerDash();
+                }
+            }
+            // 鼠标世界坐标同步：客户端上报自己的鼠标位置，服务端代播给其余客户端，
+            // 让别人的手持弹幕在本机也能朝着正确的方向挥（载荷都很小，故不加节流外的额外条件）
+            else if (msgType == Players.CalamityDemutationPlayer.MsgSyncMouseWorld)
+            {
+                int mouseOwner = reader.ReadByte();
+                short deltaX = reader.ReadInt16();
+                short deltaY = reader.ReadInt16();
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)Players.CalamityDemutationPlayer.MsgSyncMouseWorld);
+                    packet.Write((byte)whoAmI);
+                    packet.Write(deltaX);
+                    packet.Write(deltaY);
+                    packet.Send(-1, whoAmI);
+                }
+                else if (mouseOwner >= 0 && mouseOwner < Main.player.Length && Main.player[mouseOwner].active)
+                {
+                    Main.player[mouseOwner].GetModPlayer<Players.CalamityDemutationPlayer>().ReceiveMouseWorld(deltaX, deltaY);
                 }
             }
         }

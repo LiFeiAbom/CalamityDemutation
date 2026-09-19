@@ -1105,6 +1105,11 @@ Items: {
 			'''
 	}
 
+	NihilityFragments: {
+		DisplayName: Nihility Fragments
+		Tooltip: ""
+	}
+
 	OldLordOathsword: {
 		DisplayName: Old Lord Oathsword
 		Tooltip: A relic of the ancient underworld
@@ -1218,6 +1223,17 @@ Items: {
 			'''
 	}
 
+	RuneSong: {
+		DisplayName: Archaic Song
+		Tooltip:
+			'''
+			Briefly charge up before sweeping the blade in a wide arc
+			If the sweep hits an enemy, the blade bounces off and performs a wider multi-hit slash
+			If it misses, the blade points at the cursor and fires a runic pulse beam
+			All attacks inflict Armor Crunch
+			'''
+	}
+
 	SeaShell: {
 		DisplayName: Sea Shell
 		Tooltip:
@@ -1312,6 +1328,15 @@ Items: {
 			Taking a hit will make you move very fast for a short time
 			You emit a mushroom spore and spark explosion when you are hit
 			Enemy attacks will have part of their damage absorbed and used to heal you
+			'''
+	}
+
+	StarlessNight: {
+		DisplayName: Starless Night
+		Tooltip:
+			'''
+			Releases homing void stars on hit
+			"Slash the sun!"
 			'''
 	}
 
@@ -1741,6 +1766,8 @@ Projectiles: {
 	ElementalExcaliburRay.DisplayName: Elemental Excalibur Ray
 	ElementalExcaliburWave.DisplayName: Elemental Excalibur Wave
 	RedDevil.DisplayName: Red Devil
+	RuneBolt.DisplayName: Rune Bolt
+	RuneSongHeld.DisplayName: Archaic Song
 	SandBolt.DisplayName: Bolt
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
@@ -1749,11 +1776,13 @@ Projectiles: {
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
+	StarlessNightProj.DisplayName: Starless Night
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
 	StarlitFractalHeld.DisplayName: Starlit Fractal Held
 	TerraBall.DisplayName: Ball
 	TrueBiomeOrb.DisplayName: Orb
+	VoidStarF.DisplayName: Void Star
 	WaterSpearFriendly.DisplayName: Spear
 	WelkinFractalHeld.DisplayName: Welkin Fractal Held
 	MiniGuardianAttack.DisplayName: Offensive Guardian
