@@ -197,6 +197,38 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     }
                 }
             }
+            // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            {
+                var calamityPlayerType = calamity1.Code.GetTypes()
+                   .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
+                if (calamityPlayerType != null)
+                {
+                    var getModPlayerMethod = typeof(Player).GetMethod("GetModPlayer", [])
+                        ?.MakeGenericMethod(calamityPlayerType);
+                    if (getModPlayerMethod != null)
+                    {
+                        if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
+                        {
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
+                                System.Reflection.BindingFlags.Public |
+                                System.Reflection.BindingFlags.NonPublic |
+                                System.Reflection.BindingFlags.Instance);
+                            if (prop != null)
+                            {
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
+                                if (ZoneAstral)
+                                {
+                                    if (calamity1.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    {
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         /// <summary>
         /// 命中玩家（PvP）：与 NPC 版逻辑一致——按环境/事件为攻击者自身附加对应 buff（含星陨重力正常化）
@@ -314,6 +346,38 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 if (ZoneAstral)
                                 {
                                     if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    {
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            {
+                var calamityPlayerType = calamity1.Code.GetTypes()
+                   .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
+                if (calamityPlayerType != null)
+                {
+                    var getModPlayerMethod = typeof(Player).GetMethod("GetModPlayer", [])
+                        ?.MakeGenericMethod(calamityPlayerType);
+                    if (getModPlayerMethod != null)
+                    {
+                        if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
+                        {
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
+                                System.Reflection.BindingFlags.Public |
+                                System.Reflection.BindingFlags.NonPublic |
+                                System.Reflection.BindingFlags.Instance);
+                            if (prop != null)
+                            {
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
+                                if (ZoneAstral)
+                                {
+                                    if (calamity1.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
                                     {
                                         player.AddBuff(gravityNormalizerBuff.Type, 600);
                                     }

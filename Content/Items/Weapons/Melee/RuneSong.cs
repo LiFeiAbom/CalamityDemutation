@@ -71,7 +71,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         /// <summary>剑体拖尾的圆形烟贴图（CE 的 CEExtraAssets.CircularSmearSmokey）</summary>
         private const string SmearTexture = "CalamityDemutation/Assets/ExtraTextures/CircularSmearSmokey";
-        /// <summary>护甲碎裂减益类型：现代版与经典版灾厄都有 ArmorCrunch，加载期解析取得（同文件的 <see cref="RuneBolt"/> 也用它）</summary>
+        /// <summary>护甲碎裂减益类型：现代版与经典版灾厄都有同名 ArmorCrunch，加载期两版各试一次（同文件的 <see cref="RuneBolt"/> 也用它）</summary>
         internal static int armorCrunchBuffType = -1;
         /// <summary>朝向（±1），取出手时的水平速度方向，之后在收招时朝鼠标重定向</summary>
         private int dir = 1;
@@ -97,10 +97,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         public override void SetStaticDefaults()
         {
-            // 护甲碎裂：两版灾厄都有 ArmorCrunch（CE 挂的是它自研的 SoulDisorder，本模组不新建 buff）
+            // 护甲碎裂：两版灾厄都有同名 ArmorCrunch（现代版 Buffs/StatDebuffs/、经典版 Buffs/；CE 挂的是它自研的 SoulDisorder，本模组不新建 buff）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch))
             {
                 armorCrunchBuffType = armorCrunch.Type;
+            }
+            else if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1) && calamity1.TryFind<ModBuff>("ArmorCrunch", out ModBuff classicArmorCrunch))
+            {
+                armorCrunchBuffType = classicArmorCrunch.Type;
             }
         }
         public override void SetDefaults()
