@@ -1305,6 +1305,17 @@ Items: {
 			'''
 	}
 
+	StarlitFractal: {
+		DisplayName: Starlit Fractal
+		Tooltip:
+			'''
+			Release homing swords that call down stars from the heavens on hit
+			Every other swing sends out a star that bursts into homing fragments
+			Attacks inflict Astral Infection
+			'[c/dd00ff:Constellations of your design fade in and out...]'
+			'''
+	}
+
 	StatisBeltOfCurses: {
 		DisplayName: Statis' Belt of Curses
 		Tooltip:
@@ -1651,6 +1662,7 @@ Projectiles: {
 	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
 	AbyssalBullet.DisplayName: Abyssal Bullet
 	AbyssalCrack.DisplayName: Abyssal Crack
+	AstralStarMelee.DisplayName: Astral Star Melee
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
 	BigBustyRose.DisplayName: Big Busty Rose
@@ -1686,6 +1698,9 @@ Projectiles: {
 	FractalFeather.DisplayName: Fractal Feather
 	FractalShadow.DisplayName: Fractal Shadow
 	FractalShoot.DisplayName: Fractal Shoot
+	FractalStar.DisplayName: Fractal Star
+	FractalStarBlade.DisplayName: Fractal Star Blade
+	FractalStarblight.DisplayName: Fractal Starblight
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump
 	FungalHeal.DisplayName: Fungal Heal
@@ -1724,6 +1739,7 @@ Projectiles: {
 	SirenSongFriendly.DisplayName: Song
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
+	StarlitFractalHeld.DisplayName: Starlit Fractal Held
 	TerraBall.DisplayName: Ball
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear

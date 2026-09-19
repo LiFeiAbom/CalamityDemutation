@@ -48,5 +48,9 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle FractalImpact = new("CalamityDemutation/Sounds/Item/FractalImpact");
         /// <summary>分形深渊刃冲刺启动（CE 原名 AbyssalBladeLaunch）：深渊分形的 FractalAbyssalBlade 锁定目标冲出时播放</summary>
         public static readonly SoundStyle AbyssalBladeLaunch = new("CalamityDemutation/Sounds/Item/AbyssalBladeLaunch");
+        /// <summary>分形之星裂开（CE 原名 bne_hit，名字不可读故按用途命名）：星熠分形的 FractalStar 寿命将尽、放出四颗渊星时播放</summary>
+        public static readonly SoundStyle FractalStarSplit = new("CalamityDemutation/Sounds/Item/bne_hit");
+        /// <summary>分形渊星消散（CE 原名 metalhit，名字不可读故按用途命名）：FractalStarblight 消失时播放</summary>
+        public static readonly SoundStyle FractalBlightFade = new("CalamityDemutation/Sounds/Item/metalhit");
     }
 }

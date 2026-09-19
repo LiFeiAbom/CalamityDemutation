@@ -1306,6 +1306,17 @@ Items: {
 			'''
 	}
 
+	StarlitFractal: {
+		DisplayName: 星熠分形
+		Tooltip:
+			'''
+			发射追踪剑影与会分裂的星熠
+			剑影命中后从上方降下星星
+			真近战命中后降下更多星星
+			[c/dd00ff:剑身浮动着星光]
+			'''
+	}
+
 	StatisBeltOfCurses: {
 		DisplayName: 斯塔提斯诅咒腰带
 		Tooltip:
@@ -1652,6 +1663,7 @@ Projectiles: {
 	AbyssFractalHeld.DisplayName: 深渊分形
 	AbyssalBullet.DisplayName: 渊水弹
 	AbyssalCrack.DisplayName: 深渊裂隙
+	AstralStarMelee.DisplayName: 星熠星陨
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
 	BigBustyRose.DisplayName: 硕大玫瑰
@@ -1687,6 +1699,9 @@ Projectiles: {
 	FractalFeather.DisplayName: 分形之羽
 	FractalShadow.DisplayName: 分形剑影
 	FractalShoot.DisplayName: 分形弹
+	FractalStar.DisplayName: 分形之星
+	FractalStarBlade.DisplayName: 分形星影
+	FractalStarblight.DisplayName: 分形星弹
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
@@ -1725,6 +1740,7 @@ Projectiles: {
 	SirenSongFriendly.DisplayName: 塞壬之歌
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
+	StarlitFractalHeld.DisplayName: 星熠分形
 	TerraBall.DisplayName: 泰拉球
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛

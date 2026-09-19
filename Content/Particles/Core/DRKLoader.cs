@@ -73,6 +73,8 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<FlameParticle>();
             RegisterParticle<ManaDrainStreak>();
             RegisterParticle<GlowSpark>();
+            RegisterParticle<GlowSparkCal>();
+            RegisterParticle<StarTrailParticle>();
             RegisterParticle<AbyssalParticle>();
             On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
@@ -230,6 +232,30 @@ namespace CalamityDemutation.Content.Particles.Core
             batched_NonPremultiplied_DRK.Clear();
             batched_AdditiveBlend_DRK.Clear();
             sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
+        }
+        /// <summary>
+        /// 把批次接回该粒子所在混合桶的样式（CE 的 <c>PRTLoader.BeginDrawingWithMode</c> 等价物）：
+        /// 粒子在 CustomDraw 里为自己的采样需求 End/Begin 过批次之后必须调它，否则同桶里后面的粒子
+        /// 会画进错误的批次（表现为那一帧后续粒子花屏）。
+        /// </summary>
+        internal static void BeginDrawingWithMode(BaseParticle particle, SpriteBatch sb)
+        {
+            RasterizerState rasterizer = Main.Rasterizer;
+            rasterizer.ScissorTestEnable = true;
+            Main.instance.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
+            Main.instance.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
+            if (particle.UseAdditiveBlend)
+            {
+                sb.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.Default, rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            }
+            else if (particle.UseHalfTransparency)
+            {
+                sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            }
+            else
+            {
+                sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            }
         }
         /// <summary>
         /// 可用粒子槽数量
