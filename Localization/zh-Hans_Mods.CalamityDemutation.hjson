@@ -1331,6 +1331,15 @@ Items: {
 			'''
 	}
 
+	SpiritFractal: {
+		DisplayName: 聚魂分形
+		Tooltip:
+			'''
+			发射大量的聚魂剑影，并在每4次挥舞后投掷出武器本身，造成多次伤害并释放追踪灵魂
+			[c/dfe7cb:剑上聚集着众多亡魂]
+			'''
+	}
+
 	StarlessNight: {
 		DisplayName: 无星之夜
 		Tooltip:
@@ -1733,6 +1742,7 @@ Projectiles: {
 	FractalBeam.DisplayName: 分形射线
 	FractalBlight.DisplayName: 分形光星
 	FractalFeather.DisplayName: 分形之羽
+	FractalGhostBlade.DisplayName: 聚魂之影
 	FractalShadow.DisplayName: 分形剑影
 	FractalShoot.DisplayName: 分形弹
 	FractalStar.DisplayName: 分形之星
@@ -1776,6 +1786,7 @@ Projectiles: {
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
+	SpiritFractalHeld.DisplayName: 聚魂分形
 	StarlessNightProj.DisplayName: 无星之夜
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
@@ -1804,6 +1815,7 @@ Projectiles: {
 	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
 	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
+	// GhastlySoulLarge.DisplayName: Ghastly Soul Large
 }
 
 Systems: {

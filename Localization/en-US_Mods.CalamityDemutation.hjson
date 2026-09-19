@@ -1331,6 +1331,17 @@ Items: {
 			'''
 	}
 
+	SpiritFractal: {
+		DisplayName: Spirit Fractal
+		Tooltip:
+			'''
+			Swings the sword three times, releasing homing swords
+			Throws the sword on the fourth swing, summoning a ring of homing spirits
+			Inflicts Armor Crunch
+			'[c/dfe7cb:Spirits of those you've slain empower each swing...]'
+			'''
+	}
+
 	StarlessNight: {
 		DisplayName: Starless Night
 		Tooltip:
@@ -1733,6 +1744,7 @@ Projectiles: {
 	FractalBeam.DisplayName: Fractal Beam
 	FractalBlight.DisplayName: Fractal Blight
 	FractalFeather.DisplayName: Fractal Feather
+	FractalGhostBlade.DisplayName: Fractal Ghost Blade
 	FractalShadow.DisplayName: Fractal Shadow
 	FractalShoot.DisplayName: Fractal Shoot
 	FractalStar.DisplayName: Fractal Star
@@ -1776,6 +1788,7 @@ Projectiles: {
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
+	SpiritFractalHeld.DisplayName: Spirit Fractal Held
 	StarlessNightProj.DisplayName: Starless Night
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
@@ -1804,6 +1817,7 @@ Projectiles: {
 	PscTransformAnimation.DisplayName: Psc Transform Animation
 	PscTransformRocks.DisplayName: Psc Transform Rocks
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
+	GhastlySoulLarge.DisplayName: Ghastly Soul Large
 }
 
 Systems: {

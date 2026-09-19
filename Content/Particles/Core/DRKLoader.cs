@@ -80,6 +80,7 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<RuneParticle>();
             RegisterParticle<HeavenfallStarCal>();
             RegisterParticle<LineParticleCal>();
+            RegisterParticle<ImpactParticle>();
             On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
         /// <summary>
