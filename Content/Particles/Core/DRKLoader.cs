@@ -56,7 +56,7 @@ namespace CalamityDemutation.Content.Particles.Core
         internal static Dictionary<Type, int> ParticleTypesDic;
         // ── 生命周期方法 ──
         /// <summary>
-        /// 模组加载时初始化所有粒子容器、注册内置粒子 DRK_Spark、DRK_HeavenfallStar 与 FlameParticle，并挂上绘制钩子。
+        /// 模组加载时初始化所有粒子容器、注册内置粒子（DRK_Spark / DRK_HeavenfallStar / FlameParticle / ManaDrainStreak / GlowSpark），并挂上绘制钩子。
         /// </summary>
         public override void Load()
         {
@@ -72,6 +72,7 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<DRK_HeavenfallStar>();
             RegisterParticle<FlameParticle>();
             RegisterParticle<ManaDrainStreak>();
+            RegisterParticle<GlowSpark>();
             On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
         /// <summary>

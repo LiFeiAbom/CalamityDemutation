@@ -1198,6 +1198,17 @@ Items: {
 			'''
 	}
 
+	ShatteredFractal: {
+		DisplayName: 破碎分形
+		Tooltip:
+			'''
+			上下挥舞，然后向前刺出
+			刺出同时发射威力随时间衰减的追踪分形弹
+			[c/ff5300:曾经的神剑，但如今已失去了它的潜能]
+			[c/ff5300:或许以后你可以让它重现光芒]
+			'''
+	}
+
 	ShieldoftheOcean: {
 		DisplayName: 海之盾
 		Tooltip: 浸没在液体中时防御提高 5
@@ -1638,6 +1649,7 @@ Projectiles: {
 	EXNeutronExplode.DisplayName: 中子大爆点
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
+	FractalShoot.DisplayName: 分形弹
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
@@ -1670,6 +1682,7 @@ Projectiles: {
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
 	SandyWaifu.DisplayName: 沙元素
+	ShatteredFractalHeld.DisplayName: 破碎分形
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌

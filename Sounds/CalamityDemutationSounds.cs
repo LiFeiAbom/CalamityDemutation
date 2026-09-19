@@ -34,5 +34,17 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle ExobladeDashImpact = new("CalamityDemutation/Sounds/Item/ExobladeDashImpact") { Volume = 0.8f };
         /// <summary>破碎剑柄挥砍（HiltAttack）：分形系列 BrokenHilt 每次挥砍播放（CE 原为 CEUtils.PlaySound("HiltAttack")）</summary>
         public static readonly SoundStyle HiltAttack = new("CalamityDemutation/Sounds/Item/HiltAttack");
+        /// <summary>破碎分形挥砍（CE 原名 sf_use）：ShatteredFractal 的普通挥砍式（ai[0] 0/1）起手播放</summary>
+        public static readonly SoundStyle FractalSwing = new("CalamityDemutation/Sounds/Item/FractalSwing");
+        /// <summary>破碎分形刺出起手（CE 原名 powerwhip）：ShatteredFractal 的刺出式（ai[0] 2）起手播放</summary>
+        public static readonly SoundStyle FractalThrust = new("CalamityDemutation/Sounds/Item/FractalThrust");
+        /// <summary>破碎分形刺出（CE 原名 sf_shoot）：刺出式射出 FractalShoot 时播放</summary>
+        public static readonly SoundStyle FractalShoot = new("CalamityDemutation/Sounds/Item/FractalShoot");
+        /// <summary>破碎分形挥砍命中（CE 原名 sf_hit）：普通挥砍式的命中音</summary>
+        public static readonly SoundStyle FractalSwingHit = new("CalamityDemutation/Sounds/Item/FractalSwingHit");
+        /// <summary>破碎分形刺出命中（CE 原名 sf_hit1）：刺出式的命中音</summary>
+        public static readonly SoundStyle FractalThrustHit = new("CalamityDemutation/Sounds/Item/FractalThrustHit");
+        /// <summary>破碎分形命中附加音（CE 原名 FractalHit）：普通挥砍式命中时额外叠加播放</summary>
+        public static readonly SoundStyle FractalImpact = new("CalamityDemutation/Sounds/Item/FractalImpact");
     }
 }
