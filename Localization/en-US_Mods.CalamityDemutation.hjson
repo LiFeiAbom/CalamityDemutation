@@ -525,6 +525,15 @@ Items: {
 		DisplayName: Bloom Stone
 	}
 
+	BrilliantFractal: {
+		DisplayName: Brilliant Fractal
+		Tooltip:
+			'''
+			Summons homing stars and swords that charge at the cursor on swing
+			'[c/f2ffd4:You took this old blade and polished it anew...]'
+			'''
+	}
+
 	BrokenHilt: {
 		DisplayName: Broken Hilt
 		Tooltip: "[c/c4ff3b:An unremarkable, rotting handle...]"
@@ -1657,8 +1666,11 @@ Projectiles: {
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
+	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
 	FractalBeam.DisplayName: Fractal Beam
+	FractalBlight.DisplayName: Fractal Blight
 	FractalFeather.DisplayName: Fractal Feather
+	FractalShadow.DisplayName: Fractal Shadow
 	FractalShoot.DisplayName: Fractal Shoot
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump

@@ -525,6 +525,15 @@ Items: {
 		DisplayName: 繁花石
 	}
 
+	BrilliantFractal: {
+		DisplayName: 光辉分形
+		Tooltip:
+			'''
+			挥舞时发射众多追踪的神圣之星并发射一发追踪剑影
+			[c/f2ffd4:吸纳了光辉能量]
+			'''
+	}
+
 	BrokenHilt: {
 		DisplayName: 破碎剑柄
 		Tooltip: "[c/c4ff3b:远古神剑的一部分]"
@@ -1659,8 +1668,11 @@ Projectiles: {
 	EXNeutronExplode.DisplayName: 中子大爆点
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
+	BrilliantFractalHeld.DisplayName: 光辉分形
 	FractalBeam.DisplayName: 分形射线
+	FractalBlight.DisplayName: 分形光星
 	FractalFeather.DisplayName: 分形之羽
+	FractalShadow.DisplayName: 分形剑影
 	FractalShoot.DisplayName: 分形弹
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
