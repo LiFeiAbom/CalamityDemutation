@@ -31,8 +31,9 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             Item.value = Item.buyPrice(0, 2, 0, 0);
         }
         /// <summary>
-        /// 合成表：狂暴药水 + 灾厄 UnholyEssence + 本模组银河奇点，或药剂瓶 + 血珠×40 + UnholyEssence；
-        /// 两分支使用同一套材料名，仅取 Mod 来源不同（均在炼金台）
+        /// 合成表：狂暴药水 + 灾厄 UnholyEssence + 银河奇点，或药剂瓶 + 血珠×40 + UnholyEssence，均在炼金台。
+        /// 银河奇点按灾厄版本取用不同来源——现代版用本模组补位的 GalacticaSingularity，
+        /// 经典版用灾厄经典版自有的同名材料（本模组那份的配方只在现代分支注册，经典版下拿不到）
         /// </summary>
         public override void AddRecipes()
         {
@@ -61,13 +62,13 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
-                // 经典版灾厄：狂暴药水 + UnholyEssence + 本模组银河奇点
-                if(calamity1.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence3))
+                // 经典版灾厄：狂暴药水 + UnholyEssence + 灾厄经典版自有的银河奇点
+                if(calamity1.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence3) && calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
                 {
                     Recipe recipe1 = CreateRecipe();
                     recipe1.AddIngredient(ItemID.WrathPotion);
                     recipe1.AddIngredient(unholyEssence3.Type);
-                    recipe1.AddIngredient<GalacticaSingularity>();
+                    recipe1.AddIngredient(galacticaSingularity1.Type);
                     recipe1.AddTile(TileID.AlchemyTable);
                     recipe1.Register();
                 }
