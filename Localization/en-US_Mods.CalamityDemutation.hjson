@@ -1510,6 +1510,19 @@ Items: {
 			'''
 	}
 
+	VoidFractal: {
+		DisplayName: Void Fractal
+		Tooltip:
+			'''
+			Left Click to swing forward a voiden bolt five times
+			The sixth swing throws the sword forward, casting a ring of stars
+			The seventh swing creates a slash across the screen
+			Right Click to perform a void slash towards your cursor and makes the character invincible every 10 seconds
+			Attacks inflict Void Touch
+			'[c/ba3ade:To work with void is to dance with death, it is of the highest honor to wield it]'
+			'''
+	}
+
 	VoidofExtinction: {
 		DisplayName: Void of Extinction
 		Tooltip:
@@ -1818,6 +1831,10 @@ Projectiles: {
 	PscTransformRocks.DisplayName: Psc Transform Rocks
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
 	GhastlySoulLarge.DisplayName: Ghastly Soul Large
+	FractalLaser.DisplayName: Fractal Laser
+	VoidFractalHeld.DisplayName: Void Fractal Held
+	VoidSlash.DisplayName: Void Slash
+	VoidWave.DisplayName: Void Wave
 }
 
 Systems: {

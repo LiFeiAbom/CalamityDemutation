@@ -41,6 +41,21 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public bool silvaHysteresis = false;
         public bool voidErosion = false;
+        // ── 虚空侵蚀（VoidTouch）实例字段：移植自 CE 的 EGlobalNPC（这三项在 CE 里不随帧重置，是持续计数）──
+        /// <summary>
+        /// 虚空侵蚀剩余时间（帧）：每次被虚空系攻击命中累加，归零时层数清零（CE 的 VoidTouchTime，上限由施加方给）
+        /// </summary>
+        public int VoidTouchTime = 0;
+        /// <summary>
+        /// 虚空侵蚀层数：每层让敌怪受击增伤 +1%（弹幕命中）/ +5%（真近战命中），并每 20 帧额外扣 26×层数 血
+        /// （CE 的 VoidTouchLevel，上限由施加方给，通常是 10）
+        /// </summary>
+        public float VoidTouchLevel = 0;
+        /// <summary>
+        /// 虚空侵蚀抗性（0~1）：为 1 时完全免疫（AddVoidTouch 直接返回失败），否则全部效果按 (1 - 此值) 缩放
+        /// （CE 的 VoidTouchDR，本模组暂无内容设置它，作为系统的一部分保留）
+        /// </summary>
+        public float VoidTouchDR = 0;
         // ── 属性 ──
         /// <summary>
         /// 按实例启用，避免多个 NPC 共享全局状态
@@ -444,6 +459,110 @@ namespace CalamityDemutation.NPCs
                     Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, 184, 1, false, 0, false, false);
                 }
             }
+        }
+        /// <summary>
+        /// 给敌怪叠加虚空侵蚀（移植自 CE 的 <c>EGlobalNPC.AddVoidTouch</c>）：
+        /// 时间按传入值的 1.4 倍累加（封顶 <paramref name="maxTime"/>），层数按 <c>level / 10</c> 累加
+        /// （封顶 <paramref name="maxLevel"/>）。已完全免疫（抗性为 1）时直接返回 false。
+        /// </summary>
+        public static bool AddVoidTouch(NPC npc, int time, float level, int maxTime = 600, int maxLevel = 10)
+        {
+            CalamityDemutationGlobalNPC globalNPC = npc.GetGlobalNPC<CalamityDemutationGlobalNPC>();
+            if (globalNPC.VoidTouchDR == 1f)
+            {
+                return false;
+            }
+            if (globalNPC.VoidTouchTime < maxTime)
+            {
+                globalNPC.VoidTouchTime += (int)(time * 1.4f);
+                if (globalNPC.VoidTouchTime > maxTime)
+                {
+                    globalNPC.VoidTouchTime = maxTime;
+                }
+            }
+            if (globalNPC.VoidTouchLevel < maxLevel)
+            {
+                globalNPC.VoidTouchLevel += level / 10f;
+                if (globalNPC.VoidTouchLevel > maxLevel)
+                {
+                    globalNPC.VoidTouchLevel = maxLevel;
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// 玩家侧的虚空侵蚀（只有 PvP 命中玩家才会走到）：CE 挂的是它自研的 <c>VoidTouch</c> buff，
+        /// 本模组不新建 buff——现代版灾厄取 <c>Voidfrost</c>，经典版没有虚空系减益则退回原版 <c>ShadowFlame</c>
+        /// （紫黑 DoT，观感最接近）。CE 那件 buff 本体是「每 4/(1-抗性) 帧扣 3 血 + 速度 ×0.99 + 虚空尘」。
+        /// </summary>
+        public static bool AddVoidTouch(Player player, int time, int level, int maxTime = 600, int maxLevel = 10)
+        {
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("Voidfrost", out ModBuff voidfrost))
+            {
+                player.AddBuff(voidfrost.Type, maxTime);
+            }
+            else
+            {
+                player.AddBuff(BuffID.ShadowFlame, maxTime);
+            }
+            return true;
+        }
+        /// <summary>
+        /// 虚空侵蚀的每帧结算（移植自 CE 的 <c>EGlobalNPC.PreAI</c>）：每 20 个游戏更新周期扣一次
+        /// <c>26 × 层数 × (1 - 抗性)</c> 血（隐藏原版战斗文本，改在血条处画蓝紫数字；多人客户端再补一次
+        /// <c>SendStrikeNPC</c>），非 Boss 每帧减速 4%、Boss 在抗性低于 0.2 时减速 2%，同时撒腐蚀喷尘；
+        /// 时间每帧 -1，归零则层数清零。
+        /// <para>
+        /// 与 CE 的差异：① CE 会给敌怪 <c>AddBuff(VoidTouch)</c> 只是为了显示减益图标，本模组不新建 buff，
+        /// 故省掉（扣血/减速/增伤全部保留）；② CE 那段 <c>PRT_Void</c> 粒子被它自己用 <c>&amp;&amp; false</c>
+        /// 关掉了（死代码），没有移植；③ CE 的 <c>SendExtraAI</c> 里同步这两项计数的代码整段被注释掉，
+        /// 也就是说 CE 本身不同步——本模组保持同样行为（各端各自计数）。
+        /// </para>
+        /// </summary>
+        public override bool PreAI(NPC npc)
+        {
+            if (VoidTouchTime > 0)
+            {
+                if (Main.GameUpdateCount % 20 == 0 && !npc.dontTakeDamage)
+                {
+                    NPC.HitInfo hit = npc.CalculateHitInfo((int)(26 * VoidTouchLevel * (1 - VoidTouchDR)), 0, false, 0, DamageClass.Generic, false, 0);
+                    hit.HideCombatText = true;
+                    int damageDone = npc.StrikeNPC(hit, false, false);
+                    CombatText.NewText(npc.getRect(), new Color(148, 148, 255), damageDone);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        NetMessage.SendStrikeNPC(npc, hit);
+                    }
+                }
+                if (npc.boss)
+                {
+                    if (VoidTouchDR < 0.2f)
+                    {
+                        npc.velocity *= 0.98f;
+                    }
+                }
+                else
+                {
+                    npc.velocity *= 0.96f;
+                }
+                Dust.NewDust(npc.position, npc.width, npc.height, DustID.CorruptSpray, Main.rand.NextFloat() * 2f - 1f, Main.rand.NextFloat() * 2f - 1f);
+                VoidTouchTime -= 1;
+            }
+            if (VoidTouchTime <= 0)
+            {
+                VoidTouchLevel = 0;
+            }
+            return base.PreAI(npc);
+        }
+        /// <summary>虚空侵蚀对弹幕命中的增伤：每层 +1%（满层 +10%），按抗性缩放</summary>
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            modifiers.FinalDamage += VoidTouchLevel * 0.01f * (1 - VoidTouchDR);
+        }
+        /// <summary>虚空侵蚀对真近战（物品直接命中）的增伤：每层 +5%（满层 +50%），按抗性缩放</summary>
+        public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)
+        {
+            modifiers.FinalDamage += VoidTouchLevel * 0.05f * (1 - VoidTouchDR);
         }
     }
 }

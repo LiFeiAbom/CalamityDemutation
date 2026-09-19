@@ -3111,6 +3111,8 @@ namespace CalamityDemutation.Players
                     Player.statDefense += 10;
                 }
             }
+            // 虚空斩突进（虚空分形右键）：突进期间无重力/隐形/抬无敌帧，状态机在 partial 文件里
+            VoidSlashDashPlayerEffects();
         }
         // ── 还原灾厄内容削弱 ──
         /// <summary>

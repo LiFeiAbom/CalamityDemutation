@@ -72,5 +72,11 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle RuneSongHit = new("CalamityDemutation/Sounds/Item/runesonghit");
         /// <summary>符文脉冲束命中（CE 原名 beast_lavaball_rise1，名字不可读故按用途命名）：RuneBolt 命中敌人时播放</summary>
         public static readonly SoundStyle RuneBoltHit = new("CalamityDemutation/Sounds/Item/beast_lavaball_rise1");
+        /// <summary>虚空斩起手（CE 原名 VoidAnticipation）：虚空分形右键发动虚空斩时播放</summary>
+        public static readonly SoundStyle VoidSlashCharge = new("CalamityDemutation/Sounds/Item/VoidAnticipation");
+        /// <summary>虚空分形掷剑（CE 原名 CastTriangles）：投掷本剑式（ai[0] = 2）起手时与挥砍音一起播放</summary>
+        public static readonly SoundStyle VoidFractalThrow = new("CalamityDemutation/Sounds/Item/CastTriangles");
+        /// <summary>虚空全屏斩命中（CE 原名 VoidAttack）：第七下全屏斩（ai[0] = 3）命中敌人时播放</summary>
+        public static readonly SoundStyle VoidStrikeHit = new("CalamityDemutation/Sounds/Item/VoidAttack");
     }
 }

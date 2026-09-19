@@ -1508,6 +1508,17 @@ Items: {
 			'''
 	}
 
+	VoidFractal: {
+		DisplayName: 虚空分形
+		Tooltip:
+			'''
+			发射虚空波，并在每6次挥舞后投掷出武器本身，造成多次伤害并释放追踪虚空新星
+			回收后进行一次大斩击，在命中的目标处生成空间流
+			右键以发动虚空斩并突进一段距离
+			[c/ba3ade:剑上附着薄薄一层虚空]
+			'''
+	}
+
 	VoidofExtinction: {
 		DisplayName: 终结虚空
 		Tooltip:
@@ -1816,6 +1827,10 @@ Projectiles: {
 	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
 	// GhastlySoulLarge.DisplayName: Ghastly Soul Large
+	FractalLaser.DisplayName: 分形激光
+	VoidFractalHeld.DisplayName: 虚空分形
+	VoidSlash.DisplayName: 虚空斩
+	VoidWave.DisplayName: 虚空波
 }
 
 Systems: {
