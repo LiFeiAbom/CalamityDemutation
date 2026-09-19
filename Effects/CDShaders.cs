@@ -47,6 +47,10 @@ namespace CalamityDemutation.Effects
         /// 元素王者魔力阵着色器（原灾厄 ExoVortex，VortexPass）：ElementalExcaliburMagicCircle 绘制噪声法阵时使用
         /// </summary>
         internal static Asset<Effect> ExoVortexShader;
+        /// <summary>
+        /// 分形之羽拖尾着色器（原灾厄熵 ArtAttack，TrailPass）：FractalFeather 用 PrimitiveRenderer 拉丝带时使用
+        /// </summary>
+        internal static Asset<Effect> ArtAttackShader;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
@@ -72,6 +76,9 @@ namespace CalamityDemutation.Effects
             RegisterMiscShader(ArtemisLaserShader, "TrailPass", "ArtemisLaser");
             ExoVortexShader = LoadShader("ExoVortexShader");
             RegisterMiscShader(ExoVortexShader, "VortexPass", "ExoVortex");
+            // 分形系列：分形之羽的丝带拖尾（本模组第一个从灾厄熵搬来的着色器）
+            ArtAttackShader = LoadShader("ArtAttack");
+            RegisterMiscShader(ArtAttackShader, "TrailPass", "ArtAttack");
         }
         /// <summary>
         /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
@@ -86,11 +93,13 @@ namespace CalamityDemutation.Effects
             GameShaders.Misc.Remove(CircularBarShaderName);
             GameShaders.Misc.Remove($"{ShaderPrefix}ArtemisLaser");
             GameShaders.Misc.Remove($"{ShaderPrefix}ExoVortex");
+            GameShaders.Misc.Remove($"{ShaderPrefix}ArtAttack");
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
             CircularBarShader = null;
             ArtemisLaserShader = null;
             ExoVortexShader = null;
+            ArtAttackShader = null;
         }
         // ── 私有工具 ──
         /// <summary>

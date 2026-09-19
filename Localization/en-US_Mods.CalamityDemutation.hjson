@@ -1446,6 +1446,16 @@ Items: {
 			'''
 	}
 
+	WelkinFractal: {
+		DisplayName: Welkin Fractal
+		Tooltip:
+			'''
+			Sends feathers from above and below towards the cursor
+			Every third swing creates 3 homing stars
+			'[c/d4fff8:You have channeled clouds into the design...]'
+			'''
+	}
+
 	WifeinaBottle: {
 		Tooltip: Summons a sand elemental to fight for you
 		DisplayName: Elemental in a Bottle
@@ -1647,6 +1657,8 @@ Projectiles: {
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
+	FractalBeam.DisplayName: Fractal Beam
+	FractalFeather.DisplayName: Fractal Feather
 	FractalShoot.DisplayName: Fractal Shoot
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump
@@ -1689,6 +1701,7 @@ Projectiles: {
 	TerraBall.DisplayName: Ball
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
+	WelkinFractalHeld.DisplayName: Welkin Fractal Held
 	MiniGuardianAttack.DisplayName: Offensive Guardian
 	MiniGuardianDefense.DisplayName: Defensive Guardian
 	MiniGuardianHealer.DisplayName: Healer Guardian

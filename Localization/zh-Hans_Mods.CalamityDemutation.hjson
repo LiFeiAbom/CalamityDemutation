@@ -1448,6 +1448,16 @@ Items: {
 			'''
 	}
 
+	WelkinFractal: {
+		DisplayName: 苍穹分形
+		Tooltip:
+			'''
+			从天上与地下召唤分形之羽
+			从剑尖刺出分形光束
+			[c/d4fff8:它被苍穹所赐福]
+			'''
+	}
+
 	WifeinaBottle: {
 		Tooltip: 召唤一个沙元素为你作战
 		DisplayName: 瓶装沙元素
@@ -1649,6 +1659,8 @@ Projectiles: {
 	EXNeutronExplode.DisplayName: 中子大爆点
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
+	FractalBeam.DisplayName: 分形射线
+	FractalFeather.DisplayName: 分形之羽
 	FractalShoot.DisplayName: 分形弹
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
@@ -1691,6 +1703,7 @@ Projectiles: {
 	TerraBall.DisplayName: 泰拉球
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛
+	WelkinFractalHeld.DisplayName: 苍穹分形
 	MiniGuardianAttack.DisplayName: 进攻守护者
 	MiniGuardianDefense.DisplayName: 防御守护者
 	MiniGuardianHealer.DisplayName: 治愈守护者
