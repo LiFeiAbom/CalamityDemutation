@@ -78,5 +78,13 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle VoidFractalThrow = new("CalamityDemutation/Sounds/Item/CastTriangles");
         /// <summary>虚空全屏斩命中（CE 原名 VoidAttack）：第七下全屏斩（ai[0] = 3）命中敌人时播放</summary>
         public static readonly SoundStyle VoidStrikeHit = new("CalamityDemutation/Sounds/Item/VoidAttack");
+        /// <summary>虚影薄锋右键突刺起手（CE 原名 AntivoidDashSlash）：Voidshade 物品右键出手时播放，音高 CE 值减 1</summary>
+        public static readonly SoundStyle VoidshadeDash = new("CalamityDemutation/Sounds/Item/AntivoidDashSlash");
+        /// <summary>虚影薄锋强化期挥砍（CE 原名 rswave）：Voidshade 左键出手且玩家正处于突刺强化期时叠加播放</summary>
+        public static readonly SoundStyle VoidshadeBoostSwing = new("CalamityDemutation/Sounds/Item/rswave");
+        /// <summary>虚影薄锋命中（CE 原名 antivoidhit，名字不可读故按用途命名）：VoidshadeHeld 普通挥砍命中时播放</summary>
+        public static readonly SoundStyle VoidshadeHit = new("CalamityDemutation/Sounds/Item/antivoidhit");
+        /// <summary>虚影剑气命中（CE 原名 flashback）：VoidImpact 命中敌人时播放</summary>
+        public static readonly SoundStyle VoidImpactHit = new("CalamityDemutation/Sounds/Item/flashback");
     }
 }

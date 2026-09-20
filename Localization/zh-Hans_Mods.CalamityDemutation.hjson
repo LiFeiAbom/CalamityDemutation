@@ -838,6 +838,17 @@ Items: {
 		DisplayName: 风暴之眼
 	}
 
+	FinalFractal: {
+		DisplayName: 最终分形
+		Tooltip:
+			'''
+			从屏幕外向光标处发射大量剑影
+			挥舞8次后用锁链链接并掷出，刺入目标体内造成持续伤害
+			右键进行幽冥斩，向前突进一段距离并在途中向两侧发射剑影
+			[c/fcc7ff:异界的神剑]
+			'''
+	}
+
 	FleshTotem: {
 		DisplayName: 血肉图腾
 		Tooltip:
@@ -1531,6 +1542,16 @@ Items: {
 			'''
 	}
 
+	Voidshade: {
+		DisplayName: 虚影薄锋
+		Tooltip:
+			'''
+			左键挥砍，释放能量波
+			右键突刺，释放虚光射线，
+			刺中目标短时间内给予一次挥砍强化
+			'''
+	}
+
 	WelkinFractal: {
 		DisplayName: 苍穹分形
 		Tooltip:
@@ -1831,6 +1852,11 @@ Projectiles: {
 	VoidFractalHeld.DisplayName: 虚空分形
 	VoidSlash.DisplayName: 虚空斩
 	VoidWave.DisplayName: 虚空波
+	FinalFractalHeld.DisplayName: 最终分形
+	FinalFractalBlade.DisplayName: 最终分形
+	VoidshadeHeld.DisplayName: 虚影薄锋
+	VoidImpact.DisplayName: 虚影剑气
+	// WohLaser.DisplayName: Woh Laser
 }
 
 Systems: {

@@ -56,6 +56,13 @@ namespace CalamityDemutation.Effects
         /// 用三角带拉刀光时使用，采样 uImage（拖尾噪声）与 uTransformImage（配色图）
         /// </summary>
         internal static Asset<Effect> SlashTransShader;
+        /// <summary>
+        /// 最终分形刀光着色器（原灾厄熵 FinalFrac，EffectPass）：FinalFractalHeld 与剑影弹幕用三角带拉拖尾时使用，
+        /// 把底图（MotionTrail2）的红色通道当权重在 color1/color2 之间插值。与其它着色器不同，CE 是先在
+        /// Immediate 批次里 <c>pass.Apply()</c> 再手动 <c>DrawUserPrimitives</c>（不是把 Effect 传给 Begin），
+        /// 本模组照抄这个次序
+        /// </summary>
+        internal static Asset<Effect> FinalFracShader;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
@@ -87,6 +94,9 @@ namespace CalamityDemutation.Effects
             // 分形系列：无星之夜的刀光透明变换
             SlashTransShader = LoadShader("SlashTrans");
             RegisterMiscShader(SlashTransShader, "EnchantedPass", "SlashTrans");
+            // 分形系列：最终分形的刀光（三角带 + 手动 pass.Apply，用法见字段注释）
+            FinalFracShader = LoadShader("FinalFrac");
+            RegisterMiscShader(FinalFracShader, "EffectPass", "FinalFrac");
         }
         /// <summary>
         /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
@@ -103,6 +113,7 @@ namespace CalamityDemutation.Effects
             GameShaders.Misc.Remove($"{ShaderPrefix}ExoVortex");
             GameShaders.Misc.Remove($"{ShaderPrefix}ArtAttack");
             GameShaders.Misc.Remove($"{ShaderPrefix}SlashTrans");
+            GameShaders.Misc.Remove($"{ShaderPrefix}FinalFrac");
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
             CircularBarShader = null;
@@ -110,6 +121,7 @@ namespace CalamityDemutation.Effects
             ExoVortexShader = null;
             ArtAttackShader = null;
             SlashTransShader = null;
+            FinalFracShader = null;
         }
         // ── 私有工具 ──
         /// <summary>

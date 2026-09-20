@@ -839,6 +839,18 @@ Items: {
 		DisplayName: Eye of the Storm
 	}
 
+	FinalFractal: {
+		DisplayName: Final Fractal
+		Tooltip:
+			'''
+			Sends visions of past blades towards your cursor
+			On every 9th slash send forth a devastating beam
+			On every 10th slash throw the sword out on a chain, releasing cosmic energy
+			Right Click to perform a ghost slash that grants invunerability and sends you towards your cursor every 5 seconds
+			'[c/fcc7ff:The path past your Zenith is of your will and perserverance alone...]'
+			'''
+	}
+
 	FleshTotem: {
 		DisplayName: Flesh Totem
 		Tooltip:
@@ -1535,6 +1547,11 @@ Items: {
 			'''
 	}
 
+	Voidshade: {
+		DisplayName: Voidshade
+		Tooltip: Releases a fractal shockwave when swung
+	}
+
 	WelkinFractal: {
 		DisplayName: Welkin Fractal
 		Tooltip:
@@ -1835,6 +1852,11 @@ Projectiles: {
 	VoidFractalHeld.DisplayName: Void Fractal Held
 	VoidSlash.DisplayName: Void Slash
 	VoidWave.DisplayName: Void Wave
+	FinalFractalHeld.DisplayName: Final Fractal Held
+	FinalFractalBlade.DisplayName: Final Fractal Blade
+	VoidshadeHeld.DisplayName: Voidshade
+	VoidImpact.DisplayName: Void Impact
+	WohLaser.DisplayName: Woh Laser
 }
 
 Systems: {

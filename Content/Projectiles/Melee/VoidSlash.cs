@@ -22,9 +22,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// <see cref="CDUtil.LineThroughRect"/>，<c>CEUtils.randomVec</c> 内联成 <see cref="RandomVec"/>。
     /// </para>
     /// <para>
-    /// <b>未实现（留给第 10 把）</b>：CE 在 <c>ai[0] == 1</c> 时会朝两侧各生成一把 <c>FinalFractalBlade</c>
-    /// （属于第 10 把幽邃分形的类）。本武器生成 VoidSlash 时不传 ai，永远走的是 <c>ai[0] == 0</c>，走不到那个分支；
-    /// 第 10 把的 <c>FinalFractal</c> 会以 <c>ai[0] = 1</c> 生成 VoidSlash，届时再把这个分支补上。
+    /// <b><c>ai[0] == 1</c>（最终分形的幽冥斩）</b>：突进期间的每一帧都朝速度的左右两侧各甩出一把
+    /// <see cref="FinalFractalBlade"/>，于是整条突进路径上会不断散出剑影。这个分支只有第 10 把走得到 ——
+    /// 第九把「虚空分形」生成 VoidSlash 时不传 ai（永远是 <c>ai[0] == 0</c>），而第 10 把的
+    /// <c>FinalFractal</c> 会以 <c>ai[0] = 1</c> 生成它。
     /// </para>
     /// </summary>
     internal class VoidSlash:ModProjectile
@@ -68,6 +69,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             else
             {
+                if (Projectile.ai[0] == 1)
+                {
+                    // 最终分形的幽冥斩：突进途中每一帧都朝速度的左右两侧各甩出一把剑影
+                    int type = ModContent.ProjectileType<FinalFractalBlade>();
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RotatedBy(MathHelper.PiOver2) * 0.1f, type, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RotatedBy(-MathHelper.PiOver2) * 0.1f, type, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                }
                 // 突进期间：沿路径补采样点，并把玩家中心钉在弹幕中心——"玩家被这一斩带过去"就是这句
                 Vector2 o = (points.Count > 0 ? points[points.Count - 1] : Projectile.Center - Projectile.velocity);
                 Vector2 nv = Projectile.Center + RandomVec(4);

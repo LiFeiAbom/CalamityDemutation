@@ -625,6 +625,12 @@ namespace CalamityDemutation.Players
         public bool theAmalgam = false;
         public bool theCommunity = false;
         /// <summary>
+        /// 虚影薄锋（Voidshade）右键突刺命中后的挥砍强化计时：>0 期间该武器下一次普通挥砍伤害翻倍。
+        /// 由 <c>VoidshadeHeld</c> 命中时置 90 帧、并于读取后立刻清零；每帧递减
+        /// （CE 在 EModPlayer.PreUpdate 里递减，本模组并入 PostUpdateMiscEffects 这个每帧结算中心）
+        /// </summary>
+        public int voidshadeBoostTime = 0;
+        /// <summary>
         /// The Community 的 Debuff 时间缩减计时器（帧）：每 60 帧（1 秒）触发一轮缩减，
         /// 同时处理治疗冷却（药水病）/魔力病/一般 Debuff。仅在装备期间递增。
         /// </summary>
@@ -1012,6 +1018,9 @@ namespace CalamityDemutation.Players
             // 血肉图腾冷却倒计时
             if (fleshTotemCooldown > 0)
                 fleshTotemCooldown--;
+            // 虚影薄锋的挥砍强化倒计时
+            if (voidshadeBoostTime > 0)
+                voidshadeBoostTime--;
             // 龟壳爆发（ShellBoost）：受击后增益期间 +90% 移速。
             // 原结算于 UpdateBadLifeRegen（该钩子仅在负面生命回复期运行，常漏加），
             // 改到本方法（每帧全饰品结算中心）保证增益期全程生效。
