@@ -1,4 +1,4 @@
-// Mods.CalamityDemutation.KilledByVoidTouch：虚空之触扣血致死时的专属死亡文本（VoidTouch.cs 读取）
+// Mods.CalamityDemutation.KilledByVoidTouch: death message used when Void Touch damage kills the player (read by VoidTouch.cs)
 KilledByVoidTouch: "{0}消散在了时间与空间的各处"
 
 Buffs: {
