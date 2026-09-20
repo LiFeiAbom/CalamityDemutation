@@ -21,7 +21,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            Item.damage = 540;
+            Item.damage = 2160;
             Item.crit = 10;
             Item.DamageType = DamageClass.Melee;
             Item.width = 86;

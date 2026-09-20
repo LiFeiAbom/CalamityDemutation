@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.autoReuse = true;
             Item.scale = 1f;
             Item.DamageType = DamageClass.Melee;
-            Item.damage = 100;                              // 100 点近战伤害
+            Item.damage = 300;                             // 300 点近战伤害
             Item.knockBack = 6;
             Item.UseSound = CalamityDemutationSounds.FractalThrust;
             Item.crit = 6;                                  // 额外暴击率

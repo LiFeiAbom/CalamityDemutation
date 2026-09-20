@@ -1,3 +1,6 @@
+// Mods.CalamityDemutation.KilledByVoidTouch: death message used when Void Touch damage kills the player (read by VoidTouch.cs)
+KilledByVoidTouch: "{0} missed in the void"
+
 Buffs: {
 	Afflicted: {
 		DisplayName: Afflicted
@@ -74,6 +77,11 @@ Buffs: {
 		Description: You are invulnerable
 	}
 
+	SoulDisorder: {
+		DisplayName: Soul Disorder
+		Description: ""
+	}
+
 	SirenLure: {
 		Description: The siren will protect you
 		DisplayName: Siren
@@ -87,6 +95,11 @@ Buffs: {
 	VoidErosion: {
 		DisplayName: Void Erosion
 		Description: The nothingness is eating you away
+	}
+
+	VoidTouch: {
+		DisplayName: Void Touch
+		Description: ""
 	}
 
 	YharimPower: {
@@ -1242,7 +1255,7 @@ Items: {
 			Briefly charge up before sweeping the blade in a wide arc
 			If the sweep hits an enemy, the blade bounces off and performs a wider multi-hit slash
 			If it misses, the blade points at the cursor and fires a runic pulse beam
-			All attacks inflict Armor Crunch
+			All attacks inflict Soul Disorder
 			'''
 	}
 
@@ -1349,7 +1362,7 @@ Items: {
 			'''
 			Swings the sword three times, releasing homing swords
 			Throws the sword on the fourth swing, summoning a ring of homing spirits
-			Inflicts Armor Crunch
+			Inflicts Soul Disorder
 			'[c/dfe7cb:Spirits of those you've slain empower each swing...]'
 			'''
 	}

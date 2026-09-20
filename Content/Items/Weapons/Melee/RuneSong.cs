@@ -1,3 +1,4 @@
+using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Dusts;
 using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
@@ -24,7 +25,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            Item.damage = 230;
+            Item.damage = 1035;
             Item.DamageType = DamageClass.Melee;
             Item.width = 56;
             Item.height = 56;
@@ -71,8 +72,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         /// <summary>剑体拖尾的圆形烟贴图（CE 的 CEExtraAssets.CircularSmearSmokey）</summary>
         private const string SmearTexture = "CalamityDemutation/Assets/ExtraTextures/CircularSmearSmokey";
-        /// <summary>护甲碎裂减益类型：现代版与经典版灾厄都有同名 ArmorCrunch，加载期两版各试一次（同文件的 <see cref="RuneBolt"/> 也用它）</summary>
-        internal static int armorCrunchBuffType = -1;
+        /// <summary>灵魂紊乱减益类型（本模组自有，见 <c>Content/Buffs/NegativeBuffs/SoulDisorder.cs</c>）</summary>
+        internal static int soulDisorderBuffType = -1;
         /// <summary>朝向（±1），取出手时的水平速度方向，之后在收招时朝鼠标重定向</summary>
         private int dir = 1;
         /// <summary>当前每帧的旋转角速度</summary>
@@ -97,15 +98,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         public override void SetStaticDefaults()
         {
-            // 护甲碎裂：两版灾厄都有同名 ArmorCrunch（现代版 Buffs/StatDebuffs/、经典版 Buffs/；CE 挂的是它自研的 SoulDisorder，本模组不新建 buff）
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch))
-            {
-                armorCrunchBuffType = armorCrunch.Type;
-            }
-            else if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1) && calamity1.TryFind<ModBuff>("ArmorCrunch", out ModBuff classicArmorCrunch))
-            {
-                armorCrunchBuffType = classicArmorCrunch.Type;
-            }
+            // 灵魂紊乱是本模组自有的减益（CE 原版挂的就是它），内容注册完成后直接取 ID
+            soulDisorderBuffType = ModContent.BuffType<SoulDisorder>();
         }
         public override void SetDefaults()
         {
@@ -305,9 +299,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI);
                 }
             }
-            if (armorCrunchBuffType >= 0)
+            if (soulDisorderBuffType >= 0)
             {
-                target.AddBuff(armorCrunchBuffType, 200);
+                target.AddBuff(soulDisorderBuffType, 200);
             }
         }
         /// <summary>联机同步旋转速度与拖尾透明度：两者都由本端按攻速累加，不传别的端会散架</summary>
@@ -489,9 +483,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 dust.fadeIn = 2f;
             }
             Projectile.damage = (int)(Projectile.damage * 0.85f);   // 穿透时逐次衰减
-            if (RuneSongHeld.armorCrunchBuffType >= 0)
+            if (RuneSongHeld.soulDisorderBuffType >= 0)
             {
-                target.AddBuff(RuneSongHeld.armorCrunchBuffType, 200);
+                target.AddBuff(RuneSongHeld.soulDisorderBuffType, 200);
             }
         }
         public override bool PreDraw(ref Color lightColor)

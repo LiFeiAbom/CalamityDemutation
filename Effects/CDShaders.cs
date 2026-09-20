@@ -63,6 +63,13 @@ namespace CalamityDemutation.Effects
         /// 本模组照抄这个次序
         /// </summary>
         internal static Asset<Effect> FinalFracShader;
+        /// <summary>
+        /// 灵魂紊乱染色着色器（原灾厄熵 SoulDiscorder，EnchantedPass）：带灵魂紊乱减益的敌怪
+        /// 在 CalamityDemutationGlobalNPC.PreDraw 里换批次套上它，用配色图 SoulDiscorderColorMap
+        /// 采样当前帧的 UV 叠一层灵魂色。与其它着色器不同，CE 是把 Effect 直接传给 Begin
+        /// （SpriteSortMode.Deferred + 手动 <c>Passes[0].Apply()</c>），本模组照抄这个次序
+        /// </summary>
+        internal static Asset<Effect> SoulDiscorderShader;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
@@ -97,6 +104,9 @@ namespace CalamityDemutation.Effects
             // 分形系列：最终分形的刀光（三角带 + 手动 pass.Apply，用法见字段注释）
             FinalFracShader = LoadShader("FinalFrac");
             RegisterMiscShader(FinalFracShader, "EffectPass", "FinalFrac");
+            // 灵魂紊乱：带减益敌怪的灵魂色染色
+            SoulDiscorderShader = LoadShader("SoulDiscorder");
+            RegisterMiscShader(SoulDiscorderShader, "EnchantedPass", "SoulDiscorder");
         }
         /// <summary>
         /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
@@ -114,6 +124,7 @@ namespace CalamityDemutation.Effects
             GameShaders.Misc.Remove($"{ShaderPrefix}ArtAttack");
             GameShaders.Misc.Remove($"{ShaderPrefix}SlashTrans");
             GameShaders.Misc.Remove($"{ShaderPrefix}FinalFrac");
+            GameShaders.Misc.Remove($"{ShaderPrefix}SoulDiscorder");
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
             CircularBarShader = null;
@@ -122,6 +133,7 @@ namespace CalamityDemutation.Effects
             ArtAttackShader = null;
             SlashTransShader = null;
             FinalFracShader = null;
+            SoulDiscorderShader = null;
         }
         // ── 私有工具 ──
         /// <summary>

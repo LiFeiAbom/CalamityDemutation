@@ -1,3 +1,6 @@
+// Mods.CalamityDemutation.KilledByVoidTouch：虚空之触扣血致死时的专属死亡文本（VoidTouch.cs 读取）
+KilledByVoidTouch: "{0}消散在了时间与空间的各处"
+
 Buffs: {
 	Afflicted: {
 		DisplayName: 侵蚀
@@ -74,6 +77,11 @@ Buffs: {
 		Description: 你处于无敌状态
 	}
 
+	SoulDisorder: {
+		DisplayName: 灵魂紊乱
+		Description: 灵魂的动荡使你更加脆弱
+	}
+
 	SirenLure: {
 		Description: 塞壬会保护你
 		DisplayName: 塞壬
@@ -87,6 +95,11 @@ Buffs: {
 	VoidErosion: {
 		DisplayName: 虚空侵蚀
 		Description: 虚无正在吞噬你
+	}
+
+	VoidTouch: {
+		DisplayName: 虚空之触
+		Description: 你正在被虚空残蚀
 	}
 
 	YharimPower: {
@@ -1239,7 +1252,7 @@ Items: {
 			经过短暂的充能随后进行一次大范围的挥舞
 			如果命中了敌人，剑身会弹开，随后进行一次更大范围的多段斩击
 			如果没有命中则剑会指向光标方向并发射一道符文脉冲束
-			所有攻击造成护甲碎裂
+			所有攻击造成灵魂紊乱
 			'''
 	}
 

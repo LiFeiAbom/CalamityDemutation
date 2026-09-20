@@ -1,3 +1,4 @@
+using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
@@ -28,7 +29,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         private int atkType = 0;
         public override void SetDefaults()
         {
-            Item.damage = 265;                             // 265 点近战伤害
+            Item.damage = 1590;                            // 1590 点近战伤害
             Item.crit = 10;                                // 额外暴击率
             Item.DamageType = DamageClass.Melee;
             Item.width = 48;                               // 贴图宽（像素）
@@ -240,11 +241,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         public override bool ShouldUpdatePosition() => false;
-        /// <summary>命中时挂护甲碎裂（换掉 CE 自研的 SoulDisorder）、播命中音，并按灾厄「真断钢」的粒子套路炸一圈火花</summary>
+        /// <summary>命中时挂灵魂紊乱（CE 原版就是它）、播命中音，并按灾厄「真断钢」的粒子套路炸一圈火花</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "ArmorCrunch", 460);
-            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "ArmorCrunch", 460);
+            target.AddBuff(ModContent.BuffType<SoulDisorder>(), 460);
             if (playHitSound || Projectile.ai[0] == 2)
             {
                 playHitSound = false;
