@@ -16,6 +16,28 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
+        /// 普通的追逐行为（移植自 CWR 的 ChasingBehavior）：直接把实体速度设为朝目标方向的
+        /// <paramref name="speed"/>，目标进入 <paramref name="shutdownDistance"/> 内则减速为剩余距离（不会加速）。
+        /// </summary>
+        public static Vector2 ChasingBehavior(this Entity entity, Vector2 targetCenter, float speed, float shutdownDistance = 16f)
+        {
+            if (entity == null)
+                return Vector2.Zero;
+            Vector2 toTargetNormalized = (targetCenter - entity.Center).SafeNormalize(Vector2.Zero);
+            Vector2 velocity = toTargetNormalized * AsymptoticVelocity(entity.Center, targetCenter, speed, shutdownDistance);
+            entity.velocity = velocity;
+            return velocity;
+        }
+        /// <summary>
+        /// 渐近速度（移植自 CWR 的 AsymptoticVelocity）：目标在 <paramref name="shutdownDistance"/> 之外时返回
+        /// <paramref name="speed"/>，进入该距离后返回剩余距离，用于追踪时减速收束。
+        /// </summary>
+        public static float AsymptoticVelocity(Vector2 thisCenter, Vector2 targetCenter, float speed, float shutdownDistance)
+        {
+            Vector2 toTarget = targetCenter - thisCenter;
+            return toTarget.LengthSquared() > shutdownDistance * shutdownDistance ? speed : MathHelper.Min(speed, toTarget.Length());
+        }
+        /// <summary>
         /// 缓和的追逐行为（移植自 CWR 的 ChasingBehavior2）：让实体速度方向以
         /// <paramref name="homingStrength"/> 为单帧最大转角平滑转向目标点，
         /// 速度大小按 <paramref name="speedUpdates"/> 系数缩放。

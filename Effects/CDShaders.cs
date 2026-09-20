@@ -70,6 +70,21 @@ namespace CalamityDemutation.Effects
         /// （SpriteSortMode.Deferred + 手动 <c>Passes[0].Apply()</c>），本模组照抄这个次序
         /// </summary>
         internal static Asset<Effect> SoulDiscorderShader;
+        /// <summary>
+        /// 泰拉巨刃剑气着色器（原灾厄 ExobladeSlash，TrailPass）：TerratomereBeams、TerratomereHoldout 弧光、
+        /// DivineSourceBeam 用 PrimitiveRenderer 拉剑气时使用，采样 uImage1（VoronoiShapes 噪声）
+        /// </summary>
+        internal static Asset<Effect> ExobladeSlashShader;
+        /// <summary>
+        /// 泰拉巨刃大刀光穿刺着色器（原灾厄 ExobladePierce，PiercePass）：TerratomereBigSlashs 用 PrimitiveRenderer 拉刀光时使用，
+        /// 采样 uImage1（BlobbyNoise）与 uImage2（Extra_189）
+        /// </summary>
+        internal static Asset<Effect> ExobladePierceShader;
+        /// <summary>
+        /// 泰拉巨刃小闪电/金源光束拖尾着色器（原灾厄 TrailStreak，TrailPass）：TerratomereBolts、DivineSourceBladeProjectile
+        /// 用 PrimitiveRenderer 拉拖尾时使用，采样 uImage1（ScarletDevilStreak）
+        /// </summary>
+        internal static Asset<Effect> TrailStreakShader;
         // ── 生命周期方法 ──
         /// <summary>
         /// 内容加载完成后注册着色器：异步请求 Effects/ 下的 .fx 资源，
@@ -107,6 +122,13 @@ namespace CalamityDemutation.Effects
             // 灵魂紊乱：带减益敌怪的灵魂色染色
             SoulDiscorderShader = LoadShader("SoulDiscorder");
             RegisterMiscShader(SoulDiscorderShader, "EnchantedPass", "SoulDiscorder");
+            // 泰拉巨刃系列：剑气（TrailPass）、大刀光穿刺（PiercePass）、拖尾（TrailPass）
+            ExobladeSlashShader = LoadShader("ExobladeSlashShader");
+            RegisterMiscShader(ExobladeSlashShader, "TrailPass", "ExobladeSlash");
+            ExobladePierceShader = LoadShader("ExobladePierceShader");
+            RegisterMiscShader(ExobladePierceShader, "PiercePass", "ExobladePierce");
+            TrailStreakShader = LoadShader("FadedUVMapStreak");
+            RegisterMiscShader(TrailStreakShader, "TrailPass", "TrailStreak");
         }
         /// <summary>
         /// 卸载时从 Terraria 全局的 GameShaders.Misc 字典移除本模组注册的着色器并置空 Asset 引用，
@@ -125,6 +147,9 @@ namespace CalamityDemutation.Effects
             GameShaders.Misc.Remove($"{ShaderPrefix}SlashTrans");
             GameShaders.Misc.Remove($"{ShaderPrefix}FinalFrac");
             GameShaders.Misc.Remove($"{ShaderPrefix}SoulDiscorder");
+            GameShaders.Misc.Remove($"{ShaderPrefix}ExobladeSlash");
+            GameShaders.Misc.Remove($"{ShaderPrefix}ExobladePierce");
+            GameShaders.Misc.Remove($"{ShaderPrefix}TrailStreak");
             HeavenlyGaleTrailShader = null;
             StandardPrimitiveShader = null;
             CircularBarShader = null;
@@ -134,6 +159,9 @@ namespace CalamityDemutation.Effects
             SlashTransShader = null;
             FinalFracShader = null;
             SoulDiscorderShader = null;
+            ExobladeSlashShader = null;
+            ExobladePierceShader = null;
+            TrailStreakShader = null;
         }
         // ── 私有工具 ──
         /// <summary>

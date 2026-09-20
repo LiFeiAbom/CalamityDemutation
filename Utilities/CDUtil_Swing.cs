@@ -16,9 +16,10 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
-        /// 获取当前手持物品（对应 CWR 的 Player.ActiveItem()）
+        /// 获取玩家当前“实际持有”的物品（对应 CWR 的 Player.ActiveItem()，即灾厄的
+        /// GeneralExtensionUtils.ActiveItem）：鼠标上拿着东西时返回鼠标物品，否则返回手持物品。
         /// </summary>
-        public static Item ActiveItem(this Player player) => player.HeldItem;
+        public static Item ActiveItem(this Player player) => Main.mouseItem.IsAir ? player.HeldItem : Main.mouseItem;
         /// <summary>
         /// 检测玩家是否存活活跃（对应 CWR 的 Alives）
         /// </summary>

@@ -760,6 +760,11 @@ Items: {
 			'''
 	}
 
+	DivineSourceBlade: {
+		DisplayName: Divine Source Blade
+		Tooltip: Swinging causes a high velocity blade that slashes the first enemy it pierces through into ribbons.
+	}
+
 	DragonRage: {
 		DisplayName: Dragon Rage
 		Tooltip:
@@ -845,6 +850,15 @@ Items: {
 	ExaltedOathblade: {
 		DisplayName: Exalted Oathblade
 		Tooltip: Sword of an ancient demon god
+	}
+
+	Excelsus: {
+		DisplayName: Excelsus
+		Tooltip:
+			'''
+			Sends out Cosmic Blade Mirages that pierce through walls, inflicting God Slayer Inferno. True Melee hits also summon a laser beam from the sky.
+			Right click sends out a high velocity God Slayer dart that explodes on impact.
+			'''
 	}
 
 	EyeoftheStorm: {
@@ -1462,6 +1476,17 @@ Items: {
 			'''
 	}
 
+	Terratomere: {
+		DisplayName: Terratomere
+		Tooltip:
+			'''
+			Swing a Sword Infused with the essence of Terraria,
+			causing several piercing energy bolts to seek out enemies along with several beams from above.
+			Upon death, energy bolts discharge and explode, dealing damage in an Area of Effect.
+			"Make this Journey one to remember."
+			'''
+	}
+
 	TheAbsorber: {
 		DisplayName: The Absorber
 		Tooltip:
@@ -1771,6 +1796,8 @@ Projectiles: {
 	DefenseBlast2.DisplayName: Defense Blast2
 	DefenseFlame.DisplayName: Defense Flame
 	DemonFork.DisplayName: Demon Fork
+	DivineSourceBeam.DisplayName: Divine Source Beam
+	DivineSourceBladeProjectile.DisplayName: Divine Source Blade
 	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
@@ -1778,6 +1805,10 @@ Projectiles: {
 	ElementalFractalHeld.DisplayName: Elemental Fractal Held
 	ElementalFractalThrown.DisplayName: Elemental Fractal Thrown
 	EonBeam.DisplayName: Beam
+	ExcelsusBlue.DisplayName: Excelsus Blue
+	ExcelsusBomb.DisplayName: Excelsus Bomb
+	ExcelsusMain.DisplayName: Excelsus Main
+	ExcelsusPink.DisplayName: Excelsus Pink
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	ExoComet.DisplayName: Exo Comet
@@ -1837,6 +1868,13 @@ Projectiles: {
 	StandingFire.DisplayName: Standing Fire
 	StarlitFractalHeld.DisplayName: Starlit Fractal Held
 	TerraBall.DisplayName: Ball
+	TerratomereBeams.DisplayName: Terratomere Beams
+	TerratomereBigSlashs.DisplayName: Terratomere Big Slashs
+	TerratomereBolts.DisplayName: Terratomere Bolts
+	TerratomereExplosion.DisplayName: Terratomere Explosion
+	TerratomereHoldout.DisplayName: Terratomere Holdout
+	TerratomereSlash.DisplayName: Terratomere Slash
+	TerratomereSlashCreator.DisplayName: Terratomere Slash Creator
 	TrueBiomeOrb.DisplayName: Orb
 	VoidStarF.DisplayName: Void Star
 	WaterSpearFriendly.DisplayName: Spear

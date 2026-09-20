@@ -86,5 +86,11 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle VoidshadeHit = new("CalamityDemutation/Sounds/Item/antivoidhit");
         /// <summary>虚影剑气命中（CE 原名 flashback）：VoidImpact 命中敌人时播放</summary>
         public static readonly SoundStyle VoidImpactHit = new("CalamityDemutation/Sounds/Item/flashback");
+        /// <summary>泰拉巨刃挥砍（TerratomereSwing）：TerratomereHoldout 挥砍到发射点时播放（灾厄原为 Terratomere.SwingSound）</summary>
+        public static readonly SoundStyle TerratomereSwing = new("CalamityDemutation/Sounds/Item/TerratomereSwing");
+        /// <summary>急速斩击（SwiftSlice）：TerratomereSlashCreator 生成小刀光时播放（灾厄原为 CommonCalamitySounds.SwiftSliceSound）</summary>
+        public static readonly SoundStyle SwiftSliceSound = new("CalamityDemutation/Sounds/Custom/SwiftSlice");
+        /// <summary>吞噬涡流爆炸（SubsumingVortexExplosion）：TerratomereExplosion 首帧播放（灾厄原为 SubsumingVortex.ExplosionSound）</summary>
+        public static readonly SoundStyle SubsumingVortexExplosion = new("CalamityDemutation/Sounds/Custom/SubsumingVortexExplosion");
     }
 }

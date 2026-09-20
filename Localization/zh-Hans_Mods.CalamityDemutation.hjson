@@ -759,6 +759,15 @@ Items: {
 			'''
 	}
 
+	DivineSourceBlade: {
+		DisplayName: 金源灭却刃
+		Tooltip:
+			'''
+			挥舞金源之力
+			"生命不息"
+			'''
+	}
+
 	DragonRage: {
 		DisplayName: 巨龙之怒
 		Tooltip:
@@ -844,6 +853,16 @@ Items: {
 	ExaltedOathblade: {
 		DisplayName: 崇高誓约之刃
 		Tooltip: 远古恶魔之神的剑
+	}
+
+	Excelsus: {
+		DisplayName: 宙宇波能刃
+		Tooltip:
+			'''
+			挥舞发射数个宇宙之刃
+			右键发射寰宇光暗矢
+			"拿着这个宇宙的这把刀，把其它宇宙的甩出去"
+			'''
 	}
 
 	EyeoftheStorm: {
@@ -1459,6 +1478,15 @@ Items: {
 			'''
 	}
 
+	Terratomere: {
+		DisplayName: 泰拉巨刃
+		Tooltip:
+			'''
+			挥舞释放生命洪流
+			“与泰拉瑞亚世界之精华相连”
+			'''
+	}
+
 	TheAbsorber: {
 		DisplayName: 阴阳吸星石
 		Tooltip:
@@ -1771,6 +1799,8 @@ Projectiles: {
 	DefenseBlast2.DisplayName: 防御爆裂 2
 	DefenseFlame.DisplayName: 防御烈焰
 	DemonFork.DisplayName: 恶魔叉
+	DivineSourceBeam.DisplayName: 金源剑气
+	DivineSourceBladeProjectile.DisplayName: 金源光束
 	DragonRageFireOrb.DisplayName: 巨龙之怒火球
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
@@ -1778,6 +1808,10 @@ Projectiles: {
 	ElementalFractalHeld.DisplayName: 元素分形
 	ElementalFractalThrown.DisplayName: 元素分形
 	EonBeam.DisplayName: 远古光束
+	ExcelsusBlue.DisplayName: 宙宇蓝刃
+	ExcelsusBomb.DisplayName: 寰宇光暗矢
+	ExcelsusMain.DisplayName: 宙宇主刃
+	ExcelsusPink.DisplayName: 宙宇粉刃
 	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
 	EXNeutronExplode.DisplayName: 中子大爆点
 	ExoComet.DisplayName: 终焉彗星
@@ -1837,6 +1871,13 @@ Projectiles: {
 	StandingFire.DisplayName: 滞留火焰
 	StarlitFractalHeld.DisplayName: 星熠分形
 	TerraBall.DisplayName: 泰拉球
+	TerratomereBeams.DisplayName: 泰拉光束剑气
+	TerratomereBigSlashs.DisplayName: 泰拉大刀光
+	TerratomereBolts.DisplayName: 泰拉闪电
+	TerratomereExplosion.DisplayName: 泰拉爆炸
+	TerratomereHoldout.DisplayName: 泰拉巨刃（手持）
+	TerratomereSlash.DisplayName: 泰拉小刀光
+	TerratomereSlashCreator.DisplayName: 泰拉刀光创造者
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	VoidStarF.DisplayName: 虚空新星
 	WaterSpearFriendly.DisplayName: 水流长矛

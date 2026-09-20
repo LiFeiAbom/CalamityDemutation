@@ -5027,6 +5027,33 @@ namespace CalamityDemutation.Players
                 target.AddBuff(type, duration, false);
         }
         /// <summary>
+        /// NPC 版「从简 + 近似替代」的灾厄减益施加：先试现代版、再试经典版，两版都没有时退回原版近似 buff。
+        /// 供 Terratomere（GlacialState→Frostburn）、Excelsus（GodSlayerInferno→CursedInferno）等命中点使用。
+        /// </summary>
+        public static void ApplyCalamityBuffWithFallback(NPC target, string buffName, int duration, int fallbackBuff)
+        {
+            int type = GetBuffType("CalamityMod", buffName);
+            if (type <= 0)
+                type = GetBuffType("CalamityModClassicPreTrailer", buffName);
+            if (type > 0)
+                target.AddBuff(type, duration, false);
+            else
+                target.AddBuff(fallbackBuff, duration, false);
+        }
+        /// <summary>
+        /// 玩家版「从简 + 近似替代」的灾厄减益施加（PvP 命中时用），语义同 NPC 版。
+        /// </summary>
+        public static void ApplyCalamityBuffWithFallback(Player target, string buffName, int duration, int fallbackBuff)
+        {
+            int type = GetBuffType("CalamityMod", buffName);
+            if (type <= 0)
+                type = GetBuffType("CalamityModClassicPreTrailer", buffName);
+            if (type > 0)
+                target.AddBuff(type, duration, false);
+            else
+                target.AddBuff(fallbackBuff, duration, false);
+        }
+        /// <summary>
         /// 检查玩家当前是否佩戴指定饰品（直接查 armor 饰品槽，而非 ModPlayer 标志位）。
         /// 供 PvP 命中钩子在受害者客户端上判断【攻击者】的装备，
         /// 避免远程玩家实例的标志位因 ResetEffects 只对本地运行而残留/不同步。

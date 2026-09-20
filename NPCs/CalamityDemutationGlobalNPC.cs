@@ -44,6 +44,11 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public bool silvaHysteresis = false;
         public bool voidErosion = false;
+        /// <summary>
+        /// 泰拉巨刃的电击命中计数（移植自大修 CWRGlobalNPC 的 TerratomereBoltOnHitNum）：
+        /// TerratomereBigSlashs 每次命中 +1、上限 6，累计超过 5 时触发 TerratomereExplosion 爆炸后清零。
+        /// </summary>
+        public int TerratomereBoltOnHitNum = 0;
         // ── 虚空侵蚀（VoidTouch）实例字段：移植自 CE 的 EGlobalNPC（这三项在 CE 里不随帧重置，是持续计数）──
         /// <summary>
         /// 虚空侵蚀剩余时间（帧）：每次被虚空系攻击命中累加，归零时层数清零（CE 的 VoidTouchTime，上限由施加方给）
