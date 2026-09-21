@@ -1,5 +1,7 @@
 ﻿using CalamityDemutation.Players;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Demonshade
 {
@@ -8,9 +10,11 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
     /// 提供召唤栏、通用伤害与暴击加成；套装激活后置位 demonshadeSetBonus、redDevil，
     /// 并维持一只友方红魔，套装效果最终在 CalamityDemutationPlayer 与
     /// CalamityDemutationGlobalNPC 中结算。
+    /// 另实现 IExtendedHat：现代版头盔造型的兜帽与角单独画在 _Extension 贴图上，
+    /// 由 HatExtensionLayer 在原版头部层之后叠加绘制。
     /// </summary>
     [AutoloadEquip(EquipType.Head)]
-    internal class DemonshadeHelm:ModItem
+    internal class DemonshadeHelm:ModItem, IExtendedHat
     {
         /// <summary>
         /// 物品基础属性：尺寸、价值、防御与月后自定义稀有度
@@ -23,6 +27,15 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             Item.defense = 55; //15（原值记录，当前实际生效 55）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
+        /// <summary>
+        /// 附加层贴图路径：现代版恶魔之影头盔上半的兜帽与角画在这张 40×1200（20 帧 × 40×60）的贴图上，
+        /// 由 HatExtensionLayer 在头部绘制完成后叠加
+        /// </summary>
+        public string ExtensionTexture => "CalamityDemutation/Content/Items/Armors/Demonshade/DemonshadeHelm_Extension";
+        /// <summary>
+        /// 附加层相对头部的偏移：整层上移 4 像素（附加层每帧高 60，比头部的 56 高 4）
+        /// </summary>
+        public Vector2 ExtensionSpriteOffset(PlayerDrawSet drawInfo) => new Vector2(0f, -4f);
         /// <summary>
         /// 判定是否集齐恶魔之影套三件（胸甲 + 护腿）
         /// </summary>

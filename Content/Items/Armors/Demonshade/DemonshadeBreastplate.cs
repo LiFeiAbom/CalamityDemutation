@@ -7,10 +7,17 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
     /// 恶魔之影胸甲（DemonshadeBreastplate） - 恶魔之影套（Demonshade）胸部防具
     /// 提供巨额生命/魔力上限、通用伤害、暴击与近战攻速，并附带高额荆棘反伤；
     /// 装备时置位 shadeRegen，最终在 CalamityDemutationPlayer.UpdateLifeRegen 中结算生命回复。
+    /// 另实现 IDrawArmOverShoulderpad：走路时露出身前的前臂需要盖在肩甲之上，
+    /// 单独由 _Arms 贴图提供，由 FrontArmOverShoulderpadLayer 重绘。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
-    internal class DemonshadeBreastplate:ModItem
+    internal class DemonshadeBreastplate:ModItem, IDrawArmOverShoulderpad
     {
+        /// <summary>
+        /// 前臂贴图路径：肩甲会盖住走路时露在身前的前臂，故用这张 40×1120（20 帧 × 40×56）的
+        /// 前臂贴图在肩甲之上重绘。tML 1.4 起 _Arms 不再随胸甲自动加载，只有本接口对应的绘制层会用到它
+        /// </summary>
+        public string FrontArmTexture => "CalamityDemutation/Content/Items/Armors/Demonshade/DemonshadeBreastplate_Arms";
         /// <summary>
         /// 物品基础属性：尺寸、价值、防御与月后自定义稀有度
         /// </summary>
