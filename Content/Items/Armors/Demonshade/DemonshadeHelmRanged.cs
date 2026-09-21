@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Players;
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -6,15 +6,14 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Demonshade
 {
     /// <summary>
-    /// 魔影头盔（DemonshadeHelm） - 恶魔之影套（Demonshade）的**近战**职业头部件。
-    /// 单件给近战伤害、暴击与攻速；套装激活后置位 demonshadeSetBonus、redDevil 与 demonshadeClass，
-    /// 补上红魔 buff 并维持一只友方红魔。远程变体见 <see cref="DemonshadeHelmRanged"/>，
-    /// 两者套装逻辑逐行同构，只有职业不同。
-    /// 另实现 IExtendedHat：现代版头盔造型的兜帽与角单独画在 _Extension 贴图上，
+    /// 魔影羽笠（DemonshadeHelmRanged） - 恶魔之影套（Demonshade）的远程职业头部件。
+    /// 单件给远程伤害与暴击，并附 50% 不消耗弹药（不耗弹在 CalamityDemutationPlayer.CanConsumeAmmo 中结算）。
+    /// 套装与近战头盔 DemonshadeHelm 逐行同构，只把职业从近战换成远程——连带红魔及其三叉戟的伤害职业。
+    /// 造型取自灾厄大修的 DemonshadeHelmRanged：帽檐与羽饰单独画在 _Extension 贴图上，
     /// 由 HatExtensionLayer 在原版头部层之后叠加绘制。
     /// </summary>
     [AutoloadEquip(EquipType.Head)]
-    internal class DemonshadeHelm:ModItem, IExtendedHat
+    internal class DemonshadeHelmRanged:ModItem, IExtendedHat
     {
         /// <summary>
         /// 物品基础属性：尺寸、价值、防御与月后自定义稀有度
@@ -23,19 +22,19 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
-            Item.value = Item.buyPrice(5, 0, 0, 0);  // 价值 5 铂金
-            Item.defense = 55; //15（原值记录，当前实际生效 55）
+            Item.value = Item.buyPrice(5, 0, 0, 0);  // 价值 5 铂金，与近战头盔一致
+            Item.defense = 43;        // 防御 43
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
         /// <summary>
-        /// 附加层贴图路径：现代版恶魔之影头盔上半的兜帽与角画在这张 40×1200（20 帧 × 40×60）的贴图上，
-        /// 由 HatExtensionLayer 在头部绘制完成后叠加
+        /// 附加层贴图路径：帽檐与羽饰画在这张 52×1280（20 帧 × 52×64）的贴图上
         /// </summary>
-        public string ExtensionTexture => "CalamityDemutation/Content/Items/Armors/Demonshade/DemonshadeHelm_Extension";
+        public string ExtensionTexture => "CalamityDemutation/Content/Items/Armors/Demonshade/DemonshadeHelmRanged_Extension";
         /// <summary>
-        /// 附加层相对头部的偏移：整层上移 4 像素（附加层每帧高 60，比头部的 56 高 4）
+        /// 附加层相对头部的偏移。该值与贴图同源（取自灾厄大修 CWRPlayerDraw 的 Ranged 分支），
+        /// 是画师按这套 52 宽贴图规格定死的，改动会让羽饰与帽檐错位。
         /// </summary>
-        public Vector2 ExtensionSpriteOffset(PlayerDrawSet drawInfo) => new Vector2(0f, -4f);
+        public Vector2 ExtensionSpriteOffset(PlayerDrawSet drawInfo) => new Vector2(-6f, -18f);
         /// <summary>
         /// 判定是否集齐恶魔之影套三件（胸甲 + 护腿）
         /// </summary>
@@ -52,31 +51,23 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.armorEffectDrawOutlines = true;
         }
         /// <summary>
-        /// 套装激活：先叠加 +100% 近战伤害（必须早于红魔伤害取值，否则红魔与三叉戟会漏掉这一档），
-        /// 再置位 demonshadeSetBonus 与 redDevil 标记、补上红魔 buff 并召唤红魔，
-        /// 每帧把当前伤害同步给场上红魔。
-        /// 标记最终结算位置：demonshadeSetBonus 在 CalamityDemutationPlayer（潜行、受击反击、
-        /// Y 键等）与 CalamityDemutationGlobalItem / CalamityDemutationGlobalProjectile
-        /// （命中附带恶魔火焰）中消费；GlobalNPC 不读取该标记，它只处理 Enraged 的染色。
-        /// redDevil 用于维持红魔弹幕存活。
-        /// setBonus 逐条含义：近战伤害提高 100%；施加攻击时造成魔影炙炎减益；
-        /// 受击时天降暗影光束与恶魔镰刀；一只友方红魔会跟随你；
-        /// 按 Y 键以黑暗魔法激怒附近敌人 10 秒，使其伤害提高 25%，但承受的伤害提高 125%。
-        /// 注：末条为灾厄 setBonus 原文直译。实际实现（CalamityDemutationPlayer 的 Y 键分支）是给玩家自身
-        /// 与 3000 像素内的敌人各挂 600 帧 Enraged——玩家侧确实获得增伤，敌人侧仅在
-        /// GlobalNPC.GetAlpha 里染红、并不改变其输出与承伤，即原文所述"敌人增伤/易伤"尚未实现。
+        /// 套装激活：与近战头盔逐行同构，仅职业换成远程。
+        /// 先叠加 +100% 远程伤害（必须早于红魔伤害取值，否则红魔与三叉戟会漏掉这一档），
+        /// 再置位 demonshadeSetBonus / redDevil / demonshadeClass 标记，补上红魔 buff 并召唤红魔，
+        /// 最后每帧把当前伤害同步给场上红魔。
+        /// 标记的消费位置见近战头盔 DemonshadeHelm 的同名方法注释。
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
             // 必须先加再取：player.GetDamage<X>() += 是就地修改玩家身上那份共享加成数据，
-            // 同一方法内更早的读取看得到、更晚的读取看不到。原先放在方法末尾，
-            // 结果红魔（及其射出的三叉戟）漏掉了这 +100%。
-            player.GetDamage<MeleeDamageClass>() += 1f;  // 近战伤害 +100%（套装奖励原文的 "100% increased damage" 原指召唤伤害，本模组按近战套装口径改为近战）
-            int redDevilDamage = (int)player.GetDamage<MeleeDamageClass>().ApplyTo(10000);  // 红魔弹幕伤害：以玩家近战伤害对 10000 基准换算（已含上方这 +100%）
+            // 同一方法内更早的读取看得到、更晚的读取看不到。
+            player.GetDamage<RangedDamageClass>() += 1f;  // 远程伤害 +100%
+            int redDevilDamage = (int)player.GetDamage<RangedDamageClass>().ApplyTo(10000);  // 红魔弹幕伤害：以玩家远程伤害对 10000 基准换算（已含上方这 +100%）
             player.setBonus = this.GetLocalizedValue("SetBonus");
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            modPlayer.demonshadeSetBonus = true;  // 置位套装总标记
-            modPlayer.redDevil = true;            // 置位红魔标记，供红魔弹幕判断去留
+            modPlayer.demonshadeSetBonus = true;             // 置位套装总标记
+            modPlayer.redDevil = true;                       // 置位红魔标记，供红魔弹幕判断去留
+            modPlayer.demonshadeClass = DamageClass.Ranged;  // 红魔三叉戟按远程结算
             if (player.FindBuffIndex(ModContent.BuffType<Buffs.SummonBuffs.RedDevil>()) == -1)
             {
                 player.AddBuff(ModContent.BuffType<Buffs.SummonBuffs.RedDevil>(), 3600, true);  // 无红魔 buff 时补上（3600 帧 = 60 秒）
@@ -88,8 +79,6 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             }
             // Projectile.damage 在生成那一刻就冻结、此后不随玩家属性变化，而红魔召唤后常驻不重召，
             // 导致换装备或切换职业变体后伤害会陈旧，故每帧把当前算得的伤害同步过去。
-            // 不能用 ContinuouslyUpdateDamageStats 替这一段：它按 Projectile.DamageType 重算，
-            // 而红魔本体是召唤类型，会把叉子的近战伤害折算成召唤加成。
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile devil = Main.projectile[i];
@@ -100,18 +89,18 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             }
         }
         /// <summary>
-        /// 单件装备加成：近战伤害、近战暴击与近战攻速；并置位职业标记供红魔三叉戟取值。
+        /// 单件装备加成：远程伤害与远程暴击；并置位职业标记，供不耗弹判定与红魔三叉戟取值。
+        /// 50% 不消耗弹药在 CalamityDemutationPlayer.CanConsumeAmmo 中结算。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Melee;  // 置位职业标记：本件为近战变体
-            player.GetDamage<MeleeDamageClass>() += 0.5f;       // 近战伤害 +50%
-            player.GetCritChance<MeleeDamageClass>() += 50;     // 近战暴击率 +50%
-            player.GetAttackSpeed<MeleeDamageClass>() += 0.30f; // 近战攻速 +30%
+            player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Ranged;  // 置位职业标记：本件为远程变体
+            player.GetDamage<RangedDamageClass>() += 0.5f;   // 远程伤害 +50%
+            player.GetCritChance<RangedDamageClass>() += 50; // 远程暴击率 +50%
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
-        /// 材料相同（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。
+        /// 材料与近战头盔一致（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。
         /// </summary>
         public override void AddRecipes()
         {

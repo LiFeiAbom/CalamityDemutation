@@ -288,6 +288,11 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool darkSunRing = false;
         public bool deificAmulet = false;
+        /// <summary>
+        /// 当前魔影头部件对应的伤害职业（Melee / Ranged / …），由各职业头盔在 UpdateEquip 中置位。
+        /// 供红魔三叉戟决定伤害类型与暴击档位，以及远程件的不消耗弹药判定使用；未穿戴时为 null。
+        /// </summary>
+        public DamageClass demonshadeClass = null;
         public bool demonshadeSetBonus = false;
         public bool draconicSurge = false;
         public int draconicSurgeCooldown = 0;
@@ -718,6 +723,7 @@ namespace CalamityDemutation.Players
             daedalusEmblem = false;
             darkSunRing = false;
             deificAmulet = false;
+            demonshadeClass = null;
             demonshadeSetBonus = false;
             draconicSurge = false;
             drewsSandyWaifu = false;
@@ -867,6 +873,7 @@ namespace CalamityDemutation.Players
             daedalusEmblem = false;
             darkSunRing = false;
             deificAmulet = false;
+            demonshadeClass = null;
             demonshadeSetBonus = false;
             draconicSurge = false;
             draconicSurgeCooldown = 0;
@@ -3531,10 +3538,14 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 CanConsumeAmmo 钩子：判定本次射击是否消耗弹药。
-        /// 代达罗斯纹章 1/5（20%）、元素箭袋 40% 概率不消耗弹药。
+        /// 代达罗斯纹章 1/5（20%）、元素箭袋 40%、魔影羽笠（射手头部件）50% 概率不消耗弹药。
         /// </summary>
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
+            if (demonshadeClass == DamageClass.Ranged && weapon.DamageType == DamageClass.Ranged && Main.rand.NextFloat() < 0.5f)
+            {
+                return false;
+            }
             if(daedalusEmblem && weapon.DamageType == DamageClass.Ranged && Main.rand.NextBool(5))
             {
                 return false;
