@@ -1206,6 +1206,17 @@ Items: {
 			'''
 	}
 
+	NeutronGun: {
+		DisplayName: 恒星猎手
+		Tooltip:
+			'''
+			发射重力弹丸，击中目标后生成翘曲点
+			右键切换为狙击形态，发射更为强大引力子弹，引力子弹击中目标后将让数道伽马射线降落
+			每次开火都会给枪械充能，充能满格后再次开火会在鼠标处引发一次中子星爆炸
+			"把太阳射下来!"
+			'''
+	}
+
 	NihilityFragments: {
 		DisplayName: 虚无残片
 		Tooltip: ""
@@ -1879,6 +1890,7 @@ Projectiles: {
 	ExcelsusPink.DisplayName: 宙宇粉刃
 	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
 	EXNeutronExplode.DisplayName: 中子大爆点
+	EXNeutronExplosionRanged.DisplayName: 中子大爆点
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
 	BrilliantFractalHeld.DisplayName: 光辉分形
@@ -1905,9 +1917,13 @@ Projectiles: {
 	LaserFountains.DisplayName: 激光喷泉
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星
+	NeutronBullet.DisplayName: 中子弹
 	NeutronExplode.DisplayName: 中子爆点
+	NeutronExplosionRanged.DisplayName: 中子爆点
 	NeutronGlaiveBeam.DisplayName: 中子长戟光束
 	NeutronGlaiveHeld.DisplayName: 中子长戟
+	NeutronGunHoldout.DisplayName: 中子枪
+	NeutronLaser.DisplayName: 中子光束
 	NeutronsOrb.DisplayName: 中子球
 	Oathblade.DisplayName: 誓约之刃
 	OathswordFlame.DisplayName: 誓约剑之焰

@@ -184,9 +184,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             bar4 = null;
         }
         /// <summary>
-        /// 在玩家头顶绘制充能条：背景 + 按充能进度裁剪的前景，满档时切换满档贴图
+        /// 在玩家头顶绘制充能条：背景 + 按充能进度裁剪的前景，满档时切换满档贴图。
+        /// 中子枪的手持弹幕（NeutronGunHoldout）复用本方法，故为 internal
         /// </summary>
-        private static void DrawBar(Player Owner, float sengs, int uiframe)
+        internal static void DrawBar(Player Owner, float sengs, int uiframe)
         {
             if (sengs <= 0f)
             {

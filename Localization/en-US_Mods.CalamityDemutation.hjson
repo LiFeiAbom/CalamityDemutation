@@ -1204,6 +1204,17 @@ Items: {
 			'''
 	}
 
+	NeutronGun: {
+		DisplayName: Stellar Hunter
+		Tooltip:
+			'''
+			Fires gravity projectiles that create warp points upon hitting a target.
+			Right-click to switch to sniper mode, firing more powerful gravity bullets that summon gamma rays upon impact.
+			Each shot charges the gun, and when fully charged, the next shot triggers a neutron star explosion at the cursor.
+			"Shoot the sun down!"
+			'''
+	}
+
 	NihilityFragments: {
 		DisplayName: Nihility Fragments
 		Tooltip: ""
@@ -1876,6 +1887,7 @@ Projectiles: {
 	ExcelsusPink.DisplayName: Excelsus Pink
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
 	EXNeutronExplode.DisplayName: EX Neutron Explode
+	EXNeutronExplosionRanged.DisplayName: EX Neutron Explosion
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
 	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
@@ -1902,9 +1914,13 @@ Projectiles: {
 	LaserFountains.DisplayName: Laser Fountains
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
+	NeutronBullet.DisplayName: Neutron Bullet
 	NeutronExplode.DisplayName: Neutron Explode
+	NeutronExplosionRanged.DisplayName: Neutron Explosion
 	NeutronGlaiveBeam.DisplayName: Neutron Glaive Beam
 	NeutronGlaiveHeld.DisplayName: Neutron Glaive
+	NeutronGunHoldout.DisplayName: Neutron Gun
+	NeutronLaser.DisplayName: Neutron Laser
 	NeutronsOrb.DisplayName: Neutrons Orb
 	Oathblade.DisplayName: Oathblade
 	OathswordFlame.DisplayName: Oathsword Flame

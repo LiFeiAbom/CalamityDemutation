@@ -92,5 +92,9 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle SwiftSliceSound = new("CalamityDemutation/Sounds/Custom/SwiftSlice");
         /// <summary>吞噬涡流爆炸（SubsumingVortexExplosion）：TerratomereExplosion 首帧播放（灾厄原为 SubsumingVortex.ExplosionSound）</summary>
         public static readonly SoundStyle SubsumingVortexExplosion = new("CalamityDemutation/Sounds/Custom/SubsumingVortexExplosion");
+        /// <summary>中子枪开火（CWR 原名 AWP_Shoot）：NeutronGunHoldout 每次射出中子弹时播放，音高音量按左右键区分</summary>
+        public static readonly SoundStyle Gun_AWP_Shoot = new("CalamityDemutation/Sounds/Item/Gun_AWP_Shoot");
+        /// <summary>蓄力完成（CWR 原名 Pecharge）：中子枪充能满 80 触发大爆点时播放</summary>
+        public static readonly SoundStyle Pecharge = new("CalamityDemutation/Sounds/Item/Pecharge");
     }
 }
