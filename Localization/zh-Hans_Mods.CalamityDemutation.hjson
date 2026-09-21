@@ -1207,7 +1207,7 @@ Items: {
 	}
 
 	NeutronGun: {
-		DisplayName: 恒星猎手
+		DisplayName: 中子脉冲
 		Tooltip:
 			'''
 			发射重力弹丸，击中目标后生成翘曲点

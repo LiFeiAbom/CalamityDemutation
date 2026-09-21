@@ -5,7 +5,7 @@ namespace CalamityDemutation.Common.Effects
 {
     /// <summary>
     /// 着色器加载器：请求并托管本模组全部 .fx 资源——
-    /// 刀光 KnifeRendering / KnifeDistortion、屏幕扭曲 WarpShader、
+    /// 刀光 KnifeRendering / KnifeDistortion、屏幕扭曲 WarpShader、中子星扭曲 NeutronWarp、
     /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader、亵渎之魂护盾 RoverDriveShieldShader、
     /// 深渊裂隙合成 cabyss。
     /// </summary>
@@ -37,6 +37,12 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public static Asset<Effect> WarpShader;
         /// <summary>
+        /// 中子星扭曲着色器（移植自 CWR 的 NeutronWarp）：与 WarpShader 配套——由它把"位移方向 / 强度"
+        /// 写进扭曲遮罩，再由 WarpShader 消费。中子枪的弹丸与爆炸靠它按技法程序化生成位移场，
+        /// 取代旧版 CPU 叠几十层遮罩贴图的写法。使用见 <see cref="NeutronWarpHelper"/>
+        /// </summary>
+        public static Asset<Effect> NeutronWarp;
+        /// <summary>
         /// 请求加载全部 .fx 着色器资源（异步）：路径前缀取 CalamityDemutationConstant.noEffects（"Effects/"）。
         /// 只持有 Asset 句柄，不在此处取 .Value，真正取值推迟到绘制期
         /// </summary>
@@ -47,6 +53,7 @@ namespace CalamityDemutation.Common.Effects
             var assets = CalamityDemutation.Instance.Assets;
             KnifeDistortion = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeDistortion");
             WarpShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "WarpShader");
+            NeutronWarp = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "NeutronWarp");
             MetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/MetaballEdgeShader");
             AdditiveMetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/AdditiveMetaballEdgeShader");
             RoverDriveShieldShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "RoverDriveShield");
@@ -59,6 +66,7 @@ namespace CalamityDemutation.Common.Effects
         {
             KnifeDistortion = null;
             WarpShader = null;
+            NeutronWarp = null;
             MetaballEdgeShader = null;
             AdditiveMetaballEdgeShader = null;
             RoverDriveShieldShader = null;

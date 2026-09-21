@@ -1205,7 +1205,7 @@ Items: {
 	}
 
 	NeutronGun: {
-		DisplayName: Stellar Hunter
+		DisplayName: Neutron Pulse
 		Tooltip:
 			'''
 			Fires gravity projectiles that create warp points upon hitting a target.

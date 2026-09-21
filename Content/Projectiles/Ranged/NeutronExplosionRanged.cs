@@ -1,3 +1,4 @@
+using CalamityDemutation.Common.Effects;
 using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using Microsoft.Xna.Framework;
@@ -82,18 +83,17 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         /// <summary>IDrawWarp：空实现，配合 canDraw() 返回 false</summary>
         public void costomDraw(SpriteBatch spriteBatch) { }
         /// <summary>
-        /// IDrawWarp：绘制扭曲遮罩。把星形遮罩叠画 3 层（每层不额外旋转），
-        /// 缩放取 localAI[0]、透明度取 ai[1]，形成向外扩散再淡出的扭曲涟漪
+        /// IDrawWarp：绘制扭曲遮罩。用"冲击波环"技法一次性生成位移场——
+        /// 场尺寸 300×300 并按 localAI[0] 缩放、强度取 ai[1]×0.65、进度与旋转取 ai[1]/ai[0]。
+        /// 取代旧版把遮罩贴图叠 33 层的 CPU 写法（CWR 原文注释即写作"NeutronWarp 替 CPU 叠绘"）
         /// </summary>
         public void Warp()
         {
-            Texture2D warpTex = TextureAssets.Projectile[Type].Value;
-            Color warpColor = new Color(45, 45, 45) * Projectile.ai[1];
-            for (int i = 0; i < 3; i++)
-            {
-                Main.spriteBatch.Draw(warpTex, Projectile.Center - Main.screenPosition
-                    , null, warpColor, 0f, warpTex.Size() / 2, Projectile.localAI[0], SpriteEffects.None, 0f);
-            }
+            float scale = Math.Max(Projectile.localAI[0], 0.01f);
+            NeutronWarpHelper.DrawWarp(Projectile.Center
+                , screenWidth: 300f * scale, screenHeight: 300f * scale
+                , intensity: Projectile.ai[1] * 0.65f, progress: Projectile.ai[1]
+                , rotation: Projectile.ai[0], technique: "ShockwaveRing");
         }
     }
 }

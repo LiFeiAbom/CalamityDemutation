@@ -38,10 +38,10 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         private const int FireTimeSlow = 12;
         /// <summary>右键蓄力射击的射速（帧）</summary>
         private const int FireTimeCharged = 45;
-        /// <summary>右键伤害倍率（未充满时）</summary>
-        private const float ChargedDamageMult = 2.6f;
-        /// <summary>右键伤害倍率（充满后的下一发）</summary>
-        private const float ChargedDamageMultBoosted = 5.6f;
+        /// <summary>右键伤害倍率（未过载时）——CWR main 版口径，上一版是 2.6</summary>
+        private const float ChargedDamageMult = 5.6f;
+        /// <summary>右键伤害倍率（过载期间的下一发）——CWR main 版口径，上一版是 5.6</summary>
+        private const float ChargedDamageMultBoosted = 15.6f;
         /// <summary>本体距手臂的基准距离（CWR 的 HandDistance）</summary>
         private const float HandDistance = 35f;
         /// <summary>右键蓄力时本体前伸到的距离（CWR 的 HandFireDistance）</summary>
@@ -81,12 +81,17 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         }
         /// <summary>
         /// 去留判据覆写：本武器左右键共用一件物品，player.channel 不可靠，故改判三件事——
-        /// 玩家是否已无法持械（死亡/被控/物品栏被锁）、手里的东西是否还是中子枪、以及两个鼠标键是否都松开了
+        /// 玩家是否已无法持械（死亡/被控/物品栏被锁）、手里的东西是否还是中子枪、以及两个鼠标键是否都松开了。
+        /// <para>
+        /// 例外：过载状态（<see cref="charged"/> 且还有剩余充能）期间即便松手也不销毁，
+        /// 否则枪一消失、头顶那条正在回落的充能条也会跟着断掉（CWR main 版为此专门加了 StayAlive）。
+        /// </para>
         /// </summary>
         public override void KillHoldoutLogic()
         {
+            bool overchargeFading = charged && charge > 0f;
             if (Owner.CantUseHoldout(false) || Owner.HeldItem.type != ModContent.ItemType<NeutronGun>()
-                || (Projectile.owner == Main.myPlayer && !Main.mouseLeft && !Main.mouseRight))
+                || (!overchargeFading && Projectile.owner == Main.myPlayer && !Main.mouseLeft && !Main.mouseRight))
                 Projectile.Kill();
         }
         /// <summary>
@@ -98,19 +103,23 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             CDUtil.ClockFrame(ref uiframe, 5, 6);
             if (Projectile.owner != Main.myPlayer)
                 return;   // 鼠标状态、蓄力与开火都只由主人端结算，其余端只负责按同步来的数据播放
-            firingRight = Main.mouseRight;
-            // 充满后的强化标记逐帧回落（CWR 在 PostInOwnerUpdate 里做同一件事）
+            bool hasAmmo = Owner.HasAmmo(Owner.HeldItem);
+            // CWR main 版口径：没有弹药时连"右键蓄力姿态"都不进（手臂不前伸、不换贴图）
+            firingRight = Main.mouseRight && hasAmmo;
+            // 过载状态下充能逐帧回落，归零时播一声并解除过载
             if (charged && charge > 0f)
             {
                 charge--;
                 if (charge <= 0f)
                 {
-                    SoundEngine.PlaySound(SoundID.Item4 with { Pitch = -0.6f }, Projectile.Center);
+                    SoundEngine.PlaySound(SoundID.Item92 with { Pitch = -0.6f }, Projectile.Center);
                     charged = false;
                 }
             }
             if (fireTimer > 0)
                 fireTimer--;
+            if (!hasAmmo)
+                return;
             if (Main.mouseRight)
             {
                 if (fireTimer <= 0)
@@ -173,7 +182,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             {
                 if (!charged)
                 {
-                    SoundEngine.PlaySound(SoundID.Item4 with { Pitch = -0.2f }, Projectile.Center);
+                    SoundEngine.PlaySound(SoundID.Item92 with { Pitch = -0.2f }, Projectile.Center);
                     SoundEngine.PlaySound(CalamityDemutationSounds.Pecharge with { Pitch = -0.2f, Volume = 0.8f }, Projectile.Center);
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), Main.MouseWorld, Vector2.Zero
                         , ModContent.ProjectileType<EXNeutronExplosionRanged>(), Projectile.damage, 0f);
