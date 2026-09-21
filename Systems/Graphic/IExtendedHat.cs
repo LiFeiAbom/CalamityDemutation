@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-namespace CalamityDemutation.Content.Items.Armors.Demonshade
+namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 可扩展帽子接口（移植自灾厄 IExtendedHat） - 由装备在头部槽位的物品实现，

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Armors.Demonshade
+namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 前臂盖肩甲层（移植自灾厄 FrontArmOverShoulderpadLayer） - 挂在原版"手臂盖住手持物"层之后，

@@ -1,5 +1,5 @@
 using Terraria;
-namespace CalamityDemutation.Content.Items.Armors.Demonshade
+namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 前臂盖肩甲接口（移植自灾厄 IDrawArmOverShoulderpad） - 由胸甲实现，

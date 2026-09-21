@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Armors.Demonshade
+namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 帽子附加层（移植自灾厄 HatExtensionLayer） - 挂在原版头部绘制层之后，

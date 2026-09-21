@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Players;
+using CalamityDemutation.Systems.Graphic;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Demonshade
