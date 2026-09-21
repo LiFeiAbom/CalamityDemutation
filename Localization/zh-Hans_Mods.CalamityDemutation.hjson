@@ -201,6 +201,11 @@ Buffs: {
 		DisplayName: 亵渎水晶鞭减益
 		Description: 你的血肉被亵渎的水晶鞭撕开！
 	}
+
+	AbyssalWish: {
+		DisplayName: 渊洋之愿
+		Description: 你能在水下呼吸，哪怕身处深渊！
+	}
 }
 
 Configs: {
@@ -1784,6 +1789,11 @@ Items: {
 			'''
 	}
 
+	AbyssalElixir: {
+		DisplayName: 渊洋秘药
+		Tooltip: 获得渊洋之愿增益，让你能在水下呼吸，哪怕身处深渊
+	}
+
 	ProfanedSoulArtifact: {
 		DisplayName: 渎魂神物
 		Tooltip:
@@ -1956,7 +1966,7 @@ Projectiles: {
 	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
 	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
-	// GhastlySoulLarge.DisplayName: Ghastly Soul Large
+	GhastlySoulLarge.DisplayName: 大型聚魂弹
 	FractalLaser.DisplayName: 分形激光
 	VoidFractalHeld.DisplayName: 虚空分形
 	VoidSlash.DisplayName: 虚空斩
@@ -1965,7 +1975,7 @@ Projectiles: {
 	FinalFractalBlade.DisplayName: 最终分形
 	VoidshadeHeld.DisplayName: 虚影薄锋
 	VoidImpact.DisplayName: 虚影剑气
-	// WohLaser.DisplayName: Woh Laser
+	WohLaser.DisplayName: 虚影光束
 }
 
 Systems: {

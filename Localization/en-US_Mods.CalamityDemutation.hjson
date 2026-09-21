@@ -201,6 +201,11 @@ Buffs: {
 		DisplayName: Profaned Crystal Whip Debuff
 		Description: Your flesh has been torn asunder by a profaned crystalline whip!
 	}
+
+	AbyssalWish: {
+		DisplayName: Abyssal Wish
+		Description: You can breathe underwater, even in the Abyss!
+	}
 }
 
 Configs: {
@@ -1779,6 +1784,11 @@ Items: {
 			Silva invincibility heals you to full HP when triggered
 			If you trigger the above heals you cannot drink this potion again for 30 seconds
 			'''
+	}
+
+	AbyssalElixir: {
+		DisplayName: Abyssal Elixir
+		Tooltip: Grants the Abyssal Wish buff, letting you breathe underwater, even in the Abyss
 	}
 
 	ProfanedSoulArtifact: {
