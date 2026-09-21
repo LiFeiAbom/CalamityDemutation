@@ -23,16 +23,17 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Main.RegisterItemAnimation(Type, new DrawAnimationVertical(5, 7));// 垂直动画：7 帧、每 5 tick 换一帧
         }
         /// <summary>
-        /// 物品基础属性：数值照搬 CWR（伤害 580、射速 5 帧、暴击 +2%、消耗子弹）。
+        /// 物品基础属性：伤害按用户拍板 ×3.5 膨胀（580→2030），其余照搬 CWR（射速 5 帧、暴击 +2%、消耗子弹）。
         /// channel + noUseGraphic + useStyle = Shoot：本体不出图也不挥砍，靠 channel 维持持握弹幕常驻；
         /// useAmmo 供持握弹幕里的 Player.PickAmmo 识别弹药类别（本武器会把任何子弹强制转成中子弹）。
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = Item.height = 34;
-            Item.damage = 580;
+            Item.damage = 2030;
             Item.DamageType = DamageClass.Ranged;
             Item.useAnimation = Item.useTime = 5;
+            Item.shootsEveryUse = true;
             Item.knockBack = 1.5f;
             Item.shootSpeed = 12f;
             Item.useAmmo = AmmoID.Bullet;

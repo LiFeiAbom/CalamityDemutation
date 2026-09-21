@@ -2,6 +2,7 @@ using CalamityDemutation.Common.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -46,6 +47,14 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.timeLeft = 160;
+        }
+        /// <summary>
+        /// 生成时立即把贴图转到速度方向：本弹幕由持握弹幕在 AI 里生成，若首帧未及跑 AI（rotation 仍是 0），
+        /// 竖直长矛会在枪口闪一帧竖着的白光（即"枪口左右、消亡快"的怪光束）；这里提前设置，保证第一帧就水平。
+        /// </summary>
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
         }
         /// <summary>
         /// 每帧：淡入（alpha 每帧 -5），并把贴图转到与速度对齐（长矛贴图竖直，故 +90°）

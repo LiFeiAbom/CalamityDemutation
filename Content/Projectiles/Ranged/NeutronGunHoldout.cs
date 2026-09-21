@@ -18,7 +18,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
     /// <para>
     /// CWR 侧继承它自己的枪械框架 BaseFeederGun（1058 行，含弹匣/装填/手动装填按键/服务端配置一整套），
     /// 本模组不移植该框架，改为照 NeutronGlaive 的先例在 <see cref="BaseGunHoldoutCO"/> 上手写等价行为：
-    /// 左键速射（每发一颗 <see cref="NeutronBullet"/> + 一道 <see cref="NeutronLaser"/>，每第 3 发射速由 5 帧放慢到 12 帧）、
+    /// 左键速射（每发一颗 <see cref="NeutronBullet"/>，每第 3 发射速由 4 帧放慢到 12 帧）、
     /// 右键蓄力射击（射速 45 帧、伤害 ×2.6；充能满 80 时在鼠标处炸开 <see cref="EXNeutronExplosionRanged"/>，
     /// 其后下一发伤害变 ×5.6，且充能逐帧回落直到清零）。
     /// </para>
@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         /// <summary>充能上限：蓄力值达到该值时触发大爆点</summary>
         private const float MaxCharge = 80f;
         /// <summary>左键速射的基准射速（帧）</summary>
-        private const int FireTimeNormal = 5;
+        private const int FireTimeNormal = 4;
         /// <summary>左键每第 3 发射速放慢到的帧数</summary>
         private const int FireTimeSlow = 12;
         /// <summary>右键蓄力射击的射速（帧）</summary>
@@ -68,6 +68,9 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Ranged/NeutronGun";
         /// <summary>右键蓄力时把手持物前伸得更远（CWR 每帧按 onFireR 切换 HandDistance）</summary>
         public override float MaxOffsetLengthFromArm => firingRight ? HandFireDistance : HandDistance;
+        /// <summary>发射口：左键速射贴图放大 1.5 倍，枪口随之前移 1.5 倍；右键保持原位置</summary>
+        public override Vector2 GunTipPosition => Projectile.Center
+            + Vector2.UnitX.RotatedBy(Projectile.rotation) * Projectile.width * 0.5f * (firingRight ? 1f : 1.5f);
         // ── 生命周期方法 ──
         /// <summary>
         /// 基础属性：在基类默认值之上把尺寸设为贴图尺寸（108×56，width 决定发射口 GunTipPosition 的位置）
@@ -157,9 +160,6 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             // ai[0] = 0：普通弹，命中后不追加天降光束
             Projectile.NewProjectile(Projectile.GetSource_FromThis(), GunTipPosition, shootVelocity
                 , ModContent.ProjectileType<NeutronBullet>(), Projectile.damage, Projectile.knockBack, Owner.whoAmI, 0f);
-            // 同时甩出一道光束，出生点随机方向偏出 130 像素（CWR 的 CWRUtils.randVr(130, 131) 即"随机方向 × 130"）
-            Projectile.NewProjectile(Projectile.GetSource_FromThis(), GunTipPosition + Main.rand.NextVector2Unit() * 130f
-                , shootVelocity, ModContent.ProjectileType<NeutronLaser>(), Projectile.damage, Projectile.knockBack, Owner.whoAmI, 0f);
         }
         /// <summary>
         /// 右键蓄力射击：消耗一发弹药，按是否已充满决定伤害倍率；每发累积 10 点蓄力，
@@ -217,8 +217,9 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             {
                 flipSprite = SpriteEffects.FlipVertically;
             }
+            float scale = firingRight ? Projectile.scale : Projectile.scale * 1.5f;   // 左键速射贴图放大 1.5 倍
             Main.EntitySpriteDraw(texture, drawPosition, CDUtil.GetRec(texture, Projectile.frame, 7)
-                , Projectile.GetAlpha(lightColor), Projectile.rotation, CDUtil.GetOrig(texture, 7), Projectile.scale, flipSprite, 0);
+                , Projectile.GetAlpha(lightColor), Projectile.rotation, CDUtil.GetOrig(texture, 7), scale, flipSprite, 0);
             return false;
         }
         // ── 网络同步 ──
