@@ -27,6 +27,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// <summary>
         /// 基础属性：48x48 碰撞箱、需网络同步；友方、不受水阻、存活 18000*5 帧（近乎永久，靠召唤标志维持）、
         /// 无限穿透、不碰撞地形。未设置 minion/minionSlots，故不占用召唤栏（由套装直接生成）。
+        /// 伤害类型为召唤：红魔是召唤物定位。注意本体 CanDamage 返回 false、不造成任何伤害，
+        /// 真正打人的是它射出的三叉戟，那枚弹幕的伤害类型另行决定。
         /// </summary>
         public override void SetDefaults()
         {
@@ -34,6 +36,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.height = 48;            // 贴图/碰撞箱高（像素）
             Projectile.netImportant = true;    // 重要弹幕，联机时始终同步
             Projectile.friendly = true;        // 友方弹幕
+            Projectile.DamageType = DamageClass.Summon;  // 召唤伤害类型（红魔本体不造成伤害，此项仅表征其召唤物定位）
             Projectile.ignoreWater = true;     // 不受水流减速
             Projectile.timeLeft = 18000;       // 初始存活帧数
             Projectile.penetrate = -1;         // 无限穿透
@@ -294,7 +297,18 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                         value19.Normalize();
                         value19 *= scaleFactor3;
                         int num659 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.X, Projectile.Center.Y, value19.X, value19.Y, num658, Projectile.damage, 0f, Main.myPlayer, 0f, 0f);
-                        Main.projectile[num659].timeLeft = 300;   // 子弹幕寿命限制 300 帧
+                        // NewProjectile 失败时返回 -1，直接索引 Main.projectile[-1] 会越界崩溃，故先做边界校验
+                        if (num659 >= 0 && num659 < Main.maxProjectiles)
+                        {
+                            Main.projectile[num659].timeLeft = 300;                  // 子弹幕寿命限制 300 帧
+                            Main.projectile[num659].usesLocalNPCImmunity = true;     // 启用逐 NPC 独立命中冷却
+                            Main.projectile[num659].localNPCHitCooldown = 10;        // 穿透时对同一敌人 10 帧内不重复结算
+                            Main.projectile[num659].DamageType = DamageClass.Melee;  // 114 是原版弹幕，默认吃不到近战加成；红魔本体不造成伤害，真正打人的是它，故必须同步改成近战
+                            // 暴击必须显式重设：tML 在生成时把暴击快照进 Projectile.CritChance，且按弹幕自己的 DamageType 取值、
+                            // 再由父弹幕继承。红魔本体是召唤类型，于是叉子继承到的是召唤暴击（近战 build 基本为 0），
+                            // 不覆盖就永远不暴击。这里直接改写成玩家当前的近战暴击。
+                            Main.projectile[num659].CritChance = (int)player.GetTotalCritChance(DamageClass.Melee);
+                        }
                         Projectile.netUpdate = true;
                     }
                 }

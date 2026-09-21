@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
         /// <summary>
-        /// 单件装备加成：置位 shadeRegen 标记并提供伤害/暴击/攻速/上限与荆棘
+        /// 单件装备加成：置位 shadeRegen 标记并提供伤害/暴击/上限与荆棘
         /// </summary>
         public override void UpdateEquip(Player player)
         {
@@ -38,7 +38,6 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             modPlayer.shadeRegen = true;                            // 置位生命回复标记，最终在 CalamityDemutationPlayer.UpdateLifeRegen 中结算
             player.GetDamage<GenericDamageClass>() += 0.4f;         // 全类型伤害 +40%
             player.GetCritChance<GenericDamageClass>() += 20;       // 全类型暴击率 +20%
-            player.GetAttackSpeed<MeleeDamageClass>() += 0.25f;     // 近战攻速 +25%
             player.statLifeMax2 += 1000;                            // 最大生命 +1000
             player.statManaMax2 += 1000;                            // 最大魔力 +1000
             player.thorns = 200f;//100=>200

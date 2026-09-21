@@ -52,21 +52,27 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.armorEffectDrawOutlines = true;
         }
         /// <summary>
-        /// 套装激活：置位 demonshadeSetBonus 与 redDevil 标记，补上红魔 buff 并召唤红魔，
-        /// 最后额外叠加 +100% 通用伤害。
+        /// 套装激活：先叠加 +100% 近战伤害（必须早于红魔伤害取值，否则红魔与三叉戟会漏掉这一档），
+        /// 再置位 demonshadeSetBonus 与 redDevil 标记、补上红魔 buff 并召唤红魔，
+        /// 每帧把当前伤害同步给场上红魔。
         /// 标记最终结算位置：demonshadeSetBonus 在 CalamityDemutationPlayer（潜行、受击反击、
-        /// 命中附加 debuff 等）与 CalamityDemutationGlobalNPC（命中附带恶魔火焰等）中消费；
+        /// Y 键等）与 CalamityDemutationGlobalItem / CalamityDemutationGlobalProjectile
+        /// （命中附带恶魔火焰）中消费；GlobalNPC 不读取该标记，它只处理 Enraged 的染色。
         /// redDevil 用于维持红魔弹幕存活。
-        /// setBonus 逐条含义：伤害提升 100%；所有攻击附加恶魔火焰与脆弱诅咒类 debuff；
+        /// setBonus 逐条含义：近战伤害提高 100%；施加攻击时造成魔影炙炎减益；
         /// 受击时天降暗影光束与恶魔镰刀；一只友方红魔会跟随你；
         /// 按 Y 键以黑暗魔法激怒附近敌人 10 秒，使其伤害提高 25%，但承受的伤害提高 125%。
-        /// 注：末条为 setBonus 原文直译。实际实现（CalamityDemutationPlayer 的 Y 键分支）是给玩家自身
+        /// 注：末条为灾厄 setBonus 原文直译。实际实现（CalamityDemutationPlayer 的 Y 键分支）是给玩家自身
         /// 与 3000 像素内的敌人各挂 600 帧 Enraged——玩家侧确实获得增伤，敌人侧仅在
         /// GlobalNPC.GetAlpha 里染红、并不改变其输出与承伤，即原文所述"敌人增伤/易伤"尚未实现。
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
-            int redDevilDamage = (int)player.GetDamage<GenericDamageClass>().ApplyTo(10000);  // 红魔弹幕伤害：以玩家通用伤害对 10000 基准换算
+            // 必须先加再取：player.GetDamage<X>() += 是就地修改玩家身上那份共享加成数据，
+            // 同一方法内更早的读取看得到、更晚的读取看不到。原先放在方法末尾，
+            // 结果红魔（及其射出的三叉戟）漏掉了这 +100%。
+            player.GetDamage<MeleeDamageClass>() += 1f;  // 近战伤害 +100%（套装奖励原文的 "100% increased damage" 原指召唤伤害，本模组按近战套装口径改为近战）
+            int redDevilDamage = (int)player.GetDamage<MeleeDamageClass>().ApplyTo(10000);  // 红魔弹幕伤害：以玩家近战伤害对 10000 基准换算（已含上方这 +100%）
             player.setBonus = this.GetLocalizedValue("SetBonus");
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.demonshadeSetBonus = true;  // 置位套装总标记
@@ -75,21 +81,32 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             {
                 player.AddBuff(ModContent.BuffType<Buffs.SummonBuffs.RedDevil>(), 3600, true);  // 无红魔 buff 时补上（3600 帧 = 60 秒）
             }
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Summon.RedDevil>()] < 1)
+            int devilType = ModContent.ProjectileType<Projectiles.Summon.RedDevil>();
+            if (player.ownedProjectileCounts[devilType] < 1)
             {
-                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.RedDevil>(), redDevilDamage, 0f, Main.myPlayer, 0f, 0f);  // 场上无红魔时召唤一只
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center.X, player.Center.Y, 0f, -1f, devilType, redDevilDamage, 0f, Main.myPlayer, 0f, 0f);  // 场上无红魔时召唤一只
             }
-            player.GetDamage<SummonDamageClass>() += 1f;  // 召唤伤害 +100%（套装奖励原文的 "100% increased damage" 指召唤伤害）
+            // Projectile.damage 在生成那一刻就冻结、此后不随玩家属性变化，而红魔召唤后常驻不重召，
+            // 导致换装备或切换职业变体后伤害会陈旧，故每帧把当前算得的伤害同步过去。
+            // 不能用 ContinuouslyUpdateDamageStats 替这一段：它按 Projectile.DamageType 重算，
+            // 而红魔本体是召唤类型，会把叉子的近战伤害折算成召唤加成。
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile devil = Main.projectile[i];
+                if (devil.active && devil.type == devilType && devil.owner == player.whoAmI)
+                {
+                    devil.damage = redDevilDamage;
+                }
+            }
         }
         /// <summary>
-        /// 单件装备加成：召唤上限、通用伤害与暴击
+        /// 单件装备加成：近战伤害、近战暴击与近战攻速
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.maxMinions += 10;                            // 仆从栏上限 +10
-            player.maxTurrets += 10;                            // 哨兵栏上限 +10
-            player.GetDamage<GenericDamageClass>() += 0.5f;     // 全类型伤害 +50%
-            player.GetCritChance<GenericDamageClass>() += 50;   // 全类型暴击率 +50%
+            player.GetDamage<MeleeDamageClass>() += 0.5f;       // 近战伤害 +50%
+            player.GetCritChance<MeleeDamageClass>() += 50;     // 近战暴击率 +50%
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.30f; // 近战攻速 +30%
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）

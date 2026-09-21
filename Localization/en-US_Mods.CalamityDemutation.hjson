@@ -18,7 +18,7 @@ Buffs: {
 	}
 
 	DemonFlames: {
-		DisplayName: Demon Flames
+		DisplayName: Demonshade Flames
 		Description: Another burning debuff
 	}
 
@@ -715,7 +715,7 @@ Items: {
 		DisplayName: Demonshade Breastplate
 		Tooltip:
 			'''
-			25% increased melee speed, 40% increased damage and 20% critical strike chance
+			40% increased damage and 20% critical strike chance
 			Enemies take ungodly damage when they touch you
 			Increased max life by 1000 and mana by 1000
 			Standing still lets you absorb the shadows and boost your life regen
@@ -733,12 +733,12 @@ Items: {
 
 	DemonshadeHelm: {
 		DisplayName: Demonshade Helm
-		Tooltip: 50% increased damage and crit chance, +10 max minions and +10 max turrets
+		Tooltip: 50% increased melee damage, 50% increased melee crit chance and 30% increased melee speed
 		SetBonus:
 			'''
 
-			100% increased damage
-			All attacks inflict the demon flame debuff and vulnerability hex debuffs
+			100% increased melee damage
+			Inflicts the Demonshade Flames debuff on attack
 			Shadowbeams and demon scythes will fire down when you are hit
 			A friendly red devil follows you around
 			Press Y to enrage nearby enemies with a dark magic spell for 10 seconds
