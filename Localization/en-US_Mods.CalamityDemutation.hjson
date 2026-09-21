@@ -746,6 +746,26 @@ Items: {
 			'''
 	}
 
+	DemonshadeHelmMagic: {
+		DisplayName: Demonshade Hood
+		Tooltip:
+			'''
+			50% increased magic damage and 50% increased magic crit chance
+			+300 max mana
+			Mana costs are halved
+			'''
+		SetBonus:
+			'''
+
+			100% increased magic damage
+			Inflicts the Demonshade Flames debuff on attack
+			Shadowbeams and demon scythes will fire down when you are hit
+			A friendly red devil follows you around
+			Press Y to enrage nearby enemies with a dark magic spell for 10 seconds
+			This makes them do 25% more damage but they also take 125% more damage
+			'''
+	}
+
 	DemonshadeHelmRanged: {
 		DisplayName: Demonshade Plumed Helm
 		Tooltip: 50% increased ranged damage, 50% increased ranged crit chance and a 50% chance to not consume ammo
