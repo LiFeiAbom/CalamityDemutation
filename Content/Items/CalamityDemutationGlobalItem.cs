@@ -3,6 +3,7 @@ using CalamityDemutation.Content.Buffs.PositiveBuffs;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Weapons.Melee;
+using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Content.Items.Accessories.Defense;
 using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Magic;
@@ -319,6 +320,8 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
+                    // 巨龙七星灯（CI 那边它是从「犽戎精华」随机开出的，本模组挂回犽戎宝袋必掉 1 把）
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<YharonSonStaff>(), 1));
                 }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
@@ -397,6 +400,8 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
+                    // 巨龙七星灯（CI 那边它是从「犽戎精华」随机开出的，本模组挂回犽戎宝袋必掉 1 把）
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<YharonSonStaff>(), 1));
                 }
             }
         }

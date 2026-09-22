@@ -84,13 +84,29 @@ namespace CalamityDemutation.Content.Projectiles
         /// 该弹幕的主人若处于水晶态（四态 ≥ Buffs），本次伤害追加 20% 乘算伤害（强化档 40%）。
         /// 口径照抄灾厄 2.2.2 的 ProfanedSoulCrystal.ApplyTagModifyHit，并乘上该弹幕自身的 tag 收益倍率
         /// （ProjectileID.Sets.SummonTagDamageMultiplier，本工程各转化弹幕已按灾厄登记，如长矛 0.6、碎片 0.25）。
-        /// 原版这套结算跑在灾厄内部的 SummonTag 管线里，本工程用原版 IsATagBuff 标记 + 本钩子等价实现
+        /// 原版这套结算跑在灾厄内部的 SummonTag 管线里，本工程用原版 IsATagBuff 标记 + 本钩子等价实现。
+        /// <para>
+        /// 噬渊鞭挞的鞭痕 tag 也走本钩子：目标带着 WyrmWhipDebuff（由 YstralynProj 命中挂上）时，
+        /// 任意**召唤系**弹幕（含幻影妖龙）打它都追加 90 平伤与 15% 乘算，并有 1/8 概率强制暴击
+        /// （口径照抄 CE 的 WhipDebuffNPC.ModifyHitByProj 里 WyrmWhipDebuff 那一段，含"鞭自身命中不参与"的排除）。
+        /// </para>
         /// </summary>
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
             // 无主弹幕（owner = 255 = Main.maxPlayers）、敌怪弹幕与陷阱弹幕不参与（对齐灾厄对 npcProj / trap 的排除）
             if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers || projectile.npcProj || projectile.trap)
                 return;
+            if (projectile.DamageType.CountsAsClass(DamageClass.Summon) && !ProjectileID.Sets.IsAWhip[projectile.type] && target.HasBuff(ModContent.BuffType<WyrmWhipDebuff>()))
+            {
+                float wyrmTagDamageMult = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
+                modifiers.FlatBonusDamage += WyrmWhipDebuff.TagDamage * wyrmTagDamageMult;
+                modifiers.SourceDamage += WyrmWhipDebuff.TagDamageMul * wyrmTagDamageMult;
+                // CE 那边是 1/8 的强制暴击（反射塞 _critOverride），本工程用原版的 modifiers.SetCrit
+                if (Main.rand.NextBool(8))
+                {
+                    modifiers.SetCrit();
+                }
+            }
             if (!target.HasBuff(ModContent.BuffType<ProfanedCrystalWhipDebuff>()))
                 return;
             CalamityDemutationPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();

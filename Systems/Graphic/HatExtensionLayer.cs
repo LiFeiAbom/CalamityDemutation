@@ -24,7 +24,10 @@ namespace CalamityDemutation.Systems.Graphic
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => drawInfo.shadow == 0f || !drawInfo.drawPlayer.dead;
         /// <summary>
         /// 取当前头部装备（换装槽有内容时优先取换装槽），判定是否实现 IExtendedHat；
-        /// 再校验该物品的头部装备槽与玩家当前头部槽一致，符合则追加附加层绘制数据
+        /// 再校验该物品的头部装备槽与玩家当前头部槽一致，符合则追加附加层绘制数据。
+        /// <see cref="IExtendedHat.EquipSlotName"/> 留空时**直接取装备自身的 <c>Item.headSlot</c>**
+        /// （而不是拿物品名去 <c>EquipLoader.GetEquipSlot</c> 查表）：两者在正常情况是同一个值，
+        /// 但查表失败会返回 -1 而静默不画——2026-09-22 排查"附加层不显示"时改成这个更直白的写法
         /// </summary>
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
@@ -34,8 +37,8 @@ namespace CalamityDemutation.Systems.Graphic
                 headItem = drawPlayer.armor[10];
             if (ModContent.GetModItem(headItem.type) is IExtendedHat extendedHat)
             {
-                string equipSlotName = extendedHat.EquipSlotName(drawPlayer) != "" ? extendedHat.EquipSlotName(drawPlayer) : headItem.ModItem.Name;
-                int equipSlot = EquipLoader.GetEquipSlot(Mod, equipSlotName, EquipType.Head);
+                string equipSlotName = extendedHat.EquipSlotName(drawPlayer);
+                int equipSlot = equipSlotName != "" ? EquipLoader.GetEquipSlot(Mod, equipSlotName, EquipType.Head) : headItem.headSlot;
                 if (extendedHat.PreDrawExtension(drawInfo) && !drawInfo.drawPlayer.dead && equipSlot == drawPlayer.head)
                 {
                     // 必须用 drawInfo.Position 而非 Player.Position，否则人物选择界面与地图上的头部层会错位

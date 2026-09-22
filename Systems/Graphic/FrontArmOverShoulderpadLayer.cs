@@ -23,7 +23,9 @@ namespace CalamityDemutation.Systems.Graphic
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => drawInfo.shadow == 0f || !drawInfo.drawPlayer.dead;
         /// <summary>
         /// 取当前胸甲装备（换装槽有内容时优先取换装槽），判定是否实现 IDrawArmOverShoulderpad；
-        /// 再校验该物品的身体装备槽与玩家当前身体槽一致，符合则追加前臂绘制数据
+        /// 再校验该物品的身体装备槽与玩家当前身体槽一致，符合则追加前臂绘制数据。
+        /// <see cref="IDrawArmOverShoulderpad.EquipSlotName"/> 留空时直接取装备自身的 <c>Item.bodySlot</c>
+        /// （同 <see cref="HatExtensionLayer"/> 那处的改法：避免查表失败返回 -1 导致静默不画）
         /// </summary>
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
@@ -33,8 +35,8 @@ namespace CalamityDemutation.Systems.Graphic
                 bodyItem = drawPlayer.armor[11];
             if (ModContent.GetModItem(bodyItem.type) is IDrawArmOverShoulderpad frontArm)
             {
-                string equipSlotName = frontArm.EquipSlotName(drawPlayer) != "" ? frontArm.EquipSlotName(drawPlayer) : bodyItem.ModItem.Name;
-                int equipSlot = EquipLoader.GetEquipSlot(Mod, equipSlotName, EquipType.Body);
+                string equipSlotName = frontArm.EquipSlotName(drawPlayer);
+                int equipSlot = equipSlotName != "" ? EquipLoader.GetEquipSlot(Mod, equipSlotName, EquipType.Body) : bodyItem.bodySlot;
                 if (drawPlayer.body != equipSlot)
                     return;
                 int dyeShader = drawPlayer.dye?[1].dye ?? 0;

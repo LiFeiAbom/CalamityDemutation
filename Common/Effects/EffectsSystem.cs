@@ -2,6 +2,7 @@ using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using CalamityDemutation.Content.Projectiles;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Content.Projectiles.Summon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -214,6 +215,16 @@ namespace CalamityDemutation.Common.Effects
                 {
                     crack.DrawCrack();
                 }
+                // 噬渊鞭挞挥砍中段拖出的深渊裂纹（CE 把这道折线也画进同一个深渊 RT 遮罩里）
+                if (projectile.active && projectile.ModProjectile is YstralynProj ystralyn)
+                {
+                    ystralyn.draw_crack();
+                }
+                // 沧溟渊龙命中撕开的裂空（CE 同样把它画进这个深渊遮罩）
+                if (projectile.active && projectile.ModProjectile is NxCrack nxCrack)
+                {
+                    nxCrack.drawCrack();
+                }
             }
             Texture2D cvmask = ModContent.Request<Texture2D>(AbyssMaskTexture).Value;
             foreach (BaseParticle particle in DRKLoader.particles)
@@ -309,14 +320,15 @@ namespace CalamityDemutation.Common.Effects
             return false;
         }
         /// <summary>
-        /// 是否还有需要上屏合成的东西：任一活跃的深渊裂隙，或任一存活的深渊粒子。
+        /// 是否还有需要上屏合成的东西：任一活跃的深渊裂隙、任一存活的深渊粒子，或任一活跃的"在深渊遮罩里自绘"的弹幕
+        /// （噬渊鞭挞的鞭身拖出的折线、沧溟渊龙命中撕开的裂空）。
         /// 深渊刃起手阶段还没撕出裂缝，但渊水弹一路都在吐粒子，所以粒子也要算进来。
         /// </summary>
         private static bool HasAbyssContent()
         {
             foreach (Projectile projectile in Main.projectile)
             {
-                if (projectile.active && projectile.ModProjectile is AbyssalCrack)
+                if (projectile.active && (projectile.ModProjectile is AbyssalCrack || projectile.ModProjectile is YstralynProj || projectile.ModProjectile is NxCrack))
                 {
                     return true;
                 }

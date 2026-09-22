@@ -764,6 +764,7 @@ namespace CalamityDemutation.Players
             omegaBlueSet = false;
             omegaBlueHentai = false;
             ornateShield = false;
+            ownSonYharon = false;
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
@@ -817,6 +818,7 @@ namespace CalamityDemutation.Players
             voidofExtinction = false;
             wifeinaBottle = false;
             wifeinaBottlewithBoobs = false;
+            wyrmPhantom = false;
             yharimsInsignia = false;
             yharimPower = false;
             UpdateMouseWorldSync();
@@ -917,6 +919,7 @@ namespace CalamityDemutation.Players
             omegaBlueSet = false;
             omegaBlueCooldown = 0;
             ornateShield = false;
+            ownSonYharon = false;
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
@@ -3129,6 +3132,8 @@ namespace CalamityDemutation.Players
             }
             // 虚空斩突进（虚空分形右键）：突进期间无重力/隐形/抬无敌帧，状态机在 partial 文件里
             VoidSlashDashPlayerEffects();
+            // 幻影妖龙（噬渊鞭挞）：身上有虚无幻象 buff 且场上没龙时补生成一只，见 WyrmPhantom partial
+            WyrmPhantomSpawn();
         }
         // ── 还原灾厄内容削弱 ──
         /// <summary>
@@ -3518,6 +3523,9 @@ namespace CalamityDemutation.Players
         /// 在女巫套装免死无敌窗口（silvaCountdown &gt; 0 且 hasSilvaEffect 且 silvaSet）内，
         /// 把负的 Player.lifeRegen 钳回 0，抵消 debuff 造成的持续掉血；
         /// 与 PostUpdateBuffs / PostUpdateEquips 的同一判定重复，用于覆盖各结算路径。
+        /// 地狱火爆炸（hellfireExplosion）与生命压制（LifeOppress，噬渊鞭挞命中挂的 DoT，PvP 时才在玩家身上）
+        /// 各自把回复计时清零后按原值扣 lifeRegen（后者按 CE 原样扣 60；敌怪侧的 4501 点/秒另在
+        /// CalamityDemutationGlobalNPC.UpdateLifeRegen 里结算）。
         /// </summary>
         public override void UpdateBadLifeRegen()
         {
@@ -3534,6 +3542,15 @@ namespace CalamityDemutation.Players
                 }
                 Player.lifeRegenTime = 0;
                 Player.lifeRegen -= 120;
+            }
+            if (Player.HasBuff(ModContent.BuffType<LifeOppress>()))
+            {
+                if (Player.lifeRegen > 0)
+                {
+                    Player.lifeRegen = 0;
+                }
+                Player.lifeRegenTime = 0;
+                Player.lifeRegen -= 60;
             }
         }
         /// <summary>

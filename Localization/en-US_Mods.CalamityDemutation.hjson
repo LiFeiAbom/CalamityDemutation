@@ -52,6 +52,21 @@ Buffs: {
 		DisplayName: Heart of the Elements
 	}
 
+	LifeOppress: {
+		DisplayName: Life Oppression
+		Description: Your life seems to unravel
+		ItemTooltip: Typeless - 4500 DPS
+	}
+
+	NyxolithrakenBuff: {
+		DisplayName: Nyxolith Dragon
+		Description:
+			'''
+			Nyxolith Dragon will fight for you
+			"From the deepest depths of the abyss..."
+			'''
+	}
+
 	RedDevil: {
 		DisplayName: Red Devil
 		Description: The red devil will protect you
@@ -77,6 +92,11 @@ Buffs: {
 		Description: You are invulnerable
 	}
 
+	SonYharonBuff: {
+		DisplayName: Son Yharon
+		Description: Son Yharon will fight for you
+	}
+
 	SoulDisorder: {
 		DisplayName: Soul Disorder
 		Description: ""
@@ -99,6 +119,16 @@ Buffs: {
 
 	VoidTouch: {
 		DisplayName: Void Touch
+		Description: ""
+	}
+
+	WyrmPhantom: {
+		DisplayName: Wyrm Phantom
+		Description: ""
+	}
+
+	WyrmWhipDebuff: {
+		DisplayName: Wyrm Whip Debuff
 		Description: ""
 	}
 
@@ -1220,6 +1250,15 @@ Items: {
 		Tooltip: ""
 	}
 
+	Nyxolithraken: {
+		DisplayName: Nyxolithraken
+		Tooltip:
+			'''
+			Summon a Nyxolith Dragon that charges at enemies and inflicts Life Oppression and Whispering Death
+			Uses 5 minion slots
+			'''
+	}
+
 	OldLordOathsword: {
 		DisplayName: Old Lord Oathsword
 		Tooltip: A relic of the ancient underworld
@@ -1700,6 +1739,27 @@ Items: {
 		Tooltip: Gives decent buffs to all offensive and defensive stats
 	}
 
+	YharonSonStaff: {
+		DisplayName: Yharon's Kindle Staff
+		Tooltip:
+			'''
+			Summons a powerful son of Yharon fights for you
+			Requires 2 minions to use
+			No, they don't look that delicious.
+			'''
+	}
+
+	Ystralyn: {
+		DisplayName: Ystralyn
+		Tooltip:
+			'''
+			{$CommonItemTooltip.SummonTagDamage}
+			12% summon tag critical strike chance
+			{$CommonItemTooltip.Whips}
+			Summons a phantom Eilodon Wyrm that attacks enemies and inflicts Life Oppression on hit
+			'''
+	}
+
 	CadencePotion: {
 		DisplayName: Cadence Potion
 		Tooltip:
@@ -1989,6 +2049,11 @@ Projectiles: {
 	VoidshadeHeld.DisplayName: Voidshade
 	VoidImpact.DisplayName: Void Impact
 	WohLaser.DisplayName: Woh Laser
+	PhantomWyrm.DisplayName: Phantom Wyrm
+	YstralynProj.DisplayName: Ystralyn Proj
+	NxCrack.DisplayName: Abyssal Crack
+	NyxolithrakenDragon.DisplayName: Nyxolith Dragon
+	SonYharon.DisplayName: Son Yharon
 }
 
 Systems: {

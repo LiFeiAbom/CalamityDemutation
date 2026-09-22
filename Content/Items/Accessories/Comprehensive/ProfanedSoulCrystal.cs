@@ -110,8 +110,16 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             SetArmorIDSets();
         }
         /// <summary>
-        /// 按 2.2.2 的 ArmorIDSets 设置变身贴图的隐藏/覆盖标记：
-        /// 白天身体隐藏上身皮肤与手臂；白天/夜晚腿隐藏下半身皮肤并覆盖腿部绘制；头不绘制本体（避免原版头/发与变身头叠加）
+        /// 设置变身贴图的隐藏/覆盖标记：
+        /// 白天身体隐藏上身皮肤与手臂；白天/夜晚腿隐藏下半身皮肤并覆盖腿部绘制。
+        /// <para>
+        /// **头部刻意不设 <c>DrawHead[...] = false</c>**：本工程未移植"变身头由谁绘制"那一环
+        /// （灾厄的变身头就靠原版头层画，见 CalamityPlayer.cs 里把 <c>Player.head</c> 指向
+        /// <c>ProfanedSoulCrystal</c>/<c>PscNightHead</c> 那两行；本工程与之对应的就是玩家类的 FrameEffects）。
+        /// 早期移植时多抄了这两行 false，导致戴着水晶（或把它放时装栏）时 <c>player.head</c> 指向的变身头槽
+        /// 被原版头层跳过——表现为头上一片空白：头盔、附加层与头发全部消失（2026-09-22 修正）。
+        /// 头发的隐藏由原版按 <c>DrawFullHair</c> 判定，不需要这两行。
+        /// </para>
         /// </summary>
         private void SetArmorIDSets()
         {
@@ -121,8 +129,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             ArmorIDs.Legs.Sets.OverridesLegs[DayLegsSlot] = true;     // 白天腿：覆盖原版腿部绘制
             ArmorIDs.Legs.Sets.HidesBottomSkin[NightLegsSlot] = true; // 夜晚腿：同上
             ArmorIDs.Legs.Sets.OverridesLegs[NightLegsSlot] = true;
-            ArmorIDs.Head.Sets.DrawHead[DayHeadSlot] = false;         // 白天头：不绘制原版头
-            ArmorIDs.Head.Sets.DrawHead[NightHeadSlot] = false;       // 夜晚头：同上
         }
         /// <summary>
         /// 物品基础属性：50x50、饰品、价值 2 铂金 50 金、稀有度红色、月后自定义稀有度 22 级（橙）

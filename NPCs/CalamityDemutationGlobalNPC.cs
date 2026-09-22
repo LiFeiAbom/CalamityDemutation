@@ -45,6 +45,10 @@ namespace CalamityDemutation.NPCs
         public bool silvaHysteresis = false;
         public bool voidErosion = false;
         /// <summary>
+        /// 生命压制标记：由 LifeOppress debuff 在敌怪侧置位，每帧按 4501 点/秒扣血（结算见 UpdateLifeRegen）
+        /// </summary>
+        public bool lifeOppress = false;
+        /// <summary>
         /// 泰拉巨刃的电击命中计数（移植自大修 CWRGlobalNPC 的 TerratomereBoltOnHitNum）：
         /// TerratomereBigSlashs 每次命中 +1、上限 6，累计超过 5 时触发 TerratomereExplosion 爆炸后清零。
         /// </summary>
@@ -82,9 +86,9 @@ namespace CalamityDemutation.NPCs
         // ── 生命周期方法 ──
         /// <summary>
         /// tModLoader 的 ResetEffects 钩子：每帧重置 NPC 状态时调用（本类已按实例启用）。
-        /// 把本模组在 NPC 上使用的五个标记——恶魔烈焰 demonFlames、狂怒 enraged、地狱火爆炸 hellfireExplosion、
-        /// 女巫眩晕 silvaHysteresis、虚空侵蚀 voidErosion——全部复位，随后由对应的 debuff Update 在同帧重新置位，
-        /// 从而保证标记不会跨帧残留。
+        /// 把本模组在 NPC 上使用的六个标记——恶魔烈焰 demonFlames、狂怒 enraged、地狱火爆炸 hellfireExplosion、
+        /// 女巫眩晕 silvaHysteresis、虚空侵蚀 voidErosion、生命压制 lifeOppress——全部复位，随后由对应的 debuff
+        /// Update 在同帧重新置位，从而保证标记不会跨帧残留。
         /// </summary>
         public override void ResetEffects(NPC npc)
         {
@@ -93,6 +97,7 @@ namespace CalamityDemutation.NPCs
             hellfireExplosion = false;
             silvaHysteresis = false;
             voidErosion = false;
+            lifeOppress = false;
         }
         /// <summary>
         /// 玩家受到 NPC 攻击命中时触发：若玩家拥有“蜂抗”状态且攻击者属于蜂类单位，
@@ -303,7 +308,10 @@ namespace CalamityDemutation.NPCs
         /// 通过修改 npc.lifeRegen 施加持续灼烧，并用 ref damage 指定该灼烧显示的每帧伤害数字。
         /// 恶魔烈焰（demonFlames）先清掉正回复，再 -5000，damage 下限抬到 2000；
         /// 女巫眩晕（silvaHysteresis）同样清正回复后 -900，damage 下限 400。
-        /// 两个标记分别由 DemonFlames / SilvaHysteresis buff 每帧置位。
+        /// 生命压制（lifeOppress）同样清正回复后 -9002，damage 下限 4501（= CE 的 4501 点/秒口径，
+        /// CE 那边写的是 damage += 4501，本模组按本文件既有的"下限"写法等价实现）。
+        /// 各标记均由对应的 debuff（DemonFlames / SilvaHysteresis / HellfireExplosion / VoidErosion / LifeOppress）
+        /// 每帧置位。
         /// </summary>
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
@@ -353,6 +361,18 @@ namespace CalamityDemutation.NPCs
                 if (damage < 5000)
                 {
                     damage = 5000;
+                }
+            }
+            if(lifeOppress)
+            {
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+                npc.lifeRegen -= 9002;
+                if (damage < 4501)
+                {
+                    damage = 4501;
                 }
             }
         }

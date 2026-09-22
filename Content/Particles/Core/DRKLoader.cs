@@ -86,6 +86,7 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<SparkleParticle>();
             RegisterParticle<AltSparkParticle>();
             RegisterParticle<VoidImpactParticle>();
+            RegisterParticle<AbyssalLineParticle>();
             On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
         /// <summary>
