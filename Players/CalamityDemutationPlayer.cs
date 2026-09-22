@@ -8,6 +8,7 @@ using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Content.Projectiles.Typeless;
+using CalamityDemutation.Content.Tiles;
 using CalamityDemutation.Enums;
 using CalamityDemutation.Sounds;
 using CalamityDemutation.Systems.Cooldowns;
@@ -618,6 +619,14 @@ namespace CalamityDemutation.Players
         private static int starbusterCoreType = -1;
         private static int voltaicJellyType = -1;
         private static int jellyChargedBatteryType = -1;
+        /// <summary>
+        /// 蜡烛/塑像增益共存的快照：玩家当前持有的灾厄 4 根蜡烛 + 2 座塑像增益的位掩码
+        /// （0..3 = Purple/Blue/Pink/YellowCandleBuff，4..5 = Corruption/CrimsonEffigyBuff，与
+        /// Content/Tiles/CandleEffigyCoexistence 的类型缓存同序）。灾厄方块右键会 ClearBuff 掉本组同类增益，
+        /// 该掩码供方块钩子把被清掉的那几个补回来。每帧在 PostUpdateMiscEffects 末尾刷新：
+        /// 写入点永远早于下一次点击，故右键时读到的必然是"点击前"的状态。未启用开关或无灾厄时恒为 0
+        /// </summary>
+        public int candleEffigyBuffMask = 0;
         /// <summary>
         /// 冷却机架数据：按字符串 ID 索引的全部冷却实例（对应灾厄 CalamityPlayer.cooldowns），
         /// 每帧在 PostUpdateMiscEffects 末尾统一 tick，到期后执行 OnCompleted 并移除
@@ -2917,6 +2926,8 @@ namespace CalamityDemutation.Players
                     cooldowns.Remove(expiredID);
             }
             RevertCalamityContentNerfs();
+            // 蜡烛/塑像增益共存的快照：下一次方块右键时要拿它把被灾厄清掉的同类增益补回
+            candleEffigyBuffMask = CandleEffigyCoexistence.BuildMask(Player);
             if(ornateShield)
             {
                 Player.dashType = 0;
