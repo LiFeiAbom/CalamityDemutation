@@ -1899,7 +1899,6 @@ Items: {
 			[c/99ffa7:远程] [c/bfffc8:攻击时额外掷出火球与陨石]
 			[c/8cbeff:魔法] [c/bfdbff:攻击时额外掷出一枚巨大的分裂火球，消耗 100 点法力]
 			[c/d791f2:鞭子] [c/e1b6f2:攻击时额外以亵渎水晶鞭打]
-			[c/f285a2:召唤] [c/f2b6c6:攻击时额外释放致命的结晶螺旋]
 			'''
 	}
 }
@@ -2039,7 +2038,6 @@ Projectiles: {
 	ProfanedCrystalMeleeSpear.DisplayName: 神圣长矛
 	ProfanedCrystalRangedHuges.DisplayName: 神圣回旋刃
 	ProfanedCrystalRangedSmalls.DisplayName: 神圣回旋光球
-	ProfanedCrystalRogueShard.DisplayName: 神圣水晶碎片
 	ProfanedCrystalWhip.DisplayName: 亵渎水晶鞭
 	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
 	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石

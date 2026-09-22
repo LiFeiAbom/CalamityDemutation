@@ -18,7 +18,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
     /// 夜晚档追加减伤/防御/生命回复，无仆从且无哨兵时进入 Empowered 档（昼夜两档同时生效）。
     /// 与神器的区别：本工程按用户口径去掉了 Boss 门槛与 10 空闲仆从栏门槛，装备即激活四态。
     /// 本步已做：昼夜两套变身装备贴图注册、首次装备的 120 帧变身动画（PscTransformAnimation / PscTransformRocks）、
-    /// 水晶鞭增益（ProfanedCrystalWhipBuff）、武器五职业转化（TransformItemUsage，见该方法）与全部转化弹幕、
+    /// 水晶鞭增益（ProfanedCrystalWhipBuff）、武器四职业转化（近战/远程/魔法/鞭，见 TransformItemUsage）与全部转化弹幕、
     /// IsPscProjectile 名单。召唤鞭的 tag 多倍伤害原挂在灾厄内部 SummonTag 体系上，本工程用自建的
     /// ProfanedCrystalWhipDebuff（登记为原版 tag buff）+ CalamityDemutationGlobalProjectile.ModifyHitNPC 等价实现。
     /// </summary>
@@ -257,24 +257,25 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// （原武器伤害与转化弹幕伤害都保留）。之所以不能沿用 CanUseItem：我们保留了原武器，
         /// 武器一进入挥砍动画，CanUseItem 就只在"每刀之间"被调一次，密度会掉到原版的 1/useTime（实机验证过）。
         /// 计数器 profanedSoulWeaponUsage 是**按帧**累加的（与武器动画无关），
-        /// 换职业或累加到 370 时清零；五职业各自的触发节奏见各分支注释，
+        /// 换职业或累加到 370 时清零；四职业各自的触发节奏见各分支注释，
         /// 所有弹幕伤害统一按通用伤害折算并回写 originalDamage。
         /// 数值口径（用户 2026-09-15 定，实测通过后调回全值）：「回调削弱前」（= 2.2.2 源码实际值的 ×5）。
-        /// 近战霰射 1750 / 主矛 1250、远程陨石 1500 / 火球 1000、魔法 4500、
-        /// 盗贼(召唤)环射 880 / 单片 1100（强化档 625）、鞭 500（鞭没参与 ×5，保持 2.2.2 的 250 ×2）。
-        /// 守护者伤害不走这套口径，取最高档 1000。
+        /// 近战霰射 1750 / 主矛 1250、远程陨石 1500 / 火球 1000、魔法 4500、鞭 500
+        /// （鞭没参与 ×5，保持 2.2.2 的 250 ×2）。守护者伤害不走这套口径，取最高档 1000。
+        /// 灾厄原版的盗贼（Throwing）槽转化——环射 880 / 单片 1100（强化档 625）——已按用户 2026-09-22 口径
+        /// **整条删除**（连 ProfanedCrystalRogueShard 弹幕一道），故召唤类武器在本工程不触发任何转化。
         /// </summary>
         internal static void TransformItemUsage(Item item, Player player)
         {
             if (player.whoAmI != Main.myPlayer)
                 return;
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            // 职业判定：鞭（SummonMeleeSpeed）必须排在召唤前面——它在 tModLoader 里也算召唤类，先判鞭才能各归各的计数器
+            // 职业判定：鞭（SummonMeleeSpeed）单独归 5（它在 tModLoader 里同时算召唤类，故先判鞭）；
+            // 纯召唤武器不参与转化（返回 -1）
             int weaponType = item.CountsAsClass<MeleeDamageClass>() ? 1 :
                 item.CountsAsClass<RangedDamageClass>() ? 2 :
                 item.CountsAsClass<MagicDamageClass>() ? 3 :
-                item.CountsAsClass<SummonMeleeSpeedDamageClass>() ? 5 :
-                item.CountsAsClass<SummonDamageClass>() ? 4 : -1;
+                item.CountsAsClass<SummonMeleeSpeedDamageClass>() ? 5 : -1;
             if (weaponType <= 0)
                 return;
             if (modPlayer.profanedSoulWeaponType != weaponType || modPlayer.profanedSoulWeaponUsage >= 370)
@@ -400,65 +401,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 if (modPlayer.profanedSoulWeaponUsage > 0)
                     modPlayer.profanedSoulWeaponUsage--;
             }
-            else if (weaponType == 4)
-            {
-                // ── 召唤（原版为盗贼槽）：环射 880 / 单片 1100（强化档 625）。
-                // 数值 = 回调削弱前；2.2.2 为 176 / 220（强化档 125）。
-                // 节奏按原版（计数器是**帧**）：场上没有水晶螺旋碎片时计数器归零；
-                // 计数器每帧 +1（Empowered）/+2（否则），整除 5/10 时发射一片，满 120/360 时改为一次性环射 36 片
-                if (player.ownedProjectileCounts[ModContent.ProjectileType<ProfanedCrystalRogueShard>()] == 0)
-                    modPlayer.profanedSoulWeaponUsage = 0;
-                if (modPlayer.profanedSoulWeaponUsage >= (empowered ? 120 : 360))
-                {
-                    const int shardBaseDamage = 880;   // 环射 36 片（回调削弱前 880；2.2.2 为 176）
-                    int shardDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(shardBaseDamage);
-                    float crystalCount = 36f;
-                    for (float i = 0; i < crystalCount; i++)
-                    {
-                        float angle = MathHelper.TwoPi / crystalCount * i;
-                        int proj = Projectile.NewProjectile(source, player.Center, angle.ToRotationVector2() * 12f, ModContent.ProjectileType<ProfanedCrystalRogueShard>(), shardDamage, 1f, player.whoAmI, 0f, 0f);
-                        if (Main.projectile.IndexInRange(proj))
-                        {
-                            Main.projectile[proj].DamageType = DamageClass.Generic;
-                            Main.projectile[proj].originalDamage = shardBaseDamage;
-                        }
-                        SoundEngine.PlaySound(SoundID.Item20, player.Center);
-                    }
-                    modPlayer.profanedSoulWeaponUsage = 0;
-                }
-                else if (modPlayer.profanedSoulWeaponUsage % (empowered ? 5 : 10) == 0)
-                {
-                    // 单片：Empowered 档每次 3 链（链间 120 度、随时间旋转），否则单链；
-                    // 偶数个"图案周期"才发射，形成一圈圈错开的水晶螺旋
-                    int chains = empowered ? 3 : 1;
-                    int totalShardProjectiles = empowered ? 360 / 5 : 360 / 10;
-                    int shardBaseDamage = empowered ? 625 : 1100;   // 单片刃：强化档 625、平时 1100（回调削弱前；2.2.2 为 125 / 220）
-                    int shardDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(shardBaseDamage);
-                    float interval = totalShardProjectiles / chains * (empowered ? 5f : 10f);
-                    double patternInterval = Math.Floor(modPlayer.profanedSoulWeaponUsage / interval);
-                    if (patternInterval % 2 == 0)
-                    {
-                        double radians = MathHelper.TwoPi / chains;
-                        double angleA = radians * 0.5;
-                        double angleB = MathHelper.ToRadians(90f) - angleA;
-                        float velocityX = (float)(2f * Math.Sin(angleA) / Math.Sin(angleB));
-                        Vector2 spinningPoint = new Vector2(velocityX, -2f);
-                        for (int i = 0; i < chains; i++)
-                        {
-                            Vector2 vector2 = spinningPoint.RotatedBy(radians * i + MathHelper.ToRadians(modPlayer.profanedSoulWeaponUsage));
-                            vector2.Normalize();
-                            int proj = Projectile.NewProjectile(source, player.Center, vector2 * 12f, ModContent.ProjectileType<ProfanedCrystalRogueShard>(), shardDamage, 1f, player.whoAmI, 1f, 0f);
-                            if (Main.projectile.IndexInRange(proj))
-                            {
-                                Main.projectile[proj].DamageType = DamageClass.Generic;
-                                Main.projectile[proj].originalDamage = shardBaseDamage;
-                            }
-                        }
-                        SoundEngine.PlaySound(SoundID.Item20, player.Center);
-                    }
-                }
-                modPlayer.profanedSoulWeaponUsage += !empowered ? 2 : 1;
-            }
             else if (weaponType == 5)
             {
                 // ── 鞭：基础伤害 500（= 2.2.2 的 250 ×2，与其它招式同比例；按字面"40%"应是 100，
@@ -509,7 +451,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 || type == ModContent.ProjectileType<ProfanedCrystalRangedSmalls>() // 转化：小型火球
                 || type == ModContent.ProjectileType<ProfanedCrystalMageFireball>() // 转化：圣光爆弹
                 || type == ModContent.ProjectileType<ProfanedCrystalMageFireballSplit>() // 转化：圣光爆弹裂片
-                || type == ModContent.ProjectileType<ProfanedCrystalRogueShard>()   // 转化：水晶螺旋碎片
                 || type == ModContent.ProjectileType<ProfanedCrystalWhip>();        // 转化：水晶鞭
         }
         // ── 配方 ──

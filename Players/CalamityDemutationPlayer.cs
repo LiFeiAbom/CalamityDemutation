@@ -554,7 +554,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public int profanedSoulWeaponUsage = 0;
         /// <summary>
-        /// 上一次触发转化的武器职业（1=近战 2=远程 3=魔法 4=召唤（原版为盗贼） 5=鞭，
+        /// 上一次触发转化的武器职业（1=近战 2=远程 3=魔法 5=鞭，原版的盗贼槽 4 已整条删除；
         /// 对应灾厄 2.2.2 的 profanedSoulWeaponType）：与本次不同即清零计数器，避免职业节奏互相污染
         /// </summary>
         public int profanedSoulWeaponType = 0;
@@ -4142,15 +4142,13 @@ namespace CalamityDemutation.Players
         /// 亵渎之魂水晶的武器转化派发放在这里，是为了还原原版的**每帧**节奏：
         /// 灾厄原版在 CanUseItem 里派发、并且 return false **把武器顶替掉**——正因为武器被顶替，
         /// itemAnimation 永远是 0，vanilla 才会每帧重新去问 CanUseItem，于是 TransformItemUsage 里的计数器
-        /// （近战 6、魔法 20/25、鞭 10、盗贼 120/360，全都按帧）才能跑出"每秒十几发"的密度。
+        /// （近战 6、魔法 20/25、鞭 10，全都按帧）才能跑出"每秒十几发"的密度。
         /// 本工程保留原武器：一旦武器开始挥砍，CanUseItem 就只在"这刀砍完、准备下一刀"的那一帧被调一次，
         /// 密度会掉到原版的 1/useTime（实测确认），故必须挪到本钩子。
         /// 触发条件：持有水晶且处于激活态 + 按住攻击键 + 未被控制 + 右键未参与 + 非矿井钻头挖矿
-        /// + 非镐/斧/锤、不空手 + 属于五类职业武器之一。
-        /// 原版还有一条 `autoReuse || 鞭` 的连发闸门，本工程按用户口径**去掉**：
-        /// 否则多数召唤法杖（本工程用召唤槽承接原版盗贼槽的"水晶螺旋"）会被挡在门外。
-        /// 代价：无 autoReuse 的武器按住不放时，武器本身只挥一下、转化弹幕却会持续输出（原版不存在这个问题，
-        /// 因为它把武器顶替掉了，压根没有"武器自己挥几下"的概念）。
+        /// + 非镐/斧/锤、不空手 + 属于四类职业武器之一 + 连发闸门（`item.autoReuse || 鞭`）。
+        /// 连发闸门 2026-09-22 恢复为灾厄原版写法：当初去掉它，是为了让召唤法杖（本工程用召唤槽承接原版盗贼槽的
+        /// 水晶螺旋）能进门；该槽整条删除后这条豁免失去对象，故重新与灾厄一致地要求 autoReuse（鞭恒算连发）。
         /// </summary>
         public override void PostItemCheck()
         {
@@ -4163,8 +4161,10 @@ namespace CalamityDemutation.Players
             Item item = Player.HeldItem;
             if (item.IsAir || item.pick > 0 || item.axe > 0 || item.hammer > 0)
                 return;
-            if (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<RangedDamageClass>() || item.CountsAsClass<MagicDamageClass>()
-                || item.CountsAsClass<SummonMeleeSpeedDamageClass>() || item.CountsAsClass<SummonDamageClass>())
+            // 连发闸门（灾厄原版写法；鞭恒算连发），再按职业过滤
+            if ((item.autoReuse || item.CountsAsClass<SummonMeleeSpeedDamageClass>())
+                && (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<RangedDamageClass>() || item.CountsAsClass<MagicDamageClass>()
+                    || item.CountsAsClass<SummonMeleeSpeedDamageClass>()))
                 ProfanedSoulCrystal.TransformItemUsage(item, Player);
         }
         /// <summary>

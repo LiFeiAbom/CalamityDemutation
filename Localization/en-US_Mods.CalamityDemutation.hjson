@@ -1894,7 +1894,6 @@ Items: {
 			[c/99ffa7:Ranged] [c/bfffc8:attacks additionally hurl fireballs and meteors]
 			[c/8cbeff:Magic] [c/bfdbff:attacks additionally hurl a giant splitting fireball, costing 100 mana]
 			[c/d791f2:Whips] [c/e1b6f2:attacks additionally lash with profaned crystal]
-			[c/f285a2:Summoner] [c/f2b6c6:attacks additionally unleash a deadly crystalline spiral]
 			'''
 	}
 }
@@ -2034,7 +2033,6 @@ Projectiles: {
 	ProfanedCrystalMeleeSpear.DisplayName: Holy Friendly Spear
 	ProfanedCrystalRangedHuges.DisplayName: Holy Bab Boomer
 	ProfanedCrystalRangedSmalls.DisplayName: Holy Bab Boomer Orb
-	ProfanedCrystalRogueShard.DisplayName: Holy Bab Crystal Shard
 	ProfanedCrystalWhip.DisplayName: Profaned Crystal Whip
 	PscTransformAnimation.DisplayName: Psc Transform Animation
 	PscTransformRocks.DisplayName: Psc Transform Rocks
