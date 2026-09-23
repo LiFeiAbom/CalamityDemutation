@@ -375,6 +375,16 @@ Items: {
 			'''
 	}
 
+	AnarchyBlade: {
+		DisplayName: Anarchy Blade
+		Tooltip:
+			'''
+			Every third swing fires a brimstone beam
+			Deals more damage the lower your life is
+			Right clicking empowers the blade, causing brimstone explosions on hit
+			'''
+	}
+
 	AncientFossil: {
 		DisplayName: Ancient Fossil
 		Tooltip: Increases pick speed by 35% while underground
@@ -642,6 +652,15 @@ Items: {
 			Increases max mana by 50, all damage by 3%, and reduces mana usage by 5%
 			'''
 		DisplayName: Chaos Stone
+	}
+
+	CometQuasher: {
+		DisplayName: Comet Quasher
+		Tooltip:
+			'''
+			Swings hurl a meteor towards the cursor
+			Melee hits call down another meteor above the struck enemy
+			'''
 	}
 
 	CoreofChaos: {
@@ -924,6 +943,15 @@ Items: {
 			'''
 	}
 
+	EntropicClaymore: {
+		DisplayName: Entropic Claymore
+		Tooltip:
+			'''
+			Constellations can be seen between the flashes of the blade
+			"Amidst the accretion of entropy, even the grandest nebula became dim, chaotic dust within the blade"
+			'''
+	}
+
 	EtherealTalisman: {
 		DisplayName: Ethereal Talisman
 		Tooltip:
@@ -951,6 +979,19 @@ Items: {
 			'''
 	}
 
+	Exobladeold: {
+		DisplayName: Exoblade
+		Tooltip:
+			'''
+			Ancient blade forged by Draedon, Yharim's finest weaponsmith
+			Fires exo beams that home in on the player and explode
+			Striking enemies with the blade calls down comets
+			Repeated true melee hits trigger a cosmic explosion
+			Enemies below 15% life immediately explode
+			Heals the player when striking enemies
+			'''
+	}
+
 	EyeoftheStorm: {
 		Tooltip: Summons a cloud elemental to fight for you
 		DisplayName: Eye of the Storm
@@ -965,6 +1006,15 @@ Items: {
 			On every 10th slash throw the sword out on a chain, releasing cosmic energy
 			Right Click to perform a ghost slash that grants invunerability and sends you towards your cursor every 5 seconds
 			'[c/fcc7ff:The path past your Zenith is of your will and perserverance alone...]'
+			'''
+	}
+
+	FlarefrostBlade: {
+		DisplayName: Flarefrost Blade
+		Tooltip:
+			'''
+			Swings hurl a flarefrost bolt towards the cursor
+			Hits inflict Hellfire and Frostbite
 			'''
 	}
 
@@ -1808,6 +1858,11 @@ Items: {
 			'''
 	}
 
+	PhoenixBlade: {
+		DisplayName: Phoenix Blade
+		Tooltip: Melee kills explode and leave behind two healing flames
+	}
+
 	PhotosynthesisPotion: {
 		DisplayName: Photosynthesis Potion
 		Tooltip:
@@ -1820,6 +1875,15 @@ Items: {
 	ProfanedRagePotion: {
 		DisplayName: Profaned Rage Potion
 		Tooltip: Increases critical strike chance by 12% and increases movement and horizontal flight speed by 5%
+	}
+
+	StellarStriker: {
+		DisplayName: Stellar Striker
+		Tooltip:
+			'''
+			Swings fire a stellar beam
+			Right clicking empowers the blade, calling down a rain of lunar flares on hit
+			'''
 	}
 
 	ShatteringPotion: {
@@ -1911,6 +1975,7 @@ Projectiles: {
 	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
 	AbyssalBullet.DisplayName: Abyssal Bullet
 	AbyssalCrack.DisplayName: Abyssal Crack
+	AnarchyBeam.DisplayName: Anarchy Beam
 	AstralStarMelee.DisplayName: Astral Star Melee
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
@@ -1939,6 +2004,10 @@ Projectiles: {
 	ElementBall.DisplayName: Ball
 	ElementalFractalHeld.DisplayName: Elemental Fractal Held
 	ElementalFractalThrown.DisplayName: Elemental Fractal Thrown
+	EntropicClaymoreHoldout.DisplayName: Entropic Claymore Holdout
+	EntropicFlechette.DisplayName: Entropic Flechette
+	EntropicFlechetteLarge.DisplayName: Large Entropic Flechette
+	EntropicFlechetteSmall.DisplayName: Small Entropic Flechette
 	EonBeam.DisplayName: Beam
 	ExcelsusBlue.DisplayName: Excelsus Blue
 	ExcelsusBomb.DisplayName: Excelsus Bomb
@@ -1947,6 +2016,8 @@ Projectiles: {
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	EXNeutronExplosionRanged.DisplayName: EX Neutron Explosion
+	Exobeamold.DisplayName: Exo Beam
+	Exoboomold.DisplayName: Exo Explosion
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
 	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
@@ -2007,6 +2078,7 @@ Projectiles: {
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
 	StarlitFractalHeld.DisplayName: Starlit Fractal Held
+	StellarStrikerBeam.DisplayName: Stellar Striker Beam
 	TerraBall.DisplayName: Ball
 	TerratomereBeams.DisplayName: Terratomere Beams
 	TerratomereBigSlashs.DisplayName: Terratomere Big Slashs

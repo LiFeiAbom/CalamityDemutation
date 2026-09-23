@@ -491,6 +491,27 @@ namespace CalamityDemutation.Utilities
             return vr.SafeNormalize(Vector2.Zero);
         }
         /// <summary>
+        /// 弹幕雨（移植自灾厄 CalamityUtils.ProjectileRain）：在 targetPos 的斜上方/斜下方随机位置生成一颗弹幕并射向 targetPos。
+        /// 落点：X = targetPos.X ± rand(xLimit) 的随机值；Y = targetPos.Y - rand(yLimitLower, yLimitUpper)
+        /// —— 注意纵向是**减号**且形参不带符号，故传正数即"从上方落下"、传负数即"从下方升起"。
+        /// 速度：先求指向目标点的向量、再把 X 分量加 xVariance 抖动，最后整体缩放到长度 = projSpeed（不像 Barrage 那样夹取分量）。
+        /// 原码里有一条"目标类型是该灾厄本家弹幕时把 X 钉在 targetPos.X + xLimit"的特判，本工程没有该弹幕，略去。
+        /// </summary>
+        /// <returns>生成出的弹幕实例</returns>
+        public static Projectile ProjectileRain(IEntitySource source, Vector2 targetPos, float xLimit, float xVariance, float yLimitLower, float yLimitUpper, float projSpeed, int projType, int damage, float knockback, int owner)
+        {
+            float x = targetPos.X + Main.rand.NextFloat(-xLimit, xLimit);
+            float y = targetPos.Y - Main.rand.NextFloat(yLimitLower, yLimitUpper);
+            Vector2 spawnPosition = new Vector2(x, y);
+            Vector2 velocity = targetPos - spawnPosition;
+            velocity.X += Main.rand.NextFloat(-xVariance, xVariance);
+            float targetDist = velocity.Length();
+            targetDist = projSpeed / targetDist;
+            velocity.X *= targetDist;
+            velocity.Y *= targetDist;
+            return Projectile.NewProjectileDirect(source, spawnPosition, velocity, projType, damage, knockback, owner);
+        }
+        /// <summary>
         /// 弹幕齐射（移植自灾厄 CalamityUtils.ProjectileBarrage）：在 originVec 附近的随机点生成一颗弹幕并射向 targetPos。
         /// 生成点：X 偏移取 [xOffsetMin, xOffsetMax] 的随机值、正负由 fromRight 决定（它只是符号，不是真的"从右侧"）；
         /// Y 偏移取 [yOffsetMin, yOffsetMax] 的随机值、正负再随机一次，故上下都会出。

@@ -44,7 +44,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
             Projectile.frameCounter++;
             if (Projectile.frameCounter > 5)
             {

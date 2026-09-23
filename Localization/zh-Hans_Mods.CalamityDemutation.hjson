@@ -374,6 +374,16 @@ Items: {
 			'''
 	}
 
+	AnarchyBlade: {
+		DisplayName: 混乱之刃
+		Tooltip:
+			'''
+			每挥舞三次发射一道硫磺光束
+			生命值越低，造成的伤害越高
+			右键强化剑身，命中时引发硫磺爆炸；半血以下还有几率直接抹杀非 Boss 敌人
+			'''
+	}
+
 	AncientFossil: {
 		DisplayName: 远古化石
 		Tooltip: 在地下时挖掘速度提高 35%
@@ -641,6 +651,15 @@ Items: {
 			最大法力提高 50，所有伤害提高 3%，法力消耗降低 5%
 			'''
 		DisplayName: 混沌石
+	}
+
+	CometQuasher: {
+		DisplayName: 彗星陨刃
+		Tooltip:
+			'''
+			挥舞时朝准心甩出一颗陨石
+			近战命中敌人时，目标头顶再砸下一颗陨石
+			'''
 	}
 
 	CoreofChaos: {
@@ -927,6 +946,15 @@ Items: {
 			'''
 	}
 
+	EntropicClaymore: {
+		DisplayName: 熵之舞
+		Tooltip:
+			'''
+			刀光之间群星可见
+			「在熵的累积中，昔日再宏伟的星云也变成了刀中暗淡混沌的尘埃」
+			'''
+	}
+
 	EtherealTalisman: {
 		DisplayName: 空灵护符
 		Tooltip:
@@ -955,6 +983,19 @@ Items: {
 			'''
 	}
 
+	Exobladeold: {
+		DisplayName: 星流之刃
+		Tooltip:
+			'''
+			远古之刃，由亚利姆最优秀的工匠嘉登锻造
+			发射会跟踪玩家并在击中敌人时产生爆炸的星流光束
+			用剑刃攻击敌人会召唤彗星陨落
+			真近战连续命中敌人会引发寰宇爆炸
+			敌人血量低于 15% 时会立刻引发爆炸
+			攻击敌人时会治疗玩家
+			'''
+	}
+
 	EyeoftheStorm: {
 		Tooltip: 召唤一个云元素为你作战
 		DisplayName: 风暴之眼
@@ -968,6 +1009,15 @@ Items: {
 			挥舞8次后用锁链链接并掷出，刺入目标体内造成持续伤害
 			右键进行幽冥斩，向前突进一段距离并在途中向两侧发射剑影
 			[c/fcc7ff:异界的神剑]
+			'''
+	}
+
+	FlarefrostBlade: {
+		DisplayName: 霜火之刃
+		Tooltip:
+			'''
+			挥舞时朝准心甩出一道霜火弹幕
+			命中敌人附加狱炎与霜咬
 			'''
 	}
 
@@ -1813,6 +1863,11 @@ Items: {
 			'''
 	}
 
+	PhoenixBlade: {
+		DisplayName: 凤凰之刃
+		Tooltip: 近战击杀敌人时炸出一团日耀爆炸，并留下两枚恢复之火
+	}
+
 	PhotosynthesisPotion: {
 		DisplayName: 光合作用药水
 		Tooltip:
@@ -1825,6 +1880,15 @@ Items: {
 	ProfanedRagePotion: {
 		DisplayName: 渎神之怒药水
 		Tooltip: 暴击率提高 12%，移动与水平飞行速度提高 5%
+	}
+
+	StellarStriker: {
+		DisplayName: 月炎之锋
+		Tooltip:
+			'''
+			挥砍时射出一道星流束
+			右键强化剑身，命中时召来月炎陨石雨
+			'''
 	}
 
 	ShatteringPotion: {
@@ -1916,6 +1980,7 @@ Projectiles: {
 	AbyssFractalHeld.DisplayName: 深渊分形
 	AbyssalBullet.DisplayName: 渊水弹
 	AbyssalCrack.DisplayName: 深渊裂隙
+	AnarchyBeam.DisplayName: 硫磺光束
 	AstralStarMelee.DisplayName: 星熠星陨
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
@@ -1944,6 +2009,10 @@ Projectiles: {
 	ElementBall.DisplayName: 元素球
 	ElementalFractalHeld.DisplayName: 元素分形
 	ElementalFractalThrown.DisplayName: 元素分形
+	EntropicClaymoreHoldout.DisplayName: 熵之舞（手持）
+	EntropicFlechette.DisplayName: 熵之飞刃
+	EntropicFlechetteLarge.DisplayName: 熵之飞刃（大）
+	EntropicFlechetteSmall.DisplayName: 熵之飞刃（小）
 	EonBeam.DisplayName: 远古光束
 	ExcelsusBlue.DisplayName: 宙宇蓝刃
 	ExcelsusBomb.DisplayName: 寰宇光暗矢
@@ -1952,6 +2021,8 @@ Projectiles: {
 	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
 	EXNeutronExplode.DisplayName: 中子大爆点
 	EXNeutronExplosionRanged.DisplayName: 中子大爆点
+	Exobeamold.DisplayName: 星流射线
+	Exoboomold.DisplayName: 星流爆炸
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
 	BrilliantFractalHeld.DisplayName: 光辉分形
@@ -2012,6 +2083,7 @@ Projectiles: {
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
 	StarlitFractalHeld.DisplayName: 星熠分形
+	StellarStrikerBeam.DisplayName: 星流束
 	TerraBall.DisplayName: 泰拉球
 	TerratomereBeams.DisplayName: 泰拉光束剑气
 	TerratomereBigSlashs.DisplayName: 泰拉大刀光
