@@ -278,6 +278,20 @@ Configs: {
 				'''
 		}
 
+		UnbindCalamityDifficulty: {
+			Label: Unbind Calamity Difficulty
+			Tooltip:
+				'''
+				Unbinds Calamity's coupling between Revengeance and Expert, and between Death and Master.
+				In modern Calamity the vanilla Expert and Master modes are themselves entries in Calamity's difficulty table, so picking Revengeance switches the world to Expert and picking Death switches it to Master.
+				On top of that, the pairing is corrected every frame: Death is downgraded back to Revengeance in an Expert world, and Revengeance is upgraded to Death in a Master world.
+				With this enabled you can run Death in an Expert world, or Revengeance alone in a Master world, without being auto-downgraded or upgraded, and the world's own difficulty is left untouched.
+				Only applies while the modern Calamity Mod is enabled.
+				Note: while this is on, the world's vanilla difficulty is pinned to the value it had when you entered the world. Turn this off before changing it.
+				Default: Off.
+				'''
+		}
+
 		EnableSwordLight: {
 			Label: Enable Sword Light
 			Tooltip:
@@ -299,6 +313,11 @@ Configs: {
 				When off, the weapon is always drawn at full brightness in plain white, ignoring light — useful if the blade looks too dark in caves or at night.
 				Default: On.
 				'''
+		}
+
+		UnbindCalamityDifficulty: {
+			Label: Unbind Calamity Difficulty
+			Tooltip: ""
 		}
 	}
 }
