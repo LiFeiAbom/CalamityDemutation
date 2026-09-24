@@ -100,5 +100,7 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle YstralynHit = new("CalamityDemutation/Sounds/Item/ystn_hit");
         /// <summary>犽戎烈焰（灾厄原名 YharonInfernado）：巨龙七星灯出手时播放（CI 侧为 CommonCalamitySounds.FlareSound）</summary>
         public static readonly SoundStyle YharonInfernado = new("CalamityDemutation/Sounds/Item/YharonInfernado");
+        /// <summary>电浆烈焰（灾厄原名 ELRFire）：熵之舞挥砍中每次射出熵之飞刃时播放，音高按第几发递增、音量 0.45</summary>
+        public static readonly SoundStyle ELRFire = new("CalamityDemutation/Sounds/Item/ELRFire");
     }
 }

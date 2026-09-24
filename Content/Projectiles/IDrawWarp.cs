@@ -12,6 +12,12 @@ namespace CalamityDemutation.Content.Projectiles
         /// </summary>
         bool canDraw() => false;
         /// <summary>
+        /// 是否不使用蓝移效果，默认为 false（即走蓝移桶）。
+        /// 返回 true 的弹幕会被 <see cref="Common.Effects.EffectsSystem"/> 分到"无蓝移"桶里单独合成
+        /// （WarpShader 的 blueValue 由 30.11 降为 0.11），避免扭曲区域泛蓝。
+        /// </summary>
+        bool noBlueshift() => false;
+        /// <summary>
         /// 额外自定义绘制，绘制内容不会被扭曲影响（画在扭曲结果之上）
         /// </summary>
         void costomDraw(SpriteBatch spriteBatch);

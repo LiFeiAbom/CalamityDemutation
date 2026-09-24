@@ -2009,10 +2009,8 @@ Projectiles: {
 	ElementBall.DisplayName: 元素球
 	ElementalFractalHeld.DisplayName: 元素分形
 	ElementalFractalThrown.DisplayName: 元素分形
-	EntropicClaymoreHoldout.DisplayName: 熵之舞（手持）
-	EntropicFlechette.DisplayName: 熵之飞刃
-	EntropicFlechetteLarge.DisplayName: 熵之飞刃（大）
-	EntropicFlechetteSmall.DisplayName: 熵之飞刃（小）
+	EntropicClaymoreHeld.DisplayName: 熵之舞（手持）
+	EntropicClaymoreProj.DisplayName: 熵之飞刃
 	EonBeam.DisplayName: 远古光束
 	ExcelsusBlue.DisplayName: 宙宇蓝刃
 	ExcelsusBomb.DisplayName: 寰宇光暗矢

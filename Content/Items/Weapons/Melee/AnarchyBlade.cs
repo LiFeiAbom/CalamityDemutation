@@ -31,13 +31,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>左键挥砍计数（大修源码里是 ModItem 实例字段，这里照抄保持行为一致）</summary>
         private int ShootCount;
         /// <summary>
-        /// 物品基础属性：114×122、伤害 150、19 帧挥砍、击退 7.5、黄名（60金）、光束初速 15
+        /// 物品基础属性：114×122、伤害 203、19 帧挥砍、击退 7.5、黄名（60金）、光束初速 15
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 114;
             Item.height = 122;
-            Item.damage = 150;
+            Item.damage = 203; // 源值 150，×1.35 膨胀（202.5 上取整）
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 19;
             Item.useTime = 19;

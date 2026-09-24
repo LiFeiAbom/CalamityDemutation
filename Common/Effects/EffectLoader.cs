@@ -25,6 +25,13 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public static Asset<Effect> KnifeDistortion;
         /// <summary>
+        /// 刀光条带着色器，BaseSwingCO / DragonRageHeld 的 DrawTrail 绘制弧光拖尾时使用。
+        /// 必须在加载期就请求：这个 Asset 用的是默认的异步加载，若等到绘制期才现请求，
+        /// 同一表达式里紧跟的 .Value 会取到空引用（大修能吃住那句现请求，是因为它的
+        /// EffectLoader 在加载期已把本资源预加载并缓存）
+        /// </summary>
+        public static Asset<Effect> KnifeRendering;
+        /// <summary>
         /// 变形球边缘着色器（普通版本），Metaball 绘制时使用
         /// </summary>
         public static Asset<Effect> MetaballEdgeShader;
@@ -52,6 +59,7 @@ namespace CalamityDemutation.Common.Effects
             // 改为只持有 Asset，在真正使用(绘制期)时才取 .Value。
             var assets = CalamityDemutation.Instance.Assets;
             KnifeDistortion = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeDistortion");
+            KnifeRendering = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering");
             WarpShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "WarpShader");
             NeutronWarp = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "NeutronWarp");
             MetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/MetaballEdgeShader");
@@ -65,6 +73,7 @@ namespace CalamityDemutation.Common.Effects
         public static void UnLoad()
         {
             KnifeDistortion = null;
+            KnifeRendering = null;
             WarpShader = null;
             NeutronWarp = null;
             MetaballEdgeShader = null;

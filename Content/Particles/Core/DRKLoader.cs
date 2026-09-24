@@ -69,6 +69,7 @@ namespace CalamityDemutation.Content.Particles.Core
             batched_NonPremultiplied_DRK = [];
             batched_AdditiveBlend_DRK = [];
             RegisterParticle<DRK_Spark>();
+            RegisterParticle<DRK_LineFormPlayer>();
             RegisterParticle<DRK_HeavenfallStar>();
             RegisterParticle<FlameParticle>();
             RegisterParticle<ManaDrainStreak>();

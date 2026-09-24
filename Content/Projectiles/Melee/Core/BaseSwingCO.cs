@@ -685,7 +685,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         public virtual void DrawTrail(List<VertexPositionColorTexture> bars)
         {
-            Effect effect = CalamityDemutation.Instance.Assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering").Value;
+            Effect effect = EffectLoader.KnifeRendering.Value;
             effect.Parameters["transformMatrix"].SetValue(GetTransfromMaxrix());
             effect.Parameters["drawTrailHighlight"].SetValue(drawTrailHighlight);
             effect.Parameters["obliqueSampling"].SetValue(ObliqueSampling);

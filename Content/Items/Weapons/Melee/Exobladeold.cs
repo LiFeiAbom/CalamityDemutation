@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.width = 80;
             Item.height = 114;
-            Item.damage = 6700;
+            Item.damage = 6700; // 经典版原值（CI 写作 900）
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 14;
             Item.useTime = 14;

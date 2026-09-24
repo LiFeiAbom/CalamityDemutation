@@ -14,6 +14,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using CalamityDemutation.Content.Buffs.NegativeBuffs;
+using CalamityDemutation.Common.Effects;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
@@ -418,7 +419,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override void DrawTrail(List<VertexPositionColorTexture> bars)
         {
-            Effect effect = CalamityDemutation.Instance.Assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering").Value;
+            Effect effect = EffectLoader.KnifeRendering.Value;
             effect.Parameters["transformMatrix"].SetValue(GetTransfromMaxrix());
             effect.Parameters["sampleTexture"].SetValue(TrailTexture);
             effect.Parameters["gradientTexture"].SetValue(GradientTexture);

@@ -2004,10 +2004,8 @@ Projectiles: {
 	ElementBall.DisplayName: Ball
 	ElementalFractalHeld.DisplayName: Elemental Fractal Held
 	ElementalFractalThrown.DisplayName: Elemental Fractal Thrown
-	EntropicClaymoreHoldout.DisplayName: Entropic Claymore Holdout
-	EntropicFlechette.DisplayName: Entropic Flechette
-	EntropicFlechetteLarge.DisplayName: Large Entropic Flechette
-	EntropicFlechetteSmall.DisplayName: Small Entropic Flechette
+	EntropicClaymoreHeld.DisplayName: Entropic Claymore Held
+	EntropicClaymoreProj.DisplayName: Entropic Flechette
 	EonBeam.DisplayName: Beam
 	ExcelsusBlue.DisplayName: Excelsus Blue
 	ExcelsusBomb.DisplayName: Excelsus Bomb

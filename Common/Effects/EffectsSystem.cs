@@ -14,8 +14,8 @@ namespace CalamityDemutation.Common.Effects
 {
     /// <summary>
     /// 上屏合成系统（移植自 CWR 的 EffectsSystem）：钩入 FilterManager.EndCapture，在屏幕捕获末尾做四层后期——
-    /// ① warp 扭曲：收集所有实现 IDrawWarp 的活跃弹幕，把它们的 Warp() 画到 screenTargetSwap 作为位移遮罩，
-    /// 再用 WarpShader 合成扭曲后的屏幕；
+    /// ① warp 扭曲：收集所有实现 IDrawWarp 的活跃弹幕，按 noBlueshift 分成两桶，各自把 Warp() 画到
+    /// screenTargetSwap 作为位移遮罩，再用 WarpShader 合成扭曲后的屏幕（两桶分别设 blueValue，互不干扰）；
     /// ② 深渊裂隙：收集活跃的 <see cref="AbyssalCrack"/> 与 <see cref="AbyssalParticle"/>，把裂隙折线与
     /// 粒子遮罩画到 screenTargetSwap，再用 cabyss 着色器合成为蓝色深渊裂缝叠回屏幕；
     /// ③ 全屏闪白：<c>CalamityDemutation.FlashEffectStrength</c> 为正时，以屏幕中心为轴叠 16 层逐级放大的
@@ -24,7 +24,7 @@ namespace CalamityDemutation.Common.Effects
     /// 放在这一层调用，见 ApplyFinalShader 末尾）。
     /// <para>
     /// 注意 EndCapture 只在**滤镜管线被激活时**才会被调用，因此本系统额外注册了一个以原版 FilterMiniTower
-    /// 为背书的"透明滤镜"，仅在场上存在裂隙/深渊粒子/无星之夜弹幕，或有闪白待播时激活它
+    /// 为背书的"透明滤镜"，仅在场上存在裂隙/深渊粒子/无星之夜弹幕/实现 IDrawWarp 的弹幕，或有闪白待播时激活它
     /// （见 <see cref="PostUpdateEverything"/>），其余时间保持关闭，既保证管线跑到，又不对画面与性能产生影响。
     /// 后三项的效果强度也在这个每帧钩子里递减（分别对应 CE 的 PostUpdateNPCs / PostUpdateDusts 那两处衰减）。
     /// </para>
@@ -80,7 +80,8 @@ namespace CalamityDemutation.Common.Effects
             {
                 return;
             }
-            bool needed = HasAbyssContent() || HasStarlessNightContent() || CalamityDemutation.FlashEffectStrength > 0f;
+            bool needed = HasAbyssContent() || HasStarlessNightContent() || HasAnyWarpProjectile()
+                || CalamityDemutation.FlashEffectStrength > 0f;
             if (needed && !overlayFilter.IsActive())
             {
                 overlayFilter.Activate(Vector2.Zero);
@@ -136,44 +137,96 @@ namespace CalamityDemutation.Common.Effects
         {
             GraphicsDevice graphicsDevice = Main.instance.GraphicsDevice;
             screen ??= new RenderTarget2D(graphicsDevice, Main.screenWidth, Main.screenHeight);
-            if (HasWarpEffect(out List<IDrawWarp> warpSets))
+            if (HasWarpEffect(out List<IDrawWarp> warpSets, out List<IDrawWarp> warpSetsNoBlueshift))
             {
-                // 1. 备份当前屏幕到 screen
-                graphicsDevice.SetRenderTarget(screen);
-                graphicsDevice.Clear(Color.Transparent);
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                Main.spriteBatch.Draw(Main.screenTarget, Vector2.Zero, Color.White);
-                Main.spriteBatch.End();
-                // 2. 把 warp 遮罩画到 screenTargetSwap
-                graphicsDevice.SetRenderTarget(Main.screenTargetSwap);
-                graphicsDevice.Clear(Color.Transparent);
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None
-                    , RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                foreach (IDrawWarp p in warpSets)
+                // 有蓝移桶：WarpShader 的 blueValue 维持 30.11，扭曲区域会泛蓝
+                if (warpSets.Count > 0)
                 {
-                    p.Warp();
-                }
-                Main.spriteBatch.End();
-                // 3. 用 WarpShader 把遮罩应用到屏幕上，写回 screenTarget
-                graphicsDevice.SetRenderTarget(Main.screenTarget);
-                graphicsDevice.Clear(Color.Transparent);
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-                Effect effect = EffectLoader.WarpShader.Value;
-                effect.Parameters["tex0"].SetValue(Main.screenTargetSwap);
-                effect.Parameters["i"].SetValue(0.02f);
-                effect.CurrentTechnique.Passes[0].Apply();
-                Main.spriteBatch.Draw(screen, Vector2.Zero, Color.White);
-                Main.spriteBatch.End();
-                // 4. 弹幕本体画在扭曲结果之上
-                Main.spriteBatch.Begin();
-                foreach (IDrawWarp p in warpSets)
-                {
-                    if (p.canDraw())
+                    // 1. 备份当前屏幕到 screen
+                    graphicsDevice.SetRenderTarget(screen);
+                    graphicsDevice.Clear(Color.Transparent);
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                    Main.spriteBatch.Draw(Main.screenTarget, Vector2.Zero, Color.White);
+                    Main.spriteBatch.End();
+                    // 2. 把 warp 遮罩画到 screenTargetSwap
+                    graphicsDevice.SetRenderTarget(Main.screenTargetSwap);
+                    graphicsDevice.Clear(Color.Transparent);
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None
+                        , RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                    foreach (IDrawWarp p in warpSets)
                     {
-                        p.costomDraw(Main.spriteBatch);
+                        p.Warp();
                     }
+                    Main.spriteBatch.End();
+                    // 3. 用 WarpShader 把遮罩应用到屏幕上，写回 screenTarget
+                    graphicsDevice.SetRenderTarget(Main.screenTarget);
+                    graphicsDevice.Clear(Color.Transparent);
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                    Effect effect = EffectLoader.WarpShader.Value;
+                    effect.Parameters["tex0"].SetValue(Main.screenTargetSwap);
+                    effect.Parameters["noBlueshift"].SetValue(false);
+                    effect.Parameters["i"].SetValue(0.02f);
+                    effect.CurrentTechnique.Passes[0].Apply();
+                    Main.spriteBatch.Draw(screen, Vector2.Zero, Color.White);
+                    Main.spriteBatch.End();
+                    // 4. 弹幕本体画在扭曲结果之上
+                    // 这里必须带上 GameViewMatrix：costomDraw 喂进来的是「世界坐标 - screenPosition」，
+                    // 少了视图矩阵在非 1 倍缩放下位置与大小都会错（大修原文即带 ViewMatrix）
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState
+                        , DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                    foreach (IDrawWarp p in warpSets)
+                    {
+                        if (p.canDraw())
+                        {
+                            p.costomDraw(Main.spriteBatch);
+                        }
+                    }
+                    Main.spriteBatch.End();
                 }
-                Main.spriteBatch.End();
+                // 无蓝移桶：WarpShader 的 blueValue 降为 0.11，扭曲区域不泛蓝（大修的 noBlueshift 分支）
+                if (warpSetsNoBlueshift.Count > 0)
+                {
+                    // 1. 备份当前屏幕到 screen
+                    graphicsDevice.SetRenderTarget(screen);
+                    graphicsDevice.Clear(Color.Transparent);
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                    Main.spriteBatch.Draw(Main.screenTarget, Vector2.Zero, Color.White);
+                    Main.spriteBatch.End();
+                    // 2. 把 warp 遮罩画到 screenTargetSwap
+                    graphicsDevice.SetRenderTarget(Main.screenTargetSwap);
+                    graphicsDevice.Clear(Color.Transparent);
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None
+                        , RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                    foreach (IDrawWarp p in warpSetsNoBlueshift)
+                    {
+                        p.Warp();
+                    }
+                    Main.spriteBatch.End();
+                    // 3. 用 WarpShader 把遮罩应用到屏幕上，写回 screenTarget
+                    graphicsDevice.SetRenderTarget(Main.screenTarget);
+                    graphicsDevice.Clear(Color.Transparent);
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                    Effect effect = EffectLoader.WarpShader.Value;
+                    effect.Parameters["tex0"].SetValue(Main.screenTargetSwap);
+                    effect.Parameters["noBlueshift"].SetValue(true);
+                    effect.Parameters["i"].SetValue(0.02f);
+                    effect.CurrentTechnique.Passes[0].Apply();
+                    Main.spriteBatch.Draw(screen, Vector2.Zero, Color.White);
+                    Main.spriteBatch.End();
+                    // 4. 弹幕本体画在扭曲结果之上
+                    // 这里必须带上 GameViewMatrix：costomDraw 喂进来的是「世界坐标 - screenPosition」，
+                    // 少了视图矩阵在非 1 倍缩放下位置与大小都会错（大修原文即带 ViewMatrix）
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState
+                        , DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                    foreach (IDrawWarp p in warpSetsNoBlueshift)
+                    {
+                        if (p.canDraw())
+                        {
+                            p.costomDraw(Main.spriteBatch);
+                        }
+                    }
+                    Main.spriteBatch.End();
+                }
             }
             // 深渊裂隙：与 warp 各自独立走一遍「备份屏幕 → 画遮罩 → 合成回屏」，先后顺序不影响结果
             if (HasAbyssContent())
@@ -346,20 +399,44 @@ namespace CalamityDemutation.Common.Effects
             return false;
         }
         /// <summary>
-        /// 扫描全部活跃弹幕，收集其 ModProjectile 实现了 IDrawWarp 的实例到 warpSets；
-        /// 返回是否存在（数量大于 0）
+        /// 扫描全部活跃弹幕，收集其 ModProjectile 实现了 IDrawWarp 的实例：
+        /// 按 <see cref="IDrawWarp.noBlueshift"/> 分成"有蓝移"与"无蓝移"两桶，两者会被分别合成。
+        /// 返回是否存在任意一个（两桶总数大于 0）
         /// </summary>
-        private bool HasWarpEffect(out List<IDrawWarp> warpSets)
+        private bool HasWarpEffect(out List<IDrawWarp> warpSets, out List<IDrawWarp> warpSetsNoBlueshift)
         {
             warpSets = new List<IDrawWarp>();
+            warpSetsNoBlueshift = new List<IDrawWarp>();
             foreach (Projectile p in Main.projectile)
             {
                 if (p.active && p.ModProjectile is IDrawWarp drawWarp)
                 {
-                    warpSets.Add(drawWarp);
+                    if (drawWarp.noBlueshift())
+                    {
+                        warpSetsNoBlueshift.Add(drawWarp);
+                    }
+                    else
+                    {
+                        warpSets.Add(drawWarp);
+                    }
                 }
             }
-            return warpSets.Count > 0;
+            return warpSets.Count > 0 || warpSetsNoBlueshift.Count > 0;
+        }
+        /// <summary>
+        /// 是否存在实现了 IDrawWarp 的活跃弹幕。与 <see cref="HasWarpEffect"/> 同义但不分配容器，
+        /// 供每帧调用的滤镜开关判据使用——否则这个判据每帧都会 new 两个 List 造成 GC 压力。
+        /// </summary>
+        private static bool HasAnyWarpProjectile()
+        {
+            foreach (Projectile p in Main.projectile)
+            {
+                if (p.active && p.ModProjectile is IDrawWarp)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         /// <summary>
         /// 分辨率变化回调：释放旧 screen 并按新的屏幕宽高重建，供扭曲合成当作屏幕备份
