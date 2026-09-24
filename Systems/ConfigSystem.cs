@@ -5,7 +5,7 @@ namespace CalamityDemutation.Systems
 {
     /// <summary>
     /// 模组配置类，提供客户端侧的配置选项。
-    /// 当前配置项：性能模式、挥砍刀光、武器自适应光照、原版数值回调、灾厄难度解绑。
+    /// 当前配置项：性能模式、还原原版削弱、还原灾厄内容削弱、挥砍刀光、武器自适应光照。
     /// </summary>
     internal class ConfigSystem : ModConfig
     {
@@ -39,23 +39,15 @@ namespace CalamityDemutation.Systems
         [DefaultValue(false)]
         public bool RevertCalamityContentNerfs { get; set; }
         /// <summary>
-        /// 灾厄难度解绑开关：启用后，专家世界可以直接开死亡模式、大师世界可以只开复仇模式，
-        /// 既不会被灾厄自动降级/升级，世界自身难度也不会被改写（详见 <see cref="CalamityDifficultyUnbind"/>）。
-        /// 只对现代版灾厄（2.2.x 起那套重做过的难度系统）生效；改动即时生效，不需要重载。
-        /// </summary>
-        [BackgroundColor(211, 211, 211, 192)]
-        [DefaultValue(false)]
-        public bool UnbindCalamityDifficulty { get; set; }
-        /// <summary>
         /// 是否启用挥砍刀光（BaseSwingCO 弧光渲染开关）
         /// </summary>
-        [BackgroundColor(192, 54, 94, 192)]
+        [BackgroundColor(211, 211, 211, 192)]
         [DefaultValue(true)]
         public bool EnableSwordLight { get; set; }
         /// <summary>
         /// 武器自适应光照（关闭时刀身强制白色）
         /// </summary>
-        [BackgroundColor(192, 54, 94, 192)]
+        [BackgroundColor(211, 211, 211, 192)]
         [DefaultValue(true)]
         public bool WeaponAdaptiveIllumination { get; set; }
         /// <summary>
