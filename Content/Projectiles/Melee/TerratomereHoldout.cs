@@ -223,8 +223,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             if (!Owner.moonLeech)   // 月光吸血期间禁疗，与原版口径一致
             {
-                Owner.statLife += Terratomere.TrueMeleeHitHeal;   // 照原码直接加生命，未再夹回 statLifeMax2
+                Owner.statLife += Terratomere.TrueMeleeHitHeal;
                 Owner.HealEffect(Terratomere.TrueMeleeHitHeal);
+                if (Owner.statLife > Owner.statLifeMax2)
+                    Owner.statLife = Owner.statLifeMax2;   // 超上限夹回，否则血条会先冲高再被原版夹回，出现血量跳变
             }
         }
         /// <summary>线段碰撞：沿剑尖方向延伸 height×scale，宽 width×0.25</summary>

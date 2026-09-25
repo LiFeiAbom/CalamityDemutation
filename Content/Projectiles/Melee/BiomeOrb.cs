@@ -133,13 +133,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",   // 读 CalamityPlayer 的 ZoneAstral 标记
+                            // ZoneAstral 在灾厄里是只读属性（不是字段），必须用 GetProperty 才读得到
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
-                            if (field != null)
+                            if (prop != null)
                             {
-                                bool ZoneAstral = (bool)field.GetValue(calPlayer);
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)   // 星陨之地：改用灾厄的 AstralOrange 粉尘与橙色配色
                                 {
                                     if (calamity.TryFind<ModDust>("AstralOrange", out ModDust astralOrange)) { dustType = astralOrange.Type; }
@@ -259,13 +260,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",   // 读 CalamityPlayer 的 ZoneAstral 标记
+                            // ZoneAstral 在灾厄里是只读属性（不是字段），必须用 GetProperty 才读得到
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
-                            if (field != null)
+                            if (prop != null)
                             {
-                                bool ZoneAstral = (bool)field.GetValue(calPlayer);
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)   // 星陨之地：追加星陨感染
                                 {
                                     if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection)) { target.AddBuff(astralInfection.Type, debuffTime); }
@@ -378,13 +380,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",   // 读 CalamityPlayer 的 ZoneAstral 标记
+                            // ZoneAstral 在灾厄里是只读属性（不是字段），必须用 GetProperty 才读得到
+                            var prop = calamityPlayerType.GetProperty("ZoneAstral",
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
-                            if (field != null)
+                            if (prop != null)
                             {
-                                bool ZoneAstral = (bool)field.GetValue(calPlayer);
+                                bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)   // 星陨之地：追加星陨感染
                                 {
                                     if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection)) { target.AddBuff(astralInfection.Type, debuffTime); }
