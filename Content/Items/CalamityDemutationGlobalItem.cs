@@ -637,8 +637,8 @@ namespace CalamityDemutation.Content.Items
         public override void HorizontalWingSpeeds(Item item, Player player, ref float speed, ref float acceleration)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            float flightSpeedMult = 1f 
-                                    + (modPlayer.holyWrath ? 0.05f : 0f) 
+            float flightSpeedMult = 1f
+                                    + (modPlayer.holyWrath ? 0.05f : 0f)
                                     + (modPlayer.soaring ? 0.1f : 0f)
                                     + (modPlayer.profanedRage ? 0.05f : 0f)
                                     + (modPlayer.draconicSurge ? 0.15f : 0f);

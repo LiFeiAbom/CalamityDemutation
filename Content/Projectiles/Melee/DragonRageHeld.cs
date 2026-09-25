@@ -23,6 +23,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class DragonRageHeld : BaseSwingCO
     {
+        // ── 常量 ──
         /// <summary>
         /// 内部挥砍攻速乘数（等效攻速加速，绕过 MeleeNoSpeed 的攻速免疫）。
         /// 原值 1f；2026-09-08 改为 1.4f 实现整体 ×1.4 加速，若要回退改回 1f。
@@ -30,9 +31,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// ai[0]=3 突刺与 ai[0]=6 蓄力旋不使用 speedUp，不受此值影响。
         /// </summary>
         internal const float SwingAtkSpeed = 1.4f;
+        // ── 覆写属性 ──
+        /// <summary>挥舞中的刀身贴图：复用巨龙之怒的贴图</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/Melee/DragonRageStaff";
+        /// <summary>刀光流形采样图路径（Masking/MotionTrail3），决定刀光条带的形状纹理</summary>
         public override string trailTexturePath => CalamityDemutationConstant.Masking + "MotionTrail3";
+        /// <summary>刀光颜色采样图路径（ColorBar/DragonRage_Bar），决定沿刀光长度的配色</summary>
         public override string gradientTexturePath => CalamityDemutationConstant.ColorBar + "DragonRage_Bar";
+        // ── 覆写方法 ──
         /// <summary>
         /// 挥砍基础属性初始化：由基类 <see cref="BaseSwingCO.SetDefaults"/> 在 <see cref="BaseSwingCO.PreSetSwingProperty"/> 返回 true 后回调。
         /// 这里克隆原版长矛弹幕模板，并设定额外更新次数 3、伤害类型为近战无攻速、尺寸与本地无敌帧（5 帧），
@@ -62,7 +68,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override void SwingAI()
         {
+            // speedUp 越小越快：与攻速、SwingAtkSpeed 成反比。下面的时间阈值乘它、转速衰减除它，两处合力实现整体加速
             float speedUp = 1 / (Owner.GetAttackSpeed(DamageClass.MeleeNoSpeed) * SwingAtkSpeed);
+            // ai[0]=0：正摇的小挥砍——前 10×speedUp 帧长度与转速递增，之后递减（长度夹在 120~160）
             if (Projectile.ai[0] == 0)
             {
                 if (Time == 0)
@@ -88,11 +96,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     Projectile.Kill();
                 }
-                if (Time % updateCount == updateCount - 1)
+                if (Time % updateCount == updateCount - 1)   // updateCount = extraUpdates+1：只在每个游戏帧的最后一次 AI 更新里夹一次长度，避免同帧重复夹取
                 {
                     Length = MathHelper.Clamp(Length, 120, 160);
                 }
             }
+            // ai[0]=1：与 0 反摇的挥砍（起手角取反、转速方向相反，长度夹在 110~120）
             else if (Projectile.ai[0] == 1)
             {
                 if (Time == 0)
@@ -123,6 +132,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Length = MathHelper.Clamp(Length, 110, 120);
                 }
             }
+            // ai[0]=2：短促重挥——转速增益更大（+0.3/帧），长度夹在 60~120
             else if (Projectile.ai[0] == 2)
             {
                 if (Time == 0)
@@ -153,6 +163,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Length = MathHelper.Clamp(Length, 60, 120);
                 }
             }
+            // ai[0]=3：直线突刺——不乘 speedUp、不画刀光，前 6×updateCount 帧沿两侧撒铜币尘与火花；
+            // 长度随 speed（初值 1+0.6/updateCount）递增、每帧减 0.015，scale 随与玩家的距离变大
             else if (Projectile.ai[0] == 3)
             {
                 if (Time == 0)
@@ -194,6 +206,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Length = MathHelper.Clamp(Length, 30, 260);
                 }
             }
+            // ai[0]=4：大范围重挥——开局把中心距改 105、刀光宽度改 190 并重置弧光缓存，起手角 -30°；
+            // 中段每帧 scale +0.03，20×updateCount 帧后每帧 -0.001（长度夹在 120~260）
             else if (Projectile.ai[0] == 4)
             {
                 if (Time == 0)
@@ -233,6 +247,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Length = MathHelper.Clamp(Length, 120, 260);
                 }
             }
+            // ai[0]=5：与 4 镜像的左向重挥，起手角 -110°
             else if (Projectile.ai[0] == 5)
             {
                 if (Time == 0)
@@ -272,6 +287,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Length = MathHelper.Clamp(Length, 120, 260);
                 }
             }
+            // ai[0]=6：按住右键的蓄力旋转——先关掉基类的"强制玩家朝向/手臂修正"，让本分支手动接管；
+            // 按住右键时把 Time 钉在 30×updateCount 处无限旋转（每 30×updateCount 帧补一次挥砍音），
+            // 松开后在 60×updateCount 帧起收缩、90×updateCount 帧收招销毁
             else if (Projectile.ai[0] == 6)
             {
                 canFormOwnerSetDir = false;
@@ -337,10 +355,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             if (Time > 1)
             {
-                Projectile.alpha = 0;
+                Projectile.alpha = 0;   // 出生两帧后再取消克隆自原版长矛的全透明
             }
-            CanDrawSlashTrail = Projectile.ai[0] != 3;
-            inDrawFlipdiagonally = Projectile.ai[0] == 1 || Projectile.ai[0] == 5;
+            CanDrawSlashTrail = Projectile.ai[0] != 3;   // 直线突刺不画刀光
+            inDrawFlipdiagonally = Projectile.ai[0] == 1 || Projectile.ai[0] == 5;   // 镜像的两套挥砍走对角线翻转绘制
         }
         /// <summary>
         /// 命中敌怪：ai[0]=3 的突刺会在命中点叠加两层 bloom 粒子、额外发射一枚 FireBall（伤害 1/4）并施加血炎爆炸 debuff 300 帧；
@@ -352,7 +370,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             int type = ModContent.ProjectileType<DragonRageFireOrb>();
             if (Projectile.ai[0] == 3)
             {
-                float orbSize = Main.rand.NextFloat(0.5f, 0.8f) * Projectile.numHits;
+                float orbSize = Main.rand.NextFloat(0.5f, 0.8f) * Projectile.numHits;   // 爆点半径随累计命中数放大，上限 2.2
                 if (orbSize > 2.2f)
                 {
                     orbSize = 2.2f;
@@ -375,7 +393,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             HitEffect(target);
         }
-
         /// <summary>
         /// 命中玩家（PvP）时的对应处理：施加血炎爆炸 debuff 300 帧；ai[0]=3 突刺同样额外发射一枚 FireBall，随后调用 <see cref="HitEffect"/>。
         /// </summary>
@@ -388,7 +405,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             HitEffect(target);
         }
-
         /// <summary>
         /// 命中修正：仅 ai[0]=3 的直线突刺生效——把护甲有效度乘 0（<c>DefenseEffectiveness = 0</c>），即突刺完全无视目标防御。
         /// </summary>
@@ -399,7 +415,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 modifiers.DefenseEffectiveness *= 0f;
             }
         }
-
         /// <summary>
         /// 自定义碰撞：不用默认矩形碰撞盒，而是取「玩家中心指向弹幕中心」的方向，从弹幕中心向外延伸
         /// <c>Length * scale * 1.3</c> 得到刀尖端点，再以宽度 <c>25 * scale</c> 的线段与目标 AABB 做碰撞检测。
@@ -411,7 +426,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Vector2 endPos = rotding.ToRotationVector2() * Length * Projectile.scale * 1.3f + Projectile.Center;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, endPos, 25 * Projectile.scale, ref point);
         }
-
         /// <summary>
         /// 绘制刀光顶点带：由基类 <see cref="BaseSwingCO.DrawTrailHander"/>（经 <see cref="BaseSwingCO.DrawSlashTrail"/>）回调。
         /// 使用 <c>noEffects/KnifeRendering</c> 着色器，绑定变换矩阵、流形贴图与颜色条贴图，每个 pass 先正常画一遍，
@@ -431,7 +445,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
             }
         }
-
         /// <summary>
         /// 绘制武器本体：由基类 <see cref="BaseSwingCO.PreDraw"/> 在 <see cref="BaseSwingCO.DrawSlashTrail"/> 之后调用。
         /// ai[0]=6 的蓄力旋转先在玩家中心叠加一张红色加色光晕（Particles/Light），随后调 base.DrawSwing 走通用绘制，
@@ -450,24 +463,25 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             base.DrawSwing(spriteBatch, lightColor);
         }
-
+        // ── 私有工具 ──
         /// <summary>
         /// 蓄力旋转（ai[0]=6）的尘土表现：沿刀光弧线端点抛撒铜币尘（DustID.CopperCoin），
         /// 并按四个偏移方向生成向外飞散的尘，营造剑刃撕裂空气的效果。
         /// </summary>
         private void SpawnDust(Player player, int direction)
         {
-            float rot = Projectile.rotation - MathF.PI / 4f * direction;
+            float rot = Projectile.rotation - MathF.PI / 4f * direction;   // 刀光弧线端点所在的角（左向时再补 180° 才落到刀身一侧）
             Vector2 vector = Projectile.Center + (rot + (direction == -1 ? MathF.PI : 0f)).ToRotationVector2() * 200 * Projectile.scale;
-            Vector2 vector2 = rot.ToRotationVector2();
-            Vector2 vector3 = vector2.RotatedBy(MathF.PI / 2f * Projectile.spriteDirection);
-            if (Main.rand.NextBool())
+            Vector2 vector2 = rot.ToRotationVector2();   // 刀光径向
+            Vector2 vector3 = vector2.RotatedBy(MathF.PI / 2f * Projectile.spriteDirection);   // 与径向垂直的飞出方向
+            if (Main.rand.NextBool())   // 1/2 概率在端点补一颗随玩家速度飘的尘
             {
                 Dust dust = Dust.NewDustDirect(vector - new Vector2(5f), 10, 10, DustID.CopperCoin, player.velocity.X, player.velocity.Y, 150);
                 dust.velocity = Projectile.SafeDirectionTo(dust.position) * 0.1f + dust.velocity * 0.1f;
             }
             for (int i = 0; i < 4; i++)
             {
+                // 四颗尘按 ±1、±1.25 四档摆在刀光两侧；±1.25 那两档速度减半，形成外侧更慢的层次
                 float speedRands = 1f;
                 float modeRands = 1f;
                 switch (i)
@@ -484,7 +498,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                         speedRands = 0.5f;
                         break;
                 }
-                if (!Main.rand.NextBool(6))
+                if (!Main.rand.NextBool(6))   // 5/6 概率生成
                 {
                     Dust dust2 = Dust.NewDustDirect(Projectile.position, 0, 0, DustID.CopperCoin, 0f, 0f, 100);
                     dust2.position = Projectile.Center + vector2 * (180 * Projectile.scale + Main.rand.NextFloat() * 20f) * modeRands;
@@ -499,7 +513,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
             }
         }
-
         /// <summary>
         /// 命中特效反馈：播放拔刀命中音效（MurasamaHitOrganic，音高 1.25），并按弹幕挥砍方向在目标处抛出 DRK_Spark 火花粒子。
         /// 火花基数 13，会随场上火花总数分档下调（120/220/350/500 以上分别降为 10/8/6/3），避免粒子过多导致卡顿。
@@ -507,24 +520,24 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         private void HitEffect(Entity target)
         {
             SoundEngine.PlaySound(CalamityDemutationSounds.MurasamaHitOrganic with { Pitch = 1.25f }, target.Center);
-            int sparkCount = 13;
+            int sparkCount = 13;   // 火花基数，下面按场上火花总数分档下调
             Vector2 toTarget = Owner.Center.To(target.Center);
-            Vector2 norlToTarget = toTarget.GetNormalVector();
+            Vector2 norlToTarget = toTarget.GetNormalVector();   // 与"玩家→目标"连线垂直的方向，火花即沿它两侧飞散
             int ownerToTargetSetDir = Math.Sign(toTarget.X);
-            ownerToTargetSetDir = ownerToTargetSetDir != DirSign ? -1 : 1;
+            ownerToTargetSetDir = ownerToTargetSetDir != DirSign ? -1 : 1;   // 玩家朝向与目标方位同向取 +1、反向取 -1
             if (rotSpeed > 0)
             {
                 norlToTarget *= -1;
             }
             if (rotSpeed < 0)
             {
-                norlToTarget *= 1;
+                norlToTarget *= 1;   // 恒等于不变（原码如此，疑为漏写 *= -1）
             }
-            float rotToTargetSpeedSengs = rotSpeed * 3 * ownerToTargetSetDir;
-            Vector2 rotToTargetSpeedTrengsVumVer = norlToTarget.RotatedBy(-rotToTargetSpeedSengs) * 13;
+            float rotToTargetSpeedSengs = rotSpeed * 3 * ownerToTargetSetDir;   // 偏移量取 3 倍当前转速，火花随挥砍快慢摆动
+            Vector2 rotToTargetSpeedTrengsVumVer = norlToTarget.RotatedBy(-rotToTargetSpeedSengs) * 13;   // 13 = 基准火花速度（像素/帧）
             if (Projectile.ai[0] == 3)
             {
-                rotToTargetSpeedTrengsVumVer = Projectile.velocity.RotatedBy(rotToTargetSpeedSengs);
+                rotToTargetSpeedTrengsVumVer = Projectile.velocity.RotatedBy(rotToTargetSpeedSengs);   // 突刺另有口径：直接以突刺方向当火花方向
             }
             int pysCount = DRKLoader.GetParticlesCount(DRKLoader.GetParticleType(typeof(DRK_Spark)));
             if (pysCount > 120)
@@ -548,7 +561,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Vector2 sparkVelocity2 = rotToTargetSpeedTrengsVumVer.RotatedByRandom(0.35f) * Main.rand.NextFloat(0.3f, 1.6f);
                 int sparkLifetime2 = Main.rand.Next(18, 30);
                 float sparkScale2 = Main.rand.NextFloat(0.65f, 1.2f);
-                Color sparkColor2 = Main.rand.NextBool(3) ? Color.OrangeRed : Color.DarkRed;
+                Color sparkColor2 = Main.rand.NextBool(3) ? Color.OrangeRed : Color.DarkRed;   // 1/3 橙红，其余暗红
+                // 再按模式微调：小挥砍(0/1)更弱更短，突刺(3)更快，重挥(4/5)更强更持久
                 if (Projectile.ai[0] == 0 || Projectile.ai[0] == 1)
                 {
                     sparkVelocity2 *= 0.8f;
@@ -569,6 +583,5 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     + Projectile.velocity * 1.2f, sparkVelocity2, false, (int)(sparkLifetime2 * 1.2f), sparkScale2 * 1.4f, sparkColor2));
             }
         }
-
     }
 }

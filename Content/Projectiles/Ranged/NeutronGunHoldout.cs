@@ -68,9 +68,6 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Ranged/NeutronGun";
         /// <summary>右键蓄力时把手持物前伸得更远（CWR 每帧按 onFireR 切换 HandDistance）</summary>
         public override float MaxOffsetLengthFromArm => firingRight ? HandFireDistance : HandDistance;
-        /// <summary>发射口：左键速射贴图放大 1.5 倍，枪口随之前移 1.5 倍；右键保持原位置</summary>
-        public override Vector2 GunTipPosition => Projectile.Center
-            + Vector2.UnitX.RotatedBy(Projectile.rotation) * Projectile.width * 0.5f * (firingRight ? 1f : 1.5f);
         // ── 生命周期方法 ──
         /// <summary>
         /// 基础属性：在基类默认值之上把尺寸设为贴图尺寸（108×56，width 决定发射口 GunTipPosition 的位置）
@@ -217,9 +214,8 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             {
                 flipSprite = SpriteEffects.FlipVertically;
             }
-            float scale = firingRight ? Projectile.scale : Projectile.scale * 1.5f;   // 左键速射贴图放大 1.5 倍
             Main.EntitySpriteDraw(texture, drawPosition, CDUtil.GetRec(texture, Projectile.frame, 7)
-                , Projectile.GetAlpha(lightColor), Projectile.rotation, CDUtil.GetOrig(texture, 7), scale, flipSprite, 0);
+                , Projectile.GetAlpha(lightColor), Projectile.rotation, CDUtil.GetOrig(texture, 7), Projectile.scale, flipSprite, 0);
             return false;
         }
         // ── 网络同步 ──

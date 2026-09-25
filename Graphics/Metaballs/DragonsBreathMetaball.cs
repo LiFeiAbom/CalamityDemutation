@@ -22,7 +22,6 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// </summary>
         public override void DrawInstances() => DrawInstancesInternal(0.03f, -1f);
     }
-
     /// <summary>
     /// 龙息火焰 Metaball 第二形态（移植自灾厄的 DragonsBreathFlameMetaball2，橙红）
     /// </summary>
@@ -37,7 +36,6 @@ namespace CalamityDemutation.Graphics.Metaballs
         /// </summary>
         public override void DrawInstances() => DrawInstancesInternal(0.03f, -1f);
     }
-
     /// <summary>
     /// 龙息 Metaball 基类（移植自灾厄的 DragonsBreathMetaball）
     /// </summary>
@@ -151,7 +149,6 @@ namespace CalamityDemutation.Graphics.Metaballs
             Particles.RemoveAll(p => p.Size <= 2f);   // 尺寸过小已无视觉贡献，直接移除
         }
     }
-
     /// <summary>
     /// 龙息 Metaball 第二形态基类（移植自灾厄的 DragonsBreathMetaball2）
     /// </summary>

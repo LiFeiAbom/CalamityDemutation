@@ -6,7 +6,6 @@ using CalamityDemutation.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 namespace CalamityDemutation.Content.Items.Accessories.Movement
 {
     /// <summary>

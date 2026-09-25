@@ -2,7 +2,6 @@ using CalamityDemutation.Enums;
 using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ModLoader;
-
 namespace CalamityDemutation.Content.Items.Accessories.Movement
 {
     /// <summary>
