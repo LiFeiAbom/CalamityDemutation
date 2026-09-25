@@ -96,6 +96,10 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle Gun_AWP_Shoot = new("CalamityDemutation/Sounds/Item/Gun_AWP_Shoot");
         /// <summary>蓄力完成（CWR 原名 Pecharge）：中子枪充能满 80 触发大爆点时播放</summary>
         public static readonly SoundStyle Pecharge = new("CalamityDemutation/Sounds/Item/Pecharge");
+        /// <summary>装填弹药（CWR 原名 loadTheRounds）：洛希之弦右键蓄力到达三级阈值时各播一次，音高递减</summary>
+        public static readonly SoundStyle LoadTheRounds = new("CalamityDemutation/Sounds/Item/LoadTheRounds");
+        /// <summary>马格南开火（CWR 原名 Gun/Magnum_Shoot）：洛希之弦蓄满射出三发引力箭矢时播放，音高 0.7、音量 0.6</summary>
+        public static readonly SoundStyle Gun_Magnum_Shoot = new("CalamityDemutation/Sounds/Item/Gun_Magnum_Shoot");
         /// <summary>噬渊鞭挞命中（CE 原名 ystn_hit）：YstralynProj 命中敌人时播放，音高按既有口径取 CE 值减 1</summary>
         public static readonly SoundStyle YstralynHit = new("CalamityDemutation/Sounds/Item/ystn_hit");
         /// <summary>犽戎烈焰（灾厄原名 YharonInfernado）：巨龙七星灯出手时播放（CI 侧为 CommonCalamitySounds.FlareSound）</summary>

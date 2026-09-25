@@ -1273,6 +1273,15 @@ Items: {
 			'''
 	}
 
+	NeutronBow: {
+		DisplayName: Roche's String
+		Tooltip:
+			'''
+			Fires gravity arrows that generate gamma rays upon hitting a target
+			Right-click to perform a three-level charge, firing three powerful gravity arrows when fully charged
+			'''
+	}
+
 	NeutronGlaive: {
 		DisplayName: Neutron Glaive
 		Tooltip:
@@ -2012,6 +2021,7 @@ Projectiles: {
 	ExcelsusMain.DisplayName: Excelsus Main
 	ExcelsusPink.DisplayName: Excelsus Pink
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
+	EXNeutronArrow.DisplayName: EX Neutron Arrow
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	EXNeutronExplosionRanged.DisplayName: EX Neutron Explosion
 	Exobeamold.DisplayName: Exo Beam
@@ -2042,6 +2052,8 @@ Projectiles: {
 	LaserFountains.DisplayName: Laser Fountains
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
+	NeutronArrow.DisplayName: Neutron Arrow
+	NeutronBowHoldout.DisplayName: Neutron Bow
 	NeutronBullet.DisplayName: Neutron Bullet
 	NeutronExplode.DisplayName: Neutron Explode
 	NeutronExplosionRanged.DisplayName: Neutron Explosion
@@ -2131,4 +2143,11 @@ Systems: {
 			ProfanedSoulShieldRecharge: Profaned Soul Shield Recharge
 		}
 	}
+}
+
+TextContent: {
+	// Combat text for Roche's String's three-stage right-click charge (overhaul's CWRLocText keys kept as-is)
+	Wap_NeutronBow_LoadingText1: Catching gravity
+	Wap_NeutronBow_LoadingText2: Is Making Gravity Yield
+	Wap_NeutronBow_LoadingText3: READY!!
 }
