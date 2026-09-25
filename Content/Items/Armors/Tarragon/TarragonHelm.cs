@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
     /// <summary>
     /// 龙蒿头盔（TarragonHelm） - 龙蒿套装的头部部件
     /// 近战向头：近战伤害 +10%、近战暴击 +10%、近战攻速 +15%、减伤 +5%，
-    /// 另提供 +240 岩浆免疫时长、水下呼吸，并免疫诅咒地狱/着火了/诅咒/冷冻。
+    /// 另提供 +240 岩浆免疫时长、在液体中自由移动，并免疫诅咒地狱/着火了/诅咒/冷冻。
     /// 套装效果（逐条对应 player.setBonus 官方描述）：
     /// 1. 提升红心拾取范围
     /// 2. 敌人死亡时有概率掉落额外红心
@@ -26,7 +26,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 50, 0, 0);  // 价值 50 金
-            Item.defense = 33; //98（括号内为原值记录，当前实际生效 33）
+            Item.defense = 33;                        // 防御 33（与经典版灾厄同值，源码同行另留 //98 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;  // 月后自定义稀有度 12 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             player.armorEffectDrawOutlines = true;
         }
         /// <summary>
-        /// 套装效果：置位 tarraSet / tarraMelee 标记，并写入官方英文套装描述作为显示文本。
+        /// 套装效果：置位 tarraSet / tarraMelee 标记，并把本地化套装描述（hjson 的 SetBonus 键）写入显示文本。
         /// 标记最终在 CalamityDemutationPlayer 中结算——tarraSet 负责红心磁吸
         /// （lifeMagnet）与红心掉落相关增益；tarraMelee 负责受击 25% 概率施加
         /// TarraLifeRegen 增益、以及按 Y 触发 tarraDefense（10 秒内接触伤害减半，

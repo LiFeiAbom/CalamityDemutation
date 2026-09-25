@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 合体大脑 - 专家饰品，由腐化脑 + 混乱大脑（BrainOfConfusion）合成进阶
+    /// 合体大脑（AmalgamatedBrain） - 专家饰品，由腐化脑 + 混乱大脑（BrainOfConfusion）合成进阶
     /// 提供 +10% 通用伤害、+5% 通用暴击、1/8 概率闪避攻击；
     /// 受击无敌帧期间概率召唤灵气雨反击，受击后使附近敌人混乱并发出紫雾。
     /// </summary>
@@ -16,11 +16,11 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 34;
-            Item.height = 34;
-            Item.value = Item.buyPrice(0, 15, 0, 0);
-            Item.expert = true;
-            Item.accessory = true;
+            Item.width = 34;                          // 贴图宽（像素）
+            Item.height = 34;                         // 贴图高（像素）
+            Item.value = Item.buyPrice(0, 15, 0, 0);  // 价值 15 金（与下位腐化脑同价）
+            Item.expert = true;                       // 标记为专家物品（腐化脑的进阶形态）
+            Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
         }
         /// <summary>
         /// 装备时仅置位标记，增伤/暴击/闪避/反击/混乱光环统一在 CalamityDemutationPlayer 中结算

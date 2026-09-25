@@ -18,6 +18,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class ProfanedCrystalMeleeSpear:ModProjectile
     {
+        // ── 生命周期方法 ──
         /// <summary>注册 2 帧残影缓存、鞭标记 0.6 倍增伤（tag 加伤在 GlobalProjectile.ModifyHitNPC 结算）</summary>
         public override void SetStaticDefaults()
         {
@@ -41,6 +42,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = -1;
             Projectile.DamageType = DamageClass.Generic;
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：每帧按通用伤害重算 damage（抵消多次加成叠加，originalDamage 由派发端写入），
         /// 持续加速（每帧 ×1.06）并按速度方向校正贴图旋转（+90 度），同时给自身补一点圣光照明。

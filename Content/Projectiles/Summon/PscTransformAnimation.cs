@@ -20,10 +20,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class PscTransformAnimation:ModProjectile
     {
+        // ── 状态与属性 ──
         /// <summary>弹幕主人：跟随、粉尘与岩石都以主人为参照</summary>
         public Player Owner => Main.player[Projectile.owner];
         /// <summary>无贴图弹幕，使用工程通用的 InvisibleProj</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
+        // ── 生命周期方法 ──
         /// <summary>注册 4 帧动画（本弹幕不可见，仅为对齐原版），并禁用液体扭曲</summary>
         public override void SetStaticDefaults()
         {
@@ -41,6 +43,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.timeLeft = ProfanedSoulCrystal.maxPscAnimTime;
             Projectile.alpha = 255;
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：发光并跟随主人，把剩余时间写进主人的 profanedCrystalAnim；
         /// 主人卸下水晶则消散复位；未到最后一帧时按进度喷尘并召回岩石，最后一帧放脉冲环与音效

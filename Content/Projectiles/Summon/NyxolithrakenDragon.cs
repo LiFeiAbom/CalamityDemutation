@@ -37,12 +37,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class NyxolithrakenDragon:ModProjectile, iWyrmSeg
     {
+        // ── 状态与属性 ──
         /// <summary>本体角度：直接读写 <c>Projectile.rotation</c>（供节段链当作"前驱"读取）</summary>
         public float rot
         {
             get { return Projectile.rotation; }
             set { Projectile.rotation = value; }
         }
+        /// <summary>本体位置：直接读写 <c>Projectile.Center</c>（供节段链当作"前驱"读取）</summary>
         public Vector2 Center
         {
             get { return Projectile.Center; }
@@ -50,7 +52,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>裂空冷却：<c>ai[2]</c>，大于 0 时命中不再撕裂缝</summary>
         public float CrackCd => Projectile.ai[2];
+        /// <summary>出场帧数：<c>ai[0]</c>（供盘旋相位与"已出场 45 帧"判据使用）</summary>
         internal ref float Time => ref Projectile.ai[0];
+        /// <summary>飞行加速度（平滑后的当前值）：<c>ai[1]</c></summary>
         internal ref float FlyAcceleration => ref Projectile.ai[1];
         /// <summary>当前锁定目标（CE 原样：普通字段、跨帧保留，多人下不保证各端一致）</summary>
         private NPC target = null;
@@ -63,6 +67,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// 常量名刻意不叫 <c>GlowTexture</c>——<see cref="ModProjectile"/> 已有同名成员，那样会 CS0108（本工程警告基线是 0）
         /// </summary>
         private const string GlowTexturePath = "CalamityDemutation/Content/Projectiles/Summon/NyxolithrakenDragonGlow";
+        // ── 生命周期方法 ──
         /// <summary>单帧贴图、可被牺牲、参与原版仆从索敌目标机制</summary>
         public override void SetStaticDefaults()
         {
@@ -70,6 +75,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             ProjectileID.Sets.MinionSacrificable[Type] = true;
             ProjectileID.Sets.MinionTargettingFeature[Type] = true;
         }
+        /// <summary>
+        /// 基础属性：68x68 碰撞箱（节段的 36×36 判定另算）、友方、无限穿透、不撞地形、
+        /// 占用 5 个仆从栏位、每个敌人独立命中冷却；命中无敌帧取 9（见下方注释）
+        /// </summary>
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Summon;
@@ -89,6 +98,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 9;
             Projectile.extraUpdates = 1;
         }
+        // ── 覆写方法 ──
+        /// <summary>不能砍草</summary>
         public override bool? CanCutTiles()
         {
             return false;
@@ -112,6 +123,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 seg = spawn;
             }
         }
+        /// <summary>
+        /// AI：漂在主人头顶 120 像素处待机（<c>target</c> 为空时），锁定目标后交给 <see cref="AttackTarget"/> 追击；
+        /// 每帧把本体沿速度前挪一格跑完节段链再挪回来（避免头身错开）、离主人超 4000 像素直接传送回身边；
+        /// 主人持有沧溟龙契增益（<see cref="NyxolithrakenBuff"/>）时不断续命实现常驻，否则按 timeLeft 自然消亡。
+        /// ai 槽位：ai[0] = 出场帧数 Time、ai[1] = 飞行加速度 FlyAcceleration、ai[2] = 裂空冷却 CrackCd；
+        /// localAI[0]：首帧为 0 时喷一圈深渊粒子（由 AI 末尾自增，故只触发一次）。
+        /// </summary>
         public override void AI()
         {
             if (spawnSeg)
@@ -270,6 +288,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>本体的占位贴图（实际由 <see cref="DrawSeg"/> 按头/身/尾六个帧区绘制）</summary>
         public Texture2D tex => TextureAssets.Projectile[Type].Value;
+        /// <summary>龙体发光贴图（叠在每一节本体之上）</summary>
         public Texture2D texGlow => ModContent.Request<Texture2D>(GlowTexturePath).Value;
         /// <summary>
         /// 全自绘：把贴图条切成六段（头 80×80 起于 x=278，随后四节身子与 x=0 的尾巴），
@@ -312,6 +331,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Main.EntitySpriteDraw(texGlow, pos - Main.screenPosition, frame, Color.White, rot, new Vector2(origin.X, tex.Height - origin.Y), Projectile.scale, SpriteEffects.FlipVertically);
             }
         }
+        // ── 私有工具 ──
         /// <summary>CEUtils.randomPointInCircle 的等价实现：随机角度 × [-r, r] 的随机半径</summary>
         private static Vector2 RandomPointInCircle(float r) => Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2() * Main.rand.NextFloat(-r, r);
     }

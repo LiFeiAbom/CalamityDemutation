@@ -14,7 +14,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     public interface iWyrmSeg
     {
+        /// <summary>朝向角（弹幕本体直接读写 <c>Projectile.rotation</c>，节段存自己的角度）</summary>
         float rot { get; set; }
+        /// <summary>中心位置（节段链的跟随基准）</summary>
         Vector2 Center { get; set; }
     }
     /// <summary>
@@ -23,7 +25,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     public class WyrmSeg:iWyrmSeg
     {
+        /// <summary>本节的朝向角，每帧由 <see cref="update"/> 朝前一节的角度靠拢</summary>
         public float rot { get; set; }
+        /// <summary>本节中心位置，每帧由 <see cref="update"/> 拉回前一节身后 <see cref="spacing"/> 距离</summary>
         public Vector2 Center { get; set; }
         /// <summary>前一节（头一节的前驱就是弹幕本体）</summary>
         public iWyrmSeg follow;
@@ -33,6 +37,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         public float rotC = 0.14f;
         /// <summary>true 时无条件跟到 spacing 距离上；false 时只在超过 spacing 才拉近</summary>
         public bool AlwaysFollow = true;
+        /// <summary>每帧调用一次：把本节转向前一节（限速 <see cref="rotC"/>），并把位置拉到前一节身后 <see cref="spacing"/> 处</summary>
         public void update()
         {
             if (follow == null)
@@ -69,12 +74,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class PhantomWyrm:ModProjectile, iWyrmSeg
     {
+        // ── 状态与属性 ──
         /// <summary>本体角度：直接读写 <c>Projectile.rotation</c>（见类注释差异①）</summary>
         public float rot
         {
             get { return Projectile.rotation; }
             set { Projectile.rotation = value; }
         }
+        /// <summary>本体位置：直接读写 <c>Projectile.Center</c>（供节段链当作"前驱"读取）</summary>
         public Vector2 Center
         {
             get { return Projectile.Center; }
@@ -97,10 +104,16 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         private List<WyrmSeg> segs;
         /// <summary>当前锁定的目标（会跨帧保留，CE 原样：是普通字段而非 ai 槽，多人下不保证各端一致）</summary>
         private NPC target = null;
+        // ── 生命周期方法 ──
+        /// <summary>龙身很长，放宽屏幕外绘制剔除距离到 5000，避免身尾被裁掉</summary>
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 5000;
         }
+        /// <summary>
+        /// 基础属性：224x224 碰撞箱、友方、无限穿透、不撞地形、每帧 3 次更新、初始存活 3 帧（靠 alpha 续命）；
+        /// 注意没有置 <c>Projectile.minion</c>，本弹幕不占仆从栏位（CE 原样）；命中无敌帧取 10（见下方注释）
+        /// </summary>
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Summon;
@@ -138,8 +151,17 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 seg = spawn;
             }
         }
+        /// <summary>出场帧数：<c>ai[0]</c>（供盘旋相位与"已出场 45 帧"判据使用）</summary>
         internal ref float Time => ref Projectile.ai[0];
+        /// <summary>飞行加速度（平滑后的当前值）：<c>ai[1]</c></summary>
         internal ref float FlyAcceleration => ref Projectile.ai[1];
+        // ── 覆写方法 ──
+        /// <summary>
+        /// AI：先推进节段链，再按主人是否持有虚无幻象（<see cref="WyrmPhantom"/>）逐帧加减 <see cref="alpha"/>；
+        /// 只要 alpha 还大于 0 就不断把 timeLeft 顶回 3 来续命，淡到 0 后自然消亡。
+        /// 无目标时飘在主人头顶 120 像素处（超 300 像素才慢慢靠过去），有目标则交给 <see cref="AttackTarget"/> 追击；
+        /// 主人用召唤物标记指定的目标优先级最高。ai 槽位见 <see cref="Time"/> / <see cref="FlyAcceleration"/>。
+        /// </summary>
         public override void AI()
         {
             if (spawnSeg)

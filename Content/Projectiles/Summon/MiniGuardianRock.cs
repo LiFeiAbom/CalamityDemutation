@@ -19,8 +19,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class MiniGuardianRock:ModProjectile
     {
+        // ── 状态与属性 ──
         /// <summary>弹幕主人：环绕基准与甩出方向都以主人为参照</summary>
         public Player Owner => Main.player[Projectile.owner];
+        // ── 生命周期方法 ──
         /// <summary>注册 4 帧动画、登记 4 帧残影缓存，并标记为可右键锁定目标的召唤物</summary>
         public override void SetStaticDefaults()
         {
@@ -34,7 +36,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         {
             Projectile.netImportant = true;
             Projectile.tileCollide = false;
-            Projectile.ignoreWater = true; //the sounds get grating otherwise
+            Projectile.ignoreWater = true; // 不理会水面：否则入水的溅水音效不停刷，听感很吵
             Projectile.width = 50;
             Projectile.height = 50;
             Projectile.minion = true;
@@ -43,6 +45,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.usesIDStaticNPCImmunity = true;
             Projectile.idStaticNPCHitCooldown = 1;
         }
+        // ── 私有工具 ──
         /// <summary>
         /// 岩石贴图：对应灾厄的 ProfanedRocks.Textures[rockType - 1]，而 ProfanedRocks 的第 i 张是
         /// "ProfanedRocks" + (i + 1)，故 rockType n 实际对应后缀 n（本工程即同目录的 MiniGuardianRock n）；
@@ -53,6 +56,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             string suffix = rockType <= 0 ? "" : rockType.ToString();
             return ModContent.Request<Texture2D>("CalamityDemutation/Content/Projectiles/Summon/MiniGuardianRock" + suffix).Value;
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：每帧按召唤伤害重算 damage；主人持有神器（profanedSoulArtifact）期间才存在，否则清标志并消散；
         /// ai[0]==0 绕主人旋转（半径 50、每帧转 2 度，水晶形态为半径 80、每帧反向 2 度、按 10 等分）；
@@ -74,7 +78,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.active = false;
                 return;
             }
-            if (Projectile.ai[0] == 0f) //regular expected behaviour of floaty rocks
+            if (Projectile.ai[0] == 0f) // 常规环绕态（生成时的默认值）
             {
                 // 环绕旋转（对齐 2.2.2）：水晶形态（pscState > 0）半径 80、每帧 +2 度；神器形态半径 50、每帧 -2 度。
                 // 岩石之间的等分间隔由生成端的 2π/岩石数 决定（水晶 10 颗 / 神器 5 颗）
@@ -85,7 +89,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.rotation = Projectile.ai[1] + (float)Math.Atan(90);
                 Projectile.ai[1] += MathHelper.ToRadians(crystal ? 2f : -2f);
             }
-            else if (Projectile.ai[0] == 1f) //rock yeetage begins
+            else if (Projectile.ai[0] == 1f) // 被甩出（由 MiniGuardianDefense 在护盾消失那一帧把 ai[0] 置 1）
             {
                 // 甩出（对齐 2.2.2）：有水晶鞭增益时改为"预测瞄准直射目标"，并把 ai[0] 置 3——3 不进入
                 // ai[0]==2 的减速段，等于全速冲过去；否则沿"远离主人"方向甩出，速度按水晶增益取 25 / 神器档 20
@@ -104,10 +108,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
                 Projectile.timeLeft = 300;
             }
-            else if (Projectile.ai[0] == 2f) //rocks have been yeeted, handle the aftermath
+            else if (Projectile.ai[0] == 2f) // 甩出后的飞行衰减段（无鞭增益的甩出分支把 ai[0] 置 2）
             {
                 // 甩出后的头 25 帧减速，并在前 15 帧额外多喷一颗尘
-                if (Projectile.timeLeft > 275) //slow them down a little
+                if (Projectile.timeLeft > 275) // 甩出头 25 帧（300→275）逐渐减速
                     Projectile.velocity *= 0.9725f;
                 for (int i = 0; i < 2; i++)
                 {
@@ -146,12 +150,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 lerpVal = Utils.GetLerpValue(crystalBuffed ? 87 : 57, crystalBuffed ? 150 : 120, ownerDist, true);
                 mult = MathHelper.Lerp(0.42f, 1f, lerpVal);
             }
-            if (ConfigSystem.Instance?.PerformanceMode != true && Projectile.ai[0] >= 1f)  //handle afterimages manually since the utility broke it and didn't render correctly
+            if (ConfigSystem.Instance?.PerformanceMode != true && Projectile.ai[0] >= 1f)  // 手动画残影：灾厄的公用工具画法有问题，渲染不正确
             {
                 for (int i = 0; i < Projectile.oldPos.Length; ++i)
                 {
                     drawPos = Projectile.oldPos[i] + (Projectile.Size / 2f) - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY);
-                    // DO NOT REMOVE THESE "UNNECESSARY" FLOAT CASTS. THIS WILL BREAK THE AFTERIMAGES.
+                    // 这两个"多余"的 float 强制转换不能删，删了残影会画错
                     Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
                     color *= mult;
                     var drawData = new DrawData(texture, drawPos, frame, color)

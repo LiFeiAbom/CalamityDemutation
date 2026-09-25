@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 大凝胶 - 综合型饰品
+    /// 大凝胶（GrandGelatin） - 综合型饰品
     /// 结合生命/法力/活力果冻效果，提供移速、跳跃、生命与法力上限加成，静止时额外回复。
     /// </summary>
     internal class GrandGelatin:ModItem

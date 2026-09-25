@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 冰之石 - 综合饰品
+    /// 冰之石（CryoStone） - 综合饰品
     /// 提供 +5% 减伤、+3% 通用伤害与 +6 基础防御，并发出蓝色光芒。
     /// </summary>
     internal class CryoStone:ModItem

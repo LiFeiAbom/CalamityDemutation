@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 利维坦龙涎香 - 综合型专家饰品（灾厄利维坦的困难模式宝藏袋掉落）
+    /// 利维坦龙涎香（LeviathanAmbergris） - 综合型专家饰品（灾厄利维坦的困难模式宝藏袋掉落）
     /// 提供水下作战能力：无视水体移动、全地形常驻 +5% 通用伤害；
     /// 处于水中（溺水判定区域）时额外 +20 防御与 +75% 移速；
     /// 移动时朝周围释放毒海水弹，潜水中受击时使附近敌人中毒。
@@ -16,11 +16,11 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 20;
-            Item.height = 22;
-            Item.value = Item.buyPrice(0, 30, 0, 0);
-            Item.accessory = true;
-            Item.expert = true;
+            Item.width = 20;                          // 贴图宽（像素）
+            Item.height = 22;                         // 贴图高（像素）
+            Item.value = Item.buyPrice(0, 30, 0, 0);  // 价值 30 金（专家饰品档）
+            Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
+            Item.expert = true;                       // 标记为专家物品（利维坦宝藏袋专属）
         }
         /// <summary>
         /// 装备时仅置位标记，水下增伤/防御/移速、毒海水弹与中毒光环均统一在 CalamityDemutationPlayer 中结算

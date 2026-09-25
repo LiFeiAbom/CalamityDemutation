@@ -8,6 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class SandBolt:ModProjectile
     {
+        /// <summary>不绘制贴图，沿用工程通用的 InvisibleProj（观感靠尾迹粒子）</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>
         /// 基础属性：友方、单次穿透，本身不绘制贴图（仅靠尾迹粒子表现）。

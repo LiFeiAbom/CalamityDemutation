@@ -36,6 +36,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class YstralynProj:ModProjectile
     {
+        // ── 实例字段 ──
         /// <summary>
         /// 深渊裂纹折线：存的是相对玩家中心的偏移（CE 原样，绘制时再加回玩家中心），
         /// 上限 170 点、超出从头丢。由 <see cref="Common.Effects.EffectsSystem"/> 在深渊上屏分支里取用。
@@ -43,6 +44,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         public List<Vector2> pointsCrack = new List<Vector2>();
         /// <summary>本模组的纯白像素图（CE 的 CEExtraAssets.white）</summary>
         private const string WhitePixel = "CalamityDemutation/Assets/ExtraTextures/white";
+        // ── 生命周期方法 ──
         /// <summary>注册为原版鞭：命中判定与控制点计算都靠这个标记</summary>
         public override void SetStaticDefaults()
         {
@@ -65,6 +67,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>挥砍计时：原版鞭 AI（165）每帧推进 <c>ai[0]</c>，这里只读</summary>
         private float Timer => Projectile.ai[0];
+        // ── 覆写方法 ──
         /// <summary>
         /// 挥砍进度落在 0.46~0.9 区间时，把"控制点尾巴（鞭梢）相对玩家中心"的位置连成折线：
         /// 每帧往折线里补 10 个插值点（从上一个点线性插到本帧鞭梢），因此鞭梢扫过哪里，裂纹就画到哪里。

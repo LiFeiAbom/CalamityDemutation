@@ -26,7 +26,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 75, 0, 0);  // 价值 75 金
-            Item.defense = 48; //96                  // 48 为当前防御值，//96 为原值记录（保留原义）
+            Item.defense = 48;                        // 防御 48（与经典版灾厄同值，源码同行另留 //96 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;  // 月后稀有度 14（蓝色名）
         }
         /// <summary>

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 猩红药剂 - 防御型饰品
+    /// 猩红药剂（CrimsonFlask） - 防御型饰品
     /// 身处猩红之地时额外获得 +3 防御与 +7% 减伤。
     /// </summary>
     internal class CrimsonFlask:ModItem

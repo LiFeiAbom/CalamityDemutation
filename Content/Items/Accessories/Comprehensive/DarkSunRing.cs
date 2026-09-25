@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 暗日之戒 - 综合型饰品
+    /// 暗日之戒（DarkSunRing） - 综合型饰品
     /// 提供 +2 仆从上限、+12% 通用伤害、+12% 近战攻速、+5% 暴击、+15% 挖掘速度；
     /// 白天额外 +6 生命回复，夜晚额外 +30 防御。
     /// </summary>

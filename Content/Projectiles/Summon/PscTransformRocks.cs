@@ -19,12 +19,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class PscTransformRocks:ModProjectile
     {
+        // ── 状态与属性 ──
         /// <summary>弹幕主人：吸附目标与变身状态都以主人为参照</summary>
         public Player Owner => Main.player[Projectile.owner];
         /// <summary>
         /// 贴图为 6 张岩石外观的第一张，实际绘制时用 PreDraw 按 ai[1] 替换后缀（PscTransformRocks1..6）
         /// </summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/Summon/PscTransformRocks1";
+        // ── 生命周期方法 ──
         /// <summary>登记 4 帧残影缓存、关闭残影自动模式（PreDraw 里手动画），并禁用液体扭曲</summary>
         public override void SetStaticDefaults()
         {
@@ -45,6 +47,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.hide = true;
             Projectile.scale = 0.1f;
         }
+        // ── 覆写方法 ──
         /// <summary>画在玩家身前（对应灾厄"重写 DrawBehind 是为了画在玩家前面"的原注）</summary>
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {

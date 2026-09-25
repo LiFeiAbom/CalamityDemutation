@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 大杂烩 - 顶级综合型专家饰品，由合体大脑 + 虚空灭绝 + 利维坦龙涎香 + 真菌团块组合而成
+    /// 大杂烩（TheAmalgam） - 顶级综合型专家饰品，由合体大脑 + 虚空灭绝 + 利维坦龙涎香 + 真菌团块组合而成
     /// 集四者效果于一体并强化：+30% 通用伤害、+15% 通用暴击、1/4 概率闪避攻击；
     /// 受击时召唤灵气雨/烈焰反击并周期性喷发地狱火，获得水下/岩浆作战与真菌团块仆从。
     /// 与合体大脑、虚空灭绝、灾厄之戒、真菌团块、利维坦龙涎香互相排斥。
@@ -20,19 +20,19 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// </summary>
         public override void SetStaticDefaults()
         {
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(9, 6));
-            ItemID.Sets.AnimatesAsSoul[Type] = true;
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(9, 6));   // 9 帧竖直排布、每 9 帧换一帧
+            ItemID.Sets.AnimatesAsSoul[Type] = true;                                  // 以灵魂样式漂浮渲染
         }
         /// <summary>
         /// 基础属性：中尺寸贴图、专家限定、价值 90 金、作为饰品装备
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 34;
-            Item.height = 34;
-            Item.value = Item.buyPrice(0, 90, 0, 0);
-            Item.expert = true;
-            Item.accessory = true;
+            Item.width = 34;                          // 贴图宽（像素）
+            Item.height = 34;                         // 贴图高（像素）
+            Item.value = Item.buyPrice(0, 90, 0, 0);  // 价值 90 金（顶级专家饰品档）
+            Item.expert = true;                       // 标记为专家物品（由三件专家饰品合成）
+            Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
         }
         /// <summary>
         /// 装备时：同时置位大杂烩与真菌团块标记，并（仅本地玩家侧）维持一只高伤真菌团块仆从

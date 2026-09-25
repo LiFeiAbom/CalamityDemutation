@@ -23,10 +23,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class ProfanedCrystalWhip:ModProjectile
     {
+        // ── 状态与属性 ──
         /// <summary>鞭身配色：白天强制取 Vanity 档（暖橙），夜晚取当前四态配色</summary>
         private Color specialColor = Color.Orange;
         /// <summary>当前鞭身绘制色</summary>
         public Color SpecialDrawColor => specialColor;
+        // ── 生命周期方法 ──
         /// <summary>登记为鞭类弹幕（启用原版鞭的命中与控制点计算）</summary>
         public override void SetStaticDefaults()
         {
@@ -45,6 +47,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.DamageType = DamageClass.Generic;
             Projectile.aiStyle = 0;
         }
+        // ── 覆写方法 ──
         /// <summary>每帧先刷新鞭身配色，再走正常鞭逻辑</summary>
         public override bool PreAI()
         {

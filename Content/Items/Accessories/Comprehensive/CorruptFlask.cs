@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 腐化药剂 - 防御型饰品
+    /// 腐化药剂（CorruptFlask） - 防御型饰品
     /// 身处腐化之地时额外获得 +3 防御与 +7% 减伤。
     /// </summary>
     internal class CorruptFlask:ModItem

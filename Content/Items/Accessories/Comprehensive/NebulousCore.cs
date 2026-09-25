@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 星云核心 - 专家饰品
+    /// 星云核心（NebulousCore） - 专家饰品
     /// 提供 +20% 通用伤害与 +20% 暴击，周期性生成星云星攻击敌人，
     /// 并在濒死时有概率触发回血而免于死亡。
     /// </summary>

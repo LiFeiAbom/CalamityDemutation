@@ -16,13 +16,17 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class MiniGuardianHolyRay:ModProjectile
     {
+        // ── 状态与属性 ──
+        /// <summary>白天用主贴图；夜晚的 MiniGuardianHolyRayNight 在 PreDraw 里按昼夜另行取用</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/Summon/MiniGuardianHolyRay";
+        /// <summary>弹幕主人：射线起点每帧钉在主人中心，主人死亡即消散</summary>
         public Player Owner => Main.player[Projectile.owner];
         /// <summary>
         /// 射线配色：原为 ProvUtils.GetColorBasedOnEnrage(!Main.dayTime, 0)。白天橙金 (255,155,25)、夜晚青蓝 (100,200,250)；
         /// alpha 保持 0（Terraria 预乘 alpha 混合下属纯叠加发光，不会压暗背景）。
         /// </summary>
         internal static Color RayColor(bool night) => night ? new Color(100, 200, 250, 0) : new Color(255, 155, 25, 0);
+        // ── 生命周期方法 ──
         /// <summary>射线极长，放宽屏幕外绘制剔除距离，避免末端被裁掉</summary>
         public override void SetStaticDefaults()
         {
@@ -41,6 +45,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 3;
         }
+        // ── 网络同步 ──
         /// <summary>同步 localAI[0]（已存活帧数）与 localAI[1]（当前射线长度）</summary>
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -53,6 +58,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localAI[0] = reader.ReadSingle();
             Projectile.localAI[1] = reader.ReadSingle();
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：速度异常时兜底为向上；每帧把射线起点钉在主人身上并实时刷新伤害（主人死亡即消散）；
         /// localAI[0] 计时 150 帧后自毁，scale 按 sin 曲线从 0 胀到上限 0.66 再收回；
@@ -91,9 +97,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             num804 += Projectile.ai[0];
             Projectile.rotation = num804 - MathHelper.PiOver2;
             Projectile.velocity = num804.ToRotationVector2();
-            float num805 = 3f;
+            float num805 = 3f;                  // 沿射线取 3 个采样点做激光扫描
             float num806 = Projectile.width;
             Vector2 samplingPoint = Projectile.Center;
+            // vector78 恒为 null（CE 原样的死分支），采样点实际永远是自身中心
             if (vector78.HasValue)
                 samplingPoint = vector78.Value;
             float[] array3 = new float[(int)num805];

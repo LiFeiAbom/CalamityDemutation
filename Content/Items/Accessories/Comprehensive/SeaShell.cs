@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 海贝 - 防御型饰品
+    /// 海贝（SeaShell） - 防御型饰品
     /// 在水中时额外获得防御、减伤与移速，并可无视水体移动。
     /// </summary>
     internal class SeaShell:ModItem

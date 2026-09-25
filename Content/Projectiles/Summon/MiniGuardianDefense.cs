@@ -16,6 +16,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class MiniGuardianDefense:ModProjectile
     {
+        // ── 状态与属性 ──
         /// <summary>三种 AI 状态：护盾在场 / 护盾消失（只在主人身上喷尘）/ 纯外观（水晶形态专用）</summary>
         public enum MiniDefenderAIState
         {
@@ -38,6 +39,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         public bool shieldActiveBefore = false;
         /// <summary>当前 AI 状态：纯外观（水晶形态）&gt; 护盾在场 &gt; 护盾消失</summary>
         public MiniDefenderAIState AIState => ForcedVanity ? MiniDefenderAIState.Vanity : (shieldActive ? MiniDefenderAIState.ShieldActive : MiniDefenderAIState.ShieldInactive);
+        // ── 生命周期方法 ──
         /// <summary>注册 4 帧动画、登记 4 帧残影缓存，并标记为可牺牲、可右键锁定目标的召唤物</summary>
         public override void SetStaticDefaults()
         {
@@ -58,6 +60,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.friendly = true;
             Projectile.penetrate = -1;
         }
+        // ── 私有工具 ──
         /// <summary>
         /// 生 / 甩环绕岩石。spawnRocks：以 2π/岩石数 等分角度在主人位置生成岩石，每颗初速为对应角度的 8 倍方向向量，
         /// 伤害沿用本弹幕的 originalDamage；yeetRocks：把主人名下所有岩石的 ai[0] 置 1，交给岩石自己进入甩出流程。
@@ -93,6 +96,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
             }
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：主人持有神器（profanedSoulArtifact）期间每帧续期实现常驻，神器消失或主人死亡则清标志并消散；
         /// 每帧按 shieldActive 的边沿决定召出 / 甩出岩石，边沿帧在主人周身喷一圈向内收束的神圣色粉尘；

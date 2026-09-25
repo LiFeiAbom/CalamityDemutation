@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 90, 0, 0);  // 价值 90 金
-            Item.defense = 52; //110（括号内为原值记录，当前实际生效 52）
+            Item.defense = 52;                        // 防御 52（与经典版灾厄同值，源码同行另留 //110 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后自定义稀有度 15 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }
         /// <summary>
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             player.armorEffectDrawShadow = true;
         }
         /// <summary>
-        /// 套装效果：置位 silvaSet / silvaMelee 标记，并写入官方英文套装描述作为显示文本。
+        /// 套装效果：置位 silvaSet / silvaMelee 标记，并把本地化套装描述（hjson 的 SetBonus 键）写入显示文本。
         /// 标记最终在 CalamityDemutationPlayer 中结算——silvaSet 负责移速/加速度 +5%、
         /// 免疫几乎所有 debuff，以及"1 生命免死"无敌（silvaCountdown / SilvaRevival 增益）；
         /// silvaMelee 负责真近战 25% 五倍伤害、近战弹幕施加 SilvaHysteresis 短暂眩晕，

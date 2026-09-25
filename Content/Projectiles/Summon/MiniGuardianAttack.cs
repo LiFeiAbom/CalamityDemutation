@@ -19,6 +19,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class MiniGuardianAttack:ModProjectile
     {
+        // ── 状态与属性 ──
         /// <summary>进攻阶段：纯外观 / 神器形态跟随 / 长矛 / 冲刺 / 爆弹</summary>
         public enum MiniOffenseAIState
         {
@@ -72,19 +73,19 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             {
                 Projectile.ai[2] = (int)result;
                 return (MiniOffenseAIState)result;
-                //Return early as the phaseTimer would overwrite the spears on hit counter
+                // 提前返回：否则下面的阶段推进会把 ai[1] 覆盖掉，长矛阶段的命中计数就废了
             }
             int currentPhase = (int)currentAIState;
             if (phaseTimer <= 0)
             {
                 currentPhase++;
-                if (currentPhase > (int)MiniOffenseAIState.Fireballs) //if it is beyond the last possible phase (in terms of enum order) reset to beginning
+                if (currentPhase > (int)MiniOffenseAIState.Fireballs) // 超出最后一个阶段（按枚举顺序）时回到长矛阶段
                     currentPhase = (int)MiniOffenseAIState.Spears;
                 result = (MiniOffenseAIState)currentPhase;
                 bool whip = WhipBuffed; // 原读 ProfanedCrystalWhipBuff
-                int newPhaseTimer = result == MiniOffenseAIState.Charges ? 60 * (whip ? 10 : 6) : //charge time
-                    result == MiniOffenseAIState.Fireballs ? 60 * (whip ? 10 : 6) : //fireball time
-                    60 * (whip ? 8 : 6); //spears time
+                int newPhaseTimer = result == MiniOffenseAIState.Charges ? 60 * (whip ? 10 : 6) : // 冲刺阶段：强化 10 秒 / 平时 6 秒
+                    result == MiniOffenseAIState.Fireballs ? 60 * (whip ? 10 : 6) : // 爆弹阶段：强化 10 秒 / 平时 6 秒
+                    60 * (whip ? 8 : 6); // 长矛阶段：强化 8 秒 / 平时 6 秒
                 phaseTimer = newPhaseTimer;
             }
             else
@@ -95,6 +96,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.ai[2] = (int)result;
             return (MiniOffenseAIState)result;
         }
+        // ── 生命周期方法 ──
         /// <summary>注册 4 帧动画、登记 4 帧残影缓存，并标记为可牺牲、可右键锁定目标的召唤物</summary>
         public override void SetStaticDefaults()
         {
@@ -116,6 +118,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
         }
+        // ── 私有工具 ──
         /// <summary>
         /// 预测瞄准（移植自灾厄的 CalculatePredictiveAimToTarget，欧拉迭代 4 次估算目标未来位置）：
         /// 以目标当前速度按"到达耗时"迭代外推命中点，返回朝该点的 shootSpeed 倍单位速度。
@@ -338,9 +341,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                     // 之后沿当前朝向持续加速并缓慢转向目标
                     if (attackDelay <= 0)
                         owner.GetModPlayer<CalamityDemutationPlayer>().rollBabSpears(1, true);
-                    float distToTarget = Projectile.Distance(potentialTarget.Center) + .01f;
+                    float distToTarget = Projectile.Distance(potentialTarget.Center) + .01f;   // 加 0.01 是防止下一步做除数时除零
                     Projectile.velocity = Projectile.rotation.ToRotationVector2() * (28f + (28f / (distToTarget * .01f)));
-                    Projectile.velocity = Vector2.Clamp(Projectile.velocity, Vector2.One * -50f, Vector2.One * 50f);
+                    Projectile.velocity = Vector2.Clamp(Projectile.velocity, Vector2.One * -50f, Vector2.One * 50f);   // 冲刺速度封顶 ±50
                     // 原为 Projectile.rotation.AngleTowards(...)，本工程以 CDUtil.RotTowards 等价替代
                     Projectile.rotation = CDUtil.RotTowards(Projectile.rotation, Projectile.AngleTo(potentialTarget.Center), .001f * distToTarget);
                 }
@@ -348,6 +351,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 {
                     if (attackDelay == 24)
                     {
+                        // 第 24 帧（即蓄力帧的最后一帧）才真正扑出：预测式瞄准目标后整体提速 1.369 倍
                         Projectile.velocity = SuperhomeTowardsTarget(potentialTarget, 35f, 1f);
                         Projectile.velocity *= 1.369f;
                     }
@@ -385,6 +389,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Main.projectile[proj].originalDamage = fireballBaseDamage;
             }
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：主人持有神器（profanedSoulArtifact）期间每帧续期实现常驻，神器消失或主人死亡则清标志并消散；
         /// 每帧按召唤伤害重算 damage 与命中冷却，按阶段选择基础 AI（跟随/贴敌）或进阶 AI（长矛/爆弹/冲刺）。
@@ -488,6 +493,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             }
             return true;
         }
+        // ── 网络同步 ──
         /// <summary>接收 attackDelay 同步值</summary>
         public override void ReceiveExtraAI(BinaryReader reader)
         {

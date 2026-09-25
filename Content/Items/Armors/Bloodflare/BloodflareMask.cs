@@ -21,7 +21,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 60, 0, 0);  // 价值 60 金
-            Item.defense = 49; //85
+            Item.defense = 49;  // 防御 49（与经典版灾厄同值，源码同行另留 //85 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;  // 月后稀有度 13 级，名称颜色为荧光绿
         }
         /// <summary>

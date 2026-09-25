@@ -26,16 +26,22 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class NxCrack:ModProjectile
     {
+        // ── 实例字段 ──
         /// <summary>当前裂缝宽度倍率（从 0.1 起，每帧加上 <see cref="wj"/> 后 wj 自身递减）</summary>
         private float w = 0.1f;
         /// <summary>宽度增量，每帧 -0.065；<see cref="w"/> 被它推到负数即裂缝收口完毕、自行 Kill</summary>
         private float wj = 0.3f;
+        // ── 生命周期方法 ──
         /// <summary>注册为仆从弹幕（让它吃到召唤 tag 加伤），1 帧贴图</summary>
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 1;
             ProjectileID.Sets.MinionShot[Type] = true;
         }
+        /// <summary>
+        /// 基础属性：召唤伤害、无限穿透、不撞地形、每个敌人独立命中冷却；
+        /// 命中无敌帧取 7（见下方注释），护甲穿透 100
+        /// </summary>
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Summon;
@@ -51,8 +57,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 7;
             Projectile.ArmorPenetration = 100;
         }
+        // ── 覆写方法 ──
         /// <summary>占位贴图：真正的裂缝由 <see cref="drawCrack"/> 用这张白图当顶点带纹理画</summary>
         public override string Texture => "CalamityDemutation/Assets/ExtraTextures/white";
+        /// <summary>
+        /// AI：每帧把宽度增量 <see cref="wj"/> 加到 <see cref="w"/> 上并让 wj 自身递减 0.065，
+        /// 宽度收成负数即裂缝合拢完毕、自行 Kill（不移动，见 <see cref="ShouldUpdatePosition"/>）。
+        /// </summary>
         public override void AI()
         {
             w += wj;
@@ -62,7 +73,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.Kill();
                 return;
             }
-            Projectile.ai[0]++;
+            Projectile.ai[0]++;   // ai[0]：CE 原样只自增、全工程无人读取（死计数器），保留以对齐原版
         }
         /// <summary>位置由生成时给定、之后完全不动（裂缝是"空间被撕开"而不是飞行的东西）</summary>
         public override bool ShouldUpdatePosition()
@@ -74,14 +85,17 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         {
             return CDUtil.LineThroughRect(Projectile.Center, Projectile.Center + Projectile.velocity * 600f, targetHitbox, 60);
         }
+        /// <summary>不在此处绘制：裂缝由 <see cref="drawCrack"/> 走上屏管线（EffectsSystem 的深渊分支）合成</summary>
         public override bool PreDraw(ref Color dc)
         {
             return false;
         }
+        /// <summary>不能砍草（虚幻的空间裂缝）</summary>
         public override bool? CanCutTiles()
         {
             return false;
         }
+        // ── 上屏绘制 ──
         /// <summary>
         /// 把裂缝画成一条 <see cref="ColoredVertex"/> 三角带（由 EffectsSystem 的深渊上屏分支调用）：
         /// 沿 <c>velocity × i × 60</c> 摆 10 组顶点，每组上下两点，横向抖动由 c/d 两张权重表 + 时间余弦驱动，

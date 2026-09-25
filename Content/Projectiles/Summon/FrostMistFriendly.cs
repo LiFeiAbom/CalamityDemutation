@@ -42,6 +42,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
+            // ai[1]：帧计数器——首帧为 0，喷完登场粒子后置 1，此后每帧自增；第 30~110 帧窗口内朝最近玩家转向
+            // localAI[0]：呼吸相位，0 = 正在收缩（透明化），1 = 正在膨胀（显形）
             Projectile.frameCounter++;
             if (Projectile.frameCounter > 4)
             {

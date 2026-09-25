@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 元素之心 - 综合型饰品（五个 waifu 饰品的合集）
+    /// 元素之心（HeartoftheElements） - 综合型饰品（五个 waifu 饰品的合集）
     /// 显示外观时召唤全部元素仆从并提供综合增益；隐藏外观时仅保留强化的基础属性。
     /// </summary>
     internal class HeartoftheElements:ModItem

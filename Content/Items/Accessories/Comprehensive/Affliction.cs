@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 苦难 - 专家饰品
+    /// 苦难（Affliction） - 专家饰品
     /// 提供 +15% 通用伤害、+45 防御、+8% 减伤、+20% 最大生命与 +8 生命回复，
     /// 并将"苦难"debuff 传染给同队玩家。
     /// </summary>

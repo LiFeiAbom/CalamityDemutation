@@ -17,6 +17,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class MiniGuardianSpear:ModProjectile
     {
+        // ── 生命周期方法 ──
         /// <summary>注册 2 帧残影缓存、鞭标记 0.5 倍增伤，并声明对邪教徒类敌人有抗性减免</summary>
         public override void SetStaticDefaults()
         {
@@ -41,6 +42,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.scale = 0.9f;
             Projectile.DamageType = DamageClass.Summon;
         }
+        // ── 私有工具 ──
         /// <summary>
         /// 神圣配色（移植自灾厄 Providence.GetColorBasedOnEnrage 的白昼/夜晚两值版本）：
         /// 白昼橙红 (255,155,25)、夜晚青蓝 (100,200,250)；outline 为 true 时取描边色（白昼 (255,0,0)、夜晚 (100,250,200)）
@@ -48,7 +50,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         internal static Color ProfanedColor(bool night, int alpha, bool outline = false)
         {
-            Color finalColor = new Color(255, outline ? 0 : 155, outline ? 0 : 25, alpha); // Default to day
+            Color finalColor = new Color(255, outline ? 0 : 155, outline ? 0 : 25, alpha); // 默认取白昼档
             if (night)
                 finalColor = new Color(100, outline ? 250 : 200, outline ? 200 : 250, alpha);
             if (outline)
@@ -137,14 +139,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                     {
                         if (Projectile.ai[1] == 0f)
                         {
-                            float num550 = 24f; //12
+                            float num550 = 24f; // 期望速度 24（CE 原注释写的 12 是旧值，实际取 24）
                             Vector2 vector43 = Projectile.Center;
                             float num551 = num535 - vector43.X;
                             float num552 = num536 - vector43.Y;
                             float num553 = (float)Math.Sqrt((double)(num551 * num551 + num552 * num552));
                             if (num553 < 100f)
                             {
-                                num550 = 28f; //14
+                                num550 = 28f; // 距离 100 以内时提速到 28（CE 原注释写的 14 是旧值）
                             }
                             num553 = num550 / num553;
                             num551 *= num553;
@@ -156,6 +158,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
             }
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// AI：每帧按召唤伤害重算 damage 并原地留一颗静止的神圣色粉尘（形成拖尾弧光）；
         /// 由守卫发射时（ai[0] > 0）保持神圣色，不随夜晚改为青蓝；最后按速度方向校正贴图旋转（+90 度）。
@@ -164,7 +167,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         {
             var Owner = Main.player[Projectile.owner];
             Projectile.damage = (int)Owner.GetTotalDamage<GenericDamageClass>().ApplyTo(Projectile.originalDamage);
-            // 由守卫发射的矛不随夜晚变色（Ensure that psa's spears are not coloured by night）
+            // 由守卫发射的矛（ai[0] > 0）不随夜晚变色，只有神器本体发射的那枚才按昼夜换配色
             var psc = Projectile.ai[0] > 0f;
             int num469 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, MiniGuardianHealer.HolyDustType(!Main.dayTime && psc), 0f, 0f, 100, default, !Main.dayTime && psc ? 0.5f : 1f);
             Main.dust[num469].noGravity = true;

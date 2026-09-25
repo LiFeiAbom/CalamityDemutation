@@ -20,7 +20,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
             Item.value = Item.buyPrice(3, 0, 0, 0);  // 价值 3 铂金
-            Item.defense = 57; //15
+            Item.defense = 57;  // 防御 57（经典版为 50，同行 //15 系经典版开发期遗留注释；本模组上调至 57）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
         /// <summary>

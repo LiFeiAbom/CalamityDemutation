@@ -15,19 +15,19 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 28;
-            Item.height = 18;
-            Item.useTurn = true;
-            Item.maxStack = 999;
-            Item.rare = ItemRarityID.Orange;
-            Item.useAnimation = 17;
-            Item.useTime = 17;
-            Item.useStyle = ItemUseStyleID.EatFood;
-            Item.UseSound = SoundID.Item3;
-            Item.consumable = true;
+            Item.width = 28;                                         // 贴图宽（像素）
+            Item.height = 18;                                        // 贴图高（像素）
+            Item.useTurn = true;                                     // 使用时允许转向
+            Item.maxStack = 999;                                     // 最大堆叠
+            Item.rare = ItemRarityID.Orange;                         // 稀有度：橙色
+            Item.useAnimation = 17;                                  // 动画时长 17 帧
+            Item.useTime = 17;                                       // 使用间隔 17 帧
+            Item.useStyle = ItemUseStyleID.EatFood;                  // 使用样式：进食
+            Item.UseSound = SoundID.Item3;                           // 饮用音效
+            Item.consumable = true;                                  // 一次性消耗品
             Item.buffType = ModContent.BuffType<ArmorCrumbling>();   // 附加破甲增益
             Item.buffTime = 18000;                                   // 增益持续 18000 帧（5 分钟）
-            Item.value = Item.buyPrice(0, 2, 0, 0);
+            Item.value = Item.buyPrice(0, 2, 0, 0);                  // 价值 2 金
         }
         /// <summary>
         /// 合成表：主配方每次产出 5 瓶（炼金台），备选配方为药剂瓶 + 血珠×20；

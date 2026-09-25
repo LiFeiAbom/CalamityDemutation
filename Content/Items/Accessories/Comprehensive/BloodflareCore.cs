@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 血耀核心 - 专家饰品
+    /// 血耀核心（BloodflareCore） - 专家饰品
     /// 低生命时获得减伤与增伤，低防御时获得额外增伤（具体数值见 CalamityDemutationPlayer）。
     /// </summary>
     internal class BloodflareCore:ModItem

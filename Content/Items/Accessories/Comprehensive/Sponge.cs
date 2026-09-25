@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 海绵 - 综合型饰品
+    /// 海绵（Sponge） - 综合型饰品
     /// 提升生命与法力上限，并继承吸收者、甘露安瓿等吸收类饰品效果。
     /// </summary>
     internal class Sponge:ModItem
@@ -29,8 +29,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            modPlayer.beeResist = true;
-            modPlayer.sponge = true;
+            modPlayer.beeResist = true;   // 继承甘露安瓿/蜜露的蜜蜂抗性：被蜜蜂类敌人与蜜蜂弹幕命中时伤害减半
+            modPlayer.sponge = true;      // 海绵本体：生命/法力上限、减伤、荆棘与浸水增益等，见 PostUpdateMiscEffects
         }
         /// <summary>
         /// 配方（分版本）：吸收者 + 甘露安瓿 + 星辉矿锭 + Necroplasm（经典版改用 Phantoplasm），在宇宙砧/德雷顿熔炉合成

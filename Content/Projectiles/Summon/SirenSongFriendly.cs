@@ -28,6 +28,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
+            // ai[1]：0 = 尚未播放入场音效（首帧置 1 后再不触发）
+            // localAI[0]：呼吸相位，0 = 正在膨胀（0.75→1.25），1 = 正在收缩（1.25→0.75）
             Projectile.velocity.X *= 0.985f;
             Projectile.velocity.Y *= 0.985f;
             if (Projectile.localAI[0] == 0f)

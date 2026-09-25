@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 气之石 - 综合饰品
+    /// 气之石（AeroStone） - 综合饰品
     /// 提供 +10% 移动速度、+2.0 跳跃速度与 +3% 通用伤害，并发出青色光芒。
     /// </summary>
     internal class AeroStone:ModItem

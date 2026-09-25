@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
 {
     /// <summary>
     /// 恶魔之影胸甲（DemonshadeBreastplate） - 恶魔之影套（Demonshade）胸部防具
-    /// 提供巨额生命/魔力上限、通用伤害、暴击与近战攻速，并附带高额荆棘反伤；
+    /// 提供巨额生命/魔力上限、通用伤害与暴击，并附带高额荆棘反伤；
     /// 装备时置位 shadeRegen，最终在 CalamityDemutationPlayer.UpdateLifeRegen 中结算生命回复。
     /// 另实现 IDrawArmOverShoulderpad：走路时露出身前的前臂需要盖在肩甲之上，
     /// 单独由 _Arms 贴图提供，由 FrontArmOverShoulderpadLayer 重绘。
@@ -41,7 +41,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.GetCritChance<GenericDamageClass>() += 20;       // 全类型暴击率 +20%
             player.statLifeMax2 += 1000;                            // 最大生命 +1000
             player.statManaMax2 += 1000;                            // 最大魔力 +1000
-            player.thorns = 200f;//100=>200
+            player.thorns = 200f;                                   // 反伤值 200（经典版为 100，本模组上调至 200）
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）

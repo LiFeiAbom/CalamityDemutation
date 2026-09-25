@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
 {
     /// <summary>
     /// 奥米加蓝头盔（OmegaBlueHelmet） - 奥米加蓝套头部，召唤/近战辅助
-    /// 单件：免疫溺水、+12% 全伤害、+8% 暴击、+2 最大仆从。
+    /// 单件：可在液体中自由移动、+12% 全伤害、+8% 暴击、+2 最大仆从。
     /// 套装效果（player.setBonus 官方描述逐条）：
     /// 护甲穿透 +50；伤害与暴击 +10%；近战范围的触手会吸取敌人生命为你治疗；
     /// 按 Y 激活「深渊疯狂」持续 5 秒；深渊疯狂提升伤害、暴击以及触手的攻击性与范围；
@@ -51,11 +51,11 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
         {
             player.setBonus = this.GetLocalizedValue("SetBonus");
             player.GetArmorPenetration<GenericDamageClass>() += 50;  // 护甲穿透 +50
-            //raise rev caps（置位套装标记；+10% 伤害/暴击与触手召唤在 CalamityDemutationPlayer 统一结算）
+            // 置位套装标记；+10% 伤害/暴击与触手召唤在 CalamityDemutationPlayer 统一结算
             player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueSet = true;
             if (player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueCooldown > 0)
             {
-                if (player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueCooldown == 1) //dust when ready to use again
+                if (player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueCooldown == 1)   // 冷却只剩最后一帧：喷粒子提示「深渊疯狂」已就绪
                 {
                     // 冷却即将归零：爆发一圈净化粉粒子提示「深渊疯狂已就绪」
                     for (int i = 0; i < 66; i++)
@@ -81,11 +81,11 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
             }
         }
         /// <summary>
-        /// 单件属性：免疫溺水、全伤害 / 暴击、最大仆从数
+        /// 单件属性：液体中自由移动、全伤害 / 暴击、最大仆从数
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.ignoreWater = true;   // 免疫溺水
+            player.ignoreWater = true;   // 液体中自由移动（不受水阻与跳跃惩罚）
             const float damageUp = 0.12f;
             const int critUp = 8;
             player.GetDamage<GenericDamageClass>() += damageUp;   // 全伤害 +12%

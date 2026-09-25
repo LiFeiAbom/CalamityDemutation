@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 玫瑰石 - 综合饰品（召唤玫瑰仆从）
+    /// 玫瑰石（RoseStone） - 综合饰品（召唤玫瑰仆从）
     /// 提供 +3% 通用伤害、+2 生命回复、+20 最大生命并发出红光，同时召唤玫瑰仆从。
     /// </summary>
     internal class RoseStone:ModItem

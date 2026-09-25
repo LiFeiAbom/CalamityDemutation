@@ -16,19 +16,19 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 28;
-            Item.height = 18;
-            Item.useTurn = true;
+            Item.width = 28;                                          // 贴图宽（像素）
+            Item.height = 18;                                         // 贴图高（像素）
+            Item.useTurn = true;                                      // 使用时允许转向
             Item.maxStack = 30;                                     // 堆叠上限 30（强化药水，低于常规 999）
-            Item.rare = ItemRarityID.Orange;
-            Item.useAnimation = 17;
-            Item.useTime = 17;
-            Item.useStyle = ItemUseStyleID.EatFood;
-            Item.UseSound = SoundID.Item3;
-            Item.consumable = true;
+            Item.rare = ItemRarityID.Orange;                          // 稀有度：橙色
+            Item.useAnimation = 17;                                   // 动画时长 17 帧
+            Item.useTime = 17;                                        // 使用间隔 17 帧
+            Item.useStyle = ItemUseStyleID.EatFood;                   // 使用样式：进食
+            Item.UseSound = SoundID.Item3;                            // 饮用音效
+            Item.consumable = true;                                   // 一次性消耗品
             Item.buffType = ModContent.BuffType<ArmorShattering>();   // 附加碎甲增益
             Item.buffTime = 18000;                                    // 增益持续 18000 帧（5 分钟）
-            Item.value = Item.buyPrice(0, 2, 0, 0);
+            Item.value = Item.buyPrice(0, 2, 0, 0);                   // 价值 2 金
         }
         /// <summary>
         /// 合成表：用碎块药水（现代版需 2 瓶 / 经典版 1 瓶）升级，或药剂瓶 + 血珠×30 + 甲虫壳，均在炼金台

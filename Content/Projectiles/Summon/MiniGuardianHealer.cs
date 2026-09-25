@@ -19,9 +19,14 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class MiniGuardianHealer:ModProjectile
     {
-        internal const int starTimer = 180;    // 星弹齐射冷却（帧）
-        internal const int laserTimer = 1200;  // 神圣射线冷却（帧）
-        private bool hasSetTimers;             // 出生时是否已把两个冷却写入 ai[1]（星弹）/ ai[2]（射线）
+        // ── 常量与字段 ──
+        /// <summary>星弹齐射冷却（帧）：归零那一帧抛出三圈共 90 颗星弹并重置</summary>
+        internal const int starTimer = 180;
+        /// <summary>神圣射线冷却（帧）：归零那一帧朝目标两侧各发一道射线并重置</summary>
+        internal const int laserTimer = 1200;
+        /// <summary>出生时是否已把两个冷却写入 ai[1]（星弹）/ ai[2]（射线）</summary>
+        private bool hasSetTimers;
+        // ── 状态与属性 ──
         /// <summary>弹幕主人：跟随与攻击基准都以主人为参照</summary>
         public Player Owner => Main.player[Projectile.owner];
         /// <summary>ai[0] == 1 表示由水晶形态召唤（装备水晶时由 CalamityDemutationPlayer 写入）</summary>
@@ -49,6 +54,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// 神器档 pscState 为 Vanity（暖橙），水晶档按当前四态取色
         /// </summary>
         internal static Color PscColor(int pscState, bool day) => ProfanedSoulCrystal.GetColorForPsc(pscState, day);
+        // ── 生命周期方法 ──
         /// <summary>注册 4 帧动画，标记为可牺牲、可右键锁定目标的召唤物，并登记 4 帧残影缓存</summary>
         public override void SetStaticDefaults()
         {
@@ -72,6 +78,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.timeLeft = 18000;
             Projectile.timeLeft *= 5;
         }
+        // ── 覆写方法 ──
         /// <summary>能否砍草：只在神器形态下允许，水晶形态不许（对齐 2.2.2 的 pSoulArtifact &amp;&amp; !profanedCrystal）</summary>
         public override bool? CanCutTiles()
         {
@@ -347,6 +354,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>本体不造成伤害：星弹与射线才是输出手段</summary>
         public override bool? CanDamage() => false;
+        // ── 网络同步 ──
         /// <summary>同步 hasSetTimers，避免中途加入的客户端重复初始化冷却</summary>
         public override void SendExtraAI(BinaryWriter writer)
         {
