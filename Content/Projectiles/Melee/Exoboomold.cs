@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>青色照明、出场音效（仅一次）、每帧朝四周随机迸发 40 颗青色尘</summary>
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0f / 255f, (255 - Projectile.alpha) * 0.75f / 255f, (255 - Projectile.alpha) * 0.75f / 255f);
+            Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0f / 255f, (255 - Projectile.alpha) * 0.75f / 255f, (255 - Projectile.alpha) * 0.75f / 255f);   // 红色分量刻意乘 0，只发青（绿+蓝）光
             if (Projectile.localAI[0] == 0f)
             {
                 SoundEngine.PlaySound(SoundID.Item74, Projectile.position);
@@ -41,6 +41,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             for (int i = 0; i < 40; i++)
             {
+                // 循环只当"发 40 颗"的计数器用：方向取 (-30~30, -30~30) 后归一化，再乘 9~26 的线速度（num466 在此复用为缩放系数）
                 float num463 = Main.rand.Next(-30, 31);
                 float num464 = Main.rand.Next(-30, 31);
                 float num465 = Main.rand.Next(9, 27);

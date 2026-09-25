@@ -185,9 +185,8 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             }
         }
         /// <summary>
-        /// 命中敌人（且未进入淡出阶段）：在弹体周围随机方向生成一颗星云尘埃（NebulaDust）作溅射
+        /// 命中敌人（且尚未进入淡出阶段，ai[1] == 0）：主人端在弹体处随机方向生成一颗星云尘埃（NebulaDust）作溅射
         /// </summary>
-        // 命中敌人（且未进入淡出阶段）时散射一颗星云尘埃
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Projectile.owner == Main.myPlayer && Projectile.ai[1] == 0f)
@@ -199,9 +198,8 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             }
         }
         /// <summary>
-        /// 命中玩家（PvP）：逻辑与命中敌人相同，散射一颗星云尘埃
+        /// 命中玩家（PvP）：逻辑与命中敌人相同，主人端散射一颗星云尘埃
         /// </summary>
-        // 命中玩家（PvP）：同样散射星云尘埃
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (Projectile.owner == Main.myPlayer && Projectile.ai[1] == 0f)
@@ -213,12 +211,11 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             }
         }
         /// <summary>
-        /// 后绘制：在弹体中心叠加一张随旋转放大的发光贴图（NebulaStarGlow），强化星光视觉
+        /// 后绘制：在弹体中心叠加一张随旋转缩放的发光贴图（NebulaStarGlow），强化星光视觉
         /// </summary>
-        // 叠加绘制发光贴图，强化视觉表现
         public override void PostDraw(Color lightColor)
         {
-            Vector2 origin = new(17f, 17f);
+            Vector2 origin = new(17f, 17f);   // 17×17 的贴图中心（贴图 34×34）
             Main.spriteBatch.Draw(ModContent.Request<Texture2D>("CalamityDemutation/Content/Projectiles/Typeless/NebulaStarGlow").Value, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
         }
     }

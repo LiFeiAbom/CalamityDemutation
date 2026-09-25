@@ -14,7 +14,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class RedDevil:ModProjectile
     {
-        public int dust = 3;   // 出生粒子爆发计数器：前 4 帧（3→<0）一次性喷出大团 LifeDrain 粉尘作登场特效
+        // ── 实例字段 ──
+        /// <summary>出生粒子爆发计数器：前 4 帧（3→&lt;0）一次性喷出大团 LifeDrain 粉尘作登场特效</summary>
+        public int dust = 3;
+        // ── 生命周期方法 ──
         /// <summary>
         /// 注册 5 帧动画，并标记为可右键锁定目标、可牺牲的召唤物。
         /// </summary>
@@ -318,6 +321,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
             }
         }
+        // ── 覆写方法 ──
         /// <summary>
         /// 本体不参与接触伤害判定（伤害全部由投射的弹幕 114 承担），返回 false 屏蔽碰撞伤害。
         /// </summary>

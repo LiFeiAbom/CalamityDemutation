@@ -109,78 +109,81 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             bool bloodMoon = Main.bloodMoon;
             bool snowMoon = Main.snowMoon;
             bool pumpkinMoon = Main.pumpkinMoon;
+            // 月相事件优先：三者各自独立判定，可同时生效
             if (bloodMoon)
             {
-                player.AddBuff(BuffID.Battle, 600);
+                player.AddBuff(BuffID.Battle, 600);         // 血月：战斗
             }
             if (snowMoon)
             {
-                player.AddBuff(BuffID.RapidHealing, 600);
+                player.AddBuff(BuffID.RapidHealing, 600);   // 霜月：快速治疗
             }
             if (pumpkinMoon)
             {
-                player.AddBuff(BuffID.WellFed3, 600);   // 南瓜月：改为三级饱食（WellFed3）
+                player.AddBuff(BuffID.WellFed3, 600);       // 南瓜月：三级饱食（WellFed3，比四季银河的普通饱食更高档）
             }
+            // 其后按生物群系走 if-else 链，只取第一个匹配到的环境
             else if (jungle)
             {
-                player.AddBuff(BuffID.Thorns, 600);
+                player.AddBuff(BuffID.Thorns, 600);         // 丛林：荆棘
             }
             else if (snow)
             {
-                player.AddBuff(BuffID.Warmth, 600);
+                player.AddBuff(BuffID.Warmth, 600);         // 雪原：温暖
             }
             else if (beach)
             {
-                player.AddBuff(BuffID.Wet, 600);
+                player.AddBuff(BuffID.Wet, 600);            // 沙滩：潮湿
             }
             else if (corrupt)
             {
-                player.AddBuff(BuffID.Wrath, 600);
+                player.AddBuff(BuffID.Wrath, 600);          // 腐化：愤怒（增伤）
             }
             else if (crimson)
             {
-                player.AddBuff(BuffID.Rage, 600);
+                player.AddBuff(BuffID.Rage, 600);           // 猩红：暴怒（增暴击）
             }
             else if (dungeon)
             {
-                player.AddBuff(BuffID.Dangersense, 600);
+                player.AddBuff(BuffID.Dangersense, 600);    // 地牢：危险感知
             }
             else if (desert)
             {
-                player.AddBuff(BuffID.Endurance, 600);
+                player.AddBuff(BuffID.Endurance, 600);      // 沙漠：耐力
             }
             else if (glow)
             {
-                player.AddBuff(BuffID.Spelunker, 600);
+                player.AddBuff(BuffID.Spelunker, 600);      // 发光蘑菇：洞穴探险
             }
             else if (hell)
             {
-                player.AddBuff(BuffID.Inferno, 600);
+                player.AddBuff(BuffID.Inferno, 600);        // 地狱：狱火
             }
             else if (holy)
             {
-                player.AddBuff(BuffID.Heartreach, 600);
+                player.AddBuff(BuffID.Heartreach, 600);     // 神圣：心之共鸣（Heartreach）
             }
             else if (nebula)
             {
-                player.AddBuff(BuffID.MagicPower, 600);
+                player.AddBuff(BuffID.MagicPower, 600);     // 星云柱：魔能
             }
             else if (stardust)
             {
-                player.AddBuff(BuffID.Summoning, 600);
+                player.AddBuff(BuffID.Summoning, 600);      // 星尘柱：召唤
             }
             else if (solar)
             {
-                player.AddBuff(BuffID.Titan, 600);
+                player.AddBuff(BuffID.Titan, 600);          // 日耀柱：泰坦
             }
             else if (vortex)
             {
-                player.AddBuff(BuffID.AmmoReservation, 600);
+                player.AddBuff(BuffID.AmmoReservation, 600);// 星旋柱：弹药储备
             }
             else
             {
-                player.AddBuff(BuffID.DryadsWard, 600);
+                player.AddBuff(BuffID.DryadsWard, 600);     // 其余环境：树妖祝福
             }
+            // 星陨（灾厄自定义生物群系）无法用原版 Zone 读到，故用反射取灾厄 ModPlayer 的 ZoneAstral
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()
@@ -267,78 +270,81 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             bool bloodMoon = Main.bloodMoon;
             bool snowMoon = Main.snowMoon;
             bool pumpkinMoon = Main.pumpkinMoon;
+            // 月相事件优先：三者各自独立判定，可同时生效
             if (bloodMoon)
             {
-                player.AddBuff(BuffID.Battle, 600);
+                player.AddBuff(BuffID.Battle, 600);         // 血月：战斗
             }
             if (snowMoon)
             {
-                player.AddBuff(BuffID.RapidHealing, 600);
+                player.AddBuff(BuffID.RapidHealing, 600);   // 霜月：快速治疗
             }
             if (pumpkinMoon)
             {
-                player.AddBuff(BuffID.WellFed3, 600);   // 南瓜月：改为三级饱食（WellFed3）
+                player.AddBuff(BuffID.WellFed3, 600);       // 南瓜月：三级饱食（WellFed3，比四季银河的普通饱食更高档）
             }
+            // 其后按生物群系走 if-else 链，只取第一个匹配到的环境
             else if (jungle)
             {
-                player.AddBuff(BuffID.Thorns, 600);
+                player.AddBuff(BuffID.Thorns, 600);         // 丛林：荆棘
             }
             else if (snow)
             {
-                player.AddBuff(BuffID.Warmth, 600);
+                player.AddBuff(BuffID.Warmth, 600);         // 雪原：温暖
             }
             else if (beach)
             {
-                player.AddBuff(BuffID.Wet, 600);
+                player.AddBuff(BuffID.Wet, 600);            // 沙滩：潮湿
             }
             else if (corrupt)
             {
-                player.AddBuff(BuffID.Wrath, 600);
+                player.AddBuff(BuffID.Wrath, 600);          // 腐化：愤怒（增伤）
             }
             else if (crimson)
             {
-                player.AddBuff(BuffID.Rage, 600);
+                player.AddBuff(BuffID.Rage, 600);           // 猩红：暴怒（增暴击）
             }
             else if (dungeon)
             {
-                player.AddBuff(BuffID.Dangersense, 600);
+                player.AddBuff(BuffID.Dangersense, 600);    // 地牢：危险感知
             }
             else if (desert)
             {
-                player.AddBuff(BuffID.Endurance, 600);
+                player.AddBuff(BuffID.Endurance, 600);      // 沙漠：耐力
             }
             else if (glow)
             {
-                player.AddBuff(BuffID.Spelunker, 600);
+                player.AddBuff(BuffID.Spelunker, 600);      // 发光蘑菇：洞穴探险
             }
             else if (hell)
             {
-                player.AddBuff(BuffID.Inferno, 600);
+                player.AddBuff(BuffID.Inferno, 600);        // 地狱：狱火
             }
             else if (holy)
             {
-                player.AddBuff(BuffID.Heartreach, 600);
+                player.AddBuff(BuffID.Heartreach, 600);     // 神圣：心之共鸣（Heartreach）
             }
             else if (nebula)
             {
-                player.AddBuff(BuffID.MagicPower, 600);
+                player.AddBuff(BuffID.MagicPower, 600);     // 星云柱：魔能
             }
             else if (stardust)
             {
-                player.AddBuff(BuffID.Summoning, 600);
+                player.AddBuff(BuffID.Summoning, 600);      // 星尘柱：召唤
             }
             else if (solar)
             {
-                player.AddBuff(BuffID.Titan, 600);
+                player.AddBuff(BuffID.Titan, 600);          // 日耀柱：泰坦
             }
             else if (vortex)
             {
-                player.AddBuff(BuffID.AmmoReservation, 600);
+                player.AddBuff(BuffID.AmmoReservation, 600);// 星旋柱：弹药储备
             }
             else
             {
-                player.AddBuff(BuffID.DryadsWard, 600);
+                player.AddBuff(BuffID.DryadsWard, 600);     // 其余环境：树妖祝福
             }
+            // 星陨（灾厄自定义生物群系）无法用原版 Zone 读到，故用反射取灾厄 ModPlayer 的 ZoneAstral
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()
@@ -414,18 +420,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
+            // ── 现代版灾厄：四季银河 + 元素方舟 + 金之锭 ×5，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<FourSeasonsGalaxia>();
-                    recipe.AddIngredient<ArkoftheElements>();
-                    recipe.AddIngredient(auricBar.Type, 5);
-                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.AddIngredient<FourSeasonsGalaxia>();   // 四季银河（本模组下位）
+                    recipe.AddIngredient<ArkoftheElements>();     // 元素方舟（本模组下位）
+                    recipe.AddIngredient(auricBar.Type, 5);       // 灾厄材料：金之锭 ×5
+                    recipe.AddTile(cosmicAnvil.Type);             // 宇宙砧
                     recipe.Register();
                 }
             }
+            // ── 经典版灾厄：改用一堆后期暗黑材料，且在德雷顿熔炉合成 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 if (calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
@@ -438,11 +446,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     Recipe recipe1 = CreateRecipe();
                     recipe1.AddIngredient<FourSeasonsGalaxia>();
                     recipe1.AddIngredient<ArkoftheElements>();
-                    recipe1.AddIngredient(nightmareFuel.Type, 5);
-                    recipe1.AddIngredient(endothermicEnergy.Type, 5);
-                    recipe1.AddIngredient(hellcasterFragment.Type, 3);
-                    recipe1.AddIngredient(darksunFragment.Type, 5);
-                    recipe1.AddIngredient(auricOre.Type, 25);
+                    recipe1.AddIngredient(nightmareFuel.Type, 5);       // 经典版材料：噩梦燃料 ×5
+                    recipe1.AddIngredient(endothermicEnergy.Type, 5);   // 经典版材料：吸热能量 ×5
+                    recipe1.AddIngredient(hellcasterFragment.Type, 3);  // 经典版材料：地狱施法者碎片 ×3
+                    recipe1.AddIngredient(darksunFragment.Type, 5);     // 经典版材料：暗黑碎片 ×5
+                    recipe1.AddIngredient(auricOre.Type, 25);           // 经典版材料：金之矿石 ×25
                     recipe1.AddTile(draedonsForge.Type);
                     recipe1.Register();
                 }

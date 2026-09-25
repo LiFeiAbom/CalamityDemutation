@@ -50,10 +50,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             }
             if (Projectile.frame > 3)
                 Projectile.frame = 0;
-            Projectile.velocity.X *= 1.01f;
+            Projectile.velocity.X *= 1.01f;   // 每帧 +1%，缓慢加速
             Projectile.velocity.Y *= 1.01f;
             if (Projectile.timeLeft == 210)
-                Projectile.tileCollide = true;
+                Projectile.tileCollide = true;   // 第 210 帧（射出约 30 帧后）才开启地形碰撞
         }
         /// <summary>命中敌人：小概率滚一次追加长矛（对齐 2.2.2 的 rollBabSpears(50, chaseable)）</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

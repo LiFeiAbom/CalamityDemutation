@@ -18,7 +18,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     {
         /// <summary>弧光采样点（由 TerratomereHoldout 传入）</summary>
         public Vector2[] ControlPoints;
+        /// <summary>是否镜像绘制（由手持挥砍体按挥砍方向写入 ai[0]：1 = 左向挥砍）</summary>
         public bool Flipped => Projectile.ai[0] == 1f;
+        /// <summary>使用工程内的隐形贴图：剑气完全由 ExobladeSlash 着色器沿 ControlPoints 画出</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>基础属性：60×144、穿透无限、不碰撞物块、存活 30 帧、本地免疫 10 帧</summary>
         public override void SetDefaults()
@@ -41,14 +43,16 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             // 源为 CWRUtils.GetPlayerInstance(owner)（非法或已死亡的玩家返回 null，不跟随其速度）
             if (owner.Alives())
                 Projectile.position += owner.velocity;
-            Projectile.Opacity = Utils.GetLerpValue(Projectile.localAI[0], 26f, Projectile.timeLeft, clamped: true);
+            Projectile.Opacity = Utils.GetLerpValue(Projectile.localAI[0], 26f, Projectile.timeLeft, clamped: true);   // localAI[0] 无人写入恒为 0：等于按剩余寿命 0→26 帧淡入再淡出
             Projectile.velocity *= 0.91f;
             Projectile.scale *= 1.03f;
         }
+        /// <summary>剑气宽度：完成度无关，恒为 scale × 50</summary>
         public float SlashWidthFunction(float completionRatio, Vector2 _) => Projectile.scale * 50f;
         /// <summary>剑气颜色：ai[1]==0 时按完成度线性淡出，否则按正弦加亮</summary>
         public Color SlashColorFunction(float completionRatio, Vector2 _)
         {
+            // ai[1] 生成时未写入（恒为 0），本工程实际只走"前段淡出"这一支
             if (Projectile.ai[1] == 0)
                 return Color.Lime * Utils.GetLerpValue(0.07f, 0.57f, completionRatio, clamped: true) * Projectile.Opacity;
             float sengs = MathF.Sin(completionRatio * MathF.PI);

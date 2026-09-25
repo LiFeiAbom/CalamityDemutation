@@ -16,8 +16,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class TerratomereBolts : ModProjectile
     {
+        /// <summary>弹幕主人（掷出闪电的玩家）</summary>
         public Player Owner => Main.player[Projectile.owner];
+        /// <summary>拖尾所用 HSL 色相（存在 ai[0]，0~1）——生成时未写入，本工程实际恒为 0（偏红）</summary>
         public ref float Hue => ref Projectile.ai[0];
+        /// <summary>本体贴图：同目录的 TerratomereBolt（类名与贴图名不同，故显式指定）</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/Melee/TerratomereBolt";
         /// <summary>拖尾缓存 20 点、TrailingMode 2</summary>
         public override void SetStaticDefaults()
@@ -41,10 +44,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.velocity *= 1.01f;
-            NPC target = Projectile.Center.FindClosestNPC(1600);
+            Projectile.velocity *= 1.01f;   // 每帧略提速，直到进入 80 帧后的限速追击
+            NPC target = Projectile.Center.FindClosestNPC(1600);   // 每帧都重取 1600 像素内最近的敌怪，未找到则为 null
             if (target != null && Projectile.timeLeft < 130 && Projectile.timeLeft > 30)
             {
+                // 寿命 130→30 帧之间只做"平滑转向"：按角度差每帧转 17%，速度大小不变
                 float toTargetRot = (target.Center - Projectile.Center).ToRotation();
                 float diff = MathHelper.WrapAngle(toTargetRot - MathHelper.WrapAngle(Projectile.rotation));
                 if (Math.Abs(diff) < MathHelper.Pi)
@@ -54,18 +58,19 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Projectile.velocity = Projectile.rotation.ToRotationVector2() * Projectile.velocity.Length();
             }
             if (target != null && Projectile.timeLeft <= 80)
-                Projectile.ChasingBehavior(target.Center, 32);
+                Projectile.ChasingBehavior(target.Center, 32);   // 末段改为直接朝目标甩速：32 封顶，进目标 16 像素内减速为剩余距离
         }
         /// <summary>首次命中（numHits==1）时在目标周围随机方向生成 3 道大刀光（伤害 ×0.75）</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            // numHits==1 即"首次命中"：只在主人端生成，避免各端重复生成
             if (Projectile.IsOwnedByLocalPlayer() && Projectile.numHits == 1)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Vector2 offsetVr = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.Next(660, 720);
+                    Vector2 offsetVr = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.Next(660, 720);   // 目标外围 660~720 像素随机一圈
                     Vector2 spanPos = target.Center + offsetVr;
-                    Vector2 vr = offsetVr.SafeNormalize(Vector2.UnitY) * -50;
+                    Vector2 vr = offsetVr.SafeNormalize(Vector2.UnitY) * -50;   // 取反即朝目标飞回
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), spanPos, vr, ModContent.ProjectileType<TerratomereBigSlashs>(), (int)(Projectile.damage * 0.75f), Projectile.knockBack, Projectile.owner);
                 }
             }

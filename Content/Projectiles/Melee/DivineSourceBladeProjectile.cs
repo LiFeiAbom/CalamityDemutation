@@ -17,6 +17,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class DivineSourceBladeProjectile : ModProjectile
     {
+        /// <summary>弹幕类名与贴图不同名，故显式指向同目录的光束贴图 DivineSourceBeam</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/Melee/DivineSourceBeam";
         /// <summary>拖尾缓存 25 点、TrailingMode 2</summary>
         public override void SetStaticDefaults()
@@ -69,8 +70,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>TrailStreak 着色器 + ScarletDevilStreak 贴图绘制拖尾，再画光束本体（左向翻转）</summary>
         public override bool PreDraw(ref Color lightColor)
         {
-            GameShaders.Misc["CalamityDemutation:TrailStreak"].UseImage1(ModContent.Request<Texture2D>("CalamityDemutation/ExtraTextures/Trails/ScarletDevilStreak"));
-            PrimitiveRenderer.RenderTrail(Projectile.oldPos, new PrimitiveSettings(WidthFunction, ColorFunction, (float _, Vector2 _) => Projectile.Size * 0.5f, smoothen: true, pixelate: false, GameShaders.Misc["CalamityDemutation:TrailStreak"]), 30);
+            GameShaders.Misc["CalamityDemutation:TrailStreak"].UseImage1(ModContent.Request<Texture2D>("CalamityDemutation/ExtraTextures/Trails/ScarletDevilStreak"));   // 拖尾贴图为猩红恶魔条纹
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, new PrimitiveSettings(WidthFunction, ColorFunction, (float _, Vector2 _) => Projectile.Size * 0.5f, smoothen: true, pixelate: false, GameShaders.Misc["CalamityDemutation:TrailStreak"]), 30);   // 30 = 取样 30 个拖尾点
             Texture2D mainValue = CDUtil.GetT2DValue(Texture);
             Main.EntitySpriteDraw(mainValue, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation + MathHelper.PiOver2, CDUtil.GetOrig(mainValue), Projectile.scale, Projectile.velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
             return false;

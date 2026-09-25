@@ -79,10 +79,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.penetrate = 1;
                 if (Projectile.timeLeft > 500)
                     Projectile.velocity *= 1.06f;
-                float num535 = Projectile.position.X;
-                float num536 = Projectile.position.Y;
-                float num537 = 3000f;
-                bool flag19 = false;
+                float num535 = Projectile.position.X;   // 候选目标 X（先填自身位置）
+                float num536 = Projectile.position.Y;   // 候选目标 Y
+                float num537 = 3000f;                   // 索敌半径
+                bool flag19 = false;                    // 是否找到有效目标
                 NPC ownerMinionAttackTargetNPC2 = Projectile.OwnerMinionAttackTargetNPC;
                 if (ownerMinionAttackTargetNPC2 != null && ownerMinionAttackTargetNPC2.CanBeChasedBy(Projectile, false))
                 {
@@ -120,7 +120,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
                 if (flag19)
                 {
-                    if (Projectile.ai[1] == 0f)
+                    if (Projectile.ai[1] == 0f)   // ai[1] 恒为 0（本文件与派发端都不写它），该判断等价于恒真，保留原结构
                     {
                         float num550 = 24f;
                         Vector2 vector43 = Projectile.Center;

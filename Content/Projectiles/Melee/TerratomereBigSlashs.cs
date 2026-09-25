@@ -17,7 +17,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class TerratomereBigSlashs : ModProjectile
     {
+        /// <summary>最后一次命中的敌怪索引（-1 = 尚未命中），供消亡时决定是否在它身上再生成小刀光创造者</summary>
         public int TargetIndex = -1;
+        /// <summary>使用工程内的隐形贴图：刀光完全由 ExobladePierce 着色器沿 oldPos 画出</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>拖尾缓存 28 点、TrailingMode 2</summary>
         public override void SetStaticDefaults()
@@ -41,23 +43,25 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>尺寸随剩余寿命淡入</summary>
         public override void AI() => Projectile.scale = Utils.GetLerpValue(0f, 8f, Projectile.timeLeft, clamped: true);
+        /// <summary>刀光宽度：完成度前 10% 内由 0 涨到满，之后恒为 width × scale</summary>
         public float SlashWidthFunction(float _, Vector2 __) => Projectile.width * Projectile.scale * Utils.GetLerpValue(0f, 0.1f, _, clamped: true);
+        /// <summary>刀光颜色：不随完成度变化，恒为亮绿 × 弹幕透明度</summary>
         public Color SlashColorFunction(float _, Vector2 __) => Color.Lime * Projectile.Opacity;
         /// <summary>命中：累计电击计数，超过 5 次触发爆炸（场上爆炸不超过 3 个时）</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             TargetIndex = target.whoAmI;
             CalamityDemutationGlobalNPC g = target.GetGlobalNPC<CalamityDemutationGlobalNPC>();
-            g.TerratomereBoltOnHitNum++;
+            g.TerratomereBoltOnHitNum++;   // 计数在第 6 次命中时触发爆炸，第 7 次命中时回落到 0，即每 6 次一轮
             if (g.TerratomereBoltOnHitNum > 6)
                 g.TerratomereBoltOnHitNum = 0;
             target.netUpdate = true;
             if (g.TerratomereBoltOnHitNum > 5 && Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<TerratomereExplosion>()] <= 3)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<TerratomereExplosion>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                if (Projectile.timeLeft > 30)
+                if (Projectile.timeLeft > 30)   // timeLeft 初值 27，此判断恒为 false（原码从旧版沿袭，此处已失效）
                     Projectile.timeLeft = 30;
-                Projectile.velocity *= 0.2f;
+                Projectile.velocity *= 0.2f;   // 触发爆炸后本刀光停下并失效，避免二次结算
                 Projectile.damage = 0;
                 Projectile.netUpdate = true;
             }
@@ -65,6 +69,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>死亡：若目标累计超过 5 次电击，召唤小刀光创造者（场上不超过 3 个）</summary>
         public override void OnKill(int timeLeft)
         {
+            // 只在主人端生成，避免多人下各端重复生成（TargetIndex 经 netUpdate 同步过来）
             if (Main.myPlayer == Projectile.owner && TargetIndex >= 0 && Main.npc.IndexInRange(TargetIndex))
             {
                 int types = ModContent.ProjectileType<TerratomereSlashCreator>();

@@ -21,13 +21,18 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// </summary>
     internal class SonYharon:ModProjectile
     {
-        /// <summary>四帧贴图；可被牺牲（不参与原版"牺牲复活"）、参与原版仆从索敌目标机制</summary>
+        /// <summary>四帧贴图；不可被牺牲（不参与原版"主人将死时以仆从替死"的牺牲复活机制），但参与原版仆从索敌目标机制</summary>
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 4;
             ProjectileID.Sets.MinionSacrificable[Type] = false;
             ProjectileID.Sets.MinionTargettingFeature[Type] = true;
         }
+        /// <summary>
+        /// 基础属性：100x100 碰撞箱、无限穿透、不撞地形、额外更新 1 次（每帧多跑一趟 AI）、
+        /// 寿命 18000*5 帧（靠 <c>ownSonYharon</c> 标志续命）。
+        /// 命中无敌帧与仆从栏位是 2026-09-22 的两处刻意改动，理由见方法体内注释。
+        /// </summary>
         public override void SetDefaults()
         {
             Projectile.width = 100;
@@ -66,6 +71,11 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             }
             return projectile.frame;
         }
+        /// <summary>
+        /// 仆从 AI：出场撒一圈铜钱尘并给主人挂 <see cref="SonYharonBuff"/>、校验召唤标志续命、与同类相互排斥；
+        /// <c>ai[0] == 2</c> 时走"贴身撕咬"的短状态（30 帧）并提前返回，否则索敌（优先主人右键标记的目标），
+        /// 贴近 500 像素内就冲上去撕咬，无目标时飞回主人身边待命。
+        /// </summary>
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -95,8 +105,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             colorValue *= Main.essScale;
             // 犽戎之子的暖色光（偏红，蓝通道只有红的三分之二）
             Lighting.AddLight(Projectile.Center, 1.2f * colorValue, 0.8f * colorValue, 0f);
-            bool ifHasMinion = Projectile.type == ModContent.ProjectileType<SonYharon>();
-            player.AddBuff(ModContent.BuffType<SonYharonBuff>(), 1200);
+            bool ifHasMinion = Projectile.type == ModContent.ProjectileType<SonYharon>();   // 恒为 true（CI 原版用于兼容多个"犽戎之子"变体），保留原结构便于日后加变体
+            player.AddBuff(ModContent.BuffType<SonYharonBuff>(), 1200);   // 每帧刷新维持 Buff（20 秒）
             if (ifHasMinion)
             {
                 if (player.dead)
@@ -109,7 +119,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
             }
             // 与主人的其它同名仆从挤在一起时互相推开，避免叠成一坨
-            float accele = 0.15f;
+            float accele = 0.15f;   // 每帧的排斥推力步长
             for (int i = 0; i < 1000; i++)
             {
                 if (i != Projectile.whoAmI && Main.projectile[i].active && Main.projectile[i].owner == Projectile.owner && ifHasMinion && Math.Abs(Projectile.position.X - Main.projectile[i].position.X) + Math.Abs(Projectile.position.Y - Main.projectile[i].position.Y) < Projectile.width)
@@ -249,7 +259,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                     Projectile.velocity.Y = -0.05f;
                 }
             }
-            Projectile.frame = FramesChanger(Projectile, 12, 4);
+            Projectile.frame = FramesChanger(Projectile, 12, 4);   // 常态动画：每 12 帧一帧，4 帧循环
             if (Projectile.ai[1] > 0f)
             {
                 Projectile.ai[1] += Main.rand.Next(1, 4);

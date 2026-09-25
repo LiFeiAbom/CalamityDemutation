@@ -52,59 +52,61 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Projectile beam = Projectile.NewProjectileDirect(source, position, velocity * 0.75f, type, (int)(damage * 0.75), knockback, Main.myPlayer);
             if (beam.active)
             {
-                beam.localNPCHitCooldown = 14;
-                beam.penetrate = 2;
+                beam.localNPCHitCooldown = 14;   // 同一敌人 14 帧内不再被本光束命中
+                beam.penetrate = 2;              // 穿透 2 个敌人
                 beam.ai[0] = 1f;   // 标记为真·远古方舟光束：命中时不附加元素 debuff（EonBeam.OnHitNPC/OnHitPlayer 读此位豁免）
-                beam.ai[1] = Main.rand.Next(1, 3);
+                beam.ai[1] = Main.rand.Next(1, 3);   // 随机光束颜色编号
             }
-            int i = Main.myPlayer;
-            float num72 = Main.rand.Next(18, 27);
+            int i = Main.myPlayer;               // 弹幕归属者（本地玩家）
+            float num72 = Main.rand.Next(18, 27);// 圣星/大地弹速度基准：18~26
             float adjustedKnockback = player.GetWeaponKnockback(Item, knockback);
-            player.itemTime = Item.useTime;
+            player.itemTime = Item.useTime;      // 保持本体使用计时，与弹幕演出同步
             Vector2 vector2 = player.RotatedRelativePoint(player.MountedCenter, true);
-            Vector2 value = Vector2.UnitX.RotatedBy(player.fullRotation);
-            Vector2 vector3 = Main.MouseWorld - vector2;
-            float num78 = Main.mouseX + Main.screenPosition.X - vector2.X;
-            float num79 = Main.mouseY + Main.screenPosition.Y - vector2.Y;
+            Vector2 value = Vector2.UnitX.RotatedBy(player.fullRotation);   // （未使用）
+            Vector2 vector3 = Main.MouseWorld - vector2;                    // （未使用）
+            float num78 = Main.mouseX + Main.screenPosition.X - vector2.X;  // 鼠标相对玩家的 X 分量
+            float num79 = Main.mouseY + Main.screenPosition.Y - vector2.Y;  // 鼠标相对玩家的 Y 分量
             if (player.gravDir == -1f)
             {
-                num79 = Main.screenPosition.Y + Main.screenHeight - Main.mouseY - vector2.Y;
+                num79 = Main.screenPosition.Y + Main.screenHeight - Main.mouseY - vector2.Y;  // 反重力下翻转鼠标 Y
             }
-            float num80 = (float)Math.Sqrt(num78 * num78 + num79 * num79);
+            float num80 = (float)Math.Sqrt(num78 * num78 + num79 * num79);   // 鼠标方向长度
             if (float.IsNaN(num78) && float.IsNaN(num79) || num78 == 0f && num79 == 0f)
             {
+                // 退化情形（鼠标与玩家重合/数值异常）：退化为朝玩家朝向正前方
                 num78 = player.direction;
                 num79 = 0f;
                 num80 = num72;
             }
             else
             {
-                num80 = num72 / num80;
+                num80 = num72 / num80;   // 换算成速度缩放系数
             }
             for (int num108 = 0; num108 < Main.rand.Next(2, 4); num108++)
             {
+                // 生成点：玩家上方 600 像素、X 在鼠标方向附近随机散布（营造"从天而降"的落点）
                 vector2 = new Vector2(player.position.X + player.width * 0.5f + Main.rand.Next(201) * -player.direction + (Main.mouseX + Main.screenPosition.X - player.position.X), player.MountedCenter.Y - 600f);
                 vector2.X = (vector2.X + player.Center.X) / 2f + Main.rand.Next(-200, 201);
-                vector2.Y -= 100 * num108;
+                vector2.Y -= 100 * num108;   // 逐组抬高 100 像素，形成层次
                 num78 = Main.mouseX + Main.screenPosition.X - vector2.X;
                 num79 = Main.mouseY + Main.screenPosition.Y - vector2.Y;
                 if (num79 < 0f)
                 {
-                    num79 *= -1f;
+                    num79 *= -1f;   // 强制向下的分量（只朝下砸）
                 }
                 if (num79 < 20f)
                 {
-                    num79 = 20f;
+                    num79 = 20f;    // 保证至少有一点垂直速度，避免水平飞
                 }
                 num80 = (float)Math.Sqrt(num78 * num78 + num79 * num79);
                 num80 = num72 / num80;
                 num78 *= num80;
                 num79 *= num80;
-                float speedX2 = num78 + Main.rand.Next(-160, 161) * 0.02f;
+                float speedX2 = num78 + Main.rand.Next(-160, 161) * 0.02f;   // ±3.2 的随机散布
                 float speedY2 = num79 + Main.rand.Next(-160, 161) * 0.02f;
                 int proj = Projectile.NewProjectile(source, vector2, new Vector2(speedX2, speedY2), ProjectileID.HallowStar, damage / 2, adjustedKnockback, i, 0f, Main.rand.Next(10));
-                Main.projectile[proj].DamageType = DamageClass.Melee;
-                speedX2 = num78 + Main.rand.Next(-80, 81) * 0.02f;
+                Main.projectile[proj].DamageType = DamageClass.Melee;   // 圣星本体是魔法弹幕，强制改成近战以免吃错加成
+                speedX2 = num78 + Main.rand.Next(-80, 81) * 0.02f;   // 大地弹散布更小（±1.6）
                 speedY2 = num79 + Main.rand.Next(-80, 81) * 0.02f;
                 Projectile.NewProjectile(source, vector2, new Vector2(speedX2, speedY2), ModContent.ProjectileType<TerraBall>(), damage, adjustedKnockback, i, 0f, Main.rand.Next(5));
             }
@@ -186,18 +188,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
+            // ── 现代版灾厄：远古方舟 + 灾厄核心 + 断裂英雄剑，秘银砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<ArkoftheAncients>();
-                    recipe.AddIngredient(coreofCalamity.Type);
-                    recipe.AddIngredient(ItemID.BrokenHeroSword);
+                    recipe.AddIngredient<ArkoftheAncients>();       // 远古方舟（本模组下位）
+                    recipe.AddIngredient(coreofCalamity.Type);      // 灾厄材料：灾厄核心
+                    recipe.AddIngredient(ItemID.BrokenHeroSword);   // 断裂英雄剑
                     recipe.AddTile(TileID.MythrilAnvil);
                     recipe.Register();
                 }
             }
+            // ── 经典版灾厄：额外需要生命碎片 ×3 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 if (calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
@@ -206,7 +210,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     Recipe recipe1 = CreateRecipe();
                     recipe1.AddIngredient<ArkoftheAncients>();
                     recipe1.AddIngredient(classicCoreofCalamity.Type);
-                    recipe1.AddIngredient(livingShard.Type, 3);
+                    recipe1.AddIngredient(livingShard.Type, 3);     // 经典版材料：生命碎片 ×3
                     recipe1.AddIngredient(ItemID.BrokenHeroSword);
                     recipe1.AddTile(TileID.MythrilAnvil);
                     recipe1.Register();

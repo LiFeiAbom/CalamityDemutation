@@ -7,13 +7,20 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// Ω生物群系之球 - Ω生物群系之剑发射的追踪弹幕
-    /// 颜色与命中 debuff 依据生物群系及月相变化（含四柱环境）
+    /// Ω生物群系之球（OmegaBiomeOrb） - Ω生物群系之剑发射的追踪弹幕，
+    /// 移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
+    /// <para>
+    /// 颜色与命中 debuff 依据生物群系、四柱环境与月相事件（血月 / 霜月 / 南瓜月）变化，命中 debuff 一律 600 帧（10 秒）；
+    /// 相对经典版的重制点：借用原版光束 AI 模板、把粉尘类型与颜色提成字段、补上 6 格残影绘制与 200 像素内的短程追踪，
+    /// 另外兼容现代版灾厄的"星陨之地"配色。
+    /// </para>
     /// </summary>
     internal class OmegaBiomeOrb : ModProjectile
     {
-        Color color = default;      // 当前渲染颜色
-        private int dustType = 3;   // 当前使用的粉尘类型
+        /// <summary>当前渲染颜色：每帧按主人所在生物群系/四柱环境刷新，<see cref="GetAlpha"/> 直接返回它</summary>
+        Color color = default;
+        /// <summary>当前使用的粉尘类型：每帧按主人所在生物群系/四柱环境刷新（默认 3 = 森林，防止残留上一群系的粉尘）</summary>
+        private int dustType = 3;
         /// <summary>
         /// 静态属性：预留 6 格残影缓存（配合 PreDraw 的残影绘制）
         /// </summary>
@@ -153,14 +160,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",
+                            var field = calamityPlayerType.GetField("ZoneAstral",   // 读 CalamityPlayer 的 ZoneAstral 标记
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
                             if (field != null)
                             {
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
-                                if (ZoneAstral)
+                                if (ZoneAstral)   // 星陨之地：改用灾厄的 AstralOrange 粉尘与橙色配色
                                 {
                                     if (calamity.TryFind<ModDust>("AstralOrange", out ModDust astralOrange)) { dustType = astralOrange.Type; }
                                     color = new Color(255, 127, 80, Projectile.alpha);
@@ -175,7 +182,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Main.dust[num458].noGravity = true;
             Main.dust[num458].velocity *= 0.5f;
             Main.dust[num458].velocity += Projectile.velocity * 0.1f;
-            Projectile.HomeInNPC(200f, 24f, 20f);   // 短距离追踪（200 像素内）
+            Projectile.HomeInNPC(200f, 24f, 20f);   // 短程追踪：只追 200 像素内最近的敌人，追踪速度 24、惯性 20
         }
         /// <summary>
         /// 命中敌人：依据生物群系施加 debuff，并根据血月/霜月/南瓜月给予玩家 buff
@@ -194,20 +201,24 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             bool bloodMoon = Main.bloodMoon;
             bool snowMoon = Main.snowMoon;
             bool pumpkinMoon = Main.pumpkinMoon;
-            // 血月：给予"战斗"buff
+            // 三个事件是三个并列 if（不是 else-if）：血月/霜月可与下面的群系分支同时生效；
+            // 但南瓜月接在群系链首的 if 上，一旦南瓜月成立，其后的群系分支（else if …）就整条跳过
+            // 血月：给予"战斗"buff（600 帧 = 10 秒）
             if (bloodMoon)
             {
                 player.AddBuff(BuffID.Battle, 600);
             }
             if (snowMoon)
             {
+                // 霜月：给予快速治疗 buff
                 player.AddBuff(BuffID.RapidHealing, 600);
             }
             if (pumpkinMoon)
             {
+                // 南瓜月：给予吃饱 buff
                 player.AddBuff(BuffID.WellFed, 600);
             }
-            else if (jungle)
+            else if (jungle)   // 丛林：中毒 + 瘟疫
             {
                 target.AddBuff(BuffID.Venom, 600);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -219,12 +230,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
             }
-            else if (snow)
+            else if (snow)   // 雪原：霜灼
             {
                 // 修正：霜冻是负面 debuff，应施加给目标而非玩家自己
                 target.AddBuff(BuffID.Frostburn, 600);
             }
-            else if (beach)
+            else if (beach)   // 海滩：沉海（CrushDepth）
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -235,11 +246,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
             }
-            else if (dungeon)
+            else if (dungeon)   // 地牢：霜灼
             {
                 target.AddBuff(BuffID.Frostburn, 600);
             }
-            else if (desert || holy)
+            else if (desert || holy)   // 沙漠 / 神圣：圣火（现代版 HolyFlames，经典版 HolyLight）
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -250,7 +261,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 600); }
                 }
             }
-            else if (glow)
+            else if (glow)   // 发光蘑菇地：时之悲
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -261,7 +272,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
                 }
             }
-            else if (hell)
+            else if (hell)   // 地狱：硫磺火
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -272,7 +283,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
                 }
             }
-            else
+            else   // 其它（森林等）：甲壳破碎
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -295,14 +306,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",
+                            var field = calamityPlayerType.GetField("ZoneAstral",   // 读 CalamityPlayer 的 ZoneAstral 标记
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
                             if (field != null)
                             {
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
-                                if (ZoneAstral)
+                                if (ZoneAstral)   // 星陨之地：追加星陨感染
                                 {
                                     if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection)) { target.AddBuff(astralInfection.Type, 600); }
                                 }
@@ -329,20 +340,24 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             bool bloodMoon = Main.bloodMoon;
             bool snowMoon = Main.snowMoon;
             bool pumpkinMoon = Main.pumpkinMoon;
-            // 血月：给予"战斗"buff
+            // 三个事件是三个并列 if（不是 else-if）：血月/霜月可与下面的群系分支同时生效；
+            // 但南瓜月接在群系链首的 if 上，一旦南瓜月成立，其后的群系分支（else if …）就整条跳过
+            // 血月：给予"战斗"buff（600 帧 = 10 秒）
             if (bloodMoon)
             {
                 player.AddBuff(BuffID.Battle, 600);
             }
             if (snowMoon)
             {
+                // 霜月：给予快速治疗 buff
                 player.AddBuff(BuffID.RapidHealing, 600);
             }
             if (pumpkinMoon)
             {
+                // 南瓜月：给予吃饱 buff
                 player.AddBuff(BuffID.WellFed, 600);
             }
-            else if (jungle)
+            else if (jungle)   // 丛林：中毒 + 瘟疫
             {
                 target.AddBuff(BuffID.Venom, 600);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -354,12 +369,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
             }
-            else if (snow)
+            else if (snow)   // 雪原：霜灼
             {
                 // 修正：霜冻是负面 debuff，应施加给目标而非玩家自己
                 target.AddBuff(BuffID.Frostburn, 600);
             }
-            else if (beach)
+            else if (beach)   // 海滩：沉海（CrushDepth）
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -370,11 +385,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
             }
-            else if (dungeon)
+            else if (dungeon)   // 地牢：霜灼
             {
                 target.AddBuff(BuffID.Frostburn, 600);
             }
-            else if (desert || holy)
+            else if (desert || holy)   // 沙漠 / 神圣：圣火（现代版 HolyFlames，经典版 HolyLight）
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -385,7 +400,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 600); }
                 }
             }
-            else if (glow)
+            else if (glow)   // 发光蘑菇地：时之悲
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -396,7 +411,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
                 }
             }
-            else if (hell)
+            else if (hell)   // 地狱：硫磺火
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -407,7 +422,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
                 }
             }
-            else
+            else   // 其它（森林等）：甲壳破碎
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -430,14 +445,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
                         {
-                            var field = calamityPlayerType.GetField("ZoneAstral",
+                            var field = calamityPlayerType.GetField("ZoneAstral",   // 读 CalamityPlayer 的 ZoneAstral 标记
                                 System.Reflection.BindingFlags.Public |
                                 System.Reflection.BindingFlags.NonPublic |
                                 System.Reflection.BindingFlags.Instance);
                             if (field != null)
                             {
                                 bool ZoneAstral = (bool)field.GetValue(calPlayer);
-                                if (ZoneAstral)
+                                if (ZoneAstral)   // 星陨之地：追加星陨感染
                                 {
                                     if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection)) { target.AddBuff(astralInfection.Type, 600); }
                                 }
@@ -453,10 +468,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override void OnKill(int timeLeft)
         {
             int num3;
+            // 反编译风格的循环：循环末把 num3 赋成 num795，等价于 num795++；num795 从 4 走到 30，共 27 组
             for (int num795 = 4; num795 < 31; num795 = num3 + 1)
             {
+                // 沿旧速度的反方向把生成点往回推 30/num795 像素——num795 越大推得越近，即由远及近铺开
                 float num796 = Projectile.oldVelocity.X * (30f / num795);
                 float num797 = Projectile.oldVelocity.Y * (30f / num795);
+                // 每组撒两粒当前群系色尘：大的（1.8）留一半速度，小的（1.4）几乎不动，形成碎裂感
                 int num798 = Dust.NewDust(new Vector2(Projectile.oldPosition.X - num796, Projectile.oldPosition.Y - num797), 8, 8, dustType, Projectile.oldVelocity.X, Projectile.oldVelocity.Y, 100, default, 1.8f);
                 Main.dust[num798].noGravity = true;
                 Dust dust = Main.dust[num798];

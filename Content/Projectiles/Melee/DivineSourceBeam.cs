@@ -19,13 +19,21 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class DivineSourceBeam : ModProjectile
     {
+        /// <summary>本帧的弧光采样点缓存（每次 PreDraw 重新生成覆盖）</summary>
         public Vector2[] ControlPoints;
+        /// <summary>度 → 弧度的换算系数</summary>
         private const float AtoR = MathHelper.Pi / 180f;
+        /// <summary>右向剑气（速度 X &gt; 0）的弧线末端角：60°</summary>
         private const float EndRot = 60 * AtoR;
+        /// <summary>右向剑气的弧线起始角：-170°</summary>
         private const float StarRot = -170 * AtoR;
+        /// <summary>左向剑气的弧线末端角：-240°（采样时会再额外 +30°）</summary>
         private const float LEndRot = -240 * AtoR;
+        /// <summary>左向剑气的弧线起始角：-10°</summary>
         private const float LStarRot = -10 * AtoR;
+        /// <summary>是否镜像绘制（ai[0]=1 表示左向），供着色器的 flipped 参数使用</summary>
         public bool Flipped => Projectile.ai[0] == 1f;
+        /// <summary>使用工程内的隐形贴图：本体不做贴图绘制，剑气完全由 ExobladeSlash 着色器画出</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>基础属性：60×144、真近战（MeleeNoSpeed）、穿透无限、不碰撞物块、存活 30 帧、本地免疫 -1</summary>
         public override void SetDefaults()
@@ -67,11 +75,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             // 源为 CWRUtils.GetPlayerInstance(owner)（非法或已死亡的玩家返回 null，不跟随其速度）
             if (owner.Alives())
                 Projectile.position += owner.velocity;
-            Projectile.Opacity = Utils.GetLerpValue(Projectile.localAI[0], 26f, Projectile.timeLeft, clamped: true);
-            Projectile.velocity *= 0.91f;
-            Projectile.scale *= 1.03f;
-            Projectile.rotation -= 5f;
+            Projectile.Opacity = Utils.GetLerpValue(Projectile.localAI[0], 26f, Projectile.timeLeft, clamped: true);   // localAI[0] 无人写入恒为 0：等于按剩余寿命 0→26 帧淡入再淡出
+            Projectile.velocity *= 0.91f;   // 每帧衰减 9%，剑气越挥越停
+            Projectile.scale *= 1.03f;   // 每帧膨胀 3%，配合 PreDraw 里的 70 像素外推把弧线越撑越大
+            Projectile.rotation -= 5f;   // 注意单位是"度"（与 OnSpawn 的 -160/90 同口径），采样时才乘 AtoR
         }
+        /// <summary>剑气宽度：与完成度无关，恒为 scale × 50</summary>
         public float SlashWidthFunction(float completionRatio, Vector2 _) => Projectile.scale * 50f;
         /// <summary>剑气颜色：按完成度正弦加亮（前 40% 三次方抬升）</summary>
         public Color SlashColorFunction(float completionRatio, Vector2 _)
@@ -92,6 +101,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             GameShaders.Misc["CalamityDemutation:ExobladeSlash"].Apply();
             List<Vector2> list = new List<Vector2>();
             ControlPoints = GenerateSlashPoints(Projectile.velocity.X < 0).ToArray();
+            // 以采样点方向为径向，按 (scale-1)×70 像素把弧线整体向外推，实现剑气随膨胀变宽的观感
             for (int i = 0; i < ControlPoints.Length; i++)
                 list.Add(ControlPoints[i] + ControlPoints[i].SafeNormalize(Vector2.Zero) * (Projectile.scale - 1f) * 70f);
             // 本机 tML 无灾厄的 EnterShaderRegion/ExitShaderRegion，改用 End + 立即模式 Begin 替代，画完恢复默认批状态

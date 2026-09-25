@@ -22,6 +22,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class TerratomereHoldout : ModProjectile
     {
+        // ── 属性与静态参数 ──
+        /// <summary>弹幕主人（挥舞泰拉巨刃的玩家）</summary>
         public Player Owner => Main.player[Projectile.owner];
         /// <summary>挥砍方向（+1 右 / -1 左）</summary>
         public int Direction => Projectile.velocity.X > 0 ? 1 : -1;
@@ -40,15 +42,20 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 return num;
             }
         }
+        /// <summary>剑身朝向的单位向量（在旋转角基础上再乘方向，修正左向翻转）</summary>
         public Vector2 SwordDirection => SwordRotation.ToRotationVector2() * Direction;
+        /// <summary>已推进的更新帧数（ai[0]）：83 帧为一整轮，同时充当弧线进度轴</summary>
         public ref float Time => ref Projectile.ai[0];
+        /// <summary>初始朝向（ai[1]，首帧由 velocity 记下并同步），四段弧线角都以它为基准</summary>
         public ref float InitialRotation => ref Projectile.ai[1];
         /// <summary>挥砍到主挥段的完成度阈值</summary>
         public static float SwingCompletionRatio => 0.37f;
         /// <summary>挥砍到收招段的完成度阈值</summary>
         public static float RecoveryCompletionRatio => 0.84f;
+        // ── 覆写属性 ──
         /// <summary>武器贴图复用现代版灾厄泰拉巨刃贴图</summary>
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Melee/Terratomere";
+        // ── 生命周期方法 ──
         /// <summary>拖尾缓存 100 点、TrailingMode 2（记录位置与旋转，供弧光采样）</summary>
         public override void SetStaticDefaults()
         {
@@ -78,17 +85,19 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             if (InitialRotation == 0f)
             {
+                // 首帧（ai[1] 仍为初始 0）把速度方向记成初始朝向；netUpdate 让非主人端也拿到同一个基准角
                 InitialRotation = Projectile.velocity.ToRotation();
                 Projectile.netUpdate = true;
             }
+            // 起手(0~13%)与收招(87%~100%)缩到最小 1.3 倍，主挥段涨到最大 2.0 倍
             Projectile.scale = Utils.GetLerpValue(0f, 0.13f, SwingCompletion, clamped: true) * Utils.GetLerpValue(1f, 0.87f, SwingCompletion, clamped: true) * 0.7f + 0.3f + 1f;
             AdjustPlayerValues();
             StickToOwner();
             CreateProjectiles();
-            if (SwingCompletion > SwingCompletionRatio + 0.2f && SwingCompletion < RecoveryCompletionRatio)
+            if (SwingCompletion > SwingCompletionRatio + 0.2f && SwingCompletion < RecoveryCompletionRatio)   // 只在主挥段 57%~84% 之间喷尘
                 CreateSlashSparkleDust();
             Projectile.rotation = SwordRotation;
-            Time += 1f;
+            Time += 1f;   // 自增放在最后：本帧的旋转角与子弹幕判定用的都是"本帧开始时的进度"
         }
         /// <summary>把玩家朝向/手臂锁定到挥砍方向</summary>
         public void AdjustPlayerValues()
@@ -116,7 +125,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 SoundEngine.PlaySound(CalamityDemutationSounds.TerratomereSwing, Projectile.Center);
             if (Main.myPlayer == Projectile.owner && Time == (int)(83f * (SwingCompletionRatio + 0.34f)))
             {
+                // 只由主人端生成弹幕；ActiveItem() 取的是"鼠标上拿着就优先用鼠标物品，否则用手持物"
                 Vector2 vector = Projectile.DirectionTo(Main.MouseWorld) * Owner.ActiveItem().shootSpeed;
+                // 鼠标方向与初始朝向偏离超过 1.456 弧度（约 83°）时，改用初始朝向，防止闪电朝背离剑身的方向射出
                 if (Math.Abs(MathHelper.WrapAngle(vector.ToRotation() - InitialRotation)) > 1.456f)
                     vector = InitialRotation.ToRotationVector2() * vector.Length();
                 for (int i = 0; i < 3; i++)
@@ -131,7 +142,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Vector2 vector2 = InitialRotation.ToRotationVector2() * Owner.HeldItem.shootSpeed / 6f;
                 Vector2 position = Projectile.Center + vector2.SafeNormalize(Vector2.UnitY) * 64f;
                 int num = Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, vector2, ModContent.ProjectileType<TerratomereBeams>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                if (Main.projectile.IndexInRange(num))
+                if (Main.projectile.IndexInRange(num))   // 生成可能失败（到达弹幕上限），故先校验索引再写 ai
                 {
                     Main.projectile[num].ai[0] = Direction == 1 ? 1 : 0;
                     (Main.projectile[num].ModProjectile as TerratomereBeams).ControlPoints = GenerateSlashPoints().ToArray();
@@ -162,17 +173,19 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             DrawBlade(lightColor);
             return false;
         }
+        /// <summary>弧光宽度：与完成度无关，恒为 scale × 22</summary>
         public float SlashWidthFunction(float completionRatio, Vector2 _) => Projectile.scale * 22f;
+        /// <summary>弧光颜色：亮绿，前 40% 全程最亮，40%→90% 线性衰减到 0，再乘弹幕透明度</summary>
         public Color SlashColorFunction(float completionRatio, Vector2 _) => Color.Lime * Utils.GetLerpValue(0.9f, 0.4f, completionRatio, clamped: true) * Projectile.Opacity;
         /// <summary>按当前完成度与拖尾起始完成度采样 20 个弧光点（等分插值，扣除旧旋转差）</summary>
         public IEnumerable<Vector2> GenerateSlashPoints()
         {
             for (int i = 0; i < 20; i++)
             {
-                float completion = MathHelper.Lerp(SwingCompletion, SwingCompletionAtStartOfTrail, i / 20f);
-                float offsetRot = Math.Abs(Projectile.oldRot[0] - Projectile.oldRot[1]) * 0.8f;
+                float completion = MathHelper.Lerp(SwingCompletion, SwingCompletionAtStartOfTrail, i / 20f);   // i/20 即从"当前进度"插到"拖尾起点进度"
+                float offsetRot = Math.Abs(Projectile.oldRot[0] - Projectile.oldRot[1]) * 0.8f;   // 起点回撤量取相邻两帧旋转差的 0.8 倍
                 if (SwingCompletion > RecoveryCompletionRatio)
-                    offsetRot = 0.21f;
+                    offsetRot = 0.21f;   // 进入收招段后固定回撤 0.21 弧度
                 float rots = (GetSwingOffsetAngle(completion) - offsetRot) * Direction + InitialRotation;
                 yield return rots.ToRotationVector2() * Projectile.scale * 54f;
             }
@@ -208,9 +221,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>真近战回血 4（受 moonLeech 限制）</summary>
         public void OnHitHealEffect()
         {
-            if (!Owner.moonLeech)
+            if (!Owner.moonLeech)   // 月光吸血期间禁疗，与原版口径一致
             {
-                Owner.statLife += Terratomere.TrueMeleeHitHeal;
+                Owner.statLife += Terratomere.TrueMeleeHitHeal;   // 照原码直接加生命，未再夹回 statLifeMax2
                 Owner.HealEffect(Terratomere.TrueMeleeHitHeal);
             }
         }
@@ -231,7 +244,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (Owner.ownedProjectileCounts[num] < 2)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, num, Projectile.damage, Projectile.knockBack, Projectile.owner, target.whoAmI, Main.rand.NextFloat(MathF.PI * 2f));
-                Owner.ownedProjectileCounts[num]++;
+                Owner.ownedProjectileCounts[num]++;   // 同帧可能连续命中多个目标，手动 +1 才能让上面的计数判断当帧生效
             }
         }
         /// <summary>PvP 命中：施加冰川状态（找不到退回霜火）、回血</summary>
@@ -241,8 +254,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             OnHitHealEffect();
         }
         // ── 内联灾厄 PiecewiseAnimation（只保留 PolyIn/PolyOut，Terratomere 四段弧线专用）──
+        /// <summary>缓入：amount 的 degree 次幂</summary>
         private static float PolyIn(float amount, int degree) => (float)Math.Pow(amount, degree);
+        /// <summary>缓出：1 减去 (1-amount) 的 degree 次幂</summary>
         private static float PolyOut(float amount, int degree) => 1f - (float)Math.Pow(1f - amount, degree);
+        /// <summary>
+        /// 分段动画取值：segments 每项描述一段（起始进度 startX、起始高度 startHeight、段内增量 shift、
+        /// 用缓入还是缓出 polyIn、以及多项式次数 degree），progress 落在哪一段就按该段的曲线算出当前高度。
+        /// </summary>
         private static float PiecewiseAnimation(float progress, (float startX, float startHeight, float shift, bool polyIn, int degree)[] segments)
         {
             if (segments.Length == 0)

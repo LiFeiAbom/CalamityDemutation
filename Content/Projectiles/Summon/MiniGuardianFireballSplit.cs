@@ -63,7 +63,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             if (Projectile.frame > 3)
                 Projectile.frame = 0;
             if (Math.Abs(Projectile.velocity.X) < 8f)
-                Projectile.velocity.X *= 1.05f;
+                Projectile.velocity.X *= 1.05f;   // 横向速度不足 8 时每帧 +5%，让裂片尽快甩开
             // 原为 CalamityUtils.MinionHoming，本工程用 MiniGuardianTargeting 的等价实现
             NPC target = MiniGuardianTargeting.MinionHoming(Projectile.Center, 2000f, Main.player[Projectile.owner], true);
             if (target != null)
@@ -77,7 +77,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.velocity.Normalize();
                 Projectile.velocity *= scaleFactor2;
             }
-            Projectile.rotation = Projectile.velocity.X * 0.025f;
+            Projectile.rotation = Projectile.velocity.X * 0.025f;   // 按横向速度轻微侧倾（视觉上的"划空"感）
         }
         /// <summary>昼夜配色（白天橙红 / 夜晚青蓝）</summary>
         public override Color? GetAlpha(Color lightColor)

@@ -94,78 +94,81 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             bool bloodMoon = Main.bloodMoon;
             bool snowMoon = Main.snowMoon;
             bool pumpkinMoon = Main.pumpkinMoon;
+            // 月相事件优先：三者各自独立判定，可同时生效
             if (bloodMoon)
             {
-                player.AddBuff(BuffID.Battle, 600);
+                player.AddBuff(BuffID.Battle, 600);         // 血月：战斗
             }
             if (snowMoon)
             {
-                player.AddBuff(BuffID.RapidHealing, 600);
+                player.AddBuff(BuffID.RapidHealing, 600);   // 霜月：快速治疗
             }
             if (pumpkinMoon)
             {
-                player.AddBuff(BuffID.WellFed, 600);
+                player.AddBuff(BuffID.WellFed, 600);        // 南瓜月：饱食
             }
+            // 其后按生物群系走 if-else 链，只取第一个匹配到的环境
             else if (jungle)
             {
-                player.AddBuff(BuffID.Thorns, 600);
+                player.AddBuff(BuffID.Thorns, 600);         // 丛林：荆棘
             }
             else if (snow)
             {
-                player.AddBuff(BuffID.Warmth, 600);
+                player.AddBuff(BuffID.Warmth, 600);         // 雪原：温暖
             }
             else if (beach)
             {
-                player.AddBuff(BuffID.Wet, 600);
+                player.AddBuff(BuffID.Wet, 600);            // 沙滩：潮湿
             }
             else if (corrupt)
             {
-                player.AddBuff(BuffID.Wrath, 600);
+                player.AddBuff(BuffID.Wrath, 600);          // 腐化：愤怒（增伤）
             }
             else if (crimson)
             {
-                player.AddBuff(BuffID.Rage, 600);
+                player.AddBuff(BuffID.Rage, 600);           // 猩红：暴怒（增暴击）
             }
             else if (dungeon)
             {
-                player.AddBuff(BuffID.Dangersense, 600);
+                player.AddBuff(BuffID.Dangersense, 600);    // 地牢：危险感知
             }
             else if (desert)
             {
-                player.AddBuff(BuffID.Endurance, 600);
+                player.AddBuff(BuffID.Endurance, 600);      // 沙漠：耐力
             }
             else if (glow)
             {
-                player.AddBuff(BuffID.Spelunker, 600);
+                player.AddBuff(BuffID.Spelunker, 600);      // 发光蘑菇：洞穴探险
             }
             else if (hell)
             {
-                player.AddBuff(BuffID.Inferno, 600);
+                player.AddBuff(BuffID.Inferno, 600);        // 地狱：狱火
             }
             else if (holy)
             {
-                player.AddBuff(BuffID.Heartreach, 600);
+                player.AddBuff(BuffID.Heartreach, 600);     // 神圣：心之共鸣（Heartreach）
             }
             else if (nebula)
             {
-                player.AddBuff(BuffID.MagicPower, 600);
+                player.AddBuff(BuffID.MagicPower, 600);     // 星云柱：魔能
             }
             else if (stardust)
             {
-                player.AddBuff(BuffID.Summoning, 600);
+                player.AddBuff(BuffID.Summoning, 600);      // 星尘柱：召唤
             }
             else if (solar)
             {
-                player.AddBuff(BuffID.Titan, 600);
+                player.AddBuff(BuffID.Titan, 600);          // 日耀柱：泰坦
             }
             else if (vortex)
             {
-                player.AddBuff(BuffID.AmmoReservation, 600);
+                player.AddBuff(BuffID.AmmoReservation, 600);// 星旋柱：弹药储备
             }
             else
             {
-                player.AddBuff(BuffID.DryadsWard, 600);
+                player.AddBuff(BuffID.DryadsWard, 600);     // 其余环境：树妖祝福
             }
+            // 星陨（灾厄自定义生物群系）无法用原版 Zone 读到，故用反射取灾厄 ModPlayer 的 ZoneAstral
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()
@@ -189,7 +192,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 {
                                     if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
                                     {
-                                        player.AddBuff(gravityNormalizerBuff.Type, 600);
+                                        player.AddBuff(gravityNormalizerBuff.Type, 600);   // 星陨：重力正常化
                                     }
                                 }
                             }
@@ -393,6 +396,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
+            // ── 现代版灾厄：Ω生物群系之剑 + 星辉矿锭 ×8 + 暗黑碎片 ×8，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
@@ -400,13 +404,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<OmegaBiomeBlade>();
-                    recipe.AddIngredient(cosmiliteBar.Type, 8);
-                    recipe.AddIngredient(darksunFragment.Type, 8);
-                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.AddIngredient<OmegaBiomeBlade>();        // Ω生物群系之剑（本模组下位）
+                    recipe.AddIngredient(cosmiliteBar.Type, 8);     // 灾厄材料：星辉矿锭 ×8
+                    recipe.AddIngredient(darksunFragment.Type, 8);  // 灾厄材料：暗黑碎片 ×8
+                    recipe.AddTile(cosmicAnvil.Type);               // 宇宙砧
                     recipe.Register();
                 }
             }
+            // ── 经典版灾厄：材料改为 Phantoplasm、且改在德雷顿熔炉合成 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 if (calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
@@ -415,8 +420,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 {
                     Recipe recipe1 = CreateRecipe();
                     recipe1.AddIngredient<OmegaBiomeBlade>();
-                    recipe1.AddIngredient(classicCosmiliteBar.Type, 10);
-                    recipe1.AddIngredient(phantoplasm.Type, 5);
+                    recipe1.AddIngredient(classicCosmiliteBar.Type, 10);  // 经典版材料：星辉矿锭 ×10
+                    recipe1.AddIngredient(phantoplasm.Type, 5);           // 经典版材料：幻影质 ×5
                     recipe1.AddTile(draedonsForge.Type);
                     recipe1.Register();
                 }

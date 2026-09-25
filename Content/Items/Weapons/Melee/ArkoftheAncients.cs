@@ -61,49 +61,51 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Main.projectile[beam].penetrate = 2;    // 永恒光束穿透 2 个敌人
             if (Main.projectile[beam].type == ProjectileID.EnchantedBeam)
                 Main.projectile[beam].extraUpdates = 1; // 附魔光束加速飞行
-            float num72 = Main.rand.Next(18, 25);
+            float num72 = Main.rand.Next(18, 25);       // 圣星速度基准：18~24
             Vector2 vector2 = player.RotatedRelativePoint(player.MountedCenter, true);
-            float num78 = Main.mouseX + Main.screenPosition.X - vector2.X;
-            float num79 = Main.mouseY + Main.screenPosition.Y - vector2.Y;
+            float num78 = Main.mouseX + Main.screenPosition.X - vector2.X;   // 鼠标相对玩家的 X 分量
+            float num79 = Main.mouseY + Main.screenPosition.Y - vector2.Y;   // 鼠标相对玩家的 Y 分量
             if (player.gravDir == -1f)
             {
-                num79 = Main.screenPosition.Y + Main.screenHeight - Main.mouseY - vector2.Y;
+                num79 = Main.screenPosition.Y + Main.screenHeight - Main.mouseY - vector2.Y;  // 反重力下翻转鼠标 Y
             }
-            float num80 = (float)Math.Sqrt(num78 * num78 + num79 * num79);
+            float num80 = (float)Math.Sqrt(num78 * num78 + num79 * num79);   // 鼠标方向长度
             if (float.IsNaN(num78) && float.IsNaN(num79) || num78 == 0f && num79 == 0f)
             {
+                // 退化情形（鼠标与玩家重合/数值异常）：退化为朝玩家朝向正前方
                 num78 = player.direction;
                 num79 = 0f;
                 num80 = num72;
             }
             else
             {
-                num80 = num72 / num80;
+                num80 = num72 / num80;   // 换算成速度缩放系数
             }
-            int num107 = 2;
+            int num107 = 2;              // 每次召唤 2 颗圣星
             for (int num108 = 0; num108 < num107; num108++)
             {
+                // 生成点：玩家上方 600 像素、X 在鼠标方向附近随机散布（营造"从天而降"的落点）
                 vector2 = new Vector2(player.position.X + player.width * 0.5f + Main.rand.Next(201) * -player.direction + (Main.mouseX + Main.screenPosition.X - player.position.X), player.MountedCenter.Y - 600f);
                 vector2.X = (vector2.X + player.Center.X) / 2f + Main.rand.Next(-200, 201);
-                vector2.Y -= 100 * num108;
+                vector2.Y -= 100 * num108;   // 第二颗再抬高 100 像素，形成层次
                 num78 = Main.mouseX + Main.screenPosition.X - vector2.X;
                 num79 = Main.mouseY + Main.screenPosition.Y - vector2.Y;
                 if (num79 < 0f)
                 {
-                    num79 *= -1f;
+                    num79 *= -1f;   // 强制向下的分量（圣星只朝下砸）
                 }
                 if (num79 < 20f)
                 {
-                    num79 = 20f;
+                    num79 = 20f;    // 保证至少有一点垂直速度，避免水平飞
                 }
                 num80 = (float)Math.Sqrt(num78 * num78 + num79 * num79);
                 num80 = num72 / num80;
                 num78 *= num80;
                 num79 *= num80;
-                float speedX4 = num78 + Main.rand.Next(-120, 121) * 0.02f;
+                float speedX4 = num78 + Main.rand.Next(-120, 121) * 0.02f;   // ±2.4 的随机散布
                 float speedY5 = num79 + Main.rand.Next(-120, 121) * 0.02f;
                 int proj = Projectile.NewProjectile(source, vector2.X, vector2.Y, speedX4, speedY5, ProjectileID.HallowStar, damage / 3, knockback, player.whoAmI, 0f, Main.rand.Next(5));
-                Main.projectile[proj].DamageType = DamageClass.Melee;
+                Main.projectile[proj].DamageType = DamageClass.Melee;   // 圣星本体是魔法弹幕，强制改成近战以免吃错加成
             }
             return false;
         }
@@ -160,38 +162,42 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
+            // ── 现代版灾厄：日光精华 ×3 + 极寒精华 ×3 + 落星 + 附魔剑，铁砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight)
                     && calamity.TryFind<ModItem>("EssenceofEleum", out ModItem essenceofEleum))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient(essenceofSunlight.Type, 3);
-                    recipe.AddIngredient(essenceofEleum.Type, 3);
-                    recipe.AddIngredient(ItemID.Starfury);
-                    recipe.AddIngredient(ItemID.EnchantedSword);
-                    recipe.AddTile(TileID.Anvils);
+                    recipe.AddIngredient(essenceofSunlight.Type, 3);  // 灾厄材料：日光精华 ×3
+                    recipe.AddIngredient(essenceofEleum.Type, 3);     // 灾厄材料：极寒精华 ×3
+                    recipe.AddIngredient(ItemID.Starfury);            // 落星
+                    recipe.AddIngredient(ItemID.EnchantedSword);      // 附魔剑
+                    recipe.AddTile(TileID.Anvils);                    // 铁砧
                     recipe.Register();
                 }
             }
+            // ── 经典版灾厄：日光精华→余烬精华，且改用秘银砧、并额外给出 Arkhalis 替代路线 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 if (calamity1.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder)
                     && calamity1.TryFind<ModItem>("EssenceofEleum", out ModItem classicEssenceofEleum))
                 {
+                    // 路线一：附魔剑
                     Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(essenceofCinder.Type, 3);
+                    recipe1.AddIngredient(essenceofCinder.Type, 3);           // 经典版对应材料 ×3
                     recipe1.AddIngredient(classicEssenceofEleum.Type, 3);
                     recipe1.AddIngredient(ItemID.Starfury);
                     recipe1.AddIngredient(ItemID.EnchantedSword);
-                    recipe1.AddIngredient(ItemID.Excalibur);
+                    recipe1.AddIngredient(ItemID.Excalibur);                  // 断钢剑
                     recipe1.AddTile(TileID.MythrilAnvil);
                     recipe1.Register();
+                    // 路线二：Arkhalis（与路线一仅第四件不同）
                     recipe1 = CreateRecipe();
                     recipe1.AddIngredient(essenceofCinder.Type, 3);
                     recipe1.AddIngredient(classicEssenceofEleum.Type, 3);
                     recipe1.AddIngredient(ItemID.Starfury);
-                    recipe1.AddIngredient(ItemID.Arkhalis);
+                    recipe1.AddIngredient(ItemID.Arkhalis);                   // 阿尔卡利斯（替代附魔剑）
                     recipe1.AddIngredient(ItemID.Excalibur);
                     recipe1.AddTile(TileID.MythrilAnvil);
                     recipe1.Register();

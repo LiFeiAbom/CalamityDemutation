@@ -49,9 +49,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 mult = enrage ? 0.2f : 0.1f; // 空放惩罚很重
             int origDmg = (int)((Projectile.originalDamage * 0.2f) * mult);
             int damage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(origDmg);
-            float outerAngleVariance = MathHelper.TwoPi / (float)outerSplits;
-            float outerOffsetAngle = MathHelper.Pi / (2f * outerSplits);
-            float innerAngleVariance = MathHelper.TwoPi / (float)innerSplits;
+            float outerAngleVariance = MathHelper.TwoPi / (float)outerSplits;   // 外圈相邻裂片的角度间隔
+            float outerOffsetAngle = MathHelper.Pi / (2f * outerSplits);         // 外圈再错开半个间隔，避免首枚与正右方向重叠
+            float innerAngleVariance = MathHelper.TwoPi / (float)innerSplits;   // 内圈同上
             float innerOffsetAngle = MathHelper.Pi / (2f * innerSplits);
             Vector2 outerPosVec = new Vector2(8f, 0f).RotatedByRandom(MathHelper.TwoPi);
             Vector2 innerPosVec = new Vector2(5f, 0f).RotatedByRandom(MathHelper.TwoPi); // 两个向量在循环里会被反复重赋值
@@ -117,10 +117,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// <summary>AI：每帧按通用伤害重算 damage，并原地留一颗静止的神圣色粉尘（形成拖尾光晕）</summary>
         public override void AI()
         {
-            int dustID = MiniGuardianHealer.HolyDustType(!Main.dayTime);
+            int dustID = MiniGuardianHealer.HolyDustType(!Main.dayTime);   // 神圣色粉尘：白天金、夜晚青蓝
             int num469 = Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, dustID, 0f, 0f, 100, default, 1f);
             Main.dust[num469].noGravity = true;
-            Main.dust[num469].velocity *= 0f;
+            Main.dust[num469].velocity *= 0f;   // 原地不动（留在身后形成拖尾光晕）
             var Owner = Main.player[Projectile.owner];
             Projectile.damage = (int)Owner.GetTotalDamage<GenericDamageClass>().ApplyTo(Projectile.originalDamage);
         }

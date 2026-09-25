@@ -40,24 +40,27 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
+            // ── 现代版灾厄 ──
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
+                // 腐化世界路线：星辉尘 ×15 + 寒元锭 ×5
                 if(calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot1) && calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar1))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<CorruptFlask>();
-                    recipe.AddIngredient<ArchaicPowder>();
-                    recipe.AddIngredient<RadiantOoze>();
-                    recipe.AddIngredient<HoneyDew>();
-                    recipe.AddIngredient(starblightSoot1.Type, 15);
-                    recipe.AddIngredient(cryonicBar1.Type, 5);
-                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.AddIngredient<CorruptFlask>();      // 腐化药剂（本模组移植物）
+                    recipe.AddIngredient<ArchaicPowder>();     // 古老粉末
+                    recipe.AddIngredient<RadiantOoze>();       // 光辉软泥
+                    recipe.AddIngredient<HoneyDew>();          // 蜜露
+                    recipe.AddIngredient(starblightSoot1.Type, 15); // 灾厄材料：星辉尘 ×15
+                    recipe.AddIngredient(cryonicBar1.Type, 5);      // 灾厄材料：寒元锭 ×5
+                    recipe.AddTile(TileID.MythrilAnvil);       // 秘银砧
                     recipe.Register();
                 }
+                // 猩红世界路线：材料同上，仅把腐化药剂换成猩红药剂
                 if(calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot2) && calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar2))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<CrimsonFlask>();
+                    recipe.AddIngredient<CrimsonFlask>();      // 猩红药剂（本模组移植物）
                     recipe.AddIngredient<ArchaicPowder>();
                     recipe.AddIngredient<RadiantOoze>();
                     recipe.AddIngredient<HoneyDew>();
@@ -67,8 +70,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                     recipe.Register();
                 }
             }
+            // ── 经典版灾厄：星辉尘→Stardust、寒元锭→CryoBar（同名物不同名） ──
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
+                // 腐化世界路线
                 if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust1) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar1))
                 {
                     Recipe recipe1 = CreateRecipe();
@@ -76,11 +81,12 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                     recipe1.AddIngredient<ArchaicPowder>();
                     recipe1.AddIngredient<RadiantOoze>();
                     recipe1.AddIngredient<HoneyDew>();
-                    recipe1.AddIngredient(stardust1.Type, 15);
-                    recipe1.AddIngredient(cryoBar1.Type, 5);
+                    recipe1.AddIngredient(stardust1.Type, 15); // 经典版对应材料 ×15
+                    recipe1.AddIngredient(cryoBar1.Type, 5);   // 经典版对应材料 ×5
                     recipe1.AddTile(TileID.MythrilAnvil);
                     recipe1.Register();
                 }
+                // 猩红世界路线
                 if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust2) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar2))
                 {
                     Recipe recipe1 = CreateRecipe();

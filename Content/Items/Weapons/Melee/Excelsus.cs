@@ -50,26 +50,27 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (player.altFunctionUse == 2)
             {
-                Item.useTime = 10;
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ExcelsusBomb>(), damage * 2, knockback, player.whoAmI);
+                Item.useTime = 10;   // 右键手感更快：间隔压到 10 帧
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ExcelsusBomb>(), damage * 2, knockback, player.whoAmI);   // 炸弹伤害 ×2
             }
             else
             {
-                Item.useTime = 14;
+                Item.useTime = 14;   // 左键恢复 14 帧
                 for (int i = 0; i < 3; i++)
                 {
+                    // 三刃共用同一初速，各自叠加 ±1.5 的随机散布
                     float speedX = velocity.X + Main.rand.NextFloat(-1.5f, 1.5f);
                     float speedY = velocity.Y + Main.rand.NextFloat(-1.5f, 1.5f);
                     switch (i)
                     {
                         case 0:
-                            type = ModContent.ProjectileType<ExcelsusMain>();
+                            type = ModContent.ProjectileType<ExcelsusMain>();   // 主刃
                             break;
                         case 1:
-                            type = ModContent.ProjectileType<ExcelsusBlue>();
+                            type = ModContent.ProjectileType<ExcelsusBlue>();   // 蓝刃
                             break;
                         case 2:
-                            type = ModContent.ProjectileType<ExcelsusPink>();
+                            type = ModContent.ProjectileType<ExcelsusPink>();   // 粉刃
                             break;
                     }
                     Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, knockback, player.whoAmI);

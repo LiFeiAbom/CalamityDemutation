@@ -25,10 +25,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class AstralStarMelee:ModProjectile
     {
+        // ── 实例字段 ──
         /// <summary>命中附加的减益：现代版灾厄取 AstralInfectionDebuff，其余情况为原版诅咒狱火</summary>
         private static int astralDebuffType = BuffID.CursedInferno;
         /// <summary>归位前的原始 extraUpdates（CE 暂存在 EGlobalProjectile.StoredEU），-1 表示还没记过</summary>
         private int storedExtraUpdates = -1;
+        // ── 生命周期方法 ──
+        /// <summary>残影缓存 6 点、TrailingMode 0（只记位置）；并解析命中减益：装了灾厄就用它的 AstralInfectionDebuff</summary>
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 6;
@@ -39,6 +42,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 astralDebuffType = astralInfection.Type;
             }
         }
+        /// <summary>基础属性：24×24、友方近战、穿透 1、不碰撞物块、不受水减速；未设 timeLeft（靠撞墙/命中自然消失）</summary>
         public override void SetDefaults()
         {
             Projectile.width = 24;
@@ -49,10 +53,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
+        /// <summary>自转 + 撒流星尘/火把尘/肉块，末尾每帧尝试朝 500 像素内的敌怪归位</summary>
         public override void AI()
         {
-            Projectile.ai[1] += 1f;
-            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * Projectile.direction;
+            Projectile.ai[1] += 1f;   // ai[1] 仅作帧计数（CE 原样，本类内未再读回）
+            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * Projectile.direction;   // 转速与速度大小成正比，方向随 spriteDirection
             if (Main.rand.NextBool(8))
             {
                 // 每 8 帧撒两颗流星色尘（第二颗是压暗压小并提亮的克隆尘）
@@ -66,7 +71,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Main.dust[dustIndex].fadeIn = 0.6f + Main.rand.NextFloat();
                     Main.dust[dustIndex].velocity += Projectile.velocity.SafeNormalize(Vector2.UnitY) * 3f;
                     Main.dust[dustIndex].scale = 0.7f;
-                    if (dustIndex != 6000)
+                    if (dustIndex != 6000)   // 6000 = Main.maxDust：Dust.NewDust 找不到空闲槽时返回它，此时取不到尘
                     {
                         Dust dust = Dust.CloneDust(dustIndex);
                         dust.scale /= 2f;
@@ -79,13 +84,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.dust[torchDust].velocity = vector * 0.33f;
                 Main.dust[torchDust].position = Projectile.Center + vector * 6f;
             }
-            if (Main.rand.NextBool(24) && Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.rand.NextBool(24) && Main.netMode != NetmodeID.MultiplayerClient)   // 肉块只在服务端/单机生成，避免各客户端重复
             {
                 int goreIndex = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity * 0.1f, 16);
                 Main.gore[goreIndex].velocity *= 0.66f;
                 Main.gore[goreIndex].velocity += Projectile.velocity * 0.15f;
             }
-            Projectile.light = 0.9f;
+            Projectile.light = 0.9f;   // 自带 0.9 强度照明
             if (Main.rand.NextBool(5))
             {
                 Color newColor2 = Main.hslToRgb(1f, 1f, 0.5f);
@@ -105,10 +110,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, Projectile.velocity.X * 0.25f, Projectile.velocity.Y * 0.25f, 150);
             }
-            if (Main.rand.NextBool(10) && Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.rand.NextBool(10) && Main.netMode != NetmodeID.MultiplayerClient)   // 同上，肉块仅非客户端生成
             {
                 Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.position, Projectile.velocity * 0.1f, Main.rand.Next(16, 18));
             }
+            // ignoreTiles 直接沿用 tileCollide（本弹幕为 false）→ 要求与目标之间视线通畅；500 为归位半径、15 为归位速度、20 为惯性
             HomeInOnNPC(Projectile.tileCollide, 500f, 15f, 20f);
         }
         /// <summary>命中：附加太空感染减益</summary>
@@ -118,6 +124,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>本体按固定紫色绘制（CE 原样，不吃环境光）</summary>
         public override Color? GetAlpha(Color lightColor) => new Color(200, 100, 250, Projectile.alpha);
+        /// <summary>只交给残影绘制，本体也由它沿 oldPos 逐帧重画（返回 false 关掉默认绘制）</summary>
         public override bool PreDraw(ref Color lightColor)
         {
             DrawAfterimages(lightColor);
@@ -180,6 +187,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
             }
         }
+        // ── 私有工具 ──
         /// <summary>
         /// CEUtils.DrawAfterimagesCentered 的 mode 0 分支内联：沿 oldPos 逐个重画本体，
         /// 越靠后的残影越淡（CE 那把通用函数还带其他 mode / 护甲着色器 / 收缩分支，本粒子都没用到）。

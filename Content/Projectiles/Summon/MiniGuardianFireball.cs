@@ -34,17 +34,17 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         private void Split()
         {
-            int totalProjectiles = Projectile.ai[0] == 0f ? 8 : 4;
-            float radians = MathHelper.TwoPi / totalProjectiles;
+            int totalProjectiles = Projectile.ai[0] == 0f ? 8 : 4;   // ai[0] 由派发端写入：0 = 普通 8 枚、非 0 = 强化 4 枚
+            float radians = MathHelper.TwoPi / totalProjectiles;     // 相邻裂片的角度间隔（整圆均分）
             int type = ModContent.ProjectileType<MiniGuardianFireballSplit>();
-            float velocity = 5f;
-            Vector2 spinningPoint = new Vector2(0f, -velocity);
+            float velocity = 5f;   // 裂片的基准速度
+            Vector2 spinningPoint = new Vector2(0f, -velocity);   // 以正上方为起点铺开
             int splitBaseDamage = (int)Math.Round(Projectile.originalDamage * 0.75);
             int splitDamage = (int)Main.player[Projectile.owner].GetTotalDamage<GenericDamageClass>().ApplyTo(splitBaseDamage);
             for (int k = 0; k < totalProjectiles; k++)
             {
                 Vector2 velocity2 = spinningPoint.RotatedBy(radians * k);
-                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity2 + Projectile.velocity * 0.25f, type, splitDamage, 0f, Projectile.owner, 1f);
+                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity2 + Projectile.velocity * 0.25f, type, splitDamage, 0f, Projectile.owner, 1f);   // 叠加母弹 1/4 的惯性
                 if (Main.projectile.IndexInRange(proj))
                 {
                     Main.projectile[proj].DamageType = DamageClass.Generic;
@@ -77,7 +77,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             if (Projectile.frame > 3)
                 Projectile.frame = 0;
             if (Projectile.timeLeft == 50)
-                Projectile.tileCollide = true;
+                Projectile.tileCollide = true;   // timeLeft 自 75 递减，剩 50 时（约飞了 25 帧）才撞地形
             Projectile.rotation = Projectile.velocity.ToRotation();
             return false;
         }

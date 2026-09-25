@@ -17,7 +17,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </summary>
     internal class Exobeamold : ModProjectile
     {
+        // ── 实例字段 ──
+        /// <summary>绕光束喷尘的节拍计数：每累计到 12 触发一次，随即归零</summary>
         private int counter;
+        // ── 生命周期方法 ──
         /// <summary>残影缓存 10 点、TrailingMode 0（只记录位置）</summary>
         public override void SetStaticDefaults()
         {
@@ -43,7 +46,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             if (Projectile.localAI[1] == 0f)
             {
-                SoundEngine.PlaySound(SoundID.Item60, Projectile.position);
+                SoundEngine.PlaySound(SoundID.Item60, Projectile.position);   // localAI[1] 当"已出声"标记，保证只播一次
                 Projectile.localAI[1] += 1f;
             }
             counter++;
@@ -64,7 +67,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     Main.dust[num9].velocity = Vector2.Normalize(Projectile.Center - Projectile.velocity * 3f - Main.dust[num9].position) * 1.25f;
                 }
             }
-            Projectile.alpha -= 40;
+            Projectile.alpha -= 40;   // 初始 255，每帧减 40，约 7 帧淡入到不透明
             if (Projectile.alpha < 0)
                 Projectile.alpha = 0;
             // ai[0] 三段状态机：0 直飞 90 帧 → 1 再飞 60 帧 → 2 掉头追最近的玩家
@@ -91,6 +94,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             else if (Projectile.ai[0] == 2f)
             {
+                // ai[1] 存的是 Player.FindClosest 返回的玩家索引（不是 NPC 索引），故直接用 Main.player 取值
                 Vector2 vector70 = Main.player[(int)Projectile.ai[1]].Center - Projectile.Center;
                 if (vector70.Length() < 30f)
                 {
@@ -98,12 +102,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     return;
                 }
                 vector70.Normalize();
-                vector70 *= 14f;
+                vector70 *= 14f;   // 目标速度：朝目标 14 像素/帧
                 vector70 = Vector2.Lerp(Projectile.velocity, vector70, 0.6f);
                 // 转向时始终保留一点向下的初速度，避免贴身时速度归零
                 if (vector70.Y < 24f)
                     vector70.Y = 24f;
-                float num804 = 0.4f;
+                float num804 = 0.4f;   // 每帧最多 ±0.4 的加减速；越过目标速度时额外再补一次，避免在零点附近抖动
                 if (Projectile.velocity.X < vector70.X)
                 {
                     Projectile.velocity.X = Projectile.velocity.X + num804;
@@ -129,7 +133,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                         Projectile.velocity.Y = Projectile.velocity.Y - num804;
                 }
             }
-            Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 0.785f;
+            Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 0.785f;   // +π/4 修正贴图本身的斜向朝向
         }
         /// <summary>命中敌人：撒彗星 + 挂上整套星云系减益（原码里两行取玩家/玩家的无效局部变量已略去）</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -137,6 +141,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             OnHitEffects(target.Center);
             target.ExoDebuffs();
         }
+        // ── 私有工具 ──
         /// <summary>
         /// 命中特效（取自 CI 的 <c>ExobeamoldExoLore</c>）：在命中位置随机三选一撒出一颗彗星（伤害 = 本次光束伤害 ×0.5）。
         /// 0 = 目标两侧齐射（<see cref="CDUtil.ProjectileBarrage"/>，横向 1000~1400、纵向 80~1400）；
@@ -172,7 +177,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>消亡（自爆或到寿）：判定框撑到 192×192 再补一次近战伤害判定，播放爆裂音并迸发两轮青色尘土</summary>
         public override void OnKill(int timeLeft)
         {
-            Projectile.position = Projectile.Center;
+            Projectile.position = Projectile.Center;   // 以当前中心为新框中心，把判定框放大到 192×192（自爆范围）
             Projectile.width = Projectile.height = 192;
             Projectile.position.X = Projectile.position.X - Projectile.width / 2;
             Projectile.position.Y = Projectile.position.Y - Projectile.height / 2;

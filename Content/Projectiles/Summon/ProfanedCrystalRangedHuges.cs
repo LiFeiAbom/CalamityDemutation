@@ -78,7 +78,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.tileCollide = false;
                 if (Projectile.timeLeft < 20)
                 {
-                    Projectile.timeLeft = 50;
+                    Projectile.timeLeft = 50;   // 快到期就续到 50 帧，留出追尾/自毁的窗口
                     kill = true;
                 }
                 float num550 = 40f;
@@ -97,8 +97,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             else
             {
                 if (kill)
-                    Projectile.Kill();
-                Projectile.tileCollide = true;
+                    Projectile.Kill();   // 曾锁定过目标又丢了：直接自毁（不再乱飞）
+                Projectile.tileCollide = true;   // 没目标就恢复撞地形
             }
         }
         /// <summary>
@@ -194,13 +194,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             if (Projectile.timeLeft == 145 && Projectile.ai[0] < 2f)
                 Projectile.tileCollide = true;
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            Projectile.velocity *= boomerSwarm ? 1.03f : 1.02f;
+            Projectile.velocity *= boomerSwarm ? 1.03f : 1.02f;   // 持续加速：陨星档加速更快
             int dust = MiniGuardianHealer.HolyDustType(!Main.dayTime);
             int num469 = Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, dust, 0f, 0f, 100, default, 1f);
             Main.dust[num469].noGravity = true;
-            Main.dust[num469].velocity *= 0f;
+            Main.dust[num469].velocity *= 0f;   // 原地不动（留在身后形成拖尾光晕）
             if (boomerSwarm)
-                swarmAI();
+                swarmAI();   // 陨星档额外走追踪 AI
         }
         /// <summary>昼夜配色（白天橙红 / 夜晚青蓝）</summary>
         public override Color? GetAlpha(Color lightColor)

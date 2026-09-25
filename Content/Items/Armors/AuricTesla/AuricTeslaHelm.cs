@@ -25,10 +25,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 18;
-            Item.height = 18;
-            Item.value = Item.buyPrice(1, 80, 0, 0);
-            Item.defense = 54; //132
+            Item.width = 18;                          // 贴图宽（像素）
+            Item.height = 18;                         // 贴图高（像素）
+            Item.value = Item.buyPrice(1, 80, 0, 0);  // 价值 1 铂金 80 金（buyPrice 口径）
+            Item.defense = 54;                        // 单件防御 54
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 20;
         }
         /// <summary>
@@ -53,27 +53,28 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);   // 套装说明里的 [KEY] 换成当前冲刺绑定键
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            modPlayer.tarraSet = true;
-            modPlayer.tarraMelee = true;
-            modPlayer.bloodflareSet = true;
+            modPlayer.tarraSet = true;          // 塔拉贡套装效果
+            modPlayer.tarraMelee = true;        // 塔拉贡（近战向）
+            modPlayer.bloodflareSet = true;     // 血焰套装效果
             modPlayer.bloodflareMelee = true;
-            modPlayer.godSlayer = true;
+            modPlayer.godSlayer = true;         // 弑神者套装效果（弑神者冲刺的开启条件）
             modPlayer.godSlayerMelee = true;
-            modPlayer.silvaSet = true;
+            modPlayer.silvaSet = true;          // 席尔瓦套装效果
             modPlayer.silvaMelee = true;
-            modPlayer.auricSet = true;
-            player.thorns += 3f;
-            player.lavaMax += 240;
-            player.ignoreWater = true;
-            player.crimsonRegen = true;
-            player.aggro += 1200;
+            modPlayer.auricSet = true;          // 本模组的金之特斯拉标记
+            player.thorns += 3f;                // 荆棘反伤
+            player.lavaMax += 240;              // 岩浆免疫时间延长 4 秒
+            player.ignoreWater = true;          // 水下不减速
+            player.crimsonRegen = true;         // 血腥再生（原版猩红装备的那套）
+            player.aggro += 1200;               // 仇恨大幅提升
             if (player.lavaWet)
             {
-                player.statDefense += 30;
-                player.lifeRegen += 10;
+                player.statDefense += 30;       // 泡在岩浆里额外 +30 防御
+                player.lifeRegen += 10;         // 以及 +10 生命回复
             }
+            // ── 以下两段反射只是把灾厄 CalamityPlayer.auricSet 读进局部变量后丢弃，未写回，属无效残留（见类注释） ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()
@@ -142,21 +143,23 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// </summary>
         public override void AddRecipes()
         {
+            // ── 现代版灾厄：四件下位头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<TarragonHelm>();
-                    recipe.AddIngredient<BloodflareMask>();
-                    recipe.AddIngredient<SilvaHelm>();
-                    recipe.AddIngredient<GodSlayerHelm>();
-                    recipe.AddIngredient(auricBar.Type, 10);
-                    recipe.AddIngredient<PsychoticAmulet>();
-                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.AddIngredient<TarragonHelm>();          // 塔拉贡头（本模组移植物）
+                    recipe.AddIngredient<BloodflareMask>();        // 血焰面具
+                    recipe.AddIngredient<SilvaHelm>();             // 席尔瓦头
+                    recipe.AddIngredient<GodSlayerHelm>();         // 弑神者头
+                    recipe.AddIngredient(auricBar.Type, 10);       // 灾厄材料：金之锭 ×10
+                    recipe.AddIngredient<PsychoticAmulet>();       // 妄想护符（本模组移植物）
+                    recipe.AddTile(cosmicAnvil.Type);              // 宇宙砧
                     recipe.Register();
                 }
             }
+            // ── 经典版灾厄：四件下位头 + 一长串后期材料，德雷顿熔炉 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
             {
                 if (calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre)
@@ -175,15 +178,15 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe1.AddIngredient<BloodflareMask>();
                     recipe1.AddIngredient<SilvaHelm>();
                     recipe1.AddIngredient<GodSlayerHelm>();
-                    recipe1.AddIngredient(auricOre.Type, 60);
-                    recipe1.AddIngredient(endothermicEnergy.Type, 10);
-                    recipe1.AddIngredient(nightmareFuel.Type, 10);
-                    recipe1.AddIngredient(phantoplasm.Type, 8);
-                    recipe1.AddIngredient(darksunFragment.Type, 6);
-                    recipe1.AddIngredient(barofLife.Type, 5);
-                    recipe1.AddIngredient(hellcasterFragment.Type, 5);
-                    recipe1.AddIngredient(coreofCalamity.Type, 2);
-                    recipe1.AddIngredient(galacticaSingularity.Type);
+                    recipe1.AddIngredient(auricOre.Type, 60);              // 经典版材料：金之矿石 ×60
+                    recipe1.AddIngredient(endothermicEnergy.Type, 10);     // 吸热能量 ×10
+                    recipe1.AddIngredient(nightmareFuel.Type, 10);         // 噩梦燃料 ×10
+                    recipe1.AddIngredient(phantoplasm.Type, 8);            // 幻影质 ×8
+                    recipe1.AddIngredient(darksunFragment.Type, 6);        // 暗黑碎片 ×6
+                    recipe1.AddIngredient(barofLife.Type, 5);              // 生命锭 ×5
+                    recipe1.AddIngredient(hellcasterFragment.Type, 5);     // 地狱施法者碎片 ×5
+                    recipe1.AddIngredient(coreofCalamity.Type, 2);         // 灾厄核心 ×2
+                    recipe1.AddIngredient(galacticaSingularity.Type);      // 银河奇点 ×1
                     recipe1.AddIngredient<PsychoticAmulet>();
                     recipe1.AddTile(draedonsForge.Type);
                     recipe1.Register();
