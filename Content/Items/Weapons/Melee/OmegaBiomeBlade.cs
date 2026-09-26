@@ -22,13 +22,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 220、使用时间 18 帧、击退 8、红色稀有度；
+        /// 物品基础属性：伤害 150、使用时间 18 帧、击退 8、红色稀有度；
         /// 主弹幕为 Ω 生物球（OmegaBiomeOrb），每次挥砍散射 5 颗，月后稀有度 12。
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 62;
-            Item.damage = 220;
+            Item.damage = 150;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 18;
             Item.useTime = 18;

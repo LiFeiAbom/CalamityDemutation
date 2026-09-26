@@ -24,13 +24,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 180、使用时间 18 帧、击退 8.5、红色稀有度；
+        /// 物品基础属性：伤害 126、使用时间 18 帧、击退 8.5、红色稀有度；
         /// 主弹幕为永恒光束（EonBeam），每次挥砍发射一次，月后稀有度 12。
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 84;
-            Item.damage = 180;
+            Item.damage = 126;
             Item.DamageType = DamageClass.Melee/* tModPorter Suggestion: Consider MeleeNoSpeed for no attack speed scaling */;
             Item.useAnimation = 18;
             Item.useTime = 18;
