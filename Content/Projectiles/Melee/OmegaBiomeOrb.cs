@@ -7,10 +7,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// Ω生物群系之球（OmegaBiomeOrb） - Ω生物群系之剑发射的追踪弹幕，
+    /// 欧米茄环境能量（OmegaBiomeOrb） - 欧米茄环境之刃发射的追踪弹幕，
     /// 移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
     /// <para>
-    /// 颜色与命中 debuff 依据生物群系、四柱环境与月相事件（血月 / 霜月 / 南瓜月）变化，命中 debuff 一律 600 帧（10 秒）；
+    /// 颜色与粉尘依据生物群系、四柱环境变化（四柱只改配色，不参与命中判定），命中则按生物群系施加 debuff（一律 600 帧 = 10 秒）、
+    /// 按月相事件（血月 / 霜月 / 南瓜月）给玩家 buff；
     /// 相对经典版的重制点：借用原版光束 AI 模板、把粉尘类型与颜色提成字段、补上 6 格残影绘制与 200 像素内的短程追踪，
     /// 另外兼容现代版灾厄的"星陨之地"配色。
     /// </para>
@@ -219,7 +220,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 // 南瓜月：给予吃饱 buff
                 player.AddBuff(BuffID.WellFed, 600);
             }
-            else if (jungle)   // 丛林：中毒 + 瘟疫
+            else if (jungle)   // 丛林：剧毒 + 瘟疫
             {
                 target.AddBuff(BuffID.Venom, 600);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -231,7 +232,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
             }
-            else if (snow)   // 雪原：霜灼
+            else if (snow)   // 雪原：霜冻
             {
                 // 修正：霜冻是负面 debuff，应施加给目标而非玩家自己
                 target.AddBuff(BuffID.Frostburn, 600);
@@ -247,7 +248,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
             }
-            else if (dungeon)   // 地牢：霜灼
+            else if (dungeon)   // 地牢：霜冻
             {
                 target.AddBuff(BuffID.Frostburn, 600);
             }
@@ -359,7 +360,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 // 南瓜月：给予吃饱 buff
                 player.AddBuff(BuffID.WellFed, 600);
             }
-            else if (jungle)   // 丛林：中毒 + 瘟疫
+            else if (jungle)   // 丛林：剧毒 + 瘟疫
             {
                 target.AddBuff(BuffID.Venom, 600);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -371,7 +372,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
             }
-            else if (snow)   // 雪原：霜灼
+            else if (snow)   // 雪原：霜冻
             {
                 // 修正：霜冻是负面 debuff，应施加给目标而非玩家自己
                 target.AddBuff(BuffID.Frostburn, 600);
@@ -387,7 +388,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
             }
-            else if (dungeon)   // 地牢：霜灼
+            else if (dungeon)   // 地牢：霜冻
             {
                 target.AddBuff(BuffID.Frostburn, 600);
             }

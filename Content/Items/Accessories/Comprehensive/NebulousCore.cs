@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 星云核心（NebulousCore） - 专家饰品
-    /// 提供 +20% 通用伤害与 +20% 暴击，周期性生成星云星攻击敌人，
+    /// 提供 +20% 通用伤害与 +20% 暴击，周期性生成星云之星攻击敌人，
     /// 并在濒死时有概率触发回血而免于死亡。
     /// </summary>
     internal class NebulousCore : ModItem
@@ -35,18 +35,18 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             Lighting.AddLight((int)((Item.position.X + (float)(Item.width / 2)) / 16f), (int)((Item.position.Y + (float)(Item.height / 2)) / 16f), 0.35f * num, 0.05f * num, 0.35f * num);
         }
         /// <summary>
-        /// 装备时：置位星云核心标记，并复刻原版星云套奖励——周期性在玩家周围随机生成星云星自动攻击敌人
+        /// 装备时：置位星云核心标记，并复刻原版星云套奖励——周期性在玩家周围随机生成星云之星自动攻击敌人
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.nebulousCore = true;
-            // 复刻原版星云套装的套装奖励：周期性在玩家周围生成星云星
+            // 复刻原版星云套装的套装奖励：周期性在玩家周围生成星云之星
             int damage = 1500;
             float knockBack = 3f;
             if (Main.rand.NextBool(15))
             {
-                // 统计玩家当前已存在的星云星数量
+                // 统计玩家当前已存在的星云之星数量
                 int num = 0;
                 for (int i = 0; i < 1000; i++)
                 {
@@ -55,7 +55,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                         num++;
                     }
                 }
-                // 星云星达到 25 个上限后不再生成
+                // 星云之星达到 25 个上限后不再生成
                 if (Main.rand.Next(15) >= num && num < 25)
                 {
                     int num2 = 50;
@@ -94,7 +94,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                                 }
                                 if (flag)
                                 {
-                                    // 避免与已有星云星过于接近
+                                    // 避免与已有星云之星过于接近
                                     for (int k = 0; k < 1000; k++)
                                     {
                                         if (Main.projectile[k].active && Main.projectile[k].owner == player.whoAmI && Main.projectile[k].type == ModContent.ProjectileType<NebulaStar>() && (center - Main.projectile[k].Center).Length() < 48f)

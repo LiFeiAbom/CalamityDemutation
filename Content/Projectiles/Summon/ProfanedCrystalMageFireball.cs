@@ -16,8 +16,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// 使用魔法武器时额外发射：每发消耗 100 倍魔力消耗的魔力。
     /// 冷却按原版：派发端发完把计数器置 20/25 帧并逐帧递减，场上没有爆弹与裂片时计数器提前清零
     /// （所以"场上已有爆弹/裂片"并不是硬闸门，魔力与那 20/25 帧计数器才是）。
-    /// 飞行 75 帧后接触地形，命中敌人或耗尽时间都会炸成外圈 10~16 + 内圈 8~12 枚裂片（Enraged 及以上档更多更快）。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 1800，由派发端写入）。
+    /// 飞行 75 帧后接触地形，命中敌人或耗尽时间都会炸成外圈 10~16 + 内圈 8~12 枚裂片
+    /// （只有 Empowered 档取上限；源码里那个局部变量名叫 enrage，判断实为 pscState &gt;= Empowered）。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 4500，由派发端写入）。
     /// </summary>
     internal class ProfanedCrystalMageFireball:ModProjectile
     {
@@ -32,8 +33,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
         /// <summary>
-        /// 炸裂成裂片：外圈 outerSplits 枚（Enraged 及以上 16、否则 10）、内圈 innerSplits 枚（12 / 8），
-        /// 内外圈错开半个间距形成双层环。命中时倍率 0.6（Enraged 0.3），未命中时 0.1（Enraged 0.2）——
+        /// 炸裂成裂片：外圈 outerSplits 枚（Empowered 16、否则 10）、内圈 innerSplits 枚（12 / 8），
+        /// 内外圈错开半个间距形成双层环。命中时倍率 0.6（Empowered 0.3），未命中时 0.1（Empowered 0.2）——
         /// 空放惩罚很重。裂片的基础伤害为主弹基础值的 0.2 倍再乘该倍率，折算后回写 originalDamage。
         /// </summary>
         private void Split(bool hit, bool chaseable)
@@ -83,7 +84,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 innerSplits--;
             }
         }
-        /// <summary>基础属性：180x180 碰撞箱、友方、穿透 1 次、不撞地形（前 25 帧）、存活 75 帧、0.6 缩放</summary>
+        /// <summary>基础属性：180x180 碰撞箱、友方、穿透 1 次、前 25 帧不撞地形（第 25 帧后开启）、存活 75 帧、0.6 缩放</summary>
         public override void SetDefaults()
         {
             Projectile.width = 180;

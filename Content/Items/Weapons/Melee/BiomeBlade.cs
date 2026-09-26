@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 生物群系之剑 - 前中期近战剑
+    /// 环境之刃 - 前中期近战剑
     /// 发射会随所在生物群系改变颜色与 debuff 的生物球（BiomeOrb）
     /// </summary>
     internal class BiomeBlade:ModItem

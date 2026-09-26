@@ -11,7 +11,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 本体既不显示也不判定（noUseGraphic / noMelee），全部表现交给手持弹幕 <see cref="StarlessNightProj"/>。
     /// <para>
     /// 与 CE 原版的差异：① CE 用自研的 <c>NihilityBlue</c> 稀有度（纯蓝 + 粒子描边），本模组没有 ModRarity 体系，
-    /// 按「神明吞噬者档」对齐工程的 <c>postMoonLordRarity = 14</c>（GodSlayer 套装 / 四季银河同档，名称染蓝）；
+    /// 按「神明吞噬者档」对齐工程的 <c>postMoonLordRarity = 14</c>（GodSlayer 套装 / 银河同档，名称染蓝）；
     /// ② CE 原版没有配方（AddRecipes 空），本模组同样由宝袋掉落获得，见 <c>CalamityDemutationGlobalItem.ModifyItemLoot</c>；
     /// ③ <c>Item.value</c> 取 60 金——CE 原值是裸写的 12000（= 1 银 20 铜，与它周边武器清一色的
     /// <c>buyPrice(gold: N)</c> 写法明显不一致），已按同宝袋的 NebulousCore 与第 5 把深渊分形的 60 金对齐。

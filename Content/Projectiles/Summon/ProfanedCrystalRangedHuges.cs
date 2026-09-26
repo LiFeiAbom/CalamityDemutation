@@ -13,10 +13,11 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 亵渎之魂水晶·远程转化的陨石（移植自灾厄 2.2.2 的 ProfanedCrystalRangedHuges）。
-    /// 使用远程武器时额外发射：Enraged 及以上 100% 触发、否则 50% 触发；其中 20%/30% 是小陨石、
-    /// 小陨石里再 5% 是"加厚"版本（ai[0] = 1：体型 1.5 倍、碰撞箱 +25，命中时向四周炸出 6~9 枚陨星）。
-    /// 存活 175 帧（加厚/陨星版 200 帧），前 30 帧不撞地形；带 3 帧残影与 3 帧动画。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 600，由派发端写入）。
+    /// 使用远程武器时额外发射：Enraged 及以上 100% 触发、否则 50% 触发；其中 20%/30% 走本类（陨石）、
+    /// 其中再 5% 是"加厚"版本（ai[0] = 1：体型 1.5 倍、碰撞箱 +25，命中时向四周炸出 6~9 枚陨星）。
+    /// 余下的 70%/80% 走小型圣光火球 ProfanedCrystalRangedSmalls。
+    /// 存活 175 帧（只有陨星版 ai[0] == 2 续到 200 帧），前 30 帧不撞地形；带 3 帧残影与 3 帧动画。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 1500，由派发端写入）。
     /// </summary>
     internal class ProfanedCrystalRangedHuges:ModProjectile
     {
@@ -174,7 +175,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>
         /// AI：出生时若为加厚档则播放原版 SoundID.DD2_BetsyFireballShot（火焰球发射）；
-        /// 每帧按通用伤害重算 damage、3 帧循环动画、存活 145 帧时开启地形碰撞、朝向跟随速度并持续加速
+        /// 每帧按通用伤害重算 damage、3 帧循环动画、存活 145 帧时（非陨星版才）开启地形碰撞、朝向跟随速度并持续加速
         /// （陨星 ×1.03、普通 ×1.02），原地留一颗神圣色粉尘；陨星额外走追踪 AI。
         /// </summary>
         public override void AI()

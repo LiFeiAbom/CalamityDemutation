@@ -28,7 +28,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.ignoreWater = true;
-            Projectile.MaxUpdates = 5;   // 每帧跑 5 次 AI，故下方向 AI 里的一次喷尘实际每帧会喷 5~10 次
+            Projectile.MaxUpdates = 5;   // 每帧跑 5 次 AI（update 总数 = MaxUpdates），故下方 AI 里的一次喷尘实际每帧会喷 5~10 次
         }
         /// <summary>朝向对齐速度并喷尘，1/8 概率额外喷一次</summary>
         public override void AI()
@@ -38,7 +38,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (Main.rand.NextBool(8))
                 SpanDust();
         }
-        /// <summary>喷一圈蓝/粉尘土（随机蓝精灵或粉火炬尘，带 customData 供着色）</summary>
+        /// <summary>喷一颗蓝/粉尘土（随机蓝精灵或粉火炬尘，带 customData 供着色；上半分支半路染成猩红）</summary>
         public void SpanDust()
         {
             int dustType = Main.rand.NextBool(3) ? DustID.BlueFairy : DustID.PinkTorch;   // 1/3 概率蓝精灵尘，否则粉火炬尘

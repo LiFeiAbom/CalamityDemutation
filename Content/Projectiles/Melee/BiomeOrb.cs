@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 生物群系之球（BiomeOrb） - 生物群系之剑发射的普通弹幕，移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
+    /// 环境能量（BiomeOrb） - 环境之刃发射的普通弹幕，移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
     /// <para>
     /// 颜色与命中 debuff 依据玩家所在生物群系动态变化。相对经典版的重制点：借用原版光束 AI 模板（aiStyle=Beam）、
     /// 把粉尘类型与颜色提成字段并补上 2 格残影绘制，另外兼容现代版灾厄的"星陨之地"配色。
@@ -173,7 +173,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             bool hell = player.ZoneUnderworldHeight;
             bool holy = player.ZoneHallow;
             int debuffTime = 90;  // 现代版 debuff 持续 90 帧（1.5 秒）
-            if (jungle)   // 丛林：中毒 + 瘟疫（经典版瘟疫固定 180 帧）
+            if (jungle)   // 丛林：剧毒 + 瘟疫（经典版瘟疫固定 180 帧）
             {
                 target.AddBuff(BuffID.Venom, debuffTime);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -185,7 +185,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 180); }
                 }
             }
-            else if (snow)   // 雪原：霜灼
+            else if (snow)   // 雪原：霜冻
             {
                 target.AddBuff(BuffID.Frostburn, debuffTime);
             }
@@ -200,7 +200,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 180); }
                 }
             }
-            else if (dungeon)   // 地牢：霜灼
+            else if (dungeon)   // 地牢：霜冻
             {
                 target.AddBuff(BuffID.Frostburn, debuffTime);
             }
@@ -215,7 +215,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 180); }
                 }
             }
-            else if (glow)   // 发光蘑菇地：时之悲（现代版只给 debuffTime / 3 = 30 帧，经典版仍 180 帧）
+            else if (glow)   // 发光蘑菇地：时之悲（现代版只给 debuffTime / 3 帧——NPC 30、PvP 120，经典版固定 180 帧）
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {
@@ -293,7 +293,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             bool hell = player.ZoneUnderworldHeight;
             bool holy = player.ZoneHallow;
             int debuffTime = 360;   // PvP 时 debuff 持续 360 帧（6 秒）
-            if (jungle)   // 丛林：中毒 + 瘟疫（经典版瘟疫固定 180 帧）
+            if (jungle)   // 丛林：剧毒 + 瘟疫（经典版瘟疫固定 180 帧）
             {
                 target.AddBuff(BuffID.Venom, debuffTime);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -305,7 +305,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 180); }
                 }
             }
-            else if (snow)   // 雪原：霜灼
+            else if (snow)   // 雪原：霜冻
             {
                 target.AddBuff(BuffID.Frostburn, debuffTime);
             }
@@ -320,7 +320,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 180); }
                 }
             }
-            else if (dungeon)   // 地牢：霜灼
+            else if (dungeon)   // 地牢：霜冻
             {
                 target.AddBuff(BuffID.Frostburn, debuffTime);
             }
@@ -335,7 +335,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 180); }
                 }
             }
-            else if (glow)   // 发光蘑菇地：时之悲（现代版只给 debuffTime / 3 = 30 帧，经典版仍 180 帧）
+            else if (glow)   // 发光蘑菇地：时之悲（现代版只给 debuffTime / 3 帧——NPC 30、PvP 120，经典版固定 180 帧）
             {
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
                 {

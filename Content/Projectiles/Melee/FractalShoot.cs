@@ -10,20 +10,23 @@ namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
     /// 分形弹（FractalShoot，移植自 CalamityEntropy）：破碎分形刺出式射出的追踪弹。
-    /// 出膛后先直飞 10 帧，随后每帧朝最近的敌怪做两次转向；命中伤害随剩余存活时间线性衰减
+    /// 出膛后先直飞 10 余次更新（localAI[0] 自增过 10 才转追踪；MaxUpdates = 4，约 3 帧），随后每次更新
+    /// 朝最近的敌怪做两次转向（即每帧 8 次）；命中伤害随剩余存活时间线性衰减
     /// （刚射出时为全额，临近消失时只剩一半）；死亡时喷出一圈发光火花。
     /// <para>
     /// 与 CE 原版的差异：① 追踪用的 <c>CEUtils.HomingToNPCNearby</c> / <c>FindTarget_HomingProj</c>
     /// 属于 CE 工具库，这里内联成 <see cref="HomingToNPCNearby"/>；② 死亡火花从 InnoVault 的
     /// <c>PRT_GlowSpark</c> 换成本模组行为一致的 <see cref="GlowSpark"/>；
     /// ③ <c>GetTexture()</c> 换成 TextureAssets；④ CE 的 <c>UseAdditive</c>/<c>ExitShaderRegion</c>
-    /// 本机 tML 没有，改用 End + 立即模式 Begin(Additive)、画完再恢复默认批次。
+    /// 本机 tML 没有，改用 End + 立即模式 Begin(Additive)、画完再恢复默认批次；
+    /// ⑤ CE 的 SetStaticDefaults（只设 projFrames = 1，本就是默认值）未移植。
     /// </para>
     /// </summary>
     internal class FractalShoot:ModProjectile
     {
         /// <summary>拖尾采样点（最多保留 26 个）</summary>
         private readonly List<Vector2> oldPos = new List<Vector2>();
+        /// <summary>基础属性：12×12、近战、穿透 4、碰撞物块、存活 120 次更新（MaxUpdates 4，即 30 帧）、本地免疫 -1</summary>
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Melee;
@@ -38,10 +41,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;         // 同一个敌人只结算一次
         }
+        /// <summary>朝向对齐速度、记录最多 26 个拖尾采样点；寿命不足 32 次更新时逐次减 1/32 淡出；飞出后转追踪，已命中过则不再追</summary>
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
-            if (Projectile.timeLeft < 32)                // 最后 32 帧淡出
+            if (Projectile.timeLeft < 32)                // 剩余寿命不足 32 次更新（约 8 帧）时开始淡出
             {
                 Projectile.Opacity -= 1 / 32f;
             }
@@ -89,7 +93,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
         }
-        /// <summary>CEUtils.HomingToNPCNearby + FindTarget_HomingProj 的内联：朝最近的可攻击敌怪转向（先按 velMult 减速再加 vel 的转向分量）</summary>
+        /// <summary>CEUtils.HomingToNPCNearby + FindTarget_HomingProj 的内联：在 600 像素内找最近的可攻击敌怪，先按 velMult 减速再加 vel 的转向分量</summary>
         private void HomingToNPCNearby(float vel, float velMult)
         {
             NPC target = null;

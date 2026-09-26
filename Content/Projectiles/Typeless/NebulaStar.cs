@@ -6,8 +6,8 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
-    /// 星云星 - 追踪敌人的魔法弹幕
-    /// 旋转发光、随时间改变尺寸与轨迹，命中时散射星云尘埃（NebulaDust）
+    /// 星云之星 - 追踪敌人的魔法弹幕（移植自灾厄经典版 1.4.2.101 的同名弹幕，额外补了命中玩家的分支）
+    /// 旋转发光、随时间改变尺寸与轨迹，命中时散射星云之尘（NebulaDust）
     /// </summary>
     internal class NebulaStar:ModProjectile
     {
@@ -28,7 +28,8 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
         }
         /// <summary>
         /// AI：按透明度叠加紫色星光；做呼吸式缩放与持续旋转；按弹体编号 (identity%6) 决定漂移方向并周期性反向，形成 S 形轨迹；
-        /// 远离主人越久越早进入"伤害清零 + 淡出"阶段；600 像素内有敌人时平滑追踪，否则缓慢减速漂移
+        /// ai[0] 累到 5400 后进入"伤害清零 + 淡出"（累速随与主人的距离递增，离得越远越早淡出）；
+        /// 曼哈顿距离 600 内有敌人时平滑追踪，否则缓慢减速漂移
         /// </summary>
         public override void AI()
         {

@@ -10,7 +10,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
     /// 真·远古方舟 - 远古方舟的进阶形态
-    /// 发射强化版永恒光束，并召唤圣星与大地弹（TerraBall）混合攻击
+    /// （对照灾厄经典版 1.4.2.101 的同名武器：伤害 60→113、使用时间 25→22、命中减益换成深海重压）
+    /// 发射强化版远古光束（EonBeam），并召唤圣星与大地弹（TerraBall）混合攻击
     /// </summary>
     internal class TrueArkoftheAncients:ModItem
     {
@@ -23,7 +24,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 物品基础属性：伤害 113、使用时间 22 帧、击退 6.5、黄色稀有度；
-        /// 主弹幕为永恒光束（EonBeam），每次挥砍发射一次。
+        /// 主弹幕为远古光束（EonBeam），每次挥砍发射一次。
         /// </summary>
         public override void SetDefaults()
         {
@@ -44,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootsEveryUse = true;
         }
         /// <summary>
-        /// 射击逻辑：主弹幕为 75% 伤害/速度的永恒光束（局部命中冷却 14、穿透 2），
+        /// 射击逻辑：主弹幕为 75% 伤害/速度的远古光束（局部命中冷却 14、穿透 2），
         /// 再从玩家上方召唤 2~3 组圣星 + 大地弹混合坠落
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -113,7 +114,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             return false;
         }
         /// <summary>
-        /// 挥砍特效：修正挥舞位置，随机生成三种神圣系粉尘之一
+        /// 挥砍特效：修正挥舞位置，随机生成三种粉尘之一（沿用源版的数字写法 15/57/58）
         /// </summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
@@ -138,7 +139,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         /// <summary>
-        /// 命中敌人：50% 概率施加灾厄的"深海重压"（CrushDepth）debuff
+        /// 命中敌人：50% 概率施加灾厄的"深海重压"（CrushDepth）debuff，持续 300 帧
+        /// （源版此处施加的是 HolyLight、持续 500 帧）
         /// </summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {

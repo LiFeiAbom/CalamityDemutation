@@ -145,7 +145,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>
         /// 命中特效（取自 CI 的 <c>ExobeamoldExoLore</c>）：在命中位置随机三选一撒出一颗彗星（伤害 = 本次光束伤害 ×0.5）。
         /// 0 = 目标两侧齐射（<see cref="CDUtil.ProjectileBarrage"/>，横向 1000~1400、纵向 80~1400）；
-        /// 1 = 目标上方雨落、2 = 目标下方升起（后两者走 <see cref="CDUtil.ProjectileRain"/>，横向 ±400、纵向 ∓800~1500）。
+        /// 1 = 目标下方升起、2 = 目标上方雨落（后两者走 <see cref="CDUtil.ProjectileRain"/>：横向 ±400、纵向 800~1500；
+        /// ProjectileRain 内部按 <c>y = 目标.Y - 随机量</c> 取生成点，故负值那一组的生成点在目标下方，会朝上飞）。
         /// </summary>
         private void OnHitEffects(Vector2 targetPos)
         {

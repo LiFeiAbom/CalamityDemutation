@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
-    /// 星云尘埃 - 星云星命中敌人时散射的辅助弹幕
+    /// 星云尘埃 - 星云之星命中敌人时散射的辅助弹幕
     /// 本体不可见，缓慢减速并淡出；无限穿透并快速连续命中
     /// </summary>
     internal class NebulaDust:ModProjectile

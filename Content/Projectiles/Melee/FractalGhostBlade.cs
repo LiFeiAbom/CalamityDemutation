@@ -12,10 +12,17 @@ namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
     /// 聚魂之影（FractalGhostBlade，移植自 CalamityEntropy）：聚魂分形挥砍时甩出的剑影，伤害与本体相同。
-    /// 出手先原地自转 30 帧并逐帧减速（期间不能命中），随后锁定 4000 范围内最近的目标：
+    /// 出手先原地自转 30 帧（门槛写作 30 × MaxUpdates）、期间逐帧减速且不能命中，随后锁定 4000 像素内最近的目标：
     /// 在剑心炸一发 <see cref="ImpactParticle"/>、播一声爆响，然后朝目标猛冲（带 ±0.6 弧度的散射）
-    /// 并按 0.01 的强度持续贴向目标；命中后寿命压到 4 秒，剩余 4 秒起整体淡出。
+    /// 并按 0.01 的强度持续贴向目标；首次命中把寿命压到 4 × 60 = 240 次更新（MaxUpdates = 4，实为 1 秒）并开始线性淡出。
     /// 本体只靠 <see cref="PreDraw"/> 摊开的 32 帧旋转残影呈现（贴图直接借用本体的辉光图）。
+    /// <para>
+    /// 与 CE 原版的差异：① 索敌沿用 tML 自带的 <c>Projectile.FindTargetWithinRange</c>（CE 的
+    /// <c>CEUtils.FindTarget_HomingProj</c> 是同类 API）；② <c>CEUtils.SmoothHomingBehavior</c> 换成本工程的
+    /// <c>ChasingBehavior2</c>（同为 RotTowards 限角转向，参数语义一致）；③ 冲击粒子由 InnoVault 的
+    /// <c>PRT_ImpactParticle</c> 换成本模组的 <see cref="ImpactParticle"/>；④ CE 就地改静态 SoundStyle 后播放，
+    /// 这里用 with 复制一份以免污染全局音效；⑤ CE 的 <c>Entropy().MouseWorldListener</c> 属 CE 玩家系统，未移植。
+    /// </para>
     /// </summary>
     internal class FractalGhostBlade:ModProjectile
     {
@@ -25,17 +32,19 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         private bool init = true;
         /// <summary>自身帧数计数，30 帧内只自转减速、不索敌</summary>
         private float counter = 0f;
-        /// <summary>是否已经命中过目标（首次命中才把寿命压到 4 秒）</summary>
+        /// <summary>是否已经命中过目标（首次命中才把寿命压到 4 × 60 次更新）</summary>
         private bool hited = false;
         /// <summary>是否还在待发状态：待发期间不能命中，锁定目标的那一帧转为冲刺</summary>
         private bool launch = true;
         /// <summary>出手音只播一次</summary>
         private bool playSound = true;
+        /// <summary>拖尾缓存 32 帧：TrailingMode 2 同时记录 oldPos 与 oldRot，供 PreDraw 摊成一串剑影</summary>
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 32;
         }
+        /// <summary>基础属性：80×80、近战、无限穿透、存活 1440 次更新（6 × 60 × MaxUpdates 即 6 秒）、本地免疫 -1、MaxUpdates 4、不碰撞物块</summary>
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Melee;
@@ -52,6 +61,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>待发期间不参与命中判定（CE 原样的起手保护）</summary>
         public override bool? CanHitNPC(NPC target) => launch ? false : null;
+        /// <summary>出手音只播一次；前 30 帧原地自转减速，之后锁最近目标并转入冲刺/持续追踪；寿命不足 240 时按剩余比例淡出</summary>
         public override void AI()
         {
             if (playSound)
@@ -94,6 +104,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             counter++;
         }
+        /// <summary>首次命中才把寿命压到 4 × 60 次更新（即 1 秒淡出窗口），之后不再重置</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!hited)
@@ -113,6 +124,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             return false;
         }
+        /// <summary>绘制单帧剑影：dir &gt; 0 时附加 PiOver4，否则水平翻转并附加 Pi * 0.75（dir 取 ai[1]，本工程召唤处未传故为 0）</summary>
         private void Draw(Vector2 pos, Color lightColor, float rotation, int dir)
         {
             SpriteEffects effect = dir > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;

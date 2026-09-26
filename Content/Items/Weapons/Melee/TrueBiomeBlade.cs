@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 真·生物群系之剑 - 生物群系之剑的进阶形态
+    /// 真·环境之刃 - 环境之刃的进阶形态
     /// 发射自动追踪、随生物群系变化的真·生物球（TrueBiomeOrb）
     /// </summary>
     internal class TrueBiomeBlade:ModItem
@@ -51,7 +51,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.Dirt);
         }
         /// <summary>
-        /// 配方（分版本）：生物群系之剑 + 断裂英雄剑 + 灵气 + 深渊/虚空类灾厄材料
+        /// 配方（分版本）：环境之刃 + 断裂英雄剑 + 灵气 + 深渊/虚空类灾厄材料
         /// </summary>
         public override void AddRecipes()
         {

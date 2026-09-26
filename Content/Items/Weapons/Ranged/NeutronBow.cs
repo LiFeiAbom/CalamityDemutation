@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Ranged
 {
     /// <summary>
-    /// 洛希之弦（NeutronBow） - 月后终局远程武器，由黑物质棒在德雷顿熔炉上打造（移植自灾厄大修 0.4.0.1.3）。
+    /// 洛希之弦（NeutronBow） - 月后终局远程武器，由中子锭在德雷顿熔炉上打造（移植自灾厄大修 0.4.0.1.3）。
     /// 物品本体既不出图也不挥砍，左右键都只负责把持弓弹幕 <see cref="NeutronBowHoldout"/> 拿出来；
     /// 瞄准、搭箭、蓄力、充能条全由该弹幕自行结算。
     /// <para>
@@ -76,9 +76,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             return false;
         }
         /// <summary>
-        /// 注册配方：与中子枪同档 —— 黑物质棒×25 + 德雷顿熔炉，兼容灾厄现代版与经典版
+        /// 注册配方：与中子枪同档 —— 中子锭×25 + 德雷顿熔炉，兼容灾厄现代版与经典版
         /// （两版熔炉同名不同物，故分别注册）。
-        /// 大修原版是"黑物质棒×25 @ 转化物质台"的特种合成，本工程无那张台子，数量照源码、台子换成本工程惯例
+        /// 大修原版是"中子锭×25 @ 转化物质台"的特种合成，本工程无那张台子，数量照源码、台子换成本工程惯例
         /// </summary>
         public override void AddRecipes()
         {

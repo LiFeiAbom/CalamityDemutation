@@ -9,13 +9,13 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 银河弹（Galaxia） - 四季银河 / 宇宙方舟发射的追踪弹幕，移植自灾厄经典版（CalamityModClassicPreTrailer 1.4.2.101）的同名弹幕。
+    /// 银河弹（Galaxia） - 银河 / 鸿蒙方舟发射的追踪弹幕，移植自灾厄经典版（CalamityModClassicPreTrailer 1.4.2.101）的同名弹幕。
     /// <para>
     /// 携带旋转彩虹残影，命中敌人/玩家时依据主人所处的生物群系、月相事件（血月 / 霜月 / 南瓜月）、
     /// 四柱环境触发对应 buff 与二次弹幕；另用反射读取现代版灾厄的 <c>CalamityPlayer.ZoneAstral</c>，补上"星陨之地"一套效果。
     /// </para>
     /// <para>
-    /// 两处调用方给的 ai[1] 不同：四季银河不传（=0），宇宙方舟传 <c>Main.rand.Next(3)</c>（0~2），
+    /// 两处调用方给的 ai[1] 不同：银河不传（=0），鸿蒙方舟传 <c>Main.rand.Next(3)</c>（0~2），
     /// 后者正是源码用来开启"群星"额外发光/粉尘的档位（见 <see cref="AI"/>）。
     /// </para>
     /// </summary>
@@ -51,7 +51,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// AI：周期性播放闪烁音效；透明度逐帧降 15（变实），但被 num58 这个下限夹住——下限由 ai[1] 决定
         /// （源码把 ai[1] 兼作"亮度档位"与 Y 阈值两用，实际只传 0~2，恒小于弹幕 Y，故通常压到 0，即全实）；
         /// 随速度旋转；概率生成彩虹拖尾粉尘与星形残片；ai[1]=1 时额外发光并补喷粉尘/残片
-        /// （宇宙方舟的群星只有 ai[1]==1 的那 1/3 命中此档）；最后朝 1600 像素内最近敌人追踪
+        /// （鸿蒙方舟的群星只有 ai[1]==1 的那 1/3 命中此档）；最后朝 1600 像素内最近敌人追踪
         /// </summary>
         public override void AI()
         {
@@ -94,7 +94,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.gore[goreIndex].velocity *= 0.66f;
                 Main.gore[goreIndex].velocity += Projectile.velocity * 0.3f;
             }
-            // ai[1] == 1 时（宇宙方舟发射的群星）附带发光与额外粉尘/残片特效
+            // ai[1] == 1 时（鸿蒙方舟发射的群星）附带发光与额外粉尘/残片特效
             if (Projectile.ai[1] == 1f)
             {
                 Projectile.light = 0.9f;
@@ -153,7 +153,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 // 南瓜月：给予吃饱 buff
                 player.AddBuff(BuffID.WellFed, 600);
             }
-            else if (jungle)   // 丛林：给敌人中毒 + 瘟疫；给玩家荆棘，并额外射出叶刃
+            else if (jungle)   // 丛林：给敌人剧毒 + 瘟疫；给玩家荆棘，并额外射出叶刃
             {
                 target.AddBuff(BuffID.Venom, 1200);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -201,7 +201,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.projectile[ball].penetrate = 1;
                 Main.projectile[ball].DamageType = DamageClass.Melee;
             }
-            else if (dungeon)   // 地牢：给敌人霜灼；给玩家危险感，并射出穿透 1 的水球
+            else if (dungeon)   // 地牢：给敌人霜冻；给玩家危险感，并射出穿透 1 的水球
             {
                 target.AddBuff(BuffID.Frostburn, 1200);
                 player.AddBuff(BuffID.Dangersense, 600);
@@ -329,7 +329,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                             if (prop != null)
                             {
                                 bool ZoneAstral = (bool)prop.GetValue(calPlayer);
-                                if (ZoneAstral)   // 星陨之地：额外给敌人星陨感染、给玩家重力使，并射出一枚灾厄的星陨之星
+                                if (ZoneAstral)   // 星陨之地：额外给敌人星陨感染、给玩家重力正常化，并射出一枚灾厄的星陨之星
                                 {
                                     if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection)) { target.AddBuff(astralInfection.Type, 1200); }
                                     if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizer)) { player.AddBuff(gravityNormalizer.Type, 600); }
@@ -386,7 +386,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 // 南瓜月：给予吃饱 buff
                 player.AddBuff(BuffID.WellFed, 600);
             }
-            else if (jungle)   // 丛林：给敌人中毒 + 瘟疫；给玩家荆棘，并额外射出叶刃
+            else if (jungle)   // 丛林：给敌人剧毒 + 瘟疫；给玩家荆棘，并额外射出叶刃
             {
                 target.AddBuff(BuffID.Venom, 1200);
                 if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
@@ -434,7 +434,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.projectile[ball].penetrate = 1;
                 Main.projectile[ball].DamageType = DamageClass.Melee;
             }
-            else if (dungeon)   // 地牢：给敌人霜灼；给玩家危险感，并射出穿透 1 的水球
+            else if (dungeon)   // 地牢：给敌人霜冻；给玩家危险感，并射出穿透 1 的水球
             {
                 target.AddBuff(BuffID.Frostburn, 1200);
                 player.AddBuff(BuffID.Dangersense, 600);
@@ -562,7 +562,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                             if (prop != null)
                             {
                                 bool ZoneAstral = (bool)prop.GetValue(calPlayer);
-                                if (ZoneAstral)   // 星陨之地：额外给敌人星陨感染、给玩家重力使，并射出一枚灾厄的星陨之星
+                                if (ZoneAstral)   // 星陨之地：额外给敌人星陨感染、给玩家重力正常化，并射出一枚灾厄的星陨之星
                                 {
                                     if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection)) { target.AddBuff(astralInfection.Type, 1200); }
                                     if (calamity.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizer)) { player.AddBuff(gravityNormalizer.Type, 600); }

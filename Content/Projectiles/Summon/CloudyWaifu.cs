@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 云朵老婆（CloudyWaifu） - 由风暴之眼（eyeoftheStorm）召唤的常驻召唤物，
+    /// 云元素（CloudyWaifu，移植自灾厄经典版 1.4.2.101 的 Projectiles/Summon/CloudyWaifu）- 由风暴之眼（EyeoftheStorm）召唤的常驻召唤物，
     /// 追踪敌人并在贴近时发起冲刺撞击。
     /// <para>
     /// 状态机由 <c>ai[0]</c> 区分：0 = 巡游/攻击，1 = 召回（离主人过远），
@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>
         /// 基础属性：58x116 碰撞箱、无召唤栏消耗（<c>minionSlots = 0</c>）、无限穿透、不撞地形。
-        /// 命中冷却以 20 帧打底，随 Boss 进度每解锁一项递减（歌利亚 -5、月总 -5、噬神者 -4、犽戎 -3，
+        /// 命中冷却以 20 帧打底，随 Boss 进度每解锁一项递减（石巨人 -5、月总 -5、噬神者 -4、犽戎 -3，
         /// 全解锁后为 3 帧）；该值是逐敌人生效的独立冷却（<c>usesLocalNPCImmunity</c>）。
         /// </summary>
         public override void SetDefaults()

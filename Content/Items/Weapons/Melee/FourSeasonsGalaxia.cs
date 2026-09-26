@@ -10,8 +10,9 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 四季银河 - 顶级近战剑
-    /// 发射自动追踪的银河弹（Galaxia），命中敌人时依据所在环境/事件获得对应 buff 与二次弹幕
+    /// 银河（FourSeasonsGalaxia，移植自灾厄经典版 1.4.2.101 的同名武器 Galaxia）—— 月后档近战剑
+    /// 每次挥砍发射一颗自动追踪的银河弹（Galaxia）；银河弹命中时另按生物群系/月相施加减益并放二次弹幕，
+    /// 而本体近战命中的 OnHitNPC 只负责按玩家所处环境/月相给玩家上对应 buff（含星陨的重力正常化）
     /// </summary>
     internal class FourSeasonsGalaxia:ModItem
     {
@@ -72,7 +73,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 命中敌人：根据玩家所在环境/月相事件为玩家提供对应 buff。
-        /// 血月/霜月/南瓜月优先，其次按生物群系（if-else 链）依次判定。
+        /// 血月/霜月/南瓜月三者各自独立判定（可同时生效），之后按生物群系走 if-else 链只取首个匹配的环境；
+        /// 与源版的差别：源版丛林那一支是独立 if（南瓜月成立时两者叠加），本模组并入 else-if 链、南瓜月成立即跳过。
+        /// 末尾再用反射读灾厄 ZoneAstral，补上星陨的重力正常化（现代版与经典版各一份）。
         /// </summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -392,11 +395,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         /// <summary>
-        /// 配方（分版本）：Ω生物群系之剑 + 星辉矿锭 + 暗黑碎片（现代版）/ Phantoplasm（经典版），在宇宙砧/德雷顿熔炉合成
+        /// 配方（分版本）：欧米茄环境之刃 + 星辉矿锭 + 暗黑碎片（现代版）/ Phantoplasm（经典版），在宇宙砧/德雷顿熔炉合成
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：Ω生物群系之剑 + 星辉矿锭 ×8 + 暗黑碎片 ×8，宇宙砧 ──
+            // ── 现代版灾厄：欧米茄环境之刃 + 星辉矿锭 ×8 + 暗黑碎片 ×8，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
@@ -404,7 +407,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<OmegaBiomeBlade>();        // Ω生物群系之剑（本模组下位）
+                    recipe.AddIngredient<OmegaBiomeBlade>();        // 欧米茄环境之刃（本模组下位）
                     recipe.AddIngredient(cosmiliteBar.Type, 8);     // 灾厄材料：星辉矿锭 ×8
                     recipe.AddIngredient(darksunFragment.Type, 8);  // 灾厄材料：暗黑碎片 ×8
                     recipe.AddTile(cosmicAnvil.Type);               // 宇宙砧

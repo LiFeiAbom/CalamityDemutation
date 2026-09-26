@@ -11,9 +11,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 亵渎之魂水晶·远程转化的小型圣光火球（移植自灾厄 2.2.2 的 ProfanedCrystalRangedSmalls）。
-    /// 与陨石同一次触发里按 20%/30% 的分支生成：存活 240 帧、4 帧动画、持续缓慢加速（每帧 ×1.01），
-    /// 第 210 帧起才开启地形碰撞与命中判定（在那之前 ai[0] == 1 的变体完全不可命中）。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 400，由派发端写入）。
+    /// 与陨石同一次触发里走余下的 70%/80% 分支生成：存活 240 帧、4 帧动画、持续缓慢加速（每帧 ×1.01），
+    /// 第 210 帧起才开启地形碰撞；另有"ai[0] == 1 的变体在第 210 帧前不可命中"一条判断，本工程派发端恒传 ai[0] = 0，故从不生效。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 1000，由派发端写入）。
     /// 命中敌人时按 1/50 的概率让主人的进攻守护者喷一圈"追加长矛"（rollBabSpears，见本类 OnHitNPC）。
     /// </summary>
     internal class ProfanedCrystalRangedSmalls:ModProjectile

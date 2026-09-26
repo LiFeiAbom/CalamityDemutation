@@ -6,9 +6,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Materials
 {
     /// <summary>
-    /// 黑物质棒（BlackMatterStick） - 材料物品。
-    /// 由四柱碎片 + 原版全部矿锭 + 对应版本灾厄的全部矿锭合成（现代版和经典版均在德雷顿熔炉）
-    /// 目前是 NeutronGlaive 的制作材料（每件需 12 个）。物品使用灵魂式的垂直逐帧动画贴图。
+    /// 中子锭（BlackMatterStick，移植自灾厄大修 0.4.0.1.3 的同名材料）—— 中子系列武器的高级材料。
+    /// 大修原版没有任何普通配方（它挂在 Supertable 超级工作台体系上：OmigaSnyContent = FullItems5、售价 999 金），
+    /// 本模组改写为普通配方：四柱碎片 + 原版全部矿锭 + 对应版本灾厄的全部矿锭 @ 德雷顿熔炉，售价 1 铂金。
+    /// 目前是中子之刃（NeutronGlaive）/中子脉冲（NeutronGun）各 12 个、洛希之弦（NeutronBow）25 个的合成材料。
+    /// 贴图使用灵魂式的垂直逐帧动画。
     /// </summary>
     internal class BlackMatterStick : ModItem
     {
@@ -34,8 +36,10 @@ namespace CalamityDemutation.Content.Items.Materials
             Item.useStyle = ItemUseStyleID.Swing;                // 使用样式：挥击
         }
         /// <summary>
-        /// 注册合成配方：两版灾厄的材料不同，分别注册——
+        /// 注册合成配方（本模组自加，大修原版没有普通配方）：两版灾厄的矿锭清单不同，分别注册——
         /// 现代版(CalamityMod)和经典版(CalamityModClassicPreTrailer)均使用德雷顿熔炉。
+        /// 注意两版都要求清单里的矿锭全部命中（TryFind 全成功）才注册，因此铜/锡、铁/铅、银/钨、金/铂、
+        /// 魔矿/猩红矿这些成对的世界专属矿石会被同时要求。
         /// </summary>
         public override void AddRecipes()
         {

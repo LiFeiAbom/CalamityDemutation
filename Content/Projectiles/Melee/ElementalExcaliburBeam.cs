@@ -18,8 +18,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// 9 紫-忽快忽慢；10 品红-起步极慢后持续加速；11 桃红-边飞边分裂出品红。
     /// </para>
     /// <para>
-    /// 与源码的差异：施加的 debuff 一律改为软依赖双版本查找（现代版 <c>CalamityMod</c> / 经典版 <c>CalamityModClassicPreTrailer</c>），
-    /// 并补上了 PvP 用的 OnHitPlayer 与撞墙反弹用的 OnTileCollide。
+    /// 与源码的差异：源码命中敌人 / 玩家都只挂一个 MiracleBlight（600 帧），本工程改为软依赖双版本查找并分别补挂——
+    /// 现代版 <c>CalamityMod</c>（VulnerabilityHex / MiracleBlight / Dragonfire）、经典版
+    /// <c>CalamityModClassicPreTrailer</c>（DemonFlames / GodSlayerInferno / HolyLight），各 600 帧；
+    /// 其余行为（含源码本就有的过 <c>OnHitPlayer</c> 与 <c>OnTileCollide</c>）与源码一致。
     /// </para>
     /// </summary>
     internal class ElementalExcaliburBeam:ModProjectile

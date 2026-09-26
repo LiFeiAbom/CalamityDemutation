@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 沙之老婆（SandyWaifu） - 由瓶中老婆（wifeinaBottle）召唤的常驻召唤物，
+    /// 沙元素（SandyWaifu，移植自灾厄经典版 1.4.2.101 的 Projectiles/Summon/SandyWaifu）- 由瓶装沙元素（WifeinaBottle）召唤的常驻召唤物，
     /// 追踪敌人并周期性发射沙之矢（<see cref="SandBolt"/>）。
     /// <para>
     /// 状态机由 <c>ai[0]</c> 区分：0 = 巡游/攻击（追敌或跟随主人），1 = 召回（离主人过远，飞回后复位）；
@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>
         /// 基础属性：42x98 碰撞箱、无召唤栏消耗（<c>minionSlots = 0</c>，靠饰品效果常驻）、无限穿透、不撞地形。
-        /// 命中冷却以 20 帧打底，随 Boss 进度每解锁一项递减（歌利亚 -5、月总 -5、噬神者 -4、犽戎 -3，
+        /// 命中冷却以 20 帧打底，随 Boss 进度每解锁一项递减（石巨人 -5、月总 -5、噬神者 -4、犽戎 -3，
         /// 全解锁后为 3 帧）；该值是逐敌人生效的独立冷却（<c>usesLocalNPCImmunity</c>）。
         /// </summary>
         public override void SetDefaults()
@@ -95,10 +95,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             {
                 Projectile.spriteDirection = -Projectile.direction;   // 水平移动较快时让贴图朝向运动方向
             }
-            float num633 = 700f;   // 700：目标搜索半径（只锁定最近的敌人；原版遗留标记表示此值未改）
+            float num633 = 700f;   // 700：目标搜索半径（只锁定最近的敌人；源码遗留标记 //700，值未改）
             float num634 = 800f;   // 无目标时允许离主人的最大距离，超出即召回
             float num635 = 1200f;   // 有目标时允许离主人的最大距离，允许追出更远
-            float num636 = 200f;   // 召回态判定"已回到主人身边"的距离（原版遗留标记 150，此处已调大到 200）
+            float num636 = 200f;   // 召回态判定"已回到主人身边"的距离（源码遗留标记 //150，经典版实际值即 200）
             float num = (float)Main.rand.Next(90, 111) * 0.01f;   // 光晕亮度基准：0.9~1.10 之间随机
             num *= Main.essScale;   // 再随环境光缩放，夜里变暗
             Lighting.AddLight(Projectile.Center, 0.7f * num, 0.6f * num, 0f * num);   // 沙色暖光（无蓝通道）
@@ -240,7 +240,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 float num650 = 6f;   // 跟随速度：巡游 6（原版遗留标记亦为 6）
                 if (flag26)
                 {
-                    num650 = 15f;   // 召回时加速到 15（原版遗留标记 16，此处改小 1）
+                    num650 = 15f;   // 召回时加速到 15（源码遗留标记 //16，实际值 15）
                 }
                 Vector2 center2 = Projectile.Center;
                 Vector2 vector48 = player.Center - center2 + new Vector2(250f, -60f);   // 悬停点：主人右侧 250、上方 60

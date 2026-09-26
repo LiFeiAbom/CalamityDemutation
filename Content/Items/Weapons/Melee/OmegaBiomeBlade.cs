@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// Ω生物群系之剑 - 生物群系之剑的终级形态
+    /// 欧米茄环境之刃 - 环境之刃的终级形态
     /// 每次挥砍散射 5 颗自动追踪、随生物群系与月相变化的 Ω 生物球（OmegaBiomeOrb）
     /// </summary>
     internal class OmegaBiomeBlade:ModItem
@@ -68,7 +68,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.Dirt);
         }
         /// <summary>
-        /// 配方（分版本）：真·生物群系之剑 + 灾厄核心 + 生命合金/生命锭 + 银河奇点 + 月亮锭
+        /// 配方（分版本）：真·环境之刃 + 灾厄核心 + 生命合金/生命锭 + 银河奇点 + 月亮锭
         /// </summary>
         public override void AddRecipes()
         {

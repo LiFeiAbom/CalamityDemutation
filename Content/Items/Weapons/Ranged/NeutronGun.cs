@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Ranged
 {
     /// <summary>
-    /// 中子枪（NeutronGun） - 月后终局远程武器，由黑物质棒在灾厄德雷顿熔炉上打造（移植自 CWR 0.5.0.1.7）。
+    /// 中子枪（NeutronGun） - 月后终局远程武器，由中子锭在灾厄德雷顿熔炉上打造（移植自 CWR 0.5.0.1.7）。
     /// 物品本体既不出图也不挥砍，左右键都只负责把持握弹幕 <see cref="NeutronGunHoldout"/> 拿出来；
     /// 瞄准、开火、蓄力、充能条全由该弹幕自行结算。
     /// </summary>
@@ -67,7 +67,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             return false;
         }
         /// <summary>
-        /// 注册配方：与中子长戟同档 —— 黑物质棒×12 + 德雷顿熔炉，兼容灾厄现代版与经典版
+        /// 注册配方：与中子长戟同档 —— 中子锭×12 + 德雷顿熔炉，兼容灾厄现代版与经典版
         /// （两版熔炉同名不同物，故分别注册）
         /// </summary>
         public override void AddRecipes()

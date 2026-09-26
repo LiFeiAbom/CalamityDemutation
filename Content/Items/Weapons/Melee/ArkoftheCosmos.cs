@@ -9,8 +9,8 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 宇宙方舟 - 终局近战剑
-    /// 挥砍发射永恒光束与群星（Galaxia），命中敌人时依据所处环境/月相获得对应 buff
+    /// 鸿蒙方舟 - 终局近战剑（月后稀有度 15）
+    /// 挥砍发射远古光束（EonBeam）与群星（Galaxia），命中敌人时依据所处环境/月相获得对应 buff
     /// </summary>
     internal class ArkoftheCosmos:ModItem
     {
@@ -23,7 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 物品基础属性：伤害 680、使用时间 14 帧、击退 9.5、无转向（useTurn=false）；
-        /// 主弹幕为永恒光束（EonBeam），每次挥砍发射一次，月后稀有度 15。
+        /// 主弹幕为远古光束（EonBeam），每次挥砍发射一次，月后稀有度 15。
         /// </summary>
         public override void SetDefaults()
         {
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>
-        /// 射击逻辑：主弹幕为永恒光束（不碰撞、随机色彩、限时 160 帧），
+        /// 射击逻辑：主弹幕为远古光束（不碰撞、随机色彩、限时 160 帧），
         /// 并在玩家与鼠标连线中点处斜向散射 4 颗群星（Galaxia）弹幕
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -87,7 +87,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 命中敌人：依据玩家所在环境（丛林/雪原/血月等）获得对应的增益 buff，
-        /// 以及陨星环境下的重力正常化 buff
+        /// 以及星陨环境下的重力正常化 buff（南瓜月成立时会跳过整条生物群系 if-else 链；
+        /// 源版此处丛林那一支是独立 if，会与月相 buff 叠加）
         /// </summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -120,7 +121,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
             if (pumpkinMoon)
             {
-                player.AddBuff(BuffID.WellFed3, 600);       // 南瓜月：三级饱食（WellFed3，比四季银河的普通饱食更高档）
+                player.AddBuff(BuffID.WellFed3, 600);       // 南瓜月：三级饱食（WellFed3，比银河的普通饱食更高档）
             }
             // 其后按生物群系走 if-else 链，只取第一个匹配到的环境
             else if (jungle)
@@ -281,7 +282,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
             if (pumpkinMoon)
             {
-                player.AddBuff(BuffID.WellFed3, 600);       // 南瓜月：三级饱食（WellFed3，比四季银河的普通饱食更高档）
+                player.AddBuff(BuffID.WellFed3, 600);       // 南瓜月：三级饱食（WellFed3，比银河的普通饱食更高档）
             }
             // 其后按生物群系走 if-else 链，只取第一个匹配到的环境
             else if (jungle)
@@ -415,20 +416,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         // Terraria seems to really dislike high crit values in SetDefaults
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 16;
         /// <summary>
-        /// 配方（分版本）：四季银河 + 元素方舟 + 星辉矿锭（现代版）；
-        /// 经典版改用多种月后暗黑碎片/矿石材料在德雷顿熔炉合成
+        /// 配方（分版本）：银河 + 元素方舟 + AuricBar ×5 @ 宇宙砧（现代版，与灾厄 1.4.4 同名武器配方一致）；
+        /// 经典版没有 AuricBar/宇宙砧，改用噩梦燃料/吸热能量/地狱施法者碎片/暗黑碎片 + AuricOre ×25 @ 德雷顿熔炉
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：四季银河 + 元素方舟 + 金之锭 ×5，宇宙砧 ──
+            // ── 现代版灾厄：银河 + 元素方舟 + AuricBar ×5，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient<FourSeasonsGalaxia>();   // 四季银河（本模组下位）
+                    recipe.AddIngredient<FourSeasonsGalaxia>();   // 银河（本模组下位）
                     recipe.AddIngredient<ArkoftheElements>();     // 元素方舟（本模组下位）
-                    recipe.AddIngredient(auricBar.Type, 5);       // 灾厄材料：金之锭 ×5
+                    recipe.AddIngredient(auricBar.Type, 5);       // 灾厄材料：AuricBar ×5
                     recipe.AddTile(cosmicAnvil.Type);             // 宇宙砧
                     recipe.Register();
                 }
@@ -450,7 +451,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe1.AddIngredient(endothermicEnergy.Type, 5);   // 经典版材料：吸热能量 ×5
                     recipe1.AddIngredient(hellcasterFragment.Type, 3);  // 经典版材料：地狱施法者碎片 ×3
                     recipe1.AddIngredient(darksunFragment.Type, 5);     // 经典版材料：暗黑碎片 ×5
-                    recipe1.AddIngredient(auricOre.Type, 25);           // 经典版材料：金之矿石 ×25
+                    recipe1.AddIngredient(auricOre.Type, 25);           // 经典版材料：AuricOre ×25
                     recipe1.AddTile(draedonsForge.Type);
                     recipe1.Register();
                 }

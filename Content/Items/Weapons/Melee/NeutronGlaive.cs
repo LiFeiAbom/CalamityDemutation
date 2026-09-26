@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 中子长戟（NeutronGlaive） - 月后终局近战挥砍武器，由黑物质棒在灾厄砧/锻造台上打造。
+    /// 中子长戟（NeutronGlaive） - 月后终局近战挥砍武器，由中子锭在灾厄砧/锻造台上打造。
     /// 每次挥击都会射出 NeutronGlaiveBeam 弹幕，弹幕消亡时再生成 NeutronExplode 扭曲爆点，
     /// 形成「挥砍→光束→中子爆裂」的联动伤害链。
     /// </summary>
@@ -94,7 +94,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 注册配方：兼容灾厄现代版与经典版，两版所需工作台名字一致但是具体对应不同，故分别注册配方。
-        /// 两版均消耗 12 个黑物质棒。
+        /// 两版均消耗 12 个中子锭。
         /// </summary>
         public override void AddRecipes()
         {
