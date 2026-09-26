@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityDemutation.Players;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -33,6 +34,13 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
         /// </summary>
         public override void AI()
         {
+            // 星云之星由星云核心驱动：饰品卸下或隐藏外观后立刻消散，场上已有的不再残留
+            CalamityDemutationPlayer modPlayer = Main.player[Projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (!modPlayer.nebulousCore || !modPlayer.nebulousCoreVisible)
+            {
+                Projectile.active = false;
+                return;
+            }
             // 依据当前透明度计算发光强度
             float num944 = 1f - (float)Projectile.alpha / 255f;
             num944 *= Projectile.scale;

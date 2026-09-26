@@ -426,6 +426,11 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool nebulousCore = false;
         /// <summary>
+        /// 星云核心是否"显示外观"（对应饰品的可见性开关，与元素之心的 heartoftheElementshideVisual 同义）：
+        /// 仅在装上且未隐藏时为 true。隐藏时不生成星云之星、场上已有的也立刻消散，但 nebulousCore 的属性照常生效
+        /// </summary>
+        public bool nebulousCoreVisible = false;
+        /// <summary>
         /// 烦恼项链已装备（通用伤害+5%，半血以下额外+15%）
         /// </summary>
         public bool necklaceOfVexation = false;
@@ -449,6 +454,11 @@ namespace CalamityDemutation.Players
         /// 已装备玫瑰石：生命回复/上限、+3% 通用增伤与粉色照明（同时驱动玫瑰娘召唤物）
         /// </summary>
         public bool roseStone = false;
+        /// <summary>
+        /// 玫瑰石是否"显示外观"：仅在装上且未隐藏时为 true。隐藏时不召唤玫瑰娘、场上已有的立刻消散、
+        /// 粉色照明也一并关掉，但 roseStone 的属性与互斥判定照常生效
+        /// </summary>
+        public bool roseStoneVisible = false;
         /// <summary>
         /// 已装备腐坏大脑：75% 血以下 +15% 通用增伤，免疫受击期间概率降下 AuraRain
         /// </summary>
@@ -768,6 +778,7 @@ namespace CalamityDemutation.Players
             lureofEnthrallment = false;
             manaJelly = false;
             nebulousCore = false;
+            nebulousCoreVisible = false;
             necklaceOfVexation = false;
             omegaBlueChestplate = false;
             omegaBlueSet = false;
@@ -797,6 +808,7 @@ namespace CalamityDemutation.Players
             redDevil2 = false;
             revivify = false;
             roseStone = false;
+            roseStoneVisible = false;
             rottenBrain = false;
             sandyWaifu = false;
             seaShell = false;
@@ -923,6 +935,7 @@ namespace CalamityDemutation.Players
             lureofEnthrallment = false;
             manaJelly = false;
             nebulousCore = false;
+            nebulousCoreVisible = false;
             necklaceOfVexation = false;
             omegaBlueChestplate = false;
             omegaBlueSet = false;
@@ -947,6 +960,7 @@ namespace CalamityDemutation.Players
             redDevil2 = false;
             revivify = false;
             roseStone = false;
+            roseStoneVisible = false;
             rottenBrain = false;
             sandyWaifu = false;
             seaShell = false;
@@ -1298,7 +1312,11 @@ namespace CalamityDemutation.Players
             // 玫瑰石：粉色照明 + 生命回复/上限/3% 通用增伤
             if (roseStone)
             {
-                Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0.6f, 0f, 0.25f);
+                // 粉色照明属于表现层，隐藏外观时关掉（下面的属性照给）
+                if (roseStoneVisible)
+                {
+                    Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0.6f, 0f, 0.25f);
+                }
                 Player.lifeRegen += 2;
                 Player.statLifeMax2 += 20;
                 Player.GetDamage<GenericDamageClass>() += 0.03f;

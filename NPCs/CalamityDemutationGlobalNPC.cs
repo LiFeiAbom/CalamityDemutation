@@ -35,7 +35,8 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public bool demonFlames = false;
         /// <summary>
-        /// 狂怒标记：由 Enraged buff 在敌怪侧置位，仅用于 GlobalNPC.GetAlpha 染色
+        /// 狂怒标记：由 Enraged buff 在敌怪侧置位。
+        /// 两处消费——<see cref="GetAlpha"/> 把它染成红色；<see cref="ModifyHitPlayer"/> 让这只敌怪造成 +25% 伤害
         /// </summary>
         public bool enraged = false;
         public bool hellfireExplosion = false;
@@ -100,8 +101,7 @@ namespace CalamityDemutation.NPCs
             lifeOppress = false;
         }
         /// <summary>
-        /// 玩家受到 NPC 攻击命中时触发：若玩家拥有“蜂抗”状态且攻击者属于蜂类单位，
-        /// 则将最终伤害乘算 0.5f，实现蜂类伤害减半的效果
+        /// 玩家受到 NPC 攻击命中时触发：蜂抗（蜂类来源伤害减半）与魔影套装「激怒」的增伤都在这里结算。
         /// </summary>
         public override void ModifyHitPlayer(NPC npc, Player target, ref Player.HurtModifiers modifiers)
         {
@@ -112,6 +112,12 @@ namespace CalamityDemutation.NPCs
                     // 蜂抗生效：蜂类来源的最终伤害减半
                     modifiers.FinalDamage *= 0.5f;
                 }
+            }
+            // 魔影套装 Y 键「激怒」的另一半：被 Enraged 标记的敌怪造成的伤害 +25%，
+            // 与套装文案「它们受到的伤害提高 125%」（由玩家自身的 Enraged 增伤实现）配对。
+            if (enraged)
+            {
+                modifiers.FinalDamage *= 1.25f;
             }
         }
         /// <summary>
@@ -394,7 +400,7 @@ namespace CalamityDemutation.NPCs
         /// <summary>
         /// tModLoader 的 GetAlpha 钩子：NPC 绘制时决定叠加颜色。返回 null 表示保持默认着色；
         /// 狂怒标记（enraged）生效时返回 (200,50,50) 的红色，alpha 沿用 npc.alpha。
-        /// 该标记由 Enraged buff 在敌怪侧置位，仅用于染色，不参与伤害结算。
+        /// 该标记由 Enraged buff 在敌怪侧置位；染色只是表现，其增伤结算见 <see cref="ModifyHitPlayer"/>。
         /// </summary>
         public override Color? GetAlpha(NPC npc, Color drawColor)
         {

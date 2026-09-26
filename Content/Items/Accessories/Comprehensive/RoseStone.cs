@@ -24,14 +24,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
         }
         /// <summary>
-        /// 装备时：置位玫瑰石标记并（仅本地玩家侧）维持一只玫瑰仆从，避免多人下重复生成
+        /// 装备时：置位玫瑰石标记并（仅本地玩家侧）维持一只玫瑰仆从，避免多人下重复生成。
+        /// 隐藏外观时只保留属性，不召唤玫瑰娘、粉色照明关闭（场上已有的由 BigBustyRose 据 roseStoneVisible 立刻消散）
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.roseStone = true;
+            // 隐藏外观时只保留属性：不召唤玫瑰娘、粉色照明关闭，场上已有的也据此外标记立刻消散
+            modPlayer.roseStoneVisible = !hideVisual;
             // 仅本地玩家负责生成并维护召唤物，避免多人下重复生成
-            if (player.whoAmI == Main.myPlayer)
+            if (!hideVisual && player.whoAmI == Main.myPlayer)
             {
                 if (player.FindBuffIndex(ModContent.BuffType<BrimstoneWaifu>()) == -1)
                 {

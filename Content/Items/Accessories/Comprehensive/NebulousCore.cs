@@ -35,16 +35,19 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             Lighting.AddLight((int)((Item.position.X + (float)(Item.width / 2)) / 16f), (int)((Item.position.Y + (float)(Item.height / 2)) / 16f), 0.35f * num, 0.05f * num, 0.35f * num);
         }
         /// <summary>
-        /// 装备时：置位星云核心标记，并复刻原版星云套奖励——周期性在玩家周围随机生成星云之星自动攻击敌人
+        /// 装备时：置位星云核心标记，并复刻原版星云套奖励——周期性在玩家周围随机生成星云之星自动攻击敌人。
+        /// 隐藏外观时只保留属性，不再生成星云之星（场上已有的由 NebulaStar 据 nebulousCoreVisible 立刻消散）
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.nebulousCore = true;
+            // 隐藏外观时只保留属性：不再生成星云之星，场上已有的也据此外标记立刻消散
+            modPlayer.nebulousCoreVisible = !hideVisual;
             // 复刻原版星云套装的套装奖励：周期性在玩家周围生成星云之星
             int damage = 1500;
             float knockBack = 3f;
-            if (Main.rand.NextBool(15))
+            if (!hideVisual && Main.rand.NextBool(15))
             {
                 // 统计玩家当前已存在的星云之星数量
                 int num = 0;

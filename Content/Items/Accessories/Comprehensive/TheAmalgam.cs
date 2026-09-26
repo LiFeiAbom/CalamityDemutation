@@ -35,14 +35,16 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
         }
         /// <summary>
-        /// 装备时：同时置位大杂烩与真菌团块标记，并（仅本地玩家侧）维持一只高伤真菌团块仆从
+        /// 装备时：同时置位大杂烩与真菌团块标记，并（仅本地玩家侧）维持一只高伤真菌团块仆从。
+        /// 隐藏外观时只保留大杂烩的属性，不再召唤真菌团块（场上已有的由 FungalClump 据 fungalClump 立刻消散）
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.GetModPlayer<CalamityDemutationPlayer>().theAmalgam = true;
-            player.GetModPlayer<CalamityDemutationPlayer>().fungalClump = true;
+            // 隐藏外观时只保留属性：不召唤真菌团块，场上已有的也据此外标记立刻消散
+            player.GetModPlayer<CalamityDemutationPlayer>().fungalClump = !hideVisual;
             // 仅在本地玩家侧生成，避免多人模式下重复生成
-            if (player.whoAmI == Main.myPlayer)
+            if (!hideVisual && player.whoAmI == Main.myPlayer)
             {
                 // buff 仅作存活状态标记，真正的仆从由下方弹幕实现
                 if (player.FindBuffIndex(ModContent.BuffType<Buffs.SummonBuffs.FungalClump>()) == -1)

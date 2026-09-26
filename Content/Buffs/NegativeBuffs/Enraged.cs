@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Buffs.NegativeBuffs
 {
     /// <summary>
     /// 狂暴（Enraged） - 同时作用于玩家与敌怪的双向标记减益
-    /// 由特定装备/套装触发，玩家侧提升伤害倍率，敌怪侧仅在 GlobalNPC.GetAlpha 中染红以表现狂暴。
+    /// 由特定装备/套装触发，玩家侧提升伤害倍率，敌怪侧在 GlobalNPC 中染红并使其造成的伤害 +25%。
     /// </summary>
     internal class Enraged:ModBuff
     {
@@ -36,11 +36,11 @@ namespace CalamityDemutation.Content.Buffs.NegativeBuffs
             player.GetModPlayer<CalamityDemutationPlayer>().enraged = true;
         }
         /// <summary>
-        /// 敌怪侧：置位 GlobalNPC.enraged，仅用于把敌怪染成红色，不参与伤害结算
+        /// 敌怪侧：置位 GlobalNPC.enraged——GlobalNPC.GetAlpha 据此染红，ModifyHitPlayer 据此令其造成伤害 +25%
         /// </summary>
         public override void Update(NPC npc, ref int buffIndex)
         {
-            // 置位 NPC 标记：GlobalNPC.GetAlpha 据此返回红色 (200,50,50) 着色
+            // 置位 NPC 标记：染色与 +25% 增伤结算都在 GlobalNPC 里读它
             npc.GetGlobalNPC<CalamityDemutationGlobalNPC>().enraged = true;
         }
     }

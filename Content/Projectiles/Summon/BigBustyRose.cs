@@ -65,8 +65,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         {
             Player player = Main.player[Projectile.owner];
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            // 未装备玫瑰石且未开启"全体老婆"时直接消失，避免残留召唤物
-            if (!modPlayer.roseStone && !modPlayer.allWaifus)
+            // 未装备玫瑰石（或已隐藏其外观）且未开启"全体老婆"时直接消失，避免残留召唤物
+            if ((!modPlayer.roseStone || !modPlayer.roseStoneVisible) && !modPlayer.allWaifus)
             {
                 Projectile.active = false;
                 return;

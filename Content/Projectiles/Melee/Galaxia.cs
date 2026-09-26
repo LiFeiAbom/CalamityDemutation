@@ -1,4 +1,5 @@
-﻿using CalamityDemutation.Utilities;
+﻿using CalamityDemutation.Players;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -168,8 +169,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.Leaf, Projectile.damage, Projectile.knockBack, Projectile.owner);
                 Main.projectile[proj].DamageType = DamageClass.Melee;
             }
-            else if (snow)   // 雪原：给玩家温暖，并额外射出冰锥
+            else if (snow)   // 雪原：给敌人冰冻，给玩家温暖，并额外射出冰锥
             {
+                CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GlacialState", 1200, BuffID.Frostburn);
                 player.AddBuff(BuffID.Warmth, 600);
                 Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.IceBolt, Projectile.damage, Projectile.knockBack, Projectile.owner);
             }
@@ -401,8 +403,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.Leaf, Projectile.damage, Projectile.knockBack, Projectile.owner);
                 Main.projectile[proj].DamageType = DamageClass.Melee;
             }
-            else if (snow)   // 雪原：给玩家温暖，并额外射出冰锥
+            else if (snow)   // 雪原：给敌人冰冻，给玩家温暖，并额外射出冰锥
             {
+                CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GlacialState", 1200, BuffID.Frostburn);
                 player.AddBuff(BuffID.Warmth, 600);
                 Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.IceBolt, Projectile.damage, Projectile.knockBack, Projectile.owner);
             }

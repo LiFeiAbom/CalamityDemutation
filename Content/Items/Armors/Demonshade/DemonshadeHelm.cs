@@ -64,8 +64,8 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         /// 受击时天降暗影光束与恶魔镰刀；一只友方红魔会跟随你；
         /// 按 Y 键以黑暗魔法激怒附近敌人 10 秒，使其伤害提高 25%，但承受的伤害提高 125%。
         /// 注：末条为灾厄 setBonus 原文直译。实际实现（CalamityDemutationPlayer 的 Y 键分支）是给玩家自身
-        /// 与 3000 像素内的敌人各挂 600 帧 Enraged——玩家侧确实获得增伤，敌人侧仅在
-        /// GlobalNPC.GetAlpha 里染红、并不改变其输出与承伤，即原文所述"敌人增伤/易伤"尚未实现。
+        /// 与 3000 像素内的敌人各挂 600 帧 Enraged——玩家侧的增伤即"敌人受到的伤害提高 125%"，
+        /// 敌人侧则由 GlobalNPC 染红（GetAlpha）并在被其击中时 +25% 伤害（ModifyHitPlayer）。
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
