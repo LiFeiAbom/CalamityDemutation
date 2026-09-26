@@ -23,14 +23,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.AnimatesAsSoul[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：伤害 212、使用时间 20 帧、击退 4.25、无转向、红色稀有度；
+        /// 物品基础属性：伤害 114、使用时间 20 帧、击退 4.25、无转向、红色稀有度；
         /// 主弹幕为银河爆弹（GalaxyBlast），每次挥砍发射一次，月后稀有度 12。
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 72;
             Item.height = 72;
-            Item.damage = 212;
+            Item.damage = 114;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 20;
             Item.useTime = 20;

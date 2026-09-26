@@ -16,7 +16,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         internal const float ShootSpeed = 3f;
         /// <summary>
-        /// 物品基础属性：伤害 175、使用时间 20 帧、击退 7.5、黄色稀有度；
+        /// 物品基础属性：伤害 150、使用时间 20 帧、击退 7.5、黄色稀有度；
         /// 主弹幕为崇高誓言之刃弹幕（ExaltedOathBladeProj），弹速取常量 ShootSpeed=3，
         /// 每次挥砍发射一次。
         /// </summary>
@@ -25,7 +25,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.width = 88;
             Item.height = 88;
-            Item.damage = 175;
+            Item.damage = 150;
             Item.useAnimation = 20;
             Item.useTime = 20;
             Item.useTurn = false;

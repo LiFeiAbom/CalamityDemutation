@@ -15,13 +15,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class FlarefrostBlade : ModItem
     {
         /// <summary>
-        /// 物品基础属性：64×66、伤害 169、29 帧挥砍、击退 6.25、粉名（24金）
+        /// 物品基础属性：64×66、伤害 125、29 帧挥砍、击退 6.25、粉名（24金）
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 64;
             Item.height = 66;
-            Item.damage = 169; // 源值 125，×1.35 膨胀（168.75 上取整）
+            Item.damage = 125;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = Item.useTime = 29;
             Item.useTurn = true;

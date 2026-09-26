@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
     /// 真·远古方舟 - 远古方舟的进阶形态
-    /// （对照灾厄经典版 1.4.2.101 的同名武器：伤害 60→113、使用时间 25→22、命中减益换成深海重压）
+    /// （对照灾厄经典版 1.4.2.101 的同名武器：使用时间 25→22、命中减益换成深海重压）
     /// 发射强化版远古光束（EonBeam），并召唤圣星与大地弹（TerraBall）混合攻击
     /// </summary>
     internal class TrueArkoftheAncients:ModItem
@@ -23,13 +23,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 113、使用时间 22 帧、击退 6.5、黄色稀有度；
+        /// 物品基础属性：伤害 60、使用时间 22 帧、击退 6.5、黄色稀有度；
         /// 主弹幕为远古光束（EonBeam），每次挥砍发射一次。
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 60;
-            Item.damage = 113;
+            Item.damage = 60;
             Item.DamageType = DamageClass.Melee/* tModPorter Suggestion: Consider MeleeNoSpeed for no attack speed scaling */;
             Item.useAnimation = 22;
             Item.useTime = 22;

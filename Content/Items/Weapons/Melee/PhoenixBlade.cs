@@ -19,13 +19,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class PhoenixBlade : ModItem
     {
         /// <summary>
-        /// 物品基础属性：106×106、伤害 129、29 帧挥砍、击退 8、浅紫名（48金）
+        /// 物品基础属性：106×106、伤害 95、29 帧挥砍、击退 8、浅紫名（48金）
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 106;
             Item.height = 106;
-            Item.damage = 129; // 源值 95（经典版；CI 写作 160），×1.35 膨胀（128.25 上取整）
+            Item.damage = 95;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 29;
             Item.useStyle = ItemUseStyleID.Swing;

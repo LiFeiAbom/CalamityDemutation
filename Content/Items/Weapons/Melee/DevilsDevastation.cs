@@ -15,7 +15,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class DevilsDevastation:ModItem
     {
         /// <summary>
-        /// 物品基础属性：伤害 520、使用时间 14 帧、击退 6.75、红色稀有度；
+        /// 物品基础属性：伤害 450、使用时间 14 帧、击退 6.75、红色稀有度；
         /// 主弹幕为誓言之刃（Oathblade），每次挥砍发射一次，月后稀有度 14。
         /// </summary>
         public override void SetDefaults()
@@ -23,7 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.width = 118;
             Item.height = 118;
-            Item.damage = 520;
+            Item.damage = 450;
             Item.useAnimation = 14;
             Item.useTime = 14;
             Item.useTurn = false;
