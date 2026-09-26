@@ -17,9 +17,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 挂整套星云系减益，并在目标可吸血且自身未挂月噬时回血 5~8。
     /// 配方按**现代版 / 经典版各一条**（两版不同，见 <c>AddRecipes</c>）：
     /// 现代版 = 六把自有下位剑 + 奇迹物质 @ 嘉登熔炉；经典版 = 同样六把剑 + 七种经典版材料 @ 嘉登熔炉。
-    /// 与 CI 源的三处差异：①伤害取经典版原值 6700（CI 写 900）；
-    /// ②去掉「损失生命值 1:1 转平伤」与灾厄真近战伤害类加成（本工程没有 TrueMeleeDamageClass）；
-    /// ③CI 的传颂之物（LoreExo）分支不存在，直接常驻它那条「多次命中触发」的行为分支，不搬 Lore 专属弹幕与 tooltip 行。
+    /// 伤害：移植时取经典版原值 6700，2026-09-26 按用户削弱方案改为 900（＝CI 值）。
+    /// 与 CI 源的两处差异：①去掉「损失生命值 1:1 转平伤」与灾厄真近战伤害类加成（本工程没有 TrueMeleeDamageClass）；
+    /// ②CI 的传颂之物（LoreExo）分支不存在，直接常驻它那条「多次命中触发」的行为分支，不搬 Lore 专属弹幕与 tooltip 行。
     /// </summary>
     internal class Exobladeold : ModItem
     {
@@ -28,12 +28,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>物品基础属性：80×114、伤害 6700、14 帧挥砍、击退 9、月后稀有度 15（紫）、光束初速 19</summary>
+        /// <summary>物品基础属性：80×114、伤害 900、14 帧挥砍、击退 9、月后稀有度 15（紫）、光束初速 19</summary>
         public override void SetDefaults()
         {
             Item.width = 80;
             Item.height = 114;
-            Item.damage = 6700; // 经典版原值（CI 写作 900）
+            Item.damage = 900;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 14;
             Item.useTime = 14;

@@ -24,13 +24,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 425、使用时间 16 帧、击退 9、红色稀有度；
+        /// 物品基础属性：伤害 99、使用时间 16 帧、击退 9、红色稀有度；
         /// 主弹幕为自动追踪的银河弹（Galaxia），每次挥砍发射一次，月后稀有度 14。
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 70;
-            Item.damage = 425;
+            Item.damage = 99;
             Item.DamageType = DamageClass.Melee/* tModPorter Suggestion: Consider MeleeNoSpeed for no attack speed scaling */;
             Item.useAnimation = 16;
             Item.useTime = 16;
