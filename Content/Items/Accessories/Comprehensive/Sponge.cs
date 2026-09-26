@@ -29,7 +29,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            modPlayer.beeResist = true;   // 继承甘露安瓿/蜜露的蜜蜂抗性：被蜜蜂类敌人与蜜蜂弹幕命中时伤害减半
+            modPlayer.beeResist = true;   // 继承甘露安瓿/蜜露的蜜蜂抗性：被蜜蜂类敌人与蜜蜂弹幕命中时伤害减至 75%
             modPlayer.sponge = true;      // 海绵本体：生命/法力上限、减伤、荆棘与浸水增益等，见 PostUpdateMiscEffects
         }
         /// <summary>

@@ -101,7 +101,7 @@ namespace CalamityDemutation.NPCs
             lifeOppress = false;
         }
         /// <summary>
-        /// 玩家受到 NPC 攻击命中时触发：蜂抗（蜂类来源伤害减半）与魔影套装「激怒」的增伤都在这里结算。
+        /// 玩家受到 NPC 攻击命中时触发：蜂抗（蜂类来源伤害减至 75%）与魔影套装「激怒」的增伤都在这里结算。
         /// </summary>
         public override void ModifyHitPlayer(NPC npc, Player target, ref Player.HurtModifiers modifiers)
         {
@@ -109,8 +109,8 @@ namespace CalamityDemutation.NPCs
             {
                 if (CalamityDemutation.beeEnemyList.Contains(npc.type))
                 {
-                    // 蜂抗生效：蜂类来源的最终伤害减半
-                    modifiers.FinalDamage *= 0.5f;
+                    // 蜂抗生效：蜂类来源的最终伤害减至 75%
+                    modifiers.FinalDamage *= 0.75f;
                 }
             }
             // 魔影套装 Y 键「激怒」的另一半：被 Enraged 标记的敌怪造成的伤害 +25%，

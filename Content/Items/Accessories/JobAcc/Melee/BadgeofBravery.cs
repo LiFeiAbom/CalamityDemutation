@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
 {
     /// <summary>
     /// 勇士徽章 - 近战职业饰品
-    /// +10% 近战伤害、+10% 近战暴击、+10 近战穿透。
+    /// +10% 近战伤害、+10% 近战暴击、+5 近战穿透。
     /// </summary>
     internal class BadgeofBravery : ModItem
     {

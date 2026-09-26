@@ -360,9 +360,9 @@ Items: {
 			50% increased mining speed
 			You emit light
 			12% increased damage reduction and increased life regen
-			Poison, Freeze, Chill, Frostburn, and Venom immunity
+			Poison, Freeze, Chill, Frostburn, Frostburn 2, and Venom immunity
 			Honey life regen with no speed penalty
-			Most bee/hornet enemies and projectiles do half damage to you
+			Most bee/hornet enemies and projectiles do 75% damage to you
 			'''
 	}
 
@@ -465,7 +465,7 @@ Items: {
 			'''
 			Allows the ability to ram dash, empowered by the cosmic inferno
 			This dash can slam through enemies without taking damage
-			Increases maximum life by 150 and life regeneration by 8
+			Increases maximum life by 40 and life regeneration by 2.5 HP/s
 			Grants immunity to knockback, lava and fire
 			Grants immunity to the vast majority of debuffs, including God Slayer Inferno
 			Grants 12% damage reduction while submerged in liquid
@@ -492,7 +492,7 @@ Items: {
 			'''
 			Increases melee damage by 10%
 			Increases melee critical strike chance by 10%
-			Increases melee armor penetration by 10
+			Increases melee armor penetration by 5
 			'''
 	}
 
@@ -736,8 +736,8 @@ Items: {
 			'''
 			12% increase to damage, minion knockback, and melee speed
 			5% increase to critical strike chance
-			+1 life regen, 15% increased pick speed, and +2 max minions
-			During the day the player has +3 life regen
+			+1 HP/s life regen, 15% increased pick speed, and +2 max minions
+			During the day the player has +3 HP/s life regen
 			During the night the player has +30 defense
 			"Contains the power of the dark sun"
 			'''
@@ -890,9 +890,10 @@ Items: {
 			'''
 			Absolutely Fabulous
 			Horizontal speed: 12
-			Acceleration multiplier: 4
+			Acceleration multiplier: 3
 			Flight time: 361
 			Excellent vertical speed
+			Immunity to fall damage
 			'''
 	}
 
@@ -935,7 +936,7 @@ Items: {
 			'''
 			Allows the ability to ram dash, empowered by holy fire
 			This dash can slam through enemies without taking damage
-			Increases maximum life by 100 and life regeneration by 8
+			Increases maximum life by 30 and life regeneration by 1.5 HP/s
 			Grants immunity to knockback, lava and fire
 			Grants immunity to most fire debuffs, including Holy Flames and Daybreak
 			Press [KEY] to toggle the guardian stance
@@ -1201,7 +1202,7 @@ Items: {
 			10% increased damage reduction, +5 defense, and increased life regen while in the Jungle
 			Poison and Venom immunity
 			Honey life regen with no speed penalty
-			Most bee/hornet enemies and projectiles do half damage to you
+			Most bee/hornet enemies and projectiles do 75% damage to you
 			'''
 	}
 
@@ -1377,8 +1378,8 @@ Items: {
 			'''
 			Allows the ability to dash
 			This dash can ram through enemies without taking damage
-			Increases max life by 20 and life regen by 8
-			Increases defense by 8 when below 25% life
+			Increases max life by 20 and life regen by 1 HP/s
+			Increases defense by 4 when below 25% life
 			'''
 	}
 
@@ -1524,11 +1525,11 @@ Items: {
 			'''
 			50% increased mining speed and you emit light
 			18% increased damage reduction and increased life regen
-			Poison, Freeze, Chill, Frostburn, and Venom immunity
+			Poison, Freeze, Chill, Frostburn, Frostburn 2, and Venom immunity
 			Honey life regen with no speed penalty
-			Most bee/hornet enemies and projectiles do half damage to you
+			Most bee/hornet enemies and projectiles do 75% damage to you
 			120% increased jump speed and 12% increased movement speed
-			+50 max life and mana
+			+30 max life and mana
 			Standing still boosts life and mana regen
 			Increased defense and damage reduction when submerged in liquid
 			Increased movement speed when submerged in liquid
@@ -1662,7 +1663,7 @@ Items: {
 			'''
 			12% increased movement speed
 			120% increased jump speed
-			+30 max life and mana
+			+30 max life and +20 max mana
 			Standing still boosts life and mana regen
 			Increased defense and damage reduction when submerged in liquid
 			Increased movement speed when submerged in liquid

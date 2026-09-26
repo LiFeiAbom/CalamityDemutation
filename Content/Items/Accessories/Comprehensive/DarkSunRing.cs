@@ -7,8 +7,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 暗日之戒（DarkSunRing） - 综合型饰品
-    /// 提供 +2 仆从上限、+12% 通用伤害、+12% 近战攻速、+5% 暴击、+15% 挖掘速度；
-    /// 白天额外 +6 生命回复，夜晚额外 +30 防御。
+    /// 提供 +2 仆从上限、+10 防御、+1 HP/s 生命再生、+12% 通用伤害、+12% 近战攻速、
+    /// +5% 暴击、+15% 挖掘速度、仆从击退；白天额外 +3 HP/s 生命再生，夜晚额外 +30 防御。
     /// </summary>
     internal class DarkSunRing:ModItem
     {

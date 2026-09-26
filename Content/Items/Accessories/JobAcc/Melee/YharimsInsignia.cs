@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
 {
     /// <summary>
     /// 亚利姆徽章 - 近战职业饰品
-    /// +10% 近战伤害/暴击/攻速、烈火手套击退与熔岩免疫时间延长，半血以下额外 +10% 通用伤害；
+    /// +14% 近战伤害/暴击/攻速、烈火手套击退与熔岩免疫时间延长，半血以下额外 +10% 通用伤害；
     /// 近战命中时施加圣焰（现代版）/圣光（经典版）debuff。
     /// </summary>
     internal class YharimsInsignia : ModItem

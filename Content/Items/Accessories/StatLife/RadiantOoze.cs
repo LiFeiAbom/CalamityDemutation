@@ -38,7 +38,7 @@ namespace CalamityDemutation.Content.Items.Accessories.StatLife
                 if(calamity.TryFind<ModItem>("BlightedGel", out ModItem blightedGel) && calamity.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel1))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient(blightedGel.Type, 5);
+                    recipe.AddIngredient(blightedGel.Type, 45);
                     recipe.AddIngredient(purifiedGel1.Type, 15);
                     recipe.AddTile(TileID.Anvils);
                     recipe.Register();

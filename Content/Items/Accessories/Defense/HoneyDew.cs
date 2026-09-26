@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 蜜露 - 防御型饰品
-    /// 身处丛林时强化属性，免疫毒液等 debuff，提供蜂蜜效果与生命回复并减半蜜蜂类弹幕伤害。
+    /// 身处丛林时强化属性，免疫毒液等 debuff，提供蜂蜜效果与生命回复并把蜜蜂类弹幕伤害减至 75%。
     /// </summary>
     internal class HoneyDew:ModItem
     {

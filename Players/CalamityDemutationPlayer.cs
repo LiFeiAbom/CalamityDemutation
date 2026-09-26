@@ -1094,12 +1094,12 @@ namespace CalamityDemutation.Players
             {
                 Player.statLifeMax2 += Player.statLifeMax2;
             }
-            // 勇士徽章：+10%近战伤害、+10%近战暴击率、+10近战穿透
+            // 勇士徽章：+10%近战伤害、+10%近战暴击率、+5近战穿透
             if (badgeOfBravery)
             {
                 Player.GetDamage<MeleeDamageClass>() += 0.1f;
                 Player.GetCritChance<MeleeDamageClass>() += 10;
-                Player.GetArmorPenetration<MeleeDamageClass>() += 10;
+                Player.GetArmorPenetration<MeleeDamageClass>() += 5;
             }
             // 血蠕虫围巾：+10% 近战伤害、+10% 近战攻速、+15% 伤害减免
             if (bloodyWormScarf)
@@ -1257,6 +1257,7 @@ namespace CalamityDemutation.Players
             {
                 Player.maxMinions += 2;
                 Player.GetDamage<GenericDamageClass>() += 0.12f;
+                Player.GetKnockback<SummonDamageClass>().Base += 1.2f;
                 Player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
                 Player.GetCritChance<GenericDamageClass>() += 5;
                 Player.pickSpeed -= 0.15f;
@@ -1718,6 +1719,8 @@ namespace CalamityDemutation.Players
                 Player.buffImmune[BuffID.Chilled] = true;
                 Player.buffImmune[BuffID.Frostburn] = true;
                 Player.buffImmune[BuffID.Frostburn2] = true;
+                Player.buffImmune[BuffID.Frozen] = true;
+                Player.buffImmune[BuffID.Poisoned] = true;
                 Player.buffImmune[BuffID.Venom] = true;
                 if (!Player.honey && Player.lifeRegen < 0)
                 {
@@ -1793,14 +1796,14 @@ namespace CalamityDemutation.Players
             if (theAbsorber)
             {
                 Player.statLifeMax2 += 30;
-                Player.statManaMax2 += 30;
+                Player.statManaMax2 += 20;
                 Player.moveSpeed += 0.12f;
                 Player.jumpSpeedBoost += 1.2f;
-                Player.thorns = 0.5f;
+                Player.thorns = 1f;
                 Player.endurance += 0.06f;
                 if ((double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
                 {
-                    Player.lifeRegen += 2;
+                    Player.lifeRegen += 6;
                     Player.manaRegenBonus += 2;
                 }
                 if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
@@ -1821,19 +1824,19 @@ namespace CalamityDemutation.Players
             {
                 Player.lifeRegen += 6;
                 Player.endurance += 0.18f;
-                Player.statLifeMax2 += 50;
-                Player.statManaMax2 += 50;
+                Player.statLifeMax2 += 30;
+                Player.statManaMax2 += 30;
                 Player.moveSpeed += 0.12f;
                 Player.jumpSpeedBoost += 1.2f;
-                Player.thorns = 0.5f;
+                Player.thorns = 1f;
                 if ((double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
                 {
-                    Player.lifeRegen += 2;
+                    Player.lifeRegen += 6;
                     Player.manaRegenBonus += 2;
                 }
                 if (Collision.DrownCollision(Player.position, Player.width, Player.height, Player.gravDir))
                 {
-                    Player.statDefense += 10;
+                    Player.statDefense += 5;
                     Player.endurance += 0.1f;
                     Player.moveSpeed += 0.2f;
                     Player.ignoreWater = true;
@@ -1843,6 +1846,8 @@ namespace CalamityDemutation.Players
                 Player.buffImmune[BuffID.Chilled] = true;
                 Player.buffImmune[BuffID.Frostburn] = true;
                 Player.buffImmune[BuffID.Frostburn2] = true;
+                Player.buffImmune[BuffID.Frozen] = true;
+                Player.buffImmune[BuffID.Poisoned] = true;
                 Player.buffImmune[BuffID.Venom] = true;
                 if (!Player.honey && Player.lifeRegen < 0)
                 {
@@ -1948,7 +1953,7 @@ namespace CalamityDemutation.Players
                                 num18 = (float)num17 / num18;
                                 num15 *= num18;
                                 num16 *= num18;
-                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), 120, 5f, Player.whoAmI, 0f, 0f);
+                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), 30, 5f, Player.whoAmI, 0f, 0f);
                                 Main.projectile[num19].ai[1] = Player.position.Y;
                             }
                         }
@@ -2081,7 +2086,7 @@ namespace CalamityDemutation.Players
                     }
                     else
                     {
-                        Player.GetDamage<GenericDamageClass>() += 0.05f;
+                        Player.GetDamage<GenericDamageClass>() += 0.1f;
                         Player.statDefense += 20;
                         Player.moveSpeed += 0.75f;
                     }
@@ -2949,11 +2954,11 @@ namespace CalamityDemutation.Players
             if(ornateShield)
             {
                 Player.dashType = 0;
-                Player.lifeRegen += 8;
+                Player.lifeRegen += 2;
                 Player.statLifeMax2 += 20;
                 if(Player.statLife < (int)(Player.statLifeMax2 * 0.25))
                 {
-                    Player.statDefense += 8;
+                    Player.statDefense += 4;
                 }
             }
             if(shieldoftheOcean)
@@ -3004,8 +3009,8 @@ namespace CalamityDemutation.Players
                 Player.dashType = 0;
                 Player.noKnockback = true;
                 Player.fireWalk = true;
-                Player.statLifeMax2 += 100;
-                Player.lifeRegen += 8;
+                Player.statLifeMax2 += 30;
+                Player.lifeRegen += 3;
                 Player.buffImmune[BuffID.CursedInferno] = true;
                 Player.buffImmune[BuffID.ShadowFlame] = true;
                 Player.buffImmune[BuffID.Daybreak] = true;
@@ -3110,8 +3115,8 @@ namespace CalamityDemutation.Players
                 Player.dashType = 0;
                 Player.noKnockback = true;
                 Player.fireWalk = true;
-                Player.statLifeMax2 += 150;
-                Player.lifeRegen += 8;
+                Player.statLifeMax2 += 40;
+                Player.lifeRegen += 5;
                 Player.buffImmune[BuffID.Chilled] = true;
                 Player.buffImmune[BuffID.Frostburn] = true;
                 Player.buffImmune[BuffID.Frostburn2] = true;
@@ -4013,13 +4018,13 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 ModifyHitByProjectile 钩子：被弹幕命中、伤害结算前调用。
-        /// 装备蜜蜂抗性饰品且命中来源属于蜜蜂弹幕列表时，将本次伤害减半。
+        /// 装备蜜蜂抗性饰品且命中来源属于蜜蜂弹幕列表时，将本次伤害减至 75%。
         /// </summary>
         public override void ModifyHitByProjectile(Projectile proj, ref Player.HurtModifiers modifiers)
         {
             if (beeResist && CalamityDemutation.beeProjectileList.Contains(proj.type))
             {
-                modifiers.FinalDamage *= 0.5f;
+                modifiers.FinalDamage *= 0.75f;
             }
         }
         /// <summary>
@@ -4032,13 +4037,13 @@ namespace CalamityDemutation.Players
             modifiers.FinalDamage *= (float)damageMult;
             if (theAbsorber)
             {
-                int healAmt = (int)modifiers.SourceDamage.Base / 10;//20->10
+                int healAmt = (int)modifiers.SourceDamage.Base / 20;
                 Player.statLife += healAmt;
                 Player.HealEffect(healAmt);
             }
             if (sponge)
             {
-                int healAmt = (int)modifiers.SourceDamage.Base / 5;//10->5
+                int healAmt = (int)modifiers.SourceDamage.Base / 16;
                 Player.statLife += healAmt;
                 Player.HealEffect(healAmt);
             }

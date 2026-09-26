@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
     /// 装备后向冲刺系统注册 <see cref="ShieldSlamDash.OrnateShield"/>，获得一次盾牌冲撞（双击方向键触发，
     /// 具体冲撞数值与表现见 CalamityDemutationPlayer.ShieldSlamDash.cs），并禁用原版冲刺（dashType = 0）。
     /// <para>
-    /// 被动（生命上限 +20、生命回复 +8、生命低于 25% 时额外 +8 防御）不在本文件结算，
+    /// 被动（生命上限 +20、生命再生 +1 HP/s、生命低于 25% 时额外 +4 防御）不在本文件结算，
     /// 而是在玩家文件的 <c>if(ornateShield)</c> 块里统一处理。
     /// </para>
     /// </summary>

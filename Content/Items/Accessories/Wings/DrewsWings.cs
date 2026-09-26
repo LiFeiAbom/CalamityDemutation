@@ -8,21 +8,21 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
 {
     /// <summary>
     /// 德鲁之翼（Drew's Wings） - 翅膀
-    /// 专家饰品翅膀；飞行数据为 361 帧飞行时间、水平速度 12、水平加速度倍率 4
+    /// 专家饰品翅膀；飞行数据为 361 帧飞行时间、水平速度 12、水平加速度倍率 3
     /// （WingStats 构造序为 FlyTime、AccRunSpeedOverride、AccRunAccelerationMult），
-    /// 垂直飞行速度亦经强化（见 VerticalWingSpeeds）。
+    /// 垂直飞行速度亦经强化（见 VerticalWingSpeeds），并免疫坠落伤害。
     /// 飞行时在身后洒落钻石色尘埃，仅视觉表现，无数值结算。
     /// </summary>
     [AutoloadEquip(EquipType.Wings)]  // 装备时自动分配 Item.wingSlot 并按翅膀外观渲染
     internal class DrewsWings:ModItem
     {
         /// <summary>
-        /// 注册翅膀统计数据：飞行时间 361 帧、水平速度 12、水平加速度倍率 4
+        /// 注册翅膀统计数据：飞行时间 361 帧、水平速度 12、水平加速度倍率 3
         /// （Item.wingSlot 由 AutoloadEquip(EquipType.Wings) 自动分配）
         /// </summary>
         public override void SetStaticDefaults()
         {
-            ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(361, 12f, 4f);
+            ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(361, 12f, 3f);
         }
         /// <summary>
         /// 物品基础属性：尺寸、价值、专家品质与饰品标记
@@ -57,6 +57,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
                 }
                 Main.dust[num60].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);  // 随玩家翅膀染色
             }
+            player.noFallDmg = true;   // 免疫坠落伤害
         }
         /// <summary>
         /// 设置垂直飞行参数（行尾注释为原版默认值）：

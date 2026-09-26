@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 甘露安瓿 - 防御型饰品
-    /// 提供减伤、挖掘速度与生命回复并免疫多种 debuff，同时减半蜜蜂类弹幕伤害。
+    /// 提供减伤、挖掘速度与生命回复并免疫多种 debuff，同时把蜜蜂类弹幕伤害减至 75%。
     /// </summary>
     internal class AmbrosialAmpoule:ModItem
     {
