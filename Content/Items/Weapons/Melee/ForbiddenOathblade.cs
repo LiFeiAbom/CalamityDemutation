@@ -16,7 +16,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>
         /// 物品基础属性：伤害 110、使用时间与使用动画同为 25 帧、击退 6.5、粉色稀有度；
         /// 主弹幕为崇高誓言之刃弹幕（ExaltedOathBladeProj），弹速 10。
-        /// 与同系列其他剑不同，这里未设置 shootsEveryUse。
         /// </summary>
         public override void SetDefaults()
         {

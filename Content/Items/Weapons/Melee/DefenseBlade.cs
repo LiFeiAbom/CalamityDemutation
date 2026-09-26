@@ -63,7 +63,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 基础属性：尺寸 72、近战伤害 135、14 tick 挥击、自动连击；
-        /// 设置 Item.shoot 为 DefenseBeam 并开启 shootsEveryUse，使每次挥砍都发射碎片；
+        /// 设置 Item.shoot 为 DefenseBeam，挥砍时发射碎片；
         /// 稀有度用月后自定义等级 17（基础稀有度由 GlobalItem 统一改写）。
         /// </summary>
         public override void SetDefaults()
@@ -79,7 +79,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.UseSound = SoundID.Item1;              // 挥砍音效
             Item.autoReuse = true;                      // 自动连击
             Item.shootSpeed = 14f;                      // 弹幕初速度
-            Item.shootsEveryUse = true;                 // 每次挥砍都发射（而非隔次）
             Item.shoot = ModContent.ProjectileType<DefenseBeam>();                       // 发射的弹幕：日光碎片
             Item.rare = ItemRarityID.Lime;              // 基础稀有度：青柠
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 17;// 月后自定义稀有度等级（0=未设置）

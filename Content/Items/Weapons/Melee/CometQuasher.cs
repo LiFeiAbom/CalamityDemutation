@@ -36,7 +36,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.value = Item.buyPrice(0, 60, 0, 0);
             Item.rare = ItemRarityID.Yellow;
             Item.shootSpeed = 9f;
-            Item.shootsEveryUse = true;
             // 本模组对灾厄是弱引用，加载顺序不保证，SetDefaults 阶段可能查不到灾厄的弹幕；
             // 查不到时先挂一个原版占位弹幕，保证 Shoot 一定会被调用，真正的弹幕在 Shoot 里运行时解析。
             Item.shoot = ModContent.TryFind("CalamityMod", "CometQuasherMeteor", out ModProjectile meteor) ? meteor.Type : ProjectileID.WoodenArrowFriendly;

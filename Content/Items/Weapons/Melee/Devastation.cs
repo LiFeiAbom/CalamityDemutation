@@ -44,7 +44,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<GalaxyBlast>();
             Item.shootSpeed = 16f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 射击逻辑：发射银河爆弹主弹幕，再从玩家上方召唤多组坠落爆弹

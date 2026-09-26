@@ -23,7 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 物品基础属性：伤害 92、使用时间 22 帧、击退 6.25、淡紫稀有度；
-        /// 主弹幕为永恒光束（EonBeam），每次挥砍发射一次（shootsEveryUse）。
+        /// 主弹幕为永恒光束（EonBeam），每次挥砍发射一次。
         /// </summary>
         public override void SetDefaults()
         {
@@ -41,7 +41,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.LightPurple;
             Item.shoot = ModContent.ProjectileType<EonBeam>();
             Item.shootSpeed = 10f;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 射击逻辑：随机发射永恒光束或附魔光束，并按类型微调穿透/更新次数；

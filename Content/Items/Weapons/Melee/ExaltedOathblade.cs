@@ -37,7 +37,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Yellow;
             Item.shoot = ModContent.ProjectileType<ExaltedOathBladeProj>();
             Item.shootSpeed = ShootSpeed;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 射击逻辑：以正前方为基准，左右各偏 8° 散射共 3 发半伤害的誓言之刃弹幕

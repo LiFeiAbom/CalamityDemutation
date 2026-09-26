@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         /// <summary>
         /// 物品基础属性：78×78、伤害 40、18 帧挥砍、击退 7、自动挥舞且可转向，
-        /// 主弹幕为审判光束（弹速 15）；shootsEveryUse 使每次使用都发弹，而非每轮挥砍只发一次
+        /// 主弹幕为审判光束（弹速 15）
         /// </summary>
         public override void SetDefaults()
         {
@@ -33,7 +33,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 10;   // 月后稀有度 10 级（对应灾厄 Rarity10）
             Item.shoot = ModContent.ProjectileType<JudgementBeam>();   // 主弹幕：审判光束
             Item.shootSpeed = 15f;                        // 弹速
-            Item.shootsEveryUse = true;                   // 每次使用都触发 Shoot（与工程内方舟系剑同款口径）
         }
         /// <summary>
         /// 配方：夜明锭×7 于远古操纵机（沿用灾厄原配方，不涉及灾厄材料）。

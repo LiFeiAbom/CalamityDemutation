@@ -45,7 +45,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Red;
             Item.shoot = ModContent.ProjectileType<Exobeamold>();
             Item.shootSpeed = 19f;
-            Item.shootsEveryUse = true;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>每 14 帧挥砍都射出一道星流射线（不搬 CI 的传颂之物专属光束）</summary>

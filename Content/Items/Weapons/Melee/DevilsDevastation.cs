@@ -36,7 +36,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 28f;
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 射击逻辑：主弹幕散射 3 把誓言之刃（Oathblade，按 ±8° 展开）；

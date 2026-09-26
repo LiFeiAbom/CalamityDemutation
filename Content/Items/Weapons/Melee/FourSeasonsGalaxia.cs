@@ -43,7 +43,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Red;
             Item.shoot = ModContent.ProjectileType<Galaxia>();
             Item.shootSpeed = 24f;
-            Item.shootsEveryUse = true;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
         }
         /// <summary>

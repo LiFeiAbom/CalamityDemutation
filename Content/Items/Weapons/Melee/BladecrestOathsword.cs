@@ -31,7 +31,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Orange;
             Item.shoot = ModContent.ProjectileType<BloodScythe>();
             Item.shootSpeed = 6f;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 挥砍特效：修正武器挥舞位置

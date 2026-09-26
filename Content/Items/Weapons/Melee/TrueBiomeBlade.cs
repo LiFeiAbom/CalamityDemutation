@@ -39,7 +39,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Yellow;
             Item.shoot = ModContent.ProjectileType<TrueBiomeOrb>();
             Item.shootSpeed = 12f;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 挥砍特效：修正挥舞位置，偶尔扬起泥土粉尘

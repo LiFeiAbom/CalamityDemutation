@@ -32,7 +32,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.value = Item.buyPrice(0, 24, 0, 0);
             Item.rare = ItemRarityID.Pink;
             Item.shootSpeed = 11f;
-            Item.shootsEveryUse = true;
             // 弱引用下 SetDefaults 阶段可能查不到灾厄弹幕，查不到就挂原版占位保证 Shoot 被调用，
             // 真正弹幕在 ModifyShootStats / Shoot 里运行时解析。
             Item.shoot = ModContent.TryFind("CalamityMod", "Flarefrost", out ModProjectile flarefrost) ? flarefrost.Type : ProjectileID.WoodenArrowFriendly;

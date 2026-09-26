@@ -32,7 +32,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.LightPurple;
             Item.shoot = ModContent.ProjectileType<CatastropheClaymoreSparkle>();
             Item.shootSpeed = 11f;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 射击逻辑：发射一颗带随机 ai 值的火花弹幕

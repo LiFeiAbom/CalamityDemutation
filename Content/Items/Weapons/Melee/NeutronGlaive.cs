@@ -45,7 +45,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.crit = 8;                               // 额外暴击率 +8%
             Item.shoot = ModContent.ProjectileType<NeutronGlaiveBeam>();  // 挥砍时发射的弹幕
             Item.shootSpeed = 18f;                       // 弹幕初速度
-            Item.shootsEveryUse = true;                  // 每次使用都发射（而非仅第一次）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后自定义稀有度等级 16
         }
         /// <summary>

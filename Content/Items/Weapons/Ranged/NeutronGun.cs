@@ -33,7 +33,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.damage = 2030;
             Item.DamageType = DamageClass.Ranged;
             Item.useAnimation = Item.useTime = 5;
-            Item.shootsEveryUse = true;
             Item.knockBack = 1.5f;
             Item.shootSpeed = 12f;
             Item.useAmmo = AmmoID.Bullet;

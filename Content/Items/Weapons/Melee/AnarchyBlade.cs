@@ -50,7 +50,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Yellow;
             Item.shoot = ModContent.ProjectileType<AnarchyBeam>();
             Item.shootSpeed = 15;
-            Item.shootsEveryUse = true;
         }
         /// <summary>左键 17 帧 / 1 倍体积，右键 19 帧 / 1.2 倍体积</summary>
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

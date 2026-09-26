@@ -41,7 +41,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.value = Item.buyPrice(2, 50, 0, 0);
             Item.shoot = ModContent.ProjectileType<EonBeam>();
             Item.shootSpeed = 14f;
-            Item.shootsEveryUse = true;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>

@@ -41,7 +41,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Red;
             Item.shoot = ModContent.ProjectileType<OmegaBiomeOrb>();
             Item.shootSpeed = 15f;
-            Item.shootsEveryUse = true;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;
         }
         /// <summary>

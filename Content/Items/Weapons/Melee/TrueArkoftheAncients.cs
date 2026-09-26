@@ -42,7 +42,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Yellow;
             Item.shoot = ModContent.ProjectileType<EonBeam>();
             Item.shootSpeed = 10f;
-            Item.shootsEveryUse = true;
         }
         /// <summary>
         /// 射击逻辑：主弹幕为 75% 伤害/速度的远古光束（局部命中冷却 14、穿透 2），

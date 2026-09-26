@@ -76,7 +76,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Item.noMelee = true;
                 Item.noUseGraphic = true;
                 Item.channel = true;
-                Item.shootsEveryUse = false;
                 Item.UseSound = CalamityDemutationSounds.CrystylCharge;
                 Item.shoot = ModContent.ProjectileType<ElementalExcaliburBreakerHoldout>();
                 // 手持弹幕已在场时不再允许"再次使用"，其后由 channel 维持（与 DragonRage 同款闸门）
@@ -91,7 +90,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Item.noMelee = false;
                 Item.noUseGraphic = false;
                 Item.channel = false;
-                Item.shootsEveryUse = true;
                 Item.UseSound = SoundID.Item1;
                 Item.shoot = ModContent.ProjectileType<ElementalExcaliburBeam>();
             }

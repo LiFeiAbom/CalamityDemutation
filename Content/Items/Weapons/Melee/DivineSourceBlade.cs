@@ -34,7 +34,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Red;
             Item.shoot = ModContent.ProjectileType<DivineSourceBladeProjectile>();
             Item.shootSpeed = 18f;
-            Item.shootsEveryUse = true;
         }
         /// <summary>暴击 +10</summary>
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 10;

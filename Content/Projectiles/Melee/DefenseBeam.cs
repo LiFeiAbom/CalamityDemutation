@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
     /// 防御光束（DefenseBeam） - 防御之刃（DefenseBlade）的近战弹幕。
-    /// 由 DefenseBlade 的 Item.shoot 发射（shootsEveryUse，每次挥砍都射出），具备自动追踪能力。
+    /// 由 DefenseBlade 的 Item.shoot 发射，具备自动追踪能力。
     /// 命中/消亡时以 DefenseBeam.OnKill 爆炸，并散出 DefenseFlame 火舌弹幕形成二次伤害。
     /// </summary>
     internal class DefenseBeam:ModProjectile
