@@ -31,7 +31,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.height = 154;   // 贴图高（像素）
             Item.width = 154;    // 贴图宽（像素）
-            Item.damage = 3420; // 855 * 4 = 3420
+            Item.damage = 855;
             Item.DamageType = DamageClass.Melee;   // 归属近战伤害
             Item.useAnimation = Item.useTime = 14; // 使用动画与冷却同为 14 帧（很快）
             Item.useTurn = true;                   // 挥砍时可转向

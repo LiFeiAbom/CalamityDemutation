@@ -26,7 +26,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：伤害 6375（1275 × 2.5 × 2）、使用时间 32 帧、击退 7.5、暴击 +16；
+        /// 物品基础属性：伤害 850、使用时间 32 帧、击退 7.5、暴击 +16；
         /// 无武器贴图且 noMelee，主弹幕为手持挥砍体 DragonRageHeld（channel 持续引导），
         /// 月后稀有度 15。段数计数器 Level/LevelAlt 初始化为 0。
         /// </summary>
@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.useTime = 32;
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
-            Item.damage = 6375;//1275 * 2.5 * 2 = 6375, 灾厄遗产数值膨胀 + 灾厄大修伤害减免补偿
+            Item.damage = 850;
             Item.crit = 16;
             Item.knockBack = 7.5f;
             Item.noUseGraphic = true;

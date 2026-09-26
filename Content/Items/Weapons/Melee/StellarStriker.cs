@@ -23,14 +23,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：90×100、缩放 1.5、伤害 648、20 帧挥砍、击退 7.75、红名（1铂10金）
+        /// 物品基础属性：90×100、缩放 1.5、伤害 480、20 帧挥砍、击退 7.75、红名（1铂10金）
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 90;
             Item.height = 100;
             Item.scale = 1.5f;
-            Item.damage = 648; // 源值 480，×1.35 膨胀
+            Item.damage = 480;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Swing;

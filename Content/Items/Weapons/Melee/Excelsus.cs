@@ -12,7 +12,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 宙宇波能刃（Excelsus）—— 月后神吞档近战（移植自灾厄大修 0.4.0.1.3 的 ExcelsusEcType 重置版）。
     /// 左键散射三把旋转刃（ExcelsusMain/Blue/Pink），右键投出蓝色炸弹（ExcelsusBomb），命中召唤激光喷泉（LaserFountains）。
     /// 获取方式沿用灾厄原版：神吞宝藏袋掉落。
-    /// 伤害 990 = 大修 EcType 220 × 4.5（本模组 CE 分形膨胀口径）。
     /// </summary>
     internal class Excelsus : ModItem
     {
@@ -21,11 +20,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
-        /// <summary>物品基础属性：78×94、伤害 990、14 帧挥砍、击退 8、自动挥舞；主弹幕主刃、月后稀有度 14（蓝）</summary>
+        /// <summary>物品基础属性：78×94、伤害 220、14 帧挥砍、击退 8、自动挥舞；主弹幕主刃、月后稀有度 14（蓝）</summary>
         public override void SetDefaults()
         {
             Item.width = 78;
-            Item.damage = 990;
+            Item.damage = 220;
             Item.DamageType = DamageClass.Melee;
             Item.useTime = Item.useAnimation = 14;
             Item.useStyle = ItemUseStyleID.Swing;

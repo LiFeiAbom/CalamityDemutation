@@ -31,7 +31,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         }
         /// <summary>
         /// 物品基础属性：照搬大修 0.4.0.1.3（初速 16、暴击 +20%、消耗箭矢）。
-        /// 伤害按用户 2026-09-24 点名 **×6.5 膨胀**（152→988），与同族中子脉冲（×3.5）、中子之刃（×4）同为膨胀值；
         /// 射速按用户 2026-09-25 点名由源码的 20 帧提到 **10 帧**（须与持弓体的 FireTime 保持一致）。
         /// channel + noUseGraphic + useStyle = Shoot：本体不出图也不挥砍，瞄准与射击全交给持弓弹幕；
         /// useAmmo 供持弓弹幕里的 Player.PickAmmo 识别弹药类别（本武器会把任何箭强制转成中子箭）
@@ -39,7 +38,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             Item.width = Item.height = 54;
-            Item.damage = 988;   // 源值 152，×6.5 膨胀（用户 2026-09-24 点名）
+            Item.damage = 152;
             Item.DamageType = DamageClass.Ranged;
             Item.useAnimation = Item.useTime = 10;
             Item.knockBack = 2.5f;

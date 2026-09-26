@@ -11,16 +11,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 左键射出光束（DivineSourceBladeProjectile，首击召唤小刀光创造者），挥舞时额外放出一道剑气（DivineSourceBeam）。
     /// 配方（现代版灾厄）：灾厄 AuricBar×5 + 本模组泰拉巨刃 + 本模组宙宇波能刃 @ 灾厄宇宙砧；
     /// 经典版灾厄没有 AuricBar/宇宙砧，按本模组惯例改用 AuricOre×25（5 锭 = 25 矿）@ 德雷顿熔炉。
-    /// 伤害 2160 = 大修原值 480 × 4.5（本模组 CE 分形膨胀口径）。
     /// </summary>
     internal class DivineSourceBlade : ModItem
     {
-        /// <summary>物品基础属性：154×154、伤害 2160、15 帧挥砍、击退 5.5、纯弹幕（noMelee）、红稀有度</summary>
+        /// <summary>物品基础属性：154×154、伤害 480、15 帧挥砍、击退 5.5、纯弹幕（noMelee）、红稀有度</summary>
         public override void SetDefaults()
         {
             Item.height = 154;
             Item.width = 154;
-            Item.damage = 2160;
+            Item.damage = 480;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = Item.useTime = 15;
             Item.scale = 1;

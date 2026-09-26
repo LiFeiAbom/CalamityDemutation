@@ -38,7 +38,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         private int atkType = 0;
         public override void SetDefaults()
         {
-            Item.damage = 3200;                            // 3200 点近战伤害
+            Item.damage = 760;
             Item.crit = 35;                                 // 额外暴击率
             Item.DamageType = DamageClass.Melee;
             Item.width = 48;                                // 贴图宽（像素）

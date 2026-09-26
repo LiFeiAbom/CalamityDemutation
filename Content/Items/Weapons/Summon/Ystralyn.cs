@@ -13,8 +13,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 原版鞭模板的召唤师武器，挥砍命中的敌人会被挂上噬渊标记（仆从打它多吃 90 平伤 + 15% 乘算 + 1/8 暴击）
     /// 与生命压制（4501 点/秒），同时给主人挂虚无幻象以召唤幻影妖龙。
     /// <para>
-    /// 与 CE 原版的差异：⓪ 伤害做 ×8 膨胀（CE 900 → 本模组 7200；同日试过的 ×0.6 已回滚，见 <see cref="SetDefaults"/>）；
-    /// ① 配方按用户要求重做（CE 原配方是 WyrmTooth×12 + FadingRunestone @ 深渊祭坛，
+    /// 与 CE 原版的差异：① 配方按用户要求重做（CE 原配方是 WyrmTooth×12 + FadingRunestone @ 深渊祭坛，
     /// 那三样本模组都没有；现改为 万花筒 + 猎魂鲨牙×12 + 魔影锭×5 @ 嘉登熔炉，两版灾厄分别注册，见 <see cref="AddRecipes"/>）；
     /// ② tooltip 的 <c>{0}</c> 格式参数：CE 传的是 <c>DragonWhipDebuff.TagDamage</c>（= 15，与它实际挂的
     /// WyrmWhipDebuff 对不上，是 CE 的笔误），本模组改传真实的 <c>WyrmWhipDebuff.TagDamage</c>（= 90）；
@@ -29,13 +28,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(WyrmWhipDebuff.TagDamage);
         /// <summary>
         /// 原版鞭模板（参数序：弹幕、伤害、击退、出手速度、挥砍总帧数）：击退 2 / 出手速度 4 / 挥砍 27 帧。
-        /// 伤害按 2026-09-22 用户拍板做 ×8 膨胀（CE 原值 900 → 7200）。同日曾试过再 ×0.6 削到 4320，
-        /// 用户实测"伤害少了点"，当天回滚回 7200。口径同既有的 13 件 CE 武器：**只改这个 Item.damage**，
         /// 幻影妖龙的 1600、噬渊标记的 90 平伤、生命压制的 4501 点/秒都是写死的绝对数值，保持原样。
         /// </summary>
         public override void SetDefaults()
         {
-            Item.DefaultToWhip(ModContent.ProjectileType<YstralynProj>(), 7200, 2, 4, 27);
+            Item.DefaultToWhip(ModContent.ProjectileType<YstralynProj>(), 900, 2, 4, 27);
             Item.rare = ItemRarityID.Red;                  // 基础稀有度红，真正的名称颜色由 postMoonLordRarity 覆盖
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15; // 月后稀有度 15：名称染紫
             Item.value = Item.buyPrice(platinum: 3, gold: 20);

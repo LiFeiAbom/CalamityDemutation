@@ -17,14 +17,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class CometQuasher : ModItem
     {
         /// <summary>
-        /// 物品基础属性：46×62 碰撞箱、缩放 1.5、伤害 108、15 帧挥砍、击退 2.75、黄名（60金）
+        /// 物品基础属性：46×62 碰撞箱、缩放 1.5、伤害 80、15 帧挥砍、击退 2.75、黄名（60金）
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 46;
             Item.height = 62;
             Item.scale = 1.5f;
-            Item.damage = 108; // 源值 80，×1.35 膨胀
+            Item.damage = 80;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Swing;

@@ -16,10 +16,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         /// <summary>本次挥砍的方向标记（1 / -1 交替），作为 ai[0] 传给手持弹幕</summary>
         private int atkType = 1;
-        /// <summary>基础属性：72 近战伤害、24 帧使用、4.6 击退、绿色稀有度、2 金价值；本体不画贴图也不做判定</summary>
+        /// <summary>基础属性：18 近战伤害、24 帧使用、4.6 击退、绿色稀有度、2 金价值；本体不画贴图也不做判定</summary>
         public override void SetDefaults()
         {
-            Item.damage = 72;                              // 72 点近战伤害
+            Item.damage = 18;
             Item.DamageType = DamageClass.Melee;
             Item.width = 48;                               // 贴图宽（像素）
             Item.height = 60;                              // 贴图高（像素）

@@ -11,10 +11,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 沧溟龙契（Nyxolithraken，移植自 CalamityEntropy 的 Content/Items/Weapons/Nyxolithraken.cs）：
     /// 召唤一条「沧溟渊龙」为你作战的召唤杖，占 5 个仆从栏位，出场时朝鼠标处生成。
     /// <para>
-    /// 与 CE 原版的差异：① 伤害按既有档位口径 ×4.5（CE 原值 1750 → 7875；同日试过的 ×0.6 已回滚）；
-    /// ② 配方按用户要求重做（CE 原配方是 星尘细胞法杖 + 星尘之龙法杖 + WyrmTooth×10 + FadingRunestone @ 深渊祭坛，
+    /// 与 CE 原版的差异：① 配方按用户要求重做（CE 原配方是 星尘细胞法杖 + 星尘之龙法杖 + WyrmTooth×10 + FadingRunestone @ 深渊祭坛，
     /// 后两样本模组都没有）：改为 寒霜九头蛇法杖（原版）+ 巨龙七星灯（本模组新移）+ 魔影锭×5 @ 嘉登熔炉，两版灾厄分别注册；
-    /// ③ CE 自研稀有度 <c>AbyssalBlue</c> 按「boss 档位」口径对齐本模组的 <c>postMoonLordRarity = 15</c>（名称染紫）。
+    /// ② CE 自研稀有度 <c>AbyssalBlue</c> 按「boss 档位」口径对齐本模组的 <c>postMoonLordRarity = 15</c>（名称染紫）。
     /// </para>
     /// </summary>
     internal class Nyxolithraken:ModItem
@@ -28,7 +27,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         }
         public override void SetDefaults()
         {
-            Item.damage = 7875;             // CE 原值 1750，按既有档位口径 ×4.5（同日试过的 ×0.6 已回滚）
+            Item.damage = 1750;
             Item.crit = 0;
             Item.DamageType = DamageClass.Summon;
             Item.width = 90;

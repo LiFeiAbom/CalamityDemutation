@@ -10,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 手持挥砍体 TerratomereHoldout（83 帧四段弧线挥砍），挥砍途中发射 3 发泰拉闪电（TerratomereBolts）、
     /// 收招时放出一道大光束剑气（TerratomereBeams）；真近战命中回血并施加冰川状态。
     /// 配方沿用现代版灾厄 1.4.4：原版泰拉刃 + 灾厄夜明锭（UelibloomBar）×18 于秘银砧；经典版退回五剑合成。
-    /// 伤害 833 = 大修 EcType 185 × 4.5（本模组 CE 分形膨胀口径，832.5 上取整）。
     /// </summary>
     internal class Terratomere : ModItem
     {
@@ -33,12 +32,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public static readonly Color TerraColor1 = new Color(141, 203, 50);
         /// <summary>主题色 2（灾厄 TerraColor2）</summary>
         public static readonly Color TerraColor2 = new Color(83, 163, 136);
-        /// <summary>物品基础属性：60×66、伤害 833、21 帧挥砍、击退 7、无贴图且 noMelee，主弹幕为手持挥砍体；月后稀有度 12（青绿）</summary>
+        /// <summary>物品基础属性：60×66、伤害 185、21 帧挥砍、击退 7、无贴图且 noMelee，主弹幕为手持挥砍体；月后稀有度 12（青绿）</summary>
         public override void SetDefaults()
         {
             Item.width = 60;
             Item.height = 66;
-            Item.damage = 833;
+            Item.damage = 185;
             Item.DamageType = DamageClass.Melee;
             Item.useAnimation = 21;
             Item.useTime = 21;
