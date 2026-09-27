@@ -56,21 +56,16 @@ namespace CalamityDemutation.Players
         /// </summary>
         public const int FireProjectiles = 4;
         // 各属性成长端点：初始值（击败石巨人时）→ 满配值（18 档全清）
-        private const float InitDamage = 0.10f, MaxDamage = 0.30f;           // 通用增伤（0.10 = +10%）
-        private const float InitCrit = 10f, MaxCrit = 30f;                   // 暴击（百分点：10 = +10%）
-        private const float InitMeleeSpeed = 0.05f, MaxMeleeSpeed = 0.30f;   // 近战攻速（0.05 = +5%）
-        private const float InitEndurance = 0.05f, MaxEndurance = 0.15f;     // 伤害减免（0.05 = +5%）
-        private const float InitMoveSpeed = 0.05f, MaxMoveSpeed = 0.30f;     // 移速（0.05 = +5%）
-        private const float InitLifePct = 0.05f, MaxLifePct = 0.30f;         // 最大生命（百分比）
-        private const float InitManaPct = 0.05f, MaxManaPct = 0.30f;         // 最大魔力（百分比）
-        private const int InitLifeRegen = 1, MaxLifeRegen = 10;              // 回血
-        private const int InitManaRegen = 1, MaxManaRegen = 10;              // 回蓝
-        private const int InitDefense = 5, MaxDefense = 30;                  // 防御
-        private const float InitJumpPct = 0.05f, MaxJumpPct = 0.30f;         // 跳跃力（0.05 = +5%）
-        private const float InitMinePct = 0.05f, MaxMinePct = 0.30f;         // 挖掘速度（0.05 = +5%）
-        private const float InitCostPct = 0.05f, MaxCostPct = 0.30f;         // 魔力消耗减免（0.05 = -5%）
-        private const float InitThornsPct = 0.05f, MaxThornsPct = 0.30f;     // 荆棘反伤（0.05 = 5%）
-        private const float InitLuckPct = 0.05f, MaxLuckPct = 0.30f;         // 幸运（0.05 = +0.05）
+        // 归一心元石的成长端点：初始档照搬 1.4.4 版同名饰品，满配档按用户 2026-09-27 点名
+        private const float InitDamage = 0.025f, MaxDamage = 0.20f;         // 通用增伤
+        private const float InitCrit = 1f, MaxCrit = 10f;                   // 暴击（百分点：1 = +1%）
+        private const float InitMeleeSpeed = 0.025f, MaxMeleeSpeed = 0.20f; // 近战攻速
+        private const float InitEndurance = 0.0125f, MaxEndurance = 0.10f;  // 伤害减免
+        private const float InitMoveSpeed = 0.025f, MaxMoveSpeed = 0.10f;   // 移速
+        private const float InitLifePct = 0.02f, MaxLifePct = 0.10f;        // 最大生命（百分比）
+        private const int InitLifeRegen = 1, MaxLifeRegen = 3;              // 回血
+        private const int InitDefense = 2, MaxDefense = 10;                 // 防御
+        private const float InitKnockback = 0.05f, MaxKnockback = 0.2f;     // 召唤击退
         /// <summary>
         /// 自定义网络消息码：客户端上报"洋葱永久解锁状态变更"（见 SendClientChanges），
         /// 由主类 CalamityDemutation.HandlePacket 处理。
@@ -1140,11 +1135,11 @@ namespace CalamityDemutation.Players
             // 烦恼项链：+5%通用伤害，半血以下额外+15%
             if (necklaceOfVexation)
             {
-                Player.GetDamage<GenericDamageClass>() += 0.05f;
+                Player.GetDamage<GenericDamageClass>() += 0.1f;
                 // 半血判定：statLife 为当前生命，statLifeMax2 为加成后的最大生命
                 if (Player.statLife <= 0.5 * Player.statLifeMax2)
                 {
-                    Player.GetDamage<GenericDamageClass>() += 0.15f;
+                    Player.GetDamage<GenericDamageClass>() += 0.2f;
                 }
             }
             // 亚利姆徽章：+14%近战伤害、+14%近战暴击率、+14%近战攻速、烈火手套击退、+240熔岩免疫时间，半血以下额外+10%通用伤害
@@ -1188,7 +1183,7 @@ namespace CalamityDemutation.Players
                 Player.GetDamage<RangedDamageClass>() += 0.15f;
                 Player.GetCritChance<RangedDamageClass>() += 10;
                 Player.lifeRegen += 2;
-                Player.GetKnockback<RangedDamageClass>().Base += 0.5f;
+                Player.GetKnockback<SummonDamageClass>().Base += 0.5f;
                 Player.pickSpeed -= 0.15f;
             }
             // 元素箭袋：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
@@ -1196,9 +1191,9 @@ namespace CalamityDemutation.Players
             {
                 Player.GetDamage<RangedDamageClass>() += 0.2f;
                 Player.GetCritChance<RangedDamageClass>() += 20;
-                Player.lifeRegen += 4;
-                Player.GetKnockback<RangedDamageClass>().Base += 1f;
-                Player.pickSpeed -= 0.3f;
+                Player.lifeRegen += 2;
+                Player.GetKnockback<SummonDamageClass>().Base += 0.5f;
+                Player.pickSpeed -= 0.15f;
             }
             // 灾厄符印：魔法增伤/暴击/魔力上限与减耗，附带寻宝/药剂
             if (sigilofCalamitas)
@@ -1262,11 +1257,12 @@ namespace CalamityDemutation.Players
                 Player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
                 Player.GetCritChance<GenericDamageClass>() += 5;
                 Player.pickSpeed -= 0.15f;
+                // 白天回血、夜晚加防；日食算"白天"，按 1.3 的口径两项同时生效
                 if (Main.dayTime)
                 {
-                    Player.lifeRegen += 6;
+                    Player.lifeRegen += 3;
                 }
-                else
+                if (!Main.dayTime || Main.eclipse)
                 {
                     Player.statDefense += 30;
                 }
@@ -2139,8 +2135,8 @@ namespace CalamityDemutation.Players
             // 大杂烩（The Amalgam）：聚合上述多种高级饰品的全部结算，属终极饰品（数值更高）
             if (theAmalgam)
             {
-                Player.GetDamage<GenericDamageClass>() += 0.3f;
-                Player.GetCritChance<GenericDamageClass>() += 15;
+                Player.GetDamage<GenericDamageClass>() += 0.2f;
+                Player.GetCritChance<GenericDamageClass>() += 10;
                 // 大杂烩 = 四件原料（血脑/虚空/龙涎香/菌块）效果集合：补继承虚空之烬的
                 // 熔岩免疫与浸岩浆增伤（原只装虚空戒才有，合体后也应一并继承）
                 Player.lavaRose = true;
@@ -2151,30 +2147,8 @@ namespace CalamityDemutation.Players
                 }
                 if (Player.immune)
                 {
-                    if (Main.rand.NextBool(8))
-                    {
-                        if (Player.whoAmI == Main.myPlayer)
-                        {
-                            for (int l = 0; l < 1; l++)
-                            {
-                                float x = Player.position.X + (float)Main.rand.Next(-400, 400);
-                                float y = Player.position.Y - (float)Main.rand.Next(500, 800);
-                                Vector2 vector = new(x, y);
-                                float num15 = Player.position.X + (float)(Player.width / 2) - vector.X;
-                                float num16 = Player.position.Y + (float)(Player.height / 2) - vector.Y;
-                                num15 += (float)Main.rand.Next(-100, 101);
-                                int num17 = 22;
-                                float num18 = (float)Math.Sqrt((double)(num15 * num15 + num16 * num16));
-                                num18 = (float)num17 / num18;
-                                num15 *= num18;
-                                num16 *= num18;
-                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<AuraRain>(), 320, 2f, Player.whoAmI, 0f, 0f);//18*5
-                                Main.projectile[num19].ai[1] = Player.position.Y;
-                                Main.projectile[num19].tileCollide = false;
-                            }
-                        }
-                    }
-                    if (Main.rand.NextBool(10))
+                    // 免伤期间 1/10 概率降下一道天降：灵气雨与烈焰随机二选一
+                    if (Main.rand.Next(10) == 0)
                     {
                         // 仅本地端生成：非主机客户端也生成会重复创建弹幕、造成不同步
                         if (Player.whoAmI == Main.myPlayer)
@@ -2192,7 +2166,16 @@ namespace CalamityDemutation.Players
                                 num18 = (float)num17 / num18;
                                 num15 *= num18;
                                 num16 *= num18;
-                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), 360, 5f, Player.whoAmI, 0f, 0f);
+                                int num19;
+                                if (Main.rand.NextBool(2))
+                                {
+                                    num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(500), 5f, Player.whoAmI, 0f, 0f);
+                                }
+                                else
+                                {
+                                    num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<AuraRain>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(500), 2f, Player.whoAmI, 0f, 0f);
+                                    Main.projectile[num19].tileCollide = false;
+                                }
                                 Main.projectile[num19].ai[1] = Player.position.Y;
                             }
                         }
@@ -2224,7 +2207,7 @@ namespace CalamityDemutation.Players
                                 Vector2 velocity = baseVelocity;
                                 velocity = baseVelocity.RotatedBy(MathHelper.ToRadians(-FireAngleSpread / 2 + (FireAngleSpread * i / (float)FireProjectiles)));
                                 velocity.X = velocity.X + 3 * Main.rand.NextFloat() - 1.5f;
-                                int projectile = Projectile.NewProjectile(Player.GetSource_FromThis(), spawn.X, spawn.Y, velocity.X, velocity.Y, ModContent.ProjectileType<BrimstoneHellfireballFriendly2>(), 540, 5f, Main.myPlayer, 0f, 0f);
+                                int projectile = Projectile.NewProjectile(Player.GetSource_FromThis(), spawn.X, spawn.Y, velocity.X, velocity.Y, ModContent.ProjectileType<BrimstoneHellfireballFriendly2>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(500), 5f, Main.myPlayer, 0f, 0f);
                                 Main.projectile[projectile].tileCollide = false;
                                 Main.projectile[projectile].timeLeft = 50;
                             }
@@ -2250,7 +2233,7 @@ namespace CalamityDemutation.Players
                 {
                     if (Player.whoAmI == Main.myPlayer)
                     {
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center.X, Player.Center.Y, 0f, 0f, ModContent.ProjectileType<PoisonousSeawater>(), 450, 5f, Player.whoAmI, 0f, 0f);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center.X, Player.Center.Y, 0f, 0f, ModContent.ProjectileType<PoisonousSeawater>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(500), 5f, Player.whoAmI, 0f, 0f);
                     }
                 }
                 int seaCounter = 0;
@@ -2258,7 +2241,7 @@ namespace CalamityDemutation.Players
                 int num = BuffID.Venom;
                 float num2 = 200f;
                 bool flag = seaCounter % 60 == 0;
-                int num3 = 15;
+                int num3 = 80;
                 int random = Main.rand.Next(5);
                 if (Player.whoAmI == Main.myPlayer)
                 {
@@ -2303,31 +2286,23 @@ namespace CalamityDemutation.Players
                     float endurance = InitEndurance + (MaxEndurance - InitEndurance) * t;
                     float moveSpeed = InitMoveSpeed + (MaxMoveSpeed - InitMoveSpeed) * t;
                     float lifePct = InitLifePct + (MaxLifePct - InitLifePct) * t;
-                    float manaPct = InitManaPct + (MaxManaPct - InitManaPct) * t;
                     int lifeRegen = (int)(InitLifeRegen + (MaxLifeRegen - InitLifeRegen) * t);
-                    int manaRegen = (int)(InitManaRegen + (MaxManaRegen - InitManaRegen) * t);
                     int defense = (int)(InitDefense + (MaxDefense - InitDefense) * t);
-                    float jumpPct = InitJumpPct + (MaxJumpPct - InitJumpPct) * t;
-                    float minePct = InitMinePct + (MaxMinePct - InitMinePct) * t;
-                    float costPct = InitCostPct + (MaxCostPct - InitCostPct) * t;
-                    float thornsPct = InitThornsPct + (MaxThornsPct - InitThornsPct) * t;
-                    float luckPct = InitLuckPct + (MaxLuckPct - InitLuckPct) * t;
+                    float knockback = InitKnockback + (MaxKnockback - InitKnockback) * t;
                     Player.GetDamage<GenericDamageClass>() += damage;
                     Player.GetCritChance<GenericDamageClass>() += crit;
                     Player.GetAttackSpeed<MeleeDamageClass>() += meleeSpeed;
                     Player.endurance += endurance;
                     Player.moveSpeed += moveSpeed;
                     Player.statLifeMax2 += (int)(Player.statLifeMax2 * lifePct);
-                    Player.statManaMax2 += (int)(Player.statManaMax2 * manaPct);
                     Player.lifeRegen += lifeRegen;
-                    Player.manaRegen += manaRegen;
                     Player.statDefense += defense;
-                    Player.jumpSpeedBoost *= 1f + jumpPct;      // 跳跃力 +5%~+30%
-                    Player.pickSpeed *= 1f - minePct;           // 挖掘提速 5%~30%（pickSpeed 越低越快）
-                    Player.manaCost *= 1f - costPct;            // 魔力消耗减免 5%~30%
-                    if (thornsPct > Player.thorns)
-                        Player.thorns = thornsPct;              // 荆棘反伤 5%~30%（不覆盖更高的反伤）
-                    Player.luck += luckPct;                     // 幸运 +0.05~+0.30
+                    Player.GetKnockback<SummonDamageClass>().Base += knockback;
+                    // 最大飞行时间恒 ×1.15（与经典版源一致）
+                    if (Player.wingTimeMax > 0)
+                    {
+                        Player.wingTimeMax = (int)(Player.wingTimeMax * 1.15);
+                    }
                 }
                 // Debuff 时间缩减：始终生效，不使用 Boss 等级解锁。
                 // 每 1 秒触发一轮：治疗冷却（药水病）缩减 2%；魔力病缩减 20%；一般 Debuff 缩减 10%。
@@ -2351,20 +2326,6 @@ namespace CalamityDemutation.Players
                             Player.buffTime[i] = (int)(Player.buffTime[i] * 0.9f);
                         }
                     }
-                }
-                // 特殊一次性加成（绑定特定 Boss，与进度系数无关）
-                if (NPC.downedMoonlord)
-                {
-                    Player.maxMinions += 1;      // 月亮领主：+1 召唤栏
-                    Player.wingTimeMax *= 2;     // 月亮领主：最大飞行时间 ×2
-                }
-                if (BossSystem.OldDuke)
-                {
-                    Player.maxMinions += 2;      // 硫海遗爵（老公爵）：+2 召唤栏
-                }
-                if (BossSystem.ExoMechs || BossSystem.SupremeCalamitas)
-                {
-                    Player.wingTime = 10000 * Player.wingTimeMax; // 星流巨械/至尊灾厄：每帧回满飞行时间 = 无限飞行
                 }
             }
             if (deificAmulet)
@@ -3602,7 +3563,7 @@ namespace CalamityDemutation.Players
             {
                 return false;
             }
-            if (elementalQuiver && weapon.DamageType == DamageClass.Ranged && Main.rand.NextFloat() < 0.4f)
+            if (elementalQuiver && weapon.DamageType == DamageClass.Ranged && Main.rand.NextFloat() < 0.2f)
             {
                 return false;
             }
@@ -4277,7 +4238,9 @@ namespace CalamityDemutation.Players
                         if (distance < num10)
                         {
                             float num11 = (float)Main.rand.Next(90 + (int)info.Damage / 3, 240 + (int)info.Damage / 2);
-                            Main.npc[m].AddBuff(BuffID.Frozen, (int)num11, false);
+                            // 源各版都用灾厄的 GlacialState（真正能定住 NPC）；该 buff 在 1.4.4 缺失，
+                            // 故走 fallback：取不到时退回原版 Frozen
+                            ApplyCalamityBuffWithFallback(Main.npc[m], "GlacialState", (int)num11, BuffID.Frozen);
                         }
                     }
                 }
@@ -4827,10 +4790,17 @@ namespace CalamityDemutation.Players
                 ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 60);
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 60);
             }
-            if ((statisCurse || statisBeltOfCurses) && (proj.CountsAsClass<SummonDamageClass>() || proj.CountsAsClass<SummonMeleeSpeedDamageClass>()))
+            // 时滞（TemporalSadness）与暗影焰：诅咒与腰带分别结算，帧数不同故不合并
+            if (statisCurse && (proj.CountsAsClass<SummonDamageClass>() || proj.CountsAsClass<SummonMeleeSpeedDamageClass>()))
+            {
+                ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 60);
+                target.AddBuff(BuffID.ShadowFlame, 300);
+                ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 60);
+            }
+            if (statisBeltOfCurses && (proj.CountsAsClass<SummonDamageClass>() || proj.CountsAsClass<SummonMeleeSpeedDamageClass>()))
             {
                 ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 120);
-                target.AddBuff(BuffID.ShadowFlame, 120);
+                target.AddBuff(BuffID.ShadowFlame, 300);
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 120);
             }
             if(theFirstShadowflame && (proj.CountsAsClass<SummonDamageClass>() || proj.CountsAsClass<SummonMeleeSpeedDamageClass>()))

@@ -7,8 +7,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 暗日之戒（DarkSunRing） - 综合型饰品
-    /// 提供 +2 仆从上限、+10 防御、+1 HP/s 生命再生、+12% 通用伤害、+12% 近战攻速、
-    /// +5% 暴击、+15% 挖掘速度、仆从击退；白天额外 +3 HP/s 生命再生，夜晚额外 +30 防御。
+    /// 提供 +2 仆从上限、+10 防御、+0.5 HP/s 生命再生、+12% 通用伤害、+12% 近战攻速、
+    /// +5% 暴击、+15% 挖掘速度、仆从击退；白天额外 +1.5 HP/s 生命再生，夜晚额外 +30 防御，
+    /// 日食期间两项同时生效。
     /// </summary>
     internal class DarkSunRing:ModItem
     {
@@ -30,7 +31,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             Item.height = 26;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 90, 0, 0);  // 价值 90 金
             Item.defense = 10;                        // 装备时 +10 防御
-            Item.lifeRegen = 2;                       // 装备时 +2 生命回复
+            Item.lifeRegen = 1;                       // 装备时 +1 生命回复（显示 +0.5 HP/s）
             Item.accessory = true;                    // 标记为饰品，可装备于饰品栏
             // 使用模组自定义的月后稀有度等级
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;

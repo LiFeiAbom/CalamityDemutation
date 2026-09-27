@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
 {
     /// <summary>
     /// 代达罗斯徽章 - 远程职业饰品
-    /// +15% 远程伤害、+10% 远程暴击、+2 生命回复、+0.5 远程击退、+15% 挖掘速度、+5 防御，
+    /// +15% 远程伤害、+10% 远程暴击、+2 生命回复、+0.5 召唤击退、+15% 挖掘速度、+5 防御，
     /// 并有 20% 概率不消耗弹药（见 CalamityDemutationPlayer.CanConsumeAmmo）。
     /// </summary>
     internal class DaedalusEmblem:ModItem

@@ -205,7 +205,7 @@ namespace CalamityDemutation.Content.Projectiles
         /// - 神圣之怒 buff（HolyWrath）：120 帧神圣火（现代版）与圣光（经典版）；
         /// - 恶魔残影套装（demonshadeSetBonus）：随机 360/240/120 帧恶魔烈焰；
         /// - omega 蓝胸甲（omegaBlueChestplate）：240 帧 HadopelagicPressure / CrushDepth（原误用 omegaBlueSet，已与 NPC 侧统一）；
-        /// - 召唤专属：时滞（statisBlessing 60 帧；statisCurse / statisBeltOfCurses 120 帧 + 暗影焰）与原初暗影焰 300 帧；
+        /// - 召唤专属：时滞（statisBlessing 与 statisCurse 各 60 帧、statisBeltOfCurses 120 帧，均附暗影焰）与原初暗影焰 300 帧；
         /// - 亚利姆徽章：随机 120/240/360 帧神圣火（现代版）与圣光（经典版）；
         /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 灾厄现代/经典两版本）；
         /// - 女巫套装近战弹幕（silvaMelee）：1/4 概率 20 帧女巫眩晕；
@@ -255,10 +255,16 @@ namespace CalamityDemutation.Content.Projectiles
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 60);
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 60);
                 }
-                if (modPlayer.statisCurse || modPlayer.statisBeltOfCurses)
+                if (modPlayer.statisCurse)
+                {
+                    CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 60);
+                    target.AddBuff(BuffID.ShadowFlame, 300);
+                    CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 60);
+                }
+                if (modPlayer.statisBeltOfCurses)
                 {
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "TemporalSadness", 120);
-                    target.AddBuff(BuffID.ShadowFlame, 120);
+                    target.AddBuff(BuffID.ShadowFlame, 300);
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "TemporalSadness", 120);
                 }
                 // 原初暗影焰（theFirstShadowflame）：300 帧暗影焰

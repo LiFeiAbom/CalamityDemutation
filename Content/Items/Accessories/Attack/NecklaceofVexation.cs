@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
 {
     /// <summary>
     /// 烦恼项链 - 通用攻击饰品
-    /// 提供 +5% 通用伤害，半血以下额外 +15%（合计 +20%）。
+    /// 提供 +10% 通用伤害，半血以下额外 +20%（合计 +30%）。
     /// </summary>
     internal class NecklaceofVexation : ModItem
     {

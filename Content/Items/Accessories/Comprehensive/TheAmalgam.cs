@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 大杂烩（TheAmalgam） - 顶级综合型专家饰品，由合体大脑 + 虚空灭绝 + 利维坦龙涎香 + 真菌团块组合而成
-    /// 集四者效果于一体并强化：+30% 通用伤害、+15% 通用暴击、1/4 概率闪避攻击；
+    /// 集四者效果于一体并强化：+20% 通用伤害、+10% 通用暴击、1/4 概率闪避攻击；
     /// 受击时召唤灵气雨/烈焰反击并周期性喷发地狱火，获得水下/岩浆作战与真菌团块仆从。
     /// 与合体大脑、虚空灭绝、灾厄之戒、真菌团块、利维坦龙涎香互相排斥。
     /// </summary>
@@ -51,10 +51,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.SummonBuffs.FungalClump>(), 3600, true);
                 }
-                // 数量不足 1 时补生成（基准伤害 330，为单真菌团块 50 的强化版）
+                // 数量不足 1 时补生成（基准伤害 250，与源一致）
                 if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Summon.FungalClump>()] < 1)
                 {
-                    Projectile.NewProjectile(player.GetSource_Accessory(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.FungalClump>(), (int)(330f * player.GetDamage<SummonDamageClass>().Multiplicative), 1f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(player.GetSource_Accessory(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.FungalClump>(), (int)(250f * player.GetDamage<SummonDamageClass>().Multiplicative), 1f, Main.myPlayer, 0f, 0f);
                 }
             }
         }

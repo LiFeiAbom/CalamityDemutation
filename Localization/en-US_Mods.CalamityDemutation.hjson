@@ -736,9 +736,10 @@ Items: {
 			'''
 			12% increase to damage, minion knockback, and melee speed
 			5% increase to critical strike chance
-			+1 HP/s life regen, 15% increased pick speed, and +2 max minions
-			During the day the player has +3 HP/s life regen
+			+0.5 HP/s life regen, 15% increased pick speed, and +2 max minions
+			During the day the player has +1.5 HP/s life regen
 			During the night the player has +30 defense
+			Both bonuses are granted during an eclipse
 			"Contains the power of the dark sun"
 			'''
 	}
@@ -1270,8 +1271,8 @@ Items: {
 		DisplayName: Necklace of Vexation
 		Tooltip:
 			'''
-			5% increased damage
-			10% increased damage when under 50% life
+			10% increased damage
+			Additional 20% increased damage when under 50% life
 			'''
 	}
 
@@ -1691,11 +1692,11 @@ Items: {
 		DisplayName: The Amalgam
 		Tooltip:
 			'''
-			30% increased damage and 15% increased critical strike chance
+			20% increased damage and 10% increased critical strike chance
 			Shade rains down when you are hit
 			You will confuse nearby enemies when you are struck
 			Drops brimstone fireballs from the sky occasionally
-			Brimstone fire rains down while invincibility is active
+			Shade or brimstone fire rains down while invincibility is active
 			Temporary immunity to lava, greatly reduces lava burn damage, and 25% increased damage while in lava
 			Summons a fungal clump to fight for you
 			You leave behind poisonous seawater as you move
@@ -1714,6 +1715,7 @@ Items: {
 			Starts off with weak buffs to all of your stats
 			The stat buffs become more powerful as you progress
 			Reduces the DoT effects of harmful debuffs inflicted on you
+			Boosts your maximum flight time by 15%
 			"Thank you to all of my supporters that made this mod a reality"
 			'''
 	}

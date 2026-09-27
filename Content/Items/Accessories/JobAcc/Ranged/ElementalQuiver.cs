@@ -6,8 +6,8 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
 {
     /// <summary>
     /// 元素箭袋 - 顶级远程职业饰品
-    /// +20% 远程伤害、+20% 远程暴击、+4 生命回复、+1 远程击退、+30% 挖掘速度、+5 防御，
-    /// 40% 概率不消耗弹药，且箭矢有小概率分裂为镜像箭矢
+    /// +20% 远程伤害、+20% 远程暴击、+2 生命回复（1 HP/s）、+0.5 召唤击退、−15% 挖掘时间、+5 防御，
+    /// 20% 概率不消耗弹药，且箭矢有小概率分裂为镜像箭矢
     /// （分裂逻辑见 CalamityDemutationGlobalProjectile.AI）。
     /// </summary>
     internal class ElementalQuiver:ModItem
