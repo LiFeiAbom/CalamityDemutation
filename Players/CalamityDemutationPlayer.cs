@@ -1488,29 +1488,29 @@ namespace CalamityDemutation.Players
             // 元素之心：全属性大礼包；站立地面时脚下长出草/花，并驱动五个娘化召唤物
             if (heartoftheElements)
             {
-                Player.lifeRegen += 6;
-                Player.manaRegen += 6;
-                Player.statLifeMax2 += 50;
-                Player.statManaMax2 += 50;
-                Player.moveSpeed += 0.1f;
-                Player.jumpSpeedBoost += 2.0f;
-                Player.endurance += 0.05f;
-                Player.manaCost *= 0.85f;
-                Player.GetDamage<GenericDamageClass>() += 0.1f;
-                Player.GetCritChance<GenericDamageClass>() += 1f;
-                // 隐藏视觉版元素之心：数值约为完整版一半，仅在未显示外观时叠加
-                if (heartoftheElementshideVisual)
+                // 用户 2026-09-27 点名的修正值：不随元素开关分档，两档都给
+                Player.lifeRegen += 4;                            // 2 HP/s
+                Player.manaRegenBonus += 2;
+                Player.manaCost *= 0.95f;
+                Player.GetCritChance<GenericDamageClass>() += 10f;
+                // 其余数值按经典版 cal-1.4.2.101 逐项对齐：元素开启（可见）档较低，关闭（隐藏）档略高
+                if (!heartoftheElementshideVisual)
                 {
-                    Player.lifeRegen += 2;
-                    Player.manaRegen += 2;
                     Player.statLifeMax2 += 20;
-                    Player.statManaMax2 += 20;
-                    Player.moveSpeed += 0.04f;
-                    Player.jumpSpeedBoost += 0.5f;
-                    Player.endurance += 0.02f;
-                    Player.manaCost *= 0.9f;
-                    Player.GetDamage<GenericDamageClass>() += 0.02f;
-                    Player.GetCritChance<GenericDamageClass>() += 2;
+                    Player.statManaMax2 += 50;
+                    Player.moveSpeed += 0.1f;
+                    Player.jumpSpeedBoost += 2.0f;
+                    Player.endurance += 0.05f;
+                    Player.GetDamage<GenericDamageClass>() += 0.1f;
+                }
+                else
+                {
+                    Player.statLifeMax2 += 25;
+                    Player.statManaMax2 += 60;
+                    Player.moveSpeed += 0.12f;
+                    Player.jumpSpeedBoost += 2.2f;
+                    Player.endurance += 0.06f;
+                    Player.GetDamage<GenericDamageClass>() += 0.12f;
                 }
                 int bloomCounter = 0;
                 int num = 186;

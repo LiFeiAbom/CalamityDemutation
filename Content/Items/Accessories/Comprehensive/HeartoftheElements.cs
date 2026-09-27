@@ -54,9 +54,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 // 召唤物生成/增益维护仅由本地玩家负责（与玫瑰石/真菌团块等组成件一致），避免多人下重复生成
                 if (player.whoAmI == Main.myPlayer)
                 {
-                    // 召唤物基础伤害随游戏进度提升：月后 600、月前 200；击败噬神者后伤害翻倍
-                    int damage = NPC.downedMoonlord ? 600 : 200;
-                    float damageMult = BossSystem.DevourerOfGods ? 2f : 1f;
+                    // 召唤物基础伤害随游戏进度提升：月后 300、月前 100；击败噬神者后 ×2.5
+                    int damage = NPC.downedMoonlord ? 300 : 100;
+                    float damageMult = BossSystem.DevourerOfGods ? 2.5f : 1f;
                     // 限数保护：若某类元素仆从异常超限（>1，多人/极端帧序导致），
                     // 直接销毁多余实例只保留一只，并正常维持 HotE 增益。
                     // 原实现仅靠"清 buff 不补"指望超限仆从自然消散，但仆从存活并不依赖该 buff，
