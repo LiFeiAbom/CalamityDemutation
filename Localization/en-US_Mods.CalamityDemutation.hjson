@@ -1577,9 +1577,10 @@ Items: {
 			'''
 			Increased max minions by 4
 			20% increased minion damage, 20% increased whip range and 20% whip speed
+			Increased minion knockback
 			Grants shadowflame powers to all minions
 			Minions make enemies cry on hit
-			Increases jump speed and allows constant jumping
+			Increases jump speed and fall speed, and allows constant jumping
 			Can climb walls, dash, and dodge attacks
 			'''
 	}
@@ -1609,7 +1610,7 @@ Items: {
 		DisplayName: Statis' Ninja Belt
 		Tooltip:
 			'''
-			Increases jump speed and allows constant jumping
+			Increases jump speed and fall speed, and allows constant jumping
 			Can climb walls, dash, and dodge attacks
 			5% increased damage and 5% increased critical strike chance
 			'''

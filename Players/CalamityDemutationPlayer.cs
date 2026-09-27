@@ -1249,7 +1249,8 @@ namespace CalamityDemutation.Players
                 Player.jumpSpeedBoost += 1.2f;
                 Player.extraFall += 50;
                 Player.blackBelt = true;
-                Player.dash = 1;
+                Player.dash = 1;          // 仅视觉字段，本身不授予冲刺
+                Player.dashType = 1;      // 1 = 忍者大师装备式冲刺，真正生效的是这一条
                 Player.spikedBoots = 2;
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
