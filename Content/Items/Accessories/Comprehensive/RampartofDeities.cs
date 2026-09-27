@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
-    /// 众神的壁垒（Rampart of Deities） - 综合型饰品
+    /// 神之壁垒（Rampart of Deities） - 综合型饰品
     /// 由寒霜壁垒与神之护符合成，兼具二者的生存与回击能力：
     /// +18 防御、免疫击退，生命 >25% 时提供圣骑士护盾（可为附近队友加盾），
     /// ≤50% 生命获得冰屏障，≤15% 生命额外 +5% 减伤；

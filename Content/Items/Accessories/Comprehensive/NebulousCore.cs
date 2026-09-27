@@ -58,8 +58,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                         num++;
                     }
                 }
-                // 星云之星达到 25 个上限后不再生成
-                if (Main.rand.Next(15) >= num && num < 25)
+                // 星云之星达到 20 个上限后不再生成
+                if (Main.rand.Next(15) >= num && num < 20)
                 {
                     int num2 = 50;
                     int num3 = 24;

@@ -1882,7 +1882,7 @@ namespace CalamityDemutation.Players
                                 num18 = (float)num17 / num18;
                                 num15 *= num18;
                                 num16 *= num18;
-                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<AuraRain>(), 90, 2f, Player.whoAmI, 0f, 0f);//18*5
+                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<AuraRain>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(18), 2f, Player.whoAmI, 0f, 0f);
                                 Main.projectile[num19].ai[1] = Player.position.Y;
                                 Main.projectile[num19].tileCollide = false;
                             }
@@ -1922,7 +1922,7 @@ namespace CalamityDemutation.Players
                                 num18 = (float)num17 / num18;
                                 num15 *= num18;
                                 num16 *= num18;
-                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<AuraRain>(), 160, 2f, Player.whoAmI, 0f, 0f);//18*5
+                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<AuraRain>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(60), 2f, Player.whoAmI, 0f, 0f);
                                 Main.projectile[num19].ai[1] = Player.position.Y;
                                 Main.projectile[num19].tileCollide = false;
                             }
@@ -1996,7 +1996,7 @@ namespace CalamityDemutation.Players
                                 Vector2 velocity = baseVelocity;
                                 velocity = baseVelocity.RotatedBy(MathHelper.ToRadians(-FireAngleSpread / 2 + (FireAngleSpread * i / (float)FireProjectiles)));
                                 velocity.X = velocity.X + 3 * Main.rand.NextFloat() - 1.5f;
-                                int projectile = Projectile.NewProjectile(Player.GetSource_FromThis(), spawn.X, spawn.Y, velocity.X, velocity.Y, ModContent.ProjectileType<BrimstoneHellfireballFriendly2>(), 108, 5f, Main.myPlayer, 0f, 0f);
+                                int projectile = Projectile.NewProjectile(Player.GetSource_FromThis(), spawn.X, spawn.Y, velocity.X, velocity.Y, ModContent.ProjectileType<BrimstoneHellfireballFriendly2>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(54), 5f, Main.myPlayer, 0f, 0f);
                                 Main.projectile[projectile].tileCollide = false;
                                 Main.projectile[projectile].timeLeft = 50;
                             }
@@ -2033,7 +2033,7 @@ namespace CalamityDemutation.Players
                                 num18 = (float)num17 / num18;
                                 num15 *= num18;
                                 num16 *= num18;
-                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), 480, 5f, Player.whoAmI, 0f, 0f);
+                                int num19 = Projectile.NewProjectile(Player.GetSource_FromThis(), x, y, num15, num16, ModContent.ProjectileType<StandingFire>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(40), 5f, Player.whoAmI, 0f, 0f);
                                 Main.projectile[num19].ai[1] = Player.position.Y;
                             }
                         }
@@ -2065,7 +2065,7 @@ namespace CalamityDemutation.Players
                                 Vector2 velocity = baseVelocity;
                                 velocity = baseVelocity.RotatedBy(MathHelper.ToRadians(-FireAngleSpread / 2 + (FireAngleSpread * i / (float)FireProjectiles)));
                                 velocity.X = velocity.X + 3 * Main.rand.NextFloat() - 1.5f;
-                                int projectile = Projectile.NewProjectile(Player.GetSource_FromThis(), spawn.X, spawn.Y, velocity.X, velocity.Y, ModContent.ProjectileType<BrimstoneHellfireballFriendly2>(), 432, 5f, Main.myPlayer, 0f, 0f);
+                                int projectile = Projectile.NewProjectile(Player.GetSource_FromThis(), spawn.X, spawn.Y, velocity.X, velocity.Y, ModContent.ProjectileType<BrimstoneHellfireballFriendly2>(), (int)Player.GetDamage<GenericDamageClass>().ApplyTo(70), 5f, Main.myPlayer, 0f, 0f);
                                 Main.projectile[projectile].tileCollide = false;
                                 Main.projectile[projectile].timeLeft = 50;
                             }
@@ -4414,7 +4414,7 @@ namespace CalamityDemutation.Players
                     double deltaAngle = spread / 8f;
                     double offsetAngle;
                     int i;
-                    int fDamage = 224;//56 * 4 = 224
+                    int fDamage = (int)Player.GetDamage<GenericDamageClass>().ApplyTo(70);
                     if (Player.whoAmI == Main.myPlayer)
                     {
                         for (i = 0; i < 4; i++)
@@ -4498,11 +4498,11 @@ namespace CalamityDemutation.Players
             {
                 if (info.Damage == 1.0)
                 {
-                    Player.immuneTime += 15;//10->15
+                    Player.immuneTime += 10;
                 }
                 else
                 {
-                    Player.immuneTime += 25;//20->25
+                    Player.immuneTime += 20;
                 }
                 for (int n = 0; n < 3; n++)
                 {
@@ -4517,7 +4517,7 @@ namespace CalamityDemutation.Players
                     num16 = (float)num15 / num16;
                     num13 *= num16;
                     num14 *= num16;
-                    int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar,260, 4f, Player.whoAmI, 0f, 0f);//130->260
+                    int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(130), 4f, Player.whoAmI, 0f, 0f);
                     Main.projectile[num17].usesLocalNPCImmunity = true;
                     Main.projectile[num17].localNPCHitCooldown = 5;
                 }
@@ -4526,13 +4526,13 @@ namespace CalamityDemutation.Players
             {
                 if (info.Damage == 1.0)
                 {
-                    Player.immuneTime += 25;//15->25
+                    Player.immuneTime += 15;
                 }
                 else
                 {
-                    Player.immuneTime += 40;//25->40
+                    Player.immuneTime += 30;
                 }
-                for (int n = 0; n < 7; n++)
+                for (int n = 0; n < 6; n++)
                 {
                     float x = Player.position.X + (float)Main.rand.Next(-400, 400);
                     float y = Player.position.Y - (float)Main.rand.Next(500, 800);
@@ -4545,7 +4545,7 @@ namespace CalamityDemutation.Players
                     num16 = (float)num15 / num16;
                     num13 *= num16;
                     num14 *= num16;
-                    int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(780), 4f, Player.whoAmI, 0f, 0f);//130->260
+                    int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(130), 4f, Player.whoAmI, 0f, 0f);
                     Main.projectile[num17].usesLocalNPCImmunity = true;
                     Main.projectile[num17].localNPCHitCooldown = 5;
                 }
@@ -4915,11 +4915,11 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 PreKill 钩子：玩家即将死亡前调用。
-        /// 星云核心 1/5（20%）概率免死：播放特效、回复 100 点生命并取消本次死亡。
+        /// 星云核心 1/10 概率免死：播放特效、回复 100 点生命并取消本次死亡。
         /// </summary>
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genDust, ref PlayerDeathReason damageSource)
         {
-            if (nebulousCore && Main.rand.NextBool(5))
+            if (nebulousCore && Main.rand.NextBool(10))
             {
                 SoundEngine.PlaySound(SoundID.Item67, Player.position);
                 for (int j = 0; j < 25; j++)
