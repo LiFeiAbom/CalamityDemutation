@@ -108,6 +108,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.active = false;
                 return;
             }
+            // 形态不符即消散（对齐 2.2.2 MiniGuardianHealer.cs 的 psc != SpawnedFromPSC 判定）：
+            // 神器↔水晶切换后由玩家类按新档重新召唤
+            if (modPlayer.profanedCrystal != SpawnedFromPSC)
+            {
+                Projectile.active = false;
+                return;
+            }
             // 出生时写入两个冷却并同步给其他客户端（在 AI 首帧完成，避免中途加入的客户端计时错乱）
             if (!hasSetTimers)
             {
@@ -145,8 +152,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             // 只有主人本机参与索敌与生成，否则每个客户端都会生成一份星弹/射线（原注释如此）
             if (empowered && player.whoAmI == Main.myPlayer)
             {
-                // 原为 CalamityUtils.MinionHoming：优先玩家右键锁定的目标，否则取 2000 像素内最近的敌人
-                target = player.HasMinionAttackTargetNPC ? Main.npc[player.MinionAttackTargetNPC] : MiniGuardianTargeting.MinionHoming(Projectile.Center, 2000f, player);
+                // 原为 CalamityUtils.MinionHoming：优先玩家右键锁定的目标，否则取 2000 像素内最近的敌人。
+                // 锁定索引可能越界、或指向一只已消失的敌人，先校验再用（否则会越界崩溃 / 锁着死怪不放）
+                bool hasLockedTarget = player.HasMinionAttackTargetNPC
+                    && player.MinionAttackTargetNPC >= 0 && player.MinionAttackTargetNPC < Main.maxNPCs
+                    && Main.npc[player.MinionAttackTargetNPC].active && Main.npc[player.MinionAttackTargetNPC].CanBeChasedBy(null, false);
+                target = hasLockedTarget ? Main.npc[player.MinionAttackTargetNPC] : MiniGuardianTargeting.MinionHoming(Projectile.Center, 2000f, player);
                 if (target != null)
                 {
                     Projectile.spriteDirection = Projectile.DirectionTo(owner.Center).X > 0 ? 1 : -1;
@@ -160,6 +171,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                         double radians = MathHelper.TwoPi / totalFlameProjectiles;
                         double angleA = radians * 0.5;
                         double angleB = MathHelper.ToRadians(90f) - angleA;
+                        // 循环不变量提到外层：原先它们在内层每颗星弹都要重算一遍（90 次 GetModPlayer + 90 次类型查找）
+                        int starType = ModContent.ProjectileType<MiniGuardianStars>();
+                        int starBaseDamage = Projectile.originalDamage;
+                        Color dustColor = PscColor(player.GetModPlayer<CalamityDemutationPlayer>().pscState, Main.dayTime);
+                        dustColor.A = 255;
+                        int maxDust = 3;
                         for (int i = 0; i < totalRings; i++)
                         {
                             bool firstRing = i % 2 == 0;
@@ -169,14 +186,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                             for (int j = 0; j < totalFlameProjectiles; j++)
                             {
                                 Vector2 vector2 = spinningPoint.RotatedBy(radians * j);
-                                int type = ModContent.ProjectileType<MiniGuardianStars>();
-                                int dmgAmt = Projectile.originalDamage;
-                                var star = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, vector2 * 2.5f, type, dmgAmt, 0f, Main.myPlayer);
-                                star.originalDamage = Projectile.originalDamage;
+                                var star = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, vector2 * 2.5f, starType, starBaseDamage, 0f, Main.myPlayer);
+                                star.originalDamage = starBaseDamage;
                                 // 每颗星弹拖 3 颗神圣色粉尘，并额外复制一颗半尺寸白色粉尘
-                                Color dustColor = PscColor(player.GetModPlayer<CalamityDemutationPlayer>().pscState, Main.dayTime);
-                                dustColor.A = 255;
-                                int maxDust = 3;
                                 for (int k = 0; k < maxDust; k++)
                                 {
                                     // 原代码用已废弃的 Dust.BetterCloneDust 复制粉尘，此处用等价的 NewDustPerfect 内联实现

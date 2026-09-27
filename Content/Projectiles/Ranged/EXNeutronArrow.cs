@@ -102,6 +102,17 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
                     , Vector2.Zero, ModContent.ProjectileType<EXNeutronExplosionRanged>(), Projectile.damage * HitExplosionDamageMult, 0f);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——在靶心生成一次 EX 中子爆点（伤害 ×3）。
+        /// 原逻辑里的「非蠕虫体节」判定依赖 NPC 专有字段（type / realLife / aiStyle），玩家不可能命中该条件，
+        /// 故该判定省略、效果恒触发。</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.IsOwnedByLocalPlayer())
+            {
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center
+                    , Vector2.Zero, ModContent.ProjectileType<EXNeutronExplosionRanged>(), Projectile.damage * HitExplosionDamageMult, 0f);
+            }
+        }
         /// <summary>
         /// 是否蠕虫体节：优先用显式集合；灾厄的 15 项一个都没解析到时，
         /// 退回"挂在蠕虫链条上（realLife≥0）或走蠕虫 AI"的语义近似

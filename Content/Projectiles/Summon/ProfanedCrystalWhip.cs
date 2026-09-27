@@ -196,7 +196,25 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ProfanedCrystalWhipBuff>(), buffTime);
             target.AddBuff(ModContent.BuffType<ProfanedCrystalWhipDebuff>(), buffTime);
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
-            Projectile.damage = (int)(Projectile.damage * 0.7f);
+            ApplyMultiHitPenalty();
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——给主人挂 30 秒水晶鞭增益、给目标挂 30 秒鞭痕 tag，
+        /// 本弹幕自身伤害打 7 折。原逻辑里的「设为主人右键锁定目标」（MinionAttackTargetNPC）是 NPC 索引，PvP 无意义，已省略。</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            int buffTime = 1800; // 30 秒，留出换武器的时间
+            Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ProfanedCrystalWhipBuff>(), buffTime);
+            target.AddBuff(ModContent.BuffType<ProfanedCrystalWhipDebuff>(), buffTime);
+            ApplyMultiHitPenalty();
+        }
+        /// <summary>
+        /// 多段命中惩罚：每命中一次，本鞭后续伤害打 7 折（源版的 `Projectile.damage *= 0.7f`）。
+        /// <para>
+        /// 源版那行**实际不生效**：AI 每帧都按 <c>originalDamage</c> 重算 <c>Projectile.damage</c>，
+        /// 命中当帧改的 damage 下一帧就被覆盖（源的 AI 同样是每帧重算，属源自身的缺陷）。
+        /// 这里改为折算 <c>originalDamage</c>——重算的来源变了，惩罚才真正落到后续命中上。
+        /// </para>
+        /// </summary>
+        private void ApplyMultiHitPenalty() => Projectile.originalDamage = (int)(Projectile.originalDamage * 0.7f);
     }
 }

@@ -122,6 +122,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             target.AddBuff(astralDebuffType, 180);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，附加太空感染减益</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(astralDebuffType, 180);
+        }
         /// <summary>本体按固定紫色绘制（CE 原样，不吃环境光）</summary>
         public override Color? GetAlpha(Color lightColor) => new Color(200, 100, 250, Projectile.alpha);
         /// <summary>只交给残影绘制，本体也由它沿 oldPos 逐帧重画（返回 false 关掉默认绘制）</summary>

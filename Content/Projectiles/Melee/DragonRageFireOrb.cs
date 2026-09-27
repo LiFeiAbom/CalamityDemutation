@@ -93,6 +93,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             target.AddBuff(BuffID.OnFire3, 420);
         }
         /// <summary>
+        /// 命中玩家（PvP）：与 OnHitNPC 同构，施加 420 帧的 OnFire3（着火了！3）debuff。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(BuffID.OnFire3, 420);
+        }
+        /// <summary>
         /// 消失时：在弹幕中心叠加橙红／白两层 bloom 粒子，并调用 Projectile.Explode() 产生原版爆炸。
         /// </summary>
         public override void OnKill(int timeLeft)

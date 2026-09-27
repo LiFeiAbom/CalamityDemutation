@@ -123,15 +123,16 @@ namespace CalamityDemutation.Content.Projectiles
         /// - 奥瑞克套装（auricSet）：吸血比例 = 0.05 - numHits × 0.025。
         /// 比例降至 0 即放弃；治疗量 = 弹幕伤害 × 该比例，并从本次弹幕的 lifeSteal 额度中扣除 1.5 倍作为消耗。
         /// 随后在 1200 像素内挑出存活且生命缺口最大的队友，于弹幕位置生成 SilvaOrb / AuricOrb 弹幕
-        /// （写入目标玩家索引与治疗量）为其回血。原版 canGhostHeal 限制已被移除，任意敌人均可触发。
+        /// （写入目标玩家索引与治疗量）为其回血。仅当 target.canGhostHeal 为真（该敌人允许吸血）时触发，
+        /// 口径对齐经典版灾厄 CalamityGlobalProjectile.cs:346/380。
         /// </summary>
         public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             // 无主弹幕（owner = 255 = Main.maxPlayers）会越界，先做范围校验
             if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers)
                 return;
-            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet)// && target.canGhostHeal
-            {// 解除 target.canGhostHeal 限制：任意敌人都可触发吸血
+            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet && target.canGhostHeal)
+            {
                 float num11 = 0.03f;
                 num11 -= (float)projectile.numHits * 0.015f;
                 if (num11 <= 0f)
@@ -164,8 +165,8 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
-            else if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet)// AuricTeslaHelm 同时置 silva/auric 两标记，else if 防双倍吸血
-            {// 解除 target.canGhostHeal 限制：任意敌人都可触发吸血
+            else if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet && target.canGhostHeal)// AuricTeslaHelm 同时置 silva/auric 两标记，else if 防双倍吸血
+            {
                 float num11 = 0.05f;
                 num11 -= (float)projectile.numHits * 0.025f;
                 if (num11 <= 0f)

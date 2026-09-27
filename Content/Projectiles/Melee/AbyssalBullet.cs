@@ -74,6 +74,16 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 SpawnParticle(Projectile.Center, RandomPointInCircle(6), 0.98f, 0.014f, 0.6f * Main.rand.NextFloat(0.4f, 1f));
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，附加同样的深海减益并炸出一圈深渊粒子</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "CrushDepth", 300);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "CrushDepth", 300);
+            for (int i = 0; i < 16; i++)
+            {
+                SpawnParticle(Projectile.Center, RandomPointInCircle(6), 0.98f, 0.014f, 0.6f * Main.rand.NextFloat(0.4f, 1f));
+            }
+        }
         public override bool PreDraw(ref Color lightColor) => false;
         /// <summary>吐一颗深渊粒子（vd/ad/初透明度按 CE 各调用点的取值传入）</summary>
         private static void SpawnParticle(Vector2 position, Vector2 velocity, float vd, float ad, float opacity)

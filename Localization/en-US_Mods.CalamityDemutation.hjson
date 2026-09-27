@@ -1705,6 +1705,11 @@ Items: {
 			'''
 	}
 
+	TheBurningSky: {
+		DisplayName: The Burning Sky
+		Tooltip: Rains ten meteors from the sky as you swing
+	}
+
 	TheCommunity: {
 		DisplayName: The Community
 		Tooltip:
@@ -1956,8 +1961,8 @@ Items: {
 			Purity
 			Summons three profaned guardians which accompany you in battle
 			The healer guardian heals you for a small amount of health every few seconds
-			The defensive guardian increases your movement speed and damage resistance
-			The offensive guardian increases your summon damage and grants an extra minion slot
+			The defensive guardian creates a weak barrier of profaned rock
+			The offensive guardian grants an additional minion slot and fires a ring of spears while attacking
 			Your summons inflict Holy Flames on struck enemies
 			Provides a small durability shield which recharges after it breaks
 			'''
@@ -2008,6 +2013,7 @@ Projectiles: {
 	BloodyBlade.DisplayName: Bloody Blade
 	BrimstoneHellfireballFriendly.DisplayName: Hellfire
 	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
+	BurningMeteor.DisplayName: Burning Meteor
 	BrokenHiltHeld.DisplayName: Broken Hilt
 	CactusHealOrb.DisplayName: Heal
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle

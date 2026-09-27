@@ -397,6 +397,40 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 MovementVector = Vector2.Zero
             });
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——挂虚空侵蚀并施加同样的特效；仅跳过 NPC 专有的"钉住目标"（OnNPC 字段）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationGlobalNPC.AddVoidTouch(target, 40, 1, 600, 16);
+            ShineParticle shine = new ShineParticle();
+            DRKLoader.NewParticle(shine, target.Center, Vector2.Zero, new Color(225, 200, 255), 0.6f);
+            shine.Configure(1f, true, ShineParticle.DrawModeEnum.AdditiveBlend, 0f, 12);
+            if (Projectile.ai[0] == 3)
+            {
+                scale = 2f;
+                if (!Main.dedServ)
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Vector2 ver = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2() * Main.rand.NextFloat(-12, 12);
+                        LightParticle light = new LightParticle();
+                        DRKLoader.NewParticle(light, target.Center, ver, new Color(220, 180, 255), Main.rand.NextFloat(1.3f, 1.7f));
+                        light.Configure(0.15f, lifetime: 60);
+                    }
+                }
+                SoundEngine.PlaySound(CalamityDemutationSounds.RuneSongHit with { Pitch = Main.rand.NextFloat(0.6f, 1.4f) - 1f }, target.Center);
+            }
+            if (playHitSound)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TrueExcalibur, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+        }
         /// <summary>
         /// 自绘：锁链斩先拉一条锁链；然后若剑体旋转角历史够长（普通挥砍式才记），就在 Immediate 批次下
         /// 手动应用 FinalFrac 着色器、把历史角摊成三角带当刀光画出去；

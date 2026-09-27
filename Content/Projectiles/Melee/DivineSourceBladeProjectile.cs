@@ -53,6 +53,16 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.projectile[proj].timeLeft = 30;
             }
         }
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Player player = Main.player[Projectile.owner];
+            Item item = player.ActiveItem();
+            if (Projectile.numHits == 0 && item.type == ModContent.ItemType<DivineSourceBlade>())
+            {
+                int proj = Projectile.NewProjectile(new EntitySource_ItemUse(player, item), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<TerratomereSlashCreator>(), Projectile.damage, 0, Projectile.owner, target.whoAmI, Main.rand.NextFloat(MathHelper.TwoPi));
+                Main.projectile[proj].timeLeft = 30;
+            }
+        }
         /// <summary>拖尾颜色：暖金到白随时间正弦摆动</summary>
         public Color ColorFunction(float completionRatio, Vector2 _)
         {

@@ -304,6 +304,30 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 target.AddBuff(soulDisorderBuffType, 200);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加同样的减益与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            SoundEngine.PlaySound(CalamityDemutationSounds.RuneSongHit with { Pitch = Main.rand.NextFloat(1f, 1.4f) - 1f }, target.Center);
+            SpawnHeavenSpark(target.Center, Main.rand.NextFloat(MathHelper.TwoPi), 1.2f, 1f, Color.LightBlue * 1.4f, 14);
+            if (flag == 1)
+            {
+                // 挥舞阶段命中 → 弹开，转多段斩（音效与粒子再放一遍）
+                SoundEngine.PlaySound(CalamityDemutationSounds.RuneSongHit with { Pitch = Main.rand.NextFloat(1f, 1.4f) - 1f }, target.Center);
+                SpawnHeavenSpark(target.Center, Main.rand.NextFloat(MathHelper.TwoPi), 1.2f, 1f, Color.LightBlue * 1.4f, 14);
+                Projectile.ai[0] = 1;
+                flag = 4;
+                rotVel = -0.4f;
+                smearAlpha = 0;
+                if (Main.netMode != NetmodeID.SinglePlayer && Main.myPlayer == Projectile.owner)
+                {
+                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI);
+                }
+            }
+            if (soulDisorderBuffType >= 0)
+            {
+                target.AddBuff(soulDisorderBuffType, 200);
+            }
+        }
         /// <summary>联机同步旋转速度与拖尾透明度：两者都由本端按攻速累加，不传别的端会散架</summary>
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -460,6 +484,36 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             return CDUtil.LineThroughRect(Projectile.Center, Projectile.Center + Projectile.velocity.SafeNormalize(Vector2.One) * laserLength, targetHitbox, 90);
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            SoundEngine.PlaySound(CalamityDemutationSounds.RuneBoltHit with { Pitch = Main.rand.NextFloat(1.4f, 1.8f) - 1f }, target.Center);
+            // 沿束的方向撒一片拉丝火花
+            for (int i = 0; i < 16; i++)
+            {
+                Vector2 sparkVelocity = Projectile.velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.5f, 1.8f);
+                Vector2 pos = target.Center + Main.rand.NextVector2Circular(target.width * 0.5f, target.height * 0.5f) + Projectile.velocity * 1.2f;
+                LineParticleCal spark = new LineParticleCal();
+                DRKLoader.NewParticle(spark, pos, sparkVelocity, Main.rand.NextBool() ? Color.Aqua : Color.LightBlue, Main.rand.NextFloat(0.95f, 1.8f));
+                spark.Configure(false, Main.rand.Next(20, 24));
+            }
+            // 命中在束的末端炸开一圈压扁光球尘（CE 的 SquashDust，已一并移植）
+            for (int i = 0; i < 29; i++)
+            {
+                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.rotation.ToRotationVector2() * Vector2.Distance(target.Center, Projectile.Center),
+                    ModContent.DustType<SquashDust>(), -Projectile.velocity);
+                dust.scale = Main.rand.NextFloat(3f, 3.5f);
+                dust.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(0.4f) * Main.rand.NextFloat(8, 36);
+                dust.noGravity = true;
+                dust.color = Color.LightBlue;
+                dust.fadeIn = 2f;
+            }
+            Projectile.damage = (int)(Projectile.damage * 0.85f);   // 穿透时逐次衰减
+            if (RuneSongHeld.soulDisorderBuffType >= 0)
+            {
+                target.AddBuff(RuneSongHeld.soulDisorderBuffType, 200);
+            }
+        }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加同样的减益与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             SoundEngine.PlaySound(CalamityDemutationSounds.RuneBoltHit with { Pitch = Main.rand.NextFloat(1.4f, 1.8f) - 1f }, target.Center);
             // 沿束的方向撒一片拉丝火花

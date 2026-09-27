@@ -86,5 +86,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Projectile.timeLeft = 85;
             CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GodSlayerInferno", 180, BuffID.CursedInferno);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——压到收缩阶段并施加弑神炼狱（找不到退回诅咒狱火）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.timeLeft > 85)
+                Projectile.timeLeft = 85;
+            CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GodSlayerInferno", 180, BuffID.CursedInferno);
+        }
     }
 }

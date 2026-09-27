@@ -144,6 +144,23 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     ModContent.ProjectileType<AstralStarMelee>(), Projectile.damage / 4, Projectile.owner);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加同样的减益与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            hited = true;
+            target.AddBuff(astralDebuffType, 360);
+            Projectile.damage = (int)(Projectile.damage * 0.86f);
+            if (Projectile.timeLeft > 30 * Projectile.MaxUpdates)
+            {
+                Projectile.timeLeft = 30 * Projectile.MaxUpdates;
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                Vector2 pos = target.Center + new Vector2(0, -900) + RandomPointInCircle(400);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), pos, (target.Center - pos).SafeNormalize(Vector2.Zero) * 42,
+                    ModContent.ProjectileType<AstralStarMelee>(), Projectile.damage / 4, Projectile.owner);
+            }
+        }
         /// <summary>按 dir 决定是否水平翻转，并相应地取四分之一圈作为绘制旋转（CE 原样）</summary>
         private void Draw(Vector2 pos, Color lightColor, float rotation, int dir)
         {

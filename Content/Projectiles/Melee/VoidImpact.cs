@@ -66,6 +66,23 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             Projectile.damage = 0;
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——朝四个斜角各炸两条冲击条，并把自身伤害清零</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            SoundEngine.PlaySound(CalamityDemutationSounds.VoidImpactHit with { Pitch = 0.4f, Volume = 0.4f }, Projectile.Center);
+            float[] rots = new float[] { MathHelper.PiOver4, -MathHelper.PiOver4, MathHelper.PiOver4 * 3, MathHelper.PiOver4 * -3 };
+            for (int i = 0; i < rots.Length; i++)
+            {
+                float r = rots[i] + Projectile.rotation;
+                VoidImpactParticle inner = new VoidImpactParticle();
+                DRKLoader.NewParticle(inner, target.Center, r.ToRotationVector2() * 9, Color.White, 1.8f);
+                inner.Configure(1f, r, 46);
+                VoidImpactParticle outer = new VoidImpactParticle();
+                DRKLoader.NewParticle(outer, target.Center, r.ToRotationVector2() * 12, Color.White, 2f);
+                outer.Configure(1f, r, 46);
+            }
+            Projectile.damage = 0;
+        }
         public override void AI()
         {
             if (Projectile.ai[2] == 0)

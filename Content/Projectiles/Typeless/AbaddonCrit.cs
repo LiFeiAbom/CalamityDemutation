@@ -75,6 +75,15 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             SoundEngine.PlaySound(SoundID.Item89 with { Volume = 0.5f, PitchVariance = 0.4f }, Projectile.Center);
         }
         /// <summary>
+        /// 命中玩家（PvP）：与 OnHitNPC 同构，附加 360 帧硫磺火（灾厄现代版与经典版分别查找），并播放 89 号音效。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "BrimstoneFlames", BrimstoneFrames);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "BrimstoneFlames", BrimstoneFrames);
+            SoundEngine.PlaySound(SoundID.Item89 with { Volume = 0.5f, PitchVariance = 0.4f }, Projectile.Center);
+        }
+        /// <summary>
         /// 圆形判定（内联灾厄 CollisionUtils.CircularHitboxCollision）：圆心落在目标框内直接算命中；
         /// 否则取圆心到目标框四角的最小距离与半径比较（四角近似，与灾厄一致）。
         /// </summary>

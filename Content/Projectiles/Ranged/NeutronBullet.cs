@@ -84,6 +84,20 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
                     , -randVer, ModContent.ProjectileType<NeutronLaser>(), Projectile.damage, 0f);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——原地炸一个小爆点，并从目标四周朝圆心落下 3 道中子光束</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.owner != Main.myPlayer)
+                return;
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero
+                , ModContent.ProjectileType<NeutronExplosionRanged>(), Projectile.damage, 0f);
+            for (int i = 0; i < 3; i++)
+            {
+                Vector2 randVer = Main.rand.NextVector2Unit() * Main.rand.Next(16, 18);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center + randVer * 10f
+                    , -randVer, ModContent.ProjectileType<NeutronLaser>(), Projectile.damage, 0f);
+            }
+        }
         /// <summary>本体不走常规绘制，改由 IDrawWarp 的 costomDraw 画</summary>
         public override bool PreDraw(ref Color lightColor) => false;
         // ── 公开方法 ──

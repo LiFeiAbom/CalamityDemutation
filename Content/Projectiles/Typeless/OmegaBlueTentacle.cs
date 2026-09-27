@@ -206,8 +206,8 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            // 排除训练假人；lifeSteal 为玩家的每秒吸血预算；弹幕伤害为 0 时跳过（下方按伤害比例换算会除零）
-            if (Projectile.owner == Main.myPlayer && Main.player[Main.myPlayer].lifeSteal > 0f && Projectile.damage > 0 && target.type != NPCID.TargetDummy)
+            // 排除训练假人与不允许吸血的敌人（canGhostHeal = false）；lifeSteal 为玩家的每秒吸血预算；弹幕伤害为 0 时跳过（下方按伤害比例换算会除零）
+            if (Projectile.owner == Main.myPlayer && Main.player[Main.myPlayer].lifeSteal > 0f && Projectile.damage > 0 && target.type != NPCID.TargetDummy && target.canGhostHeal)
             {
                 int healAmount = 10 * target.damage / Projectile.damage; //should always be around max, less if enemy has defense/DR
                 if (healAmount > 0)

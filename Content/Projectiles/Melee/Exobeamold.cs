@@ -141,6 +141,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             OnHitEffects(target.Center);
             target.ExoDebuffs();
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——撒彗星并施加整套星云系减益</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            OnHitEffects(target.Center);
+            target.ExoDebuffs();
+        }
         // ── 私有工具 ──
         /// <summary>
         /// 命中特效（取自 CI 的 <c>ExobeamoldExoLore</c>）：在命中位置随机三选一撒出一颗彗星（伤害 = 本次光束伤害 ×0.5）。

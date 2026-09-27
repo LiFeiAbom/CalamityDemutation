@@ -86,5 +86,20 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
                     , Vector2.Zero, ModContent.ProjectileType<NeutronExplosionRanged>(), Projectile.damage, 0f);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——首次命中时在目标周围降下三道朝内的中子光束（伤害 ×2）并叠三次中子爆点</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.numHits > 0)
+                return;
+            for (int i = 0; i < 3; i++)
+            {
+                Vector2 rand = Main.rand.NextVector2Unit() * Main.rand.NextFloat(560f, 780f);
+                Vector2 vr = rand.UnitVector() * -20f;
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center + rand
+                    , vr, ModContent.ProjectileType<NeutronLaser>(), Projectile.damage * 2, 0f);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center
+                    , Vector2.Zero, ModContent.ProjectileType<NeutronExplosionRanged>(), Projectile.damage, 0f);
+            }
+        }
     }
 }

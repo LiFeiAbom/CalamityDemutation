@@ -327,6 +327,45 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——突刺式首次命中翻成收势并给主人挂 90 帧挥砍强化，左键则在目标身上炸火花</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (dash >= 0 && AttackType == 3)
+            {
+                dash = -32;
+                Main.player[Projectile.owner].velocity *= -0.05f;
+                Main.player[Projectile.owner].GetModPlayer<CalamityDemutationPlayer>().voidshadeBoostTime = 90;
+            }
+            else
+            {
+                SoundEngine.PlaySound(CalamityDemutationSounds.VoidshadeHit with { Pitch = Main.rand.NextFloat(0.8f, 1.2f) - 1f }, target.Center);
+                SparkleParticle sparkle = new SparkleParticle();
+                DRKLoader.NewParticle(sparkle, target.Center + Main.rand.NextVector2Circular(target.width * 0.75f, target.height * 0.75f), Vector2.Zero,
+                    Color.LightBlue, Main.rand.NextFloat(1.4f, 1.6f));
+                sparkle.Configure(Color.Blue, 8, 0, 2.5f);
+                for (int i = 0; i < 32; i++)
+                {
+                    float p = Main.rand.NextFloat();
+                    Vector2 sparkVelocity = (target.Center - Projectile.Center).SafeNormalize(Vector2.Zero).RotatedByRandom(p * 0.4f) * Main.rand.NextFloat(12, 36 * (2 - p));
+                    int sparkLifetime = (int)((2 - p) * 7);
+                    float sparkScale = 0.6f + (1 - p);
+                    Color sparkColor = Color.Lerp(Color.DeepSkyBlue, Color.Purple, p);
+                    Vector2 sparkPos = target.Center + Main.rand.NextVector2Circular(target.width * 0.5f, target.height * 0.5f);
+                    if (Main.rand.NextBool())
+                    {
+                        AltSparkParticle altSpark = new AltSparkParticle();
+                        DRKLoader.NewParticle(altSpark, sparkPos, sparkVelocity, sparkColor, sparkScale * 1.4f);
+                        altSpark.Configure(false, (int)(sparkLifetime * 1.2f));
+                    }
+                    else
+                    {
+                        LineParticleCal line = new LineParticleCal();
+                        DRKLoader.NewParticle(line, sparkPos, sparkVelocity * 0.65f, Main.rand.NextBool() ? Color.AliceBlue : Color.SkyBlue, sparkScale);
+                        line.Configure(false, sparkLifetime);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// 自绘：左键先用两条三角带刀光（紫色底 + 白色芯，底图分别取 white / SwordSlashTexture，
         /// UV 按 <see cref="trailOffset"/> 滚动）在加法混合下画出身位轨迹，

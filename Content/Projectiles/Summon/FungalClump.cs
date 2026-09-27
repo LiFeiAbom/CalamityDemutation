@@ -93,6 +93,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            // 训练假人与不允许吸血的敌人（canGhostHeal = false）不触发吸血
+            // （对齐灾厄经典版 FungalClump.cs:90、2.0.3.9 FungalClumpMinion.cs:233）
+            if (target.type == NPCID.TargetDummy || !target.canGhostHeal)
+            {
+                return;
+            }
             // 吸血量 = 造成伤害 × 25%；不足 1 点则忽略
             float num = (float)hit.Damage * 0.25f;
             if ((int)num == 0)

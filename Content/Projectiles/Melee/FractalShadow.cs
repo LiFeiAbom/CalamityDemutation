@@ -101,6 +101,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             Projectile.damage = (int)(Projectile.damage * 0.86f);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，每命中一次自身伤害递减 14%</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Projectile.damage = (int)(Projectile.damage * 0.86f);
+        }
         /// <summary>按 dir 决定是否水平翻转，并相应地取四分之一圈作为绘制旋转（CE 原样）</summary>
         private void Draw(Vector2 pos, Color lightColor, float rotation, int dir)
         {

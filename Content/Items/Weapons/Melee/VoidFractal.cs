@@ -351,6 +351,28 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 MovementVector = Vector2.Zero
             });
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——挂虚空侵蚀，播同样的命中音与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationGlobalNPC.AddVoidTouch(target, 40, 1, 600, 16);
+            if (playHitSound || Projectile.ai[0] == 2)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+                if (Projectile.ai[0] == 3)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, new Vector2(0, 8).RotatedByRandom(1),
+                        ModContent.ProjectileType<FractalLaser>(), Projectile.damage / 9, 0, Projectile.owner);
+                    SoundEngine.PlaySound(CalamityDemutationSounds.VoidStrikeHit, Projectile.Center);
+                }
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TrueExcalibur, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+        }
         /// <summary>全屏斩（ai[0] == 3）把本次命中抬成必定暴击、最终伤害与来源伤害各 ×1.4</summary>
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {

@@ -97,6 +97,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "BrimstoneFlames", 180, BuffID.OnFire);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，附加硫磺火 180 帧（无该 buff 时退回原版着火了）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "BrimstoneFlames", 180, BuffID.OnFire);
+        }
         /// <summary>
         /// 星形拖尾（移植自灾厄 <c>CalamityUtils.DrawStarTrail</c>）：外圈 3 片绕弹体自转的光翼，
         /// 内圈两层按时间脉冲缩放的核心；贴图取自灾厄的 <c>Projectiles/StarTrail.png</c>。

@@ -108,6 +108,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             SoundEngine.PlaySound(CalamityDemutationSounds.RuneSongHit with { Pitch = Main.rand.NextFloat(0.6f, 1.4f) - 1f }, target.Center);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，播同样的命中音</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            SoundEngine.PlaySound(CalamityDemutationSounds.RuneSongHit with { Pitch = Main.rand.NextFloat(0.6f, 1.4f) - 1f }, target.Center);
+        }
         /// <summary>
         /// 自绘：首帧从池里抽一把剑定下贴图，然后在加法混合下按 24 段 oldPos 由远及近重绘残影
         /// （越靠后的残影越淡），最后恢复默认批次、把当前这一把实心画在 <c>Projectile.Center</c>。

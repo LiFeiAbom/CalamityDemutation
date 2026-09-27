@@ -113,6 +113,15 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             hited = true;
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，首次命中压缩寿命并置位已命中标记</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (!hited)
+            {
+                Projectile.timeLeft = 4 * 60;
+            }
+            hited = true;
+        }
         /// <summary>本体不直接绘制，而是把 32 帧位置历史摊成一串旋转剑影（越旧越偏蓝、越淡）</summary>
         public override bool PreDraw(ref Color lightColor)
         {

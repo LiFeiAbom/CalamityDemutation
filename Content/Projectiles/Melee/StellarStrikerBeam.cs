@@ -66,6 +66,22 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             onhitNPCBool = false;
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——首次命中时在弹体周围炸出 6 颗月炎火球（半伤害、存活 30 帧）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.numHits != 0 || !onhitNPCBool)
+                return;
+            for (int i = 0; i < 6; i++)
+            {
+                int proj = Projectile.NewProjectile(new EntitySource_Parent(Projectile), Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.Next(0, 255), Vector2.Zero, ProjectileID.LunarFlare, (int)(Projectile.damage * 0.5), 0, Main.myPlayer, 0f, Main.rand.Next(3));
+                if (proj >= 0 && proj < Main.maxProjectiles)
+                {
+                    Main.projectile[proj].DamageType = DamageClass.Melee;
+                    Main.projectile[proj].timeLeft = 30;
+                }
+            }
+            onhitNPCBool = false;
+        }
         /// <summary>
         /// 等价于大修的 <c>CWRDust.SpanCycleDust(Projectile, Dust, Dust)</c>：
         /// 随机挑一颗尘，把它连同另一颗一起摆到弹体四周随机方位上，给一个切向初速并加淡入/缩放。

@@ -138,6 +138,40 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             Projectile.damage = (int)(Projectile.damage * 0.8f);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——播命中音、撒紫色细线火花与压扁光球尘、按 ai[2] 叠虚空侵蚀并把自身伤害打到 80%</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            SoundEngine.PlaySound(CalamityDemutationSounds.RuneBoltHit with { Pitch = Main.rand.NextFloat(1.4f, 1.8f) - 1f }, target.Center);
+            for (int i = 0; i < 16; i++)
+            {
+                Vector2 sparkVelocity = Projectile.velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.5f, 1.8f);
+                int sparkLifetime = Main.rand.Next(20, 24);
+                float sparkScale = Main.rand.NextFloat(0.95f, 1.8f);
+                LineParticleCal line = new LineParticleCal();
+                DRKLoader.NewParticle(line, target.Center + Main.rand.NextVector2Circular(target.width * 0.5f, target.height * 0.5f) + Projectile.velocity * 1.2f,
+                    sparkVelocity, Color.Purple, sparkScale);
+                line.Configure(false, sparkLifetime);
+            }
+            for (int i = 0; i < 29; i++)
+            {
+                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.rotation.ToRotationVector2() * Vector2.Distance(target.Center, Projectile.Center),
+                    ModContent.DustType<SquashDust>(), -Projectile.velocity);
+                dust.scale = Main.rand.NextFloat(3f, 3.5f);
+                dust.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(0.4f) * Main.rand.NextFloat(8, 36);
+                dust.noGravity = true;
+                dust.color = Color.LightBlue;
+                dust.fadeIn = 2f;
+            }
+            if (Projectile.ai[2] > 0)
+            {
+                CalamityDemutationGlobalNPC.AddVoidTouch(target, 50, 5, 600, (int)Projectile.ai[2]);
+            }
+            else
+            {
+                CalamityDemutationGlobalNPC.AddVoidTouch(target, 50, 5);
+            }
+            Projectile.damage = (int)(Projectile.damage * 0.8f);
+        }
         /// <summary>
         /// 自绘：在加法混合 + 线性包裹采样下把条纹贴图按滚动 UV 拉成两道叠着的光束（内层更细更亮），
         /// 画完恢复默认批次。

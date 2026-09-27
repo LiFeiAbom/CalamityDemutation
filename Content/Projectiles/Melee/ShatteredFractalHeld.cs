@@ -191,6 +191,24 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 MovementVector = Vector2.Zero
             });
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，播同样的命中音与粒子特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (playHitSound)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(Projectile.ai[0] == 2 ? CalamityDemutationSounds.FractalThrustHit : CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                if (Projectile.ai[0] != 2)
+                {
+                    SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+                }
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TrueExcalibur, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+        }
         /// <summary>CEUtils.CustomLerp2 的等价实现：以 (1-p)³ 为权重的 1→0 插值</summary>
         private static float CustomLerp2(float p) => float.Lerp(1f, 0f, (1f - p) * (1f - p) * (1f - p));
     }

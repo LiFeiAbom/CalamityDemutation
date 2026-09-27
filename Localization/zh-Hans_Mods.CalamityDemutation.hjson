@@ -1705,6 +1705,11 @@ Items: {
 			'''
 	}
 
+	TheBurningSky: {
+		DisplayName: 焚灭天惩
+		Tooltip: 挥舞时从天空降下十枚火流星
+	}
+
 	TheCommunity: {
 		DisplayName: 归一心元石
 		Tooltip:
@@ -1961,8 +1966,8 @@ Items: {
 			纯净
 			召唤三个亵渎守护者随你作战
 			治愈守护者每隔几秒为你恢复少量生命
-			防御守护者提升你的移动速度与伤害抗性
-			进攻守护者提升你的召唤伤害，并给予一个额外的仆从栏
+			防御守护者用亵渎岩石造出脆弱的屏障
+			进攻守护者给予一个额外的仆从栏，并在攻击时射出一环长矛
 			你的召唤物会对击中的敌人施加神圣烈焰
 			提供一个碎裂后会自动充能的小型耐久护盾
 			'''
@@ -2013,6 +2018,7 @@ Projectiles: {
 	BloodyBlade.DisplayName: 血刃
 	BrimstoneHellfireballFriendly.DisplayName: 地狱火
 	BrimstoneHellfireballFriendly2.DisplayName: 硫磺地狱火球 2
+	BurningMeteor.DisplayName: 焚灭流星
 	BrokenHiltHeld.DisplayName: 破碎剑柄
 	CactusHealOrb.DisplayName: 治疗
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花

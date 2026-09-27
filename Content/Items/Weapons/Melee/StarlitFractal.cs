@@ -274,6 +274,34 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 spark.Configure(false, 14, new Vector2(0.4f, 1));
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加同样的减益与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(astralDebuffType, 460);
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 pos = target.Center + new Vector2(0, -900) + RandomPointInCircle(400);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), pos, (target.Center - pos).SafeNormalize(Vector2.Zero) * 42,
+                    ModContent.ProjectileType<AstralStarMelee>(), Projectile.damage / 4, Projectile.owner);
+            }
+            if (playHitSound)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TrueExcalibur, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+            for (int i = 0; i < 24; i++)
+            {
+                GlowSparkCal spark = new GlowSparkCal();
+                DRKLoader.NewParticle(spark, target.Center, Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(1.4f) * Main.rand.NextFloat(8f, 42f), Color.BlueViolet, Main.rand.NextFloat(0.02f, 0.08f));
+                spark.Configure(false, 14, new Vector2(0.4f, 1));
+            }
+        }
         /// <summary>CEUtils.CustomLerp2 的等价实现：以 (1-p)³ 为权重的 1→0 插值</summary>
         private static float CustomLerp2(float p) => float.Lerp(1f, 0f, (1f - p) * (1f - p) * (1f - p));
         /// <summary>CEUtils.randomPointInCircle 的等价实现：随机角度 × [-r, r] 的随机半径</summary>

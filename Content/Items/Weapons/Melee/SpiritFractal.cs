@@ -257,6 +257,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 MovementVector = Vector2.Zero
             });
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加同样的减益与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<SoulDisorder>(), 460);
+            if (playHitSound || Projectile.ai[0] == 2)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TrueExcalibur, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+        }
         /// <summary>
         /// 自绘：先按 dir 取贴图角为原点画剑体；再在加法混合下叠两笔粉红渐变半圆刀光
         /// （投掷式的 zScale 减半、zAlpha 恒为 1），最后恢复默认批次。

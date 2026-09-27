@@ -373,6 +373,9 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
+                    // 焚灭天惩（源版里它与 DragonRage 同属犽戎宝袋那组 8 把武器、走 DropHelper.CalamityStyle 保底抽取；
+                    // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典版灾厄的犽戎宝袋都掉了这把）
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
                     // 巨龙七星灯（CI 那边它是从「犽戎精华」随机开出的，本模组挂回犽戎宝袋必掉 1 把）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<YharonSonStaff>(), 1));
                 }
@@ -453,6 +456,9 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
+                    // 焚灭天惩（源版里它与 DragonRage 同属犽戎宝袋那组 8 把武器、走 DropHelper.CalamityStyle 保底抽取；
+                    // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典版灾厄的犽戎宝袋都掉了这把）
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
                     // 巨龙七星灯（CI 那边它是从「犽戎精华」随机开出的，本模组挂回犽戎宝袋必掉 1 把）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<YharonSonStaff>(), 1));
                 }

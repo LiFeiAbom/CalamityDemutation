@@ -24,6 +24,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             if (owner == null || !owner.HasMinionAttackTargetNPC || owner.MinionAttackTargetNPC < 0 || owner.MinionAttackTargetNPC >= Main.maxNPCs)
                 return ClosestNPCAt(origin, maxDistanceToCheck, ignoreTiles);
             NPC npc = Main.npc[owner.MinionAttackTargetNPC];
+            // 锁定目标可能已经死亡 / 不可追击，此时退回就近索敌（否则守卫会围着一只已消失的怪转）
+            if (!npc.active || !npc.CanBeChasedBy(null, false))
+                return ClosestNPCAt(origin, maxDistanceToCheck, ignoreTiles);
             bool canHit = true;
             if (!ignoreTiles)
                 canHit = Collision.CanHit(origin, 1, 1, npc.Center, 1, 1);

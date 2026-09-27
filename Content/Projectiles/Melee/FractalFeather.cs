@@ -63,6 +63,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             Projectile.damage = (int)(Projectile.damage * 0.8f);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，每命中一次自身伤害递减 20%</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Projectile.damage = (int)(Projectile.damage * 0.8f);
+        }
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;

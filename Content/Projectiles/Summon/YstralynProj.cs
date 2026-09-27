@@ -128,6 +128,28 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             }
         }
         /// <summary>
+        /// 命中玩家（PvP）：与 OnHitNPC 同构——挂生命压制、噬渊标记、虚无幻象与灾厄的护甲碎裂，
+        /// 并放命中音效、撒 4 颗深渊斩击线粒子；PvP 没有 NPC 可锁定，故不设 MinionAttackTargetNPC。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Player owner = Main.player[Projectile.owner];
+            target.AddBuff(ModContent.BuffType<LifeOppress>(), 600);
+            owner.AddBuff(ModContent.BuffType<WyrmPhantom>(), 480);
+            target.AddBuff(ModContent.BuffType<WyrmWhipDebuff>(), 380);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "ArmorCrunch", 600);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "ArmorCrunch", 600);
+            SoundEngine.PlaySound(CalamityDemutationSounds.YstralynHit with { Pitch = Main.rand.NextFloat(0.86f, 1.2f) - 1f, Volume = 0.76f, MaxInstances = 3 }, target.Center);
+            for (int i = 0; i < 4; i++)
+            {
+                AbyssalLineParticle particle = new AbyssalLineParticle();
+                DRKLoader.NewParticle(particle, target.Center, Vector2.Zero, Color.White, 1f);
+                particle.Configure(Main.rand.NextFloat(MathHelper.TwoPi));
+                particle.LineScale = 1.2f;
+                particle.XAdd = 1.2f;
+            }
+        }
+        /// <summary>
         /// 把深渊裂纹折线画成一条条细线（**屏幕空间**：由上屏管线的 RT 批次调用，那套批次不带视图矩阵，
         /// 故这里按惯例减 <c>Main.screenPosition</c>）。线宽取 CE 原式：先按挥砍进度算一个 0~0.26 的亮度系数，
         /// 再乘 <c>RotatedBy</c> 的 Y 分量——那是条 -100~+100 的正弦摆动，故宽度会隔着取到负值（CE 原样，别"修"）。

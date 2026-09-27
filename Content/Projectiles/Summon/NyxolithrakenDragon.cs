@@ -274,6 +274,22 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center - direction * 300, direction, ModContent.ProjectileType<NxCrack>(), Projectile.damage / 2, 0, Projectile.owner);
             }
         }
+        /// <summary>
+        /// 命中玩家（PvP）：与 OnHitNPC 同构，挂生命压制与窃语之死；裂空冷却好了就朝目标前 300 像素处撕一道 <see cref="NxCrack"/>，
+        /// 并把冷却重置为 28。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<LifeOppress>(), 600);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "WhisperingDeath", 300);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "WhisperingDeath", 300);
+            if (CrackCd <= 0)
+            {
+                Projectile.ai[2] = 28;
+                Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.UnitX);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center - direction * 300, direction, ModContent.ProjectileType<NxCrack>(), Projectile.damage / 2, 0, Projectile.owner);
+            }
+        }
         /// <summary>命中判定：除本体框外，每一节身子的 36×36 方框也算（CE 原样，否则只有龙头能打到人）</summary>
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {

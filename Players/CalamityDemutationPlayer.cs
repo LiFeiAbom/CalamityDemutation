@@ -4031,6 +4031,9 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
+            // 每次受击无条件复位"护盾完全吸收"标记（必须放在 if (profanedSoulArtifact) 之外）：
+            // 若上次完全吸收的那一击不可闪避（FreeDodge 未被调用），标记会残留到下一次可闪避的受击，白送一次无敌
+            profanedSoulShieldFreeDodge = false;
             double damageMult = 1.0 + ((bloodPact && Main.rand.NextBool(4)) ? 1.5 : 0.0) + (enraged ? 0.25 : 0.0);
             modifiers.FinalDamage *= (float)damageMult;
             if (theAbsorber)
@@ -4052,7 +4055,6 @@ namespace CalamityDemutation.Players
                 profanedSoulShieldRechargeArmed = true;
                 profanedSoulShieldRechargeDelay = profanedCrystal ? ProfanedSoulCrystal.ShieldRechargeDelayOnHit : ProfanedSoulArtifact.ShieldRechargeDelayOnHit;
                 profanedSoulShieldRechargeProgress = 0f;
-                profanedSoulShieldFreeDodge = false;   // 每次受击先复位；由 ModifyHurtInfo 置位、由 FreeDodge 消费
                 // 护盾的实际吸收挂在 HurtInfo 定稿阶段（对齐灾厄把吸收挂到 modifiers.ModifyHurtInfo 上的做法）：
                 // 那里拿到的 info.Damage 已定稿，且能安全地写无敌帧与"整次命中作废"标记，见 ModifyHurtInfo_ProfanedShield
                 modifiers.ModifyHurtInfo += ModifyHurtInfo_ProfanedShield;
@@ -4748,7 +4750,8 @@ namespace CalamityDemutation.Players
                 {
                     bloodflareMeleeHits++;
                 }
-                if (Player.whoAmI == Main.myPlayer)
+                // 回血受 target.canGhostHeal 限制（对齐 2.0.3.9 CalamityPlayerOnHit.cs:1374 的 IsAnEnemy && canGhostHeal && !moonLeech）；命中计数不受影响
+                if (Player.whoAmI == Main.myPlayer && target.canGhostHeal && !Player.moonLeech)
                 {
                     int healAmount = (Main.rand.Next(3) + 1);
                     Player.statLife += healAmount;
@@ -4892,7 +4895,8 @@ namespace CalamityDemutation.Players
                 {
                     bloodflareMeleeHits++;
                 }
-                if (Player.whoAmI == Main.myPlayer)
+                // 回血受 target.canGhostHeal 限制（对齐 2.0.3.9 CalamityPlayerOnHit.cs:1374 的 IsAnEnemy && canGhostHeal && !moonLeech）；命中计数不受影响
+                if (Player.whoAmI == Main.myPlayer && target.canGhostHeal && !Player.moonLeech)
                 {
                     int healAmount = (Main.rand.Next(3) + 1);
                     Player.statLife += healAmount;

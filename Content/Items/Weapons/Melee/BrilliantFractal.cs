@@ -240,6 +240,21 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 MovementVector = Vector2.Zero
             });
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，播同样的命中音与粒子特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (playHitSound)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TrueExcalibur, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+        }
         /// <summary>CEUtils.GetRepeatedCosFromZeroToOne 的等价实现：把 [0,1] 的余弦缓动递归套用 repeat 次</summary>
         private static float RepeatCos01(float v, int repeat)
         {

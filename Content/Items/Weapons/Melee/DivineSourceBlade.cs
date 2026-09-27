@@ -21,7 +21,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.width = 154;
             Item.damage = 480;
             Item.DamageType = DamageClass.Melee;
-            Item.useAnimation = Item.useTime = 15;
+            Item.useAnimation = Item.useTime = 14;
             Item.scale = 1;
             Item.useTurn = true;
             Item.useStyle = ItemUseStyleID.Swing;

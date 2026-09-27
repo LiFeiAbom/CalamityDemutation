@@ -69,6 +69,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         private void HandleRocks(bool spawnRocks = false, bool yeetRocks = false)
         {
+            // 只在主人本机执行（与 MiniGuardianHealer 的做法一致）：否则每个客户端都会各生成一份岩石，
+            // 或因护盾耐久未同步而各按本端的边沿判定各自甩岩石
+            if (Main.myPlayer != Projectile.owner)
+                return;
             if (spawnRocks)
             {
                 // 召出岩石：水晶态 10 颗、神器态 5 颗；类型按同一档位取
@@ -92,7 +96,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 foreach (var proj in Main.projectile)
                 {
                     if (proj.active && proj.owner == Owner.whoAmI && proj.type == rock)
+                    {
                         proj.ai[0] = 1f;
+                        proj.netUpdate = true;   // 甩出标记要让其他端一起看见
+                    }
                 }
             }
         }
@@ -112,6 +119,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             if (!modPlayer.profanedSoulArtifact || Owner.dead || !Owner.active)
             {
                 modPlayer.profanedSoulGuardians = false;
+                Projectile.active = false;
+                return;
+            }
+            // 形态不符即消散（对齐 2.2.2 MiniGuardianDefense.cs:101 的 psc != SpawnedFromPSC 判定）：
+            // 神器↔水晶切换后由玩家类按新档重新召唤
+            if (modPlayer.profanedCrystal != SpawnedFromPSC)
+            {
                 Projectile.active = false;
                 return;
             }
@@ -160,8 +174,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                     }
                     if (potentialTarget != null)
                     {
-                        // 悬停在目标方向：护盾在场时距主人 75 像素（原为水晶增益 125 / 神器 75），护盾消失时退到主人背后 50 像素
-                        Vector2 angle = Owner.Center + Owner.SafeDirectionTo(potentialTarget.Center) * (shieldIsActive ? 75f : -50f);
+                        // 悬停在目标方向：护盾在场时水晶档 125 / 神器档 75，护盾消失时退到主人背后 50 像素
+                        // （对齐 2.2.2 MiniGuardianDefense.cs 的 shieldIsActive ? (profanedCrystalBuffs ? 125f : 75f) : -50f）
+                        Vector2 angle = Owner.Center + Owner.SafeDirectionTo(potentialTarget.Center) * (shieldIsActive ? (modPlayer.profanedCrystalBuffs ? 125f : 75f) : -50f);
                         playerDestination = angle;
                         playerDestination.X += Main.rand.NextFloat(-5f, 5f);
                         playerDestination.Y += Main.rand.NextFloat(-5f, 5f);

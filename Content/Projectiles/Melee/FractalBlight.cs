@@ -81,6 +81,18 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "Plague", 400);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，ai[1]==1 时附加同样的元素减益</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.ai[1] == 1)
+            {
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "ElementalMix", 400);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 400);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GlacialState", 400);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "BrimstoneFlames", 400);
+                CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "Plague", 400);
+            }
+        }
         /// <summary>拖尾颜色：白→金（ai[1]==1 时为粉红），并随完成度与淡出透明度衰减</summary>
         private Color TrailColor(float completionRatio, Vector2 vertex)
         {

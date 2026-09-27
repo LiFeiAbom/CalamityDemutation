@@ -113,6 +113,25 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 spawnVoidStarCount--;
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——震屏、播命中音并消耗一轮放 6 颗近战伤害的虚空新星
+        /// （原逻辑里的「每敌命中计数 NPCHitCounts[whoAmI]」是 NPC 专有，PvP 版无对应物，已省略）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutation.ScreenShakeAmp = 6f;
+            SoundEngine.PlaySound((Main.rand.NextBool() ? CalamityDemutationSounds.StarlessNightHit1 : CalamityDemutationSounds.StarlessNightHit3)
+                with { Pitch = Main.rand.NextFloat(0.7f, 1.3f) - 1f, Volume = 0.7f }, Projectile.Center);
+            if (spawnVoidStarCount > 0)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    Vector2 vel = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2() * 16;
+                    int index = Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center, vel,
+                        ModContent.ProjectileType<VoidStarF>(), Projectile.damage / 5, 1, Projectile.owner);
+                    Main.projectile[index].DamageType = DamageClass.Melee;
+                }
+                spawnVoidStarCount--;
+            }
+        }
         public override void AI()
         {
             float updates = Projectile.MaxUpdates + 1;

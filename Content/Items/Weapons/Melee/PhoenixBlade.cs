@@ -69,6 +69,35 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Main.projectile[right].velocity.Y = -randomSpeedY;
             }
         }
+        /// <summary>击杀玩家（PvP）：与 OnHitNPC 同构——原位炸出日耀爆炸，再朝左右斜上方各甩一枚治疗火焰</summary>
+        public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
+        {
+            if (target.statLife > 0)
+                return;
+            IEntitySource source = player.GetSource_ItemUse(Item);
+            Projectile.NewProjectile(source, target.Center, Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, Item.damage, Item.knockBack, player.whoAmI);
+            int phoenixHeal = PhoenixHealType();
+            if (phoenixHeal <= 0)
+                return;
+            float spread = 180f * 0.0174f;
+            double startAngle = Math.Atan2(Item.shootSpeed, Item.shootSpeed) - spread / 2;
+            double deltaAngle = spread / 8f;
+            float randomSpeedX = Main.rand.Next(5);
+            float randomSpeedY = Main.rand.Next(3, 7);
+            double offsetAngle = startAngle;
+            int left = Projectile.NewProjectile(source, target.Center, new Vector2((float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f)), phoenixHeal, Item.damage, Item.knockBack, player.whoAmI);
+            int right = Projectile.NewProjectile(source, target.Center, new Vector2((float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f)), phoenixHeal, Item.damage, Item.knockBack, player.whoAmI);
+            if (left >= 0 && left < Main.maxProjectiles)
+            {
+                Main.projectile[left].velocity.X = -randomSpeedX;
+                Main.projectile[left].velocity.Y = -randomSpeedY;
+            }
+            if (right >= 0 && right < Main.maxProjectiles)
+            {
+                Main.projectile[right].velocity.X = randomSpeedX;
+                Main.projectile[right].velocity.Y = -randomSpeedY;
+            }
+        }
         /// <summary>挥舞表现：先用 BetterSwing 修正挥舞位置，约 1/4 概率洒落金色尘（<c>DustID.CopperCoin</c>，源码写 244）</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -20,11 +21,13 @@ namespace CalamityDemutation.Content.Buffs.SummonBuffs
             Main.buffNoSave[Type] = true;          // 不随存档保存
         }
         /// <summary>
-        /// 每帧判定：攻击守护者不在场则移除本 buff，否则把剩余时间续到 18000 帧
+        /// 每帧判定：攻击守护者不在场、或玩家已进入水晶态（水晶有自己的 ProfanedCrystalBuff）则移除本 buff，
+        /// 否则把剩余时间续到 18000 帧（对齐 2.2.2 Buffs/Summon/ProfanedSoulGuardians.cs 的判定）
         /// </summary>
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianAttack>()] <= 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianAttack>()] <= 0
+                || player.GetModPlayer<CalamityDemutationPlayer>().profanedCrystalBuffs)
             {
                 player.DelBuff(buffIndex);
                 buffIndex--;

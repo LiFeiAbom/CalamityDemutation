@@ -115,6 +115,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             Projectile.damage -= 15;
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——同一枚飞刃每命中一次自身伤害就少 15</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Projectile.damage -= 15;
+        }
         /// <summary>命中修正：打蠕虫体节时终伤 ×0.6</summary>
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {

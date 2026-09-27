@@ -65,5 +65,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             target.ExoDebuffs();
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加整套星云系减益</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.ExoDebuffs();
+        }
     }
 }

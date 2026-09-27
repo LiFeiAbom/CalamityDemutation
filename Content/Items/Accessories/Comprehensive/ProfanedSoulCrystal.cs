@@ -176,6 +176,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             player.moveSpeed += 0.08f;
             player.jumpSpeedBoost += 0.8f;
             player.GetArmorPenetration<GenericDamageClass>() += 16;
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.16f;   // 近战攻速 +16%
             player.manaCost *= 0.84f;
             player.pickSpeed -= 0.16f;
             Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 1.4f, 0.3f, 0.9f);
@@ -200,7 +201,18 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             if (!player.GetModPlayer<CalamityDemutationPlayer>().profanedCrystal)
                 return ProfanedSoulCrystalState.Vanity;   // 未装备水晶：只有外观
             bool noMinions = player.slotsMinions == 0;
-            bool noSentries = !Main.projectile.Any(proj => proj.active && proj.owner == player.whoAmI && proj.sentry);
+            // 用显式循环替代 LINQ Any：本方法每帧被调用 2~3 次（玩家类一次 + 每个可见玩家的护盾绘制各一次），
+            // 闭包会带来无谓的分配；命中即 break，有哨兵时通常很早退出
+            bool noSentries = true;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile proj = Main.projectile[i];
+                if (proj.active && proj.owner == player.whoAmI && proj.sentry)
+                {
+                    noSentries = false;
+                    break;
+                }
+            }
             if (noMinions && noSentries)
                 return ProfanedSoulCrystalState.Empowered;   // 无仆从无哨兵：强化档，覆盖昼夜
             return !Main.dayTime ? ProfanedSoulCrystalState.Enraged : ProfanedSoulCrystalState.Buffs;

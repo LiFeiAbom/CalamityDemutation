@@ -100,6 +100,20 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——首次命中播冲击音并朝三个均分方向飞散白球</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.numHits == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item122, Projectile.position);
+                float randNum = Main.rand.NextFloat(MathHelper.TwoPi);
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 vr = (MathHelper.TwoPi / 3f * i + randNum).ToRotationVector2() * 3;
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vr, ModContent.ProjectileType<OrderbringerWhiteOrbs>(), Projectile.damage / 4, Projectile.knockBack, Projectile.owner);
+                }
+            }
+        }
         /// <summary>
         /// 自绘：按固定白色绘制贴图（颜色不随环境光照变化），返回 false 阻止默认绘制
         /// </summary>

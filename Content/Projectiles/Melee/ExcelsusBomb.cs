@@ -82,6 +82,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Lighting.AddLight(Projectile.position, Color.Blue.ToVector3());
             base.OnHitNPC(target, hit, damageDone);
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，命中时发出蓝光</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Lighting.AddLight(Projectile.position, Color.Blue.ToVector3());
+            base.OnHitPlayer(target, info);
+        }
         /// <summary>死亡即爆炸：播音、放大到 600×600 结算伤害、喷三圈尘土与紫色光粒</summary>
         public override void OnKill(int timeLeft)
         {

@@ -62,5 +62,36 @@ namespace CalamityDemutation.Utilities
                 if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 300); }
             }
         }
+        /// <summary>
+        /// 为目标玩家附加“全套混合元素减益”（PvP 版）：逐条与 NPC 重载同构，仅目标类型不同。
+        /// </summary>
+        public static void ExoDebuffs(this Player target)
+        {
+            // 原版基础元素减益（各 300 帧 = 5 秒）：霜火、着火、诅咒地狱、灵液
+            target.AddBuff(BuffID.Frostburn, 300);
+            target.AddBuff(BuffID.OnFire, 300);
+            target.AddBuff(BuffID.CursedInferno, 300);
+            target.AddBuff(BuffID.Ichor, 300);
+            // 现代版灾厄：附加灾厄专属元素减益（500 帧 ≈ 8.3 秒）
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+            {
+                if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 500); }
+                if (calamity.TryFind<ModBuff>("MiracleBlight", out ModBuff miracleBlight)) { target.AddBuff(miracleBlight.Type, 500); }
+                if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 500); }
+                if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 500); }
+            }
+            // 经典版灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            {
+                if (Main.rand.NextBool(30))
+                {
+                    if (calamity1.TryFind<ModBuff>("ExoFreeze", out ModBuff exoFreeze)) { target.AddBuff(exoFreeze.Type, 300); }
+                }
+                if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 300); }
+                if (calamity1.TryFind<ModBuff>("GlacialState", out ModBuff glacialState)) { target.AddBuff(glacialState.Type, 300); }
+                if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 300); }
+                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 300); }
+            }
+        }
     }
 }

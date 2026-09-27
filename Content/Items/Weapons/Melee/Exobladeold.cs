@@ -101,6 +101,46 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             player.statLife += healAmount;
             player.HealEffect(healAmount);
         }
+        /// <summary>
+        /// 命中玩家（PvP）：与 OnHitNPC 同构——按命中计数决定炸爆炸 / 甩彗星，最后挂元素减益并回血。
+        /// canGhostHeal 是 NPC 侧的吸血许可，PvP 下不适用，故只保留 moonLeech 判断。
+        /// </summary>
+        public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
+        {
+            SoundEngine.PlaySound(SoundID.Item88, player.Center);
+            // 起爆点：玩家左右随机一侧 800 像素外、纵向 ±800 像素内的随机点
+            float xPos = player.position.X + 800 * (Main.rand.NextBool(2) ? 1 : -1);
+            float yPos = player.position.Y + Main.rand.Next(-800, 801);
+            Vector2 startPos = new Vector2(xPos, yPos);
+            Vector2 velocity = target.position - startPos;
+            float dir = 10f / startPos.X;
+            velocity.X *= dir * 150;
+            velocity.Y *= dir * 150;
+            velocity.X = MathHelper.Clamp(velocity.X, -15f, 15f);
+            velocity.Y = MathHelper.Clamp(velocity.Y, -15f, 15f);
+            hitCount++;
+            hitCount2++;
+            if (hitCount >= 5 || target.statLife <= target.statLifeMax2 * 0.15f)
+            {
+                Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<Exoboomold>(), hurtInfo.Damage / 4, (int)Item.knockBack, Main.myPlayer);
+                hitCount = 0;
+            }
+            if (hitCount2 >= 2 || target.statLife <= target.statLifeMax2 * 0.15f)
+            {
+                for (int comet = 0; comet < 2; comet++)
+                {
+                    float ai1 = Main.rand.NextFloat() + 0.5f;
+                    Projectile.NewProjectile(player.GetSource_OnHit(target), startPos, velocity, ModContent.ProjectileType<ExoComet>(), hurtInfo.Damage, (int)Item.knockBack, player.whoAmI, 0f, ai1);
+                }
+                hitCount2 = 0;
+            }
+            target.ExoDebuffs();
+            if (player.moonLeech)
+                return;
+            int healAmount = Main.rand.Next(4) + 5;
+            player.statLife += healAmount;
+            player.HealEffect(healAmount);
+        }
         /// <summary>掉在地上时画发光层</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {

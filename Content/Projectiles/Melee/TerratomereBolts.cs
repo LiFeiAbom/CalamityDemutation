@@ -75,6 +75,20 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构——首次命中时在目标周围随机方向生成 3 道大刀光（伤害 ×0.75）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.IsOwnedByLocalPlayer() && Projectile.numHits == 1)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 offsetVr = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.Next(660, 720);
+                    Vector2 spanPos = target.Center + offsetVr;
+                    Vector2 vr = offsetVr.SafeNormalize(Vector2.UnitY) * -50;
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), spanPos, vr, ModContent.ProjectileType<TerratomereBigSlashs>(), (int)(Projectile.damage * 0.75f), Projectile.knockBack, Projectile.owner);
+                }
+            }
+        }
         /// <summary>拖尾颜色：Hue 色与淡青绿随时间正弦摆动</summary>
         public Color ColorFunction(float completionRatio, Vector2 _)
         {

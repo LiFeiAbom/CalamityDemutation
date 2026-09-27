@@ -288,7 +288,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 }
                 else // 长矛阶段
                 {
-                    if (attackDelay % (buffedAi ? 6 : 8) == 0)
+                    // 只在主人本机生成（与 MiniGuardianHealer 的做法一致），否则每个客户端都会各生成一份长矛
+                    if (attackDelay % (buffedAi ? 6 : 8) == 0 && Main.myPlayer == Projectile.owner)
                     {
                         // 原为灾厄音效，此处沿用原版 SoundID.Item20（魔法射击）
                         SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
@@ -380,6 +381,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         private void SpawnMiniGuardianFireball(Vector2 velocity, float ai0)
         {
+            // 只在主人本机生成（与 MiniGuardianHealer 的做法一致），否则每个客户端都会各生成一份爆弹
+            if (Main.myPlayer != Projectile.owner)
+                return;
             int fireballBaseDamage = (int)Projectile.originalDamage;
             int fireballDamage = (int)Owner.GetTotalDamage<GenericDamageClass>().ApplyTo(fireballBaseDamage);
             int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<MiniGuardianFireball>(), fireballDamage, 1f, Projectile.owner, ai0);
@@ -405,6 +409,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             if (!modPlayer.profanedSoulArtifact || owner.dead || !owner.active)
             {
                 modPlayer.profanedSoulGuardians = false;
+                Projectile.active = false;
+                return;
+            }
+            // 形态不符即消散（对齐 2.2.2 MiniGuardianAttack.cs:353 的 psc != SpawnedFromPSC 判定）：
+            // 神器↔水晶切换后由玩家类按新档重新召唤，否则残留的旧档守护者会一直按旧档的 originalDamage 结算
+            if (modPlayer.profanedCrystal != SpawnedFromPSC)
+            {
                 Projectile.active = false;
                 return;
             }
@@ -460,6 +471,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.ai[1] -= 1f;
                 if (Projectile.ai[1] < 0f)
                     Projectile.ai[1] = 15;
+                // ai[1] 既是阶段计时器也当命中计数，改完要同步，否则各端看到的相位会漂
+                if (Projectile.owner == Main.myPlayer)
+                    Projectile.netUpdate = true;
             }
             else if (getAiState == MiniOffenseAIState.Charges && !WhipBuffed)
                 modPlayer.rollBabSpears(1, true);
@@ -475,6 +489,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                 Projectile.ai[1] -= 1f;
                 if (Projectile.ai[1] < 0f)
                     Projectile.ai[1] = 15;
+                // ai[1] 既是阶段计时器也当命中计数，改完要同步，否则各端看到的相位会漂
+                if (Projectile.owner == Main.myPlayer)
+                    Projectile.netUpdate = true;
             }
             else if (getAiState == MiniOffenseAIState.Charges && !WhipBuffed)
                 modPlayer.rollBabSpears(1, true);

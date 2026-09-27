@@ -246,6 +246,31 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 p.Opacity = 0.38f * Main.rand.NextFloat(1.2f, 1.6f);
             }
         }
+        /// <summary>命中玩家（PvP）：与 OnHitNPC 同构，施加同样的减益与特效</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "CrushDepth", 400);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "CrushDepth", 400);
+            if (playHitSound)
+            {
+                playHitSound = false;
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalSwingHit, Projectile.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.FractalImpact, Projectile.Center);
+            }
+            ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.TownSlimeTransform, new ParticleOrchestraSettings
+            {
+                PositionInWorld = target.Center,
+                MovementVector = Vector2.Zero
+            });
+            for (int i = 0; i < 64; i++)
+            {
+                AbyssalParticle p = new AbyssalParticle();
+                DRKLoader.NewParticle(p, RandomPoint(target.Hitbox), Projectile.velocity.RotatedByRandom(0.16f).SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(8f, 48f), Color.White);
+                p.vd = 0.92f;
+                p.ad = 0.03f;
+                p.Opacity = 0.38f * Main.rand.NextFloat(1.2f, 1.6f);
+            }
+        }
         /// <summary>CEUtils.CustomLerp2 的等价实现：以 (1-p)³ 为权重的 1→0 插值</summary>
         private static float CustomLerp2(float p) => float.Lerp(1f, 0f, (1f - p) * (1f - p) * (1f - p));
         /// <summary>CEUtils.randomPointInCircle 的等价实现：随机角度 × [-r, r] 的随机半径</summary>

@@ -123,16 +123,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 命中敌人：真近战回血 10~12，并按版本施加灾厄减益——现代版上 VulnerabilityHex / MiracleBlight / Dragonfire，
-        /// 经典版上 DemonFlames / GodSlayerInferno / HolyLight，各 600 帧（10 秒）
+        /// 经典版上 DemonFlames / GodSlayerInferno / HolyLight，各 600 帧（10 秒）。
+        /// 回血仅在 target.canGhostHeal 为真时触发，减益不受该限制。
         /// </summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             // 真近战命中回血：超上限的部分夹回最大值，否则血条会先冲高再被原版夹回，出现血量跳变
-            int healAmount = Main.rand.Next(3) + 10;
-            player.statLife += healAmount;
-            player.HealEffect(healAmount);
-            if (player.statLife > player.statLifeMax2)
-                player.statLife = player.statLifeMax2;
+            if (target.canGhostHeal)
+            {
+                int healAmount = Main.rand.Next(3) + 10;
+                player.statLife += healAmount;
+                player.HealEffect(healAmount);
+                if (player.statLife > player.statLifeMax2)
+                    player.statLife = player.statLifeMax2;
+            }
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModBuff>("VulnerabilityHex", out ModBuff vulnerabilityHex))

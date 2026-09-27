@@ -67,6 +67,20 @@ namespace CalamityDemutation.Content.Projectiles.Magic
             }
         }
         /// <summary>
+        /// 命中玩家（PvP）：与 OnHitNPC 同构，对目标施加灾厄（现代版/经典版二选一）的硫磺火 debuff，持续 1000 帧（约 16.7 秒）
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            {
+                if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1000); }
+            }
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            {
+                if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1000); }
+            }
+        }
+        /// <summary>
         /// 消亡（自然超时/被击杀）：仅在主人端于当前位置生成硫磺火爆炸（HellfireExplosionFriendly），避免联机重复生成
         /// </summary>
         public override void OnKill(int timeLeft)
