@@ -907,8 +907,6 @@ Items: {
 			'''
 			真近战击中敌人时使其冻结并治疗自己
 			发射彩虹光束，其效果取决于颜色
-			右击蓄力，释放元素圣剑激光
-			激光持续一段时间后消散，需重新蓄力
 			'''
 	}
 
@@ -2089,10 +2087,6 @@ Projectiles: {
 	OmegaBlueTentacle.DisplayName: 蓝色欧米茄触手
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PoisonousSeawater.DisplayName: 有毒海水
-	ElementalExcaliburBreakerHoldout.DisplayName: 元素圣剑
-	ElementalExcaliburMagicCircle.DisplayName: 元素圣剑魔力阵
-	ElementalExcaliburRay.DisplayName: 元素圣剑激光
-	ElementalExcaliburWave.DisplayName: 元素圣剑之波
 	RedDevil.DisplayName: 红色恶魔
 	RuneBolt.DisplayName: 符文脉冲束
 	RuneSongHeld.DisplayName: 符文之歌

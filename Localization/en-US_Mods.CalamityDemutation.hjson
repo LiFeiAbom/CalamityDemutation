@@ -904,8 +904,6 @@ Items: {
 			'''
 			True melee strikes freeze enemies and heal you
 			Fires rainbow beams that change their behavior based on their color
-			Right click to charge and unleash an Elemental Excalibur laser
-			The laser fades after a time and must be charged again
 			'''
 	}
 
@@ -2084,10 +2082,6 @@ Projectiles: {
 	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PoisonousSeawater.DisplayName: Poisonous Seawater
-	ElementalExcaliburBreakerHoldout.DisplayName: Elemental Excalibur
-	ElementalExcaliburMagicCircle.DisplayName: Elemental Excalibur Magic Circle
-	ElementalExcaliburRay.DisplayName: Elemental Excalibur Ray
-	ElementalExcaliburWave.DisplayName: Elemental Excalibur Wave
 	RedDevil.DisplayName: Red Devil
 	RuneBolt.DisplayName: Rune Bolt
 	RuneSongHeld.DisplayName: Archaic Song
