@@ -1639,13 +1639,15 @@ namespace CalamityDemutation.Players
                 }
             }
             // 腐化烧瓶/猩红烧瓶：对应邪恶生态内 +3 防御与 +7% 减伤（两件效果相同，合并结算）
-            if (corruptFlask || crimsonFlask)
+            if (corruptFlask && Player.ZoneCorrupt)
             {
-                if (Player.ZoneCorrupt || Player.ZoneCrimson)
-                {
-                    Player.statDefense += 3;
-                    Player.endurance += 0.07f;
-                }
+                Player.statDefense += 3;
+                Player.endurance += 0.07f;
+            }
+            if (crimsonFlask && Player.ZoneCrimson)
+            {
+                Player.statDefense += 3;
+                Player.endurance += 0.07f;
             }
             // 远古化石：地下/洞穴层挖掘速度 +35%
             if (ancientFossil)
@@ -3917,7 +3919,7 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 FreeDodge 钩子：完全闪避伤害（不受常规闪避冷却影响）。
-        /// 聚合大脑 1/8、大杂烩（The Amalgam）1/4 概率完全免伤；
+        /// 聚合大脑 1/10、大杂烩（The Amalgam）1/8 概率完全免伤；
         /// 亵渎之魂护盾把本次伤害全额吃下时也走这条路（对应原版 freeDodgeFromShieldAbsorption），
         /// 让击退与减益一并落空——无敌帧已在 ModifyHurtInfo_ProfanedShield 里给过。
         /// </summary>
@@ -3928,11 +3930,11 @@ namespace CalamityDemutation.Players
                 profanedSoulShieldFreeDodge = false;
                 return true;
             }
-            if(amalgamatedBrain && Main.rand.NextBool(8))
+            if(amalgamatedBrain && Main.rand.NextBool(10))
             {
                 return true;
             }
-            if(theAmalgam && Main.rand.NextBool(4))
+            if(theAmalgam && Main.rand.NextBool(8))
             {
                 return true;
             }
