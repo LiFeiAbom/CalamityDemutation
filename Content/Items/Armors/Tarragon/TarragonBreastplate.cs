@@ -5,8 +5,8 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
 {
     /// <summary>
     /// 龙蒿胸甲（TarragonBreastplate） - 龙蒿套装的胸部部件
-    /// 生存与全能向：物品自带 +2 生命回复；穿戴后 +150 生命上限、+100 魔力上限、
-    /// +6 生命回复，全职业通用伤害 +10%、通用暴击率 +10%。
+    /// 生存与全能向：物品自带 +2 生命回复（1 HP/s）；穿戴后 +40 生命上限，
+    /// 全职业通用伤害 +10%、通用暴击率 +10%。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class TarragonBreastplate:ModItem
@@ -24,13 +24,11 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;  // 月后自定义稀有度 12 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }
         /// <summary>
-        /// 穿戴时的属性加成：生命/魔力上限、生命回复与通用伤害/暴击
+        /// 穿戴时的属性加成：生命上限与通用伤害/暴击
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.statLifeMax2 += 150;                       // 生命上限 +150
-            player.statManaMax2 += 100;                       // 魔力上限 +100
-            player.lifeRegen += 6;                            // 生命回复 +6
+            player.statLifeMax2 += 40;                        // 生命上限 +40
             player.GetDamage<GenericDamageClass>() += 0.1f;   // 通用伤害 +10%（全职业增伤）
             player.GetCritChance<GenericDamageClass>() += 10; // 通用暴击率 +10%
         }

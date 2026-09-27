@@ -27,7 +27,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
             Item.value = Item.buyPrice(4, 0, 0, 0);  // 价值 4 铂金
-            Item.defense = 62;        // 防御 62
+            Item.defense = 50;        // 防御 50（与源两版一致）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
         /// <summary>
@@ -39,9 +39,9 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             modPlayer.shadeRegen = true;                            // 置位生命回复标记，最终在 CalamityDemutationPlayer.UpdateLifeRegen 中结算
             player.GetDamage<GenericDamageClass>() += 0.4f;         // 全类型伤害 +40%
             player.GetCritChance<GenericDamageClass>() += 20;       // 全类型暴击率 +20%
-            player.statLifeMax2 += 1000;                            // 最大生命 +1000
-            player.statManaMax2 += 1000;                            // 最大魔力 +1000
-            player.thorns = 200f;                                   // 反伤值 200（经典版为 100，本模组上调至 200）
+            player.statLifeMax2 += 300;                             // 最大生命 +300
+            player.statManaMax2 += 300;                             // 最大魔力 +300
+            player.thorns = 100f;                                   // 反伤值 100（与源两版一致）
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）

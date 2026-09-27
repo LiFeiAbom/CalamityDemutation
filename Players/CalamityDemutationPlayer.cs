@@ -1289,11 +1289,11 @@ namespace CalamityDemutation.Players
             if (afflicted || affliction)
             {
                 Player.noKnockback = true;
-                Player.GetDamage<GenericDamageClass>() += 0.15f;
-                Player.statDefense += 45;
-                Player.endurance += 0.08f;
-                Player.statLifeMax2 += (int)(Player.statLifeMax2 * 0.2);
-                Player.lifeRegen += 8;
+                Player.GetDamage<GenericDamageClass>() += 0.1f;
+                Player.statDefense += 30;
+                Player.endurance += 0.05f;
+                Player.statLifeMax2 += (int)(Player.statLifeMax2 * 0.1);
+                Player.lifeRegen += 2;
             }
             // 苦难饰品附加光环：每 10 帧向同队（非本人）玩家刷一次 Afflicted 增益
             if (affliction && Player.miscCounter % 10 == 0)
@@ -3515,6 +3515,30 @@ namespace CalamityDemutation.Players
             {
                 Player.lifeRegen += 10;
             }
+            // 欧米茄蓝胸甲：禁止一切正面生命再生（同上，放在本钩子末尾以覆盖本方法内先加上的各项）
+            OmegaBlueNoLifeRegen();
+        }
+        /// <summary>
+        /// 欧米茄蓝胸甲（omegaBlueChestplate）的"禁止正面生命再生"：
+        /// 把正的 lifeRegen 归零、并清空 lifeRegenTime 与 lifeRegenCount
+        /// （与灾厄两版逐字同款：经典版 CalamityPlayerPreTrailer 的 LastDebuffs 段、
+        /// 现代版 CalamityPlayerLifeRegen 的 noLifeRegen 段）。
+        /// 同时挂在 UpdateLifeRegen 与 UpdateBadLifeRegen 两处，因为本工程观察到
+        /// UpdateBadLifeRegen 只在生命回复为负时被调用，而本条要在回复为正时也生效。
+        /// </summary>
+        private void OmegaBlueNoLifeRegen()
+        {
+            if (!omegaBlueChestplate)
+                return;
+            if (Player.lifeRegen > 0)
+            {
+                Player.lifeRegen = 0;
+            }
+            Player.lifeRegenTime = 0;
+            if (Player.lifeRegenCount > 0)
+            {
+                Player.lifeRegenCount = 0;
+            }
         }
         /// <summary>
         /// tModLoader 的 UpdateBadLifeRegen 钩子：仅在生命回复为负时被调用。
@@ -3524,6 +3548,8 @@ namespace CalamityDemutation.Players
         /// 地狱火爆炸（hellfireExplosion）与生命压制（LifeOppress，噬渊鞭挞命中挂的 DoT，PvP 时才在玩家身上）
         /// 各自把回复计时清零后按原值扣 lifeRegen（后者按 CE 原样扣 60；敌怪侧的 4501 点/秒另在
         /// CalamityDemutationGlobalNPC.UpdateLifeRegen 里结算）。
+        /// 末尾再调一次 <see cref="OmegaBlueNoLifeRegen"/>，与 UpdateLifeRegen 里那次互为保险
+        /// （灾厄两版把欧米茄蓝禁回血写在本钩子里，但本工程观察到本钩子只在回复为负时触发）。
         /// </summary>
         public override void UpdateBadLifeRegen()
         {
@@ -3550,6 +3576,7 @@ namespace CalamityDemutation.Players
                 Player.lifeRegenTime = 0;
                 Player.lifeRegen -= 60;
             }
+            OmegaBlueNoLifeRegen();
         }
         /// <summary>
         /// tModLoader 的 CanConsumeAmmo 钩子：判定本次射击是否消耗弹药。

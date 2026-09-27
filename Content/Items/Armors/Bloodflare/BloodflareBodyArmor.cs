@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
 {
     /// <summary>
     /// 炎血胸甲（BloodflareBodyArmor） - 炎血套（Bloodflare）胸部防具
-    /// 提供生命/魔力上限与通用伤害、暴击加成；浸在岩浆中时额外获得防御与生命回复。
+    /// 提供生命上限与通用伤害、暴击加成；浸在岩浆中时额外获得防御与生命回复。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class BloodflareBodyArmor:ModItem
@@ -22,12 +22,11 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;  // 月后稀有度 13 级，名称颜色为荧光绿
         }
         /// <summary>
-        /// 单件装备加成：生命/魔力上限、通用伤害与暴击，浸岩浆时额外防御与回复
+        /// 单件装备加成：生命上限、通用伤害与暴击，浸岩浆时额外防御与回复
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.statLifeMax2 += 100;                              // 最大生命 +100
-            player.statManaMax2 += 100;                              // 最大魔力 +100
+            player.statLifeMax2 += 40;                               // 最大生命 +40
             player.GetDamage<GenericDamageClass>() += 0.14f;         // 全类型伤害 +14%
             player.GetCritChance<GenericDamageClass>() += 14;        // 全类型暴击率 +14%
             if (player.lavaWet)

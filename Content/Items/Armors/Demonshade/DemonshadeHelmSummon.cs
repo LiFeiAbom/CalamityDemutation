@@ -96,11 +96,11 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         public override void UpdateEquip(Player player)
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Summon;  // 置位职业标记：本件为召唤变体
-            player.GetDamage<SummonDamageClass>() += 0.8f;                            // 召唤伤害 +80%
+            player.GetDamage<SummonDamageClass>() += 0.7f;                            // 召唤伤害 +70%
             player.maxMinions += 10;                                                  // 仆从栏上限 +10
-            player.maxTurrets += 5;                                                   // 哨兵栏上限 +5
-            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.45f;            // 鞭子攻击速度 +45%
-            player.whipRangeMultiplier += 0.45f;                                      // 鞭子攻击范围 +45%
+            player.maxTurrets += 1;                                                   // 哨兵栏上限 +1
+            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.30f;            // 鞭子攻击速度 +30%
+            player.whipRangeMultiplier += 0.30f;                                      // 鞭子攻击范围 +30%
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）

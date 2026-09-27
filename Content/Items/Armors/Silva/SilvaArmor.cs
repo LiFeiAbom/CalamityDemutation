@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
 {
     /// <summary>
     /// 林妖胸甲（SilvaArmor） - 林妖套装的胸部部件
-    /// 生存与全能向：+300 生命上限、+200 魔力上限、+20% 移速，
+    /// 生存与全能向：+80 生命上限、+20% 移速，
     /// 全职业通用伤害 +18%、通用暴击率 +18%。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
@@ -24,12 +24,11 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后自定义稀有度 15 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }
         /// <summary>
-        /// 穿戴时的属性加成：生命/魔力上限、移速与通用伤害/暴击
+        /// 穿戴时的属性加成：生命上限、移速与通用伤害/暴击
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.statLifeMax2 += 300;                       // 生命上限 +300
-            player.statManaMax2 += 200;                       // 魔力上限 +200
+            player.statLifeMax2 += 80;                        // 生命上限 +80
             player.moveSpeed += 0.2f;                         // 移速 +20%
             player.GetDamage<GenericDamageClass>() += 0.18f;  // 通用伤害 +18%（全职业增伤）
             player.GetCritChance<GenericDamageClass>() += 18; // 通用暴击率 +18%

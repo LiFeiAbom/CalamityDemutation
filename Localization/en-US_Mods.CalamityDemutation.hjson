@@ -338,7 +338,7 @@ Items: {
 		Tooltip:
 			'''
 			Gives you and all other players on your team powerful buffs, grants immnuity of knockback
-			+4 life regan, +20% max life, 8% damage reduction, 45 defense, and 15% increased damage
+			+1 HP/s life regen, +10% max life, 5% damage reduction, 30 defense, and 10% increased damage
 			'''
 	}
 
@@ -420,10 +420,10 @@ Items: {
 		DisplayName: Auric Tesla Body Armor
 		Tooltip:
 			'''
-			+400 max life and +400 max mana
+			+100 max life
 			25% increased movement speed
 			Attacks have a 5% chance to do no damage to you
-			30% increased damage and increased critical strike chance
+			22% increased damage and increased critical strike chance
 			You will freeze enemies near you when you are struck
 			'''
 	}
@@ -515,7 +515,7 @@ Items: {
 		DisplayName: Bloodflare Body Armor
 		Tooltip:
 			'''
-			+100 max life and +100 max mana
+			+40 max life
 			You regenerate life quickly and gain +30 defense while in lava
 			14% increased damage and increased critical strike chance
 			'''
@@ -772,7 +772,7 @@ Items: {
 			'''
 			40% increased damage and 20% critical strike chance
 			Enemies take ungodly damage when they touch you
-			Increased max life by 1000 and mana by 1000
+			Increased max life by 300 and mana by 300
 			Standing still lets you absorb the shadows and boost your life regen
 			'''
 	}
@@ -788,7 +788,7 @@ Items: {
 
 	DemonshadeHelm: {
 		DisplayName: Demonshade Helm
-		Tooltip: 50% increased melee damage, 50% increased melee crit chance and 30% increased melee speed
+		Tooltip: 50% increased melee damage, 25% increased melee crit chance and 30% increased melee speed
 		SetBonus:
 			'''
 
@@ -805,7 +805,7 @@ Items: {
 		DisplayName: Demonshade Hood
 		Tooltip:
 			'''
-			50% increased magic damage and 50% increased magic crit chance
+			50% increased magic damage and 25% increased magic crit chance
 			+300 max mana
 			Mana costs are halved
 			'''
@@ -823,7 +823,7 @@ Items: {
 
 	DemonshadeHelmRanged: {
 		DisplayName: Demonshade Plumed Helm
-		Tooltip: 50% increased ranged damage, 50% increased ranged crit chance and a 50% chance to not consume ammo
+		Tooltip: 50% increased ranged damage, 25% increased ranged crit chance and a 50% chance to not consume ammo
 		SetBonus:
 			'''
 
@@ -840,9 +840,9 @@ Items: {
 		DisplayName: Demonshade Visor
 		Tooltip:
 			'''
-			80% increased summon damage
-			+10 max minions and +5 max sentries
-			45% increased whip attack speed and whip range
+			70% increased summon damage
+			+10 max minions and +1 max sentries
+			30% increased whip attack speed and whip range
 			'''
 		SetBonus:
 			'''
@@ -1121,7 +1121,7 @@ Items: {
 		DisplayName: God Slayer Chestplate
 		Tooltip:
 			'''
-			+250 max life and +150 max mana
+			+60 max life
 			15% increased movement speed
 			15% increased damage and increased critical strike chance
 			Attacks have a 5% chance to do no damage to you
@@ -1341,6 +1341,7 @@ Items: {
 			18% increased damage and 16% increased critical strike chance
 			Increases melee attack speed by 18%
 			Your attacks inflict Crush Depth
+			No positive life regeneration
 			'''
 		DisplayName: Omega Blue Chestplate
 	}
@@ -1483,7 +1484,7 @@ Items: {
 		DisplayName: Silva Armor
 		Tooltip:
 			'''
-			+300 max life and +200 max mana
+			+80 max life
 			20% increased movement speed
 			18% increased damage and increased critical strike chance
 			'''
@@ -1623,7 +1624,7 @@ Items: {
 		Tooltip:
 			'''
 			10% increased damage and increased critical strike chance
-			+4 HP/s life regen, +150 max life and +100 max mana
+			+1 HP/s life regen and +40 max life
 			"Breastplate of the exiler"
 			'''
 	}

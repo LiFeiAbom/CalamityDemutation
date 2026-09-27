@@ -97,7 +97,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Ranged;  // 置位职业标记：本件为远程变体
             player.GetDamage<RangedDamageClass>() += 0.5f;   // 远程伤害 +50%
-            player.GetCritChance<RangedDamageClass>() += 50; // 远程暴击率 +50%
+            player.GetCritChance<RangedDamageClass>() += 25; // 远程暴击率 +25%
         }
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）

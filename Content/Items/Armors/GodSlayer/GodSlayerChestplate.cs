@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
 {
     /// <summary>
     /// 神裁者胸甲（GodSlayerChestplate） - 弑神者套胸部
-    /// 单件：+15% 全伤害、+15% 暴击、+15% 移速、+250 生命上限、+150 法力上限、反伤 +0.9。
+    /// 单件：+15% 全伤害、+15% 暴击、+15% 移速、+60 生命上限、反伤 +0.9。
     /// 同时置位两个标记，均在 CalamityDemutationPlayer 中结算：
     /// godSlayerReflect 使 80 及以下伤害被压到 1，并有 1/20 概率完全免伤；
     /// godSlayerDamageProtect 使不超过当前保护上限（最高 80）的伤害被完全闪避，触发后上限重置为 20。
@@ -33,8 +33,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             modPlayer.godSlayerReflect = true;
             modPlayer.godSlayerDamageProtect = true;
             player.thorns += 0.9f;                          // 反伤倍率 +0.9（与头盔的 +2.5 叠加）
-            player.statLifeMax2 += 250;                     // 生命上限 +250
-            player.statManaMax2 += 150;                     // 法力上限 +150
+            player.statLifeMax2 += 60;                      // 生命上限 +60
             player.moveSpeed += 0.15f;                      // 移速 +15%
             player.GetDamage<GenericDamageClass>() += 0.15f;   // 全伤害 +15%
             player.GetCritChance<GenericDamageClass>() += 15;  // 全暴击 +15%

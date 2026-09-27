@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 苦难（Affliction） - 专家饰品
-    /// 提供 +15% 通用伤害、+45 防御、+8% 减伤、+20% 最大生命与 +8 生命回复，
+    /// 提供 +10% 通用伤害、+30 防御、+5% 减伤、+10% 最大生命与 +2 生命回复（1 HP/s），
     /// 并将"苦难"debuff 传染给同队玩家。
     /// </summary>
     internal class Affliction:ModItem

@@ -11,7 +11,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
 {
     /// <summary>
     /// 金之特斯拉胸甲（Auric Tesla Body Armor） - 金之特斯拉套（AuricTesla）身体防具
-    /// 提供生命/魔力上限、通用伤害与暴击、移速，并置位霜冻屏障与弑神者反射标记；
+    /// 提供生命上限、通用伤害与暴击、移速，并置位霜冻屏障与弑神者反射标记；
     /// 另注册背面装备贴图（_Back），穿齐后显示披风。套装判定见 AuricTeslaHelm。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                 player.back = (sbyte)EquipLoader.GetEquipSlot(Mod, Name, EquipType.Back);
         }
         /// <summary>
-        /// 单件装备加成：生命/魔力上限、移速、通用伤害与暴击，
+        /// 单件装备加成：生命上限、移速、通用伤害与暴击，
         /// 并置位霜冻屏障（frostBarrier）与弑神者反射（godSlayerReflect）标记
         /// </summary>
         public override void UpdateEquip(Player player)
@@ -53,11 +53,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.frostBarrier = true;        // 置位霜冻屏障标记（对应经典版 fBarrier）
             modPlayer.godSlayerReflect = true;    // 置位弑神者反射标记，供受击反弹结算
-            player.statLifeMax2 += 400;           // 最大生命 +400
-            player.statManaMax2 += 400;           // 最大魔力 +400
+            player.statLifeMax2 += 100;           // 最大生命 +100
             player.moveSpeed += 0.25f;            // 移动速度 +25%
-            player.GetCritChance<GenericDamageClass>() += 30;   // 通用暴击率 +30%
-            player.GetDamage<GenericDamageClass>() += 0.3f;     // 通用伤害 +30%
+            player.GetCritChance<GenericDamageClass>() += 22;   // 通用暴击率 +22%
+            player.GetDamage<GenericDamageClass>() += 0.22f;    // 通用伤害 +22%
         }
         /// <summary>
         /// 注册配方：现代版灾厄用金锭×20 + 宇宙砧，经典版灾厄用矿石与魂材 + 德雷顿熔炉，

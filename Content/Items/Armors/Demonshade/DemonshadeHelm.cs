@@ -107,7 +107,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Melee;  // 置位职业标记：本件为近战变体
             player.GetDamage<MeleeDamageClass>() += 0.5f;       // 近战伤害 +50%
-            player.GetCritChance<MeleeDamageClass>() += 50;     // 近战暴击率 +50%
+            player.GetCritChance<MeleeDamageClass>() += 25;     // 近战暴击率 +25%
             player.GetAttackSpeed<MeleeDamageClass>() += 0.30f; // 近战攻速 +30%
         }
         /// <summary>

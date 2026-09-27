@@ -97,7 +97,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Magic;  // 置位职业标记：本件为法师变体
             player.GetDamage<MagicDamageClass>() += 0.5f;   // 法术伤害 +50%
-            player.GetCritChance<MagicDamageClass>() += 50; // 法术暴击率 +50%
+            player.GetCritChance<MagicDamageClass>() += 25; // 法术暴击率 +25%
             player.statManaMax2 += 300;                     // 最大法力 +300
             player.manaCost *= 0.5f;                        // 法力消耗 ×0.5（减半）
         }

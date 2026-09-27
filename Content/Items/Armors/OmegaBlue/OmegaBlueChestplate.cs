@@ -8,8 +8,9 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
     /// 奥米加蓝胸甲（OmegaBlueChestplate） - 奥米加蓝套胸部
     /// 单件：+18% 全伤害、+16% 暴击、+18% 近战攻速。
     /// 同时置位 omegaBlueChestplate，在 CalamityDemutationPlayer 中结算：
-    /// 远程武器 25% 概率不消耗弹药，且近战/弹幕命中时对敌施加灾厄 debuff
-    /// （现代版 HadopelagicPressure，经典版 CrushDepth）。
+    /// 远程武器 25% 概率不消耗弹药，近战/弹幕命中时对敌施加灾厄 debuff
+    /// （现代版 HadopelagicPressure，经典版 CrushDepth），
+    /// 并禁止一切正面生命再生（见 UpdateBadLifeRegen，对应源里的 No positive life regen）。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class OmegaBlueChestplate : ModItem
