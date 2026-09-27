@@ -39,8 +39,45 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         private static readonly Dictionary<int, int> VanillaAxe = new()
         {
-            { ItemID.AcornAxe, 30 },
-            { ItemID.SawtoothShark, 14 },
+            // Item.axe 以 5% 为单位（显示值 = axe × 5），注释里的百分数即可读值
+            { ItemID.AcornAxe, 30 },              // 150%
+            { ItemID.AdamantiteChainsaw, 20 },    // 100%（灾厄 90%）
+            { ItemID.MoltenHamaxe, 30 },          // 150%（灾厄 125%）
+            { ItemID.MythrilChainsaw, 17 },       // 85%（灾厄 80%）
+            { ItemID.OrichalcumChainsaw, 18 },    // 90%（灾厄 80%）
+            { ItemID.PalladiumChainsaw, 15 },     // 75%（灾厄 70%）
+            { ItemID.SawtoothShark, 14 },         // 70%
+            { ItemID.TitaniumChainsaw, 21 },      // 105%（灾厄 90%）
+        };
+        /// <summary>
+        /// 原版镐力（ItemID -> 原版 item.pick）。tModLoader.xml 口径：pick 的显示值就等于字段值。
+        /// 只收灾厄**调低**的条目（灾厄调高的——如钴/秘银钻头镐、噩梦镐、银镐——不回退）。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaPick = new()
+        {
+            { ItemID.LaserDrill, 230 },           // 灾厄 220
+            { ItemID.LeadPickaxe, 43 },           // 灾厄 40
+            { ItemID.OrichalcumDrill, 165 },      // 灾厄 160
+            { ItemID.OrichalcumPickaxe, 165 },    // 灾厄 160
+            { ItemID.PlatinumPickaxe, 59 },       // 灾厄 55
+            { ItemID.TitaniumDrill, 190 },        // 灾厄 180
+            { ItemID.TitaniumPickaxe, 190 },      // 灾厄 180
+        };
+        /// <summary>
+        /// 原版锤力（ItemID -> 原版 item.hammer）。tModLoader.xml 口径：hammer 的显示值等于字段值。
+        /// 只收灾厄**调低**的条目（灾厄调高的——铁/铅/银/金/铜/陨石/血肉/熔岩锤等——不回退）。
+        /// </summary>
+        private static readonly Dictionary<int, int> VanillaHammer = new()
+        {
+            { ItemID.AshWoodHammer, 45 },         // 灾厄 25
+            { ItemID.BorealWoodHammer, 35 },      // 灾厄 25
+            { ItemID.EbonwoodHammer, 40 },        // 灾厄 25
+            { ItemID.PalmWoodHammer, 35 },        // 灾厄 25
+            { ItemID.PearlwoodHammer, 55 },       // 灾厄 25
+            { ItemID.RichMahoganyHammer, 35 },    // 灾厄 25
+            { ItemID.Rockfish, 70 },              // 灾厄 50
+            { ItemID.ShadewoodHammer, 40 },       // 灾厄 25
+            { ItemID.TinHammer, 38 },             // 灾厄 35
         };
         /// <summary>
         /// 原版伤害（ItemID -> 原版 damage）。灾厄用 DamageExact/DamageRatio 调低了这些武器/弹药的伤害。
@@ -69,6 +106,7 @@ namespace CalamityDemutation.Content.Items
             { ItemID.InfluxWaver, 100 },
             { ItemID.Kraken, 95 },
             { ItemID.LaserMachinegun, 60 },
+            { ItemID.MagicMissile, 35 },
             { ItemID.LastPrism, 100 },
             { ItemID.Minishark, 6 },
             { ItemID.MoonlordBullet, 20 },
@@ -113,13 +151,18 @@ namespace CalamityDemutation.Content.Items
         private static readonly Dictionary<int, float> VanillaShootSpeed = new()
         {
             { ItemID.IceBoomerang, 11.5f },
+            { ItemID.SpiritFlame, 3f },
         };
         /// <summary>
         /// 原版攻速（ItemID -> 原版 useTime）。灾厄用 UseExact 同时调高了 useTime 与 useAnimation。
         /// </summary>
         private static readonly Dictionary<int, int> VanillaUseTime = new()
         {
+            { ItemID.AdamantiteWaraxe, 8 },
+            { ItemID.Beenade, 15 },
             { ItemID.BeesKnees, 23 },
+            { ItemID.ChlorophyteClaymore, 26 },
+            { ItemID.ChlorophyteJackhammer, 4 },
             { ItemID.ChristmasTreeSword, 23 },
             { ItemID.CoinGun, 8 },
             { ItemID.DayBreak, 16 },
@@ -127,9 +170,18 @@ namespace CalamityDemutation.Content.Items
             { ItemID.IceBoomerang, 20 },
             { ItemID.InfluxWaver, 20 },
             { ItemID.MoltenFury, 22 },
+            { ItemID.MythrilWaraxe, 10 },
+            { ItemID.NebulaDrill, 2 },
+            { ItemID.OrichalcumWaraxe, 9 },
             { ItemID.PhoenixBlaster, 14 },
+            { ItemID.PsychoKnife, 8 },
             { ItemID.Sandgun, 16 },
+            { ItemID.SolarFlareDrill, 2 },
             { ItemID.StarCannon, 12 },
+            { ItemID.StardustDrill, 2 },
+            { ItemID.TitaniumPickaxe, 7 },
+            { ItemID.TitaniumWaraxe, 7 },
+            { ItemID.VortexDrill, 2 },
         };
         /// <summary>
         /// 原版价值（ItemID -> 原版 value；数值用 Item.sellPrice 按"售价"口径书写，便于与原版表对照）。
@@ -137,12 +189,13 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         private static readonly Dictionary<int, int> VanillaValue = new()
         {
-            { ItemID.Mushroom, Item.sellPrice(copper: 5) },
+            { ItemID.Mushroom, Item.sellPrice(silver: 2, copper: 50) },   // 桌面版 1.3.0.1 起为 2银50铜（5铜是旧主机版的值）
             { ItemID.GlowingMushroom, Item.sellPrice(copper: 10) },
-            { ItemID.VileMushroom, Item.sellPrice(silver: 2, copper: 50) },
-            { ItemID.ViciousMushroom, Item.sellPrice(silver: 2, copper: 50) },
+            { ItemID.VileMushroom, Item.sellPrice(copper: 10) },          // 腐化蘑菇实为 10 铜（原误写成 2银50铜）
+            { ItemID.ViciousMushroom, Item.sellPrice(copper: 10) },       // 血腥蘑菇同为 10 铜
             { ItemID.EncumberingStone, Item.sellPrice(gold: 1) },
             { ItemID.UncumberingStone, Item.sellPrice(gold: 1) },
+            { ItemID.PortableStool, Item.sellPrice(silver: 50) },         // 便携凳（Step Stool）：原版售价 50 银，灾厄 Worthless 归零
         };
         // ── 实例字段 ──
         /// <summary>
@@ -537,18 +590,15 @@ namespace CalamityDemutation.Content.Items
                 case ItemID.SniperScope:
                     player.GetDamage<RangedDamageClass>() += 0.1f;
                     break;
+                // 手套系：灾厄对这套是「先减后按等级重发」的替换（不是单纯减法）——
+                // CalamityGlobalItem.cs:1142-1170 每件先 -0.12（抵掉本体 12%），
+                // CalamityPlayerMiscEffects.cs:3638-3642 再按最高级手套重发：
+                // 野性爪 10%、力量/狂战士 12%、机械 12%、烈火 14%、元素手套 15%。
+                // 所以在 1.4.4 下「相对本体 12%」只有野性爪净亏 2%；
+                // 力量/狂战士/机械仍是 12%、烈火反而是 14%（加强）。
+                // 这四件一律不能再补 —— 补上就是 22%~26%（烈火手套曾实测 26%）。
                 case ItemID.FeralClaws:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.PowerGlove:
-                case ItemID.BerserkerGlove:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.MechanicalGlove:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
-                    break;
-                case ItemID.FireGauntlet:
-                    player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.02f;
                     break;
                 case ItemID.SunStone:
                     if (Main.dayTime)
@@ -565,17 +615,40 @@ namespace CalamityDemutation.Content.Items
             }
         }
         /// <summary>
-        /// 回退灾厄对原版护甲套装的削弱（WizardHat 魔法暴击、MagicHat 最大法力）。
-        /// 注：SolarFlare 的 12% 减伤移除属 IL 编辑的 DR 重做，在此不处理（见 ILEditing）。
+        /// 回退灾厄对原版护甲套装的削弱，按 tML 的原版套装名字符串分支
+        /// （灾厄的 VanillaArmorChanges/ 各套装削弱逐条对应，见各 case 注释）。
+        /// 未处理：Nebula 的 IL 阈值改动、Spectre 的 ghostDmg 逐帧累加、
+        /// Frost/SpectreHealing/Gi/Monk 系属「重做」而非纯削弱。
         /// </summary>
         public override void UpdateArmorSet(Player player, string set)
         {
             if (ConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
                 return;
-            if (set == "WizardHat")
-                player.GetCritChance<MagicDamageClass>() += 6;
-            else if (set == "MagicHat")
-                player.statManaMax2 += 20;
+            switch (set)
+            {
+                case "WizardHat":
+                    player.GetCritChance<MagicDamageClass>() += 6;
+                    break;
+                case "MagicHat":
+                    player.statManaMax2 += 20;
+                    break;
+                case "Adamantite":                    // AdamantiteArmorSetChange.cs:44-47：仅近战头在套装内扣 5% 近战攻速
+                    if (player.armor[0].type == ItemID.AdamantiteHelmet)
+                        player.GetAttackSpeed<MeleeDamageClass>() += 0.05f;
+                    break;
+                case "Cobalt":                        // 近战攻速 10%→5%
+                    player.GetAttackSpeed<MeleeDamageClass>() += 0.05f;
+                    break;
+                case "Jungle":                        // 套装：法力消耗 -16% 被抬到 -10%
+                    player.manaCost -= 0.06f;
+                    break;
+                case "Molten":                        // 近战伤害 10%→7%
+                    player.GetDamage<MeleeDamageClass>() += 0.03f;
+                    break;
+                case "SolarFlare":                    // 套装 12% 减伤被直接扣掉
+                    player.endurance += 0.12f;
+                    break;
+            }
         }
         /// <summary>
         /// 回退灾厄对原版护甲单件的削弱（魔法帽/宝石长袍/武道服/蘑菇矿胸甲/侍从衣裤/日耀头/星旋头）。
@@ -588,6 +661,15 @@ namespace CalamityDemutation.Content.Items
             {
                 case ItemID.MagicHat:
                     player.GetDamage<MagicDamageClass>() += 0.06f;
+                    break;
+                case ItemID.JungleHat:                // JungleArmorSetChange.cs:30-31 头件扣 20 法力 / 3 魔法暴击
+                case ItemID.AncientCobaltHelmet:      // 头件的替代件（远古钴头盔）同款削弱
+                    player.statManaMax2 += 20;
+                    player.GetCritChance<MagicDamageClass>() += 3;
+                    break;
+                case ItemID.JunglePants:              // JungleArmorSetChange.cs:34 腿件扣 3 魔法暴击
+                case ItemID.AncientCobaltLeggings:
+                    player.GetCritChance<MagicDamageClass>() += 3;
                     break;
                 case ItemID.AmethystRobe:
                     player.manaCost -= 0.01f;
@@ -646,6 +728,20 @@ namespace CalamityDemutation.Content.Items
             speed *= flightSpeedMult;
             acceleration *= flightAccMult;
         }
+        /// <summary>
+        /// 回退灾厄对原版翅膀「上升速度」的削弱：CalamityGlobalItem.VerticalWingSpeeds 里
+        /// ButterflyWings `maxAscentMultiplier *= 0.6667f`、GhostWings `*= 0.6625f`
+        /// （同处的 constantAscend ×5 是灾厄的加强，不回退），这里除以同一系数还原。
+        /// </summary>
+        public override void VerticalWingSpeeds(Item item, Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
+        {
+            if (ConfigSystem.Instance?.RevertVanillaNerfs != true || !ModLoader.HasMod("CalamityMod"))
+                return;
+            if (item.type == ItemID.ButterflyWings)
+                maxAscentMultiplier /= 0.6667f;
+            else if (item.type == ItemID.GhostWings)
+                maxAscentMultiplier /= 0.6625f;
+        }
         // ── 私有工具 ──
         /// <summary>
         /// 17 级传奇武器名称颜色：按具体武器返回其专属颜色（本模组自有的传奇武器）。
@@ -674,6 +770,10 @@ namespace CalamityDemutation.Content.Items
                 item.defense = defense;
             if (VanillaAxe.TryGetValue(item.type, out int axe))
                 item.axe = axe;
+            if (VanillaPick.TryGetValue(item.type, out int pick))
+                item.pick = pick;
+            if (VanillaHammer.TryGetValue(item.type, out int hammer))
+                item.hammer = hammer;
             if (VanillaValue.TryGetValue(item.type, out int value))
                 item.value = value;
         }
@@ -702,10 +802,6 @@ namespace CalamityDemutation.Content.Items
                     break;
                 case BuffID.MagicPower:
                     player.GetDamage<MagicDamageClass>() += 0.1f;
-                    break;
-                case BuffID.Clairvoyance:
-                    player.GetDamage<MagicDamageClass>() += 0.02f;
-                    player.GetCritChance<MagicDamageClass>() += 2;
                     break;
                 case BuffID.SugarRush:
                     player.moveSpeed += 0.1f;
@@ -739,21 +835,11 @@ namespace CalamityDemutation.Content.Items
                 case BuffID.Werewolf:
                     player.GetAttackSpeed<MeleeDamageClass>() += 0.051f;
                     break;
-                case BuffID.StarInBottle:
-                    if (!player.manaRegenBuff)
-                    {
-                        player.manaRegenDelayBonus += 0.5f;
-                        player.manaRegenBonus += 10;
-                    }
-                    break;
+                // 星瓶（StarInBottle）不处理：灾厄把它的原版加成整体换成「提供法力再生药水效果」
+                // （CalamityGlobalBuff.cs:89-95：置 manaRegenBuff = true 并 -0.5/-10），
+                // 属"重做/加强"而非削弱 —— 按用户口径「对原版加强就不动」。
                 case BuffID.Rabies:
                     player.GetDamage<GenericDamageClass>() += 0.2f;
-                    break;
-                case BuffID.Sharpened:
-                    player.GetArmorPenetration<MeleeDamageClass>() += 7;
-                    break;
-                case BuffID.Panic:
-                    player.moveSpeed += 0.6f;
                     break;
                 case BuffID.NebulaUpDmg1:
                     player.GetDamage<MagicDamageClass>() += 0.075f;
@@ -782,13 +868,25 @@ namespace CalamityDemutation.Content.Items
                     orbs = 3;
                 player.GetAttackSpeed<MeleeDamageClass>() += 0.05f * orbs;
             }
-            // 甲虫耐力（Beetle Shell）：灾厄把每级 multiplicative 减伤改成 10% 加算，这里补回 5% 近似原版 15%
+            // 甲虫耐力（Beetle Shell）：灾厄把原版的「每球 15% 乘算减伤」整条移除，改成
+            // 「每球 10% 加算」（CalamityGlobalBuff.cs:98-104 + BalancingConstants.BeetleShellDRPerBeetle = 0.1f）。
+            // 单纯补 5%/球虽然能凑出 15/30/45 的数字，但加算 ≠ 乘算：玩家另有减伤时会超补
+            // （例：其他减伤 30% + 3 球 → 加算 75% vs 原版乘算 61.5%）。
+            // 这里按乘算等效还原：目标 = 1 - (1 - 其他减伤) × (1 - 15% × 球数)。
+            // 依赖「灾厄先加载先跑」：本模组弱引用 CalamityMod，故此刻 player.endurance 里已含灾厄那 10%/球。
             else if (type >= BuffID.BeetleEndurance1 && type <= BuffID.BeetleEndurance3 && player.beetleDefense)
             {
                 int orbs = player.beetleOrbs < 0 ? 0 : player.beetleOrbs;
                 if (orbs > 3)
                     orbs = 3;
-                player.endurance += 0.05f * orbs;
+                if (orbs > 0)
+                {
+                    float other = player.endurance - 0.1f * orbs;   // 扣掉灾厄那 10%/球 的加算部分
+                    if (other < 0f)
+                        other = 0f;
+                    float target = 1f - (1f - other) * (1f - 0.15f * orbs);
+                    player.endurance += target - player.endurance;
+                }
             }
         }
     }

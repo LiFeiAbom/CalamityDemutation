@@ -1025,9 +1025,16 @@ namespace CalamityDemutation.Players
                     Player.accRunSpeed *= 1.15f / 1.05f;
                     Player.runSlowdown *= 1.75f / 1.5f;
                 }
-                // 腾飞徽章：灾厄把 run acceleration 从 1.75 削弱成 1.25
+                // 腾飞徽章（翱翔徽章）：灾厄把 run acceleration 从 1.75 削弱成 1.25
                 if (Player.empressBrooch)
+                {
                     Player.runAcceleration *= 1.75f / 1.25f;
+                    // 同一件饰品另有两处 IL 削弱，一并回退：
+                    // ① FixJumpHeightBoosts（BalancingILChanges.cs:76-83）把跳跃提速 1.8f 压成 0.5f → 补回 1.3f
+                    // ② RemoveSoaringInsigniaInfiniteWingTime（:32-46）让 empressBrooch 永不被识别 → 无限飞行失效
+                    Player.jumpSpeedBoost += 1.3f;
+                    Player.wingTime = Player.wingTimeMax;
+                }
             }
             // 弑神者冲刺：状态机与位移（移植自灾厄的 PlayerDashEffect 体系，实现在 partial 文件里）
             GodSlayerDashMovement();
@@ -4324,17 +4331,27 @@ namespace CalamityDemutation.Players
                 damageMult += multiplier * 0.2;
             }
             modifiers.FinalDamage *= (float)damageMult;
-            // 召唤师跨职业 nerf 近似回调：灾厄对手持非召唤武器时的召唤弹幕伤害 ×0.75，这里撤销
+            // 召唤师跨职业 nerf 回调：灾厄在 ModifyHitNPCWithProj 里对「手持非召唤职业武器时的召唤弹幕」×0.75
+            // （CalamityPlayerHitHurt.cs:663-678 + Utilities/PlayerUtils.cs:1005-1032 ShouldTriggerSummonPenalty）。
+            // 判据照抄灾厄：必须手持「近战/远程/魔法/投掷」职业武器、可用、非工具/饰品/弹药，
+            // 且不在豁免名单内（禁忌甲+法师武器、真言水晶、撒旦军事件；灾厄自有的 fearmonger/GemTech/
+            // 各类 CalamityItemSets 名单本模组读不到，暂不覆盖）。
             if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod") && proj.CountsAsClass<SummonDamageClass>())
             {
                 Item heldItem = Player.HeldItem;
-                bool heldNonSummonWeapon = heldItem.damage > 0
-                    && !heldItem.CountsAsClass<SummonDamageClass>()
-                    && heldItem.useStyle != ItemUseStyleID.None
-                    && !(heldItem.pick > 0 || heldItem.axe > 0 || heldItem.hammer > 0)
-                    && !heldItem.accessory
-                    && heldItem.ammo == AmmoID.None;
-                if (heldNonSummonWeapon)
+                bool forbiddenWithMagicWeapon = Player.armor[0].type == ItemID.AncientBattleArmorHat
+                    && Player.armor[1].type == ItemID.AncientBattleArmorShirt
+                    && Player.armor[2].type == ItemID.AncientBattleArmorPants
+                    && heldItem.CountsAsClass<MagicDamageClass>();
+                bool crossClassNerfDisabled = forbiddenWithMagicWeapon || profanedCrystalBuffs || Terraria.GameContent.Events.DD2Event.Ongoing;
+                bool heldClassedWeapon = !heldItem.CountsAsClass<SummonDamageClass>()
+                    && (heldItem.CountsAsClass<MeleeDamageClass>()
+                        || heldItem.CountsAsClass<RangedDamageClass>()
+                        || heldItem.CountsAsClass<MagicDamageClass>()
+                        || heldItem.CountsAsClass<ThrowingDamageClass>());
+                bool heldIsTool = heldItem.pick > 0 || heldItem.axe > 0 || heldItem.hammer > 0;
+                if (heldClassedWeapon && heldItem.useStyle != ItemUseStyleID.None && !heldIsTool
+                    && !heldItem.accessory && heldItem.ammo == AmmoID.None && !crossClassNerfDisabled)
                     modifiers.FinalDamage /= 0.75f;
             }
         }
