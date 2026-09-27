@@ -1605,6 +1605,16 @@ Items: {
 			'''
 	}
 
+	StatisNinjaBelt: {
+		DisplayName: Statis' Ninja Belt
+		Tooltip:
+			'''
+			Increases jump speed and allows constant jumping
+			Can climb walls, dash, and dodge attacks
+			5% increased damage and 5% increased critical strike chance
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: Tarragon Breastplate
 		Tooltip:

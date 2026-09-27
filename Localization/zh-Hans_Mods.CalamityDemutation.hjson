@@ -1607,6 +1607,16 @@ Items: {
 			'''
 	}
 
+	StatisNinjaBelt: {
+		DisplayName: 斯塔提斯忍者腰带
+		Tooltip:
+			'''
+			提升跳跃速度，并允许连续跳跃
+			可以爬墙、冲刺并闪避攻击
+			伤害提高 5%，暴击率提高 5%
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: 龙蒿护甲
 		Tooltip:
