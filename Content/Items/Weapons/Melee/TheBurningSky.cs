@@ -30,14 +30,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>每次使用洒下的流星数量（源为 6，本工程按用户口径改成 10）</summary>
         private const int ProjectilesPerBarrage = 10;
         /// <summary>
-        /// 物品基础属性：102×146、伤害 147、14 帧使用与挥舞、击退 2.5、红名、1 铂 80 金、月后稀有度 14。
+        /// 物品基础属性：102×146、伤害 244、14 帧使用与挥舞、击退 2.5、红名、1 铂 80 金、月后稀有度 14。
         /// 挥舞式（Swing + useTurn、不设 noMelee）——与源的法杖式持握不同，见类注释
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 102;
             Item.height = 146;
-            Item.damage = 147;
+            Item.damage = 244;
             Item.DamageType = DamageClass.Melee;
             Item.useTime = 14;
             Item.useAnimation = 14;
