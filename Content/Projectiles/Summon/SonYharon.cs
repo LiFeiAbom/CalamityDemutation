@@ -79,13 +79,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
-            // 每帧按 originalDamage 重算伤害（本工程召唤弹幕的既定做法，渎神系 8 处都这么写）：
-            // 源只在生成那一刻吃属性，之后换装备不涨；补上重算后与面板保持一致。
-            // 加 originalDamage > 0 守卫：万一本条路径没填过 originalDamage，行为退回改动前，不会算成 0
-            if (Projectile.originalDamage > 0)
-            {
-                Projectile.damage = (int)player.GetTotalDamage(Projectile.DamageType).ApplyTo(Projectile.originalDamage);
-            }
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 召唤出场那一下撒 100 颗铜钱尘（DustID.CopperCoin = CI 的 CIDustID.DustCopperCoin，同为原版尘埃 244）
             if (Projectile.localAI[0] == 0f)

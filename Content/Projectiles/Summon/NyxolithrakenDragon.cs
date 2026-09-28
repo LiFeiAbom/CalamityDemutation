@@ -132,15 +132,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// </summary>
         public override void AI()
         {
-            // 每帧按 originalDamage 重算伤害（本工程召唤弹幕的既定做法，渎神系 8 处都这么写）。
-            // 源只在生成时塞了 Item.damage（**未加成**的原值）且此后不再重算，
-            // 会造成「面板按加成显示、实战按原值打」——实测面板 7104、实际只有一两千。
-            // originalDamage 由武器的 Shoot 钉成原始 Item.damage，故重算后即等于面板值
-            if (Projectile.originalDamage > 0)
-            {
-                Player Owner = Main.player[Projectile.owner];
-                Projectile.damage = (int)Owner.GetTotalDamage(Projectile.DamageType).ApplyTo(Projectile.originalDamage);
-            }
             if (spawnSeg)
             {
                 InitSegments();
