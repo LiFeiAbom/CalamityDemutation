@@ -486,6 +486,18 @@ Items: {
 			'''
 	}
 
+	Ataraxia: {
+		DisplayName: Ataraxia
+		Tooltip:
+			'''
+			Fires a main missile and two side missiles when swung
+			The main missile detonates in a small explosion on hit
+			Side missiles split into six needle projectiles on hit
+			True melee strikes trigger a large explosion and a petal ring
+			Striking enemies inflicts Shadowflame
+			'''
+	}
+
 	BadgeofBravery: {
 		DisplayName: Badge of Bravery
 		Tooltip:
@@ -2005,6 +2017,10 @@ Projectiles: {
 	AbyssalCrack.DisplayName: Abyssal Crack
 	AnarchyBeam.DisplayName: Anarchy Beam
 	AstralStarMelee.DisplayName: Astral Star Melee
+	AtaraxiaBoom.DisplayName: Ataraxia Blast
+	AtaraxiaMain.DisplayName: Ataraxia Missile
+	AtaraxiaSide.DisplayName: Ataraxia Blade
+	AtaraxiaSplit.DisplayName: Ataraxia Needle
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
 	BigBustyRose.DisplayName: Big Busty Rose

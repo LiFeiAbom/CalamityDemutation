@@ -467,6 +467,10 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool seaShell = false;
         public bool shadeRegen = false;
+        /// <summary>
+        /// 身上挂着增强版暗影焰（本工程移植的 <c>Shadowflame</c> 减益）：掉血在 UpdateBadLifeRegen 中结算
+        /// </summary>
+        public bool shadowflame = false;
         public bool shadowSpeed = false;
         /// <summary>
         /// 龟壳爆发（ShellBoost 正面增益）激活标记：受击后置位，提供 +90% 移速
@@ -809,6 +813,7 @@ namespace CalamityDemutation.Players
             seaShell = false;
             shellBoost = false;
             shadeRegen = false;
+            shadowflame = false;
             shadowSpeed = false;
             shieldoftheOcean = false;
             shieldSlamDash = ShieldSlamDash.None;
@@ -960,6 +965,7 @@ namespace CalamityDemutation.Players
             sandyWaifu = false;
             seaShell = false;
             shadeRegen = false;
+            shadowflame = false;
             shadowSpeed = false;
             shellBoost = false;
             shieldoftheOcean = false;
@@ -3555,6 +3561,7 @@ namespace CalamityDemutation.Players
         /// 地狱火爆炸（hellfireExplosion）与生命压制（LifeOppress，噬渊鞭挞命中挂的 DoT，PvP 时才在玩家身上）
         /// 各自把回复计时清零后按原值扣 lifeRegen（后者按 CE 原样扣 60；敌怪侧的 4501 点/秒另在
         /// CalamityDemutationGlobalNPC.UpdateLifeRegen 里结算）。
+        /// 增强版暗影焰（本工程移植的 Shadowflame，禅心剑 PvP 命中挂上）按灾厄原值扣 30。
         /// 末尾再调一次 <see cref="OmegaBlueNoLifeRegen"/>，与 UpdateLifeRegen 里那次互为保险
         /// （灾厄两版把欧米茄蓝禁回血写在本钩子里，但本工程观察到本钩子只在回复为负时触发）。
         /// </summary>
@@ -3582,6 +3589,16 @@ namespace CalamityDemutation.Players
                 }
                 Player.lifeRegenTime = 0;
                 Player.lifeRegen -= 60;
+            }
+            // 增强版暗影焰：灾厄原码 ApplyDoTDebuff(shadowflame, 30)，即 lifeRegen -= 30（= 15 HP/s）
+            if (shadowflame)
+            {
+                if (Player.lifeRegen > 0)
+                {
+                    Player.lifeRegen = 0;
+                }
+                Player.lifeRegenTime = 0;
+                Player.lifeRegen -= 30;
             }
             OmegaBlueNoLifeRegen();
         }
@@ -3618,6 +3635,8 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
+            if (shadowflame)
+                Shadowflame.DrawEffects(drawInfo);
             if (demonshadeSetBonus)
             {
                 if (((double)Math.Abs(Player.velocity.X) > 0.05 || (double)Math.Abs(Player.velocity.Y) > 0.05) && !Player.mount.Active)

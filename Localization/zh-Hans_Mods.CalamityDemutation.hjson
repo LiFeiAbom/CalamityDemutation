@@ -485,6 +485,18 @@ Items: {
 			'''
 	}
 
+	Ataraxia: {
+		DisplayName: 禅心剑
+		Tooltip:
+			'''
+			挥舞时射出一枚主弹与两枚侧弹
+			主弹命中后引发小型爆炸
+			侧弹命中后分裂为六枚针叶弹
+			真近战命中触发大型爆炸与花瓣形粒子
+			命中敌人附加暗影焰
+			'''
+	}
+
 	BadgeofBravery: {
 		DisplayName: 勇气勋章
 		Tooltip:
@@ -2010,6 +2022,10 @@ Projectiles: {
 	AbyssalCrack.DisplayName: 深渊裂隙
 	AnarchyBeam.DisplayName: 硫磺光束
 	AstralStarMelee.DisplayName: 星熠星陨
+	AtaraxiaBoom.DisplayName: 禅心爆发
+	AtaraxiaMain.DisplayName: 禅心主弹
+	AtaraxiaSide.DisplayName: 禅心侧弹
+	AtaraxiaSplit.DisplayName: 禅心针叶弹
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
 	BigBustyRose.DisplayName: 硕大玫瑰

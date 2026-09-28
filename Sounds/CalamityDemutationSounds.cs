@@ -106,5 +106,7 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle YharonInfernado = new("CalamityDemutation/Sounds/Item/YharonInfernado");
         /// <summary>电浆烈焰（灾厄原名 ELRFire）：熵之舞挥砍中每次射出熵之飞刃时播放，音高按第几发递增、音量 0.45</summary>
         public static readonly SoundStyle ELRFire = new("CalamityDemutation/Sounds/Item/ELRFire");
+        /// <summary>掷出咒刃（灾厄原名 CursedDaggerThrow）：禅心剑真近战命中时播放，每次挥砍只响一次（灾厄原为 Ataraxia 的 hitsound 分支）</summary>
+        public static readonly SoundStyle CursedDaggerThrow = new("CalamityDemutation/Sounds/Item/CursedDaggerThrow") { Volume = 0.5f, Pitch = 0.9f, PitchVariance = 0.2f, MaxInstances = -1 };
     }
 }
