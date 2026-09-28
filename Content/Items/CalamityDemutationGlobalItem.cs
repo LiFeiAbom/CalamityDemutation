@@ -476,6 +476,8 @@ namespace CalamityDemutation.Content.Items
                     {
                         player.HealEffect(5, true);
                     }
+                    if (player.statLife > player.statLifeMax2)
+                        player.statLife = player.statLifeMax2;
                 }
             }
             return true;
@@ -562,6 +564,8 @@ namespace CalamityDemutation.Content.Items
                     int healAmount = Main.rand.Next(3) + 1;
                     player.statLife += healAmount;
                     player.HealEffect(healAmount);
+                    if (player.statLife > player.statLifeMax2)
+                        player.statLife = player.statLifeMax2;
                 }
             }
             // 弑神近战（godSlayerMelee）：生成弑神飞镖（与 OnHitNPCWithItem 同构）

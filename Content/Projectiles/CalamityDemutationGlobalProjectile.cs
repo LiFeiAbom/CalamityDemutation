@@ -331,6 +331,8 @@ namespace CalamityDemutation.Content.Projectiles
                         int healAmount = Main.rand.Next(3) + 1;
                         attacker.statLife += healAmount;
                         attacker.HealEffect(healAmount);
+                        if (attacker.statLife > attacker.statLifeMax2)
+                            attacker.statLife = attacker.statLifeMax2;
                     }
                 }
                 // 弑神近战（godSlayerMelee）：生成弑神飞镖（与 OnHitNPCWithProj 同构）

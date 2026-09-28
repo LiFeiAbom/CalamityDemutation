@@ -100,6 +100,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             int healAmount = Main.rand.Next(4) + 5;
             player.statLife += healAmount;
             player.HealEffect(healAmount);
+            if (player.statLife > player.statLifeMax2)
+                player.statLife = player.statLifeMax2;
         }
         /// <summary>
         /// 命中玩家（PvP）：与 OnHitNPC 同构——按命中计数决定炸爆炸 / 甩彗星，最后挂元素减益并回血。
@@ -140,6 +142,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             int healAmount = Main.rand.Next(4) + 5;
             player.statLife += healAmount;
             player.HealEffect(healAmount);
+            if (player.statLife > player.statLifeMax2)
+                player.statLife = player.statLifeMax2;
         }
         /// <summary>掉在地上时画发光层</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)

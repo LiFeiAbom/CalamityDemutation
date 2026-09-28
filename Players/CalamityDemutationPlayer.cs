@@ -4428,12 +4428,16 @@ namespace CalamityDemutation.Players
                 int healAmt = (int)modifiers.SourceDamage.Base / 20;
                 Player.statLife += healAmt;
                 Player.HealEffect(healAmt);
+                if (Player.statLife > Player.statLifeMax2)
+                    Player.statLife = Player.statLifeMax2;
             }
             if (sponge)
             {
                 int healAmt = (int)modifiers.SourceDamage.Base / 16;
                 Player.statLife += healAmt;
                 Player.HealEffect(healAmt);
+                if (Player.statLife > Player.statLifeMax2)
+                    Player.statLife = Player.statLifeMax2;
             }
             if (profanedSoulArtifact)
             {
@@ -5143,6 +5147,8 @@ namespace CalamityDemutation.Players
                     int healAmount = (Main.rand.Next(3) + 1);
                     Player.statLife += healAmount;
                     Player.HealEffect(healAmount);
+                    if (Player.statLife > Player.statLifeMax2)
+                        Player.statLife = Player.statLifeMax2;
                 }
             }
             int weaponDamage = Player.HeldItem.damage;
@@ -5288,6 +5294,8 @@ namespace CalamityDemutation.Players
                     int healAmount = (Main.rand.Next(3) + 1);
                     Player.statLife += healAmount;
                     Player.HealEffect(healAmount);
+                    if (Player.statLife > Player.statLifeMax2)
+                        Player.statLife = Player.statLifeMax2;
                 }
             }
             if (proj.CountsAsClass<MeleeDamageClass>() && silvaMelee && Main.rand.NextBool(4))
