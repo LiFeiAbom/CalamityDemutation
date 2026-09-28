@@ -2,7 +2,7 @@ using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories.StatLife
+namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 血契 - 生命型饰品

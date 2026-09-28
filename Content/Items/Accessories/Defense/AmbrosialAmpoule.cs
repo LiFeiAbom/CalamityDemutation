@@ -1,6 +1,5 @@
 ﻿using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.Function;
-using CalamityDemutation.Content.Items.Accessories.StatLife;
 using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;

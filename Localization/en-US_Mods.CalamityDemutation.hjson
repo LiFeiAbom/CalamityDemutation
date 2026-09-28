@@ -643,8 +643,8 @@ Items: {
 			'''
 	}
 
-	CelestialWingsOnion: {
-		DisplayName: Celestial Wings Onion
+	MoonPact: {
+		DisplayName: Moon Pact
 		Tooltip:
 			'''
 			Grants an additional slot for wings
@@ -2087,6 +2087,26 @@ Items: {
 			Heals you over time while debuffed, but slows down the longer it lasts
 			Greatly reduces the damage dealt by damage-over-time debuffs
 			'''
+	}
+
+	SugarheartCitrus: {
+		DisplayName: Sugarheart Citrus
+		Tooltip: Permanently increases melee attack speed by 4% (one time only per character)
+	}
+
+	OrganicPod: {
+		DisplayName: Organic Pod
+		Tooltip: Permanently increases damage reduction by 4% (one time only per character)
+	}
+
+	FreshBlueberry: {
+		DisplayName: Fresh Blueberry
+		Tooltip: Permanently increases armor penetration by 4 (one time only per character)
+	}
+
+	MoltenMagmaFruit: {
+		DisplayName: Molten Magma Fruit
+		Tooltip: Permanently increases damage by 4%, critical strike chance by 4% and armor penetration by 4 (one time only per character)
 	}
 }
 

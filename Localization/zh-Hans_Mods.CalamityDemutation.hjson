@@ -642,8 +642,8 @@ Items: {
 			'''
 	}
 
-	CelestialWingsOnion: {
-		DisplayName: 天界之翼洋葱
+	MoonPact: {
+		DisplayName: 拜月契约
 		Tooltip:
 			'''
 			获得一个额外的翅膀栏
@@ -2092,6 +2092,26 @@ Items: {
 			带减益期间会持续回血，但拖得越久回得越慢
 			大幅减免持续伤害类减益造成的伤害
 			'''
+	}
+
+	SugarheartCitrus: {
+		DisplayName: 糖心柑橘
+		Tooltip: 永久提高 4% 近战攻击速度（每个角色仅限一次）
+	}
+
+	OrganicPod: {
+		DisplayName: 有机豆荚
+		Tooltip: 永久提高 4% 伤害减免（每个角色仅限一次）
+	}
+
+	FreshBlueberry: {
+		DisplayName: 新鲜蓝莓
+		Tooltip: 永久提高 4 点护甲穿透（每个角色仅限一次）
+	}
+
+	MoltenMagmaFruit: {
+		DisplayName: 熔岩浆果
+		Tooltip: 永久提高 4% 伤害、4% 暴击率与 4 点护甲穿透（每个角色仅限一次）
 	}
 }
 

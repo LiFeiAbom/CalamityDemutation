@@ -1,6 +1,6 @@
 ﻿using CalamityDemutation.Content.Items.Accessories.JobAcc.Magic;
 using CalamityDemutation.Content.Items.Accessories.Movement;
-using CalamityDemutation.Content.Items.Accessories.StatLife;
+using CalamityDemutation.Content.Items.Accessories.Defense;
 using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;

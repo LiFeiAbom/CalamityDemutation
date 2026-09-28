@@ -1,11 +1,10 @@
-using CalamityDemutation.Content.Items.Accessories.Defense;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories
+namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 无暇粹魂晶（Purity）—— 灾厄 <b>2.0.3.9</b> 口径（照搬 2.0.3.9 的 <c>Purity</c>，

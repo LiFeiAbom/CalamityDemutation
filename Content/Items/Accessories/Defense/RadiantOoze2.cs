@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories.StatLife
+namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 光辉软泥（古）—— 灾厄 <b>2.0.3.9</b> 口径的光辉软泥（照搬 2.0.3.9 的 <c>RadiantOoze</c>）。

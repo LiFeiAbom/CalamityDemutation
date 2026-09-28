@@ -3,7 +3,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories.StatLife
+namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 生命果冻 - 生命型饰品

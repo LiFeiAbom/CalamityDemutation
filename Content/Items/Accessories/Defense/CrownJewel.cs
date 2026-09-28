@@ -2,7 +2,7 @@ using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories
+namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 王冠宝石（CrownJewel）—— 灾厄 <b>2.0.3.9</b> 口径（照搬 2.0.3.9 的 <c>CrownJewel</c>）。

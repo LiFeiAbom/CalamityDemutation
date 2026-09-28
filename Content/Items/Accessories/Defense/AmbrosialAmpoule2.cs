@@ -1,4 +1,3 @@
-using CalamityDemutation.Content.Items.Accessories.StatLife;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;

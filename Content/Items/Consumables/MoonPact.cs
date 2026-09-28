@@ -1,16 +1,26 @@
 using CalamityDemutation.Players;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Materials
+namespace CalamityDemutation.Content.Items.Consumables
 {
     /// <summary>
-    /// 天界翅膀洋葱：天界洋葱（CelestialOnion）的变体。专家/大师模式消耗品，
+    /// 拜月契约（MoonPact）—— 天界洋葱（CelestialOnion）的变体。专家/大师模式消耗品，
     /// 使用后永久开启一个【只放翅膀】的专用饰品栏。
     /// 使用姿势/判定/网络同步逻辑与 CelestialOnion 完全对称。
+    /// <para>
+    /// 贴图取自 Fargo's Souls 的 <c>MutantsPact</c>，是 **36×252 的 6 帧纵向动画条**（每帧 36×42）——
+    /// 因此必须注册纵向动画，否则会被当成一整张静图来画。
+    /// </para>
     /// </summary>
-    internal class CelestialWingsOnion : ModItem
+    internal class MoonPact : ModItem
     {
+        /// <summary>注册 6 帧纵向动画（贴图 36×252、每帧 36×42）；不注册则整条画成一张静图</summary>
+        public override void SetStaticDefaults()
+        {
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 6));
+        }
         /// <summary>
         /// 物品基础属性：尺寸、专家标记、堆叠上限与使用姿势/音效（与天界洋葱一致）
         /// </summary>
@@ -34,7 +44,7 @@ namespace CalamityDemutation.Content.Items.Materials
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 仅在专家/大师模式，且尚未开启翅膀栏时可用
-            if (!Main.expertMode || modPlayer.extraWingSlot)   // Main.expertMode 同时覆盖专家与大师；extraWingSlot 为“已使用翅膀洋葱”标志
+            if (!Main.expertMode || modPlayer.extraWingSlot)   // Main.expertMode 同时覆盖专家与大师；extraWingSlot 为“已使用拜月契约”标志
             {
                 return false;                                   // 非专家世界，或已解锁 → 禁止使用
             }
@@ -42,7 +52,7 @@ namespace CalamityDemutation.Content.Items.Materials
         }
         /// <summary>
         /// 执行解锁：处于使用动画且尚未解锁时，置位 extraWingSlot 永久标志并同步该玩家状态给所有端。
-        /// 标志随存档持久化（见 CalamityDemutationPlayer），由 CelestialWingsOnionSlot 读取以显示专用翅膀栏。
+        /// 标志随存档持久化（见 CalamityDemutationPlayer），由 MoonPactSlot 读取以显示专用翅膀栏。
         /// </summary>
         public override bool? UseItem(Player player)
         {
@@ -56,13 +66,13 @@ namespace CalamityDemutation.Content.Items.Materials
         }
     }
     /// <summary>
-    /// 天界翅膀洋葱提供的专用翅膀栏。只收翅膀类物品；
+    /// 拜月契约提供的专用翅膀栏。只收翅膀类物品；
     /// 翅膀的飞行效果由 ModAccessorySlot 默认 ApplyEquipEffects 自动应用，无需额外逻辑。
     /// </summary>
-    internal class CelestialWingsOnionSlot : ModAccessorySlot
+    internal class MoonPactSlot : ModAccessorySlot
     {
         /// <summary>
-        /// 该专用翅膀栏是否启用：玩家对象有效且已使用天界翅膀洋葱（extraWingSlot）时启用。
+        /// 该专用翅膀栏是否启用：玩家对象有效且已使用拜月契约（extraWingSlot）时启用。
         /// 与灾厄模组是否加载、世界进度/Boss 击杀均无关。
         /// </summary>
         public override bool IsEnabled()

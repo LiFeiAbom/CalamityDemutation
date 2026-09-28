@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Buffs.NegativeBuffs;
-using CalamityDemutation.Content.Items.Accessories;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.Defense;
@@ -9,8 +8,8 @@ using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Summon;
 using CalamityDemutation.Content.Items.Accessories.Movement;
-using CalamityDemutation.Content.Items.Accessories.StatLife;
 using CalamityDemutation.Content.Items.Materials;
+using CalamityDemutation.Content.Items.Consumables;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
@@ -200,7 +199,7 @@ namespace CalamityDemutation.NPCs
             }
             else if (npc.type == NPCID.WallofFlesh)
             {
-                npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialWingsOnion>(), 1));
+                npcLoot.Add(new CommonDrop(ModContent.ItemType<MoonPact>(), 1));
             }
             // 被附身铠甲属于原版怪，其掉落随原版链注册
             else if (npc.type == NPCID.PossessedArmor)
@@ -322,6 +321,16 @@ namespace CalamityDemutation.NPCs
             if (shop.NpcType == NPCID.TravellingMerchant && Main.moonPhase == 0)
             {
                 shop.Add(ModContent.ItemType<FrostBarrier>());
+            }
+            // 四件永久增益消耗品挂商人处，按 Boss 进度解锁：
+            // 前三件要困难模式（= 击败血肉之墙），熔岩浆果要击败月球领主。
+            // 用的都是 tML 内置条件，故无需自定义 Conditions 本地化键
+            if (shop.NpcType == NPCID.Merchant)
+            {
+                shop.Add(ModContent.ItemType<SugarheartCitrus>(), Condition.Hardmode);
+                shop.Add(ModContent.ItemType<OrganicPod>(), Condition.Hardmode);
+                shop.Add(ModContent.ItemType<FreshBlueberry>(), Condition.Hardmode);
+                shop.Add(ModContent.ItemType<MoltenMagmaFruit>(), Condition.DownedMoonLord);
             }
         }
         /// <summary>

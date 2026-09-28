@@ -9,7 +9,6 @@ using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Magic;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Summon;
-using CalamityDemutation.Content.Items.Accessories.StatLife;
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;

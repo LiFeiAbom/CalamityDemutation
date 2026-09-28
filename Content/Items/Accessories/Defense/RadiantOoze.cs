@@ -2,7 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Accessories.StatLife
+namespace CalamityDemutation.Content.Items.Accessories.Defense
 {
     /// <summary>
     /// 光辉软泥 - 生命型饰品

@@ -1,6 +1,5 @@
 using CalamityDemutation.Content.Items.Accessories.Defense;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
-using CalamityDemutation.Content.Items.Accessories.StatLife;
 using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;

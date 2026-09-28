@@ -2,7 +2,7 @@ using CalamityDemutation.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace CalamityDemutation.Content.Items.Materials
+namespace CalamityDemutation.Content.Items.Consumables
 {
     /// <summary>
     /// 天界洋葱：专家/大师模式消耗品，使用后永久开启一个额外饰品栏
