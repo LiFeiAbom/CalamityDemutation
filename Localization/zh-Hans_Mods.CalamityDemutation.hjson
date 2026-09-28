@@ -129,7 +129,7 @@ Buffs: {
 
 	WyrmWhipDebuff: {
 		DisplayName: 噬渊标记
-		Description: ""
+		Description: 噬渊之鞭留下的标记，你的仆从攻击该目标时造成额外伤害
 	}
 
 	YharimPower: {
@@ -722,6 +722,16 @@ Items: {
 		Tooltip: 身处猩红之地时伤害减免提高 7%，防御 +3
 	}
 
+	CrownJewel: {
+		DisplayName: 王冠宝石
+		Tooltip:
+			'''
+			防御 +4
+			生命再生提高 1 HP/s
+			身上带有任何减益时，再生进一步提高到 2.5 HP/s，并大幅加快再生回复速度
+			'''
+	}
+
 	CryoStone: {
 		Tooltip:
 			'''
@@ -1220,6 +1230,58 @@ Items: {
 			'''
 	}
 
+	HoneyDew2: {
+		DisplayName: 蜜露（古）
+		Tooltip:
+			'''
+			最大生命值提高 30
+			永远享有蜂蜜式生命再生
+			泡在蜂蜜中静止不动时再生更快
+			中毒与病症类减益的持续时间减半
+			'''
+	}
+
+	LivingDew2: {
+		DisplayName: 生命露（古）
+		Tooltip:
+			'''
+			最大生命值提高 50
+			继承蜜露（古）的全部效果
+			减益时长减半额外覆盖火系减益
+			'''
+	}
+
+	RadiantOoze2: {
+		DisplayName: 光辉软泥（古）
+		Tooltip:
+			'''
+			生命值越低，生命再生越高（满血 +2 HP/s，空血 +6 HP/s）
+			发出暖黄色的光
+			'''
+	}
+
+	AmbrosialAmpoule2: {
+		DisplayName: 甘露安瓿（古）
+		Tooltip:
+			'''
+			最大生命值提高 70
+			继承生命露（古）的全部效果（含蜂蜜式回生与减益时长减半）
+			生命值越低，生命再生越高（满血 +2 HP/s，空血 +6 HP/s）
+			静止不动时再生更快，并发出暖黄色的光
+			'''
+	}
+
+	InfectedJewel: {
+		DisplayName: 感染宝石
+		Tooltip:
+			'''
+			防御 +6
+			生命再生提高 1 HP/s
+			身上带有减益时，再生进一步提高（合计 3 HP/s），并大幅加快再生回复速度
+			每多一种减益额外获得 5 点防御（首个减益给 16 点）；减益消退后每秒回落 1 点
+			'''
+	}
+
 	LeadCore: {
 		DisplayName: 铅核
 		Tooltip: 免疫酸雨减益
@@ -1266,6 +1328,11 @@ Items: {
 			最大法力 +20
 			静止不动时提升法力再生
 			'''
+	}
+
+	MurkyPaste: {
+		DisplayName: 污浊糊
+		Tooltip: 从丛林的黏滑生物身上刮下的稠物
 	}
 
 	NebulousCore: {
@@ -1321,7 +1388,7 @@ Items: {
 
 	NihilityFragments: {
 		DisplayName: 虚无残片
-		Tooltip: ""
+		Tooltip: 虚无之中凝结出的碎裂残片
 	}
 
 	Nyxolithraken: {
@@ -1741,6 +1808,11 @@ Items: {
 		Tooltip: 赋予所有仆从暗影焰之力
 	}
 
+	TrapperBulb: {
+		DisplayName: 捕蝇草球茎
+		Tooltip: 从捕蝇草类生物体内取出的坚韧球茎
+	}
+
 	TrueArkoftheAncients: {
 		DisplayName: 真·远古方舟
 		Tooltip: 为荡涤一切邪恶而锻造的天堂之刃
@@ -2005,6 +2077,22 @@ Items: {
 			[c/d791f2:鞭子] [c/e1b6f2:攻击时额外以亵渎水晶鞭打]
 			'''
 	}
+
+	Purity: {
+		DisplayName: 无暇粹魂晶
+		Tooltip:
+			'''
+			防御 +12
+			伤害减免提高 12%
+			免疫击退
+			最大生命值提高 100
+			继承甘露安瓿（古）的全部效果
+			生命值越低再生越高（满血 +3 HP/s，空血 +7 HP/s）
+			身上每多一种减益，额外获得 8 点防御（首个减益给 20 点）；减益消退后每秒回落 1 点
+			带减益期间会持续回血，但拖得越久回得越慢
+			大幅减免持续伤害类减益造成的伤害
+			'''
+	}
 }
 
 Keybinds: {
@@ -2170,7 +2258,7 @@ Projectiles: {
 	YstralynProj.DisplayName: 噬渊鞭挞
 	NxCrack.DisplayName: 深渊撕裂
 	NyxolithrakenDragon.DisplayName: 沧溟渊龙
-	// SonYharon.DisplayName: Son Yharon
+	SonYharon.DisplayName: 犽戎之子
 }
 
 Systems: {

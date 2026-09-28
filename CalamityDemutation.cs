@@ -28,6 +28,17 @@ namespace CalamityDemutation
         /// </summary>
         public static List<int> debuffList;
         /// <summary>
+        /// 「病症 / 中毒类」debuff ID 列表（照抄灾厄 CalamityLists.sicknessDebuffList）：
+        /// 供（古）链蜜露系的「减益时长减半」使用。同样把现代版与经典版的专属减益都尽量收进来。
+        /// ⚠️ 注意现代版里星辉感染的类名是 AstralInfectionDebuff（不是 AstralInfection）
+        /// </summary>
+        public static List<int> sicknessDebuffList;
+        /// <summary>
+        /// 「火系 / 燃烧类」debuff ID 列表（照抄灾厄 CalamityLists.fireDebuffList）：
+        /// 供（古）链活露 LivingDew2 及以上的「减益时长减半」扩大覆盖范围
+        /// </summary>
+        public static List<int> fireDebuffList;
+        /// <summary>
         /// 模组单例：供全局静态访问当前 Mod 实例
         /// </summary>
         public static CalamityDemutation Instance;
@@ -72,6 +83,8 @@ namespace CalamityDemutation
             beeProjectileList = null;
             beeEnemyList = null;
             debuffList = null;
+            sicknessDebuffList = null;
+            fireDebuffList = null;
             // 清空单例引用，避免卸载后模组实例仍被静态字段挂住
             // (对应日志里的 "mod class still using memory" 警告)
             Instance = null;
@@ -444,6 +457,64 @@ namespace CalamityDemutation
                 debuffList.Add(buffC10.Type);
             if (ModContent.TryFind("CalamityModClassicPreTrailer", "MarkedforDeath", out ModBuff buffC11))
                 debuffList.Add(buffC11.Type);
+            // 「病症 / 中毒类」表（照抄灾厄 sicknessDebuffList → Poisoned / Venom / SulphuricPoisoning /
+            // AstralInfection / Plague / AbsorberAffliction / WhisperingDeath / Irradiated）；
+            // 经查经典版只有 Plague / WhisperingDeath / Irradiated，其余为现代版专有
+            sicknessDebuffList =
+            [
+                BuffID.Poisoned,
+                BuffID.Venom
+            ];
+            if (ModContent.TryFind("CalamityMod", "SulphuricPoisoning", out ModBuff sick1))
+                sicknessDebuffList.Add(sick1.Type);
+            if (ModContent.TryFind("CalamityMod", "AstralInfectionDebuff", out ModBuff sick2))
+                sicknessDebuffList.Add(sick2.Type);
+            if (ModContent.TryFind("CalamityMod", "Plague", out ModBuff sick3))
+                sicknessDebuffList.Add(sick3.Type);
+            if (ModContent.TryFind("CalamityMod", "AbsorberAffliction", out ModBuff sick4))
+                sicknessDebuffList.Add(sick4.Type);
+            if (ModContent.TryFind("CalamityMod", "WhisperingDeath", out ModBuff sick5))
+                sicknessDebuffList.Add(sick5.Type);
+            if (ModContent.TryFind("CalamityMod", "Irradiated", out ModBuff sick6))
+                sicknessDebuffList.Add(sick6.Type);
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "Plague", out ModBuff sickC1))
+                sicknessDebuffList.Add(sickC1.Type);
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "WhisperingDeath", out ModBuff sickC2))
+                sicknessDebuffList.Add(sickC2.Type);
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "Irradiated", out ModBuff sickC3))
+                sicknessDebuffList.Add(sickC3.Type);
+            // 「火系 / 燃烧类」表（照抄灾厄 fireDebuffList）；本工程自己移植的 Shadowflame 也在源清单里，
+            // 故一并收进来（它就是源里那条 Shadowflame 的对应物）
+            fireDebuffList =
+            [
+                BuffID.OnFire,
+                BuffID.OnFire3,
+                BuffID.Burning,
+                BuffID.CursedInferno,
+                BuffID.ShadowFlame,
+                ModContent.BuffType<Content.Buffs.NegativeBuffs.Shadowflame>()
+            ];
+            if (ModContent.TryFind("CalamityMod", "SearingLava", out ModBuff fire1))
+                fireDebuffList.Add(fire1.Type);
+            if (ModContent.TryFind("CalamityMod", "BrimstoneFlames", out ModBuff fire2))
+                fireDebuffList.Add(fire2.Type);
+            if (ModContent.TryFind("CalamityMod", "HolyFlames", out ModBuff fire3))
+                fireDebuffList.Add(fire3.Type);
+            if (ModContent.TryFind("CalamityMod", "GodSlayerInferno", out ModBuff fire4))
+                fireDebuffList.Add(fire4.Type);
+            if (ModContent.TryFind("CalamityMod", "Dragonfire", out ModBuff fire5))
+                fireDebuffList.Add(fire5.Type);
+            if (ModContent.TryFind("CalamityMod", "WeakBrimstoneFlames", out ModBuff fire6))
+                fireDebuffList.Add(fire6.Type);
+            if (ModContent.TryFind("CalamityMod", "BanishingFire", out ModBuff fire7))
+                fireDebuffList.Add(fire7.Type);
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "BrimstoneFlames", out ModBuff fireC1))
+                fireDebuffList.Add(fireC1.Type);
+            // 经典版没有 HolyFlames，对应物叫 HolyLight（与本文件既有 debuffList 的写法一致）
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "HolyLight", out ModBuff fireC2))
+                fireDebuffList.Add(fireC2.Type);
+            if (ModContent.TryFind("CalamityModClassicPreTrailer", "GodSlayerInferno", out ModBuff fireC3))
+                fireDebuffList.Add(fireC3.Type);
         }
         // ── 私有工具 ──
         /// <summary>

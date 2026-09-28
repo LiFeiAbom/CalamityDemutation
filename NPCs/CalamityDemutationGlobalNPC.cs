@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Buffs.NegativeBuffs;
+using CalamityDemutation.Content.Items.Accessories;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.Defense;
@@ -205,6 +206,20 @@ namespace CalamityDemutation.NPCs
             else if (npc.type == NPCID.PossessedArmor)
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<PsychoticAmulet>(), 200, 150));
+            }
+            // 王冠宝石：照源挂史莱姆王（普通 10% / 专家宝藏袋 10%，用 NormalvsExpert 一条写清）
+            else if (npc.type == NPCID.KingSlime)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<CrownJewel>(), 10, 10));
+            }
+            // 本工程自有的丛林材料（供「（古）」链）——掉落者与概率照 2.0.7.2 的 CalamityGlobalNPCLoot
+            else if (npc.type == NPCID.JungleSlime || npc.type == NPCID.SpikedJungleSlime || npc.type == NPCID.Arapaima)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<MurkyPaste>(), 3, 2));
+            }
+            else if (npc.type == NPCID.AngryTrapper)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<TrapperBulb>(), 2, 1));
             }
             // ===== 现代版灾厄（CalamityMod）：仅灾厄专属 NPC 的掉落规则（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))

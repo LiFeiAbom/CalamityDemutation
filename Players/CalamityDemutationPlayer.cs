@@ -390,6 +390,65 @@ namespace CalamityDemutation.Players
         public bool hellfireExplosion = false;
         public bool holyWrath = false;
         /// <summary>
+        /// 【（古）链】永远享有蜂蜜式回血：即使不在蜂蜜里也按原版蜂蜜规则回血（对应灾厄 alwaysHoneyRegen）。
+        /// 由 2.0.3.9 口径的蜜露系三件（HoneyDew2 / LivingDew2 / AmbrosialAmpoule2 + 后续的 Purity）置位，
+        /// 与上面的旧件标记完全独立、互不影响
+        /// </summary>
+        public bool alwaysHoneyRegen = false;
+        /// <summary>
+        /// 【（古）链】蜂蜜系站桩加速回复：泡在蜂蜜里且静止时按 turbo 档回血（对应灾厄 honeyTurboRegen）
+        /// </summary>
+        public bool honeyTurboRegen = false;
+        /// <summary>
+        /// 【（古）链】病症/中毒类减益时长减半（对应灾厄 honeyDewHalveDebuffs）；
+        /// 后续的 LivingDew2 会追加火系、Purity 会追加整张 debuffList
+        /// </summary>
+        public bool honeyDewHalveDebuffs = false;
+        /// <summary>
+        /// 【（古）链】在病症类之外，再把火系/燃烧类减益的时长也减半（对应灾厄 livingDewHalveDebuffs）
+        /// </summary>
+        public bool livingDewHalveDebuffs = false;
+        /// <summary>
+        /// 【（古）链】已装备光辉软泥（古）：按「缺失生命比例」给再生（对应灾厄 rOoze）。
+        /// 注意与旧件的 <c>radiantOoze</c> 是**不同的标记**，两者互不影响
+        /// </summary>
+        public bool rOoze = false;
+        /// <summary>
+        /// 【（古）链】已装备甘露安瓿（古）：按「缺失生命比例」给再生 + 置位蜂蜜系三标记（对应灾厄 aAmpoule）。
+        /// 与旧件的 <c>ambrosialAmpoule</c> 是不同标记
+        /// </summary>
+        public bool aAmpoule = false;
+        /// <summary>
+        /// 【（古）链】已装备无暇粹魂晶：减益免疫/减半、动态防御、再生等一大套（对应灾厄 purity）。
+        /// 本标记优先级高于 infectedJewel 与 crownJewel（三者互斥，源的 else-if 链）
+        /// </summary>
+        public bool purity = false;
+        /// <summary>
+        /// 【（古）链】已装备王冠宝石：基础 +2 再生，带减益时再 +3 并抬 lifeRegenTime（对应灾厄 crownJewel）
+        /// </summary>
+        public bool crownJewel = false;
+        /// <summary>
+        /// 【（古）链】已装备感染宝石：+2 再生、带减益时 +4 并抬 lifeRegenTime，另给动态防御（对应灾厄 infectedJewel）
+        /// </summary>
+        public bool infectedJewel = false;
+        /// <summary>
+        /// 【（古）链】宝石系动态防御存量（对应灾厄 jewelBonusDefense）：
+        /// 随身上减益数上涨（感染宝石 16+(N−1)×5、无暇粹魂晶 20+(N−1)×8），减益消失后每 60 帧回落 1 点。
+        /// ⚠️ **跨帧累积，绝不能放进 ResetEffects**（放进去会每帧清零、永远涨不起来）
+        /// </summary>
+        public int jewelBonusDefense = 0;
+        /// <summary>
+        /// 【（古）链】无暇粹魂晶「带减益回血节拍惩罚」的累计帧数（对应灾厄 PurityHealSlowdownFrames）：
+        /// 带减益越久，直接回血的节拍从 12 帧逐步拉长（上限 180 帧）；减益清空后逐帧回落。
+        /// ⚠️ 跨帧累积，**绝不能放进 ResetEffects**；源只在死亡时清零，本工程同（放 UpdateDead）
+        /// </summary>
+        public int purityHealSlowdownFrames = 0;
+        /// <summary>
+        /// 【（古）链】无暇粹魂晶对持续伤害减益的抵消量（近似值，理由见 UpdateBadLifeRegen 里的长注释）。
+        /// 单列成常量就是为了方便拍板调整——源里各减益的扣量其实不同，4~50 不等
+        /// </summary>
+        private const int PurityDoTOffset = 24;
+        /// <summary>
         /// 已装备蜜露：丛林区获得回血/防御/减伤，免疫毒液与中毒，并附加蜂蜜式生命回复
         /// </summary>
         public bool honeyDew = false;
@@ -705,6 +764,13 @@ namespace CalamityDemutation.Players
             afflicted = false;
             affliction = false;
             allWaifus = false;
+            alwaysHoneyRegen = false;
+            // （古）链的其余标记（与上面旧件的同族标记无关，各自独立）
+            aAmpoule = false;
+            crownJewel = false;
+            infectedJewel = false;
+            purity = false;
+            rOoze = false;
             amalgamatedBrain = false;
             ambrosialAmpoule = false;
             amidiasSpark = false;
@@ -771,9 +837,12 @@ namespace CalamityDemutation.Players
             hellfireExplosion = false;
             holyWrath = false;
             honeyDew = false;
+            honeyDewHalveDebuffs = false;
+            honeyTurboRegen = false;
             levianthanAmbergris = false;
             lifeJelly = false;
             livingDew = false;
+            livingDewHalveDebuffs = false;
             lureofEnthrallment = false;
             manaJelly = false;
             nebulousCore = false;
@@ -855,6 +924,13 @@ namespace CalamityDemutation.Players
             afflicted = false;
             affliction = false;
             allWaifus = false;
+            alwaysHoneyRegen = false;
+            // （古）链的其余标记（与上面旧件的同族标记无关，各自独立）
+            aAmpoule = false;
+            crownJewel = false;
+            infectedJewel = false;
+            purity = false;
+            rOoze = false;
             amalgamatedBrain = false;
             ambrosialAmpoule = false;
             amidiasSpark = false;
@@ -929,9 +1005,12 @@ namespace CalamityDemutation.Players
             hellfireExplosion = false;
             holyWrath = false;
             honeyDew = false;
+            honeyDewHalveDebuffs = false;
+            honeyTurboRegen = false;
             levianthanAmbergris = false;
             lifeJelly = false;
             livingDew = false;
+            livingDewHalveDebuffs = false;
             lureofEnthrallment = false;
             manaJelly = false;
             nebulousCore = false;
@@ -974,6 +1053,7 @@ namespace CalamityDemutation.Players
             shieldSlamDashCooldown = 0;
             sigilofCalamitas = false;
             silvaCountdown = 600;
+            purityHealSlowdownFrames = 0;
             silvaHitCounter = 0;
             silvaMelee = false;
             silvaSet = false;
@@ -3484,6 +3564,105 @@ namespace CalamityDemutation.Players
                     }
                 }
             }
+            // （古）链：蜂蜜系站桩加速回复。照抄灾厄 2.0.3.9 站桩区里 honeyTurboRegen 那一档
+            // （需泡在蜂蜜里 honeyWet + 静止；阈值 90 帧、turbo 档位 3、尘用 Honey2、负回复先减半）。
+            // 注：本方法上面 shadeRegen / photosynthesis 两段当年移植时改用了工程自定的 boss 相关缩放，
+            // 这一段按源原样写，不与它们共用那套缩放
+            if (honeyTurboRegen && Player.honeyWet && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
+            {
+                if (Player.lifeRegen < 0)
+                {
+                    Player.lifeRegen /= 2;
+                }
+                if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < 1800)
+                {
+                    Player.lifeRegenTime = 1800;
+                }
+                Player.lifeRegen += 3;
+                Player.lifeRegenTime += 3;
+                if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
+                {
+                    Player.lifeRegenCount++;
+                    if (Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.Next(30) == 0)
+                    {
+                        int honeyDust = Dust.NewDust(Player.position, Player.width, Player.height, DustID.Honey2, 0f, 0f, 200, default(Color), 1f);
+                        Main.dust[honeyDust].noGravity = true;
+                        Main.dust[honeyDust].velocity *= 0.75f;
+                        Main.dust[honeyDust].fadeIn = 1.3f;
+                        Vector2 honeyVec = new((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
+                        honeyVec.Normalize();
+                        honeyVec *= (float)Main.rand.Next(50, 100) * 0.04f;
+                        Main.dust[honeyDust].velocity = honeyVec;
+                        honeyVec.Normalize();
+                        honeyVec *= 34f;
+                        Main.dust[honeyDust].position = Player.Center - honeyVec;
+                    }
+                }
+            }
+            // （古）链：甘露安瓿（古）的站桩加速回复。源里与蜂蜜同一段，同样阈值 90 帧、档位 3；
+            // 差别只在尘：228 号、透明度 80、缩放 0.5、抛得更远（55），且每 1/4 概率就撒（比蜂蜜密）
+            if (aAmpoule && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
+            {
+                if (Player.lifeRegen < 0)
+                {
+                    Player.lifeRegen /= 2;
+                }
+                if (Player.lifeRegenTime > 90 && Player.lifeRegenTime < 1800)
+                {
+                    Player.lifeRegenTime = 1800;
+                }
+                Player.lifeRegen += 3;
+                Player.lifeRegenTime += 3;
+                if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
+                {
+                    Player.lifeRegenCount++;
+                    if (Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.NextBool(4))
+                    {
+                        int ampouleDust = Dust.NewDust(Player.position, Player.width, Player.height, DustID.GoldFlame, 0f, 0f, 80, default(Color), 0.5f);
+                        Main.dust[ampouleDust].noGravity = true;
+                        Main.dust[ampouleDust].fadeIn = 1.3f;
+                        Vector2 ampouleVec = new((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
+                        ampouleVec.Normalize();
+                        ampouleVec *= (float)Main.rand.Next(50, 100) * 0.04f;
+                        Main.dust[ampouleDust].velocity = ampouleVec;
+                        ampouleVec.Normalize();
+                        ampouleVec *= 55f;
+                        Main.dust[ampouleDust].position = Player.Center - ampouleVec;
+                    }
+                }
+            }
+            // （古）链：无暇粹魂晶的站桩加速回复。源里与蜂蜜同一段，但阈值更短（60 帧）、档位最高（4）；
+            // 尘用 187 号、透明度 80、缩放 0.5、抛距 55，且**必定撒**（源里 purity 时直接走 NextBool()）
+            if (purity && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
+            {
+                if (Player.lifeRegen < 0)
+                {
+                    Player.lifeRegen /= 2;
+                }
+                if (Player.lifeRegenTime > 60 && Player.lifeRegenTime < 1800)
+                {
+                    Player.lifeRegenTime = 1800;
+                }
+                Player.lifeRegen += 4;
+                Player.lifeRegenTime += 4;
+                if (Player.lifeRegen > 0 && Player.statLife < Player.statLifeMax2)
+                {
+                    Player.lifeRegenCount++;
+                    if (Main.rand.Next(30000) < Player.lifeRegenTime || Main.rand.NextBool())
+                    {
+                        int purityDust = Dust.NewDust(Player.position, Player.width, Player.height, DustID.BlueFlare, 0f, 0f, 80, default(Color), 0.5f);
+                        Main.dust[purityDust].noGravity = true;
+                        Main.dust[purityDust].fadeIn = 1.3f;
+                        Vector2 purityVec = new((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
+                        purityVec.Normalize();
+                        purityVec *= (float)Main.rand.Next(50, 100) * 0.04f;
+                        Main.dust[purityDust].velocity = purityVec;
+                        purityVec.Normalize();
+                        purityVec *= 55f;
+                        Main.dust[purityDust].position = Player.Center - purityVec;
+                    }
+                }
+            }
             if(photosynthesis && (double)Math.Abs(Player.velocity.X) < 0.05 && (double)Math.Abs(Player.velocity.Y) < 0.05 && Player.itemAnimation == 0)
             {
                 int lifeRegenTimeMaxBoost2 = Main.dayTime ? lifeRegenTimeMaxBoost : (lifeRegenTimeMaxBoost / 5);
@@ -3599,6 +3778,166 @@ namespace CalamityDemutation.Players
                 }
                 Player.lifeRegenTime = 0;
                 Player.lifeRegen -= 30;
+            }
+            // ── （古）链：蜂蜜式回血 + 减益时长减半 ──
+            // 照抄灾厄 2.0.3.9 CalamityPlayerLifeRegen 的「Life Regen That Works Even During DoT Debuffs」区。
+            // 与上面的旧件分支（honeyDew / livingDew）完全独立：那两件走的是另一套口径，不要合并
+            if (alwaysHoneyRegen)
+            {
+                // 原版蜂蜜规则的等价物，但真的泡在蜂蜜里时不叠加（灾厄原码同样有这个判定）
+                if (!Player.honey)
+                {
+                    Player.lifeRegen += 2;
+                    Player.lifeRegenTime += 1;
+                    // 负回复时再补 2，但不会把总回复推成正值
+                    if (Player.lifeRegen < 0)
+                    {
+                        Player.lifeRegen += 2;
+                        if (Player.lifeRegen > 0)
+                        {
+                            Player.lifeRegen = 0;
+                        }
+                    }
+                }
+            }
+            if (honeyDewHalveDebuffs)
+            {
+                // 逐帧给命中列表的减益多扣 1 点时长 → 实际到期速度翻倍。
+                // 覆盖范围逐级扩大：病症/中毒类（蜜露）→ 火系/燃烧类（活露）→ 整张 debuffList（无暇粹魂晶，后续批次接入）
+                for (int l = 0; l < Player.MaxBuffs; ++l)
+                {
+                    if (Player.buffTime[l] <= 2)
+                    {
+                        continue;
+                    }
+                    int buffID = Player.buffType[l];
+                    bool shouldHalveDuration = CalamityDemutation.sicknessDebuffList.Contains(buffID);
+                    if (livingDewHalveDebuffs)
+                    {
+                        shouldHalveDuration |= CalamityDemutation.fireDebuffList.Contains(buffID);
+                    }
+                    if (purity)
+                    {
+                        shouldHalveDuration |= CalamityDemutation.debuffList.Contains(buffID);
+                    }
+                    if (shouldHalveDuration)
+                    {
+                        --Player.buffTime[l];
+                    }
+                }
+            }
+            // ── （古）链：按「缺失生命比例」给再生 ──
+            // 照抄灾厄 2.0.3.9 CalamityPlayerLifeRegen 的 L420-427。
+            // ⚠️ 刻意偏离：源那行是 `(statLifeMax2 - statLife) / statLifeMax2`——两侧都是 int，
+            // 整数除法会让 missingLifeRatio 恒为 0，缩放整个失效（永远取下限）。上游 2.0.7.2 已给分母补了
+            // `(float)` 转换修掉，本工程照修（与本工程「源自身缺陷就修掉并注明」的既有做法一致）
+            if (rOoze || aAmpoule || purity)
+            {
+                float missingLifeRatio = (Player.statLifeMax2 - Player.statLife) / (float)Player.statLifeMax2;
+                float lifeRegenToGive = MathHelper.Lerp(purity ? 6f : 4f, purity ? 14f : 12f, missingLifeRatio);
+                Player.lifeRegen += (int)lifeRegenToGive;
+            }
+            // ── （古）链：无暇粹魂晶对持续伤害减益的「免疫」（本工程自实现） ──
+            // 灾厄在 CalamityPlayerLifeRegen 里用 `ApplyDoTDebuff(减益, 扣量, immuneCondition)` 的第三个参数
+            // 一次性免疫掉一整张清单：辐照 / 硫磺中毒 / 激流 / 燃烧之血 / 脑腐 / 元素混合 / 汽化 / 硫磺火 /
+            // 暗夜业火 / 神圣火焰 / 深海窒息 / 圣焰 / 暗影焰 / 星辉感染。
+            // 本工程没有那种集中式入口——那些 DoT 是灾厄自己算的，我们拦不到单条，
+            // 故改为「身上带有 debuffList 内的减益时，把负回复按固定值抵消」，等效于大幅削弱持续伤害。
+            // ⚠️ 近似处理：源里各条的扣量并不相同（4~50 不等，少数还带上下文条件），这里统一按一个常量抵消
+            if (purity && Player.lifeRegen < 0 && Player.buffType.Any(CalamityDemutation.debuffList.Contains))
+            {
+                Player.lifeRegen += PurityDoTOffset;
+                if (Player.lifeRegen > 0)
+                {
+                    Player.lifeRegen = 0;
+                }
+            }
+            // ── （古）链：宝石系三件（王冠宝石 / 感染宝石 / 无暇粹魂晶）──
+            // 照抄灾厄 2.0.3.9 CalamityPlayerLifeRegen L477-518 的 **else-if 互斥链**，
+            // 顺序即优先级：无暇粹魂晶 > 感染宝石 > 王冠宝石（purity 那一支在 Purity 落地时补到最前面）
+            if (purity)
+            {
+                int intendedPurityDefense = 0;
+                int currentDebuffs = Player.buffType.Count(CalamityDemutation.debuffList.Contains);
+                if (currentDebuffs > 0)
+                {
+                    // 直接回血：正常每 12 帧回 1 点；带减益累计超过 300 帧后节拍逐步拉长
+                    //（每超出 15 帧多 1 帧节拍，上限 180 帧 —— 即最慢 3 秒才回 1 血）
+                    int healFrameCadence = 12;
+                    int punishmentFrames = purityHealSlowdownFrames - 300;
+                    if (healFrameCadence < 180)
+                    {
+                        healFrameCadence += (punishmentFrames < 0) ? 0 : punishmentFrames / 15;
+                    }
+                    if (Player.miscCounter % healFrameCadence == healFrameCadence - 1)
+                    {
+                        Player.Heal(1);
+                    }
+                    if (Player.lifeRegenTime < 1800)
+                    {
+                        Player.lifeRegenTime = 1800;
+                    }
+                    // 动态防御：首个减益给 20 点，之后每多一种 +8
+                    intendedPurityDefense = 20 + (currentDebuffs - 1) * 8;
+                    if (jewelBonusDefense < intendedPurityDefense)
+                    {
+                        jewelBonusDefense = intendedPurityDefense;
+                    }
+                    ++purityHealSlowdownFrames;
+                }
+                // 减益消退后动态防御每秒回落 1 点
+                if (Player.miscCounter % 60 == 0 && jewelBonusDefense > intendedPurityDefense)
+                {
+                    --jewelBonusDefense;
+                }
+                // 完全没减益时，累积的节拍惩罚逐帧回落
+                if (currentDebuffs <= 0)
+                {
+                    --purityHealSlowdownFrames;
+                    if (purityHealSlowdownFrames < 0)
+                    {
+                        purityHealSlowdownFrames = 0;
+                    }
+                }
+                Player.statDefense += jewelBonusDefense;
+            }
+            else if (infectedJewel)
+            {
+                Player.lifeRegen += 2;
+                int intendedJewelDefense = 0;
+                int currentDebuffs = Player.buffType.Count(CalamityDemutation.debuffList.Contains);
+                if (currentDebuffs > 0)
+                {
+                    Player.lifeRegen += 4;
+                    if (Player.lifeRegenTime < 1800)
+                    {
+                        Player.lifeRegenTime = 1800;
+                    }
+                    intendedJewelDefense = 16 + (currentDebuffs - 1) * 5;
+                    if (jewelBonusDefense < intendedJewelDefense)
+                    {
+                        jewelBonusDefense = intendedJewelDefense;
+                    }
+                }
+                // 减益消退后动态防御每秒回落 1 点（源用 miscCounter % 60 做秒表）
+                if (Player.miscCounter % 60 == 0 && jewelBonusDefense > intendedJewelDefense)
+                {
+                    --jewelBonusDefense;
+                }
+                Player.statDefense += jewelBonusDefense;
+            }
+            else if (crownJewel)
+            {
+                Player.lifeRegen += 2;
+                // 源这里用 Any（其余两支用 Count），照抄
+                if (Player.buffType.Any(CalamityDemutation.debuffList.Contains))
+                {
+                    Player.lifeRegen += 3;
+                    if (Player.lifeRegenTime < 1800)
+                    {
+                        Player.lifeRegenTime = 1800;
+                    }
+                }
             }
             OmegaBlueNoLifeRegen();
         }

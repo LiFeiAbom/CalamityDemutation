@@ -99,7 +99,7 @@ Buffs: {
 
 	SoulDisorder: {
 		DisplayName: Soul Disorder
-		Description: ""
+		Description: The turmoil of your soul leaves you more fragile
 	}
 
 	SirenLure: {
@@ -119,17 +119,17 @@ Buffs: {
 
 	VoidTouch: {
 		DisplayName: Void Touch
-		Description: ""
+		Description: You are being eroded by the void
 	}
 
 	WyrmPhantom: {
 		DisplayName: Wyrm Phantom
-		Description: ""
+		Description: A wyrm phantom fights on your behalf
 	}
 
 	WyrmWhipDebuff: {
 		DisplayName: Wyrm Whip Debuff
-		Description: ""
+		Description: Marked by the wyrm whip; your minions deal extra damage to this target
 	}
 
 	YharimPower: {
@@ -723,6 +723,16 @@ Items: {
 		Tooltip: 7% increased damage reduction and +3 defense while in the crimson
 	}
 
+	CrownJewel: {
+		DisplayName: Crown Jewel
+		Tooltip:
+			'''
+			+4 defense
+			Increases life regeneration by 1 HP/s
+			While afflicted by any debuff, regeneration rises to 2.5 HP/s and builds up far faster
+			'''
+	}
+
 	CryoStone: {
 		Tooltip:
 			'''
@@ -1218,6 +1228,58 @@ Items: {
 			'''
 	}
 
+	HoneyDew2: {
+		DisplayName: Honey Dew (Ancient)
+		Tooltip:
+			'''
+			Increases maximum life by 30
+			Grants honey-style life regeneration at all times
+			Regenerates faster while standing still in honey
+			Toxic and sickness debuffs expire twice as fast
+			'''
+	}
+
+	LivingDew2: {
+		DisplayName: Living Dew (Ancient)
+		Tooltip:
+			'''
+			Increases maximum life by 50
+			Inherits all effects of Honey Dew (Ancient)
+			Debuff durations are also halved for fire debuffs
+			'''
+	}
+
+	RadiantOoze2: {
+		DisplayName: Radiant Ooze (Ancient)
+		Tooltip:
+			'''
+			Grants more life regeneration the lower your life is (from +2 HP/s at full to +6 HP/s at empty)
+			Emits a warm yellow light
+			'''
+	}
+
+	AmbrosialAmpoule2: {
+		DisplayName: Ambrosial Ampoule (Ancient)
+		Tooltip:
+			'''
+			Increases maximum life by 70
+			Inherits all effects of Living Dew (Ancient)
+			Grants more life regeneration the lower your life is (from +2 HP/s at full to +6 HP/s at empty)
+			Regenerates faster while standing still, and emits a warm yellow light
+			'''
+	}
+
+	InfectedJewel: {
+		DisplayName: Infected Jewel
+		Tooltip:
+			'''
+			+6 defense
+			Increases life regeneration by 1 HP/s
+			While afflicted by any debuff, regeneration rises to 3 HP/s and builds up far faster
+			Grants 5 extra defense per additional debuff (starting at 16 for the first), decaying by 1 per second
+			'''
+	}
+
 	LeadCore: {
 		DisplayName: Lead Core
 		Tooltip: Grants immunity to the acid rain debuff
@@ -1264,6 +1326,11 @@ Items: {
 			+20 max mana
 			Standing still boosts mana regen
 			'''
+	}
+
+	MurkyPaste: {
+		DisplayName: Murky Paste
+		Tooltip: A thick sludge scraped off the slimy creatures of the jungle
 	}
 
 	NebulousCore: {
@@ -1319,7 +1386,7 @@ Items: {
 
 	NihilityFragments: {
 		DisplayName: Nihility Fragments
-		Tooltip: ""
+		Tooltip: Shards condensed out of the emptiness
 	}
 
 	Nyxolithraken: {
@@ -1741,6 +1808,11 @@ Items: {
 		Tooltip: Grants shadowflame powers to all minions
 	}
 
+	TrapperBulb: {
+		DisplayName: Trapper Bulb
+		Tooltip: A tough bulb taken from within trapper plants
+	}
+
 	TrueArkoftheAncients: {
 		DisplayName: True Ark of the Ancients
 		Tooltip: A heavenly blade forged to vanquish all evil
@@ -1998,6 +2070,22 @@ Items: {
 			[c/99ffa7:Ranged] [c/bfffc8:attacks additionally hurl fireballs and meteors]
 			[c/8cbeff:Magic] [c/bfdbff:attacks additionally hurl a giant splitting fireball, costing 100 mana]
 			[c/d791f2:Whips] [c/e1b6f2:attacks additionally lash with profaned crystal]
+			'''
+	}
+
+	Purity: {
+		DisplayName: Purity
+		Tooltip:
+			'''
+			+12 defense
+			12% increased damage reduction
+			Grants immunity to knockback
+			Increases maximum life by 100
+			Inherits all effects of Ambrosial Ampoule (Ancient)
+			Grants more life regeneration the lower your life is (from +3 HP/s at full to +7 HP/s at empty)
+			Grants 8 extra defense per additional debuff (starting at 20 for the first), decaying by 1 per second
+			Heals you over time while debuffed, but slows down the longer it lasts
+			Greatly reduces the damage dealt by damage-over-time debuffs
 			'''
 	}
 }
