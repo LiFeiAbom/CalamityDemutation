@@ -119,7 +119,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 // 护盾不可见或耐久为空时不绘制（其他玩家的耐久未做网络同步，故实际只显示本地玩家自己的护罩）
                 if (!modPlayer.profanedSoulShieldVisible || modPlayer.profanedSoulShieldDurability <= 0)
                     continue;
-                // 耐久占比：决定护罩亮度。水晶档上限 200、神器档 25，按对应常量归一化（否则占比恒 >1 会一直满亮）
+                // 耐久占比：决定护罩亮度。水晶档上限 125、神器档 25，按对应常量归一化（否则占比恒 >1 会一直满亮）
                 int shieldMax = modPlayer.profanedCrystal ? ProfanedSoulCrystal.ShieldDurabilityMax : ShieldDurabilityMax;
                 // 强度曲线开方（对齐原版 visualShieldStrength = Pow(ratio, 0.5f)）：剩一半耐久时亮度仍有约 0.71，不会一下暗掉
                 float strength = MathF.Pow(modPlayer.profanedSoulShieldDurability / (float)shieldMax, 0.5f);

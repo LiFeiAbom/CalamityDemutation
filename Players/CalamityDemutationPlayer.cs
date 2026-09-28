@@ -2744,12 +2744,12 @@ namespace CalamityDemutation.Players
                 {
                     if (Player.FindBuffIndex(ModContent.BuffType<ProfanedSoulGuardians>()) == -1)
                         Player.AddBuff(ModContent.BuffType<ProfanedSoulGuardians>(), 3600, true);   // 补上守护者 buff（3600 帧 = 60 秒）
-                    // 守护者攻击基值：神器 52 / 水晶 1000。水晶档按用户口径「回调削弱前」取最高档 1000——
-                    // 灾厄旧值是 800/900/1000（随击败神明吞噬者 / 犽戎逐档提升），本工程去掉了进度门槛，故取最高档；
-                    // 2.2.2 源码里这一项是 346（比 1.5.0.001 的削弱后值还低，是另一次削弱）。
+                    // 守护者攻击基值：神器 52 / 水晶 346（用户 2026-09-28 改为「对齐灾厄本体」）。
+                    // 灾厄 1.4.4 / 2.0.3.9 / 2.0.7.2 各版都写 profanedCrystal ? 346 : 52；
+                    // 本工程曾按「回调削弱前」取旧值最高档 1000，该口径已废。
                     // 三只都必须回写 originalDamage，否则各族弹幕按 originalDamage 派生的伤害全为 0（星弹齐射会完全没伤害）。
                     // 原版还会过 ApplyArmorAccDamageBonusesTo，本工程无该方法故跳过。
-                    int babDamage = profanedCrystal ? 1000 : 52;
+                    int babDamage = profanedCrystal ? 346 : 52;
                     float babCheck = profanedCrystal ? 1f : 0f;            // ai[0]：1 = 由水晶形态召唤
                     float spearCounter = profanedCrystal ? 480f : 15f;     // 攻击守护者 ai[1]：投矛计时（水晶 480 = 60*8，神器 15）
                     if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianHealer>()] < 1)
@@ -2831,8 +2831,8 @@ namespace CalamityDemutation.Players
                 profanedCrystalBuffs = false;
                 pscState = 0;
             }
-            // 亵渎之魂护盾：维护耐久池。神器档 25（延迟 5 秒 / 回充 2 秒），水晶档 200（延迟 5 秒 / 回充 4 秒）。
-            // 注意：水晶档 200 是用户指定的口径，2.2.2 源码里该常量是 100（ProfanedSoulCrystal.ShieldDurabilityMax）
+            // 亵渎之魂护盾：维护耐久池。神器档 25（延迟 5 秒 / 回充 2 秒），水晶档 125（延迟 5 秒 / 回充 4 秒）。
+            // 水晶档上限取自 ProfanedSoulCrystal.ShieldDurabilityMax（2026-09-28 改为 125 = 2.0.3.9 / 2.0.7.2 源码值）
             int profanedShieldMax = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldDurabilityMax : ProfanedSoulArtifact.ShieldDurabilityMax;
             int profanedShieldDelay = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldRechargeDelay : ProfanedSoulArtifact.ShieldRechargeDelay;
             int profanedShieldRechargeTime = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldRechargeTime : ProfanedSoulArtifact.ShieldRechargeTime;

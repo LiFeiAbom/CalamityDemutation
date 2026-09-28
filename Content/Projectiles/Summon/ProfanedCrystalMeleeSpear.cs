@@ -14,7 +14,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// 使用近战武器时额外发射：平时每 6 次使用一枚（Enraged 及以上档每 4 次），每 30 次（Enraged 及以上 20 次）改为
     /// 一轮 5 枚扇形霰射。ai[1] == 1 表示霰射那一路（穿透 3 次）；ai[0] == 2 表示命中后炸开的回旋矛
     /// （不受前 133 帧的蓄势期限制，鞭标记概率也更高，见各自的注释）。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值：霰射 700 / 主矛 500，由派发端写入）。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值：霰射 350 / 主矛 250，由派发端写入）。
     /// </summary>
     internal class ProfanedCrystalMeleeSpear:ModProjectile
     {

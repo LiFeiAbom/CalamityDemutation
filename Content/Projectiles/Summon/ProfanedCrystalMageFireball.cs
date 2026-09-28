@@ -18,7 +18,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// （所以"场上已有爆弹/裂片"并不是硬闸门，魔力与那 20/25 帧计数器才是）。
     /// 飞行 75 帧后接触地形，命中敌人或耗尽时间都会炸成外圈 10~16 + 内圈 8~12 枚裂片
     /// （只有 Empowered 档取上限；源码里那个局部变量名叫 enrage，判断实为 pscState &gt;= Empowered）。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 4500，由派发端写入）。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 900，由派发端写入）。
     /// </summary>
     internal class ProfanedCrystalMageFireball:ModProjectile
     {

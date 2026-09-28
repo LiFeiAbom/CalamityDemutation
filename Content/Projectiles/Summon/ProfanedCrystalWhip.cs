@@ -19,7 +19,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// 挥砍推进与几何由本类自己负责（SetDefaults 里把 aiStyle 置 0 关掉原版鞭 AI，AI 末尾自增 Timer），
     /// 与灾厄自家的 BaseWhipProjectile 同一做法；这样也顺带避开了原版鞭 AI 首帧"强制主人重播武器动画"
     /// 的分支——本工程保留原武器使用，重播动画会让武器多打一次。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 500，由派发端写入）。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 250，由派发端写入）。
     /// </summary>
     internal class ProfanedCrystalWhip:ModProjectile
     {

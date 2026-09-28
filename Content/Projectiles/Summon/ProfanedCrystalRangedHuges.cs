@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// 其中再 5% 是"加厚"版本（ai[0] = 1：体型 1.5 倍、碰撞箱 +25，命中时向四周炸出 6~9 枚陨星）。
     /// 余下的 70%/80% 走小型圣光火球 ProfanedCrystalRangedSmalls。
     /// 存活 175 帧（只有陨星版 ai[0] == 2 续到 200 帧），前 30 帧不撞地形；带 3 帧残影与 3 帧动画。
-    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 1500，由派发端写入）。
+    /// 伤害按通用伤害折算（originalDamage 为未折算的基础值 200，由派发端写入）。
     /// </summary>
     internal class ProfanedCrystalRangedHuges:ModProjectile
     {

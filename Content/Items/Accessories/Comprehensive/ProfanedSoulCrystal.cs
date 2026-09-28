@@ -26,10 +26,10 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
     {
         // ── 静态常量 ──
         /// <summary>
-        /// 水晶态护盾耐久上限 = 200（用户指定；2.2.2 源码里该常量是 100，本工程按用户口径加倍。
-        /// 神器档为 ProfanedSoulArtifact.ShieldDurabilityMax = 25，与 2.2.2 一致）
+        /// 水晶态护盾耐久上限 = 125（用户 2026-09-28 指定，取灾厄 2.0.3.9 / 2.0.7.2 的源码值；
+        /// 1.4.4 与 2.2.2 是 100。神器档为 ProfanedSoulArtifact.ShieldDurabilityMax = 25，与 2.2.2 一致）
         /// </summary>
-        public const int ShieldDurabilityMax = 200;
+        public const int ShieldDurabilityMax = 125;
         /// <summary>
         /// 水晶态破盾后的回充延迟（帧，5 秒）与总回充时长（帧，4 秒）
         /// （对应 2.2.2 的 ShieldRechargeDelay = 5 秒、TotalShieldRechargeTime = 4 秒）
@@ -165,6 +165,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<PscTransformAnimation>(), 0, 0f, player.whoAmI);
             }
             // 常规属性加成区（本工程新增、装备即生效的通用全能加成，与四态无关；灾厄 2.2.2 无此段）
+            // 末尾另加仆从栏 +2（用户 2026-09-28 指定）
             player.statLifeMax2 += (int)(player.statLifeMax2 * 0.08f);
             player.statManaMax2 += (int)(player.statManaMax2 * 0.08f);
             player.GetDamage<GenericDamageClass>() += 0.16f;
@@ -179,6 +180,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             player.GetAttackSpeed<MeleeDamageClass>() += 0.16f;   // 近战攻速 +16%
             player.manaCost *= 0.84f;
             player.pickSpeed -= 0.16f;
+            player.maxMinions += 2;   // 仆从栏 +2（与上面那组通用加成同属"装备即生效"，不受四态影响）
             Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 1.4f, 0.3f, 0.9f);
         }
         /// <summary>
@@ -271,9 +273,11 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// 计数器 profanedSoulWeaponUsage 是**按帧**累加的（与武器动画无关），
         /// 换职业或累加到 370 时清零；四职业各自的触发节奏见各分支注释，
         /// 所有弹幕伤害统一按通用伤害折算并回写 originalDamage。
-        /// 数值口径（用户 2026-09-15 定，实测通过后调回全值）：「回调削弱前」（= 2.2.2 源码实际值的 ×5）。
-        /// 近战霰射 1750 / 主矛 1250、远程陨石 1500 / 火球 1000、魔法 4500、鞭 500
-        /// （鞭没参与 ×5，保持 2.2.2 的 250 ×2）。守护者伤害不走这套口径，取最高档 1000。
+        /// 数值口径（用户 2026-09-28 改为「对齐灾厄本体」）：近战霰射 350 / 主矛 250、
+        /// 远程陨石 200 / 火球 200（源里两者本就用同一个值）、魔法 900、鞭 250 ——
+        /// 与灾厄 1.3 / 1.4.4 / 2.0 / 2.0.3.9 / 2.0.7.2 五个版本逐格相同。
+        /// 此前那套「回调削弱前」（2.2.2×5 = 1750/1250/1500/1000/4500/500）口径已废。
+        /// 守护者伤害同步改取灾厄本体的 346（原「回调削弱前」最高档 1000 已废）。
         /// 灾厄原版的盗贼（Throwing）槽转化——环射 880 / 单片 1100（强化档 625）——已按用户 2026-09-22 口径
         /// **整条删除**（连 ProfanedCrystalRogueShard 弹幕一道），故召唤类武器在本工程不触发任何转化。
         /// </summary>
@@ -302,7 +306,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             var source = player.GetSource_ItemUse(item);
             if (weaponType == 1)
             {
-                // ── 近战：霰射矛 1750 / 主矛 1250（回调削弱前；2.2.2 为 350 / 250）。
+                // ── 近战：霰射矛 350 / 主矛 250（对齐灾厄本体）。
                 // 每 6 帧一枚圣光长矛（Enraged 及以上 4 帧），
                 // 第 30 帧（Enraged 及以上 20 帧）改为一轮 5 枚扇形霰射（+3 度间隔），随后计数器归零
                 if (modPlayer.profanedSoulWeaponUsage % (enraged ? 4 : 6) == 0)
@@ -316,7 +320,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                         {
                             Vector2 perturbedspeed = new Vector2(shotgunVelocity.X, shotgunVelocity.Y).RotatedBy(MathHelper.ToRadians(spread));
                             int separation = (i * 4) - 8;
-                            const int spearBaseDamage = 1750;   // 霰射矛（回调削弱前 1750；2.2.2 为 350）
+                            const int spearBaseDamage = 350;   // 霰射矛（对齐灾厄本体）
                             int spearDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(spearBaseDamage);
                             int proj = Projectile.NewProjectile(source, player.Center.X, player.Center.Y - separation, perturbedspeed.X, perturbedspeed.Y, ModContent.ProjectileType<ProfanedCrystalMeleeSpear>(), spearDamage, 1f, player.whoAmI, Main.rand.NextBool(modPlayer.profanedSoulWeaponUsage == 4 ? 5 : 7) ? 1f : 0f);
                             if (Main.projectile.IndexInRange(proj))
@@ -331,7 +335,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     }
                     else
                     {
-                        const int spearBaseDamage = 1250;   // 主矛（回调削弱前 1250；2.2.2 为 250）
+                        const int spearBaseDamage = 250;   // 主矛（对齐灾厄本体）
                         int spearDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(spearBaseDamage);
                         int proj = Projectile.NewProjectile(source, player.Center, correctedVelocity * 14f, ModContent.ProjectileType<ProfanedCrystalMeleeSpear>(), spearDamage, 1f, player.whoAmI, Main.rand.NextBool(modPlayer.profanedSoulWeaponUsage == 4 ? 5 : 7) ? 1f : 0f, 1f);
                         if (Main.projectile.IndexInRange(proj))
@@ -346,8 +350,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             }
             else if (weaponType == 2)
             {
-                // ── 远程：陨石 1500 / 小型火球 1000（回调削弱前；2.2.2 里两者已合并成 200 单值，
-                // 这里按 Data.png 的两条条目拆回）。Enraged 及以上 100% 触发，否则 50% 触发——本分支**每帧都判**，
+                // ── 远程：陨石与小形火球同为 200（对齐灾厄本体——源里两者本就共用同一个值，
+                // 本工程此前按 Data.png 拆成 1500/1000 的做法已废）。Enraged 及以上 100% 触发，否则 50% 触发——本分支**每帧都判**，
                 // 所以实际密度很高（原版同样如此）；
                 // 30%（Enraged 且非 Empowered 时 20%）走陨石分支，其中再 5% 是"加厚陨石"（命中时炸出一群陨星）
                 if (enraged || Main.rand.NextBool())
@@ -360,7 +364,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     {
                         case 1: // 加厚陨石
                         case 2: // 普通陨石
-                            const int boomBaseDamage = 1500;   // 陨石（回调削弱前 1500；2.2.2 为 200）
+                            const int boomBaseDamage = 200;   // 陨石（对齐灾厄本体）
                             int boomDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(boomBaseDamage);
                             int proj = Projectile.NewProjectile(source, player.Center, perturbedspeed, ModContent.ProjectileType<ProfanedCrystalRangedHuges>(), boomDamage, 0f, player.whoAmI, projType == 1 ? 1f : 0f);
                             if (Main.projectile.IndexInRange(proj))
@@ -370,7 +374,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                             }
                             break;
                         case 3: // 小型火球
-                            const int smallBaseDamage = 1000;   // 火球（回调削弱前 1000；2.2.2 为 200）
+                            const int smallBaseDamage = 200;   // 小型火球（对齐灾厄本体，与陨石同值）
                             int smallDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(smallBaseDamage);
                             int proj2 = Projectile.NewProjectile(source, player.Center, perturbedspeed, ModContent.ProjectileType<ProfanedCrystalRangedSmalls>(), smallDamage, 0f, player.whoAmI, 0f);
                             if (Main.projectile.IndexInRange(proj2))
@@ -386,7 +390,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             }
             else if (weaponType == 3)
             {
-                // ── 魔法：基础伤害 4500（回调削弱前；2.2.2 为 900），每发消耗 100 倍魔力消耗。
+                // ── 魔法：基础伤害 900（对齐灾厄本体），每发消耗 100 倍魔力消耗。
                 // 冷却按原版：发完把计数器置 20/25 帧，之后每帧递减；场上没有爆弹与裂片时计数器直接清零（原版同款加速）
                 if (player.ownedProjectileCounts[ModContent.ProjectileType<ProfanedCrystalMageFireball>()] == 0 && player.ownedProjectileCounts[ModContent.ProjectileType<ProfanedCrystalMageFireballSplit>()] == 0)
                     modPlayer.profanedSoulWeaponUsage = 0;
@@ -394,7 +398,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 if (modPlayer.profanedSoulWeaponUsage == 0 && !player.silence && player.CheckMana(manaCost, true))
                 {
                     player.manaRegenDelay = (int)player.maxRegenDelay;
-                    const int magefireBaseDamage = 4500;   // 圣光爆弹（回调削弱前 4500；2.2.2 为 900）
+                    const int magefireBaseDamage = 900;   // 圣光爆弹（对齐灾厄本体）
                     int mageFireDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(magefireBaseDamage);
                     if (player.HasBuff(BuffID.ManaSickness))
                     {
@@ -415,14 +419,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             }
             else if (weaponType == 5)
             {
-                // ── 鞭：基础伤害 500（= 2.2.2 的 250 ×2，与其它招式同比例；按字面"40%"应是 100，
-                // 但那会低于 2.2.2，用户 2026-09-15 选定 500）。
+                // ── 鞭：基础伤害 250（对齐灾厄本体，1.4.4 起各版均为 250）。
                 // 节奏按原版：场上没有水晶鞭时计数器归零，计数器为 0 才甩一条，甩完置 10 并每帧递减——即 10 帧一条
                 if (player.ownedProjectileCounts[ModContent.ProjectileType<ProfanedCrystalWhip>()] == 0)
                     modPlayer.profanedSoulWeaponUsage = 0;
                 if (modPlayer.profanedSoulWeaponUsage == 0)
                 {
-                    const int whipBaseDamage = 500;
+                    const int whipBaseDamage = 250;   // 鞭（对齐灾厄本体）
                     int whipDamage = (int)player.GetTotalDamage<GenericDamageClass>().ApplyTo(whipBaseDamage);
                     bool buffed = player.HasBuff<ProfanedCrystalWhipBuff>();
                     Vector2 whipVelocity = correctedVelocity * (buffed ? 10f : 8f);

@@ -42,10 +42,16 @@ namespace CalamityDemutation.Systems.UI
         /// </summary>
         public static Vector2 Spacing => CompactIcons ? Vector2.UnitX * CompactXSpacing : Vector2.UnitX * ExpandedXScaling;
         /// <summary>
-        /// 冷却条的起始绘制位置（仿灾厄默认值）：左上角 (32, 100) 再加半个间距，
+        /// 让开灾厄本体冷却机架的额外下移量（像素）。
+        /// 本类整体移植自灾厄，起始坐标 (32, 100) 与它逐字相同；两个 mod 同时都有冷却在显示时图标会完全重叠，
+        /// 故本工程的机架整体再往下挪这么多。灾厄本体那份不受影响。改这一个数即可微调。
+        /// </summary>
+        public const float OtherRackClearanceY = 52f;
+        /// <summary>
+        /// 冷却条的起始绘制位置（仿灾厄默认值再下挪 <see cref="OtherRackClearanceY"/>）：左上角 (32, 100) 再加半个间距，
         /// 并随 buff 行数下移，避免和原版 buff 图标重叠
         /// </summary>
-        public static Vector2 BaseDrawPosition => new Vector2(32, 100) + Spacing / 2f + Vector2.UnitY * 50 * MathF.Ceiling(Main.LocalPlayer.CountBuffs() / 11f);
+        public static Vector2 BaseDrawPosition => new Vector2(32, 100 + OtherRackClearanceY) + Spacing / 2f + Vector2.UnitY * 50 * MathF.Ceiling(Main.LocalPlayer.CountBuffs() / 11f);
         /// <summary>
         /// 调试开关：开启后所有冷却条以满完成度、满亮度绘制
         /// </summary>
