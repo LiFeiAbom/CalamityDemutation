@@ -10,9 +10,9 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 星流之刃（Exoblade）—— 月后终盘近战巨剑（行为照搬 CI 的 <c>Exobladeold</c>，即改版前旧 Exoblade 的复刻）。
-    /// 挥砍射出一道会掉头追踪玩家的星流射线（<see cref="Exobeamold"/>），命中敌人时：
-    /// 累计命中 5 次或目标血量 ≤15% 时原地炸出 <see cref="Exoboomold"/>（伤害为本次命中的 1/4）；
+    /// 星流之刃（ExoBlade）—— 月后终盘近战巨剑（行为照搬 CI 的 <c>Exobladeold</c>，即改版前旧 Exoblade 的复刻）。
+    /// 挥砍射出一道会掉头追踪玩家的星流射线（<see cref="ExoBeam"/>），命中敌人时：
+    /// 累计命中 5 次或目标血量 ≤15% 时原地炸出 <see cref="ExoBoom"/>（伤害为本次命中的 1/4）；
     /// 累计命中 2 次或目标血量 ≤15% 时从屏幕外甩来 2 颗星云彗星（<see cref="ExoComet"/>）；
     /// 挂整套星云系减益，并在目标可吸血且自身未挂月噬时回血 5~8。
     /// 配方按**现代版 / 经典版各一条**（两版不同，见 <c>AddRecipes</c>）：
@@ -21,7 +21,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 与 CI 源的两处差异：①去掉「损失生命值 1:1 转平伤」与灾厄真近战伤害类加成（本工程没有 TrueMeleeDamageClass）；
     /// ②CI 的传颂之物（LoreExo）分支不存在，直接常驻它那条「多次命中触发」的行为分支，不搬 Lore 专属弹幕与 tooltip 行。
     /// </summary>
-    internal class Exobladeold : ModItem
+    internal class ExoBlade : ModItem
     {
         /// <summary>研究所解锁数量 1（唯一武器）</summary>
         public override void SetStaticDefaults()
@@ -43,14 +43,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.autoReuse = true;
             Item.value = Item.buyPrice(1, 50, 0, 0);
             Item.rare = ItemRarityID.Red;
-            Item.shoot = ModContent.ProjectileType<Exobeamold>();
+            Item.shoot = ModContent.ProjectileType<ExoBeam>();
             Item.shootSpeed = 19f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>每 14 帧挥砍都射出一道星流射线（不搬 CI 的传颂之物专属光束）</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<Exobeamold>(), damage, knockback, player.whoAmI, 0f);
+            Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<ExoBeam>(), damage, knockback, player.whoAmI, 0f);
             return false;
         }
         /// <summary>挥舞表现：BetterSwing 修正挥舞位置；约 1/4 概率洒落青色泰拉尘</summary>
@@ -82,7 +82,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             hitCount2++;
             if (hitCount >= 5 || target.life <= target.lifeMax * 0.15f)
             {
-                Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<Exoboomold>(), damageDone / 4, (int)Item.knockBack, Main.myPlayer);
+                Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<ExoBoom>(), damageDone / 4, (int)Item.knockBack, Main.myPlayer);
                 hitCount = 0;
             }
             if (hitCount2 >= 2 || target.life <= target.lifeMax * 0.15f)
@@ -122,7 +122,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             hitCount2++;
             if (hitCount >= 5 || target.statLife <= target.statLifeMax2 * 0.15f)
             {
-                Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<Exoboomold>(), hurtInfo.Damage / 4, (int)Item.knockBack, Main.myPlayer);
+                Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<ExoBoom>(), hurtInfo.Damage / 4, (int)Item.knockBack, Main.myPlayer);
                 hitCount = 0;
             }
             if (hitCount2 >= 2 || target.statLife <= target.statLifeMax2 * 0.15f)
@@ -144,7 +144,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>掉在地上时画发光层</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
-            Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Melee/ExobladeoldGlow").Value);
+            Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Melee/ExoBladeGlow").Value);
         }
         /// <summary>累计命中次数（爆炸分支用，CI 源为 ModItem 实例字段，照抄）</summary>
         private int hitCount;

@@ -983,7 +983,7 @@ Items: {
 			'''
 	}
 
-	Exobladeold: {
+	ExoBlade: {
 		DisplayName: 星流之刃
 		Tooltip:
 			'''
@@ -2049,8 +2049,8 @@ Projectiles: {
 	EXNeutronArrow.DisplayName: 引力箭矢
 	EXNeutronExplode.DisplayName: 中子大爆点
 	EXNeutronExplosionRanged.DisplayName: 中子大爆点
-	Exobeamold.DisplayName: 星流射线
-	Exoboomold.DisplayName: 星流爆炸
+	ExoBeam.DisplayName: 星流射线
+	ExoBoom.DisplayName: 星流爆炸
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
 	BrilliantFractalHeld.DisplayName: 光辉分形

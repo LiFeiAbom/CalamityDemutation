@@ -8,11 +8,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 星流爆炸（Exoboomold）—— 星流之刃命中低血量目标时原地炸出的隐形爆炸区
+    /// 星流爆炸（ExoBoom）—— 星流之刃命中低血量目标时原地炸出的隐形爆炸区
     /// （照搬 CI 的 <c>Exoboomold</c>，即改版前旧 Exoboom 的复刻）。
     /// 本身无贴图，靠 250×250 的大判定框 + 连续 30 帧的青色尘爆表现；命中挂整套星云系减益。
     /// </summary>
-    internal class Exoboomold : ModProjectile
+    internal class ExoBoom : ModProjectile
     {
         /// <summary>无贴图：借用工程内的隐形贴图</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";

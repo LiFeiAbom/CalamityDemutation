@@ -979,7 +979,7 @@ Items: {
 			'''
 	}
 
-	Exobladeold: {
+	ExoBlade: {
 		DisplayName: Exoblade
 		Tooltip:
 			'''
@@ -2044,8 +2044,8 @@ Projectiles: {
 	EXNeutronArrow.DisplayName: EX Neutron Arrow
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	EXNeutronExplosionRanged.DisplayName: EX Neutron Explosion
-	Exobeamold.DisplayName: Exo Beam
-	Exoboomold.DisplayName: Exo Explosion
+	ExoBeam.DisplayName: Exo Beam
+	ExoBoom.DisplayName: Exo Explosion
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
 	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
