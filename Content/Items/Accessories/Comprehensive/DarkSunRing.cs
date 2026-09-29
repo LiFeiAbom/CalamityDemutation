@@ -63,15 +63,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar) && calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment2))
+                if (classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar) && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ueliaceBar.Type, 10);
-                    recipe1.AddIngredient(darksunFragment2.Type, 100);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ueliaceBar.Type, 10);
+                    recipeClassic.AddIngredient(darksunFragment2.Type, 100);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

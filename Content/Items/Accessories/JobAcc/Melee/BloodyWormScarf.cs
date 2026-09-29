@@ -45,13 +45,13 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
                 recipe.AddTile(TileID.MythrilAnvil);
                 recipe.Register();
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient<BloodyWormTooth>();
-                recipe1.AddIngredient(ItemID.WormScarf);
-                recipe1.AddTile(TileID.MythrilAnvil);
-                recipe1.Register();
+                Recipe recipeClassic = CreateRecipe();
+                recipeClassic.AddIngredient<BloodyWormTooth>();
+                recipeClassic.AddIngredient(ItemID.WormScarf);
+                recipeClassic.AddTile(TileID.MythrilAnvil);
+                recipeClassic.Register();
             }
         }
     }

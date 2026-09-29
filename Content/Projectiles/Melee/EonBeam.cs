@@ -62,17 +62,17 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (Projectile.ai[0] != 1f)
             {
                 target.AddBuff(BuffID.Frostburn, 120);
-                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
                 {
-                    if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
-                    if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 120); }
-                    if (calamity0.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
+                    if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
+                    if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 120); }
+                    if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 120); }
-                    if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
+                    if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 120); }
+                    if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
                 }
             }
         }
@@ -84,17 +84,17 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (Projectile.ai[0] != 1f) //excludes True Ark of the Ancients
             {
                 target.AddBuff(BuffID.Frostburn, 120);
-                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
                 {
-                    if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
-                    if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 120); }
-                    if (calamity0.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
+                    if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
+                    if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 120); }
+                    if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 120); }
-                    if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
+                    if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 120); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 120); }
+                    if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 120); }
                 }
             }
         }

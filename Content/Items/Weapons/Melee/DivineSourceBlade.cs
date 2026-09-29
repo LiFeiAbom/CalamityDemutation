@@ -63,16 +63,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre) && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(auricOre.Type, 25);
-                    recipe1.AddIngredient<Terratomere>();
-                    recipe1.AddIngredient<Excelsus>();
-                    recipe1.AddTile(draedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(auricOre.Type, 25);
+                    recipeClassic.AddIngredient<Terratomere>();
+                    recipeClassic.AddIngredient<Excelsus>();
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

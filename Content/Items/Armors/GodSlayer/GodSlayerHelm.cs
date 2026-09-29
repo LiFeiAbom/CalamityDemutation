@@ -84,19 +84,19 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
-                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
-                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(classicCosmiliteBar.Type, 14);
-                    recipe1.AddIngredient(nightmareFuel.Type, 8);
-                    recipe1.AddIngredient(endothermicEnergy.Type, 8);
-                    recipe1.AddTile(draedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(classicCosmiliteBar.Type, 14);
+                    recipeClassic.AddIngredient(nightmareFuel.Type, 8);
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 8);
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

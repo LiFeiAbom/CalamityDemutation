@@ -81,35 +81,35 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CalamityDust", out ModItem calamityDust1) && calamity1.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos1) && calamity1.TryFind<ModItem>("ChaosAmulet", out ModItem chaosAmulet1))
+                if (classic.TryFind<ModItem>("CalamityDust", out ModItem calamityDust1) && classic.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos1) && classic.TryFind<ModItem>("ChaosAmulet", out ModItem chaosAmulet1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.CharmofMyths);
-                    recipe1.AddIngredient(ItemID.SorcererEmblem);
-                    recipe1.AddIngredient(ItemID.CrystalShard, 20);
-                    recipe1.AddIngredient(calamityDust1.Type, 5);
-                    recipe1.AddIngredient(coreofChaos1.Type, 5);
-                    recipe1.AddIngredient(ItemID.SpellTome);
-                    recipe1.AddIngredient(chaosAmulet1.Type);
-                    recipe1.AddIngredient(ItemID.UnholyWater, 10);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.CharmofMyths);
+                    recipeClassic.AddIngredient(ItemID.SorcererEmblem);
+                    recipeClassic.AddIngredient(ItemID.CrystalShard, 20);
+                    recipeClassic.AddIngredient(calamityDust1.Type, 5);
+                    recipeClassic.AddIngredient(coreofChaos1.Type, 5);
+                    recipeClassic.AddIngredient(ItemID.SpellTome);
+                    recipeClassic.AddIngredient(chaosAmulet1.Type);
+                    recipeClassic.AddIngredient(ItemID.UnholyWater, 10);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
-                if (calamity1.TryFind<ModItem>("CalamityDust", out ModItem calamityDust2) && calamity1.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos2) && calamity1.TryFind<ModItem>("ChaosAmulet", out ModItem chaosAmulet2))
+                if (classic.TryFind<ModItem>("CalamityDust", out ModItem calamityDust2) && classic.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos2) && classic.TryFind<ModItem>("ChaosAmulet", out ModItem chaosAmulet2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.CharmofMyths);
-                    recipe1.AddIngredient(ItemID.SorcererEmblem);
-                    recipe1.AddIngredient(ItemID.CrystalShard, 20);
-                    recipe1.AddIngredient(calamityDust2.Type, 5);
-                    recipe1.AddIngredient(coreofChaos2.Type, 5);
-                    recipe1.AddIngredient(ItemID.SpellTome);
-                    recipe1.AddIngredient(chaosAmulet2.Type);
-                    recipe1.AddIngredient(ItemID.BloodWater, 10);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.CharmofMyths);
+                    recipeClassic.AddIngredient(ItemID.SorcererEmblem);
+                    recipeClassic.AddIngredient(ItemID.CrystalShard, 20);
+                    recipeClassic.AddIngredient(calamityDust2.Type, 5);
+                    recipeClassic.AddIngredient(coreofChaos2.Type, 5);
+                    recipeClassic.AddIngredient(ItemID.SpellTome);
+                    recipeClassic.AddIngredient(chaosAmulet2.Type);
+                    recipeClassic.AddIngredient(ItemID.BloodWater, 10);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

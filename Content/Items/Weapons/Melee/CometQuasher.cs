@@ -95,11 +95,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：陨石锭×25 + 灵质×5 @ 秘银砧（全原版材料）</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().
-                AddIngredient(ItemID.MeteoriteBar, 25).
-                AddIngredient(ItemID.Ectoplasm, 5).
-                AddTile(TileID.MythrilAnvil).
-                Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.MeteoriteBar, 25);
+            recipe.AddIngredient(ItemID.Ectoplasm, 5);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
 }

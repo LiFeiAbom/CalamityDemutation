@@ -53,23 +53,23 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：泰坦药水 + 甲虫壳
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.TitanPotion);
-                recipe1.AddIngredient(ItemID.BeetleHusk);
-                recipe1.AddTile(TileID.AlchemyTable);
-                recipe1.Register();
+                Recipe recipeClassic = CreateRecipe();
+                recipeClassic.AddIngredient(ItemID.TitanPotion);
+                recipeClassic.AddIngredient(ItemID.BeetleHusk);
+                recipeClassic.AddTile(TileID.AlchemyTable);
+                recipeClassic.Register();
                 // 经典版灾厄：血珠×10 + 药剂瓶 + 甲虫壳
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
-                    recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(bloodOrb2.Type, 10);
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddIngredient(ItemID.BeetleHusk);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 10);
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddIngredient(ItemID.BeetleHusk);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -66,31 +66,35 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("AuricBar", out ModItem auricBar)
-                && modern.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
-                && modern.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient<AmbrosialAmpoule2>().
-                    AddIngredient<InfectedJewel>().
-                    AddIngredient(auricBar.Type, 5).
-                    AddIngredient(ascendantSpiritEssence.Type, 4).
-                    AddTile(cosmicAnvil.Type).
-                    Register();
+                if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar)
+                    && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<AmbrosialAmpoule2>();
+                    recipe.AddIngredient<InfectedJewel>();
+                    recipe.AddIngredient(auricBar.Type, 5);
+                    recipe.AddIngredient(ascendantSpiritEssence.Type, 4);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
-                && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient<AmbrosialAmpoule2>().
-                    AddIngredient<InfectedJewel>().
-                    AddIngredient(auricOre.Type, 5).
-                    AddIngredient(endothermicEnergy.Type, 4).
-                    AddTile(draedonsForge.Type).
-                    Register();
+                if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<AmbrosialAmpoule2>();
+                    recipeClassic.AddIngredient<InfectedJewel>();
+                    recipeClassic.AddIngredient(auricOre.Type, 5);
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 4);
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
+                }
             }
         }
     }

@@ -185,21 +185,21 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：Cinderplate×5 + CoreofCinder + DivineGeode×5 + ExodiumClusterOre×15（恶魔祭坛）
-                if (calamity1.TryFind<ModItem>("Cinderplate", out ModItem cinderplate)
-                    && calamity1.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder)
-                    && calamity1.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode)
-                    && calamity1.TryFind<ModItem>("ExodiumClusterOre", out ModItem exodiumClusterOre))
+                if (classic.TryFind<ModItem>("Cinderplate", out ModItem cinderplate)
+                    && classic.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder)
+                    && classic.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode)
+                    && classic.TryFind<ModItem>("ExodiumClusterOre", out ModItem exodiumClusterOre))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(cinderplate.Type, 5);
-                    recipe1.AddIngredient(coreofCinder.Type);
-                    recipe1.AddIngredient(classicDivineGeode.Type, 5);
-                    recipe1.AddIngredient(exodiumClusterOre.Type, 15);
-                    recipe1.AddTile(TileID.DemonAltar);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(cinderplate.Type, 5);
+                    recipeClassic.AddIngredient(coreofCinder.Type);
+                    recipeClassic.AddIngredient(classicDivineGeode.Type, 5);
+                    recipeClassic.AddIngredient(exodiumClusterOre.Type, 15);
+                    recipeClassic.AddTile(TileID.DemonAltar);
+                    recipeClassic.Register();
                 }
             }
         }

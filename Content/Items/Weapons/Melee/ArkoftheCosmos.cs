@@ -216,9 +216,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                var calamityPlayerType = calamity1.Code.GetTypes()
+                var calamityPlayerType = classic.Code.GetTypes()
                    .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                 if (calamityPlayerType != null)
                 {
@@ -237,7 +237,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    if (calamity1.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    if (classic.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
                                     {
                                         player.AddBuff(gravityNormalizerBuff.Type, 600);
                                     }
@@ -377,9 +377,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                var calamityPlayerType = calamity1.Code.GetTypes()
+                var calamityPlayerType = classic.Code.GetTypes()
                    .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                 if (calamityPlayerType != null)
                 {
@@ -398,7 +398,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    if (calamity1.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    if (classic.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
                                     {
                                         player.AddBuff(gravityNormalizerBuff.Type, 600);
                                     }
@@ -434,25 +434,25 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // ── 经典版灾厄：改用一堆后期暗黑材料，且在德雷顿熔炉合成 ──
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
-                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                    && calamity1.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
-                    && calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
-                    && calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre)
-                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
+                    && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<FourSeasonsGalaxia>();
-                    recipe1.AddIngredient<ArkoftheElements>();
-                    recipe1.AddIngredient(nightmareFuel.Type, 5);       // 经典版材料：噩梦燃料 ×5
-                    recipe1.AddIngredient(endothermicEnergy.Type, 5);   // 经典版材料：吸热能量 ×5
-                    recipe1.AddIngredient(hellcasterFragment.Type, 3);  // 经典版材料：地狱施法者碎片 ×3
-                    recipe1.AddIngredient(darksunFragment.Type, 5);     // 经典版材料：暗黑碎片 ×5
-                    recipe1.AddIngredient(auricOre.Type, 25);           // 经典版材料：AuricOre ×25
-                    recipe1.AddTile(draedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<FourSeasonsGalaxia>();
+                    recipeClassic.AddIngredient<ArkoftheElements>();
+                    recipeClassic.AddIngredient(nightmareFuel.Type, 5);       // 经典版材料：噩梦燃料 ×5
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 5);   // 经典版材料：吸热能量 ×5
+                    recipeClassic.AddIngredient(hellcasterFragment.Type, 3);  // 经典版材料：地狱施法者碎片 ×3
+                    recipeClassic.AddIngredient(darksunFragment.Type, 5);     // 经典版材料：暗黑碎片 ×5
+                    recipeClassic.AddIngredient(auricOre.Type, 25);           // 经典版材料：AuricOre ×25
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

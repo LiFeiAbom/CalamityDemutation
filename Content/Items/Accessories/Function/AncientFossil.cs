@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
                 recipe.AddTile(TileID.Furnaces);
                 recipe.Register();
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 Recipe recipe = CreateRecipe();
                 recipe.AddRecipeGroup("SiltGroup", 100);

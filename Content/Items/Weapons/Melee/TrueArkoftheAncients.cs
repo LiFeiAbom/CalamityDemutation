@@ -145,16 +145,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (Main.rand.NextBool(2))
             {
-                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
                 {
-                    if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth))
+                    if (calamity.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth))
                     {
                         target.AddBuff(crushDepth.Type, 300);
                     }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff classicCrushDepth))
+                    if (classic.TryFind<ModBuff>("CrushDepth", out ModBuff classicCrushDepth))
                     {
                         target.AddBuff(classicCrushDepth.Type, 300);
                     }
@@ -168,16 +168,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             if (Main.rand.NextBool(2))
             {
-                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
                 {
-                    if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth))
+                    if (calamity.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth))
                     {
                         target.AddBuff(crushDepth.Type, 300);
                     }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff classicCrushDepth))
+                    if (classic.TryFind<ModBuff>("CrushDepth", out ModBuff classicCrushDepth))
                     {
                         target.AddBuff(classicCrushDepth.Type, 300);
                     }
@@ -203,18 +203,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // ── 经典版灾厄：额外需要生命碎片 ×3 ──
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
-                    && calamity1.TryFind<ModItem>("LivingShard", out ModItem livingShard))
+                if (classic.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
+                    && classic.TryFind<ModItem>("LivingShard", out ModItem livingShard))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<ArkoftheAncients>();
-                    recipe1.AddIngredient(classicCoreofCalamity.Type);
-                    recipe1.AddIngredient(livingShard.Type, 3);     // 经典版材料：生命碎片 ×3
-                    recipe1.AddIngredient(ItemID.BrokenHeroSword);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<ArkoftheAncients>();
+                    recipeClassic.AddIngredient(classicCoreofCalamity.Type);
+                    recipeClassic.AddIngredient(livingShard.Type, 3);     // 经典版材料：生命碎片 ×3
+                    recipeClassic.AddIngredient(ItemID.BrokenHeroSword);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

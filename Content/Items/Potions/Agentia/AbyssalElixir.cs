@@ -58,23 +58,23 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：药剂瓶 + 珊瑚 + 贝壳
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.BottledWater);
-                recipe1.AddIngredient(ItemID.Coral);
-                recipe1.AddIngredient(ItemID.Seashell);
-                recipe1.AddTile(TileID.AlchemyTable);
-                recipe1.Register();
+                Recipe recipeClassic = CreateRecipe();
+                recipeClassic.AddIngredient(ItemID.BottledWater);
+                recipeClassic.AddIngredient(ItemID.Coral);
+                recipeClassic.AddIngredient(ItemID.Seashell);
+                recipeClassic.AddTile(TileID.AlchemyTable);
+                recipeClassic.Register();
                 // 经典版灾厄：药剂瓶 + 血珠×40
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
-                    recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddIngredient(bloodOrb2.Type, 40);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 40);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

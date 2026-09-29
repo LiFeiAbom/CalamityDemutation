@@ -37,9 +37,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             ProjectileID.Sets.TrailCacheLength[Type] = 6;
             ProjectileID.Sets.TrailingMode[Type] = 0;
             astralDebuffType = BuffID.CursedInferno;
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                astralDebuffType = astralInfection.Type;
+                if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection))
+                {
+                    astralDebuffType = astralInfection.Type;
+                }
             }
         }
         /// <summary>基础属性：24×24、友方近战、穿透 1、不碰撞物块、不受水减速；未设 timeLeft（靠撞墙/命中自然消失）</summary>

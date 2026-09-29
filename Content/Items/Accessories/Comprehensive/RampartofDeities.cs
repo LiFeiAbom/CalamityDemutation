@@ -57,19 +57,19 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：材料为 GalacticaSingularity、DivineGeode 与 CosmiliteBar，在 DraedonsForge 合成
-                if(calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity) && calamity1.TryFind<ModItem>("DivineGeode", out ModItem divineGeode) && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
+                if(classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity) && classic.TryFind<ModItem>("DivineGeode", out ModItem divineGeode) && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<FrigidBulwark>();
-                    recipe1.AddIngredient<DeificAmulet>();
-                    recipe1.AddIngredient(galacticaSingularity.Type, 5);
-                    recipe1.AddIngredient(divineGeode.Type, 10);
-                    recipe1.AddIngredient(cosmiliteBar2.Type, 20);
-                    recipe1.AddTile(draedonsForge1.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<FrigidBulwark>();
+                    recipeClassic.AddIngredient<DeificAmulet>();
+                    recipeClassic.AddIngredient(galacticaSingularity.Type, 5);
+                    recipeClassic.AddIngredient(divineGeode.Type, 10);
+                    recipeClassic.AddIngredient(cosmiliteBar2.Type, 20);
+                    recipeClassic.AddTile(draedonsForge1.Type);
+                    recipeClassic.Register();
                 }
             }
         }

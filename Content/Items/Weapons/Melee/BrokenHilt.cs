@@ -49,26 +49,30 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：铜/锡锭×6 + 石块×4 + 铁/铅锭×4 @ 铁砧（对应世界生成的两种矿石分支）</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient(ItemID.CopperBar, 6)
-                .AddIngredient(ItemID.StoneBlock, 4)
-                .AddIngredient(ItemID.IronBar, 4)
-                .AddTile(TileID.Anvils)
-                .Register();
-            CreateRecipe().AddIngredient(ItemID.CopperBar, 6)
-                .AddIngredient(ItemID.StoneBlock, 4)
-                .AddIngredient(ItemID.LeadBar, 4)
-                .AddTile(TileID.Anvils)
-                .Register();
-            CreateRecipe().AddIngredient(ItemID.TinBar, 6)
-                .AddIngredient(ItemID.StoneBlock, 4)
-                .AddIngredient(ItemID.IronBar, 4)
-                .AddTile(TileID.Anvils)
-                .Register();
-            CreateRecipe().AddIngredient(ItemID.TinBar, 6)
-                .AddIngredient(ItemID.StoneBlock, 4)
-                .AddIngredient(ItemID.LeadBar, 4)
-                .AddTile(TileID.Anvils)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.CopperBar, 6);
+            recipe.AddIngredient(ItemID.StoneBlock, 4);
+            recipe.AddIngredient(ItemID.IronBar, 4);
+            recipe.AddTile(TileID.Anvils);
+            recipe.Register();
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient(ItemID.CopperBar, 6);
+            recipe2.AddIngredient(ItemID.StoneBlock, 4);
+            recipe2.AddIngredient(ItemID.LeadBar, 4);
+            recipe2.AddTile(TileID.Anvils);
+            recipe2.Register();
+            Recipe recipe3 = CreateRecipe();
+            recipe3.AddIngredient(ItemID.TinBar, 6);
+            recipe3.AddIngredient(ItemID.StoneBlock, 4);
+            recipe3.AddIngredient(ItemID.IronBar, 4);
+            recipe3.AddTile(TileID.Anvils);
+            recipe3.Register();
+            Recipe recipe4 = CreateRecipe();
+            recipe4.AddIngredient(ItemID.TinBar, 6);
+            recipe4.AddIngredient(ItemID.StoneBlock, 4);
+            recipe4.AddIngredient(ItemID.LeadBar, 4);
+            recipe4.AddTile(TileID.Anvils);
+            recipe4.Register();
         }
     }
 }

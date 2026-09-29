@@ -41,29 +41,33 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("LivingShard", out ModItem livingShard)
-                && modern.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient<HoneyDew2>().
-                    AddIngredient<TrapperBulb>(3).
-                    AddIngredient(livingShard.Type, 6).
-                    AddIngredient(essenceofSunlight.Type, 5).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (calamity.TryFind<ModItem>("LivingShard", out ModItem livingShard)
+                    && calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<HoneyDew2>();
+                    recipe.AddIngredient<TrapperBulb>(3);
+                    recipe.AddIngredient(livingShard.Type, 6);
+                    recipe.AddIngredient(essenceofSunlight.Type, 5);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("LivingShard", out ModItem classicLivingShard)
-                && classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient<HoneyDew2>().
-                    AddIngredient<TrapperBulb>(3).
-                    AddIngredient(classicLivingShard.Type, 6).
-                    AddIngredient(essenceofCinder.Type, 5).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (classic.TryFind<ModItem>("LivingShard", out ModItem classicLivingShard)
+                    && classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<HoneyDew2>();
+                    recipeClassic.AddIngredient<TrapperBulb>(3);
+                    recipeClassic.AddIngredient(classicLivingShard.Type, 6);
+                    recipeClassic.AddIngredient(essenceofCinder.Type, 5);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
+                }
             }
         }
     }

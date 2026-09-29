@@ -94,27 +94,27 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
-                if (calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
-                    && calamity1.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
-                    && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
-                    && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris)
-                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
-                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
+                    && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && classic.TryFind<ModItem>("Tenebris", out ModItem tenebris)
+                    && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(darksunFragment.Type, 5);
-                    recipe1.AddIngredient(classicEffulgentFeather.Type, 5);
-                    recipe1.AddIngredient(cosmiliteBar.Type, 5);
-                    recipe1.AddIngredient(tenebris.Type, 6);
-                    recipe1.AddIngredient(nightmareFuel.Type, 14);
-                    recipe1.AddIngredient(endothermicEnergy.Type, 14);
-                    recipe1.AddIngredient<LeadCore>();
-                    recipe1.AddTile(draedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(darksunFragment.Type, 5);
+                    recipeClassic.AddIngredient(classicEffulgentFeather.Type, 5);
+                    recipeClassic.AddIngredient(cosmiliteBar.Type, 5);
+                    recipeClassic.AddIngredient(tenebris.Type, 6);
+                    recipeClassic.AddIngredient(nightmareFuel.Type, 14);
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 14);
+                    recipeClassic.AddIngredient<LeadCore>();
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

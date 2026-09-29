@@ -107,13 +107,13 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.immune[Projectile.owner] = 7;
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
+                if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
+                if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
             }
         }
         /// <summary>
@@ -121,13 +121,13 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
         /// </summary>
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
+                if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
+                if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 160); }
             }
         }
         /// <summary>

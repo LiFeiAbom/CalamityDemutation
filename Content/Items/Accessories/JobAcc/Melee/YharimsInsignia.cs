@@ -51,18 +51,18 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
                 recipe.AddTile(TileID.LunarCraftingStation);
                 recipe.Register();
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder1))
+                if(classic.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.WarriorEmblem);
-                    recipe1.AddIngredient<NecklaceofVexation>();
-                    recipe1.AddIngredient(coreofCinder1.Type, 5);
-                    recipe1.AddIngredient(ItemID.CrossNecklace);
-                    recipe1.AddIngredient<BadgeofBravery>();
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.WarriorEmblem);
+                    recipeClassic.AddIngredient<NecklaceofVexation>();
+                    recipeClassic.AddIngredient(coreofCinder1.Type, 5);
+                    recipeClassic.AddIngredient(ItemID.CrossNecklace);
+                    recipeClassic.AddIngredient<BadgeofBravery>();
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
             }
         }

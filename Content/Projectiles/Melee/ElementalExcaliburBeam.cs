@@ -264,13 +264,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (calamity.TryFind<ModBuff>("Dragonfire", out ModBuff dragonfire))
                     target.AddBuff(dragonfire.Type, 600);
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))   // 经典版灾厄
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))   // 经典版灾厄
             {
-                if (calamity1.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
+                if (classic.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
                     target.AddBuff(demonFlames.Type, 600);
-                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                if (classic.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
                     target.AddBuff(godSlayerInferno.Type, 600);
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
                     target.AddBuff(holyLight.Type, 600);
             }
         }
@@ -296,13 +296,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (calamity.TryFind<ModBuff>("Dragonfire", out ModBuff dragonfire))
                     target.AddBuff(dragonfire.Type, 600);
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
+                if (classic.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
                     target.AddBuff(demonFlames.Type, 600);
-                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                if (classic.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
                     target.AddBuff(godSlayerInferno.Type, 600);
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
                     target.AddBuff(holyLight.Type, 600);
             }
         }

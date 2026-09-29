@@ -48,15 +48,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                 }
             }
             // 经典版灾厄：同名材料两版叫法不同，这里是维斯蒂德锭（VictideBar）×5 + 珊瑚×5，铁砧
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("VictideBar", out ModItem victideBar))
+                if(classic.TryFind<ModItem>("VictideBar", out ModItem victideBar))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(victideBar.Type, 5);   // 经典版对应材料 ×5
-                    recipe1.AddIngredient(ItemID.Coral, 5);
-                    recipe1.AddTile(TileID.Anvils);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(victideBar.Type, 5);   // 经典版对应材料 ×5
+                    recipeClassic.AddIngredient(ItemID.Coral, 5);
+                    recipeClassic.AddTile(TileID.Anvils);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -60,27 +60,27 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：狂暴药水 + UnholyEssence + 灾厄经典版自有的银河奇点
-                if(calamity1.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence3) && calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
+                if(classic.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence3) && classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.WrathPotion);
-                    recipe1.AddIngredient(unholyEssence3.Type);
-                    recipe1.AddIngredient(galacticaSingularity1.Type);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.WrathPotion);
+                    recipeClassic.AddIngredient(unholyEssence3.Type);
+                    recipeClassic.AddIngredient(galacticaSingularity1.Type);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
                 // 经典版灾厄：药剂瓶 + 血珠×40 + UnholyEssence
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && calamity1.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence4))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence4))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddIngredient(bloodOrb2.Type, 40);
-                    recipe1.AddIngredient(unholyEssence4.Type);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 40);
+                    recipeClassic.AddIngredient(unholyEssence4.Type);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -59,27 +59,27 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：圣水×5 + Stardust×20 + 水晶碎块×5 + EssenceofCinder×3
-                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust1) && calamity1.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder1))
+                if(classic.TryFind<ModItem>("Stardust", out ModItem stardust1) && classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.HolyWater, 5);
-                    recipe1.AddIngredient(stardust1.Type, 20);
-                    recipe1.AddIngredient(ItemID.CrystalShard, 5);
-                    recipe1.AddIngredient(essenceofCinder1.Type, 3);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.HolyWater, 5);
+                    recipeClassic.AddIngredient(stardust1.Type, 20);
+                    recipeClassic.AddIngredient(ItemID.CrystalShard, 5);
+                    recipeClassic.AddIngredient(essenceofCinder1.Type, 3);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
                 // 经典版灾厄：圣水×5 + 血珠×50
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(bloodOrb2.Type, 50);
-                    recipe1.AddIngredient(ItemID.HolyWater, 5);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 50);
+                    recipeClassic.AddIngredient(ItemID.HolyWater, 5);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -124,11 +124,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：本模组彗星陨刃 + 月锭×5 @ 月球工作台</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().
-                AddIngredient<CometQuasher>().
-                AddIngredient(ItemID.LunarBar, 5).
-                AddTile(TileID.LunarCraftingStation).
-                Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<CometQuasher>();
+            recipe.AddIngredient(ItemID.LunarBar, 5);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.Register();
         }
     }
 }

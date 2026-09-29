@@ -56,26 +56,26 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：药剂瓶 + StormlionMandible + VictoryShard×3（此处为药剂瓶合成，非炼金台）
-                if(calamity1.TryFind<ModItem>("StormlionMandible", out ModItem stormlionMandible1) && calamity1.TryFind<ModItem>("VictoryShard", out ModItem victoryShard1))
+                if(classic.TryFind<ModItem>("StormlionMandible", out ModItem stormlionMandible1) && classic.TryFind<ModItem>("VictoryShard", out ModItem victoryShard1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddIngredient(stormlionMandible1.Type);
-                    recipe1.AddIngredient(victoryShard1.Type, 3);
-                    recipe1.AddTile(TileID.Bottles);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddIngredient(stormlionMandible1.Type);
+                    recipeClassic.AddIngredient(victoryShard1.Type, 3);
+                    recipeClassic.AddTile(TileID.Bottles);
+                    recipeClassic.Register();
                 }
                 // 经典版灾厄：药剂瓶 + 血珠×30（炼金台）
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddIngredient(bloodOrb2.Type, 30);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 30);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

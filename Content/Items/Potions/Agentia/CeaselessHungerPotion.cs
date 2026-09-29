@@ -59,27 +59,27 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：水×4 + DarkPlasma + 经典版 GalacticaSingularity（每次 4 瓶）
-                if (calamity1.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma3) && calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
+                if (classic.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma3) && classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
                 {
-                    Recipe recipe1 = CreateRecipe(4);
-                    recipe1.AddIngredient(ItemID.BottledWater, 4);
-                    recipe1.AddIngredient(darkPlasma3.Type);
-                    recipe1.AddIngredient(galacticaSingularity1.Type);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe(4);
+                    recipeClassic.AddIngredient(ItemID.BottledWater, 4);
+                    recipeClassic.AddIngredient(darkPlasma3.Type);
+                    recipeClassic.AddIngredient(galacticaSingularity1.Type);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
                 // 经典版灾厄：水×4 + 血珠×20 + DarkPlasma（每次 4 瓶）
-                if (calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && calamity1.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma4))
+                if (classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma4))
                 {
-                    Recipe recipe1 = CreateRecipe(4);
-                    recipe1.AddIngredient(ItemID.BottledWater, 4);
-                    recipe1.AddIngredient(bloodOrb2.Type, 20);
-                    recipe1.AddIngredient(darkPlasma4.Type);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe(4);
+                    recipeClassic.AddIngredient(ItemID.BottledWater, 4);
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 20);
+                    recipeClassic.AddIngredient(darkPlasma4.Type);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -83,14 +83,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 }
             }
             // 经典版灾厄：德雷顿熔炉（DraedonsForge）
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
+                if (classic.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<BlackMatterStick>(12);
-                    recipe1.AddTile(classicDraedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<BlackMatterStick>(12);
+                    recipeClassic.AddTile(classicDraedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

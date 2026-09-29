@@ -49,9 +49,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             // 太空感染：现代版灾厄有 AstralInfectionDebuff 就直接用；经典版灾厄没有这一系减益，
             // 退回原版诅咒狱火（同为紫色 DoT，观感最接近），与 WelkinFractalHeld 处理风寒同款写法
             astralDebuffType = BuffID.CursedInferno;
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                astralDebuffType = astralInfection.Type;
+                if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection))
+                {
+                    astralDebuffType = astralInfection.Type;
+                }
             }
         }
         public override void SetDefaults()

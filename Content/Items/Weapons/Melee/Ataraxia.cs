@@ -144,45 +144,49 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("AuricBar", out ModItem modernAuricBar)
-                && modern.TryFind<ModItem>("CosmiliteBar", out ModItem modernCosmiliteBar)
-                && modern.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
-                && modern.TryFind<ModItem>("NightmareFuel", out ModItem modernNightmareFuel)
-                && modern.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient(ItemID.BrokenHeroSword).
-                    AddIngredient(modernAuricBar.Type, 5).
-                    AddIngredient(modernCosmiliteBar.Type, 8).
-                    AddIngredient(ascendantSpiritEssence.Type, 2).
-                    AddIngredient(modernNightmareFuel.Type, 20).
-                    AddTile(cosmicAnvil.Type).
-                    Register();
+                if (calamity.TryFind<ModItem>("AuricBar", out ModItem modernAuricBar)
+                    && calamity.TryFind<ModItem>("CosmiliteBar", out ModItem modernCosmiliteBar)
+                    && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
+                    && calamity.TryFind<ModItem>("NightmareFuel", out ModItem modernNightmareFuel)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.BrokenHeroSword);
+                    recipe.AddIngredient(modernAuricBar.Type, 5);
+                    recipe.AddIngredient(modernCosmiliteBar.Type, 8);
+                    recipe.AddIngredient(ascendantSpiritEssence.Type, 2);
+                    recipe.AddIngredient(modernNightmareFuel.Type, 20);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
-                && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
-                && classic.TryFind<ModItem>("NightmareFuel", out ModItem classicNightmareFuel)
-                && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
-                && classic.TryFind<ModItem>("BarofLife", out ModItem barofLife)
-                && classic.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
-                && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
-                && classic.TryFind<ModTile>("DraedonsForge", out ModTile classicForge))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient(ItemID.BrokenHeroSword).
-                    AddIngredient(classicCosmiliteBar.Type, 25).
-                    AddIngredient(phantoplasm.Type, 35).
-                    AddIngredient(classicNightmareFuel.Type, 90).
-                    AddIngredient(endothermicEnergy.Type, 90).
-                    AddIngredient(darksunFragment.Type, 65).
-                    AddIngredient(barofLife.Type, 15).
-                    AddIngredient(coreofCalamity.Type, 5).
-                    AddIngredient(hellcasterFragment.Type, 10).
-                    AddTile(classicForge.Type).
-                    Register();
+                if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
+                    && classic.TryFind<ModItem>("NightmareFuel", out ModItem classicNightmareFuel)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && classic.TryFind<ModItem>("BarofLife", out ModItem barofLife)
+                    && classic.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
+                    && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile classicForge))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.BrokenHeroSword);
+                    recipeClassic.AddIngredient(classicCosmiliteBar.Type, 25);
+                    recipeClassic.AddIngredient(phantoplasm.Type, 35);
+                    recipeClassic.AddIngredient(classicNightmareFuel.Type, 90);
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 90);
+                    recipeClassic.AddIngredient(darksunFragment.Type, 65);
+                    recipeClassic.AddIngredient(barofLife.Type, 15);
+                    recipeClassic.AddIngredient(coreofCalamity.Type, 5);
+                    recipeClassic.AddIngredient(hellcasterFragment.Type, 10);
+                    recipeClassic.AddTile(classicForge.Type);
+                    recipeClassic.Register();
+                }
             }
         }
     }

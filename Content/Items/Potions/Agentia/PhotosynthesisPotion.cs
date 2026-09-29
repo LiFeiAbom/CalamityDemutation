@@ -58,10 +58,10 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：药剂瓶 + BeetleJuice×2 + ManeaterBulb + TrapperBulb + EssenceofCinder
-                if(calamity1.TryFind<ModItem>("BeetleJuice", out ModItem beetleJuice1) && calamity1.TryFind<ModItem>("ManeaterBulb", out ModItem maneaterBulb1) && calamity1.TryFind<ModItem>("TrapperBulb", out ModItem trapperBulb1) && calamity1.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder1))
+                if(classic.TryFind<ModItem>("BeetleJuice", out ModItem beetleJuice1) && classic.TryFind<ModItem>("ManeaterBulb", out ModItem maneaterBulb1) && classic.TryFind<ModItem>("TrapperBulb", out ModItem trapperBulb1) && classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder1))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BottledWater);
@@ -73,7 +73,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
                 // 经典版灾厄：药剂瓶 + 血珠×40
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BottledWater);

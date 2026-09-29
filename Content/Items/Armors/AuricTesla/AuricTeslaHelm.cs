@@ -100,9 +100,9 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     }
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                var calamityPlayerType = calamity1.Code.GetTypes()
+                var calamityPlayerType = classic.Code.GetTypes()
                     .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                 if (calamityPlayerType != null)
                 {
@@ -160,36 +160,36 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                 }
             }
             // ── 经典版灾厄：四件下位头 + 一长串后期材料，德雷顿熔炉 ──
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre)
-                    && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                    && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
-                    && calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
-                    && calamity1.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
-                    && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife)
-                    && calamity1.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
-                    && calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
-                    && calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity)
-                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
+                    && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && classic.TryFind<ModItem>("BarofLife", out ModItem barofLife)
+                    && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
+                    && classic.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity)
+                    && classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<TarragonHelm>();
-                    recipe1.AddIngredient<BloodflareMask>();
-                    recipe1.AddIngredient<SilvaHelm>();
-                    recipe1.AddIngredient<GodSlayerHelm>();
-                    recipe1.AddIngredient(auricOre.Type, 60);              // 经典版材料：金之矿石 ×60
-                    recipe1.AddIngredient(endothermicEnergy.Type, 10);     // 吸热能量 ×10
-                    recipe1.AddIngredient(nightmareFuel.Type, 10);         // 噩梦燃料 ×10
-                    recipe1.AddIngredient(phantoplasm.Type, 8);            // 幻影质 ×8
-                    recipe1.AddIngredient(darksunFragment.Type, 6);        // 暗黑碎片 ×6
-                    recipe1.AddIngredient(barofLife.Type, 5);              // 生命锭 ×5
-                    recipe1.AddIngredient(hellcasterFragment.Type, 5);     // 地狱施法者碎片 ×5
-                    recipe1.AddIngredient(coreofCalamity.Type, 2);         // 灾厄核心 ×2
-                    recipe1.AddIngredient(galacticaSingularity.Type);      // 银河奇点 ×1
-                    recipe1.AddIngredient<PsychoticAmulet>();
-                    recipe1.AddTile(draedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<TarragonHelm>();
+                    recipeClassic.AddIngredient<BloodflareMask>();
+                    recipeClassic.AddIngredient<SilvaHelm>();
+                    recipeClassic.AddIngredient<GodSlayerHelm>();
+                    recipeClassic.AddIngredient(auricOre.Type, 60);              // 经典版材料：金之矿石 ×60
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 10);     // 吸热能量 ×10
+                    recipeClassic.AddIngredient(nightmareFuel.Type, 10);         // 噩梦燃料 ×10
+                    recipeClassic.AddIngredient(phantoplasm.Type, 8);            // 幻影质 ×8
+                    recipeClassic.AddIngredient(darksunFragment.Type, 6);        // 暗黑碎片 ×6
+                    recipeClassic.AddIngredient(barofLife.Type, 5);              // 生命锭 ×5
+                    recipeClassic.AddIngredient(hellcasterFragment.Type, 5);     // 地狱施法者碎片 ×5
+                    recipeClassic.AddIngredient(coreofCalamity.Type, 2);         // 灾厄核心 ×2
+                    recipeClassic.AddIngredient(galacticaSingularity.Type);      // 银河奇点 ×1
+                    recipeClassic.AddIngredient<PsychoticAmulet>();
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

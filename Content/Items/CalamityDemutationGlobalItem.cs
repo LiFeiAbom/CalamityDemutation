@@ -295,13 +295,13 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                if (calamity0.TryFind<ModItem>("PerforatorBag", out ModItem perforatorBag) && item.type == perforatorBag.Type)
+                if (calamity.TryFind<ModItem>("PerforatorBag", out ModItem perforatorBag) && item.type == perforatorBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodyWormTooth>(), 1));
                 }
-                if(calamity0.TryFind<ModItem>("RavagerBag", out ModItem ravagerBag) && item.type == ravagerBag.Type)
+                if(calamity.TryFind<ModItem>("RavagerBag", out ModItem ravagerBag) && item.type == ravagerBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodPact>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FleshTotem>(), 2));
@@ -310,7 +310,7 @@ namespace CalamityDemutation.Content.Items
                         itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodflareCore>(), 1));
                     }
                 }
-                if (calamity0.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
+                if (calamity.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<NebulousCore>(), 1));
                     // 虚无双子系（CE 的 NihilityTwinBag，档位=月后，故挂到神明吞噬者）：无星之夜 1/5 概率一次 3 把，虚无碎片必掉 32~40
@@ -319,47 +319,47 @@ namespace CalamityDemutation.Content.Items
                     // 宙宇波能刃（灾厄原版 Excelsus 即神吞袋武器池掉落，本模组移植后按 1/3 概率挂回神吞袋）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Excelsus>(), 3));
                 }
-                if (calamity0.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
+                if (calamity.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
                 }
-                if (calamity0.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
+                if (calamity.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LureofEnthrallment>(), 3));
                 }
-                if (calamity0.TryFind<ModItem>("BrimstoneElementalBag", out ModItem brimstoneElementalBag) && item.type == brimstoneElementalBag.Type)
+                if (calamity.TryFind<ModItem>("BrimstoneElementalBag", out ModItem brimstoneElementalBag) && item.type == brimstoneElementalBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Gehenna>(), 1));
                 }
-                if ((calamity0.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (calamity0.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
+                if ((calamity.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (calamity.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<AeroStone>(), 10));
                 }
-                if (calamity0.TryFind<ModItem>("CryogenBag", out ModItem cryogenBag) && item.type == cryogenBag.Type)
+                if (calamity.TryFind<ModItem>("CryogenBag", out ModItem cryogenBag) && item.type == cryogenBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
                 }
-                if (calamity0.TryFind<ModItem>("CalamitasCloneBag", out ModItem calamitasCloneBag) && item.type == calamitasCloneBag.Type)
+                if (calamity.TryFind<ModItem>("CalamitasCloneBag", out ModItem calamitasCloneBag) && item.type == calamitasCloneBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CalamityRing>(), 1));
                     // 先知系（CE 的 ProphetBag，血肉量≈灾厄之影）：符文之歌 1/5 概率一次 3 把
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RuneSong>(), 5, 1, 1, 3));
                 }
-                if (calamity0.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
+                if (calamity.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
                 }
-                if(calamity0.TryFind<ModItem>("HiveMindBag", out ModItem hiveMindBag) && item.type == hiveMindBag.Type)
+                if(calamity.TryFind<ModItem>("HiveMindBag", out ModItem hiveMindBag) && item.type == hiveMindBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RottenBrain>(), 1));
                 }
-                if(calamity0.TryFind<ModItem>("CrabulonBag", out ModItem crabulonBag) && item.type == crabulonBag.Type)
+                if(calamity.TryFind<ModItem>("CrabulonBag", out ModItem crabulonBag) && item.type == crabulonBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FungalClump>(), 1));
                 }
-                if (calamity0.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
+                if (calamity.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LeviathanAmbergris>(), 1));
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<TheCommunity>(), 100));
@@ -368,7 +368,7 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DefenseBlade>(), 100));
                 }
-                if (calamity0.TryFind<ModItem>("YharonBag", out ModItem yharonBag) && item.type == yharonBag.Type)
+                if (calamity.TryFind<ModItem>("YharonBag", out ModItem yharonBag) && item.type == yharonBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
@@ -379,13 +379,13 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<YharonSonStaff>(), 1));
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("PerforatorBag", out ModItem perforatorBag) && item.type == perforatorBag.Type)
+                if (classic.TryFind<ModItem>("PerforatorBag", out ModItem perforatorBag) && item.type == perforatorBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodyWormTooth>(), 1));
                 }
-                if (calamity1.TryFind<ModItem>("RavagerBag", out ModItem ravagerBag) && item.type == ravagerBag.Type)
+                if (classic.TryFind<ModItem>("RavagerBag", out ModItem ravagerBag) && item.type == ravagerBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodPact>(), 2));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FleshTotem>(), 2));
@@ -394,7 +394,7 @@ namespace CalamityDemutation.Content.Items
                         itemLoot.Add(new CommonDrop(ModContent.ItemType<BloodflareCore>(), 1));
                     }
                 }
-                if (calamity1.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
+                if (classic.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<NebulousCore>(), 1));
                     // 虚无双子系（CE 的 NihilityTwinBag，档位=月后，故挂到神明吞噬者）：无星之夜 1/5 概率一次 3 把，虚无碎片必掉 32~40
@@ -403,47 +403,47 @@ namespace CalamityDemutation.Content.Items
                     // 宙宇波能刃（灾厄原版 Excelsus 即神吞袋武器池掉落，本模组移植后按 1/3 概率挂回神吞袋）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Excelsus>(), 3));
                 }
-                if (calamity1.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
+                if (classic.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
                 }
-                if (calamity1.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
+                if (classic.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LureofEnthrallment>(), 3));
                 }
-                if(calamity1.TryFind<ModItem>("BrimstoneWaifuBag", out ModItem brimstoneWaifuBag) && item.type == brimstoneWaifuBag.Type)
+                if(classic.TryFind<ModItem>("BrimstoneWaifuBag", out ModItem brimstoneWaifuBag) && item.type == brimstoneWaifuBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Gehenna>(), 1));
                 }
-                if((calamity1.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (calamity1.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
+                if((classic.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (classic.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<AeroStone>(), 10));
                 }
-                if (calamity1.TryFind<ModItem>("CryogenBag", out ModItem cryogenBag) && item.type == cryogenBag.Type)
+                if (classic.TryFind<ModItem>("CryogenBag", out ModItem cryogenBag) && item.type == cryogenBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
                 }
-                if (calamity1.TryFind<ModItem>("CalamitasBag", out ModItem calamitasBag) && item.type == calamitasBag.Type)
+                if (classic.TryFind<ModItem>("CalamitasBag", out ModItem calamitasBag) && item.type == calamitasBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CalamityRing>(), 1));
                     // 先知系（CE 的 ProphetBag，血肉量≈灾厄之影）：符文之歌 1/5 概率一次 3 把
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RuneSong>(), 5, 1, 1, 3));
                 }
-                if (calamity1.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
+                if (classic.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
                 }
-                if (calamity1.TryFind<ModItem>("HiveMindBag", out ModItem hiveMindBag) && item.type == hiveMindBag.Type)
+                if (classic.TryFind<ModItem>("HiveMindBag", out ModItem hiveMindBag) && item.type == hiveMindBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RottenBrain>(), 1));
                 }
-                if (calamity1.TryFind<ModItem>("CrabulonBag", out ModItem crabulonBag) && item.type == crabulonBag.Type)
+                if (classic.TryFind<ModItem>("CrabulonBag", out ModItem crabulonBag) && item.type == crabulonBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<FungalClump>(), 1));
                 }
-                if (calamity1.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
+                if (classic.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LeviathanAmbergris>(), 1));
                 }
@@ -451,7 +451,7 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DefenseBlade>(), 100));
                 }
-                if (calamity1.TryFind<ModItem>("YharonBag", out ModItem yharonsBag) && item.type == yharonsBag.Type)
+                if (classic.TryFind<ModItem>("YharonBag", out ModItem yharonsBag) && item.type == yharonsBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));

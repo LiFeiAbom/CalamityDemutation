@@ -409,7 +409,7 @@ namespace CalamityDemutation
                 debuffList.Add(buff6.Type);
             if (ModContent.TryFind("CalamityMod", "Riptide", out ModBuff buff7))
                 debuffList.Add(buff7.Type);
-            if (ModContent.TryFind("CalamityMod", "AstralInfection", out ModBuff buff8))
+            if (ModContent.TryFind("CalamityMod", "AstralInfectionDebuff", out ModBuff buff8))
                 debuffList.Add(buff8.Type);
             if (ModContent.TryFind("CalamityMod", "BrainRot", out ModBuff buff9))
                 debuffList.Add(buff9.Type);

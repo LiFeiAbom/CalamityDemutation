@@ -103,10 +103,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方（CE 已去灾厄化，照抄）：破碎剑刃 + 黑曜石×12 @ 铁砧</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient(ItemID.BreakerBlade)
-                .AddIngredient(ItemID.Obsidian, 12)
-                .AddTile(TileID.Anvils)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.BreakerBlade);
+            recipe.AddIngredient(ItemID.Obsidian, 12);
+            recipe.AddTile(TileID.Anvils);
+            recipe.Register();
         }
     }
 }

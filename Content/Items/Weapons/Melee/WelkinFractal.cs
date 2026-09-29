@@ -56,11 +56,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：破碎分形 + 星怒 + 养蜂人 @ 铁砧</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<ShatteredFractal>()
-                .AddIngredient(ItemID.Starfury)
-                .AddIngredient(ItemID.BeeKeeper)
-                .AddTile(TileID.Anvils)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<ShatteredFractal>();
+            recipe.AddIngredient(ItemID.Starfury);
+            recipe.AddIngredient(ItemID.BeeKeeper);
+            recipe.AddTile(TileID.Anvils);
+            recipe.Register();
         }
     }
     /// <summary>
@@ -107,9 +108,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             // 风寒减益：现代版灾厄有 WindChilled 就直接用，经典版灾厄没有该 buff（也没有寒系 DoT），退回原版霜火
             chillDebuffType = BuffID.Frostburn;
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("WindChilled", out ModBuff windChilled))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                chillDebuffType = windChilled.Type;
+                if (calamity.TryFind<ModBuff>("WindChilled", out ModBuff windChilled))
+                {
+                    chillDebuffType = windChilled.Type;
+                }
             }
         }
         public override void SetDefaults()

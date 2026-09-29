@@ -76,14 +76,17 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient(cryonicBar.Type, 8).
-                    AddIngredient(ItemID.HellstoneBar, 8).
-                    AddIngredient(ItemID.SoulofLight, 3).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(cryonicBar.Type, 8);
+                    recipe.AddIngredient(ItemID.HellstoneBar, 8);
+                    recipe.AddIngredient(ItemID.SoulofLight, 3);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
         }
     }

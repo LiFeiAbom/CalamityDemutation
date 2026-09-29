@@ -62,23 +62,23 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("CoreofEleum", out ModItem coreofEleum)
-                    && calamity1.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder)
-                    && calamity1.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos))
+                if(classic.TryFind<ModItem>("CoreofEleum", out ModItem coreofEleum)
+                    && classic.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder)
+                    && classic.TryFind<ModItem>("CoreofChaos", out ModItem coreofChaos))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.AnkhShield);
-                    recipe1.AddIngredient<OrnateShield>();
-                    recipe1.AddIngredient<ShieldoftheOcean>();
-                    recipe1.AddIngredient<Abaddon>();
-                    recipe1.AddIngredient(coreofEleum.Type, 3);
-                    recipe1.AddIngredient(coreofCinder.Type, 3);
-                    recipe1.AddIngredient(coreofChaos.Type, 3);
-                    recipe1.AddIngredient(ItemID.LifeFruit, 5);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.AnkhShield);
+                    recipeClassic.AddIngredient<OrnateShield>();
+                    recipeClassic.AddIngredient<ShieldoftheOcean>();
+                    recipeClassic.AddIngredient<Abaddon>();
+                    recipeClassic.AddIngredient(coreofEleum.Type, 3);
+                    recipeClassic.AddIngredient(coreofCinder.Type, 3);
+                    recipeClassic.AddIngredient(coreofChaos.Type, 3);
+                    recipeClassic.AddIngredient(ItemID.LifeFruit, 5);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

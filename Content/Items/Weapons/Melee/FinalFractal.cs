@@ -118,25 +118,31 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity)
-                && calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar)
-                && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().AddIngredient(ItemID.Zenith)
-                    .AddIngredient<VoidFractal>()
-                    .AddIngredient(shadowspecBar.Type, 10)
-                    .AddTile(cosmicAnvil.Type)
-                    .Register();
+                if (calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.Zenith);
+                    recipe.AddIngredient<VoidFractal>();
+                    recipe.AddIngredient(shadowspecBar.Type, 10);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1)
-                && calamity1.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar)
-                && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().AddIngredient(ItemID.Zenith)
-                    .AddIngredient<VoidFractal>()
-                    .AddIngredient(classicShadowspecBar.Type, 10)
-                    .AddTile(draedonsForge.Type)
-                    .Register();
+                if (classic.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.Zenith);
+                    recipeClassic.AddIngredient<VoidFractal>();
+                    recipeClassic.AddIngredient(classicShadowspecBar.Type, 10);
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
+                }
             }
         }
     }

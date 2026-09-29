@@ -108,17 +108,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：毁灭刃 + 狱石锭×10 + 炽热精华 + 三魂各×3 @ 秘银砧（炽热精华走经典版软依赖）</summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity) && calamity.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient(ItemID.BreakerBlade).
-                    AddIngredient(ItemID.HellstoneBar, 10).
-                    AddIngredient(essenceofCinder.Type).
-                    AddIngredient(ItemID.SoulofMight, 3).
-                    AddIngredient(ItemID.SoulofSight, 3).
-                    AddIngredient(ItemID.SoulofFright, 3).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (calamity.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.BreakerBlade);
+                    recipeClassic.AddIngredient(ItemID.HellstoneBar, 10);
+                    recipeClassic.AddIngredient(essenceofCinder.Type);
+                    recipeClassic.AddIngredient(ItemID.SoulofMight, 3);
+                    recipeClassic.AddIngredient(ItemID.SoulofSight, 3);
+                    recipeClassic.AddIngredient(ItemID.SoulofFright, 3);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
+                }
             }
         }
     }

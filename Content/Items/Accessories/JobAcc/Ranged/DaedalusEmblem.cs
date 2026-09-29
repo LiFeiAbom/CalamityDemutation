@@ -50,16 +50,16 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity2))
+                if (classic.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.CelestialStone);
-                    recipe1.AddIngredient(coreofCalamity2.Type);
-                    recipe1.AddIngredient(ItemID.RangerEmblem);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.CelestialStone);
+                    recipeClassic.AddIngredient(coreofCalamity2.Type);
+                    recipeClassic.AddIngredient(ItemID.RangerEmblem);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

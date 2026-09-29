@@ -16,7 +16,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// 与 CI 原版的差异：① <c>CIDustID.DustCopperCoin</c>（CI 自己的原版尘埃别名表）→直接写它对应的原版尘埃 ID
     /// <c>244</c>；② <c>CIFunction.FramesChanger(proj, fCounter, fMax)</c> → 本类私有 <see cref="FramesChanger"/>
     /// 等价内联；③ <c>player.CIMod()</c> → <c>player.GetModPlayer&lt;CalamityDemutationPlayer&gt;()</c>，
-    /// 标记 <c>OwnSonYharon</c> → <c>ownSonYharon</c>（本模组字段小写开头）；④ 去掉 CI 的 <c>ILocalizedModType</c> 标记。
+    /// 标记 <c>OwnSonYharon</c> → <c>ownSonYharon</c>（本模组字段小写开头）；④ 去掉 CI 的 <c>ILocalizedModType</c> 标记；
+    /// ⑤ **补上 CI 漏掉的 <c>Projectile.DamageType = DamageClass.Summon</c>**（2026-09-29 用户拍板）——CI 与它自家其它召唤物
+    /// 不同、没设这一项，而 tML 对 <c>minion = true</c> 的弹幕会每帧按 <c>originalDamage × GetTotalDamage(DamageType)</c> 重算伤害
+    /// （<c>originalDamage</c> 对物品生成的弹幕自动取 <c>Item.damage</c>，即 120）。留空 = <c>DamageClass.Default</c>，
+    /// 官方文档明说不享受任何伤害类型加成，结果就是犽戎之子恒打 120、完全不吃召唤伤害装备，
+    /// 且因 <c>CountsAsClass(Summon)</c> 为假而连噬渊标记都吃不到。补齐后与灾厄本体 118 个召唤弹幕里 114 个的写法一致。
     /// </para>
     /// </summary>
     internal class SonYharon:ModProjectile
@@ -30,11 +35,12 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>
         /// 基础属性：100x100 碰撞箱、无限穿透、不撞地形、额外更新 1 次（每帧多跑一趟 AI）、
-        /// 寿命 18000*5 帧（靠 <c>ownSonYharon</c> 标志续命）。
+        /// 寿命 18000*5 帧（靠 <c>ownSonYharon</c> 标志续命）。伤害类型取召唤（CI 漏设，见类注释差异⑤）；
         /// 命中无敌帧与仆从栏位是 2026-09-22 的两处刻意改动，理由见方法体内注释。
         /// </summary>
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Summon;
             Projectile.width = 100;
             Projectile.height = 100;
             Projectile.netImportant = true;

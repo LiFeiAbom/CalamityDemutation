@@ -41,15 +41,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 recipe.AddTile(TileID.Anvils);
                 recipe.Register();
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("BloodlettingEssence", out ModItem bloodlettingEssence))
+                if(classic.TryFind<ModItem>("BloodlettingEssence", out ModItem bloodlettingEssence))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(bloodlettingEssence.Type, 3);
-                    recipe1.AddIngredient(ItemID.Vertebrae, 10);
-                    recipe1.AddTile(TileID.Anvils);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(bloodlettingEssence.Type, 3);
+                    recipeClassic.AddIngredient(ItemID.Vertebrae, 10);
+                    recipeClassic.AddTile(TileID.Anvils);
+                    recipeClassic.Register();
                 }
             }
         }

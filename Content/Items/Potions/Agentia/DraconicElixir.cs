@@ -69,10 +69,10 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：药剂瓶 + HellcasterFragment + 太阳花/月光草/火焰花
-                if(calamity1.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment1))
+                if(classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment1))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BottledWater);
@@ -84,7 +84,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
                 // 经典版灾厄：药剂瓶 + 血珠×50 + HellcasterFragment
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && calamity1.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment2))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BottledWater);

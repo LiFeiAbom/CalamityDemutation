@@ -54,15 +54,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
                 }
             }
             // 经典版灾厄：同名材料两版叫法不同，这里是 VerstaltiteBar ×5 + 水晶碎片×10，秘银砧
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("VerstaltiteBar", out ModItem verstaltiteBar))
+                if(classic.TryFind<ModItem>("VerstaltiteBar", out ModItem verstaltiteBar))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(verstaltiteBar.Type, 5);      // 经典版对应材料 ×5
-                    recipe1.AddIngredient(ItemID.CrystalShard, 10);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(verstaltiteBar.Type, 5);      // 经典版对应材料 ×5
+                    recipeClassic.AddIngredient(ItemID.CrystalShard, 10);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

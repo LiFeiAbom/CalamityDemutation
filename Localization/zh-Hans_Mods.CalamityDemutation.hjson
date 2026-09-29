@@ -642,15 +642,6 @@ Items: {
 			'''
 	}
 
-	MoonPact: {
-		DisplayName: 拜月契约
-		Tooltip:
-			'''
-			获得一个额外的翅膀栏
-			食用后会产生不可逆转的后果
-			'''
-	}
-
 	ChaosAmulet: {
 		DisplayName: 混沌护符
 		Tooltip: 洞穴探险效果
@@ -1107,6 +1098,15 @@ Items: {
 		Tooltip: 四柱碎片凝成的奇点
 	}
 
+	GalactusBlade: {
+		DisplayName: 星河之刃
+		Tooltip:
+			'''
+			由核子混沌之怒锻造
+			从天穹降下彗星弹幕
+			'''
+	}
+
 	ElementalFractal: {
 		DisplayName: 元素分形
 		Tooltip:
@@ -1327,6 +1327,15 @@ Items: {
 			'''
 			最大法力 +20
 			静止不动时提升法力再生
+			'''
+	}
+
+	MoonPact: {
+		DisplayName: 拜月契约
+		Tooltip:
+			'''
+			获得一个额外的翅膀栏
+			食用后会产生不可逆转的后果
 			'''
 	}
 
@@ -2191,6 +2200,7 @@ Projectiles: {
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
+	GalacticaComet.DisplayName: 星河彗星
 	Galaxia.DisplayName: 银河之星光球
 	GalaxyBlast.DisplayName: 星系爆弹
 	GodSlayerDart.DisplayName: 弑神者飞镖

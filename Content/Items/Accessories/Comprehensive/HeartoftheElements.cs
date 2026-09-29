@@ -116,7 +116,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         public override void AddRecipes()
         {
             // 由五个 waifu 饰品与四色元素石在月球锻造台合成
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) || ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) || ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient<WifeinaBottle>();

@@ -66,27 +66,35 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().AddIngredient<AbyssFractal>()
-                    .AddIngredient(ItemID.ChlorophyteClaymore)
-                    .AddIngredient(ItemID.TrueExcalibur)
-                    .AddIngredient(ItemID.PiercingStarlight)
-                    .AddIngredient(ItemID.ChlorophyteBar, 4)
-                    .AddIngredient(starblightSoot.Type, 16)
-                    .AddTile(TileID.MythrilAnvil)
-                    .Register();
+                if (calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<AbyssFractal>();
+                    recipe.AddIngredient(ItemID.ChlorophyteClaymore);
+                    recipe.AddIngredient(ItemID.TrueExcalibur);
+                    recipe.AddIngredient(ItemID.PiercingStarlight);
+                    recipe.AddIngredient(ItemID.ChlorophyteBar, 4);
+                    recipe.AddIngredient(starblightSoot.Type, 16);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1) && calamity1.TryFind<ModItem>("Stardust", out ModItem stardust))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().AddIngredient<AbyssFractal>()
-                    .AddIngredient(ItemID.ChlorophyteClaymore)
-                    .AddIngredient(ItemID.TrueExcalibur)
-                    .AddIngredient(ItemID.PiercingStarlight)
-                    .AddIngredient(ItemID.ChlorophyteBar, 4)
-                    .AddIngredient(stardust.Type, 16)
-                    .AddTile(TileID.MythrilAnvil)
-                    .Register();
+                if (classic.TryFind<ModItem>("Stardust", out ModItem stardust))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<AbyssFractal>();
+                    recipeClassic.AddIngredient(ItemID.ChlorophyteClaymore);
+                    recipeClassic.AddIngredient(ItemID.TrueExcalibur);
+                    recipeClassic.AddIngredient(ItemID.PiercingStarlight);
+                    recipeClassic.AddIngredient(ItemID.ChlorophyteBar, 4);
+                    recipeClassic.AddIngredient(stardust.Type, 16);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
+                }
             }
         }
     }
@@ -135,9 +143,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             astralDebuffType = BuffID.CursedInferno;
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                astralDebuffType = astralInfection.Type;
+                if (calamity.TryFind<ModBuff>("AstralInfectionDebuff", out ModBuff astralInfection))
+                {
+                    astralDebuffType = astralInfection.Type;
+                }
             }
         }
         public override void SetDefaults()

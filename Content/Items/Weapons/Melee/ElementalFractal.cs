@@ -53,13 +53,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：元素分形 + 真断钢剑 + 夜明锭×5 + 神圣锭×5 + 日耀碎片×5 @ 远古操纵机</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<StarlitFractal>()
-                .AddIngredient(ItemID.TrueNightsEdge)
-                .AddIngredient(ItemID.LunarBar, 5)
-                .AddIngredient(ItemID.HallowedBar, 5)
-                .AddIngredient(ItemID.FragmentSolar, 5)
-                .AddTile(TileID.LunarCraftingStation)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<StarlitFractal>();
+            recipe.AddIngredient(ItemID.TrueNightsEdge);
+            recipe.AddIngredient(ItemID.LunarBar, 5);
+            recipe.AddIngredient(ItemID.HallowedBar, 5);
+            recipe.AddIngredient(ItemID.FragmentSolar, 5);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.Register();
         }
     }
     /// <summary>

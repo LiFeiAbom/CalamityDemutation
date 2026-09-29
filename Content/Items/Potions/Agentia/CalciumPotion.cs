@@ -56,10 +56,10 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：药剂瓶 + AncientBoneDust
-                if(calamity1.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2))
+                if(classic.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BottledWater);
@@ -68,7 +68,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
                 // 经典版灾厄：药剂瓶 + 血珠×10（炼金台）
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BottledWater);

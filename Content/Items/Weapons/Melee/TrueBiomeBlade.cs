@@ -71,23 +71,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("LivingShard", out ModItem livingShard)
-                    && calamity1.TryFind<ModItem>("DepthCells", out ModItem classicDepthCells)
-                    && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite)
-                    && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris))
+                if (classic.TryFind<ModItem>("LivingShard", out ModItem livingShard)
+                    && classic.TryFind<ModItem>("DepthCells", out ModItem classicDepthCells)
+                    && classic.TryFind<ModItem>("Lumenite", out ModItem lumenite)
+                    && classic.TryFind<ModItem>("Tenebris", out ModItem tenebris))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<BiomeBlade>();
-                    recipe1.AddIngredient(ItemID.BrokenHeroSword);
-                    recipe1.AddIngredient(ItemID.Ectoplasm, 5);
-                    recipe1.AddIngredient(livingShard.Type, 5);
-                    recipe1.AddIngredient(classicDepthCells.Type, 10);
-                    recipe1.AddIngredient(lumenite.Type, 10);
-                    recipe1.AddIngredient(tenebris.Type, 5);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<BiomeBlade>();
+                    recipeClassic.AddIngredient(ItemID.BrokenHeroSword);
+                    recipeClassic.AddIngredient(ItemID.Ectoplasm, 5);
+                    recipeClassic.AddIngredient(livingShard.Type, 5);
+                    recipeClassic.AddIngredient(classicDepthCells.Type, 10);
+                    recipeClassic.AddIngredient(lumenite.Type, 10);
+                    recipeClassic.AddIngredient(tenebris.Type, 5);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

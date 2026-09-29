@@ -75,13 +75,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：聚魂分形 + 无星之夜 + 星辰之怒 + 符文之歌 + 虚无碎片×4 @ 远古操纵机</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<ElementalFractal>()
-                .AddIngredient<StarlessNight>()
-                .AddIngredient(ItemID.StarWrath)
-                .AddIngredient<RuneSong>()
-                .AddIngredient<NihilityFragments>(4)
-                .AddTile(TileID.LunarCraftingStation)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<ElementalFractal>();
+            recipe.AddIngredient<StarlessNight>();
+            recipe.AddIngredient(ItemID.StarWrath);
+            recipe.AddIngredient<RuneSong>();
+            recipe.AddIngredient<NihilityFragments>(4);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.Register();
         }
     }
     /// <summary>

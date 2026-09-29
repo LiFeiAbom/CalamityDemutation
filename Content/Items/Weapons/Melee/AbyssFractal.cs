@@ -56,12 +56,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：深渊分形 + 死神镰刀 + 霜刃 + 水晶碎块×8 @ 秘银砧</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<BrilliantFractal>()
-                .AddIngredient(ItemID.DeathSickle)
-                .AddIngredient(ItemID.Frostbrand)
-                .AddIngredient(ItemID.CrystalShard, 8)
-                .AddTile(TileID.MythrilAnvil)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<BrilliantFractal>();
+            recipe.AddIngredient(ItemID.DeathSickle);
+            recipe.AddIngredient(ItemID.Frostbrand);
+            recipe.AddIngredient(ItemID.CrystalShard, 8);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
     /// <summary>

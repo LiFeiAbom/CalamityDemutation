@@ -146,13 +146,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 if (calamity.TryFind<ModBuff>("Dragonfire", out ModBuff dragonfire))
                     target.AddBuff(dragonfire.Type, 600);
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
+                if (classic.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
                     target.AddBuff(demonFlames.Type, 600);
-                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                if (classic.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
                     target.AddBuff(godSlayerInferno.Type, 600);
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
                     target.AddBuff(holyLight.Type, 600);
             }
         }
@@ -174,13 +174,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 if (calamity.TryFind<ModBuff>("Dragonfire", out ModBuff dragonfire))
                     target.AddBuff(dragonfire.Type, 600);
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
+                if (classic.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
                     target.AddBuff(demonFlames.Type, 600);
-                if (calamity1.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
+                if (classic.TryFind<ModBuff>("GodSlayerInferno", out ModBuff godSlayerInferno))
                     target.AddBuff(godSlayerInferno.Type, 600);
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight))
                     target.AddBuff(holyLight.Type, 600);
             }
         }
@@ -198,14 +198,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 recipe.Register();
             }
             // 经典版灾厄：同名熔炉不同物，分开注册
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.TrueExcalibur);
-                recipe1.AddIngredient<GreatswordofJudgement>();
-                recipe1.AddIngredient(calamity1.Find<ModItem>("ShadowspecBar").Type, 5);
-                recipe1.AddTile(calamity1.Find<ModTile>("DraedonsForge").Type);
-                recipe1.Register();
+                Recipe recipeClassic = CreateRecipe();
+                recipeClassic.AddIngredient(ItemID.TrueExcalibur);
+                recipeClassic.AddIngredient<GreatswordofJudgement>();
+                recipeClassic.AddIngredient(classic.Find<ModItem>("ShadowspecBar").Type, 5);
+                recipeClassic.AddTile(classic.Find<ModTile>("DraedonsForge").Type);
+                recipeClassic.Register();
             }
         }
     }

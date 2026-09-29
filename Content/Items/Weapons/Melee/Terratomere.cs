@@ -72,31 +72,31 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("XerocsGreatsword", out ModItem xerocsGreatsword)
-                    && calamity1.TryFind<ModItem>("Floodtide", out ModItem floodtide)
-                    && calamity1.TryFind<ModItem>("Hellkite", out ModItem hellkite)
-                    && calamity1.TryFind<ModItem>("TemporalFloeSword", out ModItem temporalFloeSword))
+                if (classic.TryFind<ModItem>("XerocsGreatsword", out ModItem xerocsGreatsword)
+                    && classic.TryFind<ModItem>("Floodtide", out ModItem floodtide)
+                    && classic.TryFind<ModItem>("Hellkite", out ModItem hellkite)
+                    && classic.TryFind<ModItem>("TemporalFloeSword", out ModItem temporalFloeSword))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(xerocsGreatsword.Type);
-                    recipe1.AddIngredient(floodtide.Type);
-                    recipe1.AddIngredient(hellkite.Type);
-                    recipe1.AddIngredient(temporalFloeSword.Type);
-                    recipe1.AddIngredient(ItemID.TerraBlade);
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
-                    if (calamity1.TryFind<ModItem>("TerraEdge", out ModItem terraEdge))
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(xerocsGreatsword.Type);
+                    recipeClassic.AddIngredient(floodtide.Type);
+                    recipeClassic.AddIngredient(hellkite.Type);
+                    recipeClassic.AddIngredient(temporalFloeSword.Type);
+                    recipeClassic.AddIngredient(ItemID.TerraBlade);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
+                    if (classic.TryFind<ModItem>("TerraEdge", out ModItem terraEdge))
                     {
-                        Recipe recipe2 = CreateRecipe();
-                        recipe2.AddIngredient(xerocsGreatsword.Type);
-                        recipe2.AddIngredient(floodtide.Type);
-                        recipe2.AddIngredient(hellkite.Type);
-                        recipe2.AddIngredient(temporalFloeSword.Type);
-                        recipe2.AddIngredient(terraEdge.Type);
-                        recipe2.AddTile(TileID.LunarCraftingStation);
-                        recipe2.Register();
+                        recipeClassic = CreateRecipe();
+                        recipeClassic.AddIngredient(xerocsGreatsword.Type);
+                        recipeClassic.AddIngredient(floodtide.Type);
+                        recipeClassic.AddIngredient(hellkite.Type);
+                        recipeClassic.AddIngredient(temporalFloeSword.Type);
+                        recipeClassic.AddIngredient(terraEdge.Type);
+                        recipeClassic.AddTile(TileID.LunarCraftingStation);
+                        recipeClassic.Register();
                     }
                 }
             }

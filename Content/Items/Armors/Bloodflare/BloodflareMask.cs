@@ -91,17 +91,17 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄材料：BloodstoneCore×11、RuinousSoul×2
-                if (calamity1.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
-                    && calamity1.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
+                if (classic.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
+                    && classic.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(bloodstoneCore.Type, 11);
-                    recipe1.AddIngredient(classicRuinousSoul.Type, 2);
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(bloodstoneCore.Type, 11);
+                    recipeClassic.AddIngredient(classicRuinousSoul.Type, 2);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
             }
         }

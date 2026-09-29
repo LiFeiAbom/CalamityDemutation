@@ -49,17 +49,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                 recipe.AddTile(TileID.MythrilAnvil);
                 recipe.Register();
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：从灾厄经典版查找同名 CoreofEleum
-                if(calamity1.TryFind<ModItem>("CoreofEleum", out ModItem coreofEleum1))
+                if(classic.TryFind<ModItem>("CoreofEleum", out ModItem coreofEleum1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.PaladinsShield);
-                    recipe1.AddIngredient(ItemID.FrozenTurtleShell);
-                    recipe1.AddIngredient(coreofEleum1.Type, 5);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.PaladinsShield);
+                    recipeClassic.AddIngredient(ItemID.FrozenTurtleShell);
+                    recipeClassic.AddIngredient(coreofEleum1.Type, 5);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

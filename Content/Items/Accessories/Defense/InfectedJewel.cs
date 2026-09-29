@@ -35,27 +35,31 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("AureusCell", out ModItem aureusCell)
-                && modern.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient<CrownJewel>().
-                    AddIngredient(aureusCell.Type, 10).
-                    AddIngredient(starblightSoot.Type, 25).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (calamity.TryFind<ModItem>("AureusCell", out ModItem aureusCell)
+                    && calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<CrownJewel>();
+                    recipe.AddIngredient(aureusCell.Type, 10);
+                    recipe.AddIngredient(starblightSoot.Type, 25);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("AstralJelly", out ModItem astralJelly)
-                && classic.TryFind<ModItem>("Stardust", out ModItem stardust))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient<CrownJewel>().
-                    AddIngredient(astralJelly.Type, 10).
-                    AddIngredient(stardust.Type, 25).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (classic.TryFind<ModItem>("AstralJelly", out ModItem astralJelly)
+                    && classic.TryFind<ModItem>("Stardust", out ModItem stardust))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<CrownJewel>();
+                    recipeClassic.AddIngredient(astralJelly.Type, 10);
+                    recipeClassic.AddIngredient(stardust.Type, 25);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
+                }
             }
         }
     }

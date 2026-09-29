@@ -41,23 +41,27 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("BlightedGel", out ModItem blightedGel)
-                && modern.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient(blightedGel.Type, 45).
-                    AddIngredient(purifiedGel.Type, 15).
-                    AddTile(TileID.Anvils).
-                    Register();
+                if (calamity.TryFind<ModItem>("BlightedGel", out ModItem blightedGel)
+                    && calamity.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(blightedGel.Type, 45);
+                    recipe.AddIngredient(purifiedGel.Type, 15);
+                    recipe.AddTile(TileID.Anvils);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("PurifiedGel", out ModItem classicPurifiedGel))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient(classicPurifiedGel.Type, 60).
-                    AddTile(TileID.Anvils).
-                    Register();
+                if (classic.TryFind<ModItem>("PurifiedGel", out ModItem classicPurifiedGel))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(classicPurifiedGel.Type, 60);
+                    recipeClassic.AddTile(TileID.Anvils);
+                    recipeClassic.Register();
+                }
             }
         }
     }

@@ -177,29 +177,29 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // ── 经典版灾厄：日光精华→余烬精华，且改用秘银砧、并额外给出 Arkhalis 替代路线 ──
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder)
-                    && calamity1.TryFind<ModItem>("EssenceofEleum", out ModItem classicEssenceofEleum))
+                if (classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder)
+                    && classic.TryFind<ModItem>("EssenceofEleum", out ModItem classicEssenceofEleum))
                 {
                     // 路线一：附魔剑
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(essenceofCinder.Type, 3);           // 经典版对应材料 ×3
-                    recipe1.AddIngredient(classicEssenceofEleum.Type, 3);
-                    recipe1.AddIngredient(ItemID.Starfury);
-                    recipe1.AddIngredient(ItemID.EnchantedSword);
-                    recipe1.AddIngredient(ItemID.Excalibur);                  // 断钢剑
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(essenceofCinder.Type, 3);           // 经典版对应材料 ×3
+                    recipeClassic.AddIngredient(classicEssenceofEleum.Type, 3);
+                    recipeClassic.AddIngredient(ItemID.Starfury);
+                    recipeClassic.AddIngredient(ItemID.EnchantedSword);
+                    recipeClassic.AddIngredient(ItemID.Excalibur);                  // 断钢剑
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                     // 路线二：Arkhalis（与路线一仅第四件不同）
-                    recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(essenceofCinder.Type, 3);
-                    recipe1.AddIngredient(classicEssenceofEleum.Type, 3);
-                    recipe1.AddIngredient(ItemID.Starfury);
-                    recipe1.AddIngredient(ItemID.Arkhalis);                   // 阿尔卡利斯（替代附魔剑）
-                    recipe1.AddIngredient(ItemID.Excalibur);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(essenceofCinder.Type, 3);
+                    recipeClassic.AddIngredient(classicEssenceofEleum.Type, 3);
+                    recipeClassic.AddIngredient(ItemID.Starfury);
+                    recipeClassic.AddIngredient(ItemID.Arkhalis);                   // 阿尔卡利斯（替代附魔剑）
+                    recipeClassic.AddIngredient(ItemID.Excalibur);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

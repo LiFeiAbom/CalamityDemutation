@@ -59,17 +59,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel2))
+                if (classic.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.FrogLeg);
-                    recipe1.AddIngredient(purifiedGel2.Type, 50);
-                    recipe1.AddIngredient<CoreofEleum>();
-                    recipe1.AddIngredient(ItemID.MasterNinjaGear);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.FrogLeg);
+                    recipeClassic.AddIngredient(purifiedGel2.Type, 50);
+                    recipeClassic.AddIngredient<CoreofEleum>();
+                    recipeClassic.AddIngredient(ItemID.MasterNinjaGear);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

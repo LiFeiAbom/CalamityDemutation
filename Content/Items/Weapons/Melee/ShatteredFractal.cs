@@ -55,38 +55,42 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<BrokenHilt>()
-                .AddIngredient(ItemID.WoodenSword)
-                .AddIngredient(ItemID.GoldBroadsword)
-                .AddIngredient(ItemID.LightsBane)
-                .AddIngredient(ItemID.EnchantedSword)
-                .AddIngredient(ItemID.Muramasa)
-                .AddTile(TileID.Anvils)
-                .Register();
-            CreateRecipe().AddIngredient<BrokenHilt>()
-                .AddIngredient(ItemID.WoodenSword)
-                .AddIngredient(ItemID.GoldBroadsword)
-                .AddIngredient(ItemID.BloodButcherer)
-                .AddIngredient(ItemID.EnchantedSword)
-                .AddIngredient(ItemID.Muramasa)
-                .AddTile(TileID.Anvils)
-                .Register();
-            CreateRecipe().AddIngredient<BrokenHilt>()
-                .AddIngredient(ItemID.WoodenSword)
-                .AddIngredient(ItemID.PlatinumBroadsword)
-                .AddIngredient(ItemID.LightsBane)
-                .AddIngredient(ItemID.EnchantedSword)
-                .AddIngredient(ItemID.Muramasa)
-                .AddTile(TileID.Anvils)
-                .Register();
-            CreateRecipe().AddIngredient<BrokenHilt>()
-                .AddIngredient(ItemID.WoodenSword)
-                .AddIngredient(ItemID.PlatinumBroadsword)
-                .AddIngredient(ItemID.BloodButcherer)
-                .AddIngredient(ItemID.EnchantedSword)
-                .AddIngredient(ItemID.Muramasa)
-                .AddTile(TileID.Anvils)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<BrokenHilt>();
+            recipe.AddIngredient(ItemID.WoodenSword);
+            recipe.AddIngredient(ItemID.GoldBroadsword);
+            recipe.AddIngredient(ItemID.LightsBane);
+            recipe.AddIngredient(ItemID.EnchantedSword);
+            recipe.AddIngredient(ItemID.Muramasa);
+            recipe.AddTile(TileID.Anvils);
+            recipe.Register();
+            Recipe recipe2 = CreateRecipe();
+            recipe2.AddIngredient<BrokenHilt>();
+            recipe2.AddIngredient(ItemID.WoodenSword);
+            recipe2.AddIngredient(ItemID.GoldBroadsword);
+            recipe2.AddIngredient(ItemID.BloodButcherer);
+            recipe2.AddIngredient(ItemID.EnchantedSword);
+            recipe2.AddIngredient(ItemID.Muramasa);
+            recipe2.AddTile(TileID.Anvils);
+            recipe2.Register();
+            Recipe recipe3 = CreateRecipe();
+            recipe3.AddIngredient<BrokenHilt>();
+            recipe3.AddIngredient(ItemID.WoodenSword);
+            recipe3.AddIngredient(ItemID.PlatinumBroadsword);
+            recipe3.AddIngredient(ItemID.LightsBane);
+            recipe3.AddIngredient(ItemID.EnchantedSword);
+            recipe3.AddIngredient(ItemID.Muramasa);
+            recipe3.AddTile(TileID.Anvils);
+            recipe3.Register();
+            Recipe recipe4 = CreateRecipe();
+            recipe4.AddIngredient<BrokenHilt>();
+            recipe4.AddIngredient(ItemID.WoodenSword);
+            recipe4.AddIngredient(ItemID.PlatinumBroadsword);
+            recipe4.AddIngredient(ItemID.BloodButcherer);
+            recipe4.AddIngredient(ItemID.EnchantedSword);
+            recipe4.AddIngredient(ItemID.Muramasa);
+            recipe4.AddTile(TileID.Anvils);
+            recipe4.Register();
         }
     }
 }

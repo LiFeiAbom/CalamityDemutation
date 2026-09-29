@@ -51,19 +51,19 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
                 recipe.AddTile(TileID.MythrilAnvil);
                 recipe.Register();
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder1))
+                if (classic.TryFind<ModItem>("CoreofCinder", out ModItem coreofCinder1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.PapyrusScarab);
-                    recipe1.AddIngredient(ItemID.PygmyNecklace);
-                    recipe1.AddIngredient(ItemID.SummonerEmblem);
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddIngredient(coreofCinder1.Type, 5);
-                    recipe1.AddIngredient(ItemID.HolyWater, 30);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.PapyrusScarab);
+                    recipeClassic.AddIngredient(ItemID.PygmyNecklace);
+                    recipeClassic.AddIngredient(ItemID.SummonerEmblem);
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddIngredient(coreofCinder1.Type, 5);
+                    recipeClassic.AddIngredient(ItemID.HolyWater, 30);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

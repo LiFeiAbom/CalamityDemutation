@@ -39,7 +39,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
         public override void AddRecipes()
         {
             // 配方不涉及灾厄材料，两版写法完全一致；用 || 合并，避免同时装两版时重复注册
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) || ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) || ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient<StatisBlessing>();

@@ -89,53 +89,53 @@ namespace CalamityDemutation.Content.Items.Materials
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))// 经典版灾厄已加载
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))// 经典版灾厄已加载
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.FragmentSolar);
-                recipe1.AddIngredient(ItemID.FragmentVortex);
-                recipe1.AddIngredient(ItemID.FragmentNebula);
-                recipe1.AddIngredient(ItemID.FragmentStardust);
+                Recipe recipeClassic = CreateRecipe();
+                recipeClassic.AddIngredient(ItemID.FragmentSolar);
+                recipeClassic.AddIngredient(ItemID.FragmentVortex);
+                recipeClassic.AddIngredient(ItemID.FragmentNebula);
+                recipeClassic.AddIngredient(ItemID.FragmentStardust);
                 // 原版全部矿锭
-                recipe1.AddIngredient(ItemID.CopperBar);
-                recipe1.AddIngredient(ItemID.TinBar);
-                recipe1.AddIngredient(ItemID.IronBar);
-                recipe1.AddIngredient(ItemID.LeadBar);
-                recipe1.AddIngredient(ItemID.SilverBar);
-                recipe1.AddIngredient(ItemID.TungstenBar);
-                recipe1.AddIngredient(ItemID.GoldBar);
-                recipe1.AddIngredient(ItemID.PlatinumBar);
-                recipe1.AddIngredient(ItemID.DemoniteBar);
-                recipe1.AddIngredient(ItemID.CrimtaneBar);
-                recipe1.AddIngredient(ItemID.HellstoneBar);
-                recipe1.AddIngredient(ItemID.CobaltBar);
-                recipe1.AddIngredient(ItemID.PalladiumBar);
-                recipe1.AddIngredient(ItemID.MythrilBar);
-                recipe1.AddIngredient(ItemID.OrichalcumBar);
-                recipe1.AddIngredient(ItemID.AdamantiteBar);
-                recipe1.AddIngredient(ItemID.TitaniumBar);
-                recipe1.AddIngredient(ItemID.HallowedBar);
-                recipe1.AddIngredient(ItemID.ChlorophyteBar);
-                recipe1.AddIngredient(ItemID.ShroomiteBar);
-                recipe1.AddIngredient(ItemID.SpectreBar);
-                recipe1.AddIngredient(ItemID.LunarBar);
+                recipeClassic.AddIngredient(ItemID.CopperBar);
+                recipeClassic.AddIngredient(ItemID.TinBar);
+                recipeClassic.AddIngredient(ItemID.IronBar);
+                recipeClassic.AddIngredient(ItemID.LeadBar);
+                recipeClassic.AddIngredient(ItemID.SilverBar);
+                recipeClassic.AddIngredient(ItemID.TungstenBar);
+                recipeClassic.AddIngredient(ItemID.GoldBar);
+                recipeClassic.AddIngredient(ItemID.PlatinumBar);
+                recipeClassic.AddIngredient(ItemID.DemoniteBar);
+                recipeClassic.AddIngredient(ItemID.CrimtaneBar);
+                recipeClassic.AddIngredient(ItemID.HellstoneBar);
+                recipeClassic.AddIngredient(ItemID.CobaltBar);
+                recipeClassic.AddIngredient(ItemID.PalladiumBar);
+                recipeClassic.AddIngredient(ItemID.MythrilBar);
+                recipeClassic.AddIngredient(ItemID.OrichalcumBar);
+                recipeClassic.AddIngredient(ItemID.AdamantiteBar);
+                recipeClassic.AddIngredient(ItemID.TitaniumBar);
+                recipeClassic.AddIngredient(ItemID.HallowedBar);
+                recipeClassic.AddIngredient(ItemID.ChlorophyteBar);
+                recipeClassic.AddIngredient(ItemID.ShroomiteBar);
+                recipeClassic.AddIngredient(ItemID.SpectreBar);
+                recipeClassic.AddIngredient(ItemID.LunarBar);
                 // 灾厄经典版全部矿锭
-                if(calamity1.TryFind<ModItem>("AerialiteBar", out ModItem aerialiteBar2) && calamity1.TryFind<ModItem>("AstralBar", out ModItem astralBar2) && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife) && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && calamity1.TryFind<ModItem>("CruptixBar", out ModItem cruptixBar) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar) && calamity1.TryFind<ModItem>("DraedonBar", out ModItem draedonBar) && calamity1.TryFind<ModItem>("MeldiateBar", out ModItem meldiateBar) && calamity1.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar2) && calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar) && calamity1.TryFind<ModItem>("VerstaltiteBar", out ModItem verstaltiteBar) && calamity1.TryFind<ModItem>("VictideBar", out ModItem victideBar) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge2))
+                if(classic.TryFind<ModItem>("AerialiteBar", out ModItem aerialiteBar2) && classic.TryFind<ModItem>("AstralBar", out ModItem astralBar2) && classic.TryFind<ModItem>("BarofLife", out ModItem barofLife) && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && classic.TryFind<ModItem>("CruptixBar", out ModItem cruptixBar) && classic.TryFind<ModItem>("CryoBar", out ModItem cryoBar) && classic.TryFind<ModItem>("DraedonBar", out ModItem draedonBar) && classic.TryFind<ModItem>("MeldiateBar", out ModItem meldiateBar) && classic.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar2) && classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar) && classic.TryFind<ModItem>("VerstaltiteBar", out ModItem verstaltiteBar) && classic.TryFind<ModItem>("VictideBar", out ModItem victideBar) && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge2))
                 {
-                    recipe1.AddIngredient(aerialiteBar2.Type);
-                    recipe1.AddIngredient(astralBar2.Type);
-                    recipe1.AddIngredient(barofLife.Type);
-                    recipe1.AddIngredient(cosmiliteBar2.Type);
-                    recipe1.AddIngredient(cruptixBar.Type);
-                    recipe1.AddIngredient(cryoBar.Type);
-                    recipe1.AddIngredient(draedonBar.Type);
-                    recipe1.AddIngredient(meldiateBar.Type);
-                    recipe1.AddIngredient(shadowspecBar2.Type);
-                    recipe1.AddIngredient(ueliaceBar.Type);
-                    recipe1.AddIngredient(verstaltiteBar.Type);
-                    recipe1.AddIngredient(victideBar.Type);
-                    recipe1.AddTile(draedonsForge2.Type);
-                    recipe1.Register();
+                    recipeClassic.AddIngredient(aerialiteBar2.Type);
+                    recipeClassic.AddIngredient(astralBar2.Type);
+                    recipeClassic.AddIngredient(barofLife.Type);
+                    recipeClassic.AddIngredient(cosmiliteBar2.Type);
+                    recipeClassic.AddIngredient(cruptixBar.Type);
+                    recipeClassic.AddIngredient(cryoBar.Type);
+                    recipeClassic.AddIngredient(draedonBar.Type);
+                    recipeClassic.AddIngredient(meldiateBar.Type);
+                    recipeClassic.AddIngredient(shadowspecBar2.Type);
+                    recipeClassic.AddIngredient(ueliaceBar.Type);
+                    recipeClassic.AddIngredient(verstaltiteBar.Type);
+                    recipeClassic.AddIngredient(victideBar.Type);
+                    recipeClassic.AddTile(draedonsForge2.Type);
+                    recipeClassic.Register();
                 }
             }
         }

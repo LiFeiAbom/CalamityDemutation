@@ -43,12 +43,12 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            CreateRecipe().
-                AddIngredient(ItemID.BottledHoney, 10).
-                AddIngredient(ItemID.BeeWax, 3).
-                AddIngredient<MurkyPaste>(3).
-                AddTile(TileID.Anvils).
-                Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.BottledHoney, 10);
+            recipe.AddIngredient(ItemID.BeeWax, 3);
+            recipe.AddIngredient<MurkyPaste>(3);
+            recipe.AddTile(TileID.Anvils);
+            recipe.Register();
         }
     }
 }

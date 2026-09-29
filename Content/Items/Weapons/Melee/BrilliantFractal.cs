@@ -53,12 +53,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：光辉分形 + 破坏者巨剑 + 断钢剑 + 炽焰巨剑 @ 秘银砧</summary>
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<WelkinFractal>()
-                .AddIngredient(ItemID.BreakerBlade)
-                .AddIngredient(ItemID.Excalibur)
-                .AddIngredient(ItemID.FieryGreatsword)
-                .AddTile(TileID.MythrilAnvil)
-                .Register();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient<WelkinFractal>();
+            recipe.AddIngredient(ItemID.BreakerBlade);
+            recipe.AddIngredient(ItemID.Excalibur);
+            recipe.AddIngredient(ItemID.FieryGreatsword);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
     }
     /// <summary>

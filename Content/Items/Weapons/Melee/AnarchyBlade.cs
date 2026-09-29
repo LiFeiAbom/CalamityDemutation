@@ -145,16 +145,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：毁灭刃 + 不洁核心×5 + 灾祸核心×3 @ 秘银砧（两样核心走灾厄软依赖）</summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity)
-                && calamity.TryFind<ModItem>("UnholyCore", out ModItem unholyCore)
-                && calamity.TryFind<ModItem>("CoreofHavoc", out ModItem coreofHavoc))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient(ItemID.BreakerBlade).
-                    AddIngredient(unholyCore.Type, 5).
-                    AddIngredient(coreofHavoc.Type, 3).
-                    AddTile(TileID.MythrilAnvil).
-                    Register();
+                if (calamity.TryFind<ModItem>("UnholyCore", out ModItem unholyCore)
+                    && calamity.TryFind<ModItem>("CoreofHavoc", out ModItem coreofHavoc))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(ItemID.BreakerBlade);
+                    recipe.AddIngredient(unholyCore.Type, 5);
+                    recipe.AddIngredient(coreofHavoc.Type, 3);
+                    recipe.AddTile(TileID.MythrilAnvil);
+                    recipe.Register();
+                }
             }
         }
     }

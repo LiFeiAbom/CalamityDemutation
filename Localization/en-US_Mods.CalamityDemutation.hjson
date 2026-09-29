@@ -643,15 +643,6 @@ Items: {
 			'''
 	}
 
-	MoonPact: {
-		DisplayName: Moon Pact
-		Tooltip:
-			'''
-			Grants an additional slot for wings
-			Consuming it does something that cannot be reversed
-			'''
-	}
-
 	ChaosAmulet: {
 		DisplayName: Chaos Amulet
 		Tooltip: Spelunker effect
@@ -1104,6 +1095,15 @@ Items: {
 		Tooltip: A singularity condensed from the fragments of the four celestial pillars
 	}
 
+	GalactusBlade: {
+		DisplayName: Galactus Blade
+		Tooltip:
+			'''
+			Forged with the fury of nuclear chaos
+			Launches a barrage of comets from the sky
+			'''
+	}
+
 	ElementalFractal: {
 		DisplayName: Elemental Fractal
 		Tooltip:
@@ -1325,6 +1325,15 @@ Items: {
 			'''
 			+20 max mana
 			Standing still boosts mana regen
+			'''
+	}
+
+	MoonPact: {
+		DisplayName: Moon Pact
+		Tooltip:
+			'''
+			Grants an additional slot for wings
+			Consuming it does something that cannot be reversed
 			'''
 	}
 
@@ -2186,6 +2195,7 @@ Projectiles: {
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump
 	FungalHeal.DisplayName: Fungal Heal
+	GalacticaComet.DisplayName: Galactus Comet
 	Galaxia.DisplayName: Orb
 	GalaxyBlast.DisplayName: Galaxy Blast
 	GodSlayerDart.DisplayName: God Slayer Dart

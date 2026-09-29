@@ -227,9 +227,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
+                    if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
             }
             else if (snow)   // 雪原：霜冻
@@ -243,9 +243,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
+                    if (classic.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
             }
             else if (dungeon)   // 地牢：霜冻
@@ -258,9 +258,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 600); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 600); }
                 }
             }
             else if (glow)   // 发光蘑菇地：时之悲
@@ -269,9 +269,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
+                    if (classic.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
                 }
             }
             else if (hell)   // 地狱：硫磺火
@@ -280,9 +280,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
+                    if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
                 }
             }
             else   // 其它（森林等）：甲壳破碎
@@ -291,9 +291,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 600); }
+                    if (classic.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 600); }
                 }
             }
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
@@ -367,9 +367,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
+                    if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 600); }
                 }
             }
             else if (snow)   // 雪原：霜冻
@@ -383,9 +383,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
+                    if (classic.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 600); }
                 }
             }
             else if (dungeon)   // 地牢：霜冻
@@ -398,9 +398,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 600); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 600); }
                 }
             }
             else if (glow)   // 发光蘑菇地：时之悲
@@ -409,9 +409,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
+                    if (classic.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 600); }
                 }
             }
             else if (hell)   // 地狱：硫磺火
@@ -420,9 +420,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
+                    if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 600); }
                 }
             }
             else   // 其它（森林等）：甲壳破碎
@@ -431,9 +431,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 600); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 600); }
+                    if (classic.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 600); }
                 }
             }
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))

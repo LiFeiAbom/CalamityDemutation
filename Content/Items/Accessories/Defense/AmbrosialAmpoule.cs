@@ -70,33 +70,33 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                 }
             }
             // ── 经典版灾厄：星辉尘→Stardust、寒元锭→CryoBar（同名物不同名） ──
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 腐化世界路线
-                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust1) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar1))
+                if(classic.TryFind<ModItem>("Stardust", out ModItem stardust1) && classic.TryFind<ModItem>("CryoBar", out ModItem cryoBar1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<CorruptFlask>();
-                    recipe1.AddIngredient<ArchaicPowder>();
-                    recipe1.AddIngredient<RadiantOoze>();
-                    recipe1.AddIngredient<HoneyDew>();
-                    recipe1.AddIngredient(stardust1.Type, 15); // 经典版对应材料 ×15
-                    recipe1.AddIngredient(cryoBar1.Type, 5);   // 经典版对应材料 ×5
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<CorruptFlask>();
+                    recipeClassic.AddIngredient<ArchaicPowder>();
+                    recipeClassic.AddIngredient<RadiantOoze>();
+                    recipeClassic.AddIngredient<HoneyDew>();
+                    recipeClassic.AddIngredient(stardust1.Type, 15); // 经典版对应材料 ×15
+                    recipeClassic.AddIngredient(cryoBar1.Type, 5);   // 经典版对应材料 ×5
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
                 // 猩红世界路线
-                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust2) && calamity1.TryFind<ModItem>("CryoBar", out ModItem cryoBar2))
+                if(classic.TryFind<ModItem>("Stardust", out ModItem stardust2) && classic.TryFind<ModItem>("CryoBar", out ModItem cryoBar2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<CrimsonFlask>();
-                    recipe1.AddIngredient<ArchaicPowder>();
-                    recipe1.AddIngredient<RadiantOoze>();
-                    recipe1.AddIngredient<HoneyDew>();
-                    recipe1.AddIngredient(stardust2.Type, 15);
-                    recipe1.AddIngredient(cryoBar2.Type, 5);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<CrimsonFlask>();
+                    recipeClassic.AddIngredient<ArchaicPowder>();
+                    recipeClassic.AddIngredient<RadiantOoze>();
+                    recipeClassic.AddIngredient<HoneyDew>();
+                    recipeClassic.AddIngredient(stardust2.Type, 15);
+                    recipeClassic.AddIngredient(cryoBar2.Type, 5);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

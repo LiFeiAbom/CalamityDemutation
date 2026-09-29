@@ -42,13 +42,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方：熵构体×15 @ 月球工作台（灾厄材料，走软依赖，未加载灾厄时不注册）</summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity)
-                && calamity.TryFind<ModItem>("MeldConstruct", out ModItem meldConstruct))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient(meldConstruct.Type, 15).
-                    AddTile(TileID.LunarCraftingStation).
-                    Register();
+                if (calamity.TryFind<ModItem>("MeldConstruct", out ModItem meldConstruct))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(meldConstruct.Type, 15);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
         }
     }

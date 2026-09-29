@@ -57,24 +57,24 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                 }
             }
             // ── 经典版灾厄：配方完全相同，只是分开注册（两版血珠同名） ──
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                Recipe recipe1 = CreateRecipe();
-                recipe1.AddIngredient(ItemID.EndurancePotion);
-                recipe1.AddIngredient(ItemID.IronskinPotion);
-                recipe1.AddIngredient(ItemID.SwiftnessPotion);
-                recipe1.AddIngredient(ItemID.ArcheryPotion);
-                recipe1.AddIngredient(ItemID.MagicPowerPotion);
-                recipe1.AddIngredient(ItemID.TitanPotion);
-                recipe1.AddTile(TileID.AlchemyTable);
-                recipe1.Register();
-                if(calamity1.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
+                Recipe recipeClassic = CreateRecipe();
+                recipeClassic.AddIngredient(ItemID.EndurancePotion);
+                recipeClassic.AddIngredient(ItemID.IronskinPotion);
+                recipeClassic.AddIngredient(ItemID.SwiftnessPotion);
+                recipeClassic.AddIngredient(ItemID.ArcheryPotion);
+                recipeClassic.AddIngredient(ItemID.MagicPowerPotion);
+                recipeClassic.AddIngredient(ItemID.TitanPotion);
+                recipeClassic.AddTile(TileID.AlchemyTable);
+                recipeClassic.Register();
+                if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
-                    recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(bloodOrb2.Type, 50);
-                    recipe1.AddIngredient(ItemID.BottledWater);
-                    recipe1.AddTile(TileID.AlchemyTable);
-                    recipe1.Register();
+                    recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(bloodOrb2.Type, 50);
+                    recipeClassic.AddIngredient(ItemID.BottledWater);
+                    recipeClassic.AddTile(TileID.AlchemyTable);
+                    recipeClassic.Register();
                 }
             }
         }

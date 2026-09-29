@@ -42,18 +42,18 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                 recipe.AddTile(TileID.Anvils);
                 recipe.Register();
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("ManeaterBulb", out ModItem maneaterBulb1) && calamity1.TryFind<ModItem>("TrapperBulb", out ModItem trapperBulb1) && calamity1.TryFind<ModItem>("MurkyPaste", out ModItem murkyPaste1) && calamity1.TryFind<ModItem>("GypsyPowder", out ModItem gypsyPowder1) && calamity1.TryFind<ModItem>("BeetleJuice", out ModItem beetleJuice1))
+                if(classic.TryFind<ModItem>("ManeaterBulb", out ModItem maneaterBulb1) && classic.TryFind<ModItem>("TrapperBulb", out ModItem trapperBulb1) && classic.TryFind<ModItem>("MurkyPaste", out ModItem murkyPaste1) && classic.TryFind<ModItem>("GypsyPowder", out ModItem gypsyPowder1) && classic.TryFind<ModItem>("BeetleJuice", out ModItem beetleJuice1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(maneaterBulb1.Type, 2);
-                    recipe1.AddIngredient(trapperBulb1.Type, 2);
-                    recipe1.AddIngredient(murkyPaste1.Type, 5);
-                    recipe1.AddIngredient(gypsyPowder1.Type);
-                    recipe1.AddIngredient(beetleJuice1.Type, 3);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(maneaterBulb1.Type, 2);
+                    recipeClassic.AddIngredient(trapperBulb1.Type, 2);
+                    recipeClassic.AddIngredient(murkyPaste1.Type, 5);
+                    recipeClassic.AddIngredient(gypsyPowder1.Type);
+                    recipeClassic.AddIngredient(beetleJuice1.Type, 3);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

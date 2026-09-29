@@ -221,96 +221,96 @@ namespace CalamityDemutation.NPCs
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<TrapperBulb>(), 2, 1));
             }
             // ===== 现代版灾厄（CalamityMod）：仅灾厄专属 NPC 的掉落规则（各保留一份） =====
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 本分支专用的非专家条件规则，不与经典版分支共用实例
                 LeadingConditionRule notExpert0 = new(new Conditions.NotExpert());
-                if (calamity0.TryFind<ModNPC>("Anahita", out ModNPC anahita) && npc.type == anahita.Type)
+                if (calamity.TryFind<ModNPC>("Anahita", out ModNPC anahita) && npc.type == anahita.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LureofEnthrallment>(), 7, 5));
                 }
-                else if(calamity0.TryFind<ModNPC>("CloudElemental", out ModNPC cloudElemental) && npc.type == cloudElemental.Type)
+                else if(calamity.TryFind<ModNPC>("CloudElemental", out ModNPC cloudElemental) && npc.type == cloudElemental.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<EyeoftheStorm>(), 7, 5));
                 }
-                else if (calamity0.TryFind<ModNPC>("BrimstoneElemental", out ModNPC brimstoneElemental) && npc.type == brimstoneElemental.Type)
+                else if (calamity.TryFind<ModNPC>("BrimstoneElemental", out ModNPC brimstoneElemental) && npc.type == brimstoneElemental.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     npcLoot.Add(notExpert0);
                 }
-                else if (calamity0.TryFind<ModNPC>("Cryogen", out ModNPC cryogen) && npc.type == cryogen.Type)
+                else if (calamity.TryFind<ModNPC>("Cryogen", out ModNPC cryogen) && npc.type == cryogen.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
                     npcLoot.Add(notExpert0);
                 }
-                else if (calamity0.TryFind<ModNPC>("CalamitasClone", out ModNPC calamitasClone) && npc.type == calamitasClone.Type)
+                else if (calamity.TryFind<ModNPC>("CalamitasClone", out ModNPC calamitasClone) && npc.type == calamitasClone.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     npcLoot.Add(notExpert0);
                 }
-                else if(calamity0.TryFind<ModNPC>("PlaguebringerGoliath", out ModNPC plaguebringerGoliath) && npc.type == plaguebringerGoliath.Type)
+                else if(calamity.TryFind<ModNPC>("PlaguebringerGoliath", out ModNPC plaguebringerGoliath) && npc.type == plaguebringerGoliath.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
                     npcLoot.Add(notExpert0);
                 }
-                else if(calamity0.TryFind<ModNPC>("Cnidrion", out ModNPC cnidrion) && npc.type == cnidrion.Type)
+                else if(calamity.TryFind<ModNPC>("Cnidrion", out ModNPC cnidrion) && npc.type == cnidrion.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<AmidiasSpark>(), 6, 4));
                 }
-                else if(calamity0.TryFind<ModNPC>("IrradiatedSlime", out ModNPC irradiatedSlime) && npc.type == irradiatedSlime.Type)
+                else if(calamity.TryFind<ModNPC>("IrradiatedSlime", out ModNPC irradiatedSlime) && npc.type == irradiatedSlime.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<LeadCore>(), 10));
                 }
-                else if (calamity0.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
+                else if (calamity.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
                 }
-                else if (calamity0.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
+                else if (calamity.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
                 }
             }
             // ===== 经典版灾厄（CalamityModClassicPreTrailer）：Boss 命名不同，掉落规则保持一致（各保留一份） =====
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 本分支专用的非专家条件规则，不与现代版分支共用实例
                 LeadingConditionRule notExpert1 = new(new Conditions.NotExpert());
-                if (calamity1.TryFind<ModNPC>("Siren", out ModNPC siren) && npc.type == siren.Type)
+                if (classic.TryFind<ModNPC>("Siren", out ModNPC siren) && npc.type == siren.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LureofEnthrallment>(), 7, 5));
                 }
-                else if (calamity1.TryFind<ModNPC>("ThiccWaifu", out ModNPC thiccWaifu) && npc.type == thiccWaifu.Type)
+                else if (classic.TryFind<ModNPC>("ThiccWaifu", out ModNPC thiccWaifu) && npc.type == thiccWaifu.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<EyeoftheStorm>(), 7, 5));
                 }
-                else if (calamity1.TryFind<ModNPC>("Cryogen", out ModNPC cryogen) && npc.type == cryogen.Type)
+                else if (classic.TryFind<ModNPC>("Cryogen", out ModNPC cryogen) && npc.type == cryogen.Type)
                 {
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<CryoStone>(), 10));
                     npcLoot.Add(notExpert1);
                 }
-                else if (calamity1.TryFind<ModNPC>("Calamitas", out ModNPC calamitas) && npc.type == calamitas.Type)
+                else if (classic.TryFind<ModNPC>("Calamitas", out ModNPC calamitas) && npc.type == calamitas.Type)
                 {
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     npcLoot.Add(notExpert1);
                 }
-                else if (calamity1.TryFind<ModNPC>("PlaguebringerGoliath", out ModNPC plaguebringerGoliath) && npc.type == plaguebringerGoliath.Type)
+                else if (classic.TryFind<ModNPC>("PlaguebringerGoliath", out ModNPC plaguebringerGoliath) && npc.type == plaguebringerGoliath.Type)
                 {
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BloomStone>(), 10));
                     npcLoot.Add(notExpert1);
                 }
-                else if (calamity1.TryFind<ModNPC>("Cnidrion", out ModNPC cnidrion) && npc.type == cnidrion.Type)
+                else if (classic.TryFind<ModNPC>("Cnidrion", out ModNPC cnidrion) && npc.type == cnidrion.Type)
                 {
                     npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<AmidiasSpark>(), 6, 4));
                 }
-                else if (calamity1.TryFind<ModNPC>("IrradiatedSlime", out ModNPC irradiatedSlime) && npc.type == irradiatedSlime.Type)
+                else if (classic.TryFind<ModNPC>("IrradiatedSlime", out ModNPC irradiatedSlime) && npc.type == irradiatedSlime.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<LeadCore>(), 10));
                 }
-                else if (calamity1.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
+                else if (classic.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
                 }
-                else if (calamity1.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
+                else if (classic.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
                 }
@@ -493,11 +493,11 @@ namespace CalamityDemutation.NPCs
                     }
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].GetModPlayer<CalamityDemutationPlayer>().bloodflareSet)
                 {
-                    if (calamity1.TryFind<ModItem>("BloodOrb", out ModItem classicBloodOrb) && !npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && Main.rand.NextBool(2) && Main.bloodMoon && npc.HasPlayerTarget && (double)(npc.position.Y / 16f) < Main.worldSurface)
+                    if (classic.TryFind<ModItem>("BloodOrb", out ModItem classicBloodOrb) && !npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && Main.rand.NextBool(2) && Main.bloodMoon && npc.HasPlayerTarget && (double)(npc.position.Y / 16f) < Main.worldSurface)
                     {
                         Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, classicBloodOrb.Type, 1, false, 0, false, false);
                     }

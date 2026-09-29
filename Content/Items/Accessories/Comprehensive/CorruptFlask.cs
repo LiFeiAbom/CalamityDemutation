@@ -41,15 +41,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 recipe.AddTile(TileID.Anvils);
                 recipe.Register();
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("FetidEssence", out ModItem fetidEssence))
+                if(classic.TryFind<ModItem>("FetidEssence", out ModItem fetidEssence))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(fetidEssence.Type, 3);
-                    recipe1.AddIngredient(ItemID.RottenChunk, 10);
-                    recipe1.AddTile(TileID.Anvils);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(fetidEssence.Type, 3);
+                    recipeClassic.AddIngredient(ItemID.RottenChunk, 10);
+                    recipeClassic.AddTile(TileID.Anvils);
+                    recipeClassic.Register();
                 }
             }
         }

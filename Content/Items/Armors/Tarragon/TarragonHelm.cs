@@ -93,17 +93,17 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄配方（UeliaceBar + DivineGeode）
-                if (calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar)
-                    && calamity1.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode))
+                if (classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar)
+                    && classic.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ueliaceBar.Type, 7);
-                    recipe1.AddIngredient(classicDivineGeode.Type, 6);
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ueliaceBar.Type, 7);
+                    recipeClassic.AddIngredient(classicDivineGeode.Type, 6);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
             }
         }

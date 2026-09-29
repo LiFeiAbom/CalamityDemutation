@@ -49,15 +49,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CruptixBar", out ModItem cruptixBar1))
+                if (classic.TryFind<ModItem>("CruptixBar", out ModItem cruptixBar1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(cruptixBar1.Type, 2);
-                    recipe1.AddIngredient(ItemID.SpelunkerPotion, 7);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(cruptixBar1.Type, 2);
+                    recipeClassic.AddIngredient(ItemID.SpelunkerPotion, 7);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

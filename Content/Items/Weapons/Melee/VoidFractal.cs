@@ -111,27 +111,33 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity)
-                && calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar)
-                && calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
-                && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().AddIngredient<SpiritFractal>()
-                    .AddIngredient(auricBar.Type, 5)
-                    .AddIngredient(cosmiliteBar.Type, 5)
-                    .AddTile(cosmicAnvil.Type)
-                    .Register();
+                if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar)
+                    && calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<SpiritFractal>();
+                    recipe.AddIngredient(auricBar.Type, 5);
+                    recipe.AddIngredient(cosmiliteBar.Type, 5);
+                    recipe.AddTile(cosmicAnvil.Type);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1)
-                && calamity1.TryFind<ModItem>("AuricOre", out ModItem auricOre)
-                && calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
-                && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().AddIngredient<SpiritFractal>()
-                    .AddIngredient(auricOre.Type, 25)
-                    .AddIngredient(classicCosmiliteBar.Type, 5)
-                    .AddTile(draedonsForge.Type)
-                    .Register();
+                if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<SpiritFractal>();
+                    recipeClassic.AddIngredient(auricOre.Type, 25);
+                    recipeClassic.AddIngredient(classicCosmiliteBar.Type, 5);
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
+                }
             }
         }
     }

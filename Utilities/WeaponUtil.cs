@@ -50,16 +50,16 @@ namespace CalamityDemutation.Utilities
                 if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 500); }
             }
             // 经典版灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (Main.rand.NextBool(30))
                 {
-                    if (calamity1.TryFind<ModBuff>("ExoFreeze", out ModBuff exoFreeze)) { target.AddBuff(exoFreeze.Type, 300); }
+                    if (classic.TryFind<ModBuff>("ExoFreeze", out ModBuff exoFreeze)) { target.AddBuff(exoFreeze.Type, 300); }
                 }
-                if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 300); }
-                if (calamity1.TryFind<ModBuff>("GlacialState", out ModBuff glacialState)) { target.AddBuff(glacialState.Type, 300); }
-                if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 300); }
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 300); }
+                if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 300); }
+                if (classic.TryFind<ModBuff>("GlacialState", out ModBuff glacialState)) { target.AddBuff(glacialState.Type, 300); }
+                if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 300); }
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 300); }
             }
         }
         /// <summary>
@@ -81,16 +81,16 @@ namespace CalamityDemutation.Utilities
                 if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 500); }
             }
             // 经典版灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (Main.rand.NextBool(30))
                 {
-                    if (calamity1.TryFind<ModBuff>("ExoFreeze", out ModBuff exoFreeze)) { target.AddBuff(exoFreeze.Type, 300); }
+                    if (classic.TryFind<ModBuff>("ExoFreeze", out ModBuff exoFreeze)) { target.AddBuff(exoFreeze.Type, 300); }
                 }
-                if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 300); }
-                if (calamity1.TryFind<ModBuff>("GlacialState", out ModBuff glacialState)) { target.AddBuff(glacialState.Type, 300); }
-                if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 300); }
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 300); }
+                if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 300); }
+                if (classic.TryFind<ModBuff>("GlacialState", out ModBuff glacialState)) { target.AddBuff(glacialState.Type, 300); }
+                if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 300); }
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 300); }
             }
         }
     }

@@ -161,9 +161,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Thorns, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.Leaf, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -181,9 +181,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Wet, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity * 0.25f, ProjectileID.FlaironBubble, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -217,9 +217,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Endurance, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.BlackBolt, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -231,9 +231,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Spelunker, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.Mushroom, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -245,9 +245,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Inferno, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.BallofFire, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -259,9 +259,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Heartreach, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.RainbowCrystalExplosion, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -301,9 +301,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 1200); }
                 }
                 player.AddBuff(BuffID.DryadsWard, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.TerrarianBeam, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -395,9 +395,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Thorns, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.Leaf, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -415,9 +415,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("CrushDepth", out ModBuff crushDepth)) { target.AddBuff(crushDepth.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Wet, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity * 0.25f, ProjectileID.FlaironBubble, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -451,9 +451,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Endurance, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.BlackBolt, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -465,9 +465,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("TemporalSadness", out ModBuff temporalSadness)) { target.AddBuff(temporalSadness.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Spelunker, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.Mushroom, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -479,9 +479,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Inferno, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.BallofFire, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -493,9 +493,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)) { target.AddBuff(holyLight.Type, 1200); }
                 }
                 player.AddBuff(BuffID.Heartreach, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.RainbowCrystalExplosion, Projectile.damage, Projectile.knockBack, Projectile.owner);
@@ -535,9 +535,9 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     if (calamity0.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 1200); }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    if (calamity1.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 1200); }
+                    if (classic.TryFind<ModBuff>("ArmorCrunch", out ModBuff armorCrunch)) { target.AddBuff(armorCrunch.Type, 1200); }
                 }
                 player.AddBuff(BuffID.DryadsWard, 600);
                 int proj = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.Center, Projectile.velocity, ProjectileID.TerrarianBeam, Projectile.damage, Projectile.knockBack, Projectile.owner);

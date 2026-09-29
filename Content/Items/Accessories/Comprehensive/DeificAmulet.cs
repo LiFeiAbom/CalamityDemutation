@@ -56,21 +56,21 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 经典版灾厄：对应材料为 Stardust
-                if(calamity1.TryFind<ModItem>("Stardust", out ModItem stardust))
+                if(classic.TryFind<ModItem>("Stardust", out ModItem stardust))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.CelestialCuffs);
-                    recipe1.AddIngredient(ItemID.JellyfishNecklace);
-                    recipe1.AddIngredient(ItemID.PanicNecklace);
-                    recipe1.AddIngredient(ItemID.SharkToothNecklace);
-                    recipe1.AddIngredient(ItemID.StarVeil);
-                    recipe1.AddIngredient(stardust.Type, 25);
-                    recipe1.AddIngredient(ItemID.MeteoriteBar, 25);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.CelestialCuffs);
+                    recipeClassic.AddIngredient(ItemID.JellyfishNecklace);
+                    recipeClassic.AddIngredient(ItemID.PanicNecklace);
+                    recipeClassic.AddIngredient(ItemID.SharkToothNecklace);
+                    recipeClassic.AddIngredient(ItemID.StarVeil);
+                    recipeClassic.AddIngredient(stardust.Type, 25);
+                    recipeClassic.AddIngredient(ItemID.MeteoriteBar, 25);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

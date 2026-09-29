@@ -50,17 +50,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.Register();
                 }
             }
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if(calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm1) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
+                if(classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm1) && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<TheAbsorber>();
-                    recipe1.AddIngredient<AmbrosialAmpoule>();
-                    recipe1.AddIngredient(cosmiliteBar2.Type, 15);
-                    recipe1.AddIngredient(phantoplasm1.Type, 15);
-                    recipe1.AddTile(draedonsForge1.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<TheAbsorber>();
+                    recipeClassic.AddIngredient<AmbrosialAmpoule>();
+                    recipeClassic.AddIngredient(cosmiliteBar2.Type, 15);
+                    recipeClassic.AddIngredient(phantoplasm1.Type, 15);
+                    recipeClassic.AddTile(draedonsForge1.Type);
+                    recipeClassic.Register();
                 }
             }
         }

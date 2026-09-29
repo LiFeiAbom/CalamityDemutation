@@ -51,18 +51,18 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm1) && calamity1.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel2) && calamity1.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy2) && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
+                if (classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm1) && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel2) && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy2) && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.FireGauntlet);
-                    recipe1.AddIngredient<YharimsInsignia>();
-                    recipe1.AddIngredient(phantoplasm1.Type, 20);
-                    recipe1.AddIngredient(nightmareFuel2.Type, 20);
-                    recipe1.AddIngredient(endothermicEnergy2.Type, 20);
-                    recipe1.AddTile(draedonsForge1.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.FireGauntlet);
+                    recipeClassic.AddIngredient<YharimsInsignia>();
+                    recipeClassic.AddIngredient(phantoplasm1.Type, 20);
+                    recipeClassic.AddIngredient(nightmareFuel2.Type, 20);
+                    recipeClassic.AddIngredient(endothermicEnergy2.Type, 20);
+                    recipeClassic.AddTile(draedonsForge1.Type);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -46,25 +46,29 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("LifeAlloy", out ModItem lifeAlloy))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient<LivingDew2>().
-                    AddIngredient<RadiantOoze2>().
-                    AddIngredient(lifeAlloy.Type, 3).
-                    AddTile(TileID.LunarCraftingStation).
-                    Register();
+                if (calamity.TryFind<ModItem>("LifeAlloy", out ModItem lifeAlloy))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<LivingDew2>();
+                    recipe.AddIngredient<RadiantOoze2>();
+                    recipe.AddIngredient(lifeAlloy.Type, 3);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("BarofLife", out ModItem barofLife))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient<LivingDew2>().
-                    AddIngredient<RadiantOoze2>().
-                    AddIngredient(barofLife.Type, 3).
-                    AddTile(TileID.LunarCraftingStation).
-                    Register();
+                if (classic.TryFind<ModItem>("BarofLife", out ModItem barofLife))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<LivingDew2>();
+                    recipeClassic.AddIngredient<RadiantOoze2>();
+                    recipeClassic.AddIngredient(barofLife.Type, 3);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
+                }
             }
         }
     }

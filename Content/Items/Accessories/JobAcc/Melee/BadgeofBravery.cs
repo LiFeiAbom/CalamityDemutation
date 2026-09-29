@@ -49,16 +49,16 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar1))
+                if (classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(ItemID.FeralClaws);
-                    recipe1.AddIngredient(ItemID.WarriorEmblem);
-                    recipe1.AddIngredient(ueliaceBar1.Type, 4);
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(ItemID.FeralClaws);
+                    recipeClassic.AddIngredient(ItemID.WarriorEmblem);
+                    recipeClassic.AddIngredient(ueliaceBar1.Type, 4);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
             }
         }

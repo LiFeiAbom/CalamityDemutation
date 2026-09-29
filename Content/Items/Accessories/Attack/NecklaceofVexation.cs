@@ -49,15 +49,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("DraedonBar", out ModItem draedonBar1))
+                if (classic.TryFind<ModItem>("DraedonBar", out ModItem draedonBar1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(draedonBar1.Type, 2);
-                    recipe1.AddIngredient(ItemID.AvengerEmblem);
-                    recipe1.AddTile(TileID.MythrilAnvil);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(draedonBar1.Type, 2);
+                    recipeClassic.AddIngredient(ItemID.AvengerEmblem);
+                    recipeClassic.AddTile(TileID.MythrilAnvil);
+                    recipeClassic.Register();
                 }
             }
         }

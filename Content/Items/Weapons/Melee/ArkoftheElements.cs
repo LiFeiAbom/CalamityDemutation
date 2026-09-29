@@ -112,22 +112,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(BuffID.Frostburn, 120);
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)
-                    && calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)
-                    && calamity0.TryFind<ModBuff>("Plague", out ModBuff plague))
+                if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)
+                    && calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)
+                    && calamity.TryFind<ModBuff>("Plague", out ModBuff plague))
                 {
                     target.AddBuff(holyFlames.Type, 120);
                     target.AddBuff(brimstoneFlames.Type, 120);
                     target.AddBuff(plague.Type, 120);
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)
-                    && calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff classicBrimstoneFlames)
-                    && calamity1.TryFind<ModBuff>("Plague", out ModBuff classicPlague))
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)
+                    && classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff classicBrimstoneFlames)
+                    && classic.TryFind<ModBuff>("Plague", out ModBuff classicPlague))
                 {
                     target.AddBuff(holyLight.Type, 120);
                     target.AddBuff(classicBrimstoneFlames.Type, 120);
@@ -141,22 +141,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(BuffID.Frostburn, 120);
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity0))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                if (calamity0.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)
-                    && calamity0.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)
-                    && calamity0.TryFind<ModBuff>("Plague", out ModBuff plague))
+                if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)
+                    && calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)
+                    && calamity.TryFind<ModBuff>("Plague", out ModBuff plague))
                 {
                     target.AddBuff(holyFlames.Type, 120);
                     target.AddBuff(brimstoneFlames.Type, 120);
                     target.AddBuff(plague.Type, 120);
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)
-                    && calamity1.TryFind<ModBuff>("BrimstoneFlames", out ModBuff classicBrimstoneFlames)
-                    && calamity1.TryFind<ModBuff>("Plague", out ModBuff classicPlague))
+                if (classic.TryFind<ModBuff>("HolyLight", out ModBuff holyLight)
+                    && classic.TryFind<ModBuff>("BrimstoneFlames", out ModBuff classicBrimstoneFlames)
+                    && classic.TryFind<ModBuff>("Plague", out ModBuff classicPlague))
                 {
                     target.AddBuff(holyLight.Type, 120);
                     target.AddBuff(classicBrimstoneFlames.Type, 120);
@@ -188,20 +188,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity)
-                    && calamity1.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
-                    && calamity1.TryFind<ModItem>("BarofLife", out ModItem barofLife))
+                if (classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity)
+                    && classic.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)
+                    && classic.TryFind<ModItem>("BarofLife", out ModItem barofLife))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<TrueArkoftheAncients>();
-                    recipe1.AddIngredient(galacticaSingularity.Type, 5);
-                    recipe1.AddIngredient(classicCoreofCalamity.Type, 5);
-                    recipe1.AddIngredient(barofLife.Type, 10);
-                    recipe1.AddIngredient(ItemID.LunarBar, 15);
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<TrueArkoftheAncients>();
+                    recipeClassic.AddIngredient(galacticaSingularity.Type, 5);
+                    recipeClassic.AddIngredient(classicCoreofCalamity.Type, 5);
+                    recipeClassic.AddIngredient(barofLife.Type, 10);
+                    recipeClassic.AddIngredient(ItemID.LunarBar, 15);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
             }
         }

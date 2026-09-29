@@ -203,9 +203,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                var calamityPlayerType = calamity1.Code.GetTypes()
+                var calamityPlayerType = classic.Code.GetTypes()
                    .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                 if (calamityPlayerType != null)
                 {
@@ -224,7 +224,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    if (calamity1.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    if (classic.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
                                     {
                                         player.AddBuff(gravityNormalizerBuff.Type, 600);
                                     }
@@ -361,9 +361,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                var calamityPlayerType = calamity1.Code.GetTypes()
+                var calamityPlayerType = classic.Code.GetTypes()
                    .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                 if (calamityPlayerType != null)
                 {
@@ -382,7 +382,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                                 bool ZoneAstral = (bool)prop.GetValue(calPlayer);
                                 if (ZoneAstral)
                                 {
-                                    if (calamity1.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
+                                    if (classic.TryFind<ModBuff>("GravityNormalizerBuff", out ModBuff gravityNormalizerBuff))
                                     {
                                         player.AddBuff(gravityNormalizerBuff.Type, 600);
                                     }
@@ -414,18 +414,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
             }
             // ── 经典版灾厄：材料改为 Phantoplasm、且改在德雷顿熔炉合成 ──
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
-                    && calamity1.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
-                    && calamity1.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
+                    && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<OmegaBiomeBlade>();
-                    recipe1.AddIngredient(classicCosmiliteBar.Type, 10);  // 经典版材料：星辉矿锭 ×10
-                    recipe1.AddIngredient(phantoplasm.Type, 5);           // 经典版材料：幻影质 ×5
-                    recipe1.AddTile(draedonsForge.Type);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<OmegaBiomeBlade>();
+                    recipeClassic.AddIngredient(classicCosmiliteBar.Type, 10);  // 经典版材料：星辉矿锭 ×10
+                    recipeClassic.AddIngredient(phantoplasm.Type, 5);           // 经典版材料：幻影质 ×5
+                    recipeClassic.AddTile(draedonsForge.Type);
+                    recipeClassic.Register();
                 }
             }
         }

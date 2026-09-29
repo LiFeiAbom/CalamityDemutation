@@ -75,39 +75,39 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 }
             }
             // ── 经典版灾厄：深渊材料换名（Lumenyl→Lumenite、PlantyMush→Tenebris） ──
-            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 路线一：爬行甲壳版
-                if(calamity1.TryFind<ModItem>("DepthCells", out ModItem depthCells3) && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite1) && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris1))
+                if(classic.TryFind<ModItem>("DepthCells", out ModItem depthCells3) && classic.TryFind<ModItem>("Lumenite", out ModItem lumenite1) && classic.TryFind<ModItem>("Tenebris", out ModItem tenebris1))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<GrandGelatin>();
-                    recipe1.AddIngredient<SeaShell>();
-                    recipe1.AddIngredient<CrawCarapace>();
-                    recipe1.AddIngredient<FungalCarapace>();
-                    recipe1.AddIngredient<GiantTortoiseShell>();
-                    recipe1.AddIngredient<AmidiasSpark>();
-                    recipe1.AddIngredient(depthCells3.Type, 15); // 深渊材料：深海细胞 ×15
-                    recipe1.AddIngredient(lumenite1.Type, 15);  // 经典版对应材料 ×15
-                    recipe1.AddIngredient(tenebris1.Type, 5);   // 经典版对应材料 ×5
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<GrandGelatin>();
+                    recipeClassic.AddIngredient<SeaShell>();
+                    recipeClassic.AddIngredient<CrawCarapace>();
+                    recipeClassic.AddIngredient<FungalCarapace>();
+                    recipeClassic.AddIngredient<GiantTortoiseShell>();
+                    recipeClassic.AddIngredient<AmidiasSpark>();
+                    recipeClassic.AddIngredient(depthCells3.Type, 15); // 深渊材料：深海细胞 ×15
+                    recipeClassic.AddIngredient(lumenite1.Type, 15);  // 经典版对应材料 ×15
+                    recipeClassic.AddIngredient(tenebris1.Type, 5);   // 经典版对应材料 ×5
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
                 // 路线二：巨型贝壳版
-                if(calamity1.TryFind<ModItem>("DepthCells", out ModItem depthCells4) && calamity1.TryFind<ModItem>("Lumenite", out ModItem lumenite2) && calamity1.TryFind<ModItem>("Tenebris", out ModItem tenebris2))
+                if(classic.TryFind<ModItem>("DepthCells", out ModItem depthCells4) && classic.TryFind<ModItem>("Lumenite", out ModItem lumenite2) && classic.TryFind<ModItem>("Tenebris", out ModItem tenebris2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<GrandGelatin>();
-                    recipe1.AddIngredient<SeaShell>();
-                    recipe1.AddIngredient<GiantShell>();
-                    recipe1.AddIngredient<FungalCarapace>();
-                    recipe1.AddIngredient<GiantTortoiseShell>();
-                    recipe1.AddIngredient<AmidiasSpark>();
-                    recipe1.AddIngredient(depthCells4.Type, 15);
-                    recipe1.AddIngredient(lumenite2.Type, 15);
-                    recipe1.AddIngredient(tenebris2.Type, 5);
-                    recipe1.AddTile(TileID.LunarCraftingStation);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<GrandGelatin>();
+                    recipeClassic.AddIngredient<SeaShell>();
+                    recipeClassic.AddIngredient<GiantShell>();
+                    recipeClassic.AddIngredient<FungalCarapace>();
+                    recipeClassic.AddIngredient<GiantTortoiseShell>();
+                    recipeClassic.AddIngredient<AmidiasSpark>();
+                    recipeClassic.AddIngredient(depthCells4.Type, 15);
+                    recipeClassic.AddIngredient(lumenite2.Type, 15);
+                    recipeClassic.AddIngredient(tenebris2.Type, 5);
+                    recipeClassic.AddTile(TileID.LunarCraftingStation);
+                    recipeClassic.Register();
                 }
             }
         }

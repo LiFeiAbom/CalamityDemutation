@@ -163,47 +163,51 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("CalamityMod", out Mod modern)
-                && modern.TryFind<ModItem>("MiracleMatter", out ModItem miracleMatter)
-                && modern.TryFind<ModTile>("DraedonsForge", out ModTile modernForge))
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                CreateRecipe().
-                    AddIngredient<Terratomere>().
-                    AddIngredient<AnarchyBlade>().
-                    AddIngredient<FlarefrostBlade>().
-                    AddIngredient<EntropicClaymore>().
-                    AddIngredient<PhoenixBlade>().
-                    AddIngredient<StellarStriker>().
-                    AddIngredient(miracleMatter.Type).
-                    AddTile(modernForge.Type).
-                    Register();
+                if (calamity.TryFind<ModItem>("MiracleMatter", out ModItem miracleMatter)
+                    && calamity.TryFind<ModTile>("DraedonsForge", out ModTile modernForge))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient<Terratomere>();
+                    recipe.AddIngredient<AnarchyBlade>();
+                    recipe.AddIngredient<FlarefrostBlade>();
+                    recipe.AddIngredient<EntropicClaymore>();
+                    recipe.AddIngredient<PhoenixBlade>();
+                    recipe.AddIngredient<StellarStriker>();
+                    recipe.AddIngredient(miracleMatter.Type);
+                    recipe.AddTile(modernForge.Type);
+                    recipe.Register();
+                }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic)
-                && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
-                && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
-                && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
-                && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
-                && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
-                && classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
-                && classic.TryFind<ModTile>("DraedonsForge", out ModTile classicForge))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                CreateRecipe().
-                    AddIngredient<Terratomere>().
-                    AddIngredient<AnarchyBlade>().
-                    AddIngredient<FlarefrostBlade>().
-                    AddIngredient<EntropicClaymore>().
-                    AddIngredient<PhoenixBlade>().
-                    AddIngredient<StellarStriker>().
-                    AddIngredient(nightmareFuel.Type, 5).
-                    AddIngredient(endothermicEnergy.Type, 5).
-                    AddIngredient(cosmiliteBar.Type, 5).
-                    AddIngredient(darksunFragment.Type, 5).
-                    AddIngredient(hellcasterFragment.Type, 3).
-                    AddIngredient(phantoplasm.Type, 5).
-                    AddIngredient(auricOre.Type, 25).
-                    AddTile(classicForge.Type).
-                    Register();
+                if (classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
+                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
+                    && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
+                    && classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
+                    && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment)
+                    && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
+                    && classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
+                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile classicForge))
+                {
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<Terratomere>();
+                    recipeClassic.AddIngredient<AnarchyBlade>();
+                    recipeClassic.AddIngredient<FlarefrostBlade>();
+                    recipeClassic.AddIngredient<EntropicClaymore>();
+                    recipeClassic.AddIngredient<PhoenixBlade>();
+                    recipeClassic.AddIngredient<StellarStriker>();
+                    recipeClassic.AddIngredient(nightmareFuel.Type, 5);
+                    recipeClassic.AddIngredient(endothermicEnergy.Type, 5);
+                    recipeClassic.AddIngredient(cosmiliteBar.Type, 5);
+                    recipeClassic.AddIngredient(darksunFragment.Type, 5);
+                    recipeClassic.AddIngredient(hellcasterFragment.Type, 3);
+                    recipeClassic.AddIngredient(phantoplasm.Type, 5);
+                    recipeClassic.AddIngredient(auricOre.Type, 25);
+                    recipeClassic.AddTile(classicForge.Type);
+                    recipeClassic.Register();
+                }
             }
         }
     }

@@ -67,6 +67,11 @@ namespace CalamityDemutation.Players
         private const int InitDefense = 2, MaxDefense = 10;                 // 防御
         private const float InitKnockback = 0.05f, MaxKnockback = 0.2f;     // 召唤击退
         /// <summary>
+        /// 【（古）链】无暇粹魂晶对持续伤害减益的抵消量（近似值，理由见 UpdateBadLifeRegen 里的长注释）。
+        /// 单列成常量就是为了方便拍板调整——源里各减益的扣量其实不同，4~50 不等
+        /// </summary>
+        private const int PurityDoTOffset = 24;
+        /// <summary>
         /// 自定义网络消息码：客户端上报"洋葱永久解锁状态变更"（见 SendClientChanges），
         /// 由主类 CalamityDemutation.HandlePacket 处理。
         /// </summary>
@@ -138,6 +143,11 @@ namespace CalamityDemutation.Players
             BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
         // ── 实例字段 ──
         /// <summary>
+        /// 【（古）链】已装备甘露安瓿（古）：按「缺失生命比例」给再生 + 置位蜂蜜系三标记（对应灾厄 aAmpoule）。
+        /// 与旧件的 <c>ambrosialAmpoule</c> 是不同标记
+        /// </summary>
+        public bool aAmpoule = false;
+        /// <summary>
         /// 已装备阿巴顿（Abaddon）：+8% 通用暴击，暴击命中时炸出硫磺爆炸，并免疫硫磺火减益。
         /// 灾厄原版第三条是"大幅降低硫磺火 DoT 伤害"（30 → 10），本工程按用户口径改成完全免疫。
         /// </summary>
@@ -165,6 +175,12 @@ namespace CalamityDemutation.Players
         /// 使所有娘化召唤物同时在场且不被存活检查销毁
         /// </summary>
         public bool allWaifus = false;
+        /// <summary>
+        /// 【（古）链】永远享有蜂蜜式回血：即使不在蜂蜜里也按原版蜂蜜规则回血（对应灾厄 alwaysHoneyRegen）。
+        /// 由 2.0.3.9 口径的蜜露系三件（HoneyDew2 / LivingDew2 / AmbrosialAmpoule2 + 后续的 Purity）置位，
+        /// 与旧件的同族标记完全独立、互不影响
+        /// </summary>
+        public bool alwaysHoneyRegen = false;
         /// <summary>
         /// 已装备聚合大脑：+10% 通用伤害/+5% 暴击，受击时范围困惑敌人并召唤 AuraRain，
         /// 另有 1/8 概率完全闪避伤害
@@ -269,6 +285,10 @@ namespace CalamityDemutation.Players
         /// 已装备猩红烧瓶：身处猩红之地时获得 +3 防御与 +7% 减伤
         /// </summary>
         public bool crimsonFlask = false;
+        /// <summary>
+        /// 【（古）链】已装备王冠宝石：基础 +2 再生，带减益时再 +3 并抬 lifeRegenTime（对应灾厄 crownJewel）
+        /// </summary>
+        public bool crownJewel = false;
         /// <summary>
         /// 已装备寒晶石（CryoStone）：+5% 减伤、+3% 通用增伤，蓝色照明
         /// </summary>
@@ -398,43 +418,18 @@ namespace CalamityDemutation.Players
         public bool hellfireExplosion = false;
         public bool holyWrath = false;
         /// <summary>
-        /// 【（古）链】永远享有蜂蜜式回血：即使不在蜂蜜里也按原版蜂蜜规则回血（对应灾厄 alwaysHoneyRegen）。
-        /// 由 2.0.3.9 口径的蜜露系三件（HoneyDew2 / LivingDew2 / AmbrosialAmpoule2 + 后续的 Purity）置位，
-        /// 与上面的旧件标记完全独立、互不影响
+        /// 已装备蜜露：丛林区获得回血/防御/减伤，免疫毒液与中毒，并附加蜂蜜式生命回复
         /// </summary>
-        public bool alwaysHoneyRegen = false;
-        /// <summary>
-        /// 【（古）链】蜂蜜系站桩加速回复：泡在蜂蜜里且静止时按 turbo 档回血（对应灾厄 honeyTurboRegen）
-        /// </summary>
-        public bool honeyTurboRegen = false;
+        public bool honeyDew = false;
         /// <summary>
         /// 【（古）链】病症/中毒类减益时长减半（对应灾厄 honeyDewHalveDebuffs）；
         /// 后续的 LivingDew2 会追加火系、Purity 会追加整张 debuffList
         /// </summary>
         public bool honeyDewHalveDebuffs = false;
         /// <summary>
-        /// 【（古）链】在病症类之外，再把火系/燃烧类减益的时长也减半（对应灾厄 livingDewHalveDebuffs）
+        /// 【（古）链】蜂蜜系站桩加速回复：泡在蜂蜜里且静止时按 turbo 档回血（对应灾厄 honeyTurboRegen）
         /// </summary>
-        public bool livingDewHalveDebuffs = false;
-        /// <summary>
-        /// 【（古）链】已装备光辉软泥（古）：按「缺失生命比例」给再生（对应灾厄 rOoze）。
-        /// 注意与旧件的 <c>radiantOoze</c> 是**不同的标记**，两者互不影响
-        /// </summary>
-        public bool rOoze = false;
-        /// <summary>
-        /// 【（古）链】已装备甘露安瓿（古）：按「缺失生命比例」给再生 + 置位蜂蜜系三标记（对应灾厄 aAmpoule）。
-        /// 与旧件的 <c>ambrosialAmpoule</c> 是不同标记
-        /// </summary>
-        public bool aAmpoule = false;
-        /// <summary>
-        /// 【（古）链】已装备无暇粹魂晶：减益免疫/减半、动态防御、再生等一大套（对应灾厄 purity）。
-        /// 本标记优先级高于 infectedJewel 与 crownJewel（三者互斥，源的 else-if 链）
-        /// </summary>
-        public bool purity = false;
-        /// <summary>
-        /// 【（古）链】已装备王冠宝石：基础 +2 再生，带减益时再 +3 并抬 lifeRegenTime（对应灾厄 crownJewel）
-        /// </summary>
-        public bool crownJewel = false;
+        public bool honeyTurboRegen = false;
         /// <summary>
         /// 【（古）链】已装备感染宝石：+2 再生、带减益时 +4 并抬 lifeRegenTime，另给动态防御（对应灾厄 infectedJewel）
         /// </summary>
@@ -445,21 +440,6 @@ namespace CalamityDemutation.Players
         /// ⚠️ **跨帧累积，绝不能放进 ResetEffects**（放进去会每帧清零、永远涨不起来）
         /// </summary>
         public int jewelBonusDefense = 0;
-        /// <summary>
-        /// 【（古）链】无暇粹魂晶「带减益回血节拍惩罚」的累计帧数（对应灾厄 PurityHealSlowdownFrames）：
-        /// 带减益越久，直接回血的节拍从 12 帧逐步拉长（上限 180 帧）；减益清空后逐帧回落。
-        /// ⚠️ 跨帧累积，**绝不能放进 ResetEffects**；源只在死亡时清零，本工程同（放 UpdateDead）
-        /// </summary>
-        public int purityHealSlowdownFrames = 0;
-        /// <summary>
-        /// 【（古）链】无暇粹魂晶对持续伤害减益的抵消量（近似值，理由见 UpdateBadLifeRegen 里的长注释）。
-        /// 单列成常量就是为了方便拍板调整——源里各减益的扣量其实不同，4~50 不等
-        /// </summary>
-        private const int PurityDoTOffset = 24;
-        /// <summary>
-        /// 已装备蜜露：丛林区获得回血/防御/减伤，免疫毒液与中毒，并附加蜂蜜式生命回复
-        /// </summary>
-        public bool honeyDew = false;
         /// <summary>
         /// 已装备利维坦龙涎香：免疫溺水，浸水时高额增伤/防御/移速，
         /// 移动时产生毒海水弹幕，并周期性对近身敌人施加毒液 debuff
@@ -473,6 +453,10 @@ namespace CalamityDemutation.Players
         /// 已装备活露：身处丛林时获得生命回复、+5 防御与 +10% 减伤
         /// </summary>
         public bool livingDew = false;
+        /// <summary>
+        /// 【（古）链】在病症类之外，再把火系/燃烧类减益的时长也减半（对应灾厄 livingDewHalveDebuffs）
+        /// </summary>
+        public bool livingDewHalveDebuffs = false;
         /// <summary>
         /// 已装备魅惑之饵（召唤饰品）：置位后维持塞壬娘仆从存在并允许其存活
         /// </summary>
@@ -505,6 +489,17 @@ namespace CalamityDemutation.Players
         public bool psychoticAmulet = false;
         public bool profanedRage = false;
         /// <summary>
+        /// 【（古）链】已装备无暇粹魂晶：减益免疫/减半、动态防御、再生等一大套（对应灾厄 purity）。
+        /// 本标记优先级高于 infectedJewel 与 crownJewel（三者互斥，源的 else-if 链）
+        /// </summary>
+        public bool purity = false;
+        /// <summary>
+        /// 【（古）链】无暇粹魂晶「带减益回血节拍惩罚」的累计帧数（对应灾厄 PurityHealSlowdownFrames）：
+        /// 带减益越久，直接回血的节拍从 12 帧逐步拉长（上限 180 帧）；减益清空后逐帧回落。
+        /// ⚠️ 跨帧累积，**绝不能放进 ResetEffects**；源只在死亡时清零，本工程同（放 UpdateDead）
+        /// </summary>
+        public int purityHealSlowdownFrames = 0;
+        /// <summary>
         /// 已装备辐射软泥：夜间发出暖黄光并提供生命回复
         /// </summary>
         public bool radiantOoze = false;
@@ -512,6 +507,11 @@ namespace CalamityDemutation.Players
         public bool redDevil = false;
         public bool redDevil2 = false;
         public bool revivify = false;
+        /// <summary>
+        /// 【（古）链】已装备光辉软泥（古）：按「缺失生命比例」给再生（对应灾厄 rOoze）。
+        /// 注意与旧件的 <c>radiantOoze</c> 是**不同的标记**，两者互不影响
+        /// </summary>
+        public bool rOoze = false;
         /// <summary>
         /// 已装备玫瑰石：生命回复/上限、+3% 通用增伤与粉色照明（同时驱动玫瑰娘召唤物）
         /// </summary>
@@ -767,18 +767,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void ResetEffects()
         {
+            aAmpoule = false;
             abaddon = false;
             aeroStone = false;
             afflicted = false;
             affliction = false;
             allWaifus = false;
             alwaysHoneyRegen = false;
-            // （古）链的其余标记（与上面旧件的同族标记无关，各自独立）
-            aAmpoule = false;
-            crownJewel = false;
-            infectedJewel = false;
-            purity = false;
-            rOoze = false;
             amalgamatedBrain = false;
             ambrosialAmpoule = false;
             amidiasSpark = false;
@@ -811,6 +806,7 @@ namespace CalamityDemutation.Players
             corruptFlask = false;
             crawCarapace = false;
             crimsonFlask = false;
+            crownJewel = false;
             cryoStone = false;
             daedalusEmblem = false;
             darkSunRing = false;
@@ -847,6 +843,7 @@ namespace CalamityDemutation.Players
             honeyDew = false;
             honeyDewHalveDebuffs = false;
             honeyTurboRegen = false;
+            infectedJewel = false;
             levianthanAmbergris = false;
             lifeJelly = false;
             livingDew = false;
@@ -875,6 +872,7 @@ namespace CalamityDemutation.Players
             // 原版灾厄只在 UpdateDead 里把它复位为 300
             profanedSoulShieldVisible = false;
             profanedCrystalVisible = false;
+            purity = false;
             // 护盾受击音效的节流计时（对齐 2.2.2 的 hurtSoundTimer）：每帧递减，见 ModifyHurt
             if (profanedSoulShieldHurtSoundTimer > 0)
                 profanedSoulShieldHurtSoundTimer--;
@@ -883,6 +881,7 @@ namespace CalamityDemutation.Players
             redDevil = false;
             redDevil2 = false;
             revivify = false;
+            rOoze = false;
             roseStone = false;
             roseStoneVisible = false;
             rottenBrain = false;
@@ -926,6 +925,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void UpdateDead()
         {
+            aAmpoule = false;
             abaddon = false;
             abaddonCritCooldown = 0;
             aeroStone = false;
@@ -933,12 +933,6 @@ namespace CalamityDemutation.Players
             affliction = false;
             allWaifus = false;
             alwaysHoneyRegen = false;
-            // （古）链的其余标记（与上面旧件的同族标记无关，各自独立）
-            aAmpoule = false;
-            crownJewel = false;
-            infectedJewel = false;
-            purity = false;
-            rOoze = false;
             amalgamatedBrain = false;
             ambrosialAmpoule = false;
             amidiasSpark = false;
@@ -976,6 +970,7 @@ namespace CalamityDemutation.Players
             corruptFlask = false;
             crawCarapace = false;
             crimsonFlask = false;
+            crownJewel = false;
             cryoStone = false;
             daedalusEmblem = false;
             darkSunRing = false;
@@ -1015,6 +1010,7 @@ namespace CalamityDemutation.Players
             honeyDew = false;
             honeyDewHalveDebuffs = false;
             honeyTurboRegen = false;
+            infectedJewel = false;
             levianthanAmbergris = false;
             lifeJelly = false;
             livingDew = false;
@@ -1041,11 +1037,14 @@ namespace CalamityDemutation.Players
             profanedSoulHealCounter = 300;   // 死亡时复位治疗计时器（对齐灾厄 UpdateDead 的 healCounter = 300）
             profanedSoulShieldVisible = false;
             profanedCrystalVisible = false;
+            purity = false;
+            purityHealSlowdownFrames = 0;   // 跨帧计时器：源只在死亡时清零（见字段注释，不能进 ResetEffects）
             radiantOoze = false;
             rampartofDeities = false;
             redDevil = false;
             redDevil2 = false;
             revivify = false;
+            rOoze = false;
             roseStone = false;
             roseStoneVisible = false;
             rottenBrain = false;
@@ -1061,7 +1060,6 @@ namespace CalamityDemutation.Players
             shieldSlamDashCooldown = 0;
             sigilofCalamitas = false;
             silvaCountdown = 600;
-            purityHealSlowdownFrames = 0;
             silvaHitCounter = 0;
             silvaMelee = false;
             silvaSet = false;
@@ -4079,9 +4077,9 @@ namespace CalamityDemutation.Players
                         }
                     }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    var calamityPlayerType = calamity1.Code.GetTypes()
+                    var calamityPlayerType = classic.Code.GetTypes()
                         .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                     if (calamityPlayerType != null)
                     {
@@ -4190,9 +4188,9 @@ namespace CalamityDemutation.Players
                         }
                     }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    var calamityPlayerType = calamity1.Code.GetTypes()
+                    var calamityPlayerType = classic.Code.GetTypes()
                         .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                     if (calamityPlayerType != null)
                     {
@@ -4282,9 +4280,9 @@ namespace CalamityDemutation.Players
                         }
                     }
                 }
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
                 {
-                    var calamityPlayerType = calamity1.Code.GetTypes()
+                    var calamityPlayerType = classic.Code.GetTypes()
                         .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
                     if (calamityPlayerType != null)
                     {

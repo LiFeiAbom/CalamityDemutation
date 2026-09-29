@@ -44,15 +44,15 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("MurkySludge", out ModItem murkySludge) && calamity1.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel2))
+                if (classic.TryFind<ModItem>("MurkySludge", out ModItem murkySludge) && classic.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient(murkySludge.Type, 5);
-                    recipe1.AddIngredient(purifiedGel2.Type, 15);
-                    recipe1.AddTile(TileID.Anvils);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient(murkySludge.Type, 5);
+                    recipeClassic.AddIngredient(purifiedGel2.Type, 15);
+                    recipeClassic.AddTile(TileID.Anvils);
+                    recipeClassic.Register();
                 }
             }
         }

@@ -46,17 +46,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
                     recipe.Register();
                 }
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod calamity1))
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (calamity1.TryFind<ModItem>("DemonicBoneAsh", out ModItem demonicBoneAsh1) && calamity1.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2))
+                if (classic.TryFind<ModItem>("DemonicBoneAsh", out ModItem demonicBoneAsh1) && classic.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2))
                 {
-                    Recipe recipe1 = CreateRecipe();
-                    recipe1.AddIngredient<AncientFossil>();
-                    recipe1.AddIngredient(demonicBoneAsh1.Type);
-                    recipe1.AddIngredient(ancientBoneDust2.Type, 3);
-                    recipe1.AddIngredient(ItemID.RottenChunk, 10);
-                    recipe1.AddTile(TileID.Anvils);
-                    recipe1.Register();
+                    Recipe recipeClassic = CreateRecipe();
+                    recipeClassic.AddIngredient<AncientFossil>();
+                    recipeClassic.AddIngredient(demonicBoneAsh1.Type);
+                    recipeClassic.AddIngredient(ancientBoneDust2.Type, 3);
+                    recipeClassic.AddIngredient(ItemID.RottenChunk, 10);
+                    recipeClassic.AddTile(TileID.Anvils);
+                    recipeClassic.Register();
                 }
             }
         }
