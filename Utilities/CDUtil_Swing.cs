@@ -118,6 +118,13 @@ namespace CalamityDemutation.Utilities
             return Main.rand.NextVector2Unit() * Main.rand.Next(0, max);
         }
         /// <summary>
+        /// 随机方向单位向量乘以 min~max 随机长度（对应 CEUtils 的同名双参重载）
+        /// </summary>
+        public static Vector2 randVr(int min, int max)
+        {
+            return Main.rand.NextVector2Unit() * Main.rand.Next(min, max);
+        }
+        /// <summary>
         /// 把二维向量提升为 Z 分量为 0 的三维向量
         /// </summary>
         public static Vector3 Vec3(this Vector2 vector) => new Vector3(vector.X, vector.Y, 0);

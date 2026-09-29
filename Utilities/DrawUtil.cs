@@ -121,5 +121,38 @@ namespace CalamityDemutation.Utilities
             viewMatrix *= zoomScaleMatrix;
             projectionMatrix = Matrix.CreateOrthographicOffCenter(0f, width * zoom.X, 0f, height * zoom.Y, 0f, 1f) * zoomScaleMatrix;
         }
+        /// <summary>
+        /// 绘制「旋转描边光圈」：围绕绘制位置画 4 个外层 + 3 个内层的半透明旋转副本，
+        /// 随时间形成有呼吸感的发光外圈（逐字照抄 InnoVault 的 <c>VaultUtils.DrawRotatingMarginEffect</c>）。
+        /// 天罚系列弹幕用它在本体外叠一圈红/金辉光。
+        /// </summary>
+        public static void DrawRotatingMarginEffect(SpriteBatch spriteBatch, Texture2D texture, int drawTimer, Vector2 position,
+            Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects = SpriteEffects.None)
+        {
+            float globalTime = Main.GlobalTimeWrappedHourly;
+            float timer = drawTimer / 240f + globalTime * 0.04f;
+            // 周期性明暗，让光圈有呼吸感（三角波，范围 0.5~1）
+            float timeFactor = globalTime % 4f;
+            timeFactor /= 2f;
+            if (timeFactor >= 1f)
+                timeFactor = 2f - timeFactor;
+            timeFactor = timeFactor * 0.5f + 0.5f;
+            // 外层：4 个副本、偏移 8、透明度 50
+            for (float offset = 0f; offset < 1f; offset += 0.25f)
+            {
+                float radians = (offset + timer) * MathHelper.TwoPi;
+                Vector2 offsetPosition = position + new Vector2(0f, 8f).RotatedBy(radians) * timeFactor;
+                Color transparentColor = new Color(color.R, color.G, color.B, 50);
+                spriteBatch.Draw(texture, offsetPosition, sourceRectangle, transparentColor, rotation, origin, scale, effects, 0f);
+            }
+            // 内层：3 个副本、偏移 4、透明度 77
+            for (float offset = 0f; offset < 1f; offset += 0.34f)
+            {
+                float radians = (offset + timer) * MathHelper.TwoPi;
+                Vector2 offsetPosition = position + new Vector2(0f, 4f).RotatedBy(radians) * timeFactor;
+                Color semiTransparentColor = new Color(color.R, color.G, color.B, 77);
+                spriteBatch.Draw(texture, offsetPosition, sourceRectangle, semiTransparentColor, rotation, origin, scale, effects, 0f);
+            }
+        }
     }
 }

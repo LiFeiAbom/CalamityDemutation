@@ -50,6 +50,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         public bool Incandescence = false;
         /// <summary>
+        /// 弧光采样长度是否忽略判定箱尺寸（对应 CE 的 <c>IgnoreImpactBoxSize</c>）：
+        /// 为 true 时按 22 取采样长度，为 false 时沿用判定箱高度。
+        /// 判定箱远大于刀身的挥砍体（如天罚的 182×182）必须置位，
+        /// 否则弧光带会整体外移、脱离刀身。
+        /// </summary>
+        public bool IgnoreImpactBoxSize = false;
+        /// <summary>
         /// 绘制中是否进行对角线翻转
         /// </summary>
         protected bool inDrawFlipdiagonally;
@@ -408,7 +415,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
             {
                 oldRotate[j] = 100f;
                 oldDistanceToOwner[j] = distanceToOwner;
-                oldLength[j] = Projectile.height * Projectile.scale;
+                oldLength[j] = (IgnoreImpactBoxSize ? 22 : Projectile.height) * Projectile.scale;
             }
         }
         /// <summary>
@@ -659,7 +666,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
             }
             oldRotate[0] = (Projectile.Center - Owner.Center).ToRotation() + overOffsetCachesRoting * Math.Sign(rotSpeed);
             oldDistanceToOwner[0] = distanceToOwner;
-            oldLength[0] = Projectile.height * Projectile.scale * oldLengthOffsetSizeValue;
+            oldLength[0] = (IgnoreImpactBoxSize ? 22 : Projectile.height) * Projectile.scale * oldLengthOffsetSizeValue;
         }
         /// <summary>
         /// 临时切换混合/采样/光栅状态后调用 DrawTrail 画刀光，并还原全部图形状态

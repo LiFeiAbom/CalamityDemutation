@@ -407,6 +407,12 @@ namespace CalamityDemutation.Players
         public bool grandGelatin = false;
         public bool hasSilvaEffect = false;
         /// <summary>
+        /// 带冷却回血的剩余帧数（对应源的 <c>EModPlayer.HealingCd</c>）：玩家级、跨弹幕共享，
+        /// 每帧在 <see cref="PostUpdateMiscEffects"/> 里递减；<see cref="TryHealMeWithCd"/> 读它。
+        /// ⚠️ 跨帧计时器，**不能放进 ResetEffects**（否则冷却永远归零、形同虚设）
+        /// </summary>
+        public int HealingCd = 0;
+        /// <summary>
         /// 已装备元素之心：综合生命/魔力/移速/减伤/通用增伤/暴击增益，
         /// 脚底自动生长草/花，并作为五娘化饰品的合集核心（置 allWaifus）
         /// </summary>
@@ -1148,6 +1154,9 @@ namespace CalamityDemutation.Players
             // 虚影薄锋的挥砍强化倒计时
             if (voidshadeBoostTime > 0)
                 voidshadeBoostTime--;
+            // 带冷却回血的剩余帧数（全饰品共用的每帧结算中心，见 HealingCd 字段注释）
+            if (HealingCd > 0)
+                HealingCd--;
             // 龟壳爆发（ShellBoost）：受击后增益期间 +90% 移速。
             // 原结算于 UpdateBadLifeRegen（该钩子仅在负面生命回复期运行，常漏加），
             // 改到本方法（每帧全饰品结算中心）保证增益期全程生效。
@@ -5502,6 +5511,21 @@ namespace CalamityDemutation.Players
             }
         }
         // ── 公开方法 ──
+        /// <summary>
+        /// 带冷却的回血（对应源的 <c>EModPlayer.TryHealMeWithCd</c>）：冷却未到时返回 false 且不回血，
+        /// 可用时回血并把 <see cref="HealingCd"/> 重置为 <paramref name="cd"/> 帧。
+        /// 冷却为玩家级、跨弹幕共享，用于限制「同一次爆发里多颗治疗弹幕」的回血次数。
+        /// ⚠️ 触发者不论本方法返回真假都要置位自己的「已回过血」标记——源同此语义。
+        /// <see cref="Player.Heal"/> 自带超上限夹取。
+        /// </summary>
+        public bool TryHealMeWithCd(int amount, int cd = 12)
+        {
+            if (HealingCd > 0)
+                return false;
+            HealingCd = cd;
+            Player.Heal(amount);
+            return true;
+        }
         /// <summary>
         /// 施加灾厄模组 debuff：buff type 非法（对应模组/技能不存在）时静默跳过
         /// </summary>

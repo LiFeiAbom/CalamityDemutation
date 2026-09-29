@@ -1362,6 +1362,18 @@ Items: {
 			'''
 	}
 
+	Nemesis: {
+		DisplayName: Nemesis
+		Tooltip:
+			'''
+			Left click calls down a storm of dragon meteor stars at the cursor
+			True melee hits spawn healing stars
+			Every 7th swing calls down the Nemesis instead
+			Hold Right Click to charge the blade
+			At full charge, swing the blade to unleash a torrent of slashes
+			'''
+	}
+
 	NeutronBow: {
 		DisplayName: Roche's String
 		Tooltip:
@@ -2174,6 +2186,7 @@ Projectiles: {
 	ExcelsusMain.DisplayName: Excelsus Main
 	ExcelsusPink.DisplayName: Excelsus Pink
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
+	EXNemesisProj.DisplayName: EX Nemesis Proj
 	EXNeutronArrow.DisplayName: EX Neutron Arrow
 	EXNeutronExplode.DisplayName: EX Neutron Explode
 	EXNeutronExplosionRanged.DisplayName: EX Neutron Explosion
@@ -2206,6 +2219,9 @@ Projectiles: {
 	LaserFountains.DisplayName: Laser Fountains
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
+	NemesisAlt.DisplayName: Nemesis Alt
+	NemesisHeld.DisplayName: Nemesis Held
+	NemesisProj.DisplayName: Nemesis Proj
 	NeutronArrow.DisplayName: Neutron Arrow
 	NeutronBowHoldout.DisplayName: Neutron Bow
 	NeutronBullet.DisplayName: Neutron Bullet

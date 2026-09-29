@@ -1364,6 +1364,18 @@ Items: {
 			'''
 	}
 
+	Nemesis: {
+		DisplayName: 天罚
+		Tooltip:
+			'''
+			左键攻击在光标处召唤大量龙陨星
+			真近战会产生治疗球
+			每 7 次挥舞召唤一次天罚
+			按住右键进行蓄力
+			蓄力满后旋转刀刃急速挥出大量斩击
+			'''
+	}
+
 	NeutronBow: {
 		DisplayName: 洛希之弦
 		Tooltip:
@@ -2179,6 +2191,7 @@ Projectiles: {
 	ExcelsusMain.DisplayName: 宙宇主刃
 	ExcelsusPink.DisplayName: 宙宇粉刃
 	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
+	EXNemesisProj.DisplayName: 天罚
 	EXNeutronArrow.DisplayName: 引力箭矢
 	EXNeutronExplode.DisplayName: 中子大爆点
 	EXNeutronExplosionRanged.DisplayName: 中子大爆点
@@ -2211,6 +2224,9 @@ Projectiles: {
 	LaserFountains.DisplayName: 激光喷泉
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星
+	NemesisAlt.DisplayName: 天罚
+	NemesisHeld.DisplayName: 天罚
+	NemesisProj.DisplayName: 天罚
 	NeutronArrow.DisplayName: 中子箭
 	NeutronBowHoldout.DisplayName: 中子长弓
 	NeutronBullet.DisplayName: 中子弹
