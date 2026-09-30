@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -75,8 +76,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             rightOffset -= 1.4f * velocity;
             Projectile.NewProjectile(source, new Vector2(rrp.X + leftOffset.X, rrp.Y + leftOffset.Y), originalVelocity, sideID, sideDamage, knockback, player.whoAmI, 0f, 1f);
             Projectile.NewProjectile(source, new Vector2(rrp.X + rightOffset.X, rrp.Y + rightOffset.Y), originalVelocity, sideID, sideDamage, knockback, player.whoAmI, 0f, 2f);
-            hitsound = true;
-            return false;
+                player.GetModPlayer<CalamityDemutationPlayer>().ataraxiaHitSound = true;
+                return false;
         }
         /// <summary>挥舞表现：在判定框中心区撒 3~5 颗尘（70 / 71 / 86 三选一，灾厄原码用魔法数字，照抄）</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
@@ -121,22 +122,19 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         private void OnHitEffects(Player player, Vector2 targetPos)
         {
-            if (hitsound)
+            // 命中音标记改存玩家身上（源为 ModItem 实例字段——本文件原注释也写明"多人下会串"）
+            CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+            if (mp.ataraxiaHitSound)
             {
                 SoundEngine.PlaySound(CalamityDemutationSounds.CursedDaggerThrow, player.Center);
-                hitsound = false;
+                mp.ataraxiaHitSound = false;
             }
             int trueMeleeID = ModContent.ProjectileType<AtaraxiaBoom>();
             int trueMeleeDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(0.7f * Item.damage);
             var source = player.GetSource_ItemUse(Item);
             Projectile.NewProjectile(source, targetPos, Vector2.Zero, trueMeleeID, trueMeleeDamage, Item.knockBack, player.whoAmI, 0.0f, 0.0f);
         }
-        /// <summary>
-        /// 「本次挥砍是否还没响过命中音」——Shoot 时置真、命中时置假。灾厄源为 ModItem 实例字段，照抄；
-        /// 与 <see cref="ExoBlade"/> 的 hitCount 同理，多人下会串。
-        /// </summary>
-        public bool hitsound = true;
-        /// <summary>
+            /// <summary>
         /// 两条配方分别对应现代版与经典版（**两版配方不同，各自成条、不能混用**），都软依赖、缺料即不注册：
         /// · 现代版（灾厄 2.0.4 的配方）：断剑 + 金 Auric 锭×5 + 宇宙锭×8 + 飞升魂精×2 + 噩梦燃料×20 @ 宇宙铁砧。
         /// · 经典版（灾厄 1.4.2.101 的配方）：断剑 + 宇宙锭×25 + 幻魂质×35 + 噩梦燃料×90 + 吸热能量×90

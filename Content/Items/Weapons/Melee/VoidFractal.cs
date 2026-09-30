@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.NPCs;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
@@ -28,9 +29,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class VoidFractal:ModItem
     {
-        /// <summary>本次挥砍的招式：0/2/4 → -1（左向挥砍）、1/3/5 → 1（右向挥砍）、6 → 2（投掷本剑）、7 → 3（全屏斩），走 0~7 循环</summary>
-        private int atkType = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 600;
             Item.crit = 10;                                 // 额外暴击率
@@ -61,7 +60,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             return true;
         }
         /// <summary>
-        /// 左键：按 <see cref="atkType"/> 算出本次招式（-1/1/2/3）交给手持弹幕，<c>ai[2]</c> 取玩家到光标的距离 + 180
+        /// 左键：按 <see cref="CalamityDemutationPlayer.voidFractalAtkType"/> 算出本次招式（-1/1/2/3）交给手持弹幕，<c>ai[2]</c> 取玩家到光标的距离 + 180
         /// （投掷式与旋挥式的抛物线高度），然后把计数推进一格。
         /// 右键：给玩家挂 10 秒混乱状态当冷却，并生成一次 <see cref="VoidSlash"/> 突进
         /// （伤害是物品的 25 倍，CE 原样）。
@@ -75,26 +74,28 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<VoidSlash>(), damage * 25, 0, player.whoAmI);
                 return false;
             }
-            int at = 2;
-            if (atkType == 0 || atkType == 2 || atkType == 4)
-            {
-                at = -1;
-            }
-            if (atkType == 1 || atkType == 3 || atkType == 5)
-            {
-                at = 1;
-            }
-            if (atkType == 7)
-            {
-                at = 3;
-            }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, at, 0, Main.MouseWorld.Distance(position) + 180);
-            atkType += 1;
-            if (atkType > 7)
-            {
-                atkType = 0;
-            }
-            return false;
+                // 招式下标存在玩家身上（源为 ModItem 实例字段，联机下两名玩家会互相串招）
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                int at = 2;
+                if (mp.voidFractalAtkType == 0 || mp.voidFractalAtkType == 2 || mp.voidFractalAtkType == 4)
+                {
+                    at = -1;
+                }
+                if (mp.voidFractalAtkType == 1 || mp.voidFractalAtkType == 3 || mp.voidFractalAtkType == 5)
+                {
+                    at = 1;
+                }
+                if (mp.voidFractalAtkType == 7)
+                {
+                    at = 3;
+                }
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, at, 0, Main.MouseWorld.Distance(position) + 180);
+                mp.voidFractalAtkType += 1;
+                if (mp.voidFractalAtkType > 7)
+                {
+                    mp.voidFractalAtkType = 0;
+                }
+                return false;
         }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
@@ -302,9 +303,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 {
                     // 进度过 0.2 时朝前甩出一发虚空波（一次挥砍只甩一发）
                     shoot = false;
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
-                        Projectile.velocity.SafeNormalize(Vector2.Zero) * 12 + RandomPointInCircle(6),
-                        ModContent.ProjectileType<VoidWave>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    // 只有主人端生成：弹幕 AI 在所有端都会跑，不判归属会让联机下每个端各生成一份
+                    if (Projectile.owner == Main.myPlayer)
+                    {
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
+                            Projectile.velocity.SafeNormalize(Vector2.Zero) * 12 + RandomPointInCircle(6),
+                            ModContent.ProjectileType<VoidWave>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    }
                 }
                 if (progress < 0.6f)
                 {

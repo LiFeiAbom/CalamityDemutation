@@ -28,11 +28,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class Voidshade:ModItem
     {
-        /// <summary>本次左键的连段：0/1 交替决定挥砍方向与旋向（右键时临时置 3，走突刺式）</summary>
-        public int attackType = 0;
-        /// <summary>连段闲置计时：超过 <see cref="UpdateInventory"/> 里的 120 帧没出手就把连段拨回 0</summary>
-        public int comboExpireTimer = 0;
-        /// <summary>允许按住右键连续触发（否则右键在松开前只会出手一次）</summary>
+            /// <summary>允许按住右键连续触发（否则右键在松开前只会出手一次）</summary>
         public override void SetStaticDefaults()
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Item.type] = true;
@@ -65,14 +61,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// 左键：若玩家正处在「突刺命中强化」期，额外叠一记挥砍音，并固定播一遍原版挥剑音。
         /// 随后把本次招式作为 <c>ai[0]</c> 交给手持弹幕，并推进连段（右键因为先置了 3，推进两次后回到 1）。
         /// </summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            if (player.altFunctionUse == 2)
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
             {
-                attackType = 3;
-                damage = (int)(damage * 1.5f);
-                SoundEngine.PlaySound(CalamityDemutationSounds.VoidshadeDash with { Pitch = -0.2f, MaxInstances = 4, Volume = 0.65f }, player.Center);
-            }
+                // 连段与闲置计时改存玩家身上（CalamityDemutationPlayer.voidshadeAttackType /
+                // voidshadeComboExpireTimer）：源为 ModItem 实例字段，联机时两名玩家会互相改对方的招式
+                // （连右键突刺的 1.5 倍伤害都会被串）。
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                if (player.altFunctionUse == 2)
+                {
+                    mp.voidshadeAttackType = 3;
+                    damage = (int)(damage * 1.5f);
+                    SoundEngine.PlaySound(CalamityDemutationSounds.VoidshadeDash with { Pitch = -0.2f, MaxInstances = 4, Volume = 0.65f }, player.Center);
+                }
             else
             {
                 if (player.GetModPlayer<CalamityDemutationPlayer>().voidshadeBoostTime > 0)
@@ -81,23 +81,24 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 }
                 SoundEngine.PlaySound(SoundID.Item1, player.Center);
             }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, Main.myPlayer, attackType);
-            attackType = (attackType + 1) % 2;
-            if (player.altFunctionUse == 2)
-            {
-                attackType = (attackType + 1) % 2;
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, Main.myPlayer, mp.voidshadeAttackType);
+                mp.voidshadeAttackType = (mp.voidshadeAttackType + 1) % 2;
+                if (player.altFunctionUse == 2)
+                {
+                    mp.voidshadeAttackType = (mp.voidshadeAttackType + 1) % 2;
+                }
+                mp.voidshadeComboExpireTimer = 0;
+                return false;
             }
-            comboExpireTimer = 0;
-            return false;
-        }
         /// <summary>连段闲置超过 120 帧就把连段拨回起点（CE 原样）</summary>
-        public override void UpdateInventory(Player player)
-        {
-            if (comboExpireTimer++ >= 120)
+            public override void UpdateInventory(Player player)
             {
-                attackType = 0;
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                if (mp.voidshadeComboExpireTimer++ >= 120)
+                {
+                    mp.voidshadeAttackType = 0;
+                }
             }
-        }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>配方（CE 已去灾厄化，照抄）：破碎剑刃 + 黑曜石×12 @ 铁砧</summary>

@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -78,21 +79,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             velocity.Y *= dir * 150;
             velocity.X = MathHelper.Clamp(velocity.X, -15f, 15f);
             velocity.Y = MathHelper.Clamp(velocity.Y, -15f, 15f);
-            hitCount++;
-            hitCount2++;
-            if (hitCount >= 5 || target.life <= target.lifeMax * 0.15f)
+            // 两个命中计数改存玩家身上（源为 ModItem 实例字段，联机下队友的命中会替你推进/清空进度）
+            CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+            mp.exoBladeHitCount++;
+            mp.exoBladeHitCount2++;
+            if (mp.exoBladeHitCount >= 5 || target.life <= target.lifeMax * 0.15f)
             {
                 Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<ExoBoom>(), damageDone / 4, (int)Item.knockBack, Main.myPlayer);
-                hitCount = 0;
+                mp.exoBladeHitCount = 0;
             }
-            if (hitCount2 >= 2 || target.life <= target.lifeMax * 0.15f)
+            if (mp.exoBladeHitCount2 >= 2 || target.life <= target.lifeMax * 0.15f)
             {
                 for (int comet = 0; comet < 2; comet++)
                 {
                     float ai1 = Main.rand.NextFloat() + 0.5f;
                     Projectile.NewProjectile(player.GetSource_OnHit(target), startPos, velocity, ModContent.ProjectileType<ExoComet>(), damageDone, (int)Item.knockBack, player.whoAmI, 0f, ai1);
                 }
-                hitCount2 = 0;
+                mp.exoBladeHitCount2 = 0;
             }
             target.ExoDebuffs();
             if (!target.canGhostHeal || player.moonLeech)
@@ -120,21 +123,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             velocity.Y *= dir * 150;
             velocity.X = MathHelper.Clamp(velocity.X, -15f, 15f);
             velocity.Y = MathHelper.Clamp(velocity.Y, -15f, 15f);
-            hitCount++;
-            hitCount2++;
-            if (hitCount >= 5 || target.statLife <= target.statLifeMax2 * 0.15f)
+            // PvP 分支同理：计数同样取自玩家（见 OnHitNPC 里的说明）
+            CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+            mp.exoBladeHitCount++;
+            mp.exoBladeHitCount2++;
+            if (mp.exoBladeHitCount >= 5 || target.statLife <= target.statLifeMax2 * 0.15f)
             {
                 Projectile.NewProjectile(player.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<ExoBoom>(), hurtInfo.Damage / 4, (int)Item.knockBack, Main.myPlayer);
-                hitCount = 0;
+                mp.exoBladeHitCount = 0;
             }
-            if (hitCount2 >= 2 || target.statLife <= target.statLifeMax2 * 0.15f)
+            if (mp.exoBladeHitCount2 >= 2 || target.statLife <= target.statLifeMax2 * 0.15f)
             {
                 for (int comet = 0; comet < 2; comet++)
                 {
                     float ai1 = Main.rand.NextFloat() + 0.5f;
                     Projectile.NewProjectile(player.GetSource_OnHit(target), startPos, velocity, ModContent.ProjectileType<ExoComet>(), hurtInfo.Damage, (int)Item.knockBack, player.whoAmI, 0f, ai1);
                 }
-                hitCount2 = 0;
+                mp.exoBladeHitCount2 = 0;
             }
             target.ExoDebuffs();
             if (player.moonLeech)
@@ -150,10 +155,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Melee/ExoBladeGlow").Value);
         }
-        /// <summary>累计命中次数（爆炸分支用，CI 源为 ModItem 实例字段，照抄）</summary>
-        private int hitCount;
-        /// <summary>累计命中次数（彗星分支用，CI 源为 ModItem 实例字段，照抄）</summary>
-        private int hitCount2;
         /// <summary>
         /// 两条配方分别对应现代版与经典版（**两版配方不同，各自成条，不能混用**），都软依赖、缺料即不注册：
         /// · 现代版（沿用 CI <c>Exobladeold</c> 的配方）：六把自有下位剑 + 奇迹物质 @ 嘉登熔炉，挂 CalamityMod。

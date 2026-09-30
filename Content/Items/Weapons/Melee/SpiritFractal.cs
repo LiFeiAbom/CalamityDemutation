@@ -25,9 +25,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class SpiritFractal:ModItem
     {
-        /// <summary>本次挥砍的招式：0/2 → -1（左向挥砍）、1/3 → 1（右向挥砍）、4 → 2（投掷本剑），与 CE 一样走 0~4 循环</summary>
-        private int atkType = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 265;
             Item.crit = 10;                                // 额外暴击率
@@ -51,25 +49,27 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <c>ai[2]</c> = 玩家到光标的距离 + 180，投掷式的抛物线高度（CE 原样，取本地鼠标坐标即可——
         /// 出手的是本地玩家）。
         /// </summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            int at = 2;
-            if (atkType == 0 || atkType == 2)
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
             {
-                at = -1;
+                // 招式下标存在玩家身上（源为 ModItem 实例字段，联机下两名玩家会互相串招）
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                int at = 2;
+                if (mp.spiritFractalAtkType == 0 || mp.spiritFractalAtkType == 2)
+                {
+                    at = -1;
+                }
+                if (mp.spiritFractalAtkType == 1 || mp.spiritFractalAtkType == 3)
+                {
+                    at = 1;
+                }
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, at, 0, Main.MouseWorld.Distance(position) + 180);
+                mp.spiritFractalAtkType += 1;
+                if (mp.spiritFractalAtkType > 4)
+                {
+                    mp.spiritFractalAtkType = 0;
+                }
+                return false;
             }
-            if (atkType == 1 || atkType == 3)
-            {
-                at = 1;
-            }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, at, 0, Main.MouseWorld.Distance(position) + 180);
-            atkType += 1;
-            if (atkType > 4)
-            {
-                atkType = 0;
-            }
-            return false;
-        }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>配方：聚魂分形 + 无星之夜 + 星辰之怒 + 符文之歌 + 虚无碎片×4 @ 远古操纵机</summary>

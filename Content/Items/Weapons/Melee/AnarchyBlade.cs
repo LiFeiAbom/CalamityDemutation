@@ -28,9 +28,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>每 3 次左键挥砍才发射一道光束</summary>
         private const int ShootPeriod = 3;
-        /// <summary>左键挥砍计数（大修源码里是 ModItem 实例字段，这里照抄保持行为一致）</summary>
-        private int ShootCount;
-        /// <summary>
+            /// <summary>
         /// 物品基础属性：114×122、伤害 150、19 帧挥砍、击退 7.5、黄名（60金）、光束初速 15
         /// </summary>
         public override void SetDefaults()
@@ -62,18 +60,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Item.useTime = Item.useAnimation = 19;
             }
         }
-        /// <summary>左键每满 3 次挥砍才真正发射一次光束（并补一声 Item20 音效）；右键不发射</summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            if (player.altFunctionUse == 2)
-                return false;
-            ShootCount++;
-            if (ShootCount < ShootPeriod)
-                return false;
-            ShootCount = 0;
-            SoundEngine.PlaySound(SoundID.Item20, position);
-            return base.Shoot(player, source, position, velocity, type, damage, knockback);
-        }
+            /// <summary>
+            /// 左键每满 3 次挥砍才真正发射一次光束（并补一声 Item20 音效）；右键不发射。
+            /// 计数存在 <see cref="CalamityDemutationPlayer.anarchyBladeShootCount"/> 上——大修源码里是 ModItem 实例字段，
+            /// 联机时两名玩家会共用一个节奏。
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+            {
+                if (player.altFunctionUse == 2)
+                    return false;
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                mp.anarchyBladeShootCount++;
+                if (mp.anarchyBladeShootCount < ShootPeriod)
+                    return false;
+                mp.anarchyBladeShootCount = 0;
+                SoundEngine.PlaySound(SoundID.Item20, position);
+                return base.Shoot(player, source, position, velocity, type, damage, knockback);
+            }
         /// <summary>挥舞表现：BetterSwing 修正挥舞位置；约 1/3 概率洒落灾厄硫磺尘</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

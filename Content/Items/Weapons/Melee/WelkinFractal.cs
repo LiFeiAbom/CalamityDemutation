@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,9 +20,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class WelkinFractal:ModItem
     {
-        /// <summary>本次挥砍的招式下标，0→1→2 循环；传给弹幕时 0 记作 -1，2 表示刺出式</summary>
-        private int atkType = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 36;
             Item.crit = 4;                                 // 额外暴击率
@@ -40,17 +39,21 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<WelkinFractalHeld>();
             Item.shootSpeed = 12f;                         // 决定手持弹幕的朝向速度
         }
-        /// <summary>生成手持弹幕并把本次招式交给它（0 记作 -1），伤害减半后再传（CE 原设定）</summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position, velocity, type, damage / 2, knockback, player.whoAmI, atkType == 0 ? -1 : atkType);
-            atkType++;
-            if (atkType > 2)
+            /// <summary>
+            /// 生成手持弹幕并把本次招式交给它（0 记作 -1），伤害减半后再传（CE 原设定）。
+            /// 招式下标存在 <see cref="CalamityDemutationPlayer.welkinFractalAtkType"/> 上（源为 ModItem 实例字段，联机下会互相串招）。
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
             {
-                atkType = 0;
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                Projectile.NewProjectile(source, position, velocity, type, damage / 2, knockback, player.whoAmI, mp.welkinFractalAtkType == 0 ? -1 : mp.welkinFractalAtkType);
+                mp.welkinFractalAtkType++;
+                if (mp.welkinFractalAtkType > 2)
+                {
+                    mp.welkinFractalAtkType = 0;
+                }
+                return false;
             }
-            return false;
-        }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>配方：破碎分形 + 星怒 + 养蜂人 @ 铁砧</summary>

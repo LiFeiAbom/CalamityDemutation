@@ -20,9 +20,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class ElementalFractal:ModItem
     {
-        /// <summary>本次挥砍的招式：0 = 环绕旋挥，1 = 朝鼠标刺出（与 CE 一样在 0/1 之间交替）</summary>
-        private int atkType = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 480;
             Item.crit = 10;                                // 额外暴击率
@@ -41,13 +39,17 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ElementalFractalHeld>();
             Item.shootSpeed = 12f;                         // 决定手持弹幕的朝向速度
         }
-        /// <summary>生成手持弹幕并把本次招式交给它，然后在两种招式之间翻转</summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, atkType);
-            atkType = 1 - atkType;
-            return false;
-        }
+            /// <summary>
+            /// 生成手持弹幕并把本次招式交给它，然后在两种招式之间翻转。
+            /// 招式存在 <see cref="CalamityDemutationPlayer.elementalFractalAtkType"/> 上（源为 ModItem 实例字段，联机下会互相翻转）。
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+            {
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, mp.elementalFractalAtkType);
+                mp.elementalFractalAtkType = 1 - mp.elementalFractalAtkType;
+                return false;
+            }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>配方：元素分形 + 真断钢剑 + 夜明锭×5 + 神圣锭×5 + 日耀碎片×5 @ 远古操纵机</summary>

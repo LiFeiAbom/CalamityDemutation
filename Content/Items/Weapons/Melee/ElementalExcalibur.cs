@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,9 +18,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class ElementalExcalibur : ModItem
     {
-        /// <summary>左键彩虹光束的颜色编号：每次发射递增、0~11 循环，作为 ai[0] 传给光束弹幕选色</summary>
-        private int BeamType = 0;
-        /// <summary>挥砍粉尘的颜色透明度（NewDust 的 alpha 参数，越大越淡）</summary>
+            /// <summary>挥砍粉尘的颜色透明度（NewDust 的 alpha 参数，越大越淡）</summary>
         private const int alpha = 50;
         /// <summary>
         /// 静态属性：显式指定图鉴研究解锁数量为 1
@@ -53,18 +52,21 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>武器暴击率额外 +10%（原版对 SetDefaults 里的高暴击值处理异常，故放到此回调）</summary>
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 10;
         /// <summary>
-        /// 射击逻辑：发射彩虹光束（<see cref="BeamType"/> 每发递增、0~11 循环，作为 ai[0] 传给光束弹幕选色）
+        /// 射击逻辑：发射彩虹光束（<see cref="CalamityDemutationPlayer.elementalExcaliburBeamType"/> 每发递增、0~11 循环，
+        /// 作为 ai[0] 传给光束弹幕选色；源为 ModItem 实例字段，联机下会被队友串色）
         /// </summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, type, damage, knockback, player.whoAmI, BeamType, 0f);
-            BeamType++;
-            if (BeamType > 11)
-                BeamType = 0;
-            return false;
-        }
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+            {
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, type, damage, knockback, player.whoAmI, mp.elementalExcaliburBeamType, 0f);
+                mp.elementalExcaliburBeamType++;
+                if (mp.elementalExcaliburBeamType > 11)
+                    mp.elementalExcaliburBeamType = 0;
+                return false;
+            }
         /// <summary>
-        /// 挥砍特效：修正武器挥舞位置，偶尔按当前 <see cref="BeamType"/> 颜色生成一颗无重力的彩虹粉尘
+        /// 挥砍特效：修正武器挥舞位置，偶尔按当前 <see cref="CalamityDemutationPlayer.elementalExcaliburBeamType"/>
+        /// 颜色生成一颗无重力的彩虹粉尘
         /// </summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
@@ -72,7 +74,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             if (Main.rand.NextBool(4))
             {
                 Color color = new Color(255, 0, 0, alpha);  // 默认红（case 0 直接用此值）
-                switch (BeamType)
+                switch (player.GetModPlayer<CalamityDemutationPlayer>().elementalExcaliburBeamType)
                 {
                     case 0: // 红
                         break;

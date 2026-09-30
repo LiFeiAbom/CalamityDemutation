@@ -1,6 +1,7 @@
 using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,11 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class StarlitFractal:ModItem
     {
-        /// <summary>本次挥砍的朝向，1 与 -1 交替（传给弹幕时 0 记作 -1，本武器不会用到 2）</summary>
-        private int atkType = 1;
-        /// <summary>使用次数计数：每两次（奇数第 2、4、6…次）额外出射一颗分形之星</summary>
-        private int useCount = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 85;
             Item.crit = 7;                                 // 额外暴击率
@@ -45,17 +42,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<StarlitFractalHeld>();
             Item.shootSpeed = 12f;                         // 决定手持弹幕的朝向速度
         }
-        /// <summary>每两次挥砍额外出射一颗分形之星，再生成手持弹幕并把本次朝向交给它</summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            if (useCount++ % 2 == 1)
+            /// <summary>
+            /// 每两次挥砍额外出射一颗分形之星，再生成手持弹幕并把本次朝向交给它。
+            /// 两个计数器都存在玩家身上（<see cref="CalamityDemutationPlayer.starlitFractalUseCount"/> /
+            /// <see cref="CalamityDemutationPlayer.starlitFractalAtkType"/>）——源是 ModItem 实例字段，联机下会互相干扰。
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
             {
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<FractalStar>(), damage, knockback, player.whoAmI);
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                if (mp.starlitFractalUseCount++ % 2 == 1)
+                {
+                    Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<FractalStar>(), damage, knockback, player.whoAmI);
+                }
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, mp.starlitFractalAtkType == 0 ? -1 : mp.starlitFractalAtkType);
+                mp.starlitFractalAtkType *= -1;
+                return false;
             }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, atkType == 0 ? -1 : atkType);
-            atkType *= -1;
-            return false;
-        }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>

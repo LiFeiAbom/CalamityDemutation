@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -15,8 +16,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class DragonRage : ModItem
     {
-        private int Level;
-        private int LevelAlt;
         //internal static bool coolWorld => Main.zenithWorld || Main.getGoodWorld || Main.drunkWorld || Main.worldName == "HoCha113";
         /// <summary>
         /// 允许右键重复触发：右键重击/蓄力需要每次点击都重新施放，故开启 ItemsThatAllowRepeatedRightClick
@@ -28,7 +27,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>
         /// 物品基础属性：伤害 1275、使用时间 32 帧、击退 7.5、暴击 +16；
         /// 无武器贴图且 noMelee，主弹幕为手持挥砍体 DragonRageHeld（channel 持续引导），
-        /// 月后稀有度 15。段数计数器 Level/LevelAlt 初始化为 0。
+        /// 月后稀有度 15。段数计数器存在玩家身上（<see cref="CalamityDemutationPlayer.dragonRageLevel"/> /
+        /// <see cref="CalamityDemutationPlayer.dragonRageLevelAlt"/>，源为 ModItem 实例字段，联机下会被队友串档）。
         /// </summary>
         public override void SetDefaults()
         {
@@ -50,7 +50,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 10f;
             Item.shoot = ModContent.ProjectileType<DragonRageHeld>();
             Item.rare = ItemRarityID.Red;
-            LevelAlt = Level = 0;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>
@@ -113,13 +112,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             LevelAlt = 0;
             return false;
         }
-        /// <summary>
-        /// 重写默认射击：直接委托 ShootFunc，并把实例上的 Level/LevelAlt 段数计数器以 ref 传入
-        /// </summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            return ShootFunc(ref Level, ref LevelAlt, Item, player, source, position, velocity, type, damage, knockback);
-        }
+            /// <summary>
+            /// 重写默认射击：直接委托 ShootFunc，并把玩家身上的段数计数器以 ref 传入
+            /// （<see cref="CalamityDemutationPlayer.dragonRageLevel"/> / <see cref="CalamityDemutationPlayer.dragonRageLevelAlt"/>）
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+            {
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                return ShootFunc(ref mp.dragonRageLevel, ref mp.dragonRageLevelAlt, Item, player, source, position, velocity, type, damage, knockback);
+            }
         public override bool AltFunctionUse(Player player) => true;
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
     }

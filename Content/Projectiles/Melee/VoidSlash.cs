@@ -60,8 +60,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (d == 1)
             {
                 // 起手：把摄像机拉慢（衬出突进的速度感），并先朝鼠标方向窜出一帧
-                Main.SetCameraLerp(0.12f, 25);
-                Projectile.Center += Projectile.velocity;
+                // 镜头与位移都只由主人端结算：非主人端拉慢自己的镜头（别人冲刺会拖慢你的画面）、
+                // 或自己推进坐标，都会和主人端同步过来的位置打架，这里统一交给主人端
+                if (Projectile.owner == Main.myPlayer)
+                {
+                    Main.SetCameraLerp(0.12f, 25);
+                    Projectile.Center += Projectile.velocity;
+                }
             }
             if (d > 16)
             {
@@ -72,9 +77,13 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (Projectile.ai[0] == 1)
                 {
                     // 最终分形的幽冥斩：突进途中每一帧都朝速度的左右两侧各甩出一把剑影
-                    int type = ModContent.ProjectileType<FinalFractalBlade>();
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RotatedBy(MathHelper.PiOver2) * 0.1f, type, Projectile.damage, Projectile.knockBack, Projectile.owner);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RotatedBy(-MathHelper.PiOver2) * 0.1f, type, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    // 只有主人端生成：弹幕 AI 在所有端都会跑，不判归属会让联机下每个端各生成一份（剑影成倍）
+                    if (Projectile.owner == Main.myPlayer)
+                    {
+                        int type = ModContent.ProjectileType<FinalFractalBlade>();
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RotatedBy(MathHelper.PiOver2) * 0.1f, type, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RotatedBy(-MathHelper.PiOver2) * 0.1f, type, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    }
                 }
                 // 突进期间：沿路径补采样点，并把玩家中心钉在弹幕中心——"玩家被这一斩带过去"就是这句
                 Vector2 o = (points.Count > 0 ? points[points.Count - 1] : Projectile.Center - Projectile.velocity);
@@ -83,7 +92,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 {
                     points.Add(Vector2.Lerp(o, nv, i));
                 }
-                Main.player[Projectile.owner].Center = Projectile.Center;
+                // 玩家坐标只由主人端写：其余端写会与本端同步来的坐标互相打架（表现为抖动/被拽回）
+                if (Projectile.owner == Main.myPlayer)
+                {
+                    Main.player[Projectile.owner].Center = Projectile.Center;
+                }
             }
         }
         /// <summary>逐段检查整条突进折线，命中任意一段即算命中（线宽 30）</summary>

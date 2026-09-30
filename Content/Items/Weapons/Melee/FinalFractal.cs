@@ -3,6 +3,7 @@ using CalamityDemutation.Content.Particles.Core;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Effects;
 using CalamityDemutation.NPCs;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
@@ -34,9 +35,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class FinalFractal:ModItem
     {
-        /// <summary>本次挥砍的招式：0/2/4/6 → -1（左向挥砍）、1/3/5/7 → 1（右向挥砍）、8 → 2（投掷本剑）、9 → 3（锁链全屏斩），走 0~9 循环</summary>
-        private int atkType = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 760;
             Item.crit = 35;                                 // 额外暴击率
@@ -67,7 +66,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             return true;
         }
         /// <summary>
-        /// 左键：按 <see cref="atkType"/> 算出本次招式（-1/1/2/3）交给手持弹幕，<c>ai[2]</c> 取玩家到光标的距离 + 180
+        /// 左键：按 <see cref="CalamityDemutationPlayer.finalFractalAtkType"/> 算出本次招式（-1/1/2/3）交给手持弹幕，<c>ai[2]</c> 取玩家到光标的距离 + 180
         /// （投掷式与锁链斩的抛物线高度），然后把计数推进一格。
         /// 右键：给玩家挂 10 秒混乱状态当冷却，并生成一次带 <c>ai[0] = 1</c> 的 <see cref="VoidSlash"/> 幽冥斩
         /// （伤害是物品的 10 倍，CE 原样；这个 ai 值正是"突进途中朝两侧甩剑影"的开关）。
@@ -81,26 +80,28 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<VoidSlash>(), damage * 10, 0, player.whoAmI, 1);
                 return false;
             }
-            int at = 2;
-            if (atkType == 0 || atkType == 2 || atkType == 4 || atkType == 6)
-            {
-                at = -1;
-            }
-            if (atkType == 1 || atkType == 3 || atkType == 5 || atkType == 7)
-            {
-                at = 1;
-            }
-            if (atkType == 9)
-            {
-                at = 3;
-            }
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, at, 0, Main.MouseWorld.Distance(position) + 180);
-            atkType += 1;
-            if (atkType > 9)
-            {
-                atkType = 0;
-            }
-            return false;
+                // 招式下标存在玩家身上（源为 ModItem 实例字段，联机下两名玩家会互相串招）
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                int at = 2;
+                if (mp.finalFractalAtkType == 0 || mp.finalFractalAtkType == 2 || mp.finalFractalAtkType == 4 || mp.finalFractalAtkType == 6)
+                {
+                    at = -1;
+                }
+                if (mp.finalFractalAtkType == 1 || mp.finalFractalAtkType == 3 || mp.finalFractalAtkType == 5 || mp.finalFractalAtkType == 7)
+                {
+                    at = 1;
+                }
+                if (mp.finalFractalAtkType == 9)
+                {
+                    at = 3;
+                }
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, at, 0, Main.MouseWorld.Distance(position) + 180);
+                mp.finalFractalAtkType += 1;
+                if (mp.finalFractalAtkType > 9)
+                {
+                    mp.finalFractalAtkType = 0;
+                }
+                return false;
         }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;

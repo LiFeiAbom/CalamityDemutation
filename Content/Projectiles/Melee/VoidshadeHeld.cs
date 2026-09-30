@@ -121,15 +121,19 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (counter > 9)
                 {
                     dash -= speed;
-                    if (dash > 0)
+                    // 玩家速度只由主人端写：非主人端写会与本端同步来的玩家坐标互相打架（表现为抖动/被拽回）
+                    if (Projectile.owner == Main.myPlayer)
                     {
-                        player.velocity = Projectile.velocity * 2 * speed;
-                    }
-                    else
-                    {
-                        if (dash > -30)
+                        if (dash > 0)
                         {
-                            player.velocity *= 0.88f;
+                            player.velocity = Projectile.velocity * 2 * speed;
+                        }
+                        else
+                        {
+                            if (dash > -30)
+                            {
+                                player.velocity *= 0.88f;
+                            }
                         }
                     }
                 }

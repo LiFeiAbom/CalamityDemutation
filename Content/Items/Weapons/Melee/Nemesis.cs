@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -22,9 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class Nemesis:ModItem
     {
-        /// <summary>左键计数：0~6 循环，满 6 后下次触发天罚</summary>
-        private int fireIndex;
-        public override void SetStaticDefaults()
+            public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
         }
@@ -56,18 +55,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>
-        /// 出手：按 0~6 循环推进 <c>fireIndex</c>，满 6 后本次传 <c>ai[0] = 1</c>（天罚）；
+        /// 出手：按 0~6 循环推进 <see cref="CalamityDemutationPlayer.nemesisFireIndex"/>，满 6 后本次传 <c>ai[0] = 1</c>（天罚）；
         /// 右键则覆盖成 <c>ai[0] = 2</c>（蓄力）。生成的挥舞体由 <see cref="NemesisHeld"/> 分派三种招式。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position
             , Vector2 velocity, int type, int damage, float knockback)
         {
-            int newLevel = 0;
-            if (++fireIndex > 6)
-            {
-                newLevel = 1;
-                fireIndex = 0;
-            }
+                int newLevel = 0;
+                // 计数存在玩家身上（源为 ModItem 实例字段，联机下队友的挥砍会替你推进天罚计数）
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                if (++mp.nemesisFireIndex > 6)
+                {
+                    newLevel = 1;
+                    mp.nemesisFireIndex = 0;
+                }
             if (player.altFunctionUse == 2)
             {
                 newLevel = 2;

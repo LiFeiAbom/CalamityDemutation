@@ -101,7 +101,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     {
                         SoundEngine.PlaySound(SoundID.Item4, Projectile.Center);
                         Vector2 pos = Projectile.Center + Projectile.velocity.UnitVector() * Main.rand.Next(-52, 112);
-                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), pos, Projectile.velocity.RotatedByRandom(0.2f), ModContent.ProjectileType<NeutronsOrb>(), Projectile.damage, 0);
+                        // 只有主人端生成：弹幕 AI 在所有端都会跑，不判归属会让联机下每个端各生成一份中子球
+                        if (Projectile.owner == Main.myPlayer)
+                        {
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), pos, Projectile.velocity.RotatedByRandom(0.2f), ModContent.ProjectileType<NeutronsOrb>(), Projectile.damage, 0);
+                        }
                         for (int i = 0; i < 4; i++)
                         {
                             float rot1 = MathHelper.PiOver2 * i;

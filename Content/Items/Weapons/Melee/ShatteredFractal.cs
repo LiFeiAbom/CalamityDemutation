@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,14 +11,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 破碎分形（ShatteredFractal，移植自 CalamityEntropy）—— 分形系列的第二把武器，
     /// 由上一把「破碎剑柄」BrokenHilt 与木剑及若干早期剑类合成而来。
     /// 本体既不显示也不判定（noUseGraphic / noMelee），挥砍交给手持弹幕 ShatteredFractalHeld；
-    /// 每挥一次把 <see cref="atkType"/> 沿 0→1→2 循环，从而三式交替：
+    /// 每挥一次把 <see cref="CalamityDemutationPlayer.shatteredFractalAtkType"/> 沿 0→1→2 循环，从而三式交替：
     /// 0 与 1 是左右两个方向的普通挥砍，2 是向前刺出（弹幕会额外射出 FractalShoot）。
     /// </summary>
     internal class ShatteredFractal:ModItem
     {
-        /// <summary>本次挥砍的招式下标，0→1→2 循环；传给弹幕时 0 记作 -1（普通挥砍的方向标记），2 表示刺出式</summary>
-        private int atkType = 0;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 25;
             Item.DamageType = DamageClass.Melee;
@@ -36,17 +35,21 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ShatteredFractalHeld>();
             Item.shootSpeed = 12f;                         // 决定手持弹幕的朝向速度
         }
-        /// <summary>生成手持弹幕并把本次招式交给它（0 记作 -1），随后推进到下一式（2 之后回到 0）</summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, atkType == 0 ? -1 : atkType);
-            atkType++;
-            if (atkType > 2)
+            /// <summary>
+            /// 生成手持弹幕并把本次招式交给它（0 记作 -1），随后推进到下一式（2 之后回到 0）。
+            /// 招式下标存在 <see cref="CalamityDemutationPlayer.shatteredFractalAtkType"/> 上（源为 ModItem 实例字段，联机下会互相串招）。
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
             {
-                atkType = 0;
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, mp.shatteredFractalAtkType == 0 ? -1 : mp.shatteredFractalAtkType);
+                mp.shatteredFractalAtkType++;
+                if (mp.shatteredFractalAtkType > 2)
+                {
+                    mp.shatteredFractalAtkType = 0;
+                }
+                return false;
             }
-            return false;
-        }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>

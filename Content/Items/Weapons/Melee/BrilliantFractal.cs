@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,9 +20,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// </summary>
     internal class BrilliantFractal:ModItem
     {
-        /// <summary>本次挥砍的朝向，1 与 -1 交替（传给弹幕时 0 记作 -1，本武器不会用到 2）</summary>
-        private int atkType = 1;
-        public override void SetDefaults()
+            public override void SetDefaults()
         {
             Item.damage = 65;
             Item.crit = 5;                                 // 额外暴击率
@@ -41,13 +40,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 12f;                         // 决定手持弹幕的朝向速度
             Item.ArmorPenetration = 5;                     // 护甲穿透 5 点
         }
-        /// <summary>生成手持弹幕并把本次朝向交给它（0 记作 -1），然后在 1 与 -1 之间翻转（CE 原样，本武器不会传 2）</summary>
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, atkType == 0 ? -1 : atkType);
-            atkType *= -1;
-            return false;
-        }
+            /// <summary>
+            /// 生成手持弹幕并把本次朝向交给它（0 记作 -1），然后在 1 与 -1 之间翻转（CE 原样，本武器不会传 2）。
+            /// 朝向存在 <see cref="CalamityDemutationPlayer.brilliantFractalAtkType"/> 上——源是 ModItem 实例字段，
+            /// 联机时两名玩家会互相翻转对方的方向。
+            /// </summary>
+            public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+            {
+                CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, mp.brilliantFractalAtkType == 0 ? -1 : mp.brilliantFractalAtkType);
+                mp.brilliantFractalAtkType *= -1;
+                return false;
+            }
         /// <summary>虽用 Shoot 姿势，但伤害类型是近战，允许吃近战前缀的速度加成</summary>
         public override bool MeleePrefix() => true;
         /// <summary>配方：光辉分形 + 破坏者巨剑 + 断钢剑 + 炽焰巨剑 @ 秘银砧</summary>
