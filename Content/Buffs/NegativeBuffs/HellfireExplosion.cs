@@ -17,7 +17,6 @@ namespace CalamityDemutation.Content.Buffs.NegativeBuffs
     /// </summary>
     internal class HellfireExplosion : ModBuff
     {
-        //public override string Texture => "CalamityDemutation/Content/Buffs/HellfireExplosion";
         /// <summary>
         /// 注册为减益：参与 PvP、不随存档保存，且专家/大师模式下延长持续时间
         /// </summary>
