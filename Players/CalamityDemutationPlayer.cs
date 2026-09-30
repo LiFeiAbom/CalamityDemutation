@@ -721,11 +721,6 @@ namespace CalamityDemutation.Players
         public bool theAmalgam = false;
         public bool theCommunity = false;
         /// <summary>
-        /// 虚影薄锋（Voidshade）右键突刺命中后的挥砍强化计时：>0 期间该武器下一次普通挥砍伤害翻倍。
-        /// 由 <c>VoidshadeHeld</c> 命中时置 90 帧、并于读取后立刻清零；每帧递减
-        /// （CE 在 EModPlayer.PreUpdate 里递减，本模组并入 PostUpdateMiscEffects 这个每帧结算中心）
-        /// </summary>
-        /// <summary>
         /// The Community 的 Debuff 时间缩减计时器（帧）：每 60 帧（1 秒）触发一轮缩减，
         /// 同时处理治疗冷却（药水病）/魔力病/一般 Debuff。仅在装备期间递增。
         /// </summary>
@@ -3764,9 +3759,7 @@ namespace CalamityDemutation.Players
         /// 在女巫套装免死无敌窗口（silvaCountdown &gt; 0 且 hasSilvaEffect 且 silvaSet）内，
         /// 把负的 Player.lifeRegen 钳回 0，抵消 debuff 造成的持续掉血；
         /// 与 PostUpdateBuffs / PostUpdateEquips 的同一判定重复，用于覆盖各结算路径。
-        /// 地狱火爆炸（hellfireExplosion）与生命压制（LifeOppress，噬渊鞭挞命中挂的 DoT，PvP 时才在玩家身上）
-        /// 各自把回复计时清零后按原值扣 lifeRegen（后者按 CE 原样扣 60；敌怪侧的 4501 点/秒另在
-        /// CalamityDemutationGlobalNPC.UpdateLifeRegen 里结算）。
+            /// 地狱火爆炸（hellfireExplosion）会把回复计时清零后按原值扣 lifeRegen。
         /// 增强版暗影焰（本工程移植的 Shadowflame，禅心剑 PvP 命中挂上）按灾厄原值扣 30。
         /// 末尾再调一次 <see cref="OmegaBlueNoLifeRegen"/>，与 UpdateLifeRegen 里那次互为保险
         /// （灾厄两版把欧米茄蓝禁回血写在本钩子里，但本工程观察到本钩子只在回复为负时触发）。

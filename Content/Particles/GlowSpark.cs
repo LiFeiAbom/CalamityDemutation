@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Particles
     /// <c>SetProperty → SetDRK</c>、<c>PreDraw → UseCustomDraw + CustomDraw</c>）；
     /// ② CE 用基类的 <c>Opacity</c> 字段承载淡出，本模组基类没有该字段，改为在绘制时把
     /// <c>(1 - LifetimeCompletion)</c> 乘进颜色；③ CE 的 <c>PRTDrawModeEnum</c> 三态混合
-    /// 简化为 <see cref="UseAdditiveBlend"/>（本粒子只被 FractalShoot 以加法混合使用）；
+    /// 简化为 <see cref="UseAdditiveBlend"/>；
     /// ④ 去掉 CE 的对象池（<c>CanPool</c>）与 <c>ShouldKillWhenOffScreen</c>（本模组粒子系统不淘汰出屏粒子）。
     /// </para>
     /// </summary>

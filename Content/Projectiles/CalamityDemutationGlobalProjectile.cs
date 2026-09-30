@@ -85,11 +85,6 @@ namespace CalamityDemutation.Content.Projectiles
         /// 口径照抄灾厄 2.2.2 的 ProfanedSoulCrystal.ApplyTagModifyHit，并乘上该弹幕自身的 tag 收益倍率
         /// （ProjectileID.Sets.SummonTagDamageMultiplier，本工程各转化弹幕已按灾厄登记，如长矛 0.6、碎片 0.25）。
         /// 原版这套结算跑在灾厄内部的 SummonTag 管线里，本工程用原版 IsATagBuff 标记 + 本钩子等价实现。
-        /// <para>
-        /// 噬渊鞭挞的鞭痕 tag 也走本钩子：目标带着 WyrmWhipDebuff（由 YstralynProj 命中挂上）时，
-        /// 任意**召唤系**弹幕（含幻影妖龙）打它都追加 90 平伤与 15% 乘算，并有 1/8 概率强制暴击
-        /// （口径照抄 CE 的 WhipDebuffNPC.ModifyHitByProj 里 WyrmWhipDebuff 那一段，含"鞭自身命中不参与"的排除）。
-        /// </para>
         /// </summary>
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {

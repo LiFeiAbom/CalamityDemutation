@@ -43,7 +43,7 @@ namespace CalamityDemutation.Content.Particles.Core
         /// </summary>
         internal static Dictionary<int, Asset<Texture2D>> ParticleIDToTexturesDic;
         /// <summary>
-        /// 当前存活粒子（对模组内可见：深渊裂隙的上屏合成需要遍历它筛出 <see cref="AbyssalParticle"/>）
+        /// 当前存活粒子（粒子系统内部遍历用）
         /// </summary>
         internal static List<BaseParticle> particles;
         /// <summary>

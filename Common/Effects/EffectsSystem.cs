@@ -13,20 +13,16 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Common.Effects
 {
     /// <summary>
-    /// 上屏合成系统（移植自 CWR 的 EffectsSystem）：钩入 FilterManager.EndCapture，在屏幕捕获末尾做四层后期——
+    /// 上屏合成系统（移植自 CWR 的 EffectsSystem）：钩入 FilterManager.EndCapture，在屏幕捕获末尾做两层后期——
     /// ① warp 扭曲：收集所有实现 IDrawWarp 的活跃弹幕，按 noBlueshift 分成两桶，各自把 Warp() 画到
     /// screenTargetSwap 作为位移遮罩，再用 WarpShader 合成扭曲后的屏幕（两桶分别设 blueValue，互不干扰）；
-    /// ② 深渊裂隙：收集活跃的 <see cref="AbyssalCrack"/> 与 <see cref="AbyssalParticle"/>，把裂隙折线与
-    /// 粒子遮罩画到 screenTargetSwap，再用 cabyss 着色器合成为蓝色深渊裂缝叠回屏幕；
     /// ③ 全屏闪白：<c>CalamityDemutation.FlashEffectStrength</c> 为正时，以屏幕中心为轴叠 16 层逐级放大的
     /// 画面（CE 的 ApplyFinalShader，符文之歌收招放大招时用）；
-    /// ④ 无星之夜剑体：把 <see cref="StarlessNightProj"/> 的剑体画在所有弹幕之上（CE 把它的 drawSword
-    /// 放在这一层调用，见 ApplyFinalShader 末尾）。
     /// <para>
     /// 注意 EndCapture 只在**滤镜管线被激活时**才会被调用，因此本系统额外注册了一个以原版 FilterMiniTower
-    /// 为背书的"透明滤镜"，仅在场上存在裂隙/深渊粒子/无星之夜弹幕/实现 IDrawWarp 的弹幕，或有闪白待播时激活它
+    /// 为背书的"透明滤镜"，仅在场上存在实现 IDrawWarp 的弹幕、或有闪白待播时激活它
     /// （见 <see cref="PostUpdateEverything"/>），其余时间保持关闭，既保证管线跑到，又不对画面与性能产生影响。
-    /// 后三项的效果强度也在这个每帧钩子里递减（分别对应 CE 的 PostUpdateNPCs / PostUpdateDusts 那两处衰减）。
+    /// 闪白的强度也在这个每帧钩子里递减（对应 CE 的 PostUpdateDusts 那处衰减）。
     /// </para>
     /// </summary>
     [Autoload(Side = ModSide.Client)]

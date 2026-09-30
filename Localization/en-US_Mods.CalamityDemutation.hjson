@@ -49,12 +49,6 @@ Buffs: {
 		DisplayName: Heart of the Elements
 	}
 
-	LifeOppress: {
-		DisplayName: Life Oppression
-		Description: Your life seems to unravel
-		ItemTooltip: Typeless - 4500 DPS
-	}
-
 	RedDevil: {
 		DisplayName: Red Devil
 		Description: The red devil will protect you
@@ -93,11 +87,6 @@ Buffs: {
 	TarraLifeRegen: {
 		DisplayName: Tarra Life Regen
 		Description: Rapid healing
-	}
-
-	WyrmWhipDebuff: {
-		DisplayName: Wyrm Whip Debuff
-		Description: Marked by the wyrm whip; your minions deal extra damage to this target
 	}
 
 	YharimPower: {
@@ -1926,7 +1915,6 @@ Projectiles: {
 	AbaddonCrit.DisplayName: Brimstone Blast
 	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
 	AnarchyBeam.DisplayName: Anarchy Beam
-	AstralStarMelee.DisplayName: Astral Star Melee
 	AtaraxiaBoom.DisplayName: Ataraxia Blast
 	AtaraxiaMain.DisplayName: Ataraxia Missile
 	AtaraxiaSide.DisplayName: Ataraxia Blade

@@ -40,16 +40,16 @@ namespace CalamityDemutation.Effects
         /// </summary>
         internal static Asset<Effect> CircularBarShader;
         /// <summary>
-        /// 元素王者激光着色器（原灾厄 ArtemisLaser，TrailPass）：ElementalExcaliburRay 沿激光线拉出光束时使用
+        /// 元素王者激光着色器（原灾厄 ArtemisLaser，TrailPass）：为元素王者系列光束预留（当前无调用点）
         /// </summary>
         internal static Asset<Effect> ArtemisLaserShader;
         /// <summary>
-        /// 元素王者魔力阵着色器（原灾厄 ExoVortex，VortexPass）：ElementalExcaliburMagicCircle 绘制噪声法阵时使用
+        /// 元素王者魔力阵着色器（原灾厄 ExoVortex，VortexPass）：为元素王者系列法阵预留（当前无调用点）
         /// </summary>
         internal static Asset<Effect> ExoVortexShader;
         /// <summary>
-        /// 泰拉巨刃剑气着色器（原灾厄 ExobladeSlash，TrailPass）：TerratomereBeams、TerratomereHoldout 弧光、
-        /// DivineSourceBeam 用 PrimitiveRenderer 拉剑气时使用，采样 uImage1（VoronoiShapes 噪声）
+        /// 泰拉巨刃剑气着色器（原灾厄 ExobladeSlash，TrailPass）：TerratomereBeams、TerratomereHoldout 弧光
+        /// 用 PrimitiveRenderer 拉剑气时使用，采样 uImage1（VoronoiShapes 噪声）
         /// </summary>
         internal static Asset<Effect> ExobladeSlashShader;
         /// <summary>
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Effects
         /// </summary>
         internal static Asset<Effect> ExobladePierceShader;
         /// <summary>
-        /// 泰拉巨刃小闪电/金源光束拖尾着色器（原灾厄 TrailStreak，TrailPass）：TerratomereBolts、DivineSourceBladeProjectile
+        /// 泰拉巨刃小闪电拖尾着色器（原灾厄 TrailStreak，TrailPass）：TerratomereBolts
         /// 用 PrimitiveRenderer 拉拖尾时使用，采样 uImage1（ScarletDevilStreak）
         /// </summary>
         internal static Asset<Effect> TrailStreakShader;
