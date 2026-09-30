@@ -1,6 +1,3 @@
-// Mods.CalamityDemutation.KilledByVoidTouch: death message used when Void Touch damage kills the player (read by VoidTouch.cs)
-KilledByVoidTouch: "{0}消散在了时间与空间的各处"
-
 Buffs: {
 	Afflicted: {
 		DisplayName: 侵蚀
@@ -58,15 +55,6 @@ Buffs: {
 		ItemTooltip: 每秒造成4500点伤害
 	}
 
-	NyxolithrakenBuff: {
-		DisplayName: 沧溟渊龙
-		Description:
-			'''
-			沧溟渊龙将为你战斗
-			“来自深渊”
-			'''
-	}
-
 	RedDevil: {
 		DisplayName: 红色恶魔
 		Description: 红色恶魔会保护你
@@ -97,11 +85,6 @@ Buffs: {
 		Description: 犽戎之子为你而战
 	}
 
-	SoulDisorder: {
-		DisplayName: 灵魂紊乱
-		Description: 灵魂的动荡使你更加脆弱
-	}
-
 	SirenLure: {
 		Description: 塞壬会保护你
 		DisplayName: 塞壬
@@ -110,21 +93,6 @@ Buffs: {
 	TarraLifeRegen: {
 		DisplayName: 龙蒿生命再生
 		Description: 快速治疗
-	}
-
-	VoidErosion: {
-		DisplayName: 虚空侵蚀
-		Description: 虚无正在吞噬你
-	}
-
-	VoidTouch: {
-		DisplayName: 虚空之触
-		Description: 你正在被虚空残蚀
-	}
-
-	WyrmPhantom: {
-		DisplayName: 虚无幻象
-		Description: 妖龙幻影将为你而战
 	}
 
 	WyrmWhipDebuff: {
@@ -311,15 +279,6 @@ Items: {
 			暴击率提高 8%
 			暴击时产生爆炸，使附近敌人燃起硫磺火
 			免疫硫磺火减益
-			'''
-	}
-
-	AbyssFractal: {
-		DisplayName: 深渊分形
-		Tooltip:
-			'''
-			发射追踪渊蚀弹与能撕开空间的剑影
-			[c/7045ff:剑身仿佛深不见底的深渊]
 			'''
 	}
 
@@ -512,11 +471,6 @@ Items: {
 		Tooltip: 根据你所处环境发射不同的弹幕
 	}
 
-	BlackMatterStick: {
-		DisplayName: 中子锭
-		Tooltip: 万物之重，聚合指尖
-	}
-
 	BladecrestOathsword: {
 		DisplayName: 刃冠誓约剑
 		Tooltip: 远古恶魔领主的剑
@@ -602,20 +556,6 @@ Items: {
 			你脚下的草地上会长出花朵，无草泥土上有几率长出随机的染料植物
 			'''
 		DisplayName: 繁花石
-	}
-
-	BrilliantFractal: {
-		DisplayName: 光辉分形
-		Tooltip:
-			'''
-			挥舞时发射众多追踪的神圣之星并发射一发追踪剑影
-			[c/f2ffd4:吸纳了光辉能量]
-			'''
-	}
-
-	BrokenHilt: {
-		DisplayName: 破碎剑柄
-		Tooltip: "[c/c4ff3b:远古神剑的一部分]"
 	}
 
 	CalamityRing: {
@@ -891,15 +831,6 @@ Items: {
 			'''
 	}
 
-	DivineSourceBlade: {
-		DisplayName: 金源灭却刃
-		Tooltip:
-			'''
-			挥舞金源之力
-			"生命不息"
-			'''
-	}
-
 	DragonRage: {
 		DisplayName: 巨龙之怒
 		Tooltip:
@@ -977,15 +908,6 @@ Items: {
 			'''
 	}
 
-	Erebodrepanon: {
-		DisplayName: 泓渊亡铭
-		Tooltip:
-			'''
-			挥舞一把巨镰，将你的敌人撕得粉碎并施加生命压制
-			每第三次挥砍范围更长，命中时召来螺旋收束的龙之能量
-			'''
-	}
-
 	EtherealTalisman: {
 		DisplayName: 空灵护符
 		Tooltip:
@@ -1030,17 +952,6 @@ Items: {
 	EyeoftheStorm: {
 		Tooltip: 召唤一个云元素为你作战
 		DisplayName: 风暴之眼
-	}
-
-	FinalFractal: {
-		DisplayName: 最终分形
-		Tooltip:
-			'''
-			从屏幕外向光标处发射大量剑影
-			挥舞8次后用锁链链接并掷出，刺入目标体内造成持续伤害
-			右键进行幽冥斩，向前突进一段距离并在途中向两侧发射剑影
-			[c/fcc7ff:异界的神剑]
-			'''
 	}
 
 	FlarefrostBlade: {
@@ -1122,15 +1033,6 @@ Items: {
 			'''
 			由核子混沌之怒锻造
 			从天穹降下彗星弹幕
-			'''
-	}
-
-	ElementalFractal: {
-		DisplayName: 元素分形
-		Tooltip:
-			'''
-			旋转挥舞并生成许多元素光星，随后发射一道强力的剑影
-			[c/ff00a6:剑上闪耀着元素之光]
 			'''
 	}
 
@@ -1382,63 +1284,6 @@ Items: {
 			'''
 	}
 
-	Nemesis: {
-		DisplayName: 天罚
-		Tooltip:
-			'''
-			左键攻击在光标处召唤大量龙陨星
-			真近战会产生治疗球
-			每 7 次挥舞召唤一次天罚
-			按住右键进行蓄力
-			蓄力满后旋转刀刃急速挥出大量斩击
-			'''
-	}
-
-	NeutronBow: {
-		DisplayName: 洛希之弦
-		Tooltip:
-			'''
-			发射重力箭矢，击中目标后生成数道伽马射线
-			右键进行三级蓄力，蓄满能量后将发射三发强大的引力箭矢
-			'''
-	}
-
-	NeutronGlaive: {
-		DisplayName: 中子之刃
-		Tooltip:
-			'''
-			挥砍时释放强力的引力剑波
-			剑波命中目标时引发中子星爆炸
-			右键可为刀刃充能，充满时释放大规模中子星爆炸
-			提前松手会导致能量外溢
-			'''
-	}
-
-	NeutronGun: {
-		DisplayName: 中子脉冲
-		Tooltip:
-			'''
-			发射重力弹丸，击中目标后生成翘曲点
-			右键切换为狙击形态，发射更为强大引力子弹，引力子弹击中目标后将让数道伽马射线降落
-			每次开火都会给枪械充能，充能满格后再次开火会在鼠标处引发一次中子星爆炸
-			"把太阳射下来!"
-			'''
-	}
-
-	NihilityFragments: {
-		DisplayName: 虚无残片
-		Tooltip: 虚无之中凝结出的碎裂残片
-	}
-
-	Nyxolithraken: {
-		DisplayName: 沧溟龙契
-		Tooltip:
-			'''
-			召唤一条沧溟渊龙，冲撞敌人并撕裂空间
-			[c/c8cbff:“冥之猛兽”]
-			'''
-	}
-
 	OldLordOathsword: {
 		DisplayName: 旧日领主誓约剑
 		Tooltip: 远古地狱的遗物
@@ -1553,34 +1398,12 @@ Items: {
 			'''
 	}
 
-	RuneSong: {
-		DisplayName: 符文之歌
-		Tooltip:
-			'''
-			经过短暂的充能随后进行一次大范围的挥舞
-			如果命中了敌人，剑身会弹开，随后进行一次更大范围的多段斩击
-			如果没有命中则剑会指向光标方向并发射一道符文脉冲束
-			所有攻击造成灵魂紊乱
-			'''
-	}
-
 	SeaShell: {
 		DisplayName: 海螺壳
 		Tooltip:
 			'''
 			浸没在液体中时防御与伤害减免提升
 			浸没在液体中时移动速度提升
-			'''
-	}
-
-	ShatteredFractal: {
-		DisplayName: 破碎分形
-		Tooltip:
-			'''
-			上下挥舞，然后向前刺出
-			刺出同时发射威力随时间衰减的追踪分形弹
-			[c/ff5300:曾经的神剑，但如今已失去了它的潜能]
-			[c/ff5300:或许以后你可以让它重现光芒]
 			'''
 	}
 
@@ -1660,35 +1483,6 @@ Items: {
 			受到攻击后短时间内移动速度大幅提升
 			受击时释放蘑菇孢子与火花爆炸
 			敌怪的攻击会有一部分伤害被吸收，并用于治疗你
-			'''
-	}
-
-	SpiritFractal: {
-		DisplayName: 聚魂分形
-		Tooltip:
-			'''
-			发射大量的聚魂剑影，并在每4次挥舞后投掷出武器本身，造成多次伤害并释放追踪灵魂
-			[c/dfe7cb:剑上聚集着众多亡魂]
-			'''
-	}
-
-	StarlessNight: {
-		DisplayName: 无星之夜
-		Tooltip:
-			'''
-			击中后释放虚空新星
-			“砍碎太阳！”
-			'''
-	}
-
-	StarlitFractal: {
-		DisplayName: 星熠分形
-		Tooltip:
-			'''
-			发射追踪剑影与会分裂的星熠
-			剑影命中后从上方降下星星
-			真近战命中后降下更多星星
-			[c/dd00ff:剑身浮动着星光]
 			'''
 	}
 
@@ -1880,17 +1674,6 @@ Items: {
 			'''
 	}
 
-	VoidFractal: {
-		DisplayName: 虚空分形
-		Tooltip:
-			'''
-			发射虚空波，并在每6次挥舞后投掷出武器本身，造成多次伤害并释放追踪虚空新星
-			回收后进行一次大斩击，在命中的目标处生成空间流
-			右键以发动虚空斩并突进一段距离
-			[c/ba3ade:剑上附着薄薄一层虚空]
-			'''
-	}
-
 	VoidofExtinction: {
 		DisplayName: 终结虚空
 		Tooltip:
@@ -1900,26 +1683,6 @@ Items: {
 			所有伤害提高 15%
 			无敌期间天降硫磺火
 			暂时免疫岩浆，大幅降低岩浆灼烧伤害，身处岩浆中时伤害提高 25%
-			'''
-	}
-
-	Voidshade: {
-		DisplayName: 虚影薄锋
-		Tooltip:
-			'''
-			左键挥砍，释放能量波
-			右键突刺，释放虚光射线，
-			刺中目标短时间内给予一次挥砍强化
-			'''
-	}
-
-	WelkinFractal: {
-		DisplayName: 苍穹分形
-		Tooltip:
-			'''
-			从天上与地下召唤分形之羽
-			从剑尖刺出分形光束
-			[c/d4fff8:它被苍穹所赐福]
 			'''
 	}
 
@@ -1959,19 +1722,6 @@ Items: {
 			召唤一只强大的犽戎之子为你而战
 			每个召唤物消耗4召唤栏
 			"别看了, 这肥鸡可不好吃"
-			'''
-	}
-
-	Ystralyn: {
-		DisplayName: 噬渊鞭挞
-		Tooltip:
-			'''
-			攻击时召唤幻海妖龙幻影攻击敌人
-			召唤物获得12%的暴击率
-			{$CommonItemTooltip.SummonTagDamage}
-			召唤攻击额外造成15%伤害
-			{$CommonItemTooltip.Whips}
-			[c/c8cbff:“沧茫幻象”]
 			'''
 	}
 
@@ -2174,8 +1924,6 @@ Keybinds: {
 Projectiles: {
 	AbaddonCrit.DisplayName: 硫磺爆裂
 	AbyssFractalHeld.DisplayName: 深渊分形
-	AbyssalBullet.DisplayName: 渊水弹
-	AbyssalCrack.DisplayName: 深渊裂隙
 	AnarchyBeam.DisplayName: 硫磺光束
 	AstralStarMelee.DisplayName: 星熠星陨
 	AtaraxiaBoom.DisplayName: 禅心爆发
@@ -2191,7 +1939,6 @@ Projectiles: {
 	BrimstoneHellfireballFriendly.DisplayName: 地狱火
 	BrimstoneHellfireballFriendly2.DisplayName: 硫磺地狱火球 2
 	BurningMeteor.DisplayName: 焚灭流星
-	BrokenHiltHeld.DisplayName: 破碎剑柄
 	CactusHealOrb.DisplayName: 治疗
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
 	CloudyWaifu.DisplayName: 云元素
@@ -2203,14 +1950,11 @@ Projectiles: {
 	DefenseBlast2.DisplayName: 防御爆裂 2
 	DefenseFlame.DisplayName: 防御烈焰
 	DemonFork.DisplayName: 恶魔叉
-	DivineSourceBeam.DisplayName: 金源剑气
-	DivineSourceBladeProjectile.DisplayName: 金源光束
 	DragonRageFireOrb.DisplayName: 巨龙之怒火球
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
 	ElementBall.DisplayName: 元素球
 	ElementalFractalHeld.DisplayName: 元素分形
-	ElementalFractalThrown.DisplayName: 元素分形
 	EntropicClaymoreHeld.DisplayName: 熵之舞（手持）
 	EntropicClaymoreProj.DisplayName: 熵之飞刃
 	EonBeam.DisplayName: 远古光束
@@ -2219,25 +1963,11 @@ Projectiles: {
 	ExcelsusMain.DisplayName: 宙宇主刃
 	ExcelsusPink.DisplayName: 宙宇粉刃
 	ExaltedOathBladeProj.DisplayName: 崇高誓约之刃
-	EXNemesisProj.DisplayName: 天罚
-	EXNeutronArrow.DisplayName: 引力箭矢
-	EXNeutronExplode.DisplayName: 中子大爆点
-	EXNeutronExplosionRanged.DisplayName: 中子大爆点
 	ExoBeam.DisplayName: 星流射线
 	ExoBoom.DisplayName: 星流爆炸
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
 	BrilliantFractalHeld.DisplayName: 光辉分形
-	FractalAbyssalBlade.DisplayName: 分形深渊刃
-	FractalBeam.DisplayName: 分形射线
-	FractalBlight.DisplayName: 分形光星
-	FractalFeather.DisplayName: 分形之羽
-	FractalGhostBlade.DisplayName: 聚魂之影
-	FractalShadow.DisplayName: 分形剑影
-	FractalShoot.DisplayName: 分形弹
-	FractalStar.DisplayName: 分形之星
-	FractalStarBlade.DisplayName: 分形星影
-	FractalStarblight.DisplayName: 分形星弹
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
@@ -2252,19 +1982,6 @@ Projectiles: {
 	LaserFountains.DisplayName: 激光喷泉
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星
-	NemesisAlt.DisplayName: 天罚
-	NemesisHeld.DisplayName: 天罚
-	NemesisProj.DisplayName: 天罚
-	NeutronArrow.DisplayName: 中子箭
-	NeutronBowHoldout.DisplayName: 中子长弓
-	NeutronBullet.DisplayName: 中子弹
-	NeutronExplode.DisplayName: 中子爆点
-	NeutronExplosionRanged.DisplayName: 中子爆点
-	NeutronGlaiveBeam.DisplayName: 中子长戟光束
-	NeutronGlaiveHeld.DisplayName: 中子长戟
-	NeutronGunHoldout.DisplayName: 中子枪
-	NeutronLaser.DisplayName: 中子光束
-	NeutronsOrb.DisplayName: 中子球
 	Oathblade.DisplayName: 誓约之刃
 	OathswordFlame.DisplayName: 誓约剑之焰
 	OmegaBiomeOrb.DisplayName: 欧米茄环境能量
@@ -2278,12 +1995,10 @@ Projectiles: {
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
 	SandyWaifu.DisplayName: 沙元素
-	ShatteredFractalHeld.DisplayName: 破碎分形
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
 	SpiritFractalHeld.DisplayName: 聚魂分形
-	StarlessNightProj.DisplayName: 无星之夜
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
 	StarlitFractalHeld.DisplayName: 星熠分形
@@ -2297,7 +2012,6 @@ Projectiles: {
 	TerratomereSlash.DisplayName: 泰拉小刀光
 	TerratomereSlashCreator.DisplayName: 泰拉刀光创造者
 	TrueBiomeOrb.DisplayName: 真·环境能量
-	VoidStarF.DisplayName: 虚空新星
 	WaterSpearFriendly.DisplayName: 水流长矛
 	WelkinFractalHeld.DisplayName: 苍穹分形
 	MiniGuardianAttack.DisplayName: 进攻守护者
@@ -2318,20 +2032,8 @@ Projectiles: {
 	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
 	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
-	GhastlySoulLarge.DisplayName: 大型聚魂弹
-	FractalLaser.DisplayName: 分形激光
 	VoidFractalHeld.DisplayName: 虚空分形
-	VoidSlash.DisplayName: 虚空斩
-	VoidWave.DisplayName: 虚空波
 	FinalFractalHeld.DisplayName: 最终分形
-	FinalFractalBlade.DisplayName: 最终分形
-	VoidshadeHeld.DisplayName: 虚影薄锋
-	VoidImpact.DisplayName: 虚影剑气
-	WohLaser.DisplayName: 虚影光束
-	PhantomWyrm.DisplayName: 妖龙幻影
-	YstralynProj.DisplayName: 噬渊鞭挞
-	NxCrack.DisplayName: 深渊撕裂
-	NyxolithrakenDragon.DisplayName: 沧溟渊龙
 	SonYharon.DisplayName: 犽戎之子
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流

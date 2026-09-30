@@ -48,29 +48,6 @@ namespace CalamityDemutation.Effects
         /// </summary>
         internal static Asset<Effect> ExoVortexShader;
         /// <summary>
-        /// 分形之羽拖尾着色器（原灾厄熵 ArtAttack，TrailPass）：FractalFeather 用 PrimitiveRenderer 拉丝带时使用
-        /// </summary>
-        internal static Asset<Effect> ArtAttackShader;
-        /// <summary>
-        /// 刀光透明变换着色器（原灾厄熵 SlashTrans，EnchantedPass）：无星之夜的 StarlessNightProj
-        /// 用三角带拉刀光时使用，采样 uImage（拖尾噪声）与 uTransformImage（配色图）
-        /// </summary>
-        internal static Asset<Effect> SlashTransShader;
-        /// <summary>
-        /// 最终分形刀光着色器（原灾厄熵 FinalFrac，EffectPass）：FinalFractalHeld 与剑影弹幕用三角带拉拖尾时使用，
-        /// 把底图（MotionTrail2）的红色通道当权重在 color1/color2 之间插值。与其它着色器不同，CE 是先在
-        /// Immediate 批次里 <c>pass.Apply()</c> 再手动 <c>DrawUserPrimitives</c>（不是把 Effect 传给 Begin），
-        /// 本模组照抄这个次序
-        /// </summary>
-        internal static Asset<Effect> FinalFracShader;
-        /// <summary>
-        /// 灵魂紊乱染色着色器（原灾厄熵 SoulDiscorder，EnchantedPass）：带灵魂紊乱减益的敌怪
-        /// 在 CalamityDemutationGlobalNPC.PreDraw 里换批次套上它，用配色图 SoulDiscorderColorMap
-        /// 采样当前帧的 UV 叠一层灵魂色。与其它着色器不同，CE 是把 Effect 直接传给 Begin
-        /// （SpriteSortMode.Deferred + 手动 <c>Passes[0].Apply()</c>），本模组照抄这个次序
-        /// </summary>
-        internal static Asset<Effect> SoulDiscorderShader;
-        /// <summary>
         /// 泰拉巨刃剑气着色器（原灾厄 ExobladeSlash，TrailPass）：TerratomereBeams、TerratomereHoldout 弧光、
         /// DivineSourceBeam 用 PrimitiveRenderer 拉剑气时使用，采样 uImage1（VoronoiShapes 噪声）
         /// </summary>
@@ -110,18 +87,6 @@ namespace CalamityDemutation.Effects
             RegisterMiscShader(ArtemisLaserShader, "TrailPass", "ArtemisLaser");
             ExoVortexShader = LoadShader("ExoVortexShader");
             RegisterMiscShader(ExoVortexShader, "VortexPass", "ExoVortex");
-            // 分形系列：分形之羽的丝带拖尾（本模组第一个从灾厄熵搬来的着色器）
-            ArtAttackShader = LoadShader("ArtAttack");
-            RegisterMiscShader(ArtAttackShader, "TrailPass", "ArtAttack");
-            // 分形系列：无星之夜的刀光透明变换
-            SlashTransShader = LoadShader("SlashTrans");
-            RegisterMiscShader(SlashTransShader, "EnchantedPass", "SlashTrans");
-            // 分形系列：最终分形的刀光（三角带 + 手动 pass.Apply，用法见字段注释）
-            FinalFracShader = LoadShader("FinalFrac");
-            RegisterMiscShader(FinalFracShader, "EffectPass", "FinalFrac");
-            // 灵魂紊乱：带减益敌怪的灵魂色染色
-            SoulDiscorderShader = LoadShader("SoulDiscorder");
-            RegisterMiscShader(SoulDiscorderShader, "EnchantedPass", "SoulDiscorder");
             // 泰拉巨刃系列：剑气（TrailPass）、大刀光穿刺（PiercePass）、拖尾（TrailPass）
             ExobladeSlashShader = LoadShader("ExobladeSlashShader");
             RegisterMiscShader(ExobladeSlashShader, "TrailPass", "ExobladeSlash");
@@ -143,10 +108,6 @@ namespace CalamityDemutation.Effects
             GameShaders.Misc.Remove(CircularBarShaderName);
             GameShaders.Misc.Remove($"{ShaderPrefix}ArtemisLaser");
             GameShaders.Misc.Remove($"{ShaderPrefix}ExoVortex");
-            GameShaders.Misc.Remove($"{ShaderPrefix}ArtAttack");
-            GameShaders.Misc.Remove($"{ShaderPrefix}SlashTrans");
-            GameShaders.Misc.Remove($"{ShaderPrefix}FinalFrac");
-            GameShaders.Misc.Remove($"{ShaderPrefix}SoulDiscorder");
             GameShaders.Misc.Remove($"{ShaderPrefix}ExobladeSlash");
             GameShaders.Misc.Remove($"{ShaderPrefix}ExobladePierce");
             GameShaders.Misc.Remove($"{ShaderPrefix}TrailStreak");
@@ -155,10 +116,6 @@ namespace CalamityDemutation.Effects
             CircularBarShader = null;
             ArtemisLaserShader = null;
             ExoVortexShader = null;
-            ArtAttackShader = null;
-            SlashTransShader = null;
-            FinalFracShader = null;
-            SoulDiscorderShader = null;
             ExobladeSlashShader = null;
             ExobladePierceShader = null;
             TrailStreakShader = null;

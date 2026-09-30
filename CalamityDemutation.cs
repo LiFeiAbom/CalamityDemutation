@@ -245,11 +245,6 @@ namespace CalamityDemutation
             // 生命压制（噬渊鞭挞命中挂的 DoT）要能挂到包括 Boss 在内的所有敌怪上：
             // 灾厄会给 Boss 铺免疫表（Utilities/NPCDebuffs.cs 的 SpecificDebuffImmunity），
             // 这里照抄 CE 的做法逐 NPC 把该项免疫显式置 false
-            int lifeOppressType = ModContent.BuffType<Content.Buffs.NegativeBuffs.LifeOppress>();
-            for (int i = 0; i < NPCLoader.NPCCount; i++)
-            {
-                NPCID.Sets.SpecificDebuffImmunity[i][lifeOppressType] = false;
-            }
             if (!ModLoader.HasMod("CalamityMod"))
                 return;
             if (Systems.ConfigSystem.Instance?.RevertVanillaNerfs != true)

@@ -725,7 +725,6 @@ namespace CalamityDemutation.Players
         /// 由 <c>VoidshadeHeld</c> 命中时置 90 帧、并于读取后立刻清零；每帧递减
         /// （CE 在 EModPlayer.PreUpdate 里递减，本模组并入 PostUpdateMiscEffects 这个每帧结算中心）
         /// </summary>
-        public int voidshadeBoostTime = 0;
         /// <summary>
         /// The Community 的 Debuff 时间缩减计时器（帧）：每 60 帧（1 秒）触发一轮缩减，
         /// 同时处理治疗冷却（药水病）/魔力病/一般 Debuff。仅在装备期间递增。
@@ -1150,9 +1149,6 @@ namespace CalamityDemutation.Players
             // 血肉图腾冷却倒计时
             if (fleshTotemCooldown > 0)
                 fleshTotemCooldown--;
-            // 虚影薄锋的挥砍强化倒计时
-            if (voidshadeBoostTime > 0)
-                voidshadeBoostTime--;
             // 带冷却回血的剩余帧数（全饰品共用的每帧结算中心，见 HealingCd 字段注释）
             if (HealingCd > 0)
                 HealingCd--;
@@ -3790,15 +3786,6 @@ namespace CalamityDemutation.Players
                 }
                 Player.lifeRegenTime = 0;
                 Player.lifeRegen -= 120;
-            }
-            if (Player.HasBuff(ModContent.BuffType<LifeOppress>()))
-            {
-                if (Player.lifeRegen > 0)
-                {
-                    Player.lifeRegen = 0;
-                }
-                Player.lifeRegenTime = 0;
-                Player.lifeRegen -= 60;
             }
             // 增强版暗影焰：灾厄原码 ApplyDoTDebuff(shadowflame, 30)，即 lifeRegen -= 30（= 15 HP/s）
             if (shadowflame)

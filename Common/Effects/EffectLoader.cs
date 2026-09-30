@@ -19,16 +19,6 @@ namespace CalamityDemutation.Common.Effects
     public class EffectLoader
     {
         /// <summary>
-        /// 颜色插值着色器（移植自 CalamityEntropy 的 ColorLerp3.fx，CE 里叫 colorLerp）：把贴图按自身亮度往
-        /// color 参数插值、再乘回贴图颜色，泓渊亡铭的镰身拖影与镰尖星芒用它染成蓝白
-        /// </summary>
-        public static Asset<Effect> ColorLerp;
-        /// <summary>
-        /// 深渊裂隙合成着色器（移植自 CalamityEntropy 的 cabyss）：EffectsSystem 把深渊裂隙的白色遮罩
-        /// 合成为蓝色深渊裂缝时使用，需配合 AwSky1 噪声贴图（tex1）与 clr 颜色参数
-        /// </summary>
-        public static Asset<Effect> AbyssShader;
-        /// <summary>
         /// 变形球边缘着色器（加法混合版），DragonsBreathMetaball 绘制时使用
         /// </summary>
         public static Asset<Effect> AdditiveMetaballEdgeShader;
@@ -56,12 +46,6 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public static Asset<Effect> WarpShader;
         /// <summary>
-        /// 中子星扭曲着色器（移植自 CWR 的 NeutronWarp）：与 WarpShader 配套——由它把"位移方向 / 强度"
-        /// 写进扭曲遮罩，再由 WarpShader 消费。中子枪的弹丸与爆炸靠它按技法程序化生成位移场，
-        /// 取代旧版 CPU 叠几十层遮罩贴图的写法。使用见 <see cref="NeutronWarpHelper"/>
-        /// </summary>
-        public static Asset<Effect> NeutronWarp;
-        /// <summary>
         /// 请求加载全部 .fx 着色器资源（异步）：路径前缀取 CalamityDemutationConstant.noEffects（"Effects/"）。
         /// 只持有 Asset 句柄，不在此处取 .Value，真正取值推迟到绘制期
         /// </summary>
@@ -73,12 +57,9 @@ namespace CalamityDemutation.Common.Effects
             KnifeDistortion = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeDistortion");
             KnifeRendering = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "KnifeRendering");
             WarpShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "WarpShader");
-            NeutronWarp = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "NeutronWarp");
             MetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/MetaballEdgeShader");
             AdditiveMetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/AdditiveMetaballEdgeShader");
             RoverDriveShieldShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "RoverDriveShield");
-            AbyssShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "cabyss");
-            ColorLerp = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "ColorLerp3");
         }
         /// <summary>
         /// 卸载时把所有着色器 Asset 引用置空，便于热重载回收（注意方法名按既有约定写作 UnLoad）
@@ -88,12 +69,9 @@ namespace CalamityDemutation.Common.Effects
             KnifeDistortion = null;
             KnifeRendering = null;
             WarpShader = null;
-            NeutronWarp = null;
             MetaballEdgeShader = null;
             AdditiveMetaballEdgeShader = null;
             RoverDriveShieldShader = null;
-            AbyssShader = null;
-            ColorLerp = null;
         }
     }
 }

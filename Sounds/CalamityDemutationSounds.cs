@@ -32,85 +32,17 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle TeslaCannonFire = new("CalamityDemutation/Sounds/Item/TeslaCannonFire");
         /// <summary>永世之刃冲刺撞击（ExobladeDashImpact）：元素王者激光命中时播放（灾厄原为 PrismaticRay.HitSound）</summary>
         public static readonly SoundStyle ExobladeDashImpact = new("CalamityDemutation/Sounds/Item/ExobladeDashImpact") { Volume = 0.8f };
-        /// <summary>破碎剑柄挥砍（HiltAttack）：分形系列 BrokenHilt 每次挥砍播放（CE 原为 CEUtils.PlaySound("HiltAttack")）</summary>
-        public static readonly SoundStyle HiltAttack = new("CalamityDemutation/Sounds/Item/HiltAttack");
-        /// <summary>破碎分形挥砍（CE 原名 sf_use）：ShatteredFractal 的普通挥砍式（ai[0] 0/1）起手播放</summary>
-        public static readonly SoundStyle FractalSwing = new("CalamityDemutation/Sounds/Item/FractalSwing");
-        /// <summary>破碎分形刺出起手（CE 原名 powerwhip）：ShatteredFractal 的刺出式（ai[0] 2）起手播放</summary>
-        public static readonly SoundStyle FractalThrust = new("CalamityDemutation/Sounds/Item/FractalThrust");
-        /// <summary>破碎分形刺出（CE 原名 sf_shoot）：刺出式射出 FractalShoot 时播放</summary>
-        public static readonly SoundStyle FractalShoot = new("CalamityDemutation/Sounds/Item/FractalShoot");
-        /// <summary>破碎分形挥砍命中（CE 原名 sf_hit）：普通挥砍式的命中音</summary>
-        public static readonly SoundStyle FractalSwingHit = new("CalamityDemutation/Sounds/Item/FractalSwingHit");
-        /// <summary>破碎分形刺出命中（CE 原名 sf_hit1）：刺出式的命中音</summary>
-        public static readonly SoundStyle FractalThrustHit = new("CalamityDemutation/Sounds/Item/FractalThrustHit");
-        /// <summary>破碎分形命中附加音（CE 原名 FractalHit）：普通挥砍式命中时额外叠加播放</summary>
-        public static readonly SoundStyle FractalImpact = new("CalamityDemutation/Sounds/Item/FractalImpact");
-        /// <summary>分形深渊刃冲刺启动（CE 原名 AbyssalBladeLaunch）：深渊分形的 FractalAbyssalBlade 锁定目标冲出时播放</summary>
-        public static readonly SoundStyle AbyssalBladeLaunch = new("CalamityDemutation/Sounds/Item/AbyssalBladeLaunch");
-        /// <summary>分形之星裂开（CE 原名 bne_hit，名字不可读故按用途命名）：星熠分形的 FractalStar 寿命将尽、放出四颗渊星时播放</summary>
-        public static readonly SoundStyle FractalStarSplit = new("CalamityDemutation/Sounds/Item/bne_hit");
-        /// <summary>分形渊星消散（CE 原名 metalhit，名字不可读故按用途命名）：FractalStarblight 消失时播放</summary>
-        public static readonly SoundStyle FractalBlightFade = new("CalamityDemutation/Sounds/Item/metalhit");
-        /// <summary>元素分形掷出剑影（CE 原名 zypshot2，名字不可读故按用途命名）：ElementalFractalHeld 刺出式射出 ElementalFractalThrown 时播放</summary>
-        public static readonly SoundStyle FractalThrow = new("CalamityDemutation/Sounds/Item/zypshot2");
-        /// <summary>无星之夜命中（CE 原名 he1，名字不可读故按用途命名）：StarlessNightProj 命中敌人时随机播这一种或其变体</summary>
-        public static readonly SoundStyle StarlessNightHit1 = new("CalamityDemutation/Sounds/Item/he1");
-        /// <summary>无星之夜命中变体（CE 原名 he3）：同上，与 he1 随机二选一</summary>
-        public static readonly SoundStyle StarlessNightHit3 = new("CalamityDemutation/Sounds/Item/he3");
-        /// <summary>无星之夜挥砍（CE 原名 sn_swing）：StarlessNightProj 蓄势起手的两段挥砍音</summary>
-        public static readonly SoundStyle StarlessNightSwing = new("CalamityDemutation/Sounds/Item/sn_swing");
-        /// <summary>符文之歌蓄力完毕（CE 原名 runesong3）：RuneSongHeld 第一段蓄势结束时播放</summary>
-        public static readonly SoundStyle RuneSongCharge = new("CalamityDemutation/Sounds/Item/runesong3");
-        /// <summary>符文之歌二段斩击（CE 原名 HellkiteSwing1）：命中后弹开、转入大范围多段斩时播放</summary>
-        public static readonly SoundStyle RuneSongSwing1 = new("CalamityDemutation/Sounds/Item/HellkiteSwing1");
-        /// <summary>符文之歌二段斩击变体（CE 原名 HellkiteSwing2）：与 HellkiteSwing1 随机二选一</summary>
-        public static readonly SoundStyle RuneSongSwing2 = new("CalamityDemutation/Sounds/Item/HellkiteSwing2");
-        /// <summary>符文脉冲束射出（CE 原名 scholarStaffImpact）：RuneSongHeld 未命中时的收招、发出 RuneBolt 时播放</summary>
-        public static readonly SoundStyle RuneSongBoltImpact = new("CalamityDemutation/Sounds/Item/scholarStaffImpact");
-        /// <summary>符文之歌命中（CE 原名 runesonghit）：RuneSongHeld 命中敌人时播放</summary>
-        public static readonly SoundStyle RuneSongHit = new("CalamityDemutation/Sounds/Item/runesonghit");
-        /// <summary>符文脉冲束命中（CE 原名 beast_lavaball_rise1，名字不可读故按用途命名）：RuneBolt 命中敌人时播放</summary>
-        public static readonly SoundStyle RuneBoltHit = new("CalamityDemutation/Sounds/Item/beast_lavaball_rise1");
-        /// <summary>虚空斩起手（CE 原名 VoidAnticipation）：虚空分形右键发动虚空斩时播放</summary>
-        public static readonly SoundStyle VoidSlashCharge = new("CalamityDemutation/Sounds/Item/VoidAnticipation");
-        /// <summary>虚空分形掷剑（CE 原名 CastTriangles）：投掷本剑式（ai[0] = 2）起手时与挥砍音一起播放</summary>
-        public static readonly SoundStyle VoidFractalThrow = new("CalamityDemutation/Sounds/Item/CastTriangles");
-        /// <summary>虚空全屏斩命中（CE 原名 VoidAttack）：第七下全屏斩（ai[0] = 3）命中敌人时播放</summary>
-        public static readonly SoundStyle VoidStrikeHit = new("CalamityDemutation/Sounds/Item/VoidAttack");
-        /// <summary>虚影薄锋右键突刺起手（CE 原名 AntivoidDashSlash）：Voidshade 物品右键出手时播放，音高 CE 值减 1</summary>
-        public static readonly SoundStyle VoidshadeDash = new("CalamityDemutation/Sounds/Item/AntivoidDashSlash");
-        /// <summary>虚影薄锋强化期挥砍（CE 原名 rswave）：Voidshade 左键出手且玩家正处于突刺强化期时叠加播放</summary>
-        public static readonly SoundStyle VoidshadeBoostSwing = new("CalamityDemutation/Sounds/Item/rswave");
-        /// <summary>虚影薄锋命中（CE 原名 antivoidhit，名字不可读故按用途命名）：VoidshadeHeld 普通挥砍命中时播放</summary>
-        public static readonly SoundStyle VoidshadeHit = new("CalamityDemutation/Sounds/Item/antivoidhit");
-        /// <summary>虚影剑气命中（CE 原名 flashback）：VoidImpact 命中敌人时播放</summary>
-        public static readonly SoundStyle VoidImpactHit = new("CalamityDemutation/Sounds/Item/flashback");
         /// <summary>泰拉巨刃挥砍（TerratomereSwing）：TerratomereHoldout 挥砍到发射点时播放（灾厄原为 Terratomere.SwingSound）</summary>
         public static readonly SoundStyle TerratomereSwing = new("CalamityDemutation/Sounds/Item/TerratomereSwing");
         /// <summary>急速斩击（SwiftSlice）：TerratomereSlashCreator 生成小刀光时播放（灾厄原为 CommonCalamitySounds.SwiftSliceSound）</summary>
         public static readonly SoundStyle SwiftSliceSound = new("CalamityDemutation/Sounds/Custom/SwiftSlice");
         /// <summary>吞噬涡流爆炸（SubsumingVortexExplosion）：TerratomereExplosion 首帧播放（灾厄原为 SubsumingVortex.ExplosionSound）</summary>
         public static readonly SoundStyle SubsumingVortexExplosion = new("CalamityDemutation/Sounds/Custom/SubsumingVortexExplosion");
-        /// <summary>中子枪开火（CWR 原名 AWP_Shoot）：NeutronGunHoldout 每次射出中子弹时播放，音高音量按左右键区分</summary>
-        public static readonly SoundStyle Gun_AWP_Shoot = new("CalamityDemutation/Sounds/Item/Gun_AWP_Shoot");
-        /// <summary>蓄力完成（CWR 原名 Pecharge）：中子枪充能满 80 触发大爆点时播放</summary>
-        public static readonly SoundStyle Pecharge = new("CalamityDemutation/Sounds/Item/Pecharge");
-        /// <summary>装填弹药（CWR 原名 loadTheRounds）：洛希之弦右键蓄力到达三级阈值时各播一次，音高递减</summary>
-        public static readonly SoundStyle LoadTheRounds = new("CalamityDemutation/Sounds/Item/LoadTheRounds");
-        /// <summary>马格南开火（CWR 原名 Gun/Magnum_Shoot）：洛希之弦蓄满射出三发引力箭矢时播放，音高 0.7、音量 0.6</summary>
-        public static readonly SoundStyle Gun_Magnum_Shoot = new("CalamityDemutation/Sounds/Item/Gun_Magnum_Shoot");
-        /// <summary>噬渊鞭挞命中（CE 原名 ystn_hit）：YstralynProj 命中敌人时播放，音高按既有口径取 CE 值减 1</summary>
-        public static readonly SoundStyle YstralynHit = new("CalamityDemutation/Sounds/Item/ystn_hit");
         /// <summary>犽戎烈焰（灾厄原名 YharonInfernado）：巨龙七星灯出手时播放（CI 侧为 CommonCalamitySounds.FlareSound）</summary>
         public static readonly SoundStyle YharonInfernado = new("CalamityDemutation/Sounds/Item/YharonInfernado");
         /// <summary>电浆烈焰（灾厄原名 ELRFire）：熵之舞挥砍中每次射出熵之飞刃时播放，音高按第几发递增、音量 0.45</summary>
         public static readonly SoundStyle ELRFire = new("CalamityDemutation/Sounds/Item/ELRFire");
         /// <summary>掷出咒刃（灾厄原名 CursedDaggerThrow）：禅心剑真近战命中时播放，每次挥砍只响一次（灾厄原为 Ataraxia 的 hitsound 分支）</summary>
         public static readonly SoundStyle CursedDaggerThrow = new("CalamityDemutation/Sounds/Item/CursedDaggerThrow") { Volume = 0.5f, Pitch = 0.9f, PitchVariance = 0.2f, MaxInstances = -1 };
-        /// <summary>泓渊亡铭挥砍（CE 原名 scytheswing）：ErebodrepanonHeld 三段挥砍抡出的那一刻播放，音高按段位与随机数微调</summary>
-        public static readonly SoundStyle ErebodrepanonSwing = new("CalamityDemutation/Sounds/Item/scytheswing");
-        /// <summary>泓渊亡铭命中（CE 原名 WScytheHit）：ErebodrepanonHeld 命中敌人时播放</summary>
-        public static readonly SoundStyle ErebodrepanonHit = new("CalamityDemutation/Sounds/Item/WScytheHit");
     }
 }

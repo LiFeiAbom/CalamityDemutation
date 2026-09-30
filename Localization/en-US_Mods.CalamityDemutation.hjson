@@ -1,6 +1,3 @@
-// Mods.CalamityDemutation.KilledByVoidTouch: death message used when Void Touch damage kills the player (read by VoidTouch.cs)
-KilledByVoidTouch: "{0} missed in the void"
-
 Buffs: {
 	Afflicted: {
 		DisplayName: Afflicted
@@ -58,15 +55,6 @@ Buffs: {
 		ItemTooltip: Typeless - 4500 DPS
 	}
 
-	NyxolithrakenBuff: {
-		DisplayName: Nyxolith Dragon
-		Description:
-			'''
-			Nyxolith Dragon will fight for you
-			"From the deepest depths of the abyss..."
-			'''
-	}
-
 	RedDevil: {
 		DisplayName: Red Devil
 		Description: The red devil will protect you
@@ -97,11 +85,6 @@ Buffs: {
 		Description: Son Yharon will fight for you
 	}
 
-	SoulDisorder: {
-		DisplayName: Soul Disorder
-		Description: The turmoil of your soul leaves you more fragile
-	}
-
 	SirenLure: {
 		Description: The siren will protect you
 		DisplayName: Siren
@@ -110,21 +93,6 @@ Buffs: {
 	TarraLifeRegen: {
 		DisplayName: Tarra Life Regen
 		Description: Rapid healing
-	}
-
-	VoidErosion: {
-		DisplayName: Void Erosion
-		Description: The nothingness is eating you away
-	}
-
-	VoidTouch: {
-		DisplayName: Void Touch
-		Description: You are being eroded by the void
-	}
-
-	WyrmPhantom: {
-		DisplayName: Wyrm Phantom
-		Description: A wyrm phantom fights on your behalf
 	}
 
 	WyrmWhipDebuff: {
@@ -311,16 +279,6 @@ Items: {
 			8% increased critical strike chance
 			Critical strikes explode, causing nearby enemies to ignite with Brimstone Flames
 			Grants immunity to Brimstone Flames
-			'''
-	}
-
-	AbyssFractal: {
-		DisplayName: Abyssal Fractal
-		Tooltip:
-			'''
-			Releases three homing abyssal blobs and a bluewater slash
-			Inflicts Crush Depth
-			'[c/7045ff:It only gets darker the longer you look at it...]'
 			'''
 	}
 
@@ -513,11 +471,6 @@ Items: {
 		Tooltip: Fires different projectiles based on what biome you're in
 	}
 
-	BlackMatterStick: {
-		DisplayName: Black Matter Stick
-		Tooltip: The weight of all things, gathered at your fingertips
-	}
-
 	BladecrestOathsword: {
 		DisplayName: Bladecrest Oathsword
 		Tooltip: Sword of an ancient demon lord
@@ -603,20 +556,6 @@ Items: {
 			You grow flowers on the grass beneath you, chance to grow very random dye plants on grassless dirt
 			'''
 		DisplayName: Bloom Stone
-	}
-
-	BrilliantFractal: {
-		DisplayName: Brilliant Fractal
-		Tooltip:
-			'''
-			Summons homing stars and swords that charge at the cursor on swing
-			'[c/f2ffd4:You took this old blade and polished it anew...]'
-			'''
-	}
-
-	BrokenHilt: {
-		DisplayName: Broken Hilt
-		Tooltip: "[c/c4ff3b:An unremarkable, rotting handle...]"
 	}
 
 	CalamityRing: {
@@ -892,11 +831,6 @@ Items: {
 			'''
 	}
 
-	DivineSourceBlade: {
-		DisplayName: Divine Source Blade
-		Tooltip: Swinging causes a high velocity blade that slashes the first enemy it pierces through into ribbons.
-	}
-
 	DragonRage: {
 		DisplayName: Dragon Rage
 		Tooltip:
@@ -974,15 +908,6 @@ Items: {
 			'''
 	}
 
-	Erebodrepanon: {
-		DisplayName: Erebodrepanon
-		Tooltip:
-			'''
-			Wield a giant scythe that tears your enemies to pieces and inflicts Life Oppress
-			Every third swing has greater reach and summons a spiral of wyrm energy to close in on the enemies it hits
-			'''
-	}
-
 	EtherealTalisman: {
 		DisplayName: Ethereal Talisman
 		Tooltip:
@@ -1026,18 +951,6 @@ Items: {
 	EyeoftheStorm: {
 		Tooltip: Summons a cloud elemental to fight for you
 		DisplayName: Eye of the Storm
-	}
-
-	FinalFractal: {
-		DisplayName: Final Fractal
-		Tooltip:
-			'''
-			Sends visions of past blades towards your cursor
-			On every 9th slash send forth a devastating beam
-			On every 10th slash throw the sword out on a chain, releasing cosmic energy
-			Right Click to perform a ghost slash that grants invunerability and sends you towards your cursor every 5 seconds
-			'[c/fcc7ff:The path past your Zenith is of your will and perserverance alone...]'
-			'''
 	}
 
 	FlarefrostBlade: {
@@ -1119,16 +1032,6 @@ Items: {
 			'''
 			Forged with the fury of nuclear chaos
 			Launches a barrage of comets from the sky
-			'''
-	}
-
-	ElementalFractal: {
-		DisplayName: Elemental Fractal
-		Tooltip:
-			'''
-			Spins the sword around you, summoning small homing stars, before firing a sword apparition to pierce foes
-			Attacks inflict Elemental Mix
-			'[c/ff00a6:You have infused primoridial essence into this blade...]'
 			'''
 	}
 
@@ -1380,63 +1283,6 @@ Items: {
 			'''
 	}
 
-	Nemesis: {
-		DisplayName: Nemesis
-		Tooltip:
-			'''
-			Left click calls down a storm of dragon meteor stars at the cursor
-			True melee hits spawn healing stars
-			Every 7th swing calls down the Nemesis instead
-			Hold Right Click to charge the blade
-			At full charge, swing the blade to unleash a torrent of slashes
-			'''
-	}
-
-	NeutronBow: {
-		DisplayName: Roche's String
-		Tooltip:
-			'''
-			Fires gravity arrows that generate gamma rays upon hitting a target
-			Right-click to perform a three-level charge, firing three powerful gravity arrows when fully charged
-			'''
-	}
-
-	NeutronGlaive: {
-		DisplayName: Neutron Glaive
-		Tooltip:
-			'''
-			Swinging releases powerful gravitational sword waves
-			Waves causing a neutron star explosion upon hitting a target
-			Right-click to charge the blade, releasing a large neutron star explosion when fully charged
-			Releasing early causes the energy to spill out
-			'''
-	}
-
-	NeutronGun: {
-		DisplayName: Neutron Pulse
-		Tooltip:
-			'''
-			Fires gravity projectiles that create warp points upon hitting a target.
-			Right-click to switch to sniper mode, firing more powerful gravity bullets that summon gamma rays upon impact.
-			Each shot charges the gun, and when fully charged, the next shot triggers a neutron star explosion at the cursor.
-			"Shoot the sun down!"
-			'''
-	}
-
-	NihilityFragments: {
-		DisplayName: Nihility Fragments
-		Tooltip: Shards condensed out of the emptiness
-	}
-
-	Nyxolithraken: {
-		DisplayName: Nyxolithraken
-		Tooltip:
-			'''
-			Summon a Nyxolith Dragon that charges at enemies and inflicts Life Oppression and Whispering Death
-			Uses 5 minion slots
-			'''
-	}
-
 	OldLordOathsword: {
 		DisplayName: Old Lord Oathsword
 		Tooltip: A relic of the ancient underworld
@@ -1551,32 +1397,12 @@ Items: {
 			'''
 	}
 
-	RuneSong: {
-		DisplayName: Archaic Song
-		Tooltip:
-			'''
-			Briefly charge up before sweeping the blade in a wide arc
-			If the sweep hits an enemy, the blade bounces off and performs a wider multi-hit slash
-			If it misses, the blade points at the cursor and fires a runic pulse beam
-			All attacks inflict Soul Disorder
-			'''
-	}
-
 	SeaShell: {
 		DisplayName: Sea Shell
 		Tooltip:
 			'''
 			Increased defense and damage reduction when submerged in liquid
 			Increased movement speed when submerged in liquid
-			'''
-	}
-
-	ShatteredFractal: {
-		DisplayName: Shattered Fractal
-		Tooltip:
-			'''
-			'[c/ff5300:Once a revered blade, rendered derelict with time]'
-			'[c/ff5300:Perhaps one day you can restore it's husk to your liking...]'
 			'''
 	}
 
@@ -1656,37 +1482,6 @@ Items: {
 			Taking a hit will make you move very fast for a short time
 			You emit a mushroom spore and spark explosion when you are hit
 			Enemy attacks will have part of their damage absorbed and used to heal you
-			'''
-	}
-
-	SpiritFractal: {
-		DisplayName: Spirit Fractal
-		Tooltip:
-			'''
-			Swings the sword three times, releasing homing swords
-			Throws the sword on the fourth swing, summoning a ring of homing spirits
-			Inflicts Soul Disorder
-			'[c/dfe7cb:Spirits of those you've slain empower each swing...]'
-			'''
-	}
-
-	StarlessNight: {
-		DisplayName: Starless Night
-		Tooltip:
-			'''
-			Releases homing void stars on hit
-			"Slash the sun!"
-			'''
-	}
-
-	StarlitFractal: {
-		DisplayName: Starlit Fractal
-		Tooltip:
-			'''
-			Release homing swords that call down stars from the heavens on hit
-			Every other swing sends out a star that bursts into homing fragments
-			Attacks inflict Astral Infection
-			'[c/dd00ff:Constellations of your design fade in and out...]'
 			'''
 	}
 
@@ -1880,19 +1675,6 @@ Items: {
 			'''
 	}
 
-	VoidFractal: {
-		DisplayName: Void Fractal
-		Tooltip:
-			'''
-			Left Click to swing forward a voiden bolt five times
-			The sixth swing throws the sword forward, casting a ring of stars
-			The seventh swing creates a slash across the screen
-			Right Click to perform a void slash towards your cursor and makes the character invincible every 10 seconds
-			Attacks inflict Void Touch
-			'[c/ba3ade:To work with void is to dance with death, it is of the highest honor to wield it]'
-			'''
-	}
-
 	VoidofExtinction: {
 		DisplayName: Void of Extinction
 		Tooltip:
@@ -1902,21 +1684,6 @@ Items: {
 			15% increase to all damage
 			Brimstone fire rains down while invincibility is active
 			Temporary immunity to lava, greatly reduces lava burn damage, and 25% increased damage while in lava
-			'''
-	}
-
-	Voidshade: {
-		DisplayName: Voidshade
-		Tooltip: Releases a fractal shockwave when swung
-	}
-
-	WelkinFractal: {
-		DisplayName: Welkin Fractal
-		Tooltip:
-			'''
-			Sends feathers from above and below towards the cursor
-			Every third swing creates 3 homing stars
-			'[c/d4fff8:You have channeled clouds into the design...]'
 			'''
 	}
 
@@ -1956,17 +1723,6 @@ Items: {
 			Summons a powerful son of Yharon fights for you
 			Requires 4 minions to use
 			No, they don't look that delicious.
-			'''
-	}
-
-	Ystralyn: {
-		DisplayName: Ystralyn
-		Tooltip:
-			'''
-			{$CommonItemTooltip.SummonTagDamage}
-			12% summon tag critical strike chance
-			{$CommonItemTooltip.Whips}
-			Summons a phantom Eilodon Wyrm that attacks enemies and inflicts Life Oppression on hit
 			'''
 	}
 
@@ -2169,8 +1925,6 @@ Keybinds: {
 Projectiles: {
 	AbaddonCrit.DisplayName: Brimstone Blast
 	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
-	AbyssalBullet.DisplayName: Abyssal Bullet
-	AbyssalCrack.DisplayName: Abyssal Crack
 	AnarchyBeam.DisplayName: Anarchy Beam
 	AstralStarMelee.DisplayName: Astral Star Melee
 	AtaraxiaBoom.DisplayName: Ataraxia Blast
@@ -2186,7 +1940,6 @@ Projectiles: {
 	BrimstoneHellfireballFriendly.DisplayName: Hellfire
 	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
 	BurningMeteor.DisplayName: Burning Meteor
-	BrokenHiltHeld.DisplayName: Broken Hilt
 	CactusHealOrb.DisplayName: Heal
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
 	CloudyWaifu.DisplayName: Cloudy Waifu
@@ -2198,14 +1951,11 @@ Projectiles: {
 	DefenseBlast2.DisplayName: Defense Blast2
 	DefenseFlame.DisplayName: Defense Flame
 	DemonFork.DisplayName: Demon Fork
-	DivineSourceBeam.DisplayName: Divine Source Beam
-	DivineSourceBladeProjectile.DisplayName: Divine Source Blade
 	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
 	ElementBall.DisplayName: Ball
 	ElementalFractalHeld.DisplayName: Elemental Fractal Held
-	ElementalFractalThrown.DisplayName: Elemental Fractal Thrown
 	EntropicClaymoreHeld.DisplayName: Entropic Claymore Held
 	EntropicClaymoreProj.DisplayName: Entropic Flechette
 	EonBeam.DisplayName: Beam
@@ -2214,25 +1964,11 @@ Projectiles: {
 	ExcelsusMain.DisplayName: Excelsus Main
 	ExcelsusPink.DisplayName: Excelsus Pink
 	ExaltedOathBladeProj.DisplayName: Exalted Oath Blade Proj
-	EXNemesisProj.DisplayName: EX Nemesis Proj
-	EXNeutronArrow.DisplayName: EX Neutron Arrow
-	EXNeutronExplode.DisplayName: EX Neutron Explode
-	EXNeutronExplosionRanged.DisplayName: EX Neutron Explosion
 	ExoBeam.DisplayName: Exo Beam
 	ExoBoom.DisplayName: Exo Explosion
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
 	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
-	FractalAbyssalBlade.DisplayName: Fractal Abyssal Blade
-	FractalBeam.DisplayName: Fractal Beam
-	FractalBlight.DisplayName: Fractal Blight
-	FractalFeather.DisplayName: Fractal Feather
-	FractalGhostBlade.DisplayName: Fractal Ghost Blade
-	FractalShadow.DisplayName: Fractal Shadow
-	FractalShoot.DisplayName: Fractal Shoot
-	FractalStar.DisplayName: Fractal Star
-	FractalStarBlade.DisplayName: Fractal Star Blade
-	FractalStarblight.DisplayName: Fractal Starblight
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump
 	FungalHeal.DisplayName: Fungal Heal
@@ -2247,19 +1983,6 @@ Projectiles: {
 	LaserFountains.DisplayName: Laser Fountains
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
-	NemesisAlt.DisplayName: Nemesis Alt
-	NemesisHeld.DisplayName: Nemesis Held
-	NemesisProj.DisplayName: Nemesis Proj
-	NeutronArrow.DisplayName: Neutron Arrow
-	NeutronBowHoldout.DisplayName: Neutron Bow
-	NeutronBullet.DisplayName: Neutron Bullet
-	NeutronExplode.DisplayName: Neutron Explode
-	NeutronExplosionRanged.DisplayName: Neutron Explosion
-	NeutronGlaiveBeam.DisplayName: Neutron Glaive Beam
-	NeutronGlaiveHeld.DisplayName: Neutron Glaive
-	NeutronGunHoldout.DisplayName: Neutron Gun
-	NeutronLaser.DisplayName: Neutron Laser
-	NeutronsOrb.DisplayName: Neutrons Orb
 	Oathblade.DisplayName: Oathblade
 	OathswordFlame.DisplayName: Oathsword Flame
 	OmegaBiomeOrb.DisplayName: Orb
@@ -2273,12 +1996,10 @@ Projectiles: {
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
 	SandyWaifu.DisplayName: Waifu
-	ShatteredFractalHeld.DisplayName: Shattered Fractal Held
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
 	SpiritFractalHeld.DisplayName: Spirit Fractal Held
-	StarlessNightProj.DisplayName: Starless Night
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
 	StarlitFractalHeld.DisplayName: Starlit Fractal Held
@@ -2292,7 +2013,6 @@ Projectiles: {
 	TerratomereSlash.DisplayName: Terratomere Slash
 	TerratomereSlashCreator.DisplayName: Terratomere Slash Creator
 	TrueBiomeOrb.DisplayName: Orb
-	VoidStarF.DisplayName: Void Star
 	WaterSpearFriendly.DisplayName: Spear
 	WelkinFractalHeld.DisplayName: Welkin Fractal Held
 	MiniGuardianAttack.DisplayName: Offensive Guardian
@@ -2313,25 +2033,11 @@ Projectiles: {
 	PscTransformAnimation.DisplayName: Psc Transform Animation
 	PscTransformRocks.DisplayName: Psc Transform Rocks
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
-	GhastlySoulLarge.DisplayName: Ghastly Soul Large
-	FractalLaser.DisplayName: Fractal Laser
 	VoidFractalHeld.DisplayName: Void Fractal Held
-	VoidSlash.DisplayName: Void Slash
-	VoidWave.DisplayName: Void Wave
 	FinalFractalHeld.DisplayName: Final Fractal Held
-	FinalFractalBlade.DisplayName: Final Fractal Blade
-	VoidshadeHeld.DisplayName: Voidshade
-	VoidImpact.DisplayName: Void Impact
-	WohLaser.DisplayName: Woh Laser
-	PhantomWyrm.DisplayName: Phantom Wyrm
-	YstralynProj.DisplayName: Ystralyn Proj
-	NxCrack.DisplayName: Abyssal Crack
-	NyxolithrakenDragon.DisplayName: Nyxolith Dragon
 	SonYharon.DisplayName: Son Yharon
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
-	ErebodrepanonHeld.DisplayName: Erebodrepanon
-	ErebodrepanonMark.DisplayName: Erebodrepanon Mark
 }
 
 Systems: {

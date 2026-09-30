@@ -96,17 +96,6 @@ namespace CalamityDemutation.Content.Projectiles
             // 无主弹幕（owner = 255 = Main.maxPlayers）、敌怪弹幕与陷阱弹幕不参与（对齐灾厄对 npcProj / trap 的排除）
             if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers || projectile.npcProj || projectile.trap)
                 return;
-            if (projectile.DamageType.CountsAsClass(DamageClass.Summon) && !ProjectileID.Sets.IsAWhip[projectile.type] && target.HasBuff(ModContent.BuffType<WyrmWhipDebuff>()))
-            {
-                float wyrmTagDamageMult = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
-                modifiers.FlatBonusDamage += WyrmWhipDebuff.TagDamage * wyrmTagDamageMult;
-                modifiers.SourceDamage += WyrmWhipDebuff.TagDamageMul * wyrmTagDamageMult;
-                // CE 那边是 1/8 的强制暴击（反射塞 _critOverride），本工程用原版的 modifiers.SetCrit
-                if (Main.rand.NextBool(8))
-                {
-                    modifiers.SetCrit();
-                }
-            }
             if (!target.HasBuff(ModContent.BuffType<ProfanedCrystalWhipDebuff>()))
                 return;
             CalamityDemutationPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
