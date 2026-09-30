@@ -235,6 +235,17 @@ Configs: {
 				'''
 		}
 
+		StatInflation: {
+			Label: Stat Inflation
+			Tooltip:
+				'''
+				Raises this mod's weapon values to the legacy (pre-Calamity 2.0) numbers.
+				Every weapon reads this single switch: when on, each weapon restores its legacy damage; when off, values stay as they are.
+				Independent from the two "revert nerfs" options above; they can be toggled separately.
+				Default: Off.
+				'''
+		}
+
 		EnableSwordLight: {
 			Label: Enable Sword Light
 			Tooltip:
