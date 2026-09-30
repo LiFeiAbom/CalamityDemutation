@@ -11,19 +11,6 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
-        /// 在背包/UI 中以自定义缩放绘制物品贴图，缩放不足时按物品栏比例放大
-        /// </summary>
-        public static void DrawInventoryCustomScale(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale, float wantedScale = 1f, Vector2 drawOffset = default, SpriteEffects spriteEffects = SpriteEffects.None, float rotation = 0f)
-        {
-            // 若期望缩放小于物品栏缩放系数，则按物品栏缩放放大，保证在背包中清晰可见
-            wantedScale = Math.Max(scale, wantedScale * Main.inventoryScale);
-            // 将调用方传入的偏移量乘以最终缩放后叠加到绘制位置
-            position += drawOffset * wantedScale;
-            // 物品颜色为全透明时回退为白色，避免整张贴图被误隐藏
-            if (itemColor == Color.Transparent) itemColor = Color.White;
-            spriteBatch.Draw(texture, position, frame, itemColor.MultiplyRGB(drawColor), 0f, origin, wantedScale, SpriteEffects.None, 0);
-        }
-        /// <summary>
         /// 近战武器式弹幕的绘制信息辅助：计算贴图、屏幕绘制位置、旋转角、
         /// 旋转中心与翻转方向，便于按"挥砍武器"的观感绘制弹幕贴图。
         /// </summary>

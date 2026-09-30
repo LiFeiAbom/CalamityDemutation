@@ -162,14 +162,6 @@ namespace CalamityDemutation.Content.Projectiles.BaseProjectiles
             flags[1] = downRightValue;
             return flags;
         }
-        /// <summary>
-        /// 让弹幕朝向鼠标水平方向
-        /// </summary>
-        protected void SetDirection() => Owner.direction = Math.Sign(ToMouse.X);
-        /// <summary>
-        /// 把本弹幕登记为玩家手持弹幕
-        /// </summary>
-        protected void SetHeld() => Owner.heldProj = Projectile.whoAmI;
         // ── 私有工具 ──
         /// <summary>
         /// 处理左键点击的更新逻辑

@@ -210,19 +210,6 @@ namespace CalamityDemutation.Utilities
         /// 玩家是否无法继续使用手持弹幕（移植自灾厄 PlayerUtils.CantUseHoldout）：
         /// 玩家无效/死亡/被控/物品栏被锁，或 needsToHold 且已松开使用键时返回 true
         /// </summary>
-        /// <summary>
-        /// 专供"左键挥砍 + 右键蓄力"这类**左右键共用一件物品**的武器使用的松开判据。
-        /// 不能沿用 <see cref="CantUseHoldout"/>：那依赖 player.channel，而左右键共用一个物品时
-        /// vanilla 的 channel 会被两键互相干扰，导致右键刚生出的手持弹幕当帧就被判为"已松开"而自杀。
-        /// 这里只由弹幕主人为本机玩家时的鼠标右键状态（加上玩家可用性）决定；
-        /// 远端玩家的链条不在本地销毁，等主人侧同步。
-        /// </summary>
-        public static bool HoldoutReleased(this Player player) => player.whoAmI == Main.myPlayer
-            && (!Main.mouseRight || player == null || !player.active || player.dead || player.CCed || player.noItems);
-        /// <summary>
-        /// 玩家是否无法继续使用手持弹幕（移植自灾厄 PlayerUtils.CantUseHoldout）：
-        /// 玩家无效/死亡/被控/物品栏被锁，或 needsToHold 且已松开使用键时返回 true
-        /// </summary>
         public static bool CantUseHoldout(this Player player, bool needsToHold = true) => player == null || !player.active || player.dead || (!player.channel && needsToHold) || player.CCed || player.noItems;
     }
 }

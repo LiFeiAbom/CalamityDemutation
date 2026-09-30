@@ -257,13 +257,6 @@ namespace CalamityDemutation.Content.Particles.Core
             }
         }
         /// <summary>
-        /// 可用粒子槽数量
-        /// </summary>
-        public static int FreeSpacesAvailable()
-        {
-            return Main.dedServ || particles == null ? 0 : CalamityDemutationConstant.MaxParticleCount - particles.Count();
-        }
-        /// <summary>
         /// 取指定粒子类对应的类型 ID（注册顺序即 ID）。
         /// </summary>
         public static int GetParticleType<T>() where T : BaseParticle => ParticleTypesDic[typeof(T)];

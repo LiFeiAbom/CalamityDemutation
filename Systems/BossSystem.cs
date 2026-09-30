@@ -163,22 +163,6 @@ namespace CalamityDemutation.Systems
         private sealed record BossLink(string Key, string CalamityProp, string ClassicField);
         // ── 公开方法 ──
         /// <summary>
-        /// 获取所有可查询 Boss 的击杀状态字典（键为 Boss 规范化键）
-        /// </summary>
-        public static Dictionary<string, bool> GetAllBossDownedStates()
-        {
-            EnsureInitialized();
-            var result = new Dictionary<string, bool>(StringComparer.Ordinal);
-            if (_links == null)
-                return result;
-            foreach (string key in _links.Keys)
-            {
-                if (TryGetBossDowned(key, out bool v))
-                    result[key] = v;
-            }
-            return result;
-        }
-        /// <summary>
         /// 查询指定 Boss 是否已被击败。
         /// 按现代版 → 经典版的优先级查找；均不可用时返回 false。
         /// </summary>

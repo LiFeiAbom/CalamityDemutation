@@ -74,12 +74,6 @@ namespace CalamityDemutation.Graphics.Metaballs
                     metaball?.Dispose();
             });
         }
-        // ── 公开方法 ──
-        /// <summary>
-        /// 查询指定绘制层级上是否存在活跃元球（供其他系统按层级裁剪绘制，当前工程内暂无调用方）
-        /// </summary>
-        internal static bool AnyActiveMetaballsAtLayer(GeneralDrawLayer layerType) =>
-            metaballs.Any(m => m.AnythingToDraw && m.DrawLayer == layerType);
         // ── 私有工具 ──
         /// <summary>
         /// 合成阶段（由 GeneralDrawLayerSystem.OnDrawLayer 在对应层级触发）：

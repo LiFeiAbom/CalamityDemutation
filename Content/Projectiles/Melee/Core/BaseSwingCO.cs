@@ -419,45 +419,6 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
             }
         }
         /// <summary>
-        /// 模拟出一个勉强符合物理逻辑的命中粒子效果：
-        /// 按挥砍方向与目标相对位置求出火花速度方向，并按场上已有火花总数分档缩减 sparkCount。
-        /// </summary>
-        protected void HitEffectValue(Entity target, int sparkCount, out Vector2 rotToTargetSpeedTrengsVumVer, out int newSparkCount)
-        {
-            Vector2 toTarget = Owner.Center.To(target.Center);
-            Vector2 norlToTarget = toTarget.GetNormalVector();
-            int ownerToTargetSetDir = Math.Sign(toTarget.X);
-            ownerToTargetSetDir = ownerToTargetSetDir != DirSign ? -1 : 1;
-            if (rotSpeed > 0)
-            {
-                norlToTarget *= -1;
-            }
-            if (rotSpeed < 0)
-            {
-                norlToTarget *= 1;
-            }
-            int pysCount = DRKLoader.GetParticlesCount(DRKLoader.GetParticleType(typeof(DRK_Spark)));
-            if (pysCount > 120)
-            {
-                sparkCount = 10;
-            }
-            if (pysCount > 220)
-            {
-                sparkCount = 8;
-            }
-            if (pysCount > 350)
-            {
-                sparkCount = 6;
-            }
-            if (pysCount > 500)
-            {
-                sparkCount = 3;
-            }
-            newSparkCount = sparkCount;
-            float rotToTargetSpeedSengs = rotSpeed * 3 * ownerToTargetSetDir;
-            rotToTargetSpeedTrengsVumVer = norlToTarget.RotatedBy(-rotToTargetSpeedSengs) * 13;
-        }
-        /// <summary>
         /// 挥舞行为主体：首帧确定起始角与角速度，前 ler1Time 段加速胀大、之后减速收缩，
         /// 到达 maxSwingTime 后销毁弹幕；每整帧夹取一次 Length。
         /// 参数为空时按其默认值或由 OrigLength/maxSwingTime 推导。

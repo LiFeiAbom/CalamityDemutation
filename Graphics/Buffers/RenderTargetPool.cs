@@ -19,23 +19,11 @@ namespace CalamityDemutation.Graphics.Buffers
         /// </summary>
         public static RenderTargetDescriptor Default { get; } = new(SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, false);
         /// <summary>
-        /// 默认描述符但改用 PreserveContents：切换渲染目标时保留其已有内容
-        /// </summary>
-        public static RenderTargetDescriptor DefaultPreserveContents { get; } = new(SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents, false);
-        /// <summary>
         /// 按本描述符的参数在指定设备上创建一个新的渲染目标
         /// </summary>
         public RenderTarget2D Create(GraphicsDevice device, int width, int height)
         {
             return new RenderTarget2D(device, width, height, GenerateMipmaps, Format, Depth, MultiSampleCount, Usage);
-        }
-        /// <summary>
-        /// 根据一个已存在的渲染目标反推描述符（内容丢弃模式；LevelCount&gt;1 视为生成 mipmap），
-        /// 用于归还时计算缓存键
-        /// </summary>
-        public static RenderTargetDescriptor From(RenderTarget2D target)
-        {
-            return new RenderTargetDescriptor(target.Format, target.DepthStencilFormat, target.MultiSampleCount, RenderTargetUsage.DiscardContents, target.LevelCount > 1);
         }
     }
     /// <summary>

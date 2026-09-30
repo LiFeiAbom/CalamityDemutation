@@ -35,10 +35,6 @@ namespace CalamityDemutation.Common.Effects
         private const float ScreenShakeDecay = 0.5f;
         /// <summary>全屏闪白的每帧衰减量（CE 在 PostUpdateDusts 里减 0.02）</summary>
         private const float FlashDecay = 0.02f;
-        /// <summary>深渊粒子的遮罩贴图（CE 的 cvmask）</summary>
-        private const string AbyssMaskTexture = "CalamityDemutation/Assets/ExtraTextures/cvmask";
-        /// <summary>cabyss 着色器采样用的噪声贴图（CE 的 AwSky1）</summary>
-        private const string AbyssNoiseTexture = "CalamityDemutation/Assets/ExtraTextures/AwSky1";
         // ── 静态字段 ──
         /// <summary>
         /// 屏幕备份渲染目标：扭曲/裂隙合成前先把 Main.screenTarget 拷到这里，之后作为采样源。

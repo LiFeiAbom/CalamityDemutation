@@ -49,13 +49,6 @@ namespace CalamityDemutation.Utilities
             return instance;
         }
         /// <summary>
-        /// 移除玩家身上指定 ID 的冷却（该冷却不存在时不做任何事）
-        /// </summary>
-        public static void ClearCooldown(this Player p, string id)
-        {
-            p.CD().cooldowns.Remove(id);
-        }
-        /// <summary>
         /// 取出玩家身上所有需要显示的冷却实例（handler.ShouldDisplay 为 true 的项）
         /// </summary>
         public static IList<CooldownInstance> GetDisplayedCooldowns(this Player p)
