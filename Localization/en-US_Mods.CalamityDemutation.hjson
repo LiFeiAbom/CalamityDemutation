@@ -2047,10 +2047,3 @@ Systems: {
 		}
 	}
 }
-
-TextContent: {
-	// Combat text for Roche's String's three-stage right-click charge (overhaul's CWRLocText keys kept as-is)
-	Wap_NeutronBow_LoadingText1: Catching gravity
-	Wap_NeutronBow_LoadingText2: Is Making Gravity Yield
-	Wap_NeutronBow_LoadingText3: READY!!
-}

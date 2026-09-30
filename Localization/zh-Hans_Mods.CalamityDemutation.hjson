@@ -2046,10 +2046,3 @@ Systems: {
 		}
 	}
 }
-
-TextContent: {
-	// Combat text for Roche's String's three-stage right-click charge (overhaul's CWRLocText keys kept as-is)
-	Wap_NeutronBow_LoadingText1: 正在捕捉引力
-	Wap_NeutronBow_LoadingText2: 正在使引力屈服
-	Wap_NeutronBow_LoadingText3: 就绪!!
-}
