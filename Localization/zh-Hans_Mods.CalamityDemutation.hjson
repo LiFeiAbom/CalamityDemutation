@@ -977,6 +977,15 @@ Items: {
 			'''
 	}
 
+	Erebodrepanon: {
+		DisplayName: 泓渊亡铭
+		Tooltip:
+			'''
+			挥舞一把巨镰，将你的敌人撕得粉碎并施加生命压制
+			每第三次挥砍范围更长，命中时召来螺旋收束的龙之能量
+			'''
+	}
+
 	EtherealTalisman: {
 		DisplayName: 空灵护符
 		Tooltip:
@@ -2326,6 +2335,8 @@ Projectiles: {
 	SonYharon.DisplayName: 犽戎之子
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流
+	ErebodrepanonHeld.DisplayName: 泓渊亡铭
+	ErebodrepanonMark.DisplayName: 泓渊亡铭标记
 }
 
 Systems: {

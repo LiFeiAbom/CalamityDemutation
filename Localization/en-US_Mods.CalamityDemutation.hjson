@@ -974,6 +974,15 @@ Items: {
 			'''
 	}
 
+	Erebodrepanon: {
+		DisplayName: Erebodrepanon
+		Tooltip:
+			'''
+			Wield a giant scythe that tears your enemies to pieces and inflicts Life Oppress
+			Every third swing has greater reach and summons a spiral of wyrm energy to close in on the enemies it hits
+			'''
+	}
+
 	EtherealTalisman: {
 		DisplayName: Ethereal Talisman
 		Tooltip:
@@ -2321,6 +2330,8 @@ Projectiles: {
 	SonYharon.DisplayName: Son Yharon
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
+	ErebodrepanonHeld.DisplayName: Erebodrepanon
+	ErebodrepanonMark.DisplayName: Erebodrepanon Mark
 }
 
 Systems: {

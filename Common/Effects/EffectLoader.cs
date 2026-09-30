@@ -7,10 +7,22 @@ namespace CalamityDemutation.Common.Effects
     /// 着色器加载器：请求并托管本模组全部 .fx 资源——
     /// 刀光 KnifeRendering / KnifeDistortion、屏幕扭曲 WarpShader、中子星扭曲 NeutronWarp、
     /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader、亵渎之魂护盾 RoverDriveShieldShader、
-    /// 深渊裂隙合成 cabyss。
+    /// 深渊裂隙合成 cabyss、颜色插值 ColorLerp。
     /// </summary>
+    /// <remarks>
+    /// ⚠️ 本工程的 .fx 不是由 tModLoader 在构建时编译的：每新增一个 .fx，都必须先用 tModLoader 自带的 fxc
+    /// 在 Effects/ 目录里就地编译出同名 .fxc，构建才会把它打进 .tmod：
+    /// <c>FXC\fxc.exe /nologo /T fx_2_0 /Fo 名字.fxc 名字.fx</c>（会刷一条 X4717 "Effects deprecated" 警告，属正常）。
+    /// 少编译这一步的后果不是"贴图不显示"，而是运行期 <c>Mod.Assets.Request&lt;Effect&gt;</c> 直接抛
+    /// MissingResourceException、整个模组被 tModLoader 禁用——所以新增着色器后务必确认 Effects/ 下同名的 .fxc 已生成。
+    /// </remarks>
     public class EffectLoader
     {
+        /// <summary>
+        /// 颜色插值着色器（移植自 CalamityEntropy 的 ColorLerp3.fx，CE 里叫 colorLerp）：把贴图按自身亮度往
+        /// color 参数插值、再乘回贴图颜色，泓渊亡铭的镰身拖影与镰尖星芒用它染成蓝白
+        /// </summary>
+        public static Asset<Effect> ColorLerp;
         /// <summary>
         /// 深渊裂隙合成着色器（移植自 CalamityEntropy 的 cabyss）：EffectsSystem 把深渊裂隙的白色遮罩
         /// 合成为蓝色深渊裂缝时使用，需配合 AwSky1 噪声贴图（tex1）与 clr 颜色参数
@@ -66,6 +78,7 @@ namespace CalamityDemutation.Common.Effects
             AdditiveMetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/AdditiveMetaballEdgeShader");
             RoverDriveShieldShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "RoverDriveShield");
             AbyssShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "cabyss");
+            ColorLerp = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "ColorLerp3");
         }
         /// <summary>
         /// 卸载时把所有着色器 Asset 引用置空，便于热重载回收（注意方法名按既有约定写作 UnLoad）
@@ -80,6 +93,7 @@ namespace CalamityDemutation.Common.Effects
             AdditiveMetaballEdgeShader = null;
             RoverDriveShieldShader = null;
             AbyssShader = null;
+            ColorLerp = null;
         }
     }
 }
