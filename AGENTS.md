@@ -74,6 +74,19 @@
   `owner.GetModPlayer<CalamityDemutationPlayer>().GetMouseWorld()`（跨端可见），
   不要直读 `Main.MouseWorld`（除非外面已判 `owner == Main.myPlayer`）。
 - **自研冲刺表现**（盾牌冲撞 / 弑神者冲刺）都会广播消息让别的端重放粒子；新增大动作表现建议照抄这套。
+- **命中回调不用加判据**（已验证，别再挨个查）：`OnHitNPC` / `OnHitPvp` / `OnHitNPCWithProj` / `OnHitPlayer`
+  只会在**主人客户端**跑一次。依据是反编译 IL——原版近战走
+  `if (whoAmI == Main.myPlayer) ApplyDamageToNPC(...)`，而 `Projectile.Damage()` 的 NPC 结算段开头就是
+  `if (owner != Main.myPlayer) 跳过整段`，结算完再 `NetMessage.SendStrikeNPC` 同步给其他端
+  （服务端只按包补伤害，不会重跑玩家侧钩子）。上游灾厄在这些回调里同样不写判据。
+- **但 `ModItem.UpdateArmorSet` 与 `ModPlayer.PostUpdateMiscEffects` 是"每名玩家 × 每一端"都跑**
+  （`Player.Update → UpdateArmorSets`，且整条链上没有 `whoAmI == Main.myPlayer` 守卫）。这两处生成弹幕
+  **必须**加 `player.whoAmI == Main.myPlayer`，否则客户端会替别的玩家生成一份 owner 记成本机玩家的弹幕，
+  服务端更会以 `Main.myPlayer = 255` 当 owner。（2026-09-30 已按此修好魔影头盔 ×4 与蓝欧米伽触手。）
+- **查"某钩子跑在哪一端"的捷径**：tModLoader 安装目录 `D:\Game\Steam\steamapps\common\tModLoader`，
+  `tModLoader.dll` 就是把原版类合并进去的程序集；用同目录
+  `Libraries\mono.cecil\0.11.6\lib\netstandard2.0\Mono.Cecil.dll` 在 PowerShell 里 `ReadAssembly` 后
+  dump 目标方法的 IL（`$m.Body.Instructions`），比翻源码快且是唯一权威。用法示例见本节上两条的推导过程。
 
 ## 6. 工作流
 
@@ -88,12 +101,22 @@
   `git -c user.name='LiFeiAbom' -c user.email='LiFeiAbom@users.noreply.github.com' commit …`。
   提交信息风格：`类型: 描述`（移植 / 适配 / 修正 / 平衡 / 删除 / 清理 / 回退），可带要点正文。
 - 推送：`git push origin master`（网络偶发 `Connection was reset`，重试即可）。
+- **本机 `rg` 必须显式带路径**：`rg -n '关键字' .`（结尾那个 `.` 不能省）。不带路径时它在本机会**静默**
+  搜不到任何东西、直接返回空，看起来像"全工程 0 命中"——曾因此误判过好几轮。同理，读无 BOM 的
+  UTF-8 源文件要用 `Get-Content -Encoding UTF8`，否则中文注释会花屏。
+- 联网受限时的绕道：`raw.githubusercontent.com` 不通，改用 jsDelivr
+  （`https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path>`）或 GitHub API 均可正常访问。
 
 ## 7. 当前状态（截至最后一次会话）
 
 - 上一批工作：① 移植泓渊亡铭（已随后被删）② 全工程联机适配修正 ③ **删除全部 CWR/CE 内容**（三笔提交）
-  ④ 注释与文案的残留清理 + 一行死注释 ⑤ 补删 zh-Hans 里泓渊亡铭残留的两条弹幕名。
+  ④ 注释与文案的残留清理 + 一行死注释 ⑤ 补删 zh-Hans 里泓渊亡铭残留的两条弹幕名
+  ⑥ **联机隐患复查**（219 处 `NewProjectile` 全量过筛 + 上游同名文件逐个体检）：
+  修掉魔影头盔 ×4 的召唤缺判据、蓝欧米伽触手缺判据（对照上游发现是移植时丢的），
+  并修好无政府之刃上一轮被插坏的方法缩进。
 - **本地与 `origin/master` 已同步**（远端现为 `fa6e794`）；此前积压的提交已全部推上去，
   包括 `19ad483`/`f8c48ab`（删除第一、二批）、`b501d9a`（残留清理）、`47e7131`（死注释）、
   `d86862f`（AGENTS.md）、`fa6e794`（补删中文本地化两行）。
-- 验证状态：被删类名在工程内残留提及 **0**；编译 **0 警告 0 错误**；音效字段与素材路径存在性检查通过。
+- 验证状态：被删类名在工程内残留提及 **0**；编译 **0 警告 0 错误**；音效字段与素材路径存在性检查通过；
+  联机复查结论：ModItem 可变状态字段 0 处、鼠标读取全部有守卫、摄像机 0 处、命中回调类生成点无需判据
+  （理由见第 5 节）。

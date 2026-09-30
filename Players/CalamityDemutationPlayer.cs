@@ -2508,7 +2508,9 @@ namespace CalamityDemutation.Players
             if (omegaBlueSet) //should apply after rev caps, actually those are gone so AAAAA
             {
                 //add tentacles
-                if (Player.ownedProjectileCounts[ModContent.ProjectileType<OmegaBlueTentacle>()] < 6)
+                // 生成触手只在主人本机做（对齐上游 Calamity 的同名判据）：本钩子对每名玩家、每一端都会跑，
+                // 少了后半句时，客户端会替别的玩家生成一套 owner 记成本机玩家的触手，服务端还会以 255 当 owner。
+                if (Player.ownedProjectileCounts[ModContent.ProjectileType<OmegaBlueTentacle>()] < 6 && Main.myPlayer == Player.whoAmI)
                 {
                     bool[] tentaclesPresent = new bool[6];
                     for (int i = 0; i < 1000; i++)

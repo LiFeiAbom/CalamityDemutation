@@ -74,7 +74,9 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
                 player.AddBuff(ModContent.BuffType<Buffs.SummonBuffs.RedDevil>(), 3600, true);  // 无红魔 buff 时补上（3600 帧 = 60 秒）
             }
             int devilType = ModContent.ProjectileType<Projectiles.Summon.RedDevil>();
-            if (player.ownedProjectileCounts[devilType] < 1)
+            // 召唤只在主人本机做：UpdateArmorSet 对每名玩家、每一端都会跑（Player.Update → UpdateArmorSets），
+            // 少了这层判定会让客户端替别的玩家生成一只 owner 记成本机玩家的红魔，服务端更会以 255 当 owner。
+            if (player.whoAmI == Main.myPlayer && player.ownedProjectileCounts[devilType] < 1)
             {
                 Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center.X, player.Center.Y, 0f, -1f, devilType, redDevilDamage, 0f, Main.myPlayer, 0f, 0f);  // 场上无红魔时召唤一只
             }
