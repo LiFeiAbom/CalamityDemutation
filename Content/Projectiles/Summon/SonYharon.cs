@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 犽戎之子（SonYharon，移植自 CalamityInheritance 的 Content/Projectiles/Summon/SonYharon.cs）：
-    /// 巨龙七星灯召唤的贴身飞行仆从（4 帧贴图），占 2 个仆从栏位。
+    /// 巨龙七星灯召唤的贴身飞行仆从（4 帧贴图），占 4 个仆从栏位（CI 原样）。
     /// 常态跟在主人身边游荡；锁定到附近敌人后会先加速撞过去再退回，
     /// <c>ai[0] == 2</c> 是"贴身撕咬"的短状态（30 帧、贴图切到第 3 帧、extraUpdates 临时抬到 2）。
     /// <para>
@@ -36,7 +36,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// <summary>
         /// 基础属性：100x100 碰撞箱、无限穿透、不撞地形、额外更新 1 次（每帧多跑一趟 AI）、
         /// 寿命 18000*5 帧（靠 <c>ownSonYharon</c> 标志续命）。伤害类型取召唤（CI 漏设，见类注释差异⑤）；
-        /// 命中无敌帧与仆从栏位是 2026-09-22 的两处刻意改动，理由见方法体内注释。
+        /// 命中无敌帧与仆从栏位维持 CI 原样（1 / 4）。
         /// </summary>
         public override void SetDefaults()
         {
@@ -47,13 +47,13 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.friendly = true;
             Projectile.ignoreWater = true;
             Projectile.usesLocalNPCImmunity = true;
-            // 命中无敌帧：CI 原样是 1（每 1~2 帧判决一次、一秒几十次命中），那样会让按"次"结算的噬渊标记平伤
-            // （+90/次）白嫖出每秒数千点伤害；2026-09-22 用户拍板改成 4（约 12 次/秒）
-            Projectile.localNPCHitCooldown = 4;
+            // 命中无敌帧：CI 原样 1（每 1~2 帧判决一次、一秒几十次命中）。
+            // 注：按"次"结算的噬渊标记平伤会因此被频繁触发；2026-09-29 用户拍板改回 CI 原样，不再压制。
+            Projectile.localNPCHitCooldown = 1;
             Projectile.extraUpdates = 1;
             Projectile.minion = true;
-            // 占用仆从栏位：CI 原样是 4，2026-09-22 用户拍板降到 2（配合上面压命中频率后的输出）
-            Projectile.minionSlots = 2f;
+            // 占用仆从栏位：CI 原样 4（2026-09-29 用户拍板由 2 改回）
+            Projectile.minionSlots = 4f;
             Projectile.timeLeft = 18000;
             Projectile.timeLeft *= 5;
             Projectile.penetrate = -1;

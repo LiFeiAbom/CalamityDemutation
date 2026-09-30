@@ -77,7 +77,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>
         /// 基础属性：68x68 碰撞箱（节段的 36×36 判定另算）、友方、无限穿透、不撞地形、
-        /// 占用 5 个仆从栏位、每个敌人独立命中冷却；命中无敌帧取 9（见下方注释）
+        /// 占用 5 个仆从栏位、每个敌人独立命中冷却；命中无敌帧维持 CE 原样的 26（见下方注释）
         /// </summary>
         public override void SetDefaults()
         {
@@ -94,8 +94,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.minion = true;
             Projectile.minionSlots = 5;
             Projectile.usesLocalNPCImmunity = true;
-            // 命中无敌帧：CE 原样是 26（约 2.3 次/秒），2026-09-22 用户拍板改成 9（约 6.7 次/秒）
-            Projectile.localNPCHitCooldown = 9;
+            // 命中无敌帧：CE 原样 26（约 2.3 次/秒）。2026-09-22 曾改成 9（约 6.7 次/秒）；2026-09-30 用户拍板改回。
+            Projectile.localNPCHitCooldown = 26;
             Projectile.extraUpdates = 1;
         }
         // ── 覆写方法 ──

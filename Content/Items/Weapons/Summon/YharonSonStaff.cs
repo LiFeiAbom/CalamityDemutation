@@ -7,8 +7,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
     /// 巨龙七星灯（YharonSonStaff，移植自 CalamityInheritance 的 Content/Items/Weapons/Summon/YharonSonStaff.cs）：
-    /// 召唤一条「犽戎之子」为你作战的召唤杖，每个召唤物占 2 个仆从栏位
-    /// （CI 原样是 4；栏位与其弹幕的命中无敌帧都是 2026-09-22 用户拍板下调的，见 <see cref="SonYharon"/>）。
+    /// 召唤一条「犽戎之子」为你作战的召唤杖，每个召唤物占 4 个仆从栏位
+    /// （栏位与其弹幕的命中无敌帧均维持 CI 原样，见 <see cref="SonYharon"/>）。
     /// <para>
     /// 与 CI 原版的差异：① 显示名去掉 CI 的 <c>[Legacy]</c> 后缀——那是 CI 用来标记"灾厄旧版内容回归"的后缀，本模组本就是灾厄扩展，不需要；
     /// ② CI 的稀有度是 <c>CIConfig.SpecialRarityColor ? YharonFire : DeepBlue</c>（配置可切的金黄特殊色 / 深蓝），

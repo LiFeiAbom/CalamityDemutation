@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         }
         /// <summary>
         /// 基础属性：召唤伤害、无限穿透、不撞地形、每个敌人独立命中冷却；
-        /// 命中无敌帧取 7（见下方注释），护甲穿透 100
+        /// 命中无敌帧维持 CE 原样的 16（见下方注释），护甲穿透 100
         /// </summary>
         public override void SetDefaults()
         {
@@ -52,9 +52,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.tileCollide = false;
             Projectile.light = 0f;
             Projectile.usesLocalNPCImmunity = true;
-            // 命中无敌帧：CE 原样是 16，2026-09-22 用户拍板改成 7。
-            // 注：本弹幕 w 收口后约 11 帧就自杀，7 帧冷却意味着一道裂空对同一敌人最多命中 2 次
-            Projectile.localNPCHitCooldown = 7;
+            // 命中无敌帧：CE 原样 16（2026-09-22 曾改成 7，2026-09-30 用户拍板改回）。
+            // 注：本弹幕 w 收口后约 11 帧就自杀，16 帧冷却 = 同一敌人只会被一道裂空结算一次
+            Projectile.localNPCHitCooldown = 16;
             Projectile.ArmorPenetration = 100;
         }
         // ── 覆写方法 ──

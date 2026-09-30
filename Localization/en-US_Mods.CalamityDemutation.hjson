@@ -869,6 +869,15 @@ Items: {
 			'''
 	}
 
+	DeathsAscension: {
+		DisplayName: Death's Ascension
+		Tooltip:
+			'''
+			Press <left> to launch a barrage of homing scythes
+			You can feel the hands of Death himself onto yours
+			'''
+	}
+
 	Devastation: {
 		DisplayName: Devastation
 		Tooltip: Fires galaxy blasts that explode
@@ -1717,6 +1726,15 @@ Items: {
 			'''
 	}
 
+	StreamGouge: {
+		DisplayName: Stream Gouge
+		Tooltip:
+			'''
+			Thrusts a cosmic spear that fires an infinitely piercing essence beam
+			The spear and the beam ignore immunity frames
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: Tarragon Breastplate
 		Tooltip:
@@ -1927,7 +1945,7 @@ Items: {
 		Tooltip:
 			'''
 			Summons a powerful son of Yharon fights for you
-			Requires 2 minions to use
+			Requires 4 minions to use
 			No, they don't look that delicious.
 			'''
 	}
@@ -2165,6 +2183,7 @@ Projectiles: {
 	CloudyWaifu.DisplayName: Cloudy Waifu
 	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion
 	DeathLaser.DisplayName: Death Laser
+	DeathsAscensionProjectile.DisplayName: Ascended Scythe
 	DefenseBeam.DisplayName: Defense Beam
 	DefenseBlast.DisplayName: Defense Blast
 	DefenseBlast2.DisplayName: Defense Blast2
@@ -2300,6 +2319,8 @@ Projectiles: {
 	NxCrack.DisplayName: Abyssal Crack
 	NyxolithrakenDragon.DisplayName: Nyxolith Dragon
 	SonYharon.DisplayName: Son Yharon
+	EssenceBeam.DisplayName: Essence Beam
+	StreamGougeProj.DisplayName: Stream Gouge
 }
 
 Systems: {

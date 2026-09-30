@@ -127,8 +127,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.timeLeft = 3;
             Projectile.MaxUpdates = 3;
             Projectile.usesLocalNPCImmunity = true;
-            // 命中无敌帧：CE 原样是 30（约 2 次/秒），2026-09-22 用户拍板改成 10（约 6 次/秒）
-            Projectile.localNPCHitCooldown = 10;
+            // 命中无敌帧：CE 原样 30（约 2 次/秒）。2026-09-22 曾改成 10（约 6 次/秒）；2026-09-30 用户拍板改回。
+            Projectile.localNPCHitCooldown = 30;
         }
         /// <summary>
         /// 生成时就把节段链串好（CE 放在 AI 首帧；挪到这里是为了保证 PreDraw 永远不会拿到空表，

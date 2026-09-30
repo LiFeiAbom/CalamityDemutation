@@ -61,9 +61,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.WhipSettings.Segments = 19;
             Projectile.WhipSettings.RangeMultiplier = 4.8f;
             Projectile.usesLocalNPCImmunity = true;
-            // 命中无敌帧：CE 原样是 -1（= 一次挥击对同一敌人只结算一次），2026-09-22 用户拍板改成 5 帧冷却，
-            // 让一条 27 帧的挥击可以对同一敌人多段命中（最多约 5 次）。注意无敌帧按 tick 递减，与 MaxUpdates 无关
-            Projectile.localNPCHitCooldown = 5;
+            // 命中无敌帧：CE 原样 -1（= 一次挥击对同一敌人只结算一次）。
+            // 注：2026-09-22 曾改成 5 让一条 27 帧的挥击多段命中；2026-09-30 用户拍板改回 CE 原样。
+            Projectile.localNPCHitCooldown = -1;
         }
         /// <summary>挥砍计时：原版鞭 AI（165）每帧推进 <c>ai[0]</c>，这里只读</summary>
         private float Timer => Projectile.ai[0];

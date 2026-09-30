@@ -868,6 +868,15 @@ Items: {
 			'''
 	}
 
+	DeathsAscension: {
+		DisplayName: 死神擢升
+		Tooltip:
+			'''
+			挥砍时发射一串追踪的飞镰
+			你能感到死神之手正覆于其上
+			'''
+	}
+
 	Devastation: {
 		DisplayName: 毁灭
 		Tooltip: 发射会爆炸的星系爆弹
@@ -1719,6 +1728,15 @@ Items: {
 			'''
 	}
 
+	StreamGouge: {
+		DisplayName: 宇宙暗流
+		Tooltip:
+			'''
+			刺出宇宙长矛，矛尖发射可以无限穿透的宇宙能量
+			无视目标无敌帧
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: 龙蒿护甲
 		Tooltip:
@@ -1930,7 +1948,7 @@ Items: {
 		Tooltip:
 			'''
 			召唤一只强大的犽戎之子为你而战
-			每个召唤物消耗2召唤栏
+			每个召唤物消耗4召唤栏
 			"别看了, 这肥鸡可不好吃"
 			'''
 	}
@@ -2170,6 +2188,7 @@ Projectiles: {
 	CloudyWaifu.DisplayName: 云元素
 	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
 	DeathLaser.DisplayName: 死亡激光
+	DeathsAscensionProjectile.DisplayName: 升格镰刀
 	DefenseBeam.DisplayName: 防御光束
 	DefenseBlast.DisplayName: 防御爆裂
 	DefenseBlast2.DisplayName: 防御爆裂 2
@@ -2305,6 +2324,8 @@ Projectiles: {
 	NxCrack.DisplayName: 深渊撕裂
 	NyxolithrakenDragon.DisplayName: 沧溟渊龙
 	SonYharon.DisplayName: 犽戎之子
+	EssenceBeam.DisplayName: 宇宙精粹
+	StreamGougeProj.DisplayName: 宇宙暗流
 }
 
 Systems: {
