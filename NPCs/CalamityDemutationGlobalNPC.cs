@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Reflection;
 using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
@@ -74,6 +76,112 @@ namespace CalamityDemutation.NPCs
             hellfireExplosion = false;
             silvaHysteresis = false;
         }
+        // ── BOSS 血量膨胀（口径照 CI：逐 BOSS 分档写死，未列出的走兜底倍率）──
+        /// <summary>
+        /// 兜底倍率：<see cref="BossHealthMultipliers"/> 里没有列出的 BOSS 用它。
+        /// </summary>
+        public const float DefaultBossHealthMultiplier = 3f;
+        /// <summary>
+        /// 原版 BOSS 的额外倍率：仅当加载了现代版灾厄（CalamityMod）时生效。
+        /// 装经典版（CalamityModClassicPreTrailer）时整个膨胀会跳过，见 <see cref="SetDefaults"/>。
+        /// </summary>
+        public const float VanillaBossExtraWithModernCalamity = 1.25f;
+        /// <summary>
+        /// 逐 BOSS 分档倍率表：键 = NPC 类型，值 = (普通, 复仇, 死亡) 三档倍率。
+        /// 三档取自灾厄的 <c>CalamityWorld.revenge</c> / <c>CalamityWorld.death</c>（反射读取，取不到就按普通档）。
+        /// 没列出的 BOSS 一律走 <see cref="DefaultBossHealthMultiplier"/>。
+        /// <para>
+        /// CI（灾厄遗产）就是"逐 BOSS 写死各档血量"（例：它的至尊灾厄 = 死亡 880 万 / 复仇 800 万 / 普通 500 万，
+        /// 蠕虫 = 普通 100 万 / 复仇 120 万 / 死亡 200 万）；本表按同样口径填，只是把"绝对值"换成"倍率"，
+        /// 因为我们膨胀的是别人已经定好血量的 BOSS，而不是新建 BOSS。
+        /// </para>
+        /// </summary>
+        private static readonly Dictionary<int, (float Normal, float Revenge, float Death)> BossHealthMultipliers = new()
+        {
+            // ── 原版 BOSS ──
+            // 普通档 = 灾厄 1.5.1.006 里"无条件生效的绝对值"÷ 原版基准血量；
+            // 复仇 / 死亡档 = 普通档再乘该版本 RevDeathStatChanges 的倍率（死档另有分叉的按死档写）。
+            // 克苏鲁之眼：2800 → 3050；复仇/死亡 ×1.2
+            { NPCID.EyeofCthulhu, (1.09f, 1.31f, 1.31f) },
+            // 世界吞噬者（头/身/尾同值）：150 → 175；复仇/死亡 ×1.2
+            { NPCID.EaterofWorldsHead, (1.17f, 1.40f, 1.40f) },
+            { NPCID.EaterofWorldsBody, (1.17f, 1.40f, 1.40f) },
+            { NPCID.EaterofWorldsTail, (1.17f, 1.40f, 1.40f) },
+            // 克苏鲁之脑：1250 → 1400；复仇/死亡 ×1.2
+            { NPCID.BrainofCthulhu, (1.12f, 1.34f, 1.34f) },
+            // 血肉之墙（本体与眼睛同值）：8000 → 12800；复仇/死亡 ×1.2
+            { NPCID.WallofFlesh, (1.60f, 1.92f, 1.92f) },
+            { NPCID.WallofFleshEye, (1.60f, 1.92f, 1.92f) },
+            // 双子魔眼：20000 → 22000、23000 → 26000；复仇/死亡 ×1.2
+            { NPCID.Retinazer, (1.10f, 1.32f, 1.32f) },
+            { NPCID.Spazmatism, (1.13f, 1.36f, 1.36f) },
+            // 世纪之花：30000 → 75000；复仇/死亡 ×1.2
+            { NPCID.Plantera, (2.50f, 3.00f, 3.00f) },
+            // 石巨人：15000 → 30000，但头部反向削到 20000；复仇/死亡 ×1.2
+            { NPCID.Golem, (2.00f, 2.40f, 2.40f) },
+            { NPCID.GolemHead, (0.80f, 0.96f, 0.96f) },
+            // 猪鲨公爵：60000 → 105625；复仇/死亡 ×1.4
+            { NPCID.DukeFishron, (1.76f, 2.46f, 2.46f) },
+            // 拜月教邪教徒：32000 → 53500；复仇/死亡 ×1.2
+            { NPCID.CultistBoss, (1.67f, 2.00f, 2.00f) },
+            // 月亮领主：核心 50000 → 92000（复仇/死亡 ×1.2）；手与头该版本没改基础值，只有难度档 ×1.2
+            { NPCID.MoonLordCore, (1.84f, 2.21f, 2.21f) },
+            { NPCID.MoonLordHand, (1.00f, 1.20f, 1.20f) },
+            { NPCID.MoonLordHead, (1.00f, 1.20f, 1.20f) },
+        };
+        /// <summary>模组探测结果缓存：现代版灾厄 / 经典版灾厄是否在场</summary>
+        private static bool modsResolved;
+        private static bool hasModernCalamity;
+        private static bool hasClassicCalamity;
+        /// <summary>灾厄 <c>CalamityWorld.revenge</c> / <c>death</c> 的反射句柄（取不到则为 null，按普通档处理）</summary>
+        private static FieldInfo calamityRevengeField;
+        private static FieldInfo calamityDeathField;
+        /// <summary>
+        /// 所有 NPC 生成时都会走这里，且发生在原版难度缩放**之前**——这正是给 BOSS 血量做膨胀的位置。
+        /// 不能改用 <c>ApplyDifficultyAndPlayerScaling</c>：那条钩子只在专家及以上的世界才会被调到，
+        /// 经典世界（乃至经典 FTW）会整段跳过，开关会失效。
+        /// </summary>
+        public override void SetDefaults(NPC npc)
+        {
+            if (!npc.boss)
+                return;
+            if (!GameplayConfig.StatInflationEnabled)
+                return;
+            ResolveModPresence();
+            // 经典版灾厄自己就是"膨胀口径"（它的夜隆 227 万 vs 现代 100 万），装了它就不再叠我们的膨胀。
+            if (hasClassicCalamity)
+                return;
+            float multiplier = BossHealthMultipliers.TryGetValue(npc.type, out var tiers)
+                ? (CalamityDeath ? tiers.Death : CalamityRevenge ? tiers.Revenge : tiers.Normal)
+                : DefaultBossHealthMultiplier;
+            // 原版 BOSS 在"现代灾厄在场"时再补一档。
+            if (hasModernCalamity && npc.type < NPCID.Count)
+                multiplier *= VanillaBossExtraWithModernCalamity;
+            npc.lifeMax = (int)(npc.lifeMax * multiplier);
+        }
+        /// <summary>探测两个灾厄版本是否加载（结果缓存，只在第一次生成 BOSS 时查一次）</summary>
+        private static void ResolveModPresence()
+        {
+            if (modsResolved)
+                return;
+            modsResolved = true;
+            hasModernCalamity = ModLoader.TryGetMod("CalamityMod", out Mod modern);
+            hasClassicCalamity = ModLoader.TryGetMod("CalamityModClassicPreTrailer", out _);
+            if (modern is not null)
+            {
+                // 反射拿 CalamityWorld 的两个难度静态字段；拿不到就退化成"永远按普通档"。
+                System.Type calamityWorld = modern.Code.GetType("CalamityMod.World.CalamityWorld");
+                if (calamityWorld is not null)
+                {
+                    calamityRevengeField = calamityWorld.GetField("revenge", BindingFlags.Public | BindingFlags.Static);
+                    calamityDeathField = calamityWorld.GetField("death", BindingFlags.Public | BindingFlags.Static);
+                }
+            }
+        }
+        /// <summary>当前是否处于灾厄复仇模式（未加载灾厄 / 反射失败时为 false）</summary>
+        private static bool CalamityRevenge => calamityRevengeField?.GetValue(null) is true;
+        /// <summary>当前是否处于灾厄死亡模式（未加载灾厄 / 反射失败时为 false）</summary>
+        private static bool CalamityDeath => calamityDeathField?.GetValue(null) is true;
         /// <summary>
         /// 玩家受到 NPC 攻击命中时触发：蜂抗（蜂类来源伤害减至 75%）与魔影套装「激怒」的增伤都在这里结算。
         /// </summary>
