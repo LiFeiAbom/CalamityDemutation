@@ -80,7 +80,7 @@ namespace CalamityDemutation.Common.Effects
             {
                 return;
             }
-            bool needed = HasAbyssContent() || HasStarlessNightContent() || HasAnyWarpProjectile()
+            bool needed = HasAnyWarpProjectile()
                 || CalamityDemutation.FlashEffectStrength > 0f;
             if (needed && !overlayFilter.IsActive())
             {
@@ -228,86 +228,12 @@ namespace CalamityDemutation.Common.Effects
                     Main.spriteBatch.End();
                 }
             }
-            // 深渊裂隙：与 warp 各自独立走一遍「备份屏幕 → 画遮罩 → 合成回屏」，先后顺序不影响结果
-            if (HasAbyssContent())
-            {
-                DrawAbyssCrack();
-            }
             // 全屏闪白与无星之夜剑体：CE 把这两件事都放在它的 ApplyFinalShader 末尾按「先闪白、后剑体」执行
             if (CalamityDemutation.FlashEffectStrength > 0f)
             {
                 DrawFlash();
             }
-            if (HasStarlessNightContent())
-            {
-                DrawStarlessNightSwords();
-            }
             orig.Invoke(self, finalTexture, screenTarget1, screenTarget2, clearColor);
-        }
-        /// <summary>
-        /// 深渊裂隙的上屏合成：① 备份当前屏幕；② 把裂隙折线与深渊粒子按屏幕空间画到 screenTargetSwap 当遮罩
-        /// （白色线条 + cvmask 贴图遮罩，都不带视图矩阵，位置自行减 screenPosition）；③ 先把屏幕还原回去，
-        /// 再用 cabyss 着色器把遮罩合成为蓝色深渊裂缝叠在最上层。
-        /// </summary>
-        private void DrawAbyssCrack()
-        {
-            GraphicsDevice graphicsDevice = Main.instance.GraphicsDevice;
-            // 1. 备份当前屏幕
-            graphicsDevice.SetRenderTarget(screen);
-            graphicsDevice.Clear(Color.Transparent);
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            Main.spriteBatch.Draw(Main.screenTarget, Vector2.Zero, Color.White);
-            Main.spriteBatch.End();
-            // 2. 裂隙折线 + 深渊粒子遮罩画到 screenTargetSwap
-            graphicsDevice.SetRenderTarget(Main.screenTargetSwap);
-            graphicsDevice.Clear(Color.Transparent);
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null);
-            foreach (Projectile projectile in Main.projectile)
-            {
-                if (projectile.active && projectile.ModProjectile is AbyssalCrack crack)
-                {
-                    crack.DrawCrack();
-                }
-                // 噬渊鞭挞挥砍中段拖出的深渊裂纹（CE 把这道折线也画进同一个深渊 RT 遮罩里）
-                if (projectile.active && projectile.ModProjectile is YstralynProj ystralyn)
-                {
-                    ystralyn.draw_crack();
-                }
-                // 沧溟渊龙命中撕开的裂空（CE 同样把它画进这个深渊遮罩）
-                if (projectile.active && projectile.ModProjectile is NxCrack nxCrack)
-                {
-                    nxCrack.drawCrack();
-                }
-            }
-            Texture2D cvmask = ModContent.Request<Texture2D>(AbyssMaskTexture).Value;
-            foreach (BaseParticle particle in DRKLoader.particles)
-            {
-                if (particle is AbyssalParticle abyss)
-                {
-                    Main.spriteBatch.Draw(cvmask, abyss.Position - Main.screenPosition, null, Color.White * 0.06f, abyss.Rotation, cvmask.Size() / 2, (5.4f * abyss.Opacity) * 0.05f, SpriteEffects.None, 0f);
-                }
-            }
-            Main.spriteBatch.End();
-            // 3. 还原场景，再经 cabyss 把遮罩合成为蓝色裂缝叠回去
-            graphicsDevice.SetRenderTarget(Main.screenTarget);
-            graphicsDevice.Clear(Color.Transparent);
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null);
-            Main.spriteBatch.Draw(screen, Vector2.Zero, Color.White);
-            // CE 的时间/偏移量都基于它的全局帧计数 cvcount，这里用等价的时间换算：cvcount ≈ 秒 × 60
-            float frameCount = Main.GlobalTimeWrappedHourly * 60f;
-            Effect cabyss = EffectLoader.AbyssShader.Value;
-            cabyss.CurrentTechnique = cabyss.Techniques["Technique1"];
-            cabyss.CurrentTechnique.Passes[0].Apply();
-            cabyss.Parameters["clr"].SetValue(new Color(12, 50, 160).ToVector4());
-            cabyss.Parameters["tex1"].SetValue(ModContent.Request<Texture2D>(AbyssNoiseTexture).Value);
-            cabyss.Parameters["time"].SetValue(frameCount / 50f);
-            cabyss.Parameters["scrsize"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-            cabyss.Parameters["offset"].SetValue((Main.screenPosition + new Vector2(frameCount * 1.4f, frameCount * 1.4f)) / new Vector2(Main.screenWidth, Main.screenHeight));
-            // 遮罩层是按世界坐标减 screenPosition 画的、不带视图矩阵，而重力反转时世界是翻转渲染的，
-            // 所以要在这里把整层垂直翻转补偿回来（CE 原样）
-            Main.spriteBatch.Draw(Main.screenTargetSwap, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f,
-                Main.LocalPlayer.gravDir < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
-            Main.spriteBatch.End();
         }
         /// <summary>
         /// 全屏闪白（CE 的 ApplyFinalShader）：① 把当前画面备份到 screen；② 把屏幕本体原样还原回去；
@@ -339,64 +265,6 @@ namespace CalamityDemutation.Common.Effects
                     1 + CalamityDemutation.FlashEffectStrength * 0.08f * i, SpriteEffects.None, 0);
             }
             Main.spriteBatch.End();
-        }
-        /// <summary>
-        /// 把所有活跃 <see cref="StarlessNightProj"/> 的剑体画在当前画面上（所有弹幕之后）。
-        /// CE 在它的全局绘制层里逐个调 drawSword，本模组改到上屏阶段做同一件事，
-        /// 这样剑体同样不会被别的弹幕/物块压住。
-        /// </summary>
-        private static void DrawStarlessNightSwords()
-        {
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState,
-                DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (Projectile projectile in Main.projectile)
-            {
-                if (projectile.active && projectile.ModProjectile is StarlessNightProj sword)
-                {
-                    sword.DrawSword();
-                }
-            }
-            Main.spriteBatch.End();
-        }
-        /// <summary>
-        /// 是否还有无星之夜的手持弹幕在场（决定要不要跑剑体的全局绘制层）。
-        /// </summary>
-        private static bool HasStarlessNightContent()
-        {
-            foreach (Projectile projectile in Main.projectile)
-            {
-                if (projectile.active && projectile.ModProjectile is StarlessNightProj)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        /// <summary>
-        /// 是否还有需要上屏合成的东西：任一活跃的深渊裂隙、任一存活的深渊粒子，或任一活跃的"在深渊遮罩里自绘"的弹幕
-        /// （噬渊鞭挞的鞭身拖出的折线、沧溟渊龙命中撕开的裂空）。
-        /// 深渊刃起手阶段还没撕出裂缝，但渊水弹一路都在吐粒子，所以粒子也要算进来。
-        /// </summary>
-        private static bool HasAbyssContent()
-        {
-            foreach (Projectile projectile in Main.projectile)
-            {
-                if (projectile.active && (projectile.ModProjectile is AbyssalCrack || projectile.ModProjectile is YstralynProj || projectile.ModProjectile is NxCrack))
-                {
-                    return true;
-                }
-            }
-            if (DRKLoader.particles != null)
-            {
-                foreach (BaseParticle particle in DRKLoader.particles)
-                {
-                    if (particle is AbyssalParticle)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
         /// <summary>
         /// 扫描全部活跃弹幕，收集其 ModProjectile 实现了 IDrawWarp 的实例：

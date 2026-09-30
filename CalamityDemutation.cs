@@ -91,9 +91,6 @@ namespace CalamityDemutation
             emptyMod();
             Common.Effects.EffectLoader.UnLoad();
             Content.Projectiles.Melee.Core.SwingSystem.UnLoad();
-            // 清空运行时懒加载的静态贴图引用，避免卸载后残留
-            Content.Projectiles.Melee.NeutronGlaiveBeam.warpTex = null;
-            Content.Projectiles.Melee.NeutronGlaiveHeld.UnloadTextures();
         }
         /// <summary>
         /// 处理客户端发来的自定义网络消息。当前有两条：

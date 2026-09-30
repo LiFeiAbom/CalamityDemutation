@@ -921,7 +921,6 @@ namespace CalamityDemutation.Players
             voidofExtinction = false;
             wifeinaBottle = false;
             wifeinaBottlewithBoobs = false;
-            wyrmPhantom = false;
             yharimsInsignia = false;
             yharimPower = false;
             UpdateMouseWorldSync();
@@ -3236,10 +3235,6 @@ namespace CalamityDemutation.Players
                     Player.statDefense += 10;
                 }
             }
-            // 虚空斩突进（虚空分形右键）：突进期间无重力/隐形/抬无敌帧，状态机在 partial 文件里
-            VoidSlashDashPlayerEffects();
-            // 幻影妖龙（噬渊鞭挞）：身上有虚无幻象 buff 且场上没龙时补生成一只，见 WyrmPhantom partial
-            WyrmPhantomSpawn();
         }
         // ── 还原灾厄内容削弱 ──
         /// <summary>

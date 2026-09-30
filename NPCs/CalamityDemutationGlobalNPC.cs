@@ -44,7 +44,6 @@ namespace CalamityDemutation.NPCs
         /// 女巫眩晕标记：由 SilvaHysteresis debuff 在敌怪侧置位，用于减速等结算
         /// </summary>
         public bool silvaHysteresis = false;
-        public bool voidErosion = false;
         /// <summary>
         /// 生命压制标记：由 LifeOppress debuff 在敌怪侧置位，每帧按 4501 点/秒扣血（结算见 UpdateLifeRegen）
         /// </summary>
@@ -54,25 +53,6 @@ namespace CalamityDemutation.NPCs
         /// TerratomereBigSlashs 每次命中 +1、上限 6，累计超过 5 时触发 TerratomereExplosion 爆炸后清零。
         /// </summary>
         public int TerratomereBoltOnHitNum = 0;
-        // ── 虚空侵蚀（VoidTouch）实例字段：移植自 CE 的 EGlobalNPC（这三项在 CE 里不随帧重置，是持续计数）──
-        /// <summary>
-        /// 虚空侵蚀剩余时间（帧）：每次被虚空系攻击命中累加，归零时层数清零（CE 的 VoidTouchTime，上限由施加方给）
-        /// </summary>
-        public int VoidTouchTime = 0;
-        /// <summary>
-        /// 虚空侵蚀层数：每层让敌怪受击增伤 +1%（弹幕命中）/ +5%（真近战命中），并每 20 帧额外扣 26×层数 血
-        /// （CE 的 VoidTouchLevel，上限由施加方给，通常是 10）
-        /// </summary>
-        public float VoidTouchLevel = 0;
-        /// <summary>
-        /// 虚空侵蚀抗性（0~1）：为 1 时完全免疫（AddVoidTouch 直接返回失败），否则全部效果按 (1 - 此值) 缩放
-        /// （CE 的 VoidTouchDR，本模组暂无内容设置它，作为系统的一部分保留）
-        /// </summary>
-        public float VoidTouchDR = 0;
-        /// <summary>灵魂紊乱染色用的配色图（CE 的 Assets/Extra/SoulDiscorderColorMap）</summary>
-        private const string SoulDiscorderColorMap = "CalamityDemutation/Assets/ExtraTextures/SoulDiscorderColorMap";
-        /// <summary>本帧是否已为这只敌怪换到着色器批次（换过就要在 PostDraw 里还原）</summary>
-        private bool soulDisorderShaderActive = false;
         // ── 属性 ──
         /// <summary>
         /// 按实例启用，避免多个 NPC 共享全局状态
@@ -97,7 +77,6 @@ namespace CalamityDemutation.NPCs
             enraged = false;
             hellfireExplosion = false;
             silvaHysteresis = false;
-            voidErosion = false;
             lifeOppress = false;
         }
         /// <summary>
@@ -381,18 +360,6 @@ namespace CalamityDemutation.NPCs
                     damage = 450;
                 }
             }
-            if(voidErosion)
-            {
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-                npc.lifeRegen -= 10000;
-                if (damage < 5000)
-                {
-                    damage = 5000;
-                }
-            }
             if(lifeOppress)
             {
                 if (npc.lifeRegen > 0)
@@ -407,21 +374,6 @@ namespace CalamityDemutation.NPCs
             }
         }
         /// <summary>
-        /// tModLoader 的 DrawEffects 钩子：NPC 绘制前调用，可修改 drawColor 并生成粒子。
-        /// 虚空侵蚀（voidErosion）生效时把红色通道压到 100（整体偏青），并在敌怪四周喷射星屑。
-        /// 该标记由 VoidErosion debuff 在敌怪侧置位。
-        /// </summary>
-        public override void DrawEffects(NPC npc, ref Color drawColor)
-        {
-            if (voidErosion)
-            {
-                drawColor.R = 100;
-                // 仅在本地玩家附近喷射星屑：远处敌人本就不可见，避免多只被侵蚀敌怪挤占全局粒子上限
-                if (Vector2.DistanceSquared(npc.Center, Main.LocalPlayer.Center) < 1600f * 1600f)
-                    VoidErosion.SpanStar(npc, CDUtil.randVr(npc.width / 2));
-            }
-        }
-        /// <summary>
         /// tModLoader 的 GetAlpha 钩子：NPC 绘制时决定叠加颜色。返回 null 表示保持默认着色；
         /// 狂怒标记（enraged）生效时返回 (200,50,50) 的红色，alpha 沿用 npc.alpha。
         /// 该标记由 Enraged buff 在敌怪侧置位；染色只是表现，其增伤结算见 <see cref="ModifyHitPlayer"/>。
@@ -431,40 +383,6 @@ namespace CalamityDemutation.NPCs
             if (enraged)
                 return new Color(200, 50, 50, npc.alpha);
             return null;
-        }
-        /// <summary>
-        /// tModLoader 的 PreDraw 钩子：带「灵魂紊乱」减益的敌怪换到带 <c>SoulDiscorder</c> 着色器的批次里，
-        /// 之后原版就会用这个批次画出这只敌怪（返回 true 继续默认绘制）。着色器参数照 CE 原样：
-        /// <c>f1/f2</c> 是当前动画帧在贴图里的上下边界（只染这一帧，不会把整张图都算进去），
-        /// <c>offset</c> 走全局时间让灵魂色流动，<c>colorMap</c> 是配色图；批次还原在 <see cref="PostDraw"/>。
-        /// </summary>
-        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            soulDisorderShaderActive = false;
-            if (npc.HasBuff(ModContent.BuffType<SoulDisorder>()))
-            {
-                Effect shader = CDShaders.SoulDiscorderShader.Value;
-                shader.Parameters["strength"].SetValue(1);
-                int npcTextureHeight = TextureAssets.Npc[npc.type].Value.Height;
-                shader.Parameters["f1"].SetValue((float)npc.frame.Y / npcTextureHeight);
-                shader.Parameters["f2"].SetValue((float)(npc.frame.Y + npc.frame.Height) / npcTextureHeight);
-                shader.Parameters["offset"].SetValue(Main.GlobalTimeWrappedHourly);
-                shader.Parameters["colorMap"].SetValue(ModContent.Request<Texture2D>(SoulDiscorderColorMap).Value);
-                spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shader, Main.GameViewMatrix.TransformationMatrix);
-                shader.CurrentTechnique.Passes[0].Apply();
-                soulDisorderShaderActive = true;
-            }
-            return true;
-        }
-        /// <summary>把 PreDraw 里换成着色器的批次还原回默认批次，避免污染它之后同帧的绘制</summary>
-        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            if (soulDisorderShaderActive)
-            {
-                spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            }
         }
         /// <summary>
         /// tModLoader 的 OnKill 钩子：NPC 死亡时调用，在此额外生成掉落物。
@@ -554,124 +472,6 @@ namespace CalamityDemutation.NPCs
                     Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().bloodflareManaTimer = 180;
                     Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, 184, 1, false, 0, false, false);
                 }
-            }
-        }
-        /// <summary>
-        /// 给敌怪叠加虚空侵蚀（移植自 CE 的 <c>EGlobalNPC.AddVoidTouch</c>）：
-        /// 时间按传入值的 1.4 倍累加（封顶 <paramref name="maxTime"/>），层数按 <c>level / 10</c> 累加
-        /// （封顶 <paramref name="maxLevel"/>）。已完全免疫（抗性为 1）时直接返回 false。
-        /// </summary>
-        public static bool AddVoidTouch(NPC npc, int time, float level, int maxTime = 600, int maxLevel = 10)
-        {
-            CalamityDemutationGlobalNPC globalNPC = npc.GetGlobalNPC<CalamityDemutationGlobalNPC>();
-            if (globalNPC.VoidTouchDR == 1f)
-            {
-                return false;
-            }
-            if (globalNPC.VoidTouchTime < maxTime)
-            {
-                globalNPC.VoidTouchTime += (int)(time * 1.4f);
-                if (globalNPC.VoidTouchTime > maxTime)
-                {
-                    globalNPC.VoidTouchTime = maxTime;
-                }
-            }
-            if (globalNPC.VoidTouchLevel < maxLevel)
-            {
-                globalNPC.VoidTouchLevel += level / 10f;
-                if (globalNPC.VoidTouchLevel > maxLevel)
-                {
-                    globalNPC.VoidTouchLevel = maxLevel;
-                }
-            }
-            // 减益图标挂 maxTime 帧（CE 原样）；实际结算计时仍以 VoidTouchTime 为准
-            npc.AddBuff(ModContent.BuffType<VoidTouch>(), maxTime);
-            return true;
-        }
-        /// <summary>
-        /// 玩家侧的虚空侵蚀（只有 PvP 命中玩家才会走到）：与 CE 一致挂本模组自己的
-        /// <see cref="VoidTouch"/> 减益 —— 那件 buff 的玩家侧 Update 已按 CE 移植
-        /// （每 4 帧扣 3 血 + 速度 ×0.99 + 腐蚀喷尘 + 专属死亡文本）。
-        /// </summary>
-        public static bool AddVoidTouch(Player player, int time, int level, int maxTime = 600, int maxLevel = 10)
-        {
-            player.AddBuff(ModContent.BuffType<VoidTouch>(), maxTime);
-            return true;
-        }
-        /// <summary>
-        /// 虚空侵蚀的每帧结算（移植自 CE 的 <c>EGlobalNPC.PreAI</c>）：每 20 个游戏更新周期扣一次
-        /// <c>26 × 层数 × (1 - 抗性)</c> 血（隐藏原版战斗文本，改在血条处画蓝紫数字；多人客户端再补一次
-        /// <c>SendStrikeNPC</c>），非 Boss 每帧减速 4%、Boss 在抗性低于 0.2 时减速 2%，同时撒腐蚀喷尘；
-        /// 时间每帧 -1，归零则层数清零。
-        /// <para>
-        /// 与 CE 的差异：① CE 那段 <c>PRT_Void</c> 粒子被它自己用 <c>&amp;&amp; false</c>
-        /// 关掉了（死代码），没有移植；② CE 的 <c>SendExtraAI</c> 里同步这两项计数的代码整段被注释掉，
-        /// 也就是说 CE 本身不同步——本模组保持同样行为（各端各自计数）。
-        /// （CE 在这里挂的 <c>VoidTouch</c> 减益图标已按同一位置移植，见本方法末尾。）
-        /// </para>
-        /// </summary>
-        public override bool PreAI(NPC npc)
-        {
-            if (VoidTouchTime > 0)
-            {
-                if (Main.GameUpdateCount % 20 == 0 && !npc.dontTakeDamage)
-                {
-                    NPC.HitInfo hit = npc.CalculateHitInfo((int)(26 * VoidTouchLevel * (1 - VoidTouchDR)), 0, false, 0, DamageClass.Generic, false, 0);
-                    hit.HideCombatText = true;
-                    int damageDone = npc.StrikeNPC(hit, false, false);
-                    CombatText.NewText(npc.getRect(), new Color(148, 148, 255), damageDone);
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                    {
-                        NetMessage.SendStrikeNPC(npc, hit);
-                    }
-                }
-                if (npc.boss)
-                {
-                    if (VoidTouchDR < 0.2f)
-                    {
-                        npc.velocity *= 0.98f;
-                    }
-                }
-                else
-                {
-                    npc.velocity *= 0.96f;
-                }
-                Dust.NewDust(npc.position, npc.width, npc.height, DustID.CorruptSpray, Main.rand.NextFloat() * 2f - 1f, Main.rand.NextFloat() * 2f - 1f);
-                VoidTouchTime -= 1;
-            }
-            if (VoidTouchTime > 0)
-            {
-                // 只负责显示减益图标；效果全在上面那一段按 VoidTouchTime/Level 结算
-                npc.AddBuff(ModContent.BuffType<VoidTouch>(), VoidTouchTime);
-            }
-            else
-            {
-                VoidTouchLevel = 0;
-            }
-            return base.PreAI(npc);
-        }
-        /// <summary>虚空侵蚀对弹幕命中的增伤：每层 +1%（满层 +10%），按抗性缩放</summary>
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
-        {
-            modifiers.FinalDamage += VoidTouchLevel * 0.01f * (1 - VoidTouchDR);
-        }
-        /// <summary>虚空侵蚀对真近战（物品直接命中）的增伤：每层 +5%（满层 +50%），按抗性缩放</summary>
-        public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)
-        {
-            modifiers.FinalDamage += VoidTouchLevel * 0.05f * (1 - VoidTouchDR);
-        }
-        /// <summary>
-        /// 灵魂紊乱的数值效果（移植自 CE 的 <c>SoulDisorderDebuffNPC.ModifyIncomingHit</c>）：
-        /// 带该减益的敌怪受击时**额外 +15 护甲穿透**、**最终伤害 ×1.05**。
-        /// 用 <c>ModifyIncomingHit</c> 而不是 <c>ModifyHitByProjectile/Item</c>，是为了让弹幕与真近战一视同仁
-        /// （CE 也是写在这个钩子里）。
-        /// </summary>
-        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
-        {
-            if (npc.HasBuff(ModContent.BuffType<SoulDisorder>()))
-            {
-                modifiers.ArmorPenetration += 15;
-                modifiers.FinalDamage *= 1.05f;
             }
         }
     }

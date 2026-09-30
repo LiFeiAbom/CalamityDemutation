@@ -75,19 +75,12 @@ namespace CalamityDemutation.Content.Particles.Core
             RegisterParticle<ManaDrainStreak>();
             RegisterParticle<GlowSpark>();
             RegisterParticle<GlowSparkCal>();
-            RegisterParticle<StarTrailParticle>();
-            RegisterParticle<AbyssalParticle>();
             RegisterParticle<HeavySmokeParticle>();
-            RegisterParticle<RuneParticle>();
-            RegisterParticle<HeavenfallStarCal>();
-            RegisterParticle<LineParticleCal>();
             RegisterParticle<ImpactParticle>();
             RegisterParticle<ShineParticle>();
             RegisterParticle<LightParticle>();
             RegisterParticle<SparkleParticle>();
             RegisterParticle<AltSparkParticle>();
-            RegisterParticle<VoidImpactParticle>();
-            RegisterParticle<AbyssalLineParticle>();
             On_Main.DrawInfernoRings += DrawForegroundParticles;
         }
         /// <summary>

@@ -313,9 +313,6 @@ namespace CalamityDemutation.Content.Items
                 if (calamity.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<NebulousCore>(), 1));
-                    // 虚无双子系（CE 的 NihilityTwinBag，档位=月后，故挂到神明吞噬者）：无星之夜 1/5 概率一次 3 把，虚无碎片必掉 32~40
-                    itemLoot.Add(new CommonDrop(ModContent.ItemType<StarlessNight>(), 5, 1, 1, 3));
-                    itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<NihilityFragments>(), 1, 32, 40));
                     // 宙宇波能刃（灾厄原版 Excelsus 即神吞袋武器池掉落，本模组移植后按 1/3 概率挂回神吞袋）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Excelsus>(), 3));
                 }
@@ -344,8 +341,6 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CalamityRing>(), 1));
-                    // 先知系（CE 的 ProphetBag，血肉量≈灾厄之影）：符文之歌 1/5 概率一次 3 把
-                    itemLoot.Add(new CommonDrop(ModContent.ItemType<RuneSong>(), 5, 1, 1, 3));
                 }
                 if (calamity.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
                 {
@@ -397,9 +392,6 @@ namespace CalamityDemutation.Content.Items
                 if (classic.TryFind<ModItem>("DevourerofGodsBag", out ModItem devourerofGodsBag) && item.type == devourerofGodsBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<NebulousCore>(), 1));
-                    // 虚无双子系（CE 的 NihilityTwinBag，档位=月后，故挂到神明吞噬者）：无星之夜 1/5 概率一次 3 把，虚无碎片必掉 32~40
-                    itemLoot.Add(new CommonDrop(ModContent.ItemType<StarlessNight>(), 5, 1, 1, 3));
-                    itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<NihilityFragments>(), 1, 32, 40));
                     // 宙宇波能刃（灾厄原版 Excelsus 即神吞袋武器池掉落，本模组移植后按 1/3 概率挂回神吞袋）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Excelsus>(), 3));
                 }
@@ -428,8 +420,6 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChaosStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<CalamityRing>(), 1));
-                    // 先知系（CE 的 ProphetBag，血肉量≈灾厄之影）：符文之歌 1/5 概率一次 3 把
-                    itemLoot.Add(new CommonDrop(ModContent.ItemType<RuneSong>(), 5, 1, 1, 3));
                 }
                 if (classic.TryFind<ModItem>("PlaguebringerGoliathBag", out ModItem plaguebringerGoliathBag) && item.type == plaguebringerGoliathBag.Type)
                 {
