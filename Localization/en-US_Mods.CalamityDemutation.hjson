@@ -703,6 +703,8 @@ Items: {
 			Legendary Weapon
 			Swinging will cause a shard of sunlight to home in before impacting the enemy, leaving damaging sparks below
 			Striking an enemy with the blade causes an earthen eruption
+			Right click to hurl the blade into the sky; holding right click charges it, increasing its size and damage
+			Letting go of right click hurls the blade at the nearest enemy, causing a massive explosion and scattering flames
 			Scales through progression gaining additive damage boosts after defeating certain bosses
 			'''
 	}
@@ -812,7 +814,8 @@ Items: {
 		DisplayName: Death's Ascension
 		Tooltip:
 			'''
-			Press <left> to launch a barrage of homing scythes
+			Hold <left> to channel a massive scythe swing
+			Press <right> to launch a barrage of homing scythes
 			You can feel the hands of Death himself onto yours
 			'''
 	}
@@ -860,6 +863,7 @@ Items: {
 			'''
 			True melee strikes freeze enemies and heal you
 			Fires rainbow beams that change their behavior based on their color
+			Press <right> for a true melee strike with doubled damage
 			'''
 	}
 
@@ -1945,7 +1949,9 @@ Projectiles: {
 	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion
 	DeathLaser.DisplayName: Death Laser
 	DeathsAscensionProjectile.DisplayName: Ascended Scythe
+	DeathsAscensionSwing.DisplayName: Ascended Greatscythe
 	DefenseBeam.DisplayName: Defense Beam
+	DefenseBladeProj.DisplayName: Defense Greatblade
 	DefenseBlast.DisplayName: Defense Blast
 	DefenseBlast2.DisplayName: Defense Blast2
 	DefenseFlame.DisplayName: Defense Flame

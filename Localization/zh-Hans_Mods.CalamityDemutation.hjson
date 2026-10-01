@@ -703,6 +703,8 @@ Items: {
 			传奇武器
 			挥砍时会释放一缕阳光追踪敌人后命中，并在下方留下具有伤害的火花
 			用刀刃击中敌人会引发大地喷发
+			右键将巨刃掷向天空；按住右键蓄力会让巨刃不断膨胀、伤害递增
+			松开右键后巨刃锁敌飞出，命中时引发巨大爆炸并溅射烈焰
 			随流程成长，击败特定 Boss 后可获得额外伤害加成
 			'''
 	}
@@ -812,7 +814,8 @@ Items: {
 		DisplayName: 死神擢升
 		Tooltip:
 			'''
-			挥砍时发射一串追踪的飞镰
+			按住左键引导巨镰挥砍
+			右键甩出一串追踪的飞镰
 			你能感到死神之手正覆于其上
 			'''
 	}
@@ -860,6 +863,7 @@ Items: {
 			'''
 			真近战击中敌人时使其冻结并治疗自己
 			发射彩虹光束，其效果取决于颜色
+			右键施展真近战打击，伤害翻倍
 			'''
 	}
 
@@ -1944,7 +1948,9 @@ Projectiles: {
 	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
 	DeathLaser.DisplayName: 死亡激光
 	DeathsAscensionProjectile.DisplayName: 升格镰刀
+	DeathsAscensionSwing.DisplayName: 死神巨镰
 	DefenseBeam.DisplayName: 防御光束
+	DefenseBladeProj.DisplayName: 庇护巨刃
 	DefenseBlast.DisplayName: 防御爆裂
 	DefenseBlast2.DisplayName: 防御爆裂 2
 	DefenseFlame.DisplayName: 防御烈焰

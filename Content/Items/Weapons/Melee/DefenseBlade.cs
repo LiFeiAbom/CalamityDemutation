@@ -4,6 +4,7 @@ using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
@@ -56,10 +57,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         private static bool ClassicSentinelsDowned =>
             BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
         // ── 生命周期方法 ──
-        /// <summary>静态属性：研究所解锁数量设为 1。</summary>
+        /// <summary>静态属性：研究所解锁数量设为 1；允许右键连续触发（右键掷刃是独立招式）。</summary>
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
         /// 基础属性：尺寸 72、近战伤害 110、14 tick 挥击、自动连击；
@@ -82,6 +84,47 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<DefenseBeam>();                       // 发射的弹幕：日光碎片
             Item.rare = ItemRarityID.Lime;              // 基础稀有度：青柠
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 17;// 月后自定义稀有度等级（0=未设置）
+        }
+        /// <summary>右键可用（灾厄大修 0.4.0.1.3 的庇护巨刃）</summary>
+        public override bool AltFunctionUse(Player player) => true;
+        /// <summary>
+        /// 按左右键切换状态（照抄 CWR 的 AegisBladeEcType.CanUseItem）：
+        /// 右键收起贴图与剑身判定、改用 Item73 音效并改为掷出 <see cref="DefenseBladeProj"/>；
+        /// 左键恢复原有的巨剑挥砍与 <see cref="DefenseBeam"/>。
+        /// 巨刃在场期间整把武器不可再次使用（CWR 的 <c>ownedProjectileCounts == 0</c> 口径）。
+        /// </summary>
+        public override bool CanUseItem(Player player)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                Item.noUseGraphic = true;
+                Item.noMelee = true;
+                Item.UseSound = SoundID.Item73;
+                Item.shoot = ModContent.ProjectileType<DefenseBladeProj>();
+            }
+            else
+            {
+                Item.noUseGraphic = false;
+                Item.noMelee = false;
+                Item.UseSound = SoundID.Item1;
+                Item.shoot = ModContent.ProjectileType<DefenseBeam>();
+            }
+            return player.ownedProjectileCounts[ModContent.ProjectileType<DefenseBladeProj>()] == 0;
+        }
+        /// <summary>右键掷刃的挥舞速度 ×1.33（CWR 原值）</summary>
+        public override float UseSpeedMultiplier(Player player) => player.altFunctionUse != 2 ? 1f : 1.33f;
+        /// <summary>
+        /// 右键掷出庇护巨刃，伤害为面板的 3.3 倍（CWR 原值）；
+        /// 左键返回 true，交给默认逻辑发射 <see cref="DefenseBeam"/>。
+        /// </summary>
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<DefenseBladeProj>(), (int)(damage * 3.3f), knockback, player.whoAmI);
+                return false;
+            }
+            return true;
         }
         /// <summary>挥砍表现：调用 BetterSwing 修正巨剑挥舞位置，并随机洒落金币色尘埃（约 1/3 概率）。</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)

@@ -21,11 +21,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             /// <summary>挥砍粉尘的颜色透明度（NewDust 的 alpha 参数，越大越淡）</summary>
         private const int alpha = 50;
         /// <summary>
-        /// 静态属性：显式指定图鉴研究解锁数量为 1
+        /// 静态属性：显式指定图鉴研究解锁数量为 1；允许右键连续触发（右键真近战是独立招式，不受左键节奏限制）
         /// </summary>
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
         /// 基础属性：112×112 贴图、伤害 4000、14 帧挥砍、击退 8、暴击额外 +10%（见 <see cref="ModifyWeaponCrit"/>）、
@@ -49,14 +50,48 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 12f;                    // 弹幕初速
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;
         }
+        /// <summary>右键可用（CI 口径的右键真近战打击）</summary>
+        public override bool AltFunctionUse(Player player) => true;
+        /// <summary>
+        /// 按左右键切换弹幕：右键把 Item.shoot 清空（本次挥砍不发射彩虹光束，只走剑身判定），
+        /// 左键恢复彩虹光束与 12 的弹速。照抄 CI <c>ElementalExcalibur.CanUseItem</c>。
+        /// </summary>
+        public override bool CanUseItem(Player player)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                Item.shoot = ProjectileID.None;
+                Item.shootSpeed = 0f;
+            }
+            else
+            {
+                Item.shoot = ModContent.ProjectileType<ElementalExcaliburBeam>();
+                Item.shootSpeed = 12f;
+            }
+            return base.CanUseItem(player);
+        }
         /// <summary>武器暴击率额外 +10%（原版对 SetDefaults 里的高暴击值处理异常，故放到此回调）</summary>
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 10;
+        /// <summary>右键真近战命中伤害 ×2（CI 口径）</summary>
+        public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
+        {
+            if (player.altFunctionUse == 2)
+                modifiers.SourceDamage *= 2f;
+        }
+        /// <summary>PvP 下右键真近战命中伤害同样 ×2</summary>
+        public override void ModifyHitPvp(Player player, Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (player.altFunctionUse == 2)
+                modifiers.SourceDamage *= 2f;
+        }
         /// <summary>
         /// 射击逻辑：发射彩虹光束（<see cref="CalamityDemutationPlayer.elementalExcaliburBeamType"/> 每发递增、0~11 循环，
         /// 作为 ai[0] 传给光束弹幕选色；源为 ModItem 实例字段，联机下会被队友串色）
         /// </summary>
             public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
             {
+                if (player.altFunctionUse == 2)
+                    return false;   // 右键真近战：不发射光束（也不推进彩虹配色计数）
                 CalamityDemutationPlayer mp = player.GetModPlayer<CalamityDemutationPlayer>();
                 Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, type, damage, knockback, player.whoAmI, mp.elementalExcaliburBeamType, 0f);
                 mp.elementalExcaliburBeamType++;
