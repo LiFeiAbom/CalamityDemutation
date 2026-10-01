@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -32,7 +33,13 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             modPlayer.shadowSpeed = true;                         // 置位奔跑加速标记，最终结算为 +50% 奔跑速度与加速度
             player.GetDamage<GenericDamageClass>() += 0.3f;      // 全类型伤害 +30%
             player.GetCritChance<GenericDamageClass>() += 15;    // 全类型暴击率 +15%
+            if (ConfigSystem.StatInflationEnabled)
+            {
+                player.statDefense += LegacyDefenseBonus;        // 防御 50 → 57（削弱前旧值）
+            }
         }
+        /// <summary>数值膨胀开关开启时恢复的旧版防御增量（源值 50 → 削弱前的 57）</summary>
+        private const int LegacyDefenseBonus = 7;
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料相同（ShadowspecBar×45），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。

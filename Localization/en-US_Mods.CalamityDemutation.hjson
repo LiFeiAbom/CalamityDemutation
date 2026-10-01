@@ -1273,7 +1273,7 @@ Items: {
 			'''
 			20% increased damage and 20% increased critical strike chance
 			Summons floating nebula stars to protect you
-			You have a 20% chance to survive an attack that would have killed you
+			You have a 10% chance to survive an attack that would have killed you
 			If this effect activates you will be healed by 100 HP
 			'''
 	}

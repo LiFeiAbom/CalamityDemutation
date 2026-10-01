@@ -10,7 +10,8 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
     /// 同时置位 omegaBlueChestplate，在 CalamityDemutationPlayer 中结算：
     /// 远程武器 25% 概率不消耗弹药，近战/弹幕命中时对敌施加灾厄 debuff
     /// （现代版 HadopelagicPressure，经典版 CrushDepth），
-    /// 并禁止一切正面生命再生（见 UpdateBadLifeRegen，对应源里的 No positive life regen）。
+    /// 并禁止一切正面生命再生（见 UpdateBadLifeRegen，对应源里的 No positive life regen；
+    /// 数值膨胀开关开启时这条限制失效）。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class OmegaBlueChestplate : ModItem

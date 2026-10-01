@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.GodSlayer
@@ -33,11 +34,20 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             modPlayer.godSlayerReflect = true;
             modPlayer.godSlayerDamageProtect = true;
             player.thorns += 0.9f;                          // 反伤倍率 +0.9（与头盔的 +2.5 叠加）
-            player.statLifeMax2 += 60;                      // 生命上限 +60
+            bool legacy = ConfigSystem.StatInflationEnabled;
+            player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 60;   // 生命上限：常态 +60 / 膨胀 +250（削弱前旧值）
+            if (legacy)
+            {
+                player.statManaMax2 += LegacyStatManaMax2;             // 最大魔力 +150（削弱时整条删除，膨胀时恢复）
+            }
             player.moveSpeed += 0.15f;                      // 移速 +15%
             player.GetDamage<GenericDamageClass>() += 0.15f;   // 全伤害 +15%
             player.GetCritChance<GenericDamageClass>() += 15;  // 全暴击 +15%
         }
+        /// <summary>数值膨胀开关开启时恢复的旧版生命上限（2026-09-27「250 → 60」那次削弱的原值）</summary>
+        private const int LegacyStatLifeMax2 = 250;
+        /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
+        private const int LegacyStatManaMax2 = 150;
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，分别注册。
         /// 现代版用 CosmiliteBar(20) + AscendantSpiritEssence(4)，于 CosmicAnvil（宇宙砧）合成；

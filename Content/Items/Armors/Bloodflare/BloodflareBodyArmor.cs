@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using CalamityDemutation.Systems;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Bloodflare
@@ -6,6 +7,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
     /// <summary>
     /// 炎血胸甲（BloodflareBodyArmor） - 炎血套（Bloodflare）胸部防具
     /// 提供生命上限与通用伤害、暴击加成；浸在岩浆中时额外获得防御与生命回复。
+    /// 数值膨胀开关开启时恢复 2026-09-27 削弱前的旧值：生命上限 +100、魔力上限 +100。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class BloodflareBodyArmor:ModItem
@@ -22,11 +24,17 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;  // 月后稀有度 13 级，名称颜色为荧光绿
         }
         /// <summary>
-        /// 单件装备加成：生命上限、通用伤害与暴击，浸岩浆时额外防御与回复
+        /// 单件装备加成：生命上限、通用伤害与暴击，浸岩浆时额外防御与回复；
+        /// 数值膨胀开关开启时改用 2026-09-27 削弱前的旧值（生命/魔力上限一起恢复）。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.statLifeMax2 += 40;                               // 最大生命 +40
+            bool legacy = ConfigSystem.StatInflationEnabled;
+            player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 40; // 最大生命：常态 +40 / 膨胀 +100（削弱前旧值）
+            if (legacy)
+            {
+                player.statManaMax2 += LegacyStatManaMax2;           // 最大魔力 +100（削弱时整条删除，膨胀时恢复）
+            }
             player.GetDamage<GenericDamageClass>() += 0.14f;         // 全类型伤害 +14%
             player.GetCritChance<GenericDamageClass>() += 14;        // 全类型暴击率 +14%
             if (player.lavaWet)
@@ -35,6 +43,10 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
                 player.lifeRegen += 10;                              // 处于岩浆中：生命回复 +10
             }
         }
+        /// <summary>数值膨胀开关开启时恢复的旧版生命上限（2026-09-27「100 → 40」那次削弱的原值）</summary>
+        private const int LegacyStatLifeMax2 = 100;
+        /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
+        private const int LegacyStatManaMax2 = 100;
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料不同，故分别注册两套配方，均在远古操纵机（LunarCraftingStation）处合成。

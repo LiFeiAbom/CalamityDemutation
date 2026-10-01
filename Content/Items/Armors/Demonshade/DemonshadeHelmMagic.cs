@@ -1,4 +1,5 @@
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -99,10 +100,12 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Magic;  // 置位职业标记：本件为法师变体
             player.GetDamage<MagicDamageClass>() += 0.5f;   // 法术伤害 +50%
-            player.GetCritChance<MagicDamageClass>() += 25; // 法术暴击率 +25%
+            player.GetCritChance<MagicDamageClass>() += ConfigSystem.StatInflationEnabled ? LegacyCritChance : 25; // 法术暴击率：常态 +25% / 膨胀 +50%
             player.statManaMax2 += 300;                     // 最大法力 +300
             player.manaCost *= 0.5f;                        // 法力消耗 ×0.5（减半）
         }
+        /// <summary>数值膨胀开关开启时恢复的旧版法术暴击率（2026-09-27「50 → 25」那次削弱的原值）</summary>
+        private const int LegacyCritChance = 50;
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料与近战头盔一致（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。

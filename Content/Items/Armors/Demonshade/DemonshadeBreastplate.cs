@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
 using Terraria;
 using Terraria.ModLoader;
@@ -39,10 +40,23 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             modPlayer.shadeRegen = true;                            // 置位生命回复标记，最终在 CalamityDemutationPlayer.UpdateLifeRegen 中结算
             player.GetDamage<GenericDamageClass>() += 0.4f;         // 全类型伤害 +40%
             player.GetCritChance<GenericDamageClass>() += 20;       // 全类型暴击率 +20%
-            player.statLifeMax2 += 300;                             // 最大生命 +300
-            player.statManaMax2 += 300;                             // 最大魔力 +300
-            player.thorns = 100f;                                   // 反伤值 100（与源两版一致）
+            bool legacy = ConfigSystem.StatInflationEnabled;
+            player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 300;   // 最大生命：常态 +300 / 膨胀 +1000（削弱前旧值）
+            player.statManaMax2 += legacy ? LegacyStatManaMax2 : 300;   // 最大魔力：常态 +300 / 膨胀 +1000（削弱前旧值）
+            if (legacy)
+            {
+                player.statDefense += LegacyDefenseBonus;               // 防御 50 → 62（削弱前旧值）
+            }
+            player.thorns = legacy ? LegacyThorns : 100f;               // 反伤：常态 100 / 膨胀 200（削弱前旧值）
         }
+        /// <summary>数值膨胀开关开启时恢复的旧版生命上限（2026-09-27「1000 → 300」那次削弱的原值）</summary>
+        private const int LegacyStatLifeMax2 = 1000;
+        /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27「1000 → 300」那次削弱的原值）</summary>
+        private const int LegacyStatManaMax2 = 1000;
+        /// <summary>数值膨胀开关开启时恢复的旧版防御增量（源值 50 → 削弱前的 62）</summary>
+        private const int LegacyDefenseBonus = 12;
+        /// <summary>数值膨胀开关开启时恢复的旧版反伤值（2026-09-27「200 → 100」那次削弱的原值）</summary>
+        private const float LegacyThorns = 200f;
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料相同（ShadowspecBar×50），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。

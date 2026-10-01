@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Content.Items.Accessories.Function;
+using CalamityDemutation.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,11 +29,20 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.statLifeMax2 += 80;                        // 生命上限 +80
+            bool legacy = ConfigSystem.StatInflationEnabled;
+            player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 80;   // 生命上限：常态 +80 / 膨胀 +300（削弱前旧值）
+            if (legacy)
+            {
+                player.statManaMax2 += LegacyStatManaMax2;             // 最大魔力 +200（削弱时整条删除，膨胀时恢复）
+            }
             player.moveSpeed += 0.2f;                         // 移速 +20%
             player.GetDamage<GenericDamageClass>() += 0.18f;  // 通用伤害 +18%（全职业增伤）
             player.GetCritChance<GenericDamageClass>() += 18; // 通用暴击率 +18%
         }
+        /// <summary>数值膨胀开关开启时恢复的旧版生命上限（2026-09-27「300 → 80」那次削弱的原值）</summary>
+        private const int LegacyStatLifeMax2 = 300;
+        /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
+        private const int LegacyStatManaMax2 = 200;
         /// <summary>
         /// 配方：现代版与经典版灾厄材料不同，分别注册两套配方，均需本模组材料 LeadCore
         /// </summary>

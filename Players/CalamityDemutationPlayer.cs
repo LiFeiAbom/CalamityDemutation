@@ -3741,10 +3741,14 @@ namespace CalamityDemutation.Players
         /// 现代版 CalamityPlayerLifeRegen 的 noLifeRegen 段）。
         /// 同时挂在 UpdateLifeRegen 与 UpdateBadLifeRegen 两处，因为本工程观察到
         /// UpdateBadLifeRegen 只在生命回复为负时被调用，而本条要在回复为正时也生效。
+        /// <b>数值膨胀开关开启时本限制失效</b>（用户 2026-10-01 指定），故开头直接返回。
         /// </summary>
         private void OmegaBlueNoLifeRegen()
         {
             if (!omegaBlueChestplate)
+                return;
+            // 数值膨胀开启时解禁：欧米茄蓝胸甲不再禁止正面生命再生（用户 2026-10-01 指定）
+            if (ConfigSystem.StatInflationEnabled)
                 return;
             if (Player.lifeRegen > 0)
             {

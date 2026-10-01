@@ -1,4 +1,5 @@
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -100,10 +101,20 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Summon;  // 置位职业标记：本件为召唤变体
             player.GetDamage<SummonDamageClass>() += 0.7f;                            // 召唤伤害 +70%
             player.maxMinions += 10;                                                  // 仆从栏上限 +10
-            player.maxTurrets += 1;                                                   // 哨兵栏上限 +1
-            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.30f;            // 鞭子攻击速度 +30%
-            player.whipRangeMultiplier += 0.30f;                                      // 鞭子攻击范围 +30%
+            bool legacy = ConfigSystem.StatInflationEnabled;
+            player.GetDamage<SummonDamageClass>() += legacy ? LegacyDamageBonus : 0f;  // 召唤伤害：常态 +70% / 膨胀 +80%
+            player.maxTurrets += legacy ? LegacyMaxTurrets : 1;                       // 哨兵栏上限：常态 +1 / 膨胀 +5
+            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += legacy ? LegacyWhipSpeed : 0.30f;  // 鞭子攻速：常态 +30% / 膨胀 +45%
+            player.whipRangeMultiplier += legacy ? LegacyWhipRange : 0.30f;           // 鞭子范围：常态 +30% / 膨胀 +45%
         }
+        /// <summary>数值膨胀开关开启时额外补回的召唤伤害（2026-09-27「80% → 70%」那次削弱的差值）</summary>
+        private const float LegacyDamageBonus = 0.10f;
+        /// <summary>数值膨胀开关开启时恢复的哨兵栏上限（2026-09-27「+5 → +1」那次削弱的原值）</summary>
+        private const int LegacyMaxTurrets = 5;
+        /// <summary>数值膨胀开关开启时恢复的鞭子攻击速度（2026-09-27「45% → 30%」那次削弱的原值）</summary>
+        private const float LegacyWhipSpeed = 0.45f;
+        /// <summary>数值膨胀开关开启时恢复的鞭子攻击范围（2026-09-27「45% → 30%」那次削弱的原值）</summary>
+        private const float LegacyWhipRange = 0.45f;
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料与近战头盔一致（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。
