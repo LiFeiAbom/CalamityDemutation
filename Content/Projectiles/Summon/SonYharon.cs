@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Buffs.SummonBuffs;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -9,7 +10,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 犽戎之子（SonYharon，移植自 CalamityInheritance 的 Content/Projectiles/Summon/SonYharon.cs）：
-    /// 巨龙七星灯召唤的贴身飞行仆从（4 帧贴图），占 4 个仆从栏位（CI 原样）。
+    /// 巨龙七星灯召唤的贴身飞行仆从（4 帧贴图），占 4 个仆从栏位（CI 原样；数值膨胀开关开启时降到 2 个）。
     /// 常态跟在主人身边游荡；锁定到附近敌人后会先加速撞过去再退回，
     /// <c>ai[0] == 2</c> 是"贴身撕咬"的短状态（30 帧、贴图切到第 3 帧、extraUpdates 临时抬到 2）。
     /// <para>
@@ -36,7 +37,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// <summary>
         /// 基础属性：100x100 碰撞箱、无限穿透、不撞地形、额外更新 1 次（每帧多跑一趟 AI）、
         /// 寿命 18000*5 帧（靠 <c>ownSonYharon</c> 标志续命）。伤害类型取召唤（CI 漏设，见类注释差异⑤）；
-        /// 命中无敌帧与仆从栏位维持 CI 原样（1 / 4）。
+        /// 命中无敌帧维持 CI 原样（1）；仆从栏位常态 4、数值膨胀开关开启时 2（见 <see cref="BaseMinionSlots"/>）。
         /// </summary>
         public override void SetDefaults()
         {
@@ -52,13 +53,17 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             Projectile.localNPCHitCooldown = 1;
             Projectile.extraUpdates = 1;
             Projectile.minion = true;
-            // 占用仆从栏位：CI 原样 4（2026-09-29 用户拍板由 2 改回）
-            Projectile.minionSlots = 4f;
+            // 占用仆从栏位：CI 原样 4（2026-09-29 用户拍板由 2 改回）；实际取值由 AI 每帧按膨胀开关刷新
+            Projectile.minionSlots = BaseMinionSlots;
             Projectile.timeLeft = 18000;
             Projectile.timeLeft *= 5;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
         }
+        /// <summary>常态占用的仆从栏位：CI 原样 4（2026-09-29 用户拍板由 2 改回）</summary>
+        private const float BaseMinionSlots = 4f;
+        /// <summary>数值膨胀开关开启时占用的仆从栏位（用户 2026-10-01 指定：4 → 2）</summary>
+        private const float InflatedMinionSlots = 2f;
         /// <summary>
         /// CI 的 <c>CIFunction.FramesChanger</c> 等价内联：按 <paramref name="frameRate"/> 帧推进动画帧，
         /// 到 <paramref name="frameCount"/> 帧后绕回 0，返回当前帧号。
@@ -85,6 +90,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
+            // 仆从栏位实时跟随数值膨胀开关：原版每帧把 player.slotsMinions 归零，再由各仆从的 Projectile.minionSlots 重新汇总
+            // （Projectile.Update 里的判据是 `slotsMinions + minionSlots > maxMinions`），
+            // 所以在这里每帧改写即可让开关游戏内即时生效，已召唤的仆从不必重召。
+            Projectile.minionSlots = ConfigSystem.StatInflationEnabled ? InflatedMinionSlots : BaseMinionSlots;
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             // 召唤出场那一下撒 100 颗铜钱尘（DustID.CopperCoin = CI 的 CIDustID.DustCopperCoin，同为原版尘埃 244）
             if (Projectile.localAI[0] == 0f)

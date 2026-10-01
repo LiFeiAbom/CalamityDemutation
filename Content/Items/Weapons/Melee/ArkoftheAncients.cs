@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -22,7 +23,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 92、使用时间 22 帧、击退 6.25、淡紫稀有度；
+        /// 物品基础属性：伤害 92（源值；数值膨胀开关开启时面板回调到 194）、
+        /// 使用时间 22 帧、击退 6.25、淡紫稀有度；
         /// 主弹幕为永恒光束（EonBeam），每次挥砍发射一次。
         /// </summary>
         public override void SetDefaults()
@@ -41,6 +43,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.LightPurple;
             Item.shoot = ModContent.ProjectileType<EonBeam>();
             Item.shootSpeed = 10f;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：远古方舟 92 → 194）。
+        /// </summary>
+        private const float InflatedDamage = 194f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 92。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 永恒光束与 2 颗圣星都走传进来的 <c>damage</c>（圣星取 <c>damage / 3</c>），会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 射击逻辑：随机发射永恒光束或附魔光束，并按类型微调穿透/更新次数；

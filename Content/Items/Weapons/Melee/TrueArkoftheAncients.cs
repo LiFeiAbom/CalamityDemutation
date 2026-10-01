@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -23,7 +24,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 60、使用时间 22 帧、击退 6.5、黄色稀有度；
+        /// 物品基础属性：伤害 60（源值；数值膨胀开关开启时面板回调到 194）、
+        /// 使用时间 22 帧、击退 6.5、黄色稀有度；
         /// 主弹幕为远古光束（EonBeam），每次挥砍发射一次。
         /// </summary>
         public override void SetDefaults()
@@ -42,6 +44,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Yellow;
             Item.shoot = ModContent.ProjectileType<EonBeam>();
             Item.shootSpeed = 10f;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：真·远古方舟 60 → 194，等于现代版灾厄 2.0.4 的同名值）。
+        /// </summary>
+        private const float InflatedDamage = 194f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 60。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 远古光束（×0.75）、圣星（÷2）与大地弹都走传进来的 <c>damage</c>，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 射击逻辑：主弹幕为 75% 伤害/速度的远古光束（局部命中冷却 14、穿透 2），

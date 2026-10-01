@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -32,7 +33,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public static readonly Color TerraColor1 = new Color(141, 203, 50);
         /// <summary>主题色 2（灾厄 TerraColor2）</summary>
         public static readonly Color TerraColor2 = new Color(83, 163, 136);
-        /// <summary>物品基础属性：60×66、伤害 185、21 帧挥砍、击退 7、无贴图且 noMelee，主弹幕为手持挥砍体；月后稀有度 12（青绿）</summary>
+        /// <summary>
+        /// 物品基础属性：60×66、伤害 185（源值；数值膨胀开关开启时面板回调到 370）、
+        /// 21 帧挥砍、击退 7、无贴图且 noMelee，主弹幕为手持挥砍体；月后稀有度 12（青绿）
+        /// </summary>
         public override void SetDefaults()
         {
             Item.width = 60;
@@ -52,6 +56,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<TerratomereHoldout>();
             Item.shootSpeed = 60f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：泰拉巨刃 185 → 370）。
+        /// </summary>
+        private const float InflatedDamage = 370f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 185。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 手持挥砍体拿的是生成时传入的面板值，小刀光（×0.4）与光束剑气都按 <c>Projectile.damage</c> 派生，全部自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>一场挥砍尚未结束时不能再次挥砍</summary>
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;

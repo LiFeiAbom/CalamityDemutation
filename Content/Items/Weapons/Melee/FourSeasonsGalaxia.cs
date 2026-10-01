@@ -1,5 +1,6 @@
 ﻿using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 99、使用时间 16 帧、击退 9、红色稀有度；
+        /// 物品基础属性：伤害 99（源值；数值膨胀开关开启时面板回调到 425）、
+        /// 使用时间 16 帧、击退 9、红色稀有度；
         /// 主弹幕为自动追踪的银河弹（Galaxia），每次挥砍发射一次，月后稀有度 14。
         /// </summary>
         public override void SetDefaults()
@@ -44,6 +46,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<Galaxia>();
             Item.shootSpeed = 24f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：银河 99 → 425）。
+        /// </summary>
+        private const float InflatedDamage = 425f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 99。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 银河弹走传进来的 <c>damage</c>，其命中后的二次弹幕按实际命中伤害派生，都会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 射击逻辑：每次挥砍发射 1 颗带轻微随机速度偏转的银河弹

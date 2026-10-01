@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,7 +21,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
-        /// <summary>物品基础属性：78×94、伤害 220、14 帧挥砍、击退 8、自动挥舞；主弹幕主刃、月后稀有度 14（蓝）</summary>
+        /// <summary>
+        /// 物品基础属性：78×94、伤害 220（源值；数值膨胀开关开启时面板回调到 660）、
+        /// 14 帧挥砍、击退 8、自动挥舞；主弹幕主刃、月后稀有度 14（蓝）
+        /// </summary>
         public override void SetDefaults()
         {
             Item.width = 78;
@@ -38,6 +42,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ExcelsusMain>();
             Item.shootSpeed = 12f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：宙宇波能刃 220 → 660，即 LAP 分档表的神吞后 ×3）。
+        /// </summary>
+        private const float InflatedDamage = 660f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 220。
+        /// 面板回调与命中召唤激光喷泉的裸面板伤害统一读这里，避免只膨胀一半。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>掉落在地上时绘制 Glow 发光层</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
@@ -82,12 +100,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>命中召唤激光喷泉（ai0 写入目标索引）</summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), target.Center, Vector2.Zero, ModContent.ProjectileType<LaserFountains>(), Item.damage, 0f, player.whoAmI, target.whoAmI);
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), target.Center, Vector2.Zero, ModContent.ProjectileType<LaserFountains>(), (int)BaseDamage, 0f, player.whoAmI, target.whoAmI);
         }
         /// <summary>PvP 命中同样召唤激光喷泉</summary>
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
         {
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), target.Center, Vector2.Zero, ModContent.ProjectileType<LaserFountains>(), Item.damage, 0f, player.whoAmI, target.whoAmI);
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), target.Center, Vector2.Zero, ModContent.ProjectileType<LaserFountains>(), (int)BaseDamage, 0f, player.whoAmI, target.whoAmI);
         }
     }
 }

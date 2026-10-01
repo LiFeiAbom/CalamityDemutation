@@ -1,5 +1,6 @@
 ﻿using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,7 +30,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
-        /// 基础属性：112×112 贴图、伤害 4000、14 帧挥砍、击退 8、暴击额外 +10%（见 <see cref="ModifyWeaponCrit"/>）、
+        /// 基础属性：112×112 贴图、伤害 4000（源值；数值膨胀开关开启时面板回调到 10000）、
+        /// 14 帧挥砍、击退 8、暴击额外 +10%（见 <see cref="ModifyWeaponCrit"/>）、
         /// 主弹幕为彩虹光束（<see cref="ElementalExcaliburBeam"/>）、月后稀有度 16。
         /// </summary>
         public override void SetDefaults()
@@ -49,6 +51,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ElementalExcaliburBeam>(); // 左键主弹幕：彩虹光束
             Item.shootSpeed = 12f;                    // 弹幕初速
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：元素圣剑 4000 → 10000）。
+        /// </summary>
+        private const float InflatedDamage = 10000f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 4000。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 彩虹光束走传进来的 <c>damage</c>，右键真近战的 ×2 是命中倍率，两者都会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>右键可用（CI 口径的右键真近战打击）</summary>
         public override bool AltFunctionUse(Player player) => true;

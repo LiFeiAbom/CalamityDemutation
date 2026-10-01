@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -16,7 +17,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class EntropicClaymore : ModItem
     {
         /// <summary>
-        /// 物品基础属性：130×106、伤害 92、28 帧使用间隔（挥砍动画 38 帧）、击退 5.25、青名（80金）、
+        /// 物品基础属性：130×106、伤害 92（源值；数值膨胀开关开启时面板回调到 113）、
+        /// 28 帧使用间隔（挥砍动画 38 帧）、击退 5.25、青名（80金）、
         /// 无贴图且 noMelee，靠挥砍体 <see cref="EntropicClaymoreHeld"/> 出伤
         /// </summary>
         public override void SetDefaults()
@@ -38,6 +40,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Cyan;
             Item.shoot = ModContent.ProjectileType<EntropicClaymoreHeld>();
             Item.shootSpeed = 12f;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：熵之舞 92 → 113）。
+        /// </summary>
+        private const float InflatedDamage = 113f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 92。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 挥砍体与熵之飞刃取的 <c>Projectile.damage</c> 来自生成时传入的本次面板值，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>配方：熵构体×15 @ 月球工作台（灾厄材料，走软依赖，未加载灾厄时不注册）</summary>
         public override void AddRecipes()

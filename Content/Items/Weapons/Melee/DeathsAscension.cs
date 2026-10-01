@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,7 +11,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 死神擢升（Death's Ascension，移植自灾厄 2.0.4 的 <c>DeathsAscension</c>）——
     /// 左键：引导式巨镰挥砍（<see cref="DeathsAscensionSwing"/>），按住左键持续挥砍、松手收招；
     /// 右键：普通挥砍并打开剑身判定，每次甩出 4 把追踪飞镰（<see cref="DeathsAscensionProjectile"/>，伤害 ×0.125，±9 随机散布）。
-    /// 1200 伤害、24 帧、击退 9、射速 12；纯绿稀有度（灾厄 Rarity 13）对应本工程月后稀有度 13（荧光绿）。
+    /// 1200 伤害（数值膨胀开关开启时面板回调到 1350）、24 帧、击退 9、射速 12；
+    /// 纯绿稀有度（灾厄 Rarity 13）对应本工程月后稀有度 13（荧光绿）。
     /// </summary>
     internal class DeathsAscension:ModItem
     {
@@ -21,7 +23,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：70×70、伤害 1200、24 帧使用、击退 9、射速 12；
+        /// 物品基础属性：70×70、伤害 1200（源值；数值膨胀开关开启时面板回调到 1350）、
+        /// 24 帧使用、击退 9、射速 12；
         /// 默认是左键的引导状态（<c>channel + Shoot</c>、无剑身判定、不出贴图），
         /// 实际配置在 <see cref="CanUseItem"/> 里按左右键切换。
         /// </summary>
@@ -41,6 +44,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.value = Item.buyPrice(1, 75, 0, 0);
             Item.rare = ItemRarityID.Red;                   // 基础稀有度红，真正的名称颜色由 postMoonLordRarity 覆盖
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;  // 月后稀有度 13（荧光绿，同 Bloodflare/OmegaBlue）
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：死神擢升 1200 → 1350）。
+        /// </summary>
+        private const float InflatedDamage = 1350f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 1200。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 引导挥砍体与 4 把飞镰（<c>damage * 0.125</c>）都走传进来的 <c>damage</c>，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>右键可用（甩镰）</summary>
         public override bool AltFunctionUse(Player player) => true;

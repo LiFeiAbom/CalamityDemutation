@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,7 +13,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class GreatswordofJudgement : ModItem
     {
         /// <summary>
-        /// 物品基础属性：78×78、伤害 40、18 帧挥砍、击退 7、自动挥舞且可转向，
+        /// 物品基础属性：78×78、伤害 40（源值；数值膨胀开关开启时面板回调到 310）、
+        /// 18 帧挥砍、击退 7、自动挥舞且可转向，
         /// 主弹幕为审判光束（弹速 15）
         /// </summary>
         public override void SetDefaults()
@@ -33,6 +35,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 10;   // 月后稀有度 10 级（对应灾厄 Rarity10）
             Item.shoot = ModContent.ProjectileType<JudgementBeam>();   // 主弹幕：审判光束
             Item.shootSpeed = 15f;                        // 弹速
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：制裁大剑 40 → 310）。
+        /// </summary>
+        private const float InflatedDamage = 310f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 40。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 审判光束走默认发射路径，取的就是本次修正后的面板值，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 配方：夜明锭×7 于远古操纵机（沿用灾厄原配方，不涉及灾厄材料）。

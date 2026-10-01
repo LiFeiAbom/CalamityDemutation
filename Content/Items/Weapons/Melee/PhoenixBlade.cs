@@ -1,3 +1,4 @@
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -19,7 +20,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class PhoenixBlade : ModItem
     {
         /// <summary>
-        /// 物品基础属性：106×106、伤害 95、29 帧挥砍、击退 8、浅紫名（48金）
+        /// 物品基础属性：106×106、伤害 95（源值；数值膨胀开关开启时面板回调到 160）、
+        /// 29 帧挥砍、击退 8、浅紫名（48金）
         /// </summary>
         public override void SetDefaults()
         {
@@ -38,6 +40,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.LightPurple;
             Item.shootSpeed = 12f;
         }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：凤凰之刃 95 → 160）。
+        /// </summary>
+        private const float InflatedDamage = 160f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 95。
+        /// 面板回调与下面两处击杀表现（日耀爆炸 + 治疗火焰）统一读这里，避免只膨胀一半。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
         /// <summary>运行时解析经典版灾厄的治疗火焰弹幕 <c>PhoenixHeal</c> 的类型；未加载时返回 0</summary>
         private static int PhoenixHealType() => ModContent.TryFind("CalamityModClassicPreTrailer", "PhoenixHeal", out ModProjectile phoenixHeal) ? phoenixHeal.Type : 0;
         /// <summary>近战击杀敌人：原位炸出日耀爆炸，并朝左右两侧斜上方各甩出一枚治疗火焰（速度被后面覆写成随机值）</summary>
@@ -46,7 +62,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             if (target.life > 0)
                 return;
             IEntitySource source = player.GetSource_ItemUse(Item);
-            Projectile.NewProjectile(source, target.Center, Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, Item.damage, Item.knockBack, player.whoAmI);
+            Projectile.NewProjectile(source, target.Center, Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, (int)BaseDamage, Item.knockBack, player.whoAmI);
             int phoenixHeal = PhoenixHealType();
             if (phoenixHeal <= 0)
                 return;
@@ -56,8 +72,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             float randomSpeedX = Main.rand.Next(5);
             float randomSpeedY = Main.rand.Next(3, 7);
             double offsetAngle = startAngle;
-            int left = Projectile.NewProjectile(source, target.Center, new Vector2((float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f)), phoenixHeal, Item.damage, Item.knockBack, player.whoAmI);
-            int right = Projectile.NewProjectile(source, target.Center, new Vector2((float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f)), phoenixHeal, Item.damage, Item.knockBack, player.whoAmI);
+            int left = Projectile.NewProjectile(source, target.Center, new Vector2((float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f)), phoenixHeal, (int)BaseDamage, Item.knockBack, player.whoAmI);
+            int right = Projectile.NewProjectile(source, target.Center, new Vector2((float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f)), phoenixHeal, (int)BaseDamage, Item.knockBack, player.whoAmI);
             if (left >= 0 && left < Main.maxProjectiles)
             {
                 Main.projectile[left].velocity.X = -randomSpeedX;
@@ -75,7 +91,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             if (target.statLife > 0)
                 return;
             IEntitySource source = player.GetSource_ItemUse(Item);
-            Projectile.NewProjectile(source, target.Center, Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, Item.damage, Item.knockBack, player.whoAmI);
+            Projectile.NewProjectile(source, target.Center, Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, (int)BaseDamage, Item.knockBack, player.whoAmI);
             int phoenixHeal = PhoenixHealType();
             if (phoenixHeal <= 0)
                 return;
@@ -85,8 +101,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             float randomSpeedX = Main.rand.Next(5);
             float randomSpeedY = Main.rand.Next(3, 7);
             double offsetAngle = startAngle;
-            int left = Projectile.NewProjectile(source, target.Center, new Vector2((float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f)), phoenixHeal, Item.damage, Item.knockBack, player.whoAmI);
-            int right = Projectile.NewProjectile(source, target.Center, new Vector2((float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f)), phoenixHeal, Item.damage, Item.knockBack, player.whoAmI);
+            int left = Projectile.NewProjectile(source, target.Center, new Vector2((float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f)), phoenixHeal, (int)BaseDamage, Item.knockBack, player.whoAmI);
+            int right = Projectile.NewProjectile(source, target.Center, new Vector2((float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f)), phoenixHeal, (int)BaseDamage, Item.knockBack, player.whoAmI);
             if (left >= 0 && left < Main.maxProjectiles)
             {
                 Main.projectile[left].velocity.X = -randomSpeedX;

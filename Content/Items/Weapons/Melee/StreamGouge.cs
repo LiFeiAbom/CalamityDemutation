@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,7 +32,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：100×100、伤害 600、18 帧出手、击退 9.75、自动挥舞；
+        /// 物品基础属性：100×100、伤害 600（源值；数值膨胀开关开启时面板回调到 1800）、
+        /// 18 帧出手、击退 9.75、自动挥舞；
         /// 本体无挥砍判定也不画本体，伤害全部由长矛弹幕承担，月后稀有度 14（蓝）
         /// </summary>
         public override void SetDefaults()
@@ -53,6 +55,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<StreamGougeProj>();
             Item.shootSpeed = 25f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;   // 月后稀有度 14：蓝（对应 CI 的 DeepBlue）
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：宇宙暗流 600 → 1800，
+        /// 即 LAP 分档表的「神吞后 ×3」——本武器由宇宙锭制作，宇宙锭出自神明吞噬者宝藏袋）。
+        /// </summary>
+        private const float InflatedDamage = 1800f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 600。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 本体不出伤，伤害全在长矛弹幕上，而弹幕取的是 <c>Shoot</c> 传进来的 <c>damage</c>，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>出手：在身前一段距离处刺出长矛弹幕（照源写法：位置取 position + velocity，速度原样传入）</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
