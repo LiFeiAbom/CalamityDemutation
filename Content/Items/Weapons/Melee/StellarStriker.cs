@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -23,7 +24,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：90×100、缩放 1.5、伤害 480、20 帧挥砍、击退 7.75、红名（1铂10金）
+        /// 物品基础属性：90×100、缩放 1.5、伤害 480（源值；数值膨胀开关开启时面板回调到 640）、
+        /// 20 帧挥砍、击退 7.75、红名（1铂10金）
         /// </summary>
         public override void SetDefaults()
         {
@@ -43,6 +45,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Red;
             Item.shoot = ProjectileID.LunarFlare;
             Item.shootSpeed = 12f;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：月炎之锋 480 → 640）。
+        /// </summary>
+        private const float InflatedDamage = 640f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 480。
+        /// 面板回调、左键星流束（取 1/3）与右键月炎陨石雨的基数统一读这里，避免只膨胀一半。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>右键可用</summary>
         public override bool AltFunctionUse(Player player) => true;
@@ -71,13 +87,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (player.altFunctionUse == 2)
-                SpawnFlares(Item, player, Item.knockBack, Item.damage, hit.Crit);
+                SpawnFlares(Item, player, Item.knockBack, (int)BaseDamage, hit.Crit);
         }
         /// <summary>右键 PvP 命中：同上（暴击按 true 处理）</summary>
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
         {
             if (player.whoAmI == Main.myPlayer && player.altFunctionUse == 2)
-                SpawnFlares(Item, player, Item.knockBack, Item.damage, true);
+                SpawnFlares(Item, player, Item.knockBack, (int)BaseDamage, true);
         }
         /// <summary>
         /// 在鼠标方向上方的随机高度生成两波月炎火球（<c>ProjectileID.LunarFlare</c>），

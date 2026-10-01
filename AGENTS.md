@@ -112,16 +112,81 @@
 - 联网受限时的绕道：`raw.githubusercontent.com` 不通，改用 jsDelivr
   （`https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path>`）或 GitHub API 均可正常访问。
 
-## 7. 当前状态（截至最后一次会话）
+## 7. 数值膨胀（StatInflation，进行中，2026-10-01 起批量接入）
 
-- 上一批工作：① 移植泓渊亡铭（已随后被删）② 全工程联机适配修正 ③ **删除全部 CWR/CE 内容**（三笔提交）
+用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
+
+- **开关**：`ConfigSystem.StatInflation`（ClientSide，默认关），静态入口 `ConfigSystem.StatInflationEnabled`。
+  该配置项**没有** `ReloadRequired`，且武器走的是运行时回调，所以游戏内切换即时生效；
+  不要写死在 `SetDefaults` 的 `Item.damage` 里。
+- **单把武器的落地模板**（工程统一写法，别用别的花样）：
+
+```csharp
+/// <summary>数值膨胀后的面板伤害（用户 YYYY-MM-DD 指定：X → Y）。</summary>
+private const float InflatedDamage = Yf;
+/// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 Item.damage 的源值 X。</summary>
+private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
+```
+
+- **最容易漏的一环**：凡是**按基础伤害比例派生**的伤害，必须把 `Item.damage` 换成 `BaseDamage`，
+  否则会出现「面板涨了、派生弹幕没涨」。已按此处理过的点：禅心剑的真近战爆发（70%）、
+  破灭魔王剑的裸面板 ×4 追加伤害、月炎之锋的月炎陨石雨、庇护之刃命中生成的 `DefenseBlast`、
+  彗星陨刃的两处陨石。走 `Shoot(...)` 的 `damage` 参数派生的弹幕本来就会跟随，不用动。
+- **已完成的膨胀表**（关 = 源值 / 开 = 膨胀值，全部受开关控制）：
+
+| 武器 | 关 | 开 | 备注 |
+|---|---|---|---|
+| 鸿蒙方舟 | 140 | 680 | |
+| 禅心剑 | 710 | 3651 | 真近战爆发 70% 已接 |
+| 星流之刃 | 900 | 6700 | 等于 2026-09-26 削弱前的原值 |
+| 星河之刃 | 84 | 188 | |
+| 破灭魔王剑 | 166 | 520 | 关态 2026-10-01 由 230 改为现代版灾厄源值 166 |
+| 月炎之锋 | 480 | 640 | |
+| 元素方舟 | 126 | 235 | |
+| 环境之刃 | 63 | 70 | 用户先报 160 后更正为 70（160 是真·环境之刃的值） |
+| 刃冠誓约剑 | 25 | 36 | |
+| 灾变斩剑 | 85 | 98 | |
+| 彗星陨刃 | 80 | 160 | |
+| 庇护之刃 | 110（进度 ×6.00） | 135（进度 ×9.10） | 恢复 `65ba667` 削弱前的旧值；进度表加第三列存旧增量 |
+| 灾厄之刃（Devastation） | 114 | 250 | |
+| 巨龙之怒 | 1275 | 6375 | 犽戎档 ×5；备选「888×5=4440」已被用户否决 |
+
+- **档位倍率参考**（Lilac-Arcane-Pack 的分档膨胀表，可用来核对「掉落源 → 倍率」）：
+  月后 1.3× / 亵渎后 2.2× / 三使者后 2.4× / 噬魂幽花后 2.4× / 老公爵后 2.5× /
+  神吞后 3× / 犽戎后 5× / 星流巨械后 7× / 至尊灾厄后 8× / 魔影 10×。
+  该包 `/D:\Game\Terraria\ModModel\Lilac-Arcane-Pack-master` 的 `LAPGlobalItemModifyDamage.cs`
+  还提供了一个「拿目标面板反推倍率」的 `SetCustomMult_Int` 写法，思路可借鉴。
+- **待办**：其余 20 把武器尚未接入；`ConfigSystem.StatInflation` 的 tooltip 文案仍写着
+  「按旧版（灾厄 2.0 之前）口径抬高」，与现在的「逐把点名 + 档位倍率」口径不一致，待用户决定是否改。
+
+## 8. 当前状态（截至最后一次会话）
+
+- 最近一批工作：① 庇护之刃右键巨刃 / 元素圣剑右键真近战 / 死神擢升左键引导挥砍（`aa117b4`，已推送）
+  ② **数值膨胀批次**：按用户逐把点名的数值接入 14 把武器（模板与清单见第 7 节）
+  ③ 上游差异核对：判定巨龙之怒移植自 CWR **0.4.0.3.5**（判定口径 = 手持体文件名 / useTime /
+  移植时源伤害 / 粒子 API：0.4.0.3.5 用 `DRK_Spark`、0.5.0.1.7 已换 InnoVault 的 `PRT_Spark`），
+  并列出它与源的差异（见下「悬案」）。
+- 更早的批次：① 移植泓渊亡铭（已随后被删）② 全工程联机适配修正 ③ **删除全部 CWR/CE 内容**（三笔提交）
   ④ 注释与文案的残留清理 + 一行死注释 ⑤ 补删 zh-Hans 里泓渊亡铭残留的两条弹幕名
   ⑥ **联机隐患复查**（219 处 `NewProjectile` 全量过筛 + 上游同名文件逐个体检）：
   修掉魔影头盔 ×4 的召唤缺判据、蓝欧米伽触手缺判据（对照上游发现是移植时丢的），
   并修好无政府之刃上一轮被插坏的方法缩进。
-- **本地与 `origin/master` 已同步**（远端现为 `fa6e794`）；此前积压的提交已全部推上去，
-  包括 `19ad483`/`f8c48ab`（删除第一、二批）、`b501d9a`（残留清理）、`47e7131`（死注释）、
-  `d86862f`（AGENTS.md）、`fa6e794`（补删中文本地化两行）。
-- 验证状态：被删类名在工程内残留提及 **0**；编译 **0 警告 0 错误**；音效字段与素材路径存在性检查通过；
+- **同步状态**：膨胀批次提交之前，本地与 `origin/master` 一致（远端为 `aa117b4`）；
+  本笔提交若没有 push，远端仍停在 `aa117b4`。
+- **工作区里未提交的改动**：`Content/Items/Weapons/Melee/TheBurningSky.cs`（用户自己改的稀有度 14→15），
+  不要顺手提交进来。
+- **悬案（本次会话查清但都没动）**：
+  1. 熵之舞缺 `CanUseItem => player.ownedProjectileCounts[Item.shoot] <= 0` 守卫——0.4.0.3.5 的
+     `SetKnifeHeld` 会经全局 `CanUseItem` 补上这条，Terratomere / DragonRage 都有、唯独它漏了；
+     它是 28/38 帧，挥砍途中可能再生成一个手持体。用户已明确「不加任何东西」，别再提。
+  2. 巨龙之怒与 CWR 0.4.0.3.5 的差异：近战 `localNPCHitCooldown` 15→5；物品侧 `coolWorld` 判定被去掉
+     （`newLevel == 6` 的 0.6× 伤害变成无条件生效），而手持体侧又内联了 coolWorld 的一部分
+     （少了 `worldName == "HoCha113"`）；价值由 `sellPrice(gold: 75)` 变成 `buyPrice(1, 80, 0, 0)`；
+     爆炸弹幕 `FireBall` 没设 `DamageType`（源对 `FuckYou` 会补 `DamageClass.Melee`）；
+     突刺（`ai[0] == 3`）的 `DefenseEffectiveness *= 0f` 保留了，但源里那道
+     「超级护甲 / 防御 > 999 / DR ≥ 95% / 不可破 DR 就不破防」的豁免被裁掉了。
+  3. 灾厄之刃（`Devastation`）的本地化显示名是「毁灭」、代码注释却叫「灾厄之刃」，口径待统一。
+- 验证状态：编译 **0 警告 0 错误**；被删 CWR/CE 类名在工程内残留提及 **0**；音效字段与素材路径存在性检查通过；
   联机复查结论：ModItem 可变状态字段 0 处、鼠标读取全部有守卫、摄像机 0 处、命中回调类生成点无需判据
   （理由见第 5 节）。

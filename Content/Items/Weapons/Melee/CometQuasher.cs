@@ -1,3 +1,4 @@
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -17,7 +18,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class CometQuasher : ModItem
     {
         /// <summary>
-        /// 物品基础属性：46×62 碰撞箱、缩放 1.5、伤害 80、15 帧挥砍、击退 2.75、黄名（60金）
+        /// 物品基础属性：46×62 碰撞箱、缩放 1.5、伤害 80（源值；数值膨胀开关开启时面板回调到 160）、
+        /// 15 帧挥砍、击退 2.75、黄名（60金）
         /// </summary>
         public override void SetDefaults()
         {
@@ -40,6 +42,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             // 查不到时先挂一个原版占位弹幕，保证 Shoot 一定会被调用，真正的弹幕在 Shoot 里运行时解析。
             Item.shoot = ModContent.TryFind("CalamityMod", "CometQuasherMeteor", out ModProjectile meteor) ? meteor.Type : ProjectileID.WoodenArrowFriendly;
         }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：彗星陨刃 80 → 160）。
+        /// </summary>
+        private const float InflatedDamage = 160f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 80。
+        /// 挥舞甩出的陨石（半面板）与命中砸下的陨石（满面板）都按"裸面板"派生，统一读这里，避免只膨胀一半。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
         /// <summary>运行时解析灾厄本体弹幕 <c>CometQuasherMeteor</c> 的类型；灾厄未加载时返回 0</summary>
         private static int MeteorType() => ModContent.TryFind("CalamityMod", "CometQuasherMeteor", out ModProjectile meteor) ? meteor.Type : 0;
         /// <summary>挥舞时朝准心方向甩出一颗陨石（弹幕伤害为面板的一半，<c>ai[1]</c> 给 0.5~0.8 的随机值）</summary>
@@ -48,7 +64,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             int meteor = MeteorType();
             if (meteor <= 0)
                 return false;
-            Projectile.NewProjectile(source, position, velocity, meteor, (int)(Item.damage * 0.5f), Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
+            Projectile.NewProjectile(source, position, velocity, meteor, (int)(BaseDamage * 0.5f), Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
             return false;
         }
         /// <summary>暴击伤害减半（大修原设定）</summary>
@@ -62,7 +78,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Vector2 offsetVr = GetRandomVector(-75f, -105f, Main.rand.Next(500, 600));
             Vector2 spanPos = target.Center + offsetVr;
             Vector2 vr = offsetVr.SafeNormalize(Vector2.Zero) * -17;
-            Projectile.NewProjectile(new EntitySource_Parent(player), spanPos, vr, meteor, Item.damage, Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
+            Projectile.NewProjectile(new EntitySource_Parent(player), spanPos, vr, meteor, (int)BaseDamage, Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
         }
         /// <summary>PvP 命中：同近战命中，从目标上方砸下陨石</summary>
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo)
@@ -73,7 +89,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Vector2 offsetVr = GetRandomVector(-75f, -105f, Main.rand.Next(500, 600));
             Vector2 spanPos = target.Center + offsetVr;
             Vector2 vr = offsetVr.SafeNormalize(Vector2.Zero) * -17;
-            Projectile.NewProjectile(new EntitySource_Parent(player), spanPos, vr, meteor, Item.damage, Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
+            Projectile.NewProjectile(new EntitySource_Parent(player), spanPos, vr, meteor, (int)BaseDamage, Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
         }
         /// <summary>挥舞表现：先用 BetterSwing 修正巨剑挥舞位置，约 1/3 概率洒落火星尘（<c>DustID.Torch</c>，大修源码里写的是数字 6）</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)

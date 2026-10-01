@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,7 +19,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 挂整套星云系减益，并在目标可吸血且自身未挂月噬时回血 5~8。
     /// 配方按**现代版 / 经典版各一条**（两版不同，见 <c>AddRecipes</c>）：
     /// 现代版 = 六把自有下位剑 + 奇迹物质 @ 嘉登熔炉；经典版 = 同样六把剑 + 七种经典版材料 @ 嘉登熔炉。
-    /// 伤害：移植时取经典版原值 6700，2026-09-26 按用户削弱方案改为 900（＝CI 值）。
+    /// 伤害：移植时取经典版原值 6700，2026-09-26 按用户削弱方案改为 900（＝CI 值）；
+    /// 数值膨胀开关开启时面板回调到 6700（见 <see cref="InflatedDamage"/>，也就是削弱前的原值）。
     /// 与 CI 源的两处差异：①去掉「损失生命值 1:1 转平伤」与灾厄真近战伤害类加成（本工程没有 TrueMeleeDamageClass）；
     /// ②CI 的传颂之物（LoreExo）分支不存在，直接常驻它那条「多次命中触发」的行为分支，不搬 Lore 专属弹幕与 tooltip 行。
     /// </summary>
@@ -29,7 +31,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>物品基础属性：80×114、伤害 900、14 帧挥砍、击退 9、月后稀有度 15（紫）、光束初速 19</summary>
+        /// <summary>
+        /// 物品基础属性：80×114、伤害 900（源值；数值膨胀开关开启时面板回调到 6700）、
+        /// 14 帧挥砍、击退 9、月后稀有度 15（紫）、光束初速 19
+        /// </summary>
         public override void SetDefaults()
         {
             Item.width = 80;
@@ -47,6 +52,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ExoBeam>();
             Item.shootSpeed = 19f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：星流之刃 900 → 6700）。
+        /// </summary>
+        private const float InflatedDamage = 6700f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 900。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
+        /// 命中派生的星流爆炸（本次命中 1/4）与星云彗星（本次命中全额）按命中伤害结算，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>每 14 帧挥砍都射出一道星流射线（不搬 CI 的传颂之物专属光束）</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

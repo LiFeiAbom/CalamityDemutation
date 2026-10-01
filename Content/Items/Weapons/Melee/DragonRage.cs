@@ -1,6 +1,7 @@
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -25,7 +26,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         /// <summary>
-        /// 物品基础属性：伤害 1275、使用时间 32 帧、击退 7.5、暴击 +16；
+        /// 物品基础属性：伤害 1275（源值；数值膨胀开关开启时面板回调到 6375）、
+        /// 使用时间 32 帧、击退 7.5、暴击 +16；
         /// 无武器贴图且 noMelee，主弹幕为手持挥砍体 DragonRageHeld（channel 持续引导），
         /// 月后稀有度 15。段数计数器存在玩家身上（<see cref="CalamityDemutationPlayer.dragonRageLevel"/> /
         /// <see cref="CalamityDemutationPlayer.dragonRageLevelAlt"/>，源为 ModItem 实例字段，联机下会被队友串档）。
@@ -51,6 +53,24 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<DragonRageHeld>();
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 定稿：以武器现存的 1275 为基数，
+        /// 按「犽戎掉落」这条线索套 PostYharon 档的 **×5**，即 1275 × 5 = 6375）。
+        /// 备选口径「取灾厄 1.4.4 的 888 再 ×5 = 4440」已被用户否决，勿改。
+        /// </summary>
+        private const float InflatedDamage = 6375f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 1275。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 手持挥砍体、龙怒火球与爆炸弹幕都是按传下去的 <c>damage</c> 比例派生，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 射击核心（供 Shoot 委托）：段数通过 Projectile.NewProjectile 的 ai 参数写入弹幕。

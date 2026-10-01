@@ -1,4 +1,5 @@
 ﻿using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -15,7 +16,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     internal class DevilsDevastation:ModItem
     {
         /// <summary>
-        /// 物品基础属性：伤害 230、使用时间 14 帧、击退 6.75、红色稀有度；
+        /// 物品基础属性：伤害 166（现代版灾厄 2.0.x 源值；数值膨胀开关开启时面板回调到 520）、
+        /// 使用时间 14 帧、击退 6.75、红色稀有度；
         /// 主弹幕为誓言之刃（Oathblade），每次挥砍发射一次，月后稀有度 14。
         /// </summary>
         public override void SetDefaults()
@@ -23,7 +25,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.width = 118;
             Item.height = 118;
-            Item.damage = 230;                        // 用户 2026-09-27 点名的削弱值（＝灾厄 1.1 的 230；此前为源值 450、膨胀期 520）
+            Item.damage = 166;                        // 现代版灾厄 2.0.x 的源值（2026-10-01 按用户点名从 230 改为 166）；
+                                                      // 沿革：膨胀期 520 → 2026-09-26 回落到经典版源值 450 → 2026-09-27 削弱到 230 → 本日定为现代版源值 166
             Item.useAnimation = 14;
             Item.useTime = 14;
             Item.useTurn = false;
@@ -36,6 +39,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 28f;
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：破灭魔王剑 → 520，即 2026-09-27 削弱之前的膨胀期数值）。
+        /// </summary>
+        private const float InflatedDamage = 520f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 166。
+        /// 面板回调与下面按"裸面板"派生的 4 倍追加伤害统一读这里，避免只膨胀一半。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 射击逻辑：主弹幕散射 3 把誓言之刃（Oathblade，按 ±8° 展开）；
@@ -124,9 +141,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             // 修正死代码：原 150/300 两行会被后面的 450/900 覆盖，属冗余，删除
             target.AddBuff(BuffID.ShadowFlame, 450);
             target.AddBuff(BuffID.OnFire, 900);
-            // 追加伤害与 PvP 分支口径一致：同为 Item.damage*4（裸面板，不二次乘职业加成），
+            // 追加伤害与 PvP 分支口径一致：同为面板基础伤害×4（裸面板，不二次乘职业加成；膨胀开启时按膨胀后的面板算），
             // 用显式 StrikeNPC 施加，与 PvP 的 Player.Hurt 数值完全对齐
-            target.StrikeNPC(target.CalculateHitInfo(Item.damage * 4, hit.HitDirection));
+            target.StrikeNPC(target.CalculateHitInfo((int)(BaseDamage * 4), hit.HitDirection));
             float firstDustScale = 1.7f;
             float secondDustScale = 0.8f;
             float thirdDustScale = 2f;
@@ -173,7 +190,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             target.AddBuff(BuffID.OnFire, 900);
             // PvP 命中后目标处于免疫帧，清除后追加伤害才能稳定生效（与 NPC 版直接 StrikeNPC 语义一致）
             target.immuneTime = 0;
-            target.Hurt(new PlayerDeathReason { SourcePlayerIndex = player.whoAmI }, Item.damage * 4, player.direction, true);
+            target.Hurt(new PlayerDeathReason { SourcePlayerIndex = player.whoAmI }, (int)(BaseDamage * 4), player.direction, true);
             float firstDustScale = 1.7f;
             float secondDustScale = 0.8f;
             float thirdDustScale = 2f;

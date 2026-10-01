@@ -1,6 +1,7 @@
 using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -22,6 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// ③ Boom 的多段衰减用 2.0.4 版（×0.88），见 <see cref="AtaraxiaBoom.ModifyHitNPC"/>。
     /// ④ 命中音效改走本工程移植的 CursedDaggerThrow（源直接用灾厄路径）；
     /// ⑤ 使用帧 10 → **14**（用户点名，与焚灭天惩同档）。
+    /// ⑥ 数值膨胀开关开启时面板伤害 710 → **3651**（见 <see cref="InflatedDamage"/>，真近战爆发按 70% 派生、自动跟随）。
     /// 注：⑤ 只是把出招频率降到约 4.3 挥/秒，**不改变任何单次命中表现**——爆发半径、分裂枚数、花瓣圈、各条音效
     /// 都挂在「每一次事件」上而不是时间轴上，故弹幕打击的视觉与听觉逐次与改前一致，只是每秒出现次数等比减少。
     /// </para>
@@ -33,7 +35,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>物品基础属性：94×92、伤害 710、14 帧挥砍、击退 2.5、月后稀有度 15（紫）、弹速 10、可转向挥舞</summary>
+        /// <summary>
+        /// 物品基础属性：94×92、伤害 710（源值；数值膨胀开关开启时面板回调到 3651）、
+        /// 14 帧挥砍、击退 2.5、月后稀有度 15（紫）、弹速 10、可转向挥舞
+        /// </summary>
         public override void SetDefaults()
         {
             Item.width = 94;
@@ -52,6 +57,20 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<AtaraxiaMain>();
             Item.shootSpeed = 10f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：禅心剑 710 → 3651）。
+        /// </summary>
+        private const float InflatedDamage = 3651f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 710。
+        /// 面板回调与按基础伤害比例派生的伤害（真近战爆发取 70%）统一读这里，避免只膨胀一半。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 挥砍射击：一枚主弹拿满伤害，两枚侧弹各拿 50%（沿用灾厄 1.4.4 的分配写法，是本工程按用户口径做的偏离之一）。
@@ -130,7 +149,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 mp.ataraxiaHitSound = false;
             }
             int trueMeleeID = ModContent.ProjectileType<AtaraxiaBoom>();
-            int trueMeleeDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(0.7f * Item.damage);
+            int trueMeleeDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(0.7f * BaseDamage);
             var source = player.GetSource_ItemUse(Item);
             Projectile.NewProjectile(source, targetPos, Vector2.Zero, trueMeleeID, trueMeleeDamage, Item.knockBack, player.whoAmI, 0.0f, 0.0f);
         }

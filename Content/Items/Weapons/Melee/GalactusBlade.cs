@@ -1,6 +1,7 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -28,7 +29,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：伤害 84、17 帧使用与挥舞、击退 6、射速 23、红名（月后稀有度 12）；
+        /// 物品基础属性：伤害 84（源值；数值膨胀开关开启时面板回调到 188）、
+        /// 17 帧使用与挥舞、击退 6、射速 23、红名（月后稀有度 12）；
         /// 主弹幕为星河彗星（GalacticaComet），命中音效照抄源（SoundID.Item105）
         /// </summary>
         public override void SetDefaults()
@@ -49,6 +51,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<GalacticaComet>();
             Item.shootSpeed = 23f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：星河之刃 源值 84 → 188）。
+        /// </summary>
+        private const float InflatedDamage = 188f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 84。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 5 颗星河彗星走的是传进来的 <c>damage</c>（已含本次修正），会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 射击逻辑（照搬源）：一次挥砍生成 5 颗彗星，每颗的出生点都在玩家上方 600 像素、按序号逐颗再抬高 100 像素，
