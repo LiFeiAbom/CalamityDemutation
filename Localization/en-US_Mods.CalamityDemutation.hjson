@@ -729,6 +729,13 @@ Items: {
 			Increased max life by 300 and mana by 300
 			Standing still lets you absorb the shadows and boost your life regen
 			'''
+		TooltipInflated:
+			'''
+			40% increased damage and 20% critical strike chance
+			Enemies take ungodly damage when they touch you
+			Increased max life by 1000 and mana by 1000
+			Standing still lets you absorb the shadows and boost your life regen
+			'''
 	}
 
 	DemonshadeGreaves: {
@@ -743,6 +750,7 @@ Items: {
 	DemonshadeHelm: {
 		DisplayName: Demonshade Helm
 		Tooltip: 50% increased melee damage, 25% increased melee crit chance and 30% increased melee speed
+		TooltipInflated: 50% increased melee damage, 50% increased melee crit chance and 30% increased melee speed
 		SetBonus:
 			'''
 
@@ -763,6 +771,12 @@ Items: {
 			+300 max mana
 			Mana costs are halved
 			'''
+		TooltipInflated:
+			'''
+			50% increased magic damage and 50% increased magic crit chance
+			+300 max mana
+			Mana costs are halved
+			'''
 		SetBonus:
 			'''
 
@@ -778,6 +792,7 @@ Items: {
 	DemonshadeHelmRanged: {
 		DisplayName: Demonshade Plumed Helm
 		Tooltip: 50% increased ranged damage, 25% increased ranged crit chance and a 50% chance to not consume ammo
+		TooltipInflated: 50% increased ranged damage, 50% increased ranged crit chance and a 50% chance to not consume ammo
 		SetBonus:
 			'''
 
@@ -797,6 +812,12 @@ Items: {
 			70% increased summon damage
 			+10 max minions and +1 max sentries
 			30% increased whip attack speed and whip range
+			'''
+		TooltipInflated:
+			'''
+			80% increased summon damage
+			+10 max minions and +5 max sentries
+			45% increased whip attack speed and whip range
 			'''
 		SetBonus:
 			'''
@@ -1308,6 +1329,12 @@ Items: {
 			Increases melee attack speed by 18%
 			Your attacks inflict Crush Depth
 			No positive life regeneration
+			'''
+		TooltipInflated:
+			'''
+			18% increased damage and 16% increased critical strike chance
+			Increases melee attack speed by 18%
+			Your attacks inflict Crush Depth
 			'''
 		DisplayName: Omega Blue Chestplate
 	}

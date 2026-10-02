@@ -1,6 +1,8 @@
-﻿using CalamityDemutation.Players;
+﻿using System.Collections.Generic;
+using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
+using CalamityDemutation.Utilities;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Demonshade
@@ -57,6 +59,11 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         private const int LegacyDefenseBonus = 12;
         /// <summary>数值膨胀开关开启时恢复的旧版反伤值（2026-09-27「200 → 100」那次削弱的原值）</summary>
         private const float LegacyThorns = 200f;
+        /// <summary>
+        /// 数值膨胀开启时把 tooltip 正文换成膨胀文案（本地化键 Items.DemonshadeBreastplate.TooltipInflated），
+        /// 并把原版自动生成的「防御」行从 50 改成实际生效的 62。
+        /// </summary>
+        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this, 12);
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料相同（ShadowspecBar×50），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。

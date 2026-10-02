@@ -217,8 +217,15 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   且完全不吃玩家的伤害加成）；其 tooltip 的免死几率已按实现从 20% 改成 **10%**。
 - **待办**：`ConfigSystem.StatInflation` 的 tooltip 文案仍写着「按旧版（灾厄 2.0 之前）口径抬高」，
   与现在的「逐把点名 + 档位倍率」口径不一致，待用户决定是否改。
-  另外被 `310c3cf` 同步削过的盔甲 tooltip（中英文）目前仍写削弱后的数，膨胀开启时对不上——
-  已问过用户是否加 `TooltipInflated` 按开关切文案，尚未拍板。
+  另外被 `310c3cf` 同步削过的盔甲 tooltip（中英文）原先仍写削弱后的数，膨胀开启时对不上——
+  现已落地按开关切文案的机制（2026-10-02，**目前只接了魔影 6 件**）：装备在 `ModifyTooltips` 里调
+  `CDUtil.ApplyInflatedTooltip`（`Utilities/CDUtil_Tooltip.cs`），膨胀开启时用本地化键
+  `Items.<内部名>.TooltipInflated` 整段替换原版正文（只替换名字以 `Tooltip` 开头的行，SetBonus 原样保留），
+  并按传入的 `defenseBonus` 把原版自动生成的「防御」行数字改成实际生效值
+  （膨胀下防御只能在 `UpdateEquip` 补差值，`Item.defense` 运行期改不了，故 tooltip 与实现靠这里对齐）。
+  欧米茄蓝只有胸甲的「禁止正面生命再生」随开关变化（膨胀时该限制整体失效），已接；
+  其头盔/护腿没有任何随膨胀变化的数字，无需文案。
+  其余 5 件盔甲（弑神者/席尔瓦/龙蒿/血炎/金源）尚未照此补文案，待续。
 
 ## 8. 当前状态（截至最后一次会话）
 
@@ -258,3 +265,108 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 验证状态：编译 **0 警告 0 错误**；被删 CWR/CE 类名在工程内残留提及 **0**；音效字段与素材路径存在性检查通过；
   联机复查结论：ModItem 可变状态字段 0 处、鼠标读取全部有守卫、摄像机 0 处、命中回调类生成点无需判据
   （理由见第 5 节）。
+
+## 9. 古圣金源套（AuricTesla）与其四套下位 —— 对照结论与待办
+
+> 2026-10-01 侦察完成（用户点名「古圣金源套装及其下位」，要求与灾厄本体 / CI 对比，越详细越好）。
+> **本次只做了对照，一行代码没改**；下面 9.3 是明天要动手的清单，9.4 是查清后不必重复考古的机制结论。
+
+### 9.1 源流判定（一句话）
+
+工程里的 5 套 12 件（金源 3 + 龙蒿 3 + 血炎 3 + 弑神者 3 + 始源林海 3）是
+**`CalamityModClassicPreTrailer`（预发布经典版）的逐行移植**，再叠三层外来物：
+
+1. **近战攻速**取自现代灾厄（经典版近战头都没有攻速）：金源头 28%、血炎面具 18%、龙蒿头 15%、弑神头 20%。
+2. **从 CI 借的件**：现代版配方（四件坯料 + AuricBar + CosmicAnvil）、`GodSlayerDMGprotect`
+   （≤阈值完全免伤、触发后阈值跌回 20 每帧 +1）、CI 式两段飞镖 `GodSlayerDart`、以及"近战命中每 60 帧放一枚飞镖"。
+3. **工程自调**：五职业分列加成合并成 `GenericDamageClass` 并把伤害/暴击抬高（**暴击一律抬到与伤害同值**）＋
+   `StatInflation` 回滚（但只覆盖 5 件胸甲）。
+
+本机源的完整路径（侦察用，别再去翻别的版本）：
+
+| 版本 | 路径 |
+|---|---|
+| 灾厄经典（= 本工程的实际源） | `D:\Game\Terraria\ModModel\CalamityModClassic-cal-1.4.2.101\CalamityModClassic-cal-1.4.2.101\Items\Armor\AuricTesla*.cs`＋同目录 `Tarragon*/Bloodflare*/GodSlayer*/Silva*`；玩家侧逻辑在同级 `CalamityPlayerPreTrailer.cs` |
+| 灾厄本体 2.0.4（对照） | `…\CalamityModPublic-2.0.4\CalamityModPublic-2.0.4\Items\Armor\{Auric,Tarragon,Bloodflare,GodSlayer,Silva}\` |
+| 灾厄本体 1.4.4 公开源码（对照，攻速/AuricBar 数量取自它） | `…\CalamityModPublic-1.4.4-release\…\Items\Armor\…` |
+| CI Beta1.12（对照） | `…\CalamityInheritance-Beta1.12\…\Content\Items\Armor\{AuricTesla,Silva,GodSlayerOld,Ancient*}\`＋`CIPlayer\CalamityInheritancePlayer*.cs` |
+
+移植判据（想复核时照这个比对即可）：经典版的 12 条套装副作用、3 条 AuricOre 长材料配方、
+`tarraMelee` 的 25%/`rand(90,180)`、`fBarrier` 的 `rand(200+dmg/2, 301+dmg*2)` 与 500/700/900 三段衰减、
+`silvaCountdown=600`＋`silvaHitCounter×100` 扣上限＋400 下限、`auricBoost` 潜行 `0.2f`/`10`、
+跑速 `auricSet?0.1 : silvaSet?0.05` —— 工程全部原样搬运。
+
+### 9.2 对照速查表（工程 / 灾厄 2.0.4 / CI / 灾厄经典）
+
+形制类数值（防御、生命、移速、价值、稀有度）**一致**；下表只列有差异的地方。
+
+| 部件 | 工程 | 灾厄 2.0.4 | CI Beta1.12 | 灾厄经典 |
+|---|---|---|---|---|
+| 金源头 | 防 54；近战 20/20；**攻速 28% 在单件** | 防 54；近战 20/10；攻速 28% 在套装；套装另给 aggro+1200 | 防 54；20/20/28 | 防 54；20/20；**无攻速** |
+| 金源胸 | 移速 +25%；通用 **22/22** | **无移速**；通用 8/5 | 移速 +25%；8/5；+GodSlayerDMGprotect | 移速 +25%；8/5 |
+| 金源腿 | 通用 **14/14** | 移速仅 +10%；12/5 | 移速 +50%；12/10 | 移速 +50%；12/5 |
+| 龙蒿胸/腿 | 通用 10/10（腿半血再 +15% 移速） | `lifeRegen=3`；胸 10/5；腿移速仅 10%、8/8 | `AncientTarragon` 是另一套召唤/盗贼混合体，**与工程无关** | `lifeRegen=2`；胸 10/5；腿 6/6 |
+| 血炎面具 | 保留 lavaMax240/ignoreWater；10/10＋攻速 18% | 10/5；攻速在套装；**无 lavaMax/ignoreWater** | CI 直接用灾厄本体那件 | 无攻速 |
+| 血炎胸/腿 | 通用 14/14；腿移速 30% | 12/8；腿移速 17%、10/7 | — | 12/8；腿 30%、10/7 |
+| 弑神头 | 14/14＋攻速 20% | 14/**7**；攻速在套装 | old：48 防、14/14/20%、aggro+1000 | 14/14；无攻速 |
+| 弑神胸 | 反伤 **+0.9**；通用 **15/15** | 反伤 +0.5；**无移速**；11/6 | old：反伤 +0.5、移速 15%、10/6 | 反伤 +0.5、移速 15%、11/6 |
+| 弑神腿 | 通用 11/11 | 移速仅 +5%；10/10 | old：移速 35%、10/10 | 移速 35%、10/6 |
+| 林海头 | 13/13＋攻速 19% | 2.0.4 **没有近战头**（只有 Magic/Summon） | `SilvaHeadMelee` 13/13 | 13/13；无攻速 |
+| 林海胸/腿 | 通用 **18/18**／12/12 | 12/8、**无移速**／移速仅 10%、12/12 | old：移速 20%、12/8／移速 45%、12/7 | 移速 20%、12/8／45%、12/7 |
+
+- 工程**每套只有一个近战头**；灾厄现代与 CI 每套都有 5 个头（近战/远程/法师/召唤/盗贼）。现代版 Auric
+  头还改了名（`PlumedHelm/HoodedFacemask/WireHemmedVisage/SpaceHelmet/RoyalHelm`）。
+- 金源配方：经典分支 1:1；现代分支＝CI 的坯料清单（四件套＋妄想护符），但 AuricBar 数量取 **1.4.4 公开源码**
+  的 10/20/15（CI 与 2.0.4 都是 12/18/15）；且**漏了 CI 现代胸甲要求的霜冻屏障**（工程只放在经典分支）。
+- `ArmorSetShadows`：工程/经典＝`armorEffectDrawShadow`；现代与 CI＝`armorEffectDrawOutlines`。
+- 金源头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的代码是**无效残留**（读进局部变量就丢，没写回）。
+
+### 9.3 明天要处理的清单（建议按此顺序）
+
+1. **【行为 bug】「5% 完全无效」是空操作，中英语 tooltip 在骗人。**
+   位置：`Players/CalamityDemutationPlayer.cs` 的 `ModifyHurt` 里 `if (godSlayerReflect && Main.rand.NextBool(20))`
+   → 只写了 `Player.immune/immuneNoBlink`。IL 已证实（见 9.4）这**不会**取消本次伤害，等于白设标记。
+   修法：把随机判定挪进 `FreeDodge` 里 `return true`（CI 是置 `freeDodgeFromShieldAbsorption` 再被 FreeDodge 吃掉，等价）。
+   涉及 tooltip：`AuricTeslaBodyArmor`（中英各一行"你受到的攻击有 5% 的几率完全无效"）、
+   `GodSlayerChestplate` 同款；`GodSlayerChestplate` 的类注释也要跟着改。
+   顺带定口径：经典版想要 2%（`rand.Next(50)==0` 且函数体是空的死代码）、CI 是 1/50 真生效，工程现在是 1/20。
+2. **【语义】"≤80 伤害削为 1" 的置位从近战头搬到了胸甲。**
+   工程由 `GodSlayerChestplate` 置 `godSlayerReflect`，经典版由近战头的 `godSlayerDamage` 置。
+   结果：只穿胸甲不戴头也能吃这个减伤，反之不能。要么搬回头，要么确认这是有意为之。
+3. **【数值】弑神保命回复 300 ≠ 源的 150。**
+   `PreKill` 里 `int heal = draconicSurge ? statLifeMax2 : 300;`（经典版是 150；CI 那行是 `statLife = +100` 的笔误；
+   现代灾厄**整套保命机制已删除**，只剩冲刺）。开关关态该不该回到 150，等你拍板。
+4. **【数值方向】12 件的通用伤害/暴击全部高于所有源，且召唤/盗贼吃满。**
+   根因是五职业分列 → `GenericDamageClass` 合并时选了更强的一档（例：金源胸 8%/5%→22%/22%）。
+   需要你先给方向：**"复刻经典版"** 还是 **"以工程现在这套强度为准"**。定了我再逐件过。
+   另注：`StatInflation` 目前只覆盖这 5 套的**胸甲**（龙蒿/血炎/弑神/席尔瓦/金源），其余 7 件没有回滚档。
+5. **【功能缺口】每套只有近战头，且配方直接引用自己的近战头。**
+   CI 用 `RecipeGroup("CalamityInheritance:AnyGodSlayerHeadMelee")` 之类接受任意职业头，工程接受不到 ——
+   戴法师/远程/召唤头的玩家无法升阶。要么补 5 头（大工程），要么至少在配方注释里写明。
+6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
+   （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。
+
+> 改任何 tooltip 都要同步 `Localization/en-US_…hjson` 与 `zh-Hans_…hjson` 两处，并把行尾整回 CRLF（第 4 节口径）。
+
+### 9.4 已查清的机制结论（别再重复考古）
+
+1. **`Player.Hurt` 里 `ModifyHurt` 只在 `!immune` 时被调用，取消本次伤害的唯一出口是 `FreeDodge`。**
+   用 Mono.Cecil dump `tModLoader.dll` 的 `Terraria.Player::Hurt`（11 参数那版）：偏移 79–144 求
+   `bool flag = !Player.immune` 并按 `cooldownCounter` 分支，随后 `IL_008f: ldloc.0; brfalse IL_0295` 把
+   整个「构造 `HurtModifiers` → `PlayerLoader.ModifyHurt` → 结算」段包在 `if (!immune)` 里；
+   全文只有一处 `ldfld Player::immune`（偏移 80），之后再无第二次读取；而偏移 422 有
+   `PlayerLoader::FreeDodge`，其后是原版忍者/混乱之脑/暗影闪避与 `ConsumableDodge`。
+   ⇒ 在 `ModifyHurt` 里 `Player.immune = true` 只给标记，**伤害照吃**；要真正作废本次命中必须 `return true` from `FreeDodge`。
+2. 现代灾厄 2.0.4 **没有** `GodSlayerCooldown`，弑神"保命回复 + 45 秒冷却 + 冷却期 +10% 伤害"整套已删除
+   （`rg GodSlayerCooldown` 命中 0；`godSlayerDamage` 只剩 >80 放飞镖与注释掉的 ≤80 判定）；
+   林海复活也改成 480 帧重置 + 5 分钟冷却，**没有**经典版的扣最大生命惩罚。
+   CI 补回来的是 `GodSlayerDMGprotect` / `GodSlayerReborn` / `AuricSilvaSet`（600、900 两档 + 3 分钟冷却）。
+3. 工程的 `PreKill`/`ModifyHurt` 里那一票经典版逻辑（保命、25% 回血、fBarrier 数值、潜行）都能在
+   `CalamityModClassic-cal-1.4.2.101\CalamityPlayerPreTrailer.cs` 里逐行对上，
+   行号锚点：`tarraMelee` 7813–7820 / `fBarrier` 7830 / 弑神保命 5598–5629 / 林海复活 5631–5661 /
+   潜行 4440–4473 / 跑速 5477–5525。
+4. 弹幕侧：工程 `Content/Projectiles/Healing/AuricOrb.cs` 是经典版 `Projectiles/Healing/AuricOrb.cs` 的 1:1 搬运
+   （只有 `Main.player[Main.myPlayer]`→`Main.LocalPlayer`、`SendData(66)`→`MessageID.SpiritHeal` 两处现代化）；
+   现代灾厄**已经没有 AuricOrb**（只有 SilvaOrb，走 `HealingProjectile` 体系）。
+   `Content/Projectiles/Melee/GodSlayerDart.cs` 则来自 CI 的 `ArmorProj/GodslayerDart.cs`（两段式），
+   不是灾厄本体的 `GodKiller`（一代只有"被打 80+ 触发的单段直飞"）。
