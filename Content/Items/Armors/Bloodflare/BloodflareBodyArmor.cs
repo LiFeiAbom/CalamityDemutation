@@ -1,4 +1,6 @@
 ﻿using CalamityDemutation.Systems;
+using CalamityDemutation.Utilities;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -47,6 +49,11 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
         private const int LegacyStatLifeMax2 = 100;
         /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
         private const int LegacyStatManaMax2 = 100;
+        /// <summary>
+        /// 说明文字：数值膨胀开启时换成 TooltipInflated（最大生命 +100、最大魔力 +100），
+        /// 关闭时用 Tooltip 的源值（最大生命 +40）。本件防御不随膨胀变化，故不传 defenseBonus。
+        /// </summary>
+        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料不同，故分别注册两套配方，均在远古操纵机（LunarCraftingStation）处合成。

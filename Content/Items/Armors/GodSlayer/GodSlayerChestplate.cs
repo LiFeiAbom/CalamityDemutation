@@ -1,5 +1,7 @@
 ﻿using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
+using CalamityDemutation.Utilities;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.GodSlayer
@@ -8,8 +10,10 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
     /// 神裁者胸甲（GodSlayerChestplate） - 弑神者套胸部
     /// 单件：+15% 全伤害、+15% 暴击、+15% 移速、+60 生命上限、反伤 +0.9。
     /// 同时置位两个标记，均在 CalamityDemutationPlayer 中结算：
-    /// godSlayerReflect 使 80 及以下伤害被压到 1，并有 1/20 概率完全免伤；
+    /// godSlayerReflect 提供概率完全免伤（数值膨胀开启 5%、关闭 2%，即经典版与 CI 的 1/50）：
+    /// FreeDodge 返回 true，取消这次受击的伤害/击退/减益，再自行补 15 帧无敌；
     /// godSlayerDamageProtect 使不超过当前保护上限（最高 80）的伤害被完全闪避，触发后上限重置为 20。
+    /// 注：「单次 ≤80 的基础伤害压到 1」不在这里，它跟随整套（近战头 UpdateArmorSet 置 godSlayerDamage）。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class GodSlayerChestplate:ModItem
@@ -48,6 +52,11 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
         private const int LegacyStatLifeMax2 = 250;
         /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
         private const int LegacyStatManaMax2 = 150;
+        /// <summary>
+        /// 说明文字：数值膨胀开启时换成 TooltipInflated（最大生命 +250、最大魔力 +150、5% 完全免伤），
+        /// 关闭时用 Tooltip 的源值（最大生命 +60、2%）。本件防御不随膨胀变化，故不传 defenseBonus。
+        /// </summary>
+        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，分别注册。
         /// 现代版用 CosmiliteBar(20) + AscendantSpiritEssence(4)，于 CosmicAnvil（宇宙砧）合成；

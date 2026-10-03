@@ -61,6 +61,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             modPlayer.bloodflareMelee = true;
             modPlayer.godSlayer = true;         // 弑神者套装效果（弑神者冲刺的开启条件）
             modPlayer.godSlayerMelee = true;
+            modPlayer.godSlayerDamage = true;   // 弑神者低伤压制（单次 ≤80 → 1），对齐源的整套置位
             modPlayer.silvaSet = true;          // 席尔瓦套装效果
             modPlayer.silvaMelee = true;
             modPlayer.auricSet = true;          // 本模组的金之特斯拉标记

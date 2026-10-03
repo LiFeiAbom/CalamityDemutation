@@ -304,7 +304,7 @@ Items: {
 		DisplayName: Amalgamated Brain
 		Tooltip:
 			'''
-			10% increased damage and 5% increased critical strike chance
+			Increases all damage by 10% and critical strike chance by 5%
 			Shade rains down when you are hit
 			You will confuse nearby enemies when you are struck
 			Has a chance to create illusions and dodge an attack
@@ -380,8 +380,16 @@ Items: {
 			'''
 			+100 max life
 			25% increased movement speed
+			Attacks have a 2% chance to do no damage to you
+			Increases all damage and critical strike chance by 22%
+			You will freeze enemies near you when you are struck
+			'''
+		TooltipInflated:
+			'''
+			+400 max life and +400 max mana
+			25% increased movement speed
 			Attacks have a 5% chance to do no damage to you
-			22% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 30%
 			You will freeze enemies near you when you are struck
 			'''
 	}
@@ -391,7 +399,7 @@ Items: {
 		Tooltip:
 			'''
 			50% increased movement speed
-			14% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 14%
 			Magic carpet effect
 			'''
 	}
@@ -482,7 +490,13 @@ Items: {
 			'''
 			+40 max life
 			You regenerate life quickly and gain +30 defense while in lava
-			14% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 14%
+			'''
+		TooltipInflated:
+			'''
+			+100 max life and +100 max mana
+			You regenerate life quickly and gain +30 defense while in lava
+			Increases all damage and critical strike chance by 14%
 			'''
 	}
 
@@ -491,15 +505,15 @@ Items: {
 		Tooltip:
 			'''
 			You have a damaging life-draining aura around you
-			When below 50% life you gain 15% increased damage reduction, 10% increased damage, and 10% increased critical strike chance
-			When below 15% life you gain 30% increased damage reduction, 20% increased damage, and 20% increased critical strike chance
+			When below 50% life you gain 15% increased damage reduction and increase all damage and critical strike chance by 10%
+			When below 15% life you gain 30% increased damage reduction and increase all damage and critical strike chance by 20%
 			When below 100 defense you gain 15% increased damage
 			'''
 	}
 
 	BloodflareCuisses: {
 		DisplayName: Bloodflare Cuisses
-		Tooltip: 30% increased movement speed, 10% increased damage and increased critical strike chance
+		Tooltip: 30% increased movement speed; increases all damage and critical strike chance by 10%
 	}
 
 	BloodflareMask: {
@@ -626,7 +640,7 @@ Items: {
 			'''
 			Boosts your max HP by 10%
 			10% increased damage reduction
-			12% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 12%
 			When below 100 defense you gain 15% increased damage
 			Halves enemy contact damage
 			When you take contact damage this effect has a 20 second cooldown
@@ -724,14 +738,14 @@ Items: {
 		DisplayName: Demonshade Breastplate
 		Tooltip:
 			'''
-			40% increased damage and 20% critical strike chance
+			Increases all damage by 40% and critical strike chance by 20%
 			Enemies take ungodly damage when they touch you
 			Increased max life by 300 and mana by 300
 			Standing still lets you absorb the shadows and boost your life regen
 			'''
 		TooltipInflated:
 			'''
-			40% increased damage and 20% critical strike chance
+			Increases all damage by 40% and critical strike chance by 20%
 			Enemies take ungodly damage when they touch you
 			Increased max life by 1000 and mana by 1000
 			Standing still lets you absorb the shadows and boost your life regen
@@ -743,7 +757,7 @@ Items: {
 		Tooltip:
 			'''
 			Shadow speed
-			30% increased damage and 15% crit chance
+			Increases all damage by 30% and critical strike chance by 15%
 			'''
 	}
 
@@ -1089,7 +1103,14 @@ Items: {
 			'''
 			+60 max life
 			15% increased movement speed
-			15% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 15%
+			Attacks have a 2% chance to do no damage to you
+			'''
+		TooltipInflated:
+			'''
+			+250 max life and +150 max mana
+			15% increased movement speed
+			Increases all damage and critical strike chance by 15%
 			Attacks have a 5% chance to do no damage to you
 			'''
 	}
@@ -1122,7 +1143,7 @@ Items: {
 		Tooltip:
 			'''
 			35% increased movement speed
-			11% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 11%
 			'''
 	}
 
@@ -1292,7 +1313,7 @@ Items: {
 		DisplayName: Nebulous Core
 		Tooltip:
 			'''
-			20% increased damage and 20% increased critical strike chance
+			Increases all damage and critical strike chance by 20%
 			Summons floating nebula stars to protect you
 			You have a 10% chance to survive an attack that would have killed you
 			If this effect activates you will be healed by 100 HP
@@ -1325,14 +1346,14 @@ Items: {
 	OmegaBlueChestplate: {
 		Tooltip:
 			'''
-			18% increased damage and 16% increased critical strike chance
+			Increases all damage by 18% and critical strike chance by 16%
 			Increases melee attack speed by 18%
 			Your attacks inflict Crush Depth
 			No positive life regeneration
 			'''
 		TooltipInflated:
 			'''
-			18% increased damage and 16% increased critical strike chance
+			Increases all damage by 18% and critical strike chance by 16%
 			Increases melee attack speed by 18%
 			Your attacks inflict Crush Depth
 			'''
@@ -1343,7 +1364,7 @@ Items: {
 		Tooltip:
 			'''
 			You can move freely through liquids
-			12% increased damage and 8% increased critical strike chance
+			Increases all damage by 12% and critical strike chance by 8%
 			+2 max minions
 			'''
 		DisplayName: Omega Blue Helmet
@@ -1351,7 +1372,7 @@ Items: {
 			'''
 
 			Increases armor penetration by 50
-			10% increased damage and critical strike chance
+			Increases all damage and critical strike chance by 10%
 			Short-ranged tentacles heal you by sucking enemy life
 			Press Y to activate abyssal madness for 5 seconds
 			Abyssal madness increases damage, critical strike chance, and tentacle aggression/range
@@ -1363,7 +1384,7 @@ Items: {
 		Tooltip:
 			'''
 			30% increased movement speed
-			16% increased damage and 12% increased critical strike chance
+			Increases all damage by 16% and critical strike chance by 12%
 			'''
 		DisplayName: Omega Blue Leggings
 	}
@@ -1446,7 +1467,7 @@ Items: {
 		DisplayName: Sigil of Calamitas
 		Tooltip:
 			'''
-			15% increased magic damage, 10% increased ranged critical strike chance
+			15% increased magic damage, 10% increased magic critical strike chance
 			15% decreased mana usage
 			+100 max mana and reveals treasure locations
 			Reduces the cooldown of healing potions
@@ -1459,7 +1480,13 @@ Items: {
 			'''
 			+80 max life
 			20% increased movement speed
-			18% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 18%
+			'''
+		TooltipInflated:
+			'''
+			+300 max life and +200 max mana
+			20% increased movement speed
+			Increases all damage and critical strike chance by 18%
 			'''
 	}
 
@@ -1491,7 +1518,7 @@ Items: {
 		Tooltip:
 			'''
 			45% increased movement speed
-			12% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 12%
 			'''
 	}
 
@@ -1557,7 +1584,7 @@ Items: {
 			'''
 			Increases jump speed and fall speed, and allows constant jumping
 			Can climb walls, dash, and dodge attacks
-			5% increased damage and 5% increased critical strike chance
+			Increases all damage and critical strike chance by 5%
 			'''
 	}
 
@@ -1574,8 +1601,14 @@ Items: {
 		DisplayName: Tarragon Breastplate
 		Tooltip:
 			'''
-			10% increased damage and increased critical strike chance
+			Increases all damage and critical strike chance by 10%
 			+1 HP/s life regen and +40 max life
+			"Breastplate of the exiler"
+			'''
+		TooltipInflated:
+			'''
+			Increases all damage and critical strike chance by 10%
+			+150 max life, +100 max mana, and +6 life regen
 			"Breastplate of the exiler"
 			'''
 	}
@@ -1606,7 +1639,7 @@ Items: {
 		Tooltip:
 			'''
 			20% increased movement speed; greater speed boost if health is lower
-			10% increased damage and critical strike chance
+			Increases all damage and critical strike chance by 10%
 			"Leggings of a fabled explorer"
 			'''
 	}
@@ -1644,7 +1677,7 @@ Items: {
 		DisplayName: The Amalgam
 		Tooltip:
 			'''
-			20% increased damage and 10% increased critical strike chance
+			Increases all damage by 20% and critical strike chance by 10%
 			Shade rains down when you are hit
 			You will confuse nearby enemies when you are struck
 			Drops brimstone fireballs from the sky occasionally
@@ -1837,7 +1870,7 @@ Items: {
 		DisplayName: Shattering Potion
 		Tooltip:
 			'''
-			Increases damage and critical strike chance by 8%
+			Increases all damage and critical strike chance by 8%
 			Attacks break enemy armor
 			'''
 	}
@@ -1941,7 +1974,7 @@ Items: {
 
 	MoltenMagmaFruit: {
 		DisplayName: Molten Magma Fruit
-		Tooltip: Permanently increases damage by 4%, critical strike chance by 4% and armor penetration by 4 (one time only per character)
+		Tooltip: Permanently increases all damage and critical strike chance by 4%, and armor penetration by 4 (one time only per character)
 	}
 }
 

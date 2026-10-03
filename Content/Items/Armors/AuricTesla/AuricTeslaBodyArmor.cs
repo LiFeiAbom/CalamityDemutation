@@ -5,6 +5,8 @@ using CalamityDemutation.Content.Items.Armors.Silva;
 using CalamityDemutation.Content.Items.Armors.Tarragon;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
+using CalamityDemutation.Utilities;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -53,7 +55,9 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.frostBarrier = true;        // 置位霜冻屏障标记（对应经典版 fBarrier）
-            modPlayer.godSlayerReflect = true;    // 置位弑神者反射标记，供受击反弹结算
+            // 置位弑神者反射标记：FreeDodge 结算完全免伤（膨胀开启 5%、关闭源值 2%）；
+            // 低伤压制（≤80 → 1）跟随整套，由近战头的套装方法置 godSlayerDamage
+            modPlayer.godSlayerReflect = true;
             bool legacy = ConfigSystem.StatInflationEnabled;
             player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 100;   // 最大生命：常态 +100 / 膨胀 +400（削弱前旧值）
             if (legacy)
@@ -72,6 +76,12 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         private const int LegacyCritChance = 30;
         /// <summary>数值膨胀开关开启时恢复的旧版通用伤害（2026-09-27「30% → 22%」那次削弱的原值）</summary>
         private const float LegacyDamageBonus = 0.30f;
+        /// <summary>
+        /// 说明文字：数值膨胀开启时换成 TooltipInflated（最大生命 +400、最大魔力 +400、
+        /// 伤害与暴击 30%、5% 完全免伤），关闭时用 Tooltip 的源值（+100、22%、2%）。
+        /// 本件防御不随膨胀变化，故不传 defenseBonus。
+        /// </summary>
+        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版灾厄用金锭×20 + 宇宙砧，经典版灾厄用矿石与魂材 + 德雷顿熔炉，
         /// 两分支均以四套月后胸甲为坯料，经典版另需一件霜冻屏障（本模组自有的 FrostBarrier）

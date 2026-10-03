@@ -398,7 +398,12 @@ namespace CalamityDemutation.Players
         public bool godSlayerMelee = false;
         public int godSlayerMeleefireCD = 0;
         public bool godSlayerReflect = false;
-        public float godSlayerDamage;
+        /// <summary>
+        /// 已穿弑神者套 / 金源套：把单次不超过 80 的基础伤害压到 1，由套装方法置位、<see cref="ModifyHurt"/> 消费。
+        /// 对应经典版的同名标记（源里同样写在近战头的 <c>UpdateArmorSet</c> 而非单件 UpdateEquip）。
+        /// 与胸甲的 <see cref="godSlayerReflect"/>（概率完全免伤）分工：低伤压制看整套，闪避看胸甲。
+        /// </summary>
+        public bool godSlayerDamage = false;
         public bool godSlayerDamageProtect = false;
         public int godSlayerDamageProtectMax = 80;
         /// <summary>
@@ -832,6 +837,7 @@ namespace CalamityDemutation.Players
             giantTortoiseShell = false;
             godSlayer = false;
             godSlayerCooldown = false;
+            godSlayerDamage = false;
             godSlayerDamageProtect = false;
             godSlayerMelee = false;
             godSlayerReflect = false;
@@ -997,6 +1003,7 @@ namespace CalamityDemutation.Players
             giantTortoiseShell = false;
             godSlayer = false;
             godSlayerCooldown = false;
+            godSlayerDamage = false;
             godSlayerDamageProtect = false;
             godSlayerMelee = false;
             godSlayerReflect = false;
@@ -2681,10 +2688,6 @@ namespace CalamityDemutation.Players
                 if (godSlayerDamageProtectMax < 80)
                     godSlayerDamageProtectMax++;
             }
-            if (godSlayerDamage > 0f)
-                godSlayerDamage -= 2.5f;
-            if (godSlayerDamage < 0f)
-                godSlayerDamage = 0f;
             if (godSlayerCooldown)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.1f;
@@ -4329,6 +4332,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// tModLoader 的 FreeDodge 钩子：完全闪避伤害（不受常规闪避冷却影响）。
         /// 聚合大脑 1/10、大杂烩（The Amalgam）1/8 概率完全免伤；
+        /// 弑神者胸甲 / 金源胸甲（godSlayerReflect）5% 概率完全免伤（数值膨胀关闭时为源值 2%）；
         /// 亵渎之魂护盾把本次伤害全额吃下时也走这条路（对应原版 freeDodgeFromShieldAbsorption），
         /// 让击退与减益一并落空——无敌帧已在 ModifyHurtInfo_ProfanedShield 里给过。
         /// </summary>
@@ -4350,6 +4354,16 @@ namespace CalamityDemutation.Players
             if (godSlayerDamageProtect && info.Damage <= godSlayerDamageProtectMax)
             {
                 godSlayerDamageProtectMax = 20;
+                Player.immune = true;
+                Player.immuneTime = 15;
+                return true;
+            }
+            // 弑神者胸甲 / 金源胸甲的完全免伤（对应 CI 的 GodSlayerReflect 置 freeDodgeFromShieldAbsorption 再被 FreeDodge 吃掉）：
+            // 数值膨胀开启 5%（与 tooltip 的膨胀文案一致），关闭取源值 2%（经典版与 CI 都是 1/50）。
+            // 注意：这里返回 true 时原版只把本次伤害归零（见 Player.Hurt 的 FreeDodge 分支），不会代补无敌帧，所以要自己给。
+            // 原先这段判定写在 ModifyHurt 里、只设 Player.immune 标记，伤害照吃，属于空操作——中英 tooltip 的"5% 完全无效"当时并没有实现。
+            if (godSlayerReflect && Main.rand.NextBool(ConfigSystem.StatInflationEnabled ? 20 : 50))
+            {
                 Player.immune = true;
                 Player.immuneTime = 15;
                 return true;
@@ -4403,6 +4417,8 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 受到伤害前触发：
         /// 血契有 25% 概率使本次伤害变为 2.5 倍（模拟"被暴击"）。
+        /// 弑神者套 / 金源套（godSlayerDamage，由近战头的套装方法置位）把 80 及以下的基础伤害压到 1；
+        /// 胸甲的完全免伤（godSlayerReflect）则在 FreeDodge 里结算（ModifyHurt 里设免疫标记取消不了本次伤害）。
         /// </summary>
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
@@ -4446,12 +4462,7 @@ namespace CalamityDemutation.Players
                     profanedSoulShieldHurtSoundTimer = 20;
                 }
             }
-            if (godSlayerReflect && Main.rand.NextBool(20))
-            {
-                Player.immuneNoBlink = true;
-                Player.immune = true;
-            }
-            if ((godSlayerReflect && modifiers.SourceDamage.Base <= 80) || modifiers.SourceDamage.Base < 1)
+            if ((godSlayerDamage && modifiers.SourceDamage.Base <= 80) || modifiers.SourceDamage.Base < 1)
             {
                 modifiers.SourceDamage.Base = 1f;
             }

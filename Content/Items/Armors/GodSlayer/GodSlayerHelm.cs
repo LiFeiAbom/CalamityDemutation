@@ -45,13 +45,15 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
         }
         /// <summary>
         /// 套装激活：置位 godSlayer（致命保护 + 45 秒冷却增伤，同时作为弑神者冲刺的穿戴闸门）
-        /// 与 godSlayerMelee（受击超 80 释放弑神飞镖），两者均在 CalamityDemutationPlayer 中结算；同时提升反伤。
+        /// 与 godSlayerMelee（受击超 80 释放弑神飞镖）、godSlayerDamage（单次 ≤80 的基础伤害压到 1），
+        /// 三者均在 CalamityDemutationPlayer 中结算；同时提升反伤。
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.godSlayer = true;
             modPlayer.godSlayerMelee = true;
+            modPlayer.godSlayerDamage = true;   // 低伤压制（≤80 → 1）：与源一致，属整套效果而非胸甲单件
             player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);
             player.thorns += 2.5f;  // 反伤倍率 +2.5（与胸甲的 +0.9 叠加）
         }

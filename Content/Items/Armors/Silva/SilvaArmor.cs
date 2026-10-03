@@ -1,5 +1,7 @@
 ﻿using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Systems;
+using CalamityDemutation.Utilities;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -43,6 +45,11 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         private const int LegacyStatLifeMax2 = 300;
         /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
         private const int LegacyStatManaMax2 = 200;
+        /// <summary>
+        /// 说明文字：数值膨胀开启时换成 TooltipInflated（最大生命 +300、最大魔力 +200），
+        /// 关闭时用 Tooltip 的源值（最大生命 +80）。本件防御不随膨胀变化，故不传 defenseBonus。
+        /// </summary>
+        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 配方：现代版与经典版灾厄材料不同，分别注册两套配方，均需本模组材料 LeadCore
         /// </summary>
