@@ -319,6 +319,10 @@ namespace CalamityDemutation.Content.Items
                 if (calamity.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
+                    // 女妖之爪（CWR 重制版）：源版波尔提斯袋里它与另外 6 把武器同属一组，
+                    // 走 DropHelper.CalamityStyle(1/3) 的"每把 1/3、全空则保底随机给一把"抽取；
+                    // 本工程沿用既有简化口径（同 YharonBag / DevourerofGodsBag 的 1/3），挂在宝袋上
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<BansheeHook>(), 3));
                 }
                 if (calamity.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
                 {
@@ -398,6 +402,8 @@ namespace CalamityDemutation.Content.Items
                 if (classic.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
+                    // 女妖之爪（CWR 重制版）：经典版波尔提斯袋里它本就是 CommonDrop(..., 3)，这里是精确复刻
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<BansheeHook>(), 3));
                 }
                 if (classic.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
                 {

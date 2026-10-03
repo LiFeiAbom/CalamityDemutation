@@ -243,6 +243,14 @@ namespace CalamityDemutation.NPCs
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
                 }
+                // 女妖之爪（CWR 重制版）：现代版源里它属于波尔提斯的"非专家武器池"——
+                // DropHelper.CalamityStyle(1/4, 7 把武器)：每把独立 1/4，若全不中则保底随机给一把；
+                // 本工程只能往池子里补自己这一件，沿用既有简化口径记作 1/4 非专家掉落（宝袋那条见 GlobalItem）。
+                else if (calamity.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
+                {
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BansheeHook>(), 4));
+                    npcLoot.Add(notExpert0);
+                }
             }
             // ===== 经典版灾厄（CalamityModClassicPreTrailer）：Boss 命名不同，掉落规则保持一致（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -287,6 +295,12 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
+                }
+                // 女妖之爪（CWR 重制版）：经典版源里就是波尔提斯的 CommonDrop(..., 4)，即 1/4 非专家掉落（精确复刻）
+                else if (classic.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
+                {
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BansheeHook>(), 4));
+                    npcLoot.Add(notExpert1);
                 }
             }
         }

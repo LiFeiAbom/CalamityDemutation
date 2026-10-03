@@ -5329,11 +5329,16 @@ namespace CalamityDemutation.Players
             }
         }
         /// <summary>
-        /// tModLoader 的 PreKill 钩子：玩家即将死亡前调用。
-        /// 星云核心 1/10 概率免死：播放特效、回复 100 点生命并取消本次死亡。
+        /// tModLoader 的 PreKill 钩子：玩家即将死亡前调用，三支保命按源（经典版 PreKill）的顺序判定：
+        /// 星云核心（1/10 概率，回复 100 点生命）→ 弑神者（龙之涌动时回满、否则 300，并挂 45 秒冷却）
+        /// → 始源林海（保至 1 点生命并开启 600 帧保护窗口，窗口内再致死每次扣 100 最大生命上限）。
+        /// 任何一支生效都返回 false 取消本次死亡；三支都不满足时才走到替换死因文案。
         /// </summary>
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genDust, ref PlayerDeathReason damageSource)
         {
+            // 三支保命的判定顺序与源一致（经典版 CalamityPlayerPreTrailer.PreKill：星云核心 → 弑神者 → 始源林海）。
+            // 顺序有实际意义：金源套同时置 godSlayer 与 silvaSet，若把林海摆在前面，就会先触发"回到 1 点生命"
+            // 的保护窗口，跳过弑神的回血与 45 秒冷却（以及冷却期的 +10% 伤害）。
             if (nebulousCore && Main.rand.NextBool(10))
             {
                 SoundEngine.PlaySound(SoundID.Item67, Player.position);
@@ -5357,38 +5362,6 @@ namespace CalamityDemutation.Players
                 if (Player.statLife > Player.statLifeMax2)
                 {
                     Player.statLife = Player.statLifeMax2;
-                }
-                return false;
-            }
-            if (silvaSet && silvaCountdown > 0)
-            {
-                if (hasSilvaEffect)
-                {
-                    silvaHitCounter++;
-                }
-                if (Player.FindBuffIndex(ModContent.BuffType<SilvaRevival>()) == -1)
-                {
-                    SoundEngine.PlaySound(new SoundStyle("CalamityDemutation/Sounds/Custom/SilvaActivation"), Player.position);
-                    Player.AddBuff(ModContent.BuffType<SilvaRevival>(), 600);
-                    if (draconicSurge)
-                    {
-                        Player.statLife += Player.statLifeMax2;
-                        Player.HealEffect(Player.statLifeMax2);
-                        if (Player.statLife > Player.statLifeMax2)
-                        {
-                            Player.statLife = Player.statLifeMax2;
-                        }
-                        if (Player.FindBuffIndex(ModContent.BuffType<DraconicSurgeBuff>()) > -1)
-                        {
-                            Player.ClearBuff(ModContent.BuffType<DraconicSurgeBuff>());
-                            draconicSurgeCooldown = 1800;
-                        }
-                    }
-                }
-                hasSilvaEffect = true;
-                if (Player.statLife < 1)
-                {
-                    Player.statLife = 1;
                 }
                 return false;
             }
@@ -5423,6 +5396,38 @@ namespace CalamityDemutation.Players
                     draconicSurgeCooldown = 1800;
                 }
                 Player.AddBuff(ModContent.BuffType<GodSlayerCooldown>(), 2700);
+                return false;
+            }
+            if (silvaSet && silvaCountdown > 0)
+            {
+                if (hasSilvaEffect)
+                {
+                    silvaHitCounter++;
+                }
+                if (Player.FindBuffIndex(ModContent.BuffType<SilvaRevival>()) == -1)
+                {
+                    SoundEngine.PlaySound(new SoundStyle("CalamityDemutation/Sounds/Custom/SilvaActivation"), Player.position);
+                    Player.AddBuff(ModContent.BuffType<SilvaRevival>(), 600);
+                    if (draconicSurge)
+                    {
+                        Player.statLife += Player.statLifeMax2;
+                        Player.HealEffect(Player.statLifeMax2);
+                        if (Player.statLife > Player.statLifeMax2)
+                        {
+                            Player.statLife = Player.statLifeMax2;
+                        }
+                        if (Player.FindBuffIndex(ModContent.BuffType<DraconicSurgeBuff>()) > -1)
+                        {
+                            Player.ClearBuff(ModContent.BuffType<DraconicSurgeBuff>());
+                            draconicSurgeCooldown = 1800;
+                        }
+                    }
+                }
+                hasSilvaEffect = true;
+                if (Player.statLife < 1)
+                {
+                    Player.statLife = 1;
+                }
                 return false;
             }
             if (hellfireExplosion)

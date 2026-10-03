@@ -474,6 +474,15 @@ Items: {
 			'''
 	}
 
+	BansheeHook: {
+		DisplayName: 女妖之爪
+		Tooltip:
+			'''
+			攻击时生成大量哀怨之镰，并发射一个追杀敌人的惊惧巨镰
+			按住右键可原地蓄能，蓄满后爪子会跟随鼠标持续拉出惊惧巨镰
+			'''
+	}
+
 	BiomeBlade: {
 		DisplayName: 环境之刃
 		Tooltip: 根据你所处环境发射不同的弹幕
@@ -1709,6 +1718,20 @@ Items: {
 			'''
 	}
 
+	TheEnforcer: {
+		DisplayName: 暴政
+		Tooltip:
+			'''
+			挥舞时在鼠标处释放大量追踪火焰
+			每枚火焰造成武器伤害的 25%
+			'''
+		TooltipInflated:
+			'''
+			挥舞时在鼠标处释放十枚追踪火焰
+			每枚火焰造成武器伤害的 75%
+			'''
+	}
+
 	TheFirstShadowflame: {
 		DisplayName: 初代暗影焰
 		Tooltip: 赋予所有仆从暗影焰之力
@@ -1988,6 +2011,8 @@ Keybinds: {
 Projectiles: {
 	AbaddonCrit.DisplayName: 硫磺爆裂
 	AbyssFractalHeld.DisplayName: 深渊分形
+	AbominateHookScythe.DisplayName: 惊惧巨镰
+	AbominateSpirit.DisplayName: 惊惧之灵
 	AnarchyBeam.DisplayName: 硫磺光束
 	AtaraxiaBoom.DisplayName: 禅心爆发
 	AtaraxiaMain.DisplayName: 禅心主弹
@@ -1995,6 +2020,9 @@ Projectiles: {
 	AtaraxiaSplit.DisplayName: 禅心针叶弹
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
+	BansheeHookBoom.DisplayName: 女妖爆裂
+	BansheeHookProj.DisplayName: 女妖之爪
+	BansheeHookScythe.DisplayName: 哀怨之镰
 	BigBustyRose.DisplayName: 硕大玫瑰
 	BiomeOrb.DisplayName: 环境能量
 	BloodScythe.DisplayName: 血镰
@@ -2064,6 +2092,7 @@ Projectiles: {
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
 	SpiritFractalHeld.DisplayName: 聚魂分形
+	SpiritFlame.DisplayName: 鬼火
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
 	StarlitFractalHeld.DisplayName: 星熠分形
@@ -2102,6 +2131,7 @@ Projectiles: {
 	SonYharon.DisplayName: 犽戎之子
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流
+	EssenceFlame2.DisplayName: 精魂烈焰
 }
 
 Systems: {

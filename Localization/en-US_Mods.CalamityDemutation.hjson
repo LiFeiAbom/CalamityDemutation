@@ -474,6 +474,15 @@ Items: {
 			'''
 	}
 
+	BansheeHook: {
+		DisplayName: Banshee Hook
+		Tooltip:
+			'''
+			Swinging the Hook summons several small Sorrowful Scythes before launching a bigger Dreadful Scythe to aggressively hunt down enemies
+			Holding right click charges the Hook in place; once fully charged it hovers with your cursor and keeps pulling out Dreadful Scythes
+			'''
+	}
+
 	BiomeBlade: {
 		DisplayName: Biome Blade
 		Tooltip: Fires different projectiles based on what biome you're in
@@ -1710,6 +1719,20 @@ Items: {
 			'''
 	}
 
+	TheEnforcer: {
+		DisplayName: The Enforcer
+		Tooltip:
+			'''
+			Releases a burst of homing essence flames at the cursor when swung
+			Each flame deals 25% of the weapon's damage
+			'''
+		TooltipInflated:
+			'''
+			Releases a barrage of ten homing essence flames at the cursor when swung
+			Each flame deals 75% of the weapon's damage
+			'''
+	}
+
 	TheFirstShadowflame: {
 		DisplayName: The First Shadowflame
 		Tooltip: Grants shadowflame powers to all minions
@@ -1989,6 +2012,8 @@ Keybinds: {
 Projectiles: {
 	AbaddonCrit.DisplayName: Brimstone Blast
 	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
+	AbominateHookScythe.DisplayName: Dreadful Scythe
+	AbominateSpirit.DisplayName: Dreadful Spirit
 	AnarchyBeam.DisplayName: Anarchy Beam
 	AtaraxiaBoom.DisplayName: Ataraxia Blast
 	AtaraxiaMain.DisplayName: Ataraxia Missile
@@ -1996,6 +2021,9 @@ Projectiles: {
 	AtaraxiaSplit.DisplayName: Ataraxia Needle
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
+	BansheeHookBoom.DisplayName: Banshee Burst
+	BansheeHookProj.DisplayName: Banshee Hook
+	BansheeHookScythe.DisplayName: Sorrowful Scythe
 	BigBustyRose.DisplayName: Big Busty Rose
 	BiomeOrb.DisplayName: Biome Orb
 	BloodScythe.DisplayName: Blood Scythe
@@ -2065,6 +2093,7 @@ Projectiles: {
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
 	SpiritFractalHeld.DisplayName: Spirit Fractal Held
+	SpiritFlame.DisplayName: Spirit Flame
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
 	StarlitFractalHeld.DisplayName: Starlit Fractal Held
@@ -2103,6 +2132,7 @@ Projectiles: {
 	SonYharon.DisplayName: Son Yharon
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
+	EssenceFlame2.DisplayName: Essence Flame
 }
 
 Systems: {

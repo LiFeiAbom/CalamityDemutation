@@ -31,5 +31,11 @@ namespace CalamityDemutation.Players
         public int elementalExcaliburBeamType = 0;
         /// <summary>禅心剑：本次挥砍是否还没响过命中音（出手置真、命中置假）</summary>
         public bool ataraxiaHitSound = true;
+        /// <summary>
+        /// 女妖之爪（CWR 重制版）：引导模式的蓄能量 0~500。对应源挂在物品上的 <c>CWR().MeleeCharge</c>——
+        /// 源把这类"武器状态"写在 ModItem 上，联机会在两名玩家之间串号，本工程按第 5 节口径改存 ModPlayer：
+        /// 由手持体在主人端累加/消耗，只决定蓄能条与分支切换，不参与同步。
+        /// </summary>
+        public float bansheeHookCharge = 0f;
     }
 }

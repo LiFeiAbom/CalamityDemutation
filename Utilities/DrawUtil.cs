@@ -11,6 +11,19 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
+        /// 按权重逐通道混合多个颜色（对应 CWR 的 CWRUtils.RecombinationColor）：
+        /// 本工程移植 CWR 弹幕时用它复现"本体色 + 描边色"的叠加配色。
+        /// </summary>
+        public static Color RecombinationColor(params (Color color, float weight)[] colorWeightPairs)
+        {
+            Vector4 result = Vector4.Zero;
+            for (int i = 0; i < colorWeightPairs.Length; i++)
+            {
+                result += colorWeightPairs[i].color.ToVector4() * colorWeightPairs[i].weight;
+            }
+            return new Color(result);
+        }
+        /// <summary>
         /// 近战武器式弹幕的绘制信息辅助：计算贴图、屏幕绘制位置、旋转角、
         /// 旋转中心与翻转方向，便于按"挥砍武器"的观感绘制弹幕贴图。
         /// </summary>

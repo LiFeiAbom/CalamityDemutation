@@ -60,6 +60,18 @@
   `Content/Projectiles/Melee/Core/BaseSwingCO`（+`SwingSystem`）。
 - **贴图**：物品/弹幕贴图同目录同名；复用别人贴图时用显式 `Texture => "CalamityDemutation/..."`；
   通用素材放 `Assets/ExtraTextures/`。
+- **资源路径（大坑，2026-10-03 踩过）**：`Texture => "CalamityDemutation/..."` 与 `SoundStyle` 的路径
+  写错时，tModLoader 在**加载期**就抛 `MissingResourceException` 并**把整个模组禁用**
+  （玩家端只看到"该模组加载时发生错误 / 已被禁用"，**不是**"贴图不显示"）。它还会顺手往日志写
+  「Marked tModLoader installation files as corrupt in Steam / On Next Launch, User will have
+  'Verify Local Files' ran」——那只是 tML 对"加载失败"的标准反应，不用管，下次启动让它校验即可。
+  本次实例：女妖之爪的 `BansheeHookBoom` 把共用隐形贴图写成 `Content/Projectiles/Melee/InvisibleProj`，
+  实际在 **`Content/Projectiles/InvisibleProj.png`**（工程里八个隐形弹幕都引这一张，共用占位贴图在
+  `Projectiles` **根目录**、不在 `Melee/` 子目录）。改对路径即恢复。
+  **进游戏前的必做自查**：新增任何资源后，把该文件的（a）所有 `"CalamityDemutation/..."` 字面量、
+  （b）类同名隐式贴图（`Content/.../类名.png`）、（c）用 `CalamityDemutationConstant.UI/Masking/ColorBar`
+  拼出来的路径，逐个 `Test-Path` 对盘核一遍（别靠脑补目录层级——本次就是凭印象补了 `Melee/` 才翻车）。
+  一句话范式：`Test-Path .\Content\Projectiles\Melee\X.png`，X 换成引用里的相对路径（去掉扩展名）。
 - **着色器（大坑）**：`.fx` **不会**被 tModLoader 构建时编译。新增 `.fx` 后必须手动预编译出同名 `.fxc`：
   `FXC\fxc.exe /nologo /T fx_2_0 /Fo 名字.fxc 名字.fx`（会刷一条 X4717 警告，正常），
   再在 `Common/Effects/EffectLoader.cs` 里登记句柄。漏了这步 → 运行期抛 `MissingResourceException`，
@@ -98,6 +110,11 @@
 - 编译/验证：`dotnet build -v q -nologo`（会调用 `tModLoader.dll -server -build`，把 `.tmod` 写进
   `…\tModLoader\Mods\`；该目录在工作区之外，沙箱内会报 Access denied，需提权运行）。
   期望结果：**0 警告 0 错误**（工程警告基线是 0）。
+- 资源自查（**编译不会报、只有进游戏才炸**，且会禁用整个模组）：跑现成脚本
+  `powershell -ExecutionPolicy Bypass -File .\Tools\CheckResources.ps1`（退出码 0 = 全命中；
+  它会核 `"CalamityDemutation/..."` 字面量与 `CalamityDemutationConstant.X + "名字"` 两类引用）。
+  脚本覆盖不到的两类再手工看一眼：类同名**隐式**贴图（`Content/.../类名.png`）与
+  `Texture + "Glow"` 这类**后缀拼接**。细节见第 4 节「资源路径（大坑）」。
 - 沙箱限制（Codex 会话）：`.git` 在工作区内也是只读，`git add/commit` 会报
   `index.lock: Permission denied`；同时沙箱往环境注入 `HTTP(S)_PROXY=http://127.0.0.1:9`（丢弃端口），
   网络一律不通。**git 的写操作与 `push/pull` 都要提权（非沙箱）执行**，提权后走的是系统代理
@@ -181,6 +198,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 银河 | 99 | 425 | |
 | 焚灭天惩 | 244 | 388 | 同一开关额外把每次洒落的火球数 10→15 |
 | 巨龙七星灯 | 120 | 750 | 同一开关额外把仆从栏位 4→2 |
+| 暴政 | 890 | 2200 | 同一开关额外把每次挥砍的火焰 6→10、单枚火焰伤害 25%→75% |
 
 跳过（用户明确点名，不接入）：混乱之刃 150、霜火之刃 125、禁忌誓约之刃 110。
 
@@ -189,7 +207,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   神吞后 3× / 犽戎后 5× / 星流巨械后 7× / 至尊灾厄后 8× / 魔影 10×。
   该包 `/D:\Game\Terraria\ModModel\Lilac-Arcane-Pack-master` 的 `LAPGlobalItemModifyDamage.cs`
   还提供了一个「拿目标面板反推倍率」的 `SetCustomMult_Int` 写法，思路可借鉴。
-- **进度**：工程内 34 把武器（33 近战 + 1 召唤）已全部过筛——**31 把已接入**、
+- **进度**：工程内 35 把武器（34 近战 + 1 召唤）已全部过筛——**32 把已接入**、
   **3 把按用户口径跳过**，没有剩下的待接入项。
 - **盔甲（同一开关，2026-10-01 接入）**：口径是「按 `310c3cf`（第三轮削弱，2026-09-27）逐件回滚」——
   膨胀开启时恢复那次削弱前的值。单件加成写在各自的 `UpdateEquip` 里；**防御**因为 `Item.defense` 只能在
@@ -229,6 +247,19 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-03）：① **移植暴政（TheEnforcer）**，源 = 灾厄 **2.0.3.9** 的
+  `Items/Weapons/Melee/TheEnforcer.cs`，落地为 `Content/Items/Weapons/Melee/TheEnforcer.cs`
+  （+`TheEnforcer.png`/`TheEnforcerGlow.png`）与 `Content/Projectiles/Melee/EssenceFlame2.cs`
+  （贴图取自同版本 `Projectiles/Healing/EssenceFlame.png`，源也是复用它）。
+  **效果按用户口径改写**：源把喷火挂在 `OnHitNPC`/`OnHitPvp`（要先打中，才在玩家附近随机撒 5 枚）；
+  本工程改成**发射逻辑**——每次挥砍 (`Shoot`) 不求命中，直接在**鼠标处**按圆周炸开 6 枚追踪火焰
+  （`FlamesPerBarrage`，伤害 = 面板 25%，`SoundID.Item73` 由命中时前移到出火时）。
+  其余照源：890 伤害 / 17 帧 / 击退 9 / 缩放 1.5 / 1 铂 40 金（源 `RarityDarkBlueBuyPrice`）/
+  月后稀有度 **14**（源 `Rarities/DarkBlue` 的 (43,96,222) 与本工程 14 档一致）/ 世界发光蒙版 /
+  `MeleeEffects` 洒 173 号尘。配方两版各一条：现代 宇宙锭×12 @ 宇宙铁砧；经典 宇宙锭×15 @ 嘉登熔炉。
+  **数值膨胀已接入**（用户 2026-10-03 点名，三项联动）：面板 890 → **2200**、每次挥砍火焰 6 → **10**、
+  单枚火焰伤害 25% → **75%**；tooltip 走 `CDUtil.ApplyInflatedTooltip`，膨胀文案键 `Items.TheEnforcer.TooltipInflated`
+  （这是**第一把**用该机制的武器，此前只有 6 件魔影甲在用）。编译 0 警告 0 错误，资源自检 170 条全命中。
 - 最近一批工作：① **盔甲数值膨胀**（12 件，口径 = 回滚 `310c3cf` 第三轮削弱前的值，清单见第 7 节）；
   ② **星云之核修正**：星云之星伤害由固定 1500 改成 300 基准 × 玩家通用伤害加成（不吃膨胀档），
   tooltip 免死几率 20% → 10%（对齐代码里的 `Main.rand.NextBool(10)`）。

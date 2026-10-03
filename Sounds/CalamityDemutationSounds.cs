@@ -22,6 +22,8 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle ProvidenceHurt = new("CalamityDemutation/Sounds/NPCHit/ProvidenceHurt");
         /// <summary>肉感斩击（MeatySlash）</summary>
         public static readonly SoundStyle MeatySlashSound = new("CalamityDemutation/Sounds/Custom/MeatySlash");
+        /// <summary>血炎游侠头激活音（女妖之爪重制版引导/收招时使用，音频取自灾厄 2.0.3.9）</summary>
+        public static readonly SoundStyle BloodflareRangerActivation = new("CalamityDemutation/Sounds/Item/BloodflareRangerActivation");
         /// <summary>村正大挥砍（BigSwing）</summary>
         public static readonly SoundStyle MurasamaBigSwing = new("CalamityDemutation/Sounds/Item/MurasamaBigSwing") { Volume = 0.25f };
         /// <summary>村正命中有机物（OrganicHit）</summary>
