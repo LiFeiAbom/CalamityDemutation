@@ -10,6 +10,7 @@ using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Summon;
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Content.Projectiles.Typeless;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
@@ -18,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -232,6 +234,25 @@ namespace CalamityDemutation.Content.Items
             // 回退灾厄对原版玩家装备的削弱：仅 Config 开启 + 现代版灾厄已加载时恢复原版数值
             if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
                 RevertVanillaNerf(entity);
+        }
+        /// <summary>
+        /// 血炎射手套装（bloodflareRanged）的「远程武器有几率射出血液爆炸光球」：
+        /// 每次射击 2% 概率追加一枚 BloodBomb，伤害 = 本次射击伤害 ×1.6（穿金源套时 ×2.2），
+        /// 口径照经典版 CalamityGlobalItem.Shoot（该版另判 !rogue，本工程无盗贼职业故省略）。
+        /// 这是全物品钩子：不满足条件时直接放行原弹幕。
+        /// </summary>
+        public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
+            if (modPlayer.bloodflareRanged && item.CountsAsClass<RangedDamageClass>() && Main.rand.Next(0, 100) >= 98)
+            {
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    int bombDamage = (int)(damage * (modPlayer.auricSet ? 2.2f : 1.6f));
+                    Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<BloodBomb>(), bombDamage, 2f, player.whoAmI);
+                }
+            }
+            return true;
         }
         /// <summary>
         /// 保存/同步自定义稀有度等级（SaveData 存档、NetSend 联机同步）

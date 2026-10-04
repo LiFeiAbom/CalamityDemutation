@@ -500,6 +500,25 @@ Items: {
 		Tooltip: 30% increased movement speed; increases all damage and critical strike chance by 10%
 	}
 
+	BloodflareHornedHelm: {
+		DisplayName: Bloodflare Demon Helm
+		Tooltip:
+			'''
+			You can move freely through liquids and have temporary immunity to lava
+			10% increased ranged damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+			Greatly increases life regen
+			Enemies below 50% life have a chance to drop hearts when struck
+			Enemies above 50% life have a chance to drop mana stars when struck
+			Enemies killed during a Blood Moon have a much higher chance to drop Blood Orbs
+			Press [{0}] to unleash the lost souls of polterghast to destroy your enemies
+			This effect has a 30 second cooldown
+			Ranged weapons have a chance to fire bloodsplosion orbs
+			'''
+	}
+
 	BloodflareMask: {
 		DisplayName: Bloodflare Mask
 		Tooltip:
@@ -2066,4 +2085,7 @@ Projectiles: {
 	StreamGougeProj.DisplayName: Stream Gouge
 	EssenceFlame2.DisplayName: Essence Flame
 	TarraEnergy.DisplayName: Tarragon Life Energy
+	BloodflareSoul.DisplayName: Blood Soul
+	BloodBomb.DisplayName: Blood Bomb
+	BloodBombExplosion.DisplayName: Blood Bomb Explosion
 }

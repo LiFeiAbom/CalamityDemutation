@@ -248,6 +248,32 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**血炎套装按职业补齐·第二件 = 射手头（BloodflareHornedHelm）**。
+  用户口径同射手头那一轮：单件照经典版、不吸收其它版本差异、套装效果走经典版。
+  ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHornedHelm.cs`（贴图两张取自经典版 1.4.2.101）：
+  18x18、价值 60 金、防御 34、月后稀有度 13；单件 `lavaMax += 240` + `ignoreWater` + 远程 10/10；
+  配方与既有近战头**逐字一致**（现代 `Bloodstone`×25 + `BloodOrb`×10 + `RuinousSoul`×2，经典 `BloodstoneCore`×11 + `RuinousSoul`×2，
+  均 `TileID.LunarCraftingStation`）。显示名按用户给的名字写作 **血弑魔颅盔 / Bloodflare Demon Helm**
+  （经典版原名是 Bloodflare Horned Helm、现代版类名 `BloodflareHeadRanged`，若要改回经典名只需动本地化两行）。
+  ② 玩家侧新增 `bloodflareRanged` 与 `bloodflareRangedCooldown`（字段 + 两处复位；冷却在 `PostUpdateMiscEffects` 逐帧递减）
+  ，并在既有的 `KeybindsSystem.TarragonHotKey`（默认 Y，与龙蒿近战防御共用，与经典版同键）按键块里加了经典版口径的灵魂爆发：
+  30 秒冷却 → 64 颗 + 36 颗环形血尘 → 一次 8 组、左右对称共 **16 枚 `BloodflareSoul`**、每枚固定 **800** 伤害，
+  朝向以玩家速度为准（源写法），生成带 `owner == Main.myPlayer` 判据。
+  ③ 新增弹幕：`Content/Projectiles/Ranged/BloodflareSoul.cs`（4 帧动画 + 血尘尾；离主人 >600 折返，
+  否则 400 曼哈顿距离内索敌、速度 11、惯性 20；消散时判定框撑到 110×110 结算一次范围伤害——
+  即 `Projectile.Damage()`）与 `Content/Projectiles/Typeless/BloodBomb.cs` / `BloodBombExplosion.cs`
+  （血液爆炸光球：20×20 飞行体命中后原地生成 250×250、60 帧、本地无敌帧 2 帧的爆炸）。
+  ④ `CalamityDemutationGlobalItem` 新增全物品 `Shoot` 钩子：血炎射手套装下远程武器 **2%** 概率追加 `BloodBomb`，
+  伤害 = 本次射击 ×1.6（穿金源套 ×2.2），口径照经典版（该版的 `!rogue` 判定因本工程无盗贼职业省略）。
+  ⑤ 本地化：中英各补 `Items.BloodflareHornedHelm`（DisplayName / Tooltip / SetBonus，套装文本用 `[{0}]` 占位，
+  代码里用新加的 `KeybindsSystem.TarragonKeyDisplay` 格式化）与 3 条弹幕名。
+  **四版本差异备查**：防 34 / 远程 10/10 各版一致（1.4.4 也是 34）；配方 2.0 与 2.0.3.9 是 `BloodstoneCore`×11 + `RuinousSoul`×2
+  （与经典同），1.4.4 换成 `Bloodstone`×25 + `BloodOrb`×10 + `RuinousSoul`×2 且站台是秘银砧——工程沿用近战头既有写法
+  （1.4.4 的材料 + 保留月球工作台）；**血液爆炸光球两版差得远**：经典是「每次射击 2%、伤害 ×1.6（金源 ×2.2）」，
+  现代 2.0.3.9 改成由 `canFireBloodflareRangedProjectile` 冷却闸门控制、伤害 = `DamageSoftCap(damage × 0.8, 120)`
+  （注释里写明是怕狙击枪之类超标）；本工程按用户口径取经典那套。现代版套装激活音 `BloodflareRangerActivation`
+  本工程早已有该音效（现被女妖之爪借用）。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**龙蒿套装按职业补齐·第一件 = 射手头（TarragonVisage）**。
   用户口径：单件照经典版、**不吸收** 1.4.4 的差异、套装效果**走经典版**。
   ① 新增 `Content/Items/Armors/Tarragon/TarragonVisage.cs`（贴图 `TarragonVisage.png` / `TarragonVisage_Head.png`

@@ -6,6 +6,7 @@ using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Content.Projectiles.Ranged;
 using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Content.Projectiles.Typeless;
 using CalamityDemutation.Content.Tiles;
@@ -231,6 +232,13 @@ namespace CalamityDemutation.Players
         public int bloodflareManaTimer = 180;
         public bool bloodflareMelee = false;
         public int bloodflareMeleeHits = 0;
+        /// <summary>
+        /// 血炎套装·远程向（BloodflareHornedHelm 的套装标记）：按 [键] 释放波尔特加斯特的迷失灵魂
+        /// （见按键块），远程武器射击时有几率追加血液爆炸光球（见 CalamityDemutationGlobalItem.Shoot）
+        /// </summary>
+        public bool bloodflareRanged = false;
+        /// <summary>血炎射手套装灵魂爆发的冷却（帧，1800 = 30 秒；跨帧计时器，只在死亡时复位）</summary>
+        public int bloodflareRangedCooldown = 0;
         public bool bloodflareSet = false;
         /// <summary>
         /// 血契已装备（最大生命翻倍，代价是有 25% 概率被暴击）
@@ -709,6 +717,7 @@ namespace CalamityDemutation.Players
             beeResist = false;
             bloodflareCore = false;
             bloodflareMelee = false;
+            bloodflareRanged = false;
             bloodflareSet = false;
             bloomStone = false;
             bloodPact = false;
@@ -859,6 +868,8 @@ namespace CalamityDemutation.Players
             bloodflareMelee = false;
             bloodflareManaTimer = 0;
             bloodflareMeleeHits = 0;
+            bloodflareRanged = false;
+            bloodflareRangedCooldown = 0;
             bloodflareSet = false;
             bloomStone = false;
             bloodPact = false;
@@ -2519,6 +2530,9 @@ namespace CalamityDemutation.Players
                 if (bloodflareFrenzyCooldown > 0)
                     bloodflareFrenzyCooldown--;
             }
+            // 血炎射手套装的灵魂爆发冷却：与近战狂怒冷却同为跨帧计时器，只在死亡时复位
+            if (bloodflareRangedCooldown > 0)
+                bloodflareRangedCooldown--;
             if (silvaSet)
             {
                 foreach (int debuff in CalamityDemutation.debuffList)
@@ -4489,6 +4503,47 @@ namespace CalamityDemutation.Players
                 if (tarraMelee && tarraCooldown <= 0)
                 {
                     tarraDefense = true;
+                }
+                // 血炎射手套装：同一个键释放波尔特加斯特的迷失灵魂（经典版口径：30 秒冷却、一次 16 枚、每枚 800 伤害）
+                if (bloodflareRanged && bloodflareRangedCooldown <= 0)
+                {
+                    bloodflareRangedCooldown = 1800;
+                    SoundEngine.PlaySound(SoundID.Zombie104, Player.position);
+                    for (int i = 0; i < 64; i++)
+                    {
+                        int dust = Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + 16f), Player.width, Player.height - 16, DustID.RedTorch, 0f, 0f, 0, default, 1f);
+                        Main.dust[dust].velocity *= 3f;
+                        Main.dust[dust].scale *= 1.15f;
+                    }
+                    // 一圈环状尘（源写法：以玩家中心为圆心把尘铺成一圈并向外推）
+                    const int ringDustCount = 36;
+                    Vector2 ringBase = Player.velocity.SafeNormalize(Vector2.UnitY) * new Vector2(Player.width / 2f, Player.height) * 0.75f;
+                    for (int i = 0; i < ringDustCount; i++)
+                    {
+                        Vector2 ringPos = ringBase.RotatedBy((i - (ringDustCount / 2 - 1)) * MathHelper.TwoPi / ringDustCount) + Player.Center;
+                        Vector2 offset = ringPos - Player.Center;
+                        int dust = Dust.NewDust(ringPos + offset, 0, 0, DustID.RedTorch, offset.X * 1.5f, offset.Y * 1.5f, 100, default, 1.4f);
+                        Main.dust[dust].noGravity = true;
+                        Main.dust[dust].noLight = true;
+                        Main.dust[dust].velocity = offset;
+                    }
+                    // 灵魂本体：一组 8 次、每次左右对称各一枚（共 16 枚），ai[1] 决定转向速率（0.5~1.5）
+                    const int soulDamage = 800;
+                    if (Player.whoAmI == Main.myPlayer)
+                    {
+                        const float spread = 45f * 0.0174f;   // 源把 45° 直接写成弧度系数（0.0174 ≈ π/180）
+                        double startAngle = Math.Atan2(Player.velocity.X, Player.velocity.Y) - spread / 2;
+                        double deltaAngle = spread / 8f;
+                        for (int i = 0; i < 8; i++)
+                        {
+                            float ai1 = Main.rand.NextFloat() + 0.5f;
+                            float randomSpeed = Main.rand.Next(1, 7);
+                            float randomSpeed2 = Main.rand.Next(1, 7);
+                            double offsetAngle = (startAngle + deltaAngle * (i + i * i) / 2f) + 32f * i;
+                            Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center.X, Player.Center.Y, (float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f) + randomSpeed, ModContent.ProjectileType<BloodflareSoul>(), soulDamage, 0f, Player.whoAmI, 0f, ai1);
+                            Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center.X, Player.Center.Y, (float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f) + randomSpeed2, ModContent.ProjectileType<BloodflareSoul>(), soulDamage, 0f, Player.whoAmI, 0f, ai1);
+                        }
+                    }
                 }
             }
             if (KeybindsSystem.OmegaBlueHotKey.JustPressed)

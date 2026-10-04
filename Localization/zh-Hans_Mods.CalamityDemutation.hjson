@@ -500,6 +500,25 @@ Items: {
 		Tooltip: 移动速度提高 30%，所有伤害和暴击率提高 10%
 	}
 
+	BloodflareHornedHelm: {
+		DisplayName: 血弑魔颅盔
+		Tooltip:
+			'''
+			你可以在液体中自由移动，并获得暂时的岩浆免疫
+			远程伤害与暴击率提高 10%
+			'''
+		SetBonus:
+			'''
+			极大幅提升生命再生
+			生命值低于 50% 的敌怪被击中时有几率掉落红心
+			生命值高于 50% 的敌怪被击中时有几率掉落法力星
+			血月期间被杀死的敌怪掉落鲜血球的几率大幅提高
+			按 [{0}] 释放波尔特加斯特的迷失灵魂，毁灭你的敌人
+			该效果有 30 秒冷却
+			远程武器有几率射出血液爆炸光球
+			'''
+	}
+
 	BloodflareMask: {
 		DisplayName: 血炎面具
 		Tooltip:
@@ -2065,4 +2084,7 @@ Projectiles: {
 	StreamGougeProj.DisplayName: 宇宙暗流
 	EssenceFlame2.DisplayName: 精魂烈焰
 	TarraEnergy.DisplayName: 龙蒿生命能量
+	BloodflareSoul.DisplayName: 血炎之魂
+	BloodBomb.DisplayName: 血液爆炸光球
+	BloodBombExplosion.DisplayName: 血液爆炸
 }

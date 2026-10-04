@@ -14,6 +14,8 @@ namespace CalamityDemutation.Systems
         private const string GodslayerDashDefaultKey = "H";
         /// <summary>极乐之庇护守护状态键的注册默认键（与 ElysianKeyDisplay 回退共用，避免字面量漂移）</summary>
         private const string ElysianDefaultKey = "N";
+        /// <summary>龙蒿/血炎套装技能键的注册默认键（与 TarragonKeyDisplay 回退共用，避免字面量漂移）</summary>
+        private const string TarragonDefaultKey = "Y";
         /// <summary>
         /// 套装主动技能快捷键，默认 Y。由 CalamityDemutationPlayer.ProcessTriggers 消费：
         /// 依次判定恶魔阴影套装（施加狂怒 buff 并迸发吸魂尘埃）、欧米伽蓝、塔拉近战等套装效果。
@@ -36,8 +38,9 @@ namespace CalamityDemutation.Systems
         /// </summary>
         public static ModKeybind OmegaBlueHotKey { get; private set; }
         /// <summary>
-        /// 龙蒿近战防御形态快捷键，默认 Y。由 ProcessTriggers 消费：穿着龙蒿近战套且冷却归零时进入
-        /// 防御形态（tarraDefense）。
+        /// 龙蒿/血炎套装技能快捷键，默认 Y。由 ProcessTriggers 消费：穿着龙蒿近战套且冷却归零时进入
+        /// 防御形态（tarraDefense）；穿着血炎射手套且冷却归零时释放波尔特加斯特的迷失灵魂
+        /// （bloodflareRanged，见 CalamityDemutationPlayer 的按键块与 BloodflareSoul）。
         /// </summary>
         public static ModKeybind TarragonHotKey { get; private set; }
         /// <summary>
@@ -66,6 +69,19 @@ namespace CalamityDemutation.Systems
             }
         }
         /// <summary>
+        /// 龙蒿/血炎套装技能键的可读显示名：与 <see cref="GodslayerDashKeyDisplay"/> 同一套写法
+        /// （已绑定的键用 "/" 连接），未绑定时回退为注册默认键 "Y"。
+        /// 供这两套的 setBonus 把 [KEY] 占位替换成实际绑定键。
+        /// </summary>
+        public static string TarragonKeyDisplay
+        {
+            get
+            {
+                List<string> assigned = TarragonHotKey?.GetAssignedKeys(InputMode.Keyboard);
+                return assigned != null && assigned.Count > 0 ? string.Join("/", assigned) : TarragonDefaultKey;
+            }
+        }
+        /// <summary>
         /// 模组加载时注册全部快捷键：每个键给注册名与默认键位字符串，
         /// 显示名由 Localization 的 Keybinds.&lt;注册名&gt;.DisplayName 提供（两份 hjson 都要有）
         /// </summary>
@@ -75,7 +91,7 @@ namespace CalamityDemutation.Systems
             ElysianHotKey = KeybindLoader.RegisterKeybind(Mod, "Elysian", ElysianDefaultKey);// 极乐之庇护守护状态：默认 N
             GodslayerDashHotKey = KeybindLoader.RegisterKeybind(Mod, "GodslayerDash", GodslayerDashDefaultKey);// 弑神者冲刺：默认 H
             OmegaBlueHotKey = KeybindLoader.RegisterKeybind(Mod, "OmegaBlue", "Y");// 蓝色欧米茄套装技能：默认 Y
-            TarragonHotKey = KeybindLoader.RegisterKeybind(Mod, "Tarragon", "Y");// 龙蒿防御形态：默认 Y
+            TarragonHotKey = KeybindLoader.RegisterKeybind(Mod, "Tarragon", TarragonDefaultKey);// 龙蒿防御形态 / 血炎灵魂爆发：默认 Y
         }
         /// <summary>卸载时把静态引用置空，防止残留引用导致下次加载拿到失效对象。</summary>
         public override void Unload()
