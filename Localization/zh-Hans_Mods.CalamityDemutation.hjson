@@ -164,26 +164,6 @@ Buffs: {
 		Description: 你正在吸取所有物品
 	}
 
-	ProfanedSoulGuardians: {
-		DisplayName: 亵渎之魂
-		Description: 亵渎守护者为你而战并保护你
-	}
-
-	ProfanedCrystalBuff: {
-		DisplayName: 虔诚
-		Description: 你体内的亵渎之魂已被至高女巫的强大魔法所玷污
-	}
-
-	ProfanedCrystalWhipBuff: {
-		DisplayName: 亵渎水晶鞭强化
-		Description: 守护者已被亵渎水晶鞭强化
-	}
-
-	ProfanedCrystalWhipDebuff: {
-		DisplayName: 亵渎水晶鞭减益
-		Description: 你的血肉被亵渎的水晶鞭撕开！
-	}
-
 	AbyssalWish: {
 		DisplayName: 渊洋之愿
 		Description: 你能在水下呼吸，哪怕身处深渊！
@@ -1913,41 +1893,6 @@ Items: {
 		Tooltip: 获得渊洋之愿增益，让你能在水下呼吸，哪怕身处深渊
 	}
 
-	ProfanedSoulArtifact: {
-		DisplayName: 渎魂神物
-		Tooltip:
-			'''
-			纯净
-			召唤三个亵渎守护者随你作战
-			治愈守护者每隔几秒为你恢复少量生命
-			防御守护者用亵渎岩石造出脆弱的屏障
-			进攻守护者给予一个额外的仆从栏，并在攻击时射出一环长矛
-			你的召唤物会对击中的敌人施加神圣烈焰
-			提供一个碎裂后会自动充能的小型耐久护盾
-			'''
-	}
-
-	ProfanedSoulCrystal: {
-		DisplayName: 渎神魂晶
-		Tooltip:
-			'''
-			虔诚
-			召唤三个亵渎守护者随你作战
-			你的守护者得到强化，造成远超以往的伤害，攻击也更为频繁
-			提供一个碎裂后会自动充能的大型耐久护盾
-			给予你全面的基础属性增幅
-			你的召唤伤害提高 15%，翅膀飞行时间提高 10%
-			白天时，你的召唤物获得击退，你的移动与攻击速度提升
-			夜晚时，你获得伤害减免、防御与生命再生
-			免疫岩浆与火焰
-			武器会额外发射亵渎水晶弹幕；没有仆从在场时弹幕会被强化
-			[c/ffa680:近战] [c/ffd2bf:攻击时额外掷出一连串长矛]
-			[c/99ffa7:远程] [c/bfffc8:攻击时额外掷出火球与陨石]
-			[c/8cbeff:魔法] [c/bfdbff:攻击时额外掷出一枚巨大的分裂火球，消耗 100 点法力]
-			[c/d791f2:鞭子] [c/e1b6f2:攻击时额外以亵渎水晶鞭打]
-			'''
-	}
-
 	Purity: {
 		DisplayName: 无暇粹魂晶
 		Tooltip:
@@ -2093,36 +2038,10 @@ Projectiles: {
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛
 	WelkinFractalHeld.DisplayName: 苍穹分形
-	MiniGuardianAttack.DisplayName: 进攻守护者
-	MiniGuardianDefense.DisplayName: 防御守护者
-	MiniGuardianHealer.DisplayName: 治愈守护者
-	MiniGuardianHolyRay.DisplayName: 神圣射线
-	MiniGuardianRock.DisplayName: 亵渎岩石
-	MiniGuardianSpear.DisplayName: 亵渎长矛
-	MiniGuardianStars.DisplayName: 亵渎星辰
-	MiniGuardianFireball.DisplayName: 迷你守护者火球
-	MiniGuardianFireballSplit.DisplayName: 迷你守护者分裂火球
-	ProfanedCrystalMageFireball.DisplayName: 神圣火球
-	ProfanedCrystalMageFireballSplit.DisplayName: 神圣烈焰
-	ProfanedCrystalMeleeSpear.DisplayName: 神圣长矛
-	ProfanedCrystalRangedHuges.DisplayName: 神圣回旋刃
-	ProfanedCrystalRangedSmalls.DisplayName: 神圣回旋光球
-	ProfanedCrystalWhip.DisplayName: 亵渎水晶鞭
-	PscTransformAnimation.DisplayName: 亵渎之魂水晶变身动画
-	PscTransformRocks.DisplayName: 亵渎之魂水晶变身岩石
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
 	VoidFractalHeld.DisplayName: 虚空分形
 	FinalFractalHeld.DisplayName: 最终分形
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流
 	EssenceFlame2.DisplayName: 精魂烈焰
-}
-
-Systems: {
-	UI: {
-		Cooldowns: {
-			ProfanedSoulShieldDurability: 亵渎之魂护盾耐久
-			ProfanedSoulShieldRecharge: 亵渎之魂护盾充能
-		}
-	}
 }

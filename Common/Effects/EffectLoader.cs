@@ -6,7 +6,7 @@ namespace CalamityDemutation.Common.Effects
     /// <summary>
     /// 着色器加载器：请求并托管本模组全部 .fx 资源——
     /// 刀光 KnifeRendering / KnifeDistortion、屏幕扭曲 WarpShader、中子星扭曲 NeutronWarp、
-    /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader、亵渎之魂护盾 RoverDriveShieldShader、
+    /// 变形球边缘 MetaballEdgeShader / AdditiveMetaballEdgeShader、
     /// 深渊裂隙合成 cabyss、颜色插值 ColorLerp。
     /// </summary>
     /// <remarks>
@@ -38,10 +38,6 @@ namespace CalamityDemutation.Common.Effects
         /// </summary>
         public static Asset<Effect> MetaballEdgeShader;
         /// <summary>
-        /// 亵渎之魂护盾着色器（移植自灾厄 RoverDriveShield），ProfanedSoulArtifact 绘制护罩气泡与边框圆环时使用
-        /// </summary>
-        public static Asset<Effect> RoverDriveShieldShader;
-        /// <summary>
         /// 屏幕扭曲着色器，EffectsSystem 合成 IDrawWarp 弹幕的扭曲效果时使用
         /// </summary>
         public static Asset<Effect> WarpShader;
@@ -59,7 +55,6 @@ namespace CalamityDemutation.Common.Effects
             WarpShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "WarpShader");
             MetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/MetaballEdgeShader");
             AdditiveMetaballEdgeShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "Metaballs/AdditiveMetaballEdgeShader");
-            RoverDriveShieldShader = assets.Request<Effect>(CalamityDemutationConstant.noEffects + "RoverDriveShield");
         }
         /// <summary>
         /// 卸载时把所有着色器 Asset 引用置空，便于热重载回收（注意方法名按既有约定写作 UnLoad）
@@ -71,7 +66,6 @@ namespace CalamityDemutation.Common.Effects
             WarpShader = null;
             MetaballEdgeShader = null;
             AdditiveMetaballEdgeShader = null;
-            RoverDriveShieldShader = null;
         }
     }
 }

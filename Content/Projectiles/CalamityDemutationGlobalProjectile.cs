@@ -79,28 +79,6 @@ namespace CalamityDemutation.Content.Projectiles
             }
         }
         /// <summary>
-        /// tModLoader 的 ModifyHitNPC 钩子：弹幕命中 NPC、伤害结算前调用。
-        /// 亵渎之魂水晶的鞭痕 tag 加伤：目标身上带着 ProfanedCrystalWhipDebuff（由水晶鞭命中挂上）时，
-        /// 该弹幕的主人若处于水晶态（四态 ≥ Buffs），本次伤害追加 20% 乘算伤害（强化档 40%）。
-        /// 口径照抄灾厄 2.2.2 的 ProfanedSoulCrystal.ApplyTagModifyHit，并乘上该弹幕自身的 tag 收益倍率
-        /// （ProjectileID.Sets.SummonTagDamageMultiplier，本工程各转化弹幕已按灾厄登记，如长矛 0.6、碎片 0.25）。
-        /// 原版这套结算跑在灾厄内部的 SummonTag 管线里，本工程用原版 IsATagBuff 标记 + 本钩子等价实现。
-        /// </summary>
-        public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
-        {
-            // 无主弹幕（owner = 255 = Main.maxPlayers）、敌怪弹幕与陷阱弹幕不参与（对齐灾厄对 npcProj / trap 的排除）
-            if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers || projectile.npcProj || projectile.trap)
-                return;
-            if (!target.HasBuff(ModContent.BuffType<ProfanedCrystalWhipDebuff>()))
-                return;
-            CalamityDemutationPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
-            if (modPlayer.pscState < (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Buffs)
-                return;
-            bool empowered = modPlayer.pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Empowered;
-            float tagDamageMult = ProjectileID.Sets.SummonTagDamageMultiplier[projectile.type];
-            modifiers.ScalingBonusDamage += (empowered ? 0.4f : 0.2f) * tagDamageMult;
-        }
-        /// <summary>
         /// tModLoader 的 OnHitNPC 钩子：弹幕命中 NPC 后调用。
         /// 按玩家套装触发弹幕吸血，两条分支逻辑同构、仅数值不同：
         /// - 女巫套装（silvaSet）：吸血比例 = 0.03 - numHits × 0.015；
@@ -255,18 +233,6 @@ namespace CalamityDemutation.Content.Projectiles
                 // 原初暗影焰（theFirstShadowflame）：300 帧暗影焰
                 if (modPlayer.theFirstShadowflame)
                     target.AddBuff(BuffID.ShadowFlame, 300);
-                // 亵渎之魂：召唤类（非鞭）或本水晶体系的转化弹幕命中施加圣焰；水晶态 600 帧、神器态 300 帧
-                // （与 OnHitNPCWithProj 的召唤分支对齐；经典版灾厄该 buff 名为 HolyLight）
-                if ((projectile.CountsAsClass<SummonDamageClass>() && !projectile.CountsAsClass<SummonMeleeSpeedDamageClass>())
-                    || ProfanedSoulCrystal.IsPscProjectile(projectile))
-                {
-                    int profanedHolyFlameFrames = modPlayer.profanedCrystal ? 600 : modPlayer.profanedSoulArtifact ? 300 : 0;
-                    if (profanedHolyFlameFrames > 0)
-                    {
-                        CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", profanedHolyFlameFrames);
-                        CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", profanedHolyFlameFrames);
-                    }
-                }
             }
             // ── 以下为近战专属：用 if 包裹而非提前 return，避免误挡下面的套装吸血（吸血不按伤害类型过滤）──
             bool isMelee = projectile.CountsAsClass<MeleeDamageClass>() || projectile.CountsAsClass<MeleeNoSpeedDamageClass>();

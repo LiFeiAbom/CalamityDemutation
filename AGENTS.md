@@ -246,6 +246,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**按用户要求删除渎神魂晶（ProfanedSoulCrystal）及其下位渎魂神物（ProfanedSoulArtifact）的全部内容**。
+  这两件是同一套召唤向综合饰品（神器 → 水晶），删除共 83 个文件＋一批既有代码，清单：
+  ① 物品与变身装备贴图：`Content/Items/Accessories/Comprehensive/` 下的 `ProfanedSoulCrystal` / `ProfanedSoulArtifact`
+  （各 +png）与 7 张 `ProfanedSoulTrans{,Night}_Head/Body/Legs/Wings.png`（EquipLoader 注册的昼夜两套变身外观）。
+  ② 三守护者与其从属弹幕：`Content/Projectiles/Summon/MiniGuardian{Attack,Defense,Healer,Fireball,FireballSplit,HolyRay,Rock,Spear,Stars,Targeting}`
+  （含 Rock1~6、HolyRay 的 Night/Mid/End 等贴图）；转化弹幕 `ProfanedCrystal{MeleeSpear,RangedHuges,RangedSmalls,MageFireball,MageFireballSplit,Whip}`
+  与变身动画 `PscTransformAnimation` / `PscTransformRocks`（+Rocks1~6.png）。
+  ③ 增益：`Content/Buffs/SummonBuffs/ProfanedCrystalBuff`、`ProfanedCrystalWhipBuff`、`ProfanedCrystalWhipDebuff`、`ProfanedSoulGuardians`（各 +png）。
+  ④ 专属冷却与音效/着色器：`Systems/Cooldowns/ProfanedSoulShield.cs`（两个 CooldownHandler：耐久条＋回充条，含 4 张贴图）、
+  `Sounds/Custom/ProfanedGuardians/GuardianShieldDeactivate.ogg`、`Sounds/NPCHit/ProvidenceHurt.ogg` 与两个 `SoundStyle` 字段、
+  `Effects/RoverDriveShield.fx`＋`.fxc` 与 `EffectLoader.RoverDriveShieldShader`（护罩气泡着色器，只有它用）。
+  ⑤ 代码：玩家类删掉 15 段（字段块、ResetEffects/UpdateDead 复位、守护者召唤与治疗、水晶四态属性块、护盾耐久/回充、
+  冷却条同步、`FrameEffects`＋`PostUpdate` 变身外观与腿部动画帧（含 `AnimationType`/`OnSolidGround`/`IsValidTransitionFrame`/`HandlePscAnimationFrames`）、
+  `FreeDodge` 的护盾分支、`ModifyHurtInfo_ProfanedShield`、`rollBabSpears`、`PostItemCheck` 转化派发，
+  以及圣焰施加、召唤跨职业 nerf 豁免、变身死亡文案三处引用），共 −565 行；
+  `CalamityDemutationGlobalProjectile` 删掉鞭痕 tag `ModifyHitNPC` 与圣焰分支。
+  ⑥ 本地化：中英各删 4 个增益块、2 个物品块、17 条弹幕名与整个 `Systems.UI.Cooldowns`（删后成空段）；`Systems` 段整体移除。
+  **保留（不属于本线）**：亵渎之怒药水 `ProfanedRagePotion` 与其增益 `ProfanedRage`；
+  通用冷却机架（`Systems/Cooldowns` 的 Cooldown/CooldownInstance/CooldownHandler/CooldownRegistry、
+  `Utilities/CDUtil_Cooldown`、`Systems/UI/CooldownRack*`）也保留——它是泛用基础设施，只是目前没有别的使用者。
+  验证：编译 0 警告 0 错误，资源自检 142 条全命中（原 169 条）。
 - 最近一批工作（2026-10-04）：**按用户要求删除巨龙七星灯（YharonSonStaff）**。连同其全套牵连一并清除：
   物品 `Content/Items/Weapons/Summon/YharonSonStaff.cs`（+png）、召唤物
   `Content/Projectiles/Summon/SonYharon.cs`（+png）、增益 `Content/Buffs/SummonBuffs/SonYharonBuff.cs`（+png）、

@@ -164,26 +164,6 @@ Buffs: {
 		Description: You are sucking up all the items
 	}
 
-	ProfanedSoulGuardians: {
-		DisplayName: The Profaned Soul
-		Description: The profaned guardians fight for and protect you
-	}
-
-	ProfanedCrystalBuff: {
-		DisplayName: Devotion
-		Description: The profaned soul within has been defiled by the powerful magic of a supreme witch
-	}
-
-	ProfanedCrystalWhipBuff: {
-		DisplayName: Profaned Crystal Whip Empowerment
-		Description: The guardians have been empowered by the profaned crystal whip
-	}
-
-	ProfanedCrystalWhipDebuff: {
-		DisplayName: Profaned Crystal Whip Debuff
-		Description: Your flesh has been torn asunder by a profaned crystalline whip!
-	}
-
 	AbyssalWish: {
 		DisplayName: Abyssal Wish
 		Description: You can breathe underwater, even in the Abyss!
@@ -1914,41 +1894,6 @@ Items: {
 		Tooltip: Grants the Abyssal Wish buff, letting you breathe underwater, even in the Abyss
 	}
 
-	ProfanedSoulArtifact: {
-		DisplayName: Profaned Soul Artifact
-		Tooltip:
-			'''
-			Purity
-			Summons three profaned guardians which accompany you in battle
-			The healer guardian heals you for a small amount of health every few seconds
-			The defensive guardian creates a weak barrier of profaned rock
-			The offensive guardian grants an additional minion slot and fires a ring of spears while attacking
-			Your summons inflict Holy Flames on struck enemies
-			Provides a small durability shield which recharges after it breaks
-			'''
-	}
-
-	ProfanedSoulCrystal: {
-		DisplayName: Profaned Soul Crystal
-		Tooltip:
-			'''
-			Devotion
-			Summons three profaned guardians which accompany you in battle
-			Your guardians are empowered, dealing far more damage and attacking far more often
-			Provides a large durability shield which recharges after it breaks
-			Grants a comprehensive boost to your base stats
-			Increases your summon damage by 15% and wing flight time by 10%
-			During the day, your summons gain knockback and you move and attack faster
-			At night, you gain damage reduction, defense and life regeneration
-			Grants immunity to lava and fire
-			Weapons additionally fire profaned crystal projectiles, empowered if no minions are active
-			[c/ffa680:Melee] [c/ffd2bf:attacks additionally hurl a barrage of spears]
-			[c/99ffa7:Ranged] [c/bfffc8:attacks additionally hurl fireballs and meteors]
-			[c/8cbeff:Magic] [c/bfdbff:attacks additionally hurl a giant splitting fireball, costing 100 mana]
-			[c/d791f2:Whips] [c/e1b6f2:attacks additionally lash with profaned crystal]
-			'''
-	}
-
 	Purity: {
 		DisplayName: Purity
 		Tooltip:
@@ -2094,36 +2039,10 @@ Projectiles: {
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
 	WelkinFractalHeld.DisplayName: Welkin Fractal Held
-	MiniGuardianAttack.DisplayName: Offensive Guardian
-	MiniGuardianDefense.DisplayName: Defensive Guardian
-	MiniGuardianHealer.DisplayName: Healer Guardian
-	MiniGuardianHolyRay.DisplayName: Holy Ray
-	MiniGuardianRock.DisplayName: Profaned Rock
-	MiniGuardianSpear.DisplayName: Profaned Spear
-	MiniGuardianStars.DisplayName: Profaned Star
-	MiniGuardianFireball.DisplayName: Mini Guardian Fireball
-	MiniGuardianFireballSplit.DisplayName: Mini Guardian Fireball Split
-	ProfanedCrystalMageFireball.DisplayName: Holy Bab Fireball
-	ProfanedCrystalMageFireballSplit.DisplayName: Holy Bab Fire
-	ProfanedCrystalMeleeSpear.DisplayName: Holy Friendly Spear
-	ProfanedCrystalRangedHuges.DisplayName: Holy Bab Boomer
-	ProfanedCrystalRangedSmalls.DisplayName: Holy Bab Boomer Orb
-	ProfanedCrystalWhip.DisplayName: Profaned Crystal Whip
-	PscTransformAnimation.DisplayName: Psc Transform Animation
-	PscTransformRocks.DisplayName: Psc Transform Rocks
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
 	VoidFractalHeld.DisplayName: Void Fractal Held
 	FinalFractalHeld.DisplayName: Final Fractal Held
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
 	EssenceFlame2.DisplayName: Essence Flame
-}
-
-Systems: {
-	UI: {
-		Cooldowns: {
-			ProfanedSoulShieldDurability: Profaned Soul Shield Durability
-			ProfanedSoulShieldRecharge: Profaned Soul Shield Recharge
-		}
-	}
 }

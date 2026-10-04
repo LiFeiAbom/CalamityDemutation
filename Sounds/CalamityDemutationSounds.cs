@@ -16,10 +16,6 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle DevourerSegmentBreak1 = new("CalamityDemutation/Sounds/Custom/SCalSounds/DevourerSegmentBreak1") { Volume = 0.3f };
         /// <summary>亵渎天神神圣爆破冲击（ProvidenceHolyBlastImpact）：极乐之庇护冲刺撞击的神圣爆炸音</summary>
         public static readonly SoundStyle ProvidenceHolyBlastImpact = new("CalamityDemutation/Sounds/Custom/SCalSounds/ProvidenceHolyBlastImpact") { Volume = 0.6f };
-        /// <summary>亵渎守护者护盾关闭（GuardianShieldDeactivate）：亵渎之魂护盾在位时的受击音（灾厄原用在 ProfanedSoulCrystal.HurtSound）</summary>
-        public static readonly SoundStyle GuardianShieldDeactivate = new("CalamityDemutation/Sounds/Custom/ProfanedGuardians/GuardianShieldDeactivate");
-        /// <summary>亵渎天神受击（ProvidenceHurt）：亵渎之魂护盾已破时的受击音（同上，灾厄原为 Providence.HurtSound）</summary>
-        public static readonly SoundStyle ProvidenceHurt = new("CalamityDemutation/Sounds/NPCHit/ProvidenceHurt");
         /// <summary>肉感斩击（MeatySlash）</summary>
         public static readonly SoundStyle MeatySlashSound = new("CalamityDemutation/Sounds/Custom/MeatySlash");
         /// <summary>血炎游侠头激活音（女妖之爪重制版引导/收招时使用，音频取自灾厄 2.0.3.9）</summary>

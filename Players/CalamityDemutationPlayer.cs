@@ -603,97 +603,6 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool theAbsorber = false;
         /// <summary>
-        /// 已装备亵渎之魂神器（ProfanedSoulArtifact）：三守护者召唤、治疗与护盾的结算依据
-        /// </summary>
-        public bool profanedSoulArtifact = false;
-        /// <summary>
-        /// 亵渎之魂守护者标记（对应 ProfanedSoulGuardians buff）与治疗守护者的回血计时
-        /// </summary>
-        public bool profanedSoulGuardians = false;
-        public int profanedSoulHealCounter = 300;
-        /// <summary>
-        /// 已装备亵渎之魂水晶（ProfanedSoulCrystal）：水晶四态属性、守护者强化与护盾增强的结算依据
-        /// </summary>
-        public bool profanedCrystal = false;
-        /// <summary>
-        /// 水晶激活态（pscState &gt;= Buffs）：决定护盾/守护者用哪套水晶常量；
-        /// 每帧在 PostUpdateMiscEffects 重算（不是跨帧计时器，故可随 pscState 一起刷新）
-        /// </summary>
-        public bool profanedCrystalBuffs = false;
-        /// <summary>
-        /// 水晶四态（0=Vanity 1=Buffs 2=Enraged 3=Empowered，对应 ProfanedSoulCrystal.ProfanedSoulCrystalState）：
-        /// 每帧在 PostUpdateMiscEffects 由 GetPscStateFor 刷新
-        /// </summary>
-        public int pscState = 0;
-        /// <summary>
-        /// 上一帧的水晶四态（对应灾厄 2.2.2 的 profanedCrystalStatePrevious）：在 ResetEffects 里保存，
-        /// 供水晶鞭 buff（UpdateBuffs 阶段，早于本帧四态重算）判断"离开水晶态即自清"
-        /// </summary>
-        public int profanedCrystalStatePrevious = 0;
-        /// <summary>
-        /// 上一帧是否装备水晶（对应灾厄 2.2.2 的 profanedCrystalPrevious）：在 ResetEffects 里保存，
-        /// 用于检测"首次装备"并触发变身动画
-        /// </summary>
-        public bool profanedCrystalPrevious = false;
-        /// <summary>
-        /// 亵渎之魂水晶的武器转化计数器（对应灾厄 2.2.2 的 profanedSoulWeaponUsage）：
-        /// 按"每次成功使用武器"累加，各职业分支用取模/阈值决定这一击是否额外发射转化弹幕。
-        /// 换职业（profanedSoulWeaponType 变化）或累加到 370 时归零。跨帧累积，不能放进 ResetEffects
-        /// </summary>
-        public int profanedSoulWeaponUsage = 0;
-        /// <summary>
-        /// 上一次触发转化的武器职业（1=近战 2=远程 3=魔法 5=鞭，原版的盗贼槽 4 已整条删除；
-        /// 对应灾厄 2.2.2 的 profanedSoulWeaponType）：与本次不同即清零计数器，避免职业节奏互相污染
-        /// </summary>
-        public int profanedSoulWeaponType = 0;
-        /// <summary>
-        /// 变身动画剩余帧数（120 → 1 递减，-1 表示无动画）：由 PscTransformAnimation 每帧写入，
-        /// 卸载/死亡时复位为 -1。跨帧计时器，**不能**放进 ResetEffects（每帧清零会立刻结束动画）
-        /// </summary>
-        public int profanedCrystalAnim = -1;
-        /// <summary>
-        /// 变身翅膀动画计数器（对应灾厄 2.2.2 的 profanedCrystalWingCounter）：Key=当前帧号、
-        /// Value=该帧剩余停留帧数；Enraged 及以上档 5 帧循环、否则 8 帧循环。
-        /// 跨帧计时器，**不能**放进 ResetEffects（每帧清零会导致每帧切换翅帧）
-        /// </summary>
-        public KeyValuePair<int, int> profanedCrystalWingCounter = new KeyValuePair<int, int>(1, 10);
-        /// <summary>
-        /// 变身腿部动画计数器（对应灾厄 2.2.2 的 profanedCrystalAnimCounter）：
-        /// Key=帧号（0..7 待机 / 8 跳跃 / 9..21 行走）、Value=该帧剩余停留帧数。跨帧计时器，**不能**放进 ResetEffects
-        /// </summary>
-        public KeyValuePair<int, int> profanedCrystalAnimCounter = new KeyValuePair<int, int>(0, 10);
-        /// <summary>
-        /// 亵渎之魂护盾：是否可见、当前耐久、破盾后的回充延迟与回充进度
-        /// （本工程自实现替代灾厄的着色器护盾，无 UI 条）
-        /// </summary>
-        public bool profanedSoulShieldVisible = false;
-        /// <summary>
-        /// 亵渎之魂水晶的**变身外观**是否显示（对应饰品的可见性开关）：
-        /// 装在饰品栏且"显示"（hideVisual == false）时为 true，放在时装栏时也为 true，其余（隐藏/未装备）为 false。
-        /// 由 ProfanedSoulCrystal.UpdateAccessory / UpdateVanity 每帧置位，FrameEffects 据此覆写头/身/腿/翅四个装备槽。
-        /// 不能复用 profanedSoulShieldVisible——神器也会置位那个标记，复用会让穿神器时也显示水晶外观
-        /// </summary>
-        public bool profanedCrystalVisible = false;
-        public int profanedSoulShieldDurability = 0;
-        public int profanedSoulShieldRechargeDelay = 0;
-        public float profanedSoulShieldRechargeProgress = 0f;
-        /// <summary>
-        /// 本次"护盾被打空"是否已排入回充延迟：一次性闸门，避免延迟走完后每帧重启回充（对齐灾厄
-        /// "回充冷却不在场才 AddCooldown"的语义）
-        /// </summary>
-        private bool profanedSoulShieldRechargeArmed = false;
-        /// <summary>
-        /// 本次受击是否已被亵渎之魂护盾"完全吸收"（对应原版 freeDodgeFromShieldAbsorption）：
-        /// 由 ModifyHurtInfo_ProfanedShield 置位、由 FreeDodge 消费并复位。
-        /// 置位后 FreeDodge 返回 true，取消这次受击的伤害/击退/减益（原版就是这么做的）
-        /// </summary>
-        private bool profanedSoulShieldFreeDodge = false;
-        /// <summary>
-        /// 护盾受击音效的节流计时（对应原版 2.2.2 的 hurtSoundTimer）：护盾在位时每次受击替换成
-        /// 守护者护盾关闭音，并把这个计时置 20 帧，避免连续受击时音效叠在一起。每帧在 ResetEffects 里递减
-        /// </summary>
-        private int profanedSoulShieldHurtSoundTimer = 0;
-        /// <summary>
         /// 灾厄饰品类型缓存（元素手套/核生成及其下位饰品），供"还原灾厄内容削弱"回调扫描饰品栏用。
         /// 首次调用 RevertCalamityContentNerfs 时 TryFind 填充（-1 未初始化，0 表示灾厄未安装或未找到）
         /// </summary>
@@ -866,21 +775,7 @@ namespace CalamityDemutation.Players
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
-            // 先保存上一帧的水晶状态再清零（对齐 2.2.2 ResetEffects 里的 previous 赋值）：
-            // profanedCrystalStatePrevious 供水晶鞭 buff 在 UpdateBuffs 阶段判断是否已离开水晶态
-            profanedCrystalStatePrevious = pscState;
-            profanedCrystalPrevious = profanedCrystal;
-            profanedCrystal = false;
-            profanedSoulArtifact = false;
-            profanedSoulGuardians = false;
-            // 注意：profanedSoulHealCounter 是跨帧计时器，**不能**在此重置（每帧清零会导致每帧回血）；
-            // 原版灾厄只在 UpdateDead 里把它复位为 300
-            profanedSoulShieldVisible = false;
-            profanedCrystalVisible = false;
             purity = false;
-            // 护盾受击音效的节流计时（对齐 2.2.2 的 hurtSoundTimer）：每帧递减，见 ModifyHurt
-            if (profanedSoulShieldHurtSoundTimer > 0)
-                profanedSoulShieldHurtSoundTimer--;
             radiantOoze = false;
             rampartofDeities = false;
             redDevil = false;
@@ -1032,15 +927,6 @@ namespace CalamityDemutation.Players
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
-            profanedCrystal = false;
-            profanedCrystalAnim = -1;                                      // 死亡时结束变身动画计时
-            profanedCrystalWingCounter = new KeyValuePair<int, int>(1, 10); // 翅动画计数器复位（跨帧计时器只能在此/卸装时复位）
-            profanedCrystalAnimCounter = new KeyValuePair<int, int>(0, 10); // 腿动画计数器复位
-            profanedSoulArtifact = false;
-            profanedSoulGuardians = false;
-            profanedSoulHealCounter = 300;   // 死亡时复位治疗计时器（对齐灾厄 UpdateDead 的 healCounter = 300）
-            profanedSoulShieldVisible = false;
-            profanedCrystalVisible = false;
             purity = false;
             purityHealSlowdownFrames = 0;   // 跨帧计时器：源只在死亡时清零（见字段注释，不能进 ResetEffects）
             radiantOoze = false;
@@ -2822,173 +2708,9 @@ namespace CalamityDemutation.Players
             {
                 Player.noFallDmg = true;
             }
-            // 亵渎之魂神器/水晶：维持三守护者、治疗与仆从栏加成
-            // 数值口径：神器 = 伤害 52 / 投矛 15f / ai[0]=0；水晶 = 伤害 750 / 投矛 480f / ai[0]=1
-            if (profanedSoulArtifact)
-            {
-                Player.maxMinions++;   // 攻击守护者常驻 +1 仆从栏
-                profanedSoulGuardians = true;   // 置位标记，供 buff 与其它结算读取（须在所有端置位，否则联机下别人的守护者 60 秒后消散）
-                if (Player.whoAmI == Main.myPlayer)
-                {
-                    if (Player.FindBuffIndex(ModContent.BuffType<ProfanedSoulGuardians>()) == -1)
-                        Player.AddBuff(ModContent.BuffType<ProfanedSoulGuardians>(), 3600, true);   // 补上守护者 buff（3600 帧 = 60 秒）
-                    // 守护者攻击基值：神器 52 / 水晶 346（用户 2026-09-28 改为「对齐灾厄本体」）。
-                    // 灾厄 1.4.4 / 2.0.3.9 / 2.0.7.2 各版都写 profanedCrystal ? 346 : 52；
-                    // 本工程曾按「回调削弱前」取旧值最高档 1000，该口径已废。
-                    // 三只都必须回写 originalDamage，否则各族弹幕按 originalDamage 派生的伤害全为 0（星弹齐射会完全没伤害）。
-                    // 原版还会过 ApplyArmorAccDamageBonusesTo，本工程无该方法故跳过。
-                    int babDamage = profanedCrystal ? 346 : 52;
-                    float babCheck = profanedCrystal ? 1f : 0f;            // ai[0]：1 = 由水晶形态召唤
-                    float spearCounter = profanedCrystal ? 480f : 15f;     // 攻击守护者 ai[1]：投矛计时（水晶 480 = 60*8，神器 15）
-                    if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianHealer>()] < 1)
-                    {
-                        Projectile babH = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, Vector2.UnitY * -6f, ModContent.ProjectileType<MiniGuardianHealer>(), 0, 0f, Main.myPlayer, babCheck);   // 治疗守护者：本体不造成伤害
-                        babH.originalDamage = babDamage;
-                    }
-                    if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianDefense>()] < 1)
-                    {
-                        Projectile babD = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, Vector2.UnitY * -3f, ModContent.ProjectileType<MiniGuardianDefense>(), 1, 1f, Main.myPlayer, babCheck);   // 防御守护者
-                        babD.originalDamage = babDamage;
-                    }
-                    if (Player.ownedProjectileCounts[ModContent.ProjectileType<MiniGuardianAttack>()] < 1)
-                    {
-                        Projectile babO = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, Vector2.UnitY * -1f, ModContent.ProjectileType<MiniGuardianAttack>(), 1, 1f, Main.myPlayer, babCheck, spearCounter);   // 攻击守护者：ai[0] 形态标记、ai[1] 投矛计时
-                        babO.originalDamage = babDamage;
-                    }
-                }
-                if (profanedSoulHealCounter > 0)
-                    profanedSoulHealCounter--;
-                if (profanedSoulHealCounter <= 0)
-                {
-                    profanedSoulHealCounter = 300;   // 每 300 帧（5 秒）触发一次治疗
-                    if (Player.whoAmI == Main.myPlayer)
-                        Player.Heal(10);   // 治疗守护者：每次为玩家回复 10 点生命（对应 2.2.2 的 HealPlayer(10)）
-                }
-            }
-            // 亵渎之魂水晶：每帧刷新四态（不靠绘制/同步包）并结算水晶态属性块（对齐 2.2.2 CalamityPlayerMiscEffects 4149-4188）
-            if (profanedCrystal)
-            {
-                pscState = (int)ProfanedSoulCrystal.GetPscStateFor(Player);
-                profanedCrystalBuffs = pscState >= (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Buffs;
-                if (Player.FindBuffIndex(ModContent.BuffType<ProfanedCrystalBuff>()) == -1)
-                    Player.AddBuff(ModContent.BuffType<ProfanedCrystalBuff>(), 3600, true);   // "Devotion" 标记 buff（装备期间由 buff 自身续期）
-                // 本工程装备即非 Vanity（无 Boss/仆从栏门槛），故非 Vanity == profanedCrystalBuffs
-                if (profanedCrystalBuffs)
-                {
-                    bool empowered = pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Empowered;
-                    bool day = empowered || pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Buffs;     // 白天或强化档
-                    bool night = empowered || pscState == (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Enraged; // 夜晚或强化档
-                    Player.lavaImmune = true;                    // 免疫岩浆
-                    Player.fireWalk = true;                      // 可在岩浆上行走
-                    Player.buffImmune[BuffID.OnFire] = true;     // 免疫着火了
-                    Player.buffImmune[BuffID.Burning] = true;    // 免疫燃烧
-                    Player.buffImmune[BuffID.Daybreak] = true;   // 免疫破晓（对齐灾厄的 Daybroken，本工程取原版同名 Daybreak）
-                    if (day)   // 白天档免疫圣焰（现代版 HolyFlames / 经典版 HolyLight）
-                    {
-                        AddCalamityBuffImmune(Player, "CalamityMod", "HolyFlames");
-                        AddCalamityBuffImmune(Player, "CalamityModClassicPreTrailer", "HolyLight");
-                    }
-                    else if (night)   // 夜晚档免疫夜霜（仅现代版有名）
-                    {
-                        AddCalamityBuffImmune(Player, "CalamityMod", "Nightwither");
-                    }
-                    if (Player.wingTimeMax > 0)
-                        Player.wingTimeMax = (int)(Player.wingTimeMax * 1.1D);        // 无条件：飞行时间 ×1.1
-                    Player.GetDamage<SummonDamageClass>() += 0.15f;                   // 无条件：召唤伤害 +15%
-                    if (day)   // 白天档
-                    {
-                        Player.GetKnockback<SummonDamageClass>() += 0.15f;            // 仆从击退 +15%
-                        Player.moveSpeed += 0.1f;                                     // 移速 +10%
-                        Player.ignoreWater = true;                                    // 水中不受阻
-                        Player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) += 1f;    // 召唤近战攻速 +1（只影响 PSC 鞭）
-                    }
-                    else if (night)   // 夜晚档
-                    {
-                        Player.endurance += 0.05f;   // 减伤 +5%
-                        Player.statDefense += 15;    // 防御 +15
-                        Player.lifeRegen += 5;       // 生命回复 +5
-                    }
-                    // 按四态给玩家点光源（对齐 2.2.2：夜晚 1.2/0.21、白天 1/0.2，强化档因同时算 day+night 而取夜晚色）。
-                    // 原版还有 !ZoneAbyss 的守卫（灾厄深渊区域），本工程无该区域判定故省略
-                    Lighting.AddLight(Player.Center, night ? 1.2f : day ? 1f : 0.2f, night ? 0.21f : day ? 0.2f : 0.01f, 0f);
-                }
-            }
-            else
-            {
-                // 未装备水晶：清掉派生状态，避免残留上一帧的四态
-                profanedCrystalBuffs = false;
-                pscState = 0;
-            }
-            // 亵渎之魂护盾：维护耐久池。神器档 25（延迟 5 秒 / 回充 2 秒），水晶档 125（延迟 5 秒 / 回充 4 秒）。
-            // 水晶档上限取自 ProfanedSoulCrystal.ShieldDurabilityMax（2026-09-28 改为 125 = 2.0.3.9 / 2.0.7.2 源码值）
-            int profanedShieldMax = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldDurabilityMax : ProfanedSoulArtifact.ShieldDurabilityMax;
-            int profanedShieldDelay = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldRechargeDelay : ProfanedSoulArtifact.ShieldRechargeDelay;
-            int profanedShieldRechargeTime = profanedCrystalBuffs ? ProfanedSoulCrystal.ShieldRechargeTime : ProfanedSoulArtifact.ShieldRechargeTime;
-            if (!profanedSoulArtifact)
-            {
-                profanedSoulShieldDurability = 0;
-                profanedSoulShieldRechargeDelay = 0;
-                profanedSoulShieldRechargeProgress = 0f;
-                profanedSoulShieldRechargeArmed = false;
-            }
-            else
-            {
-                // 护盾为空且本次尚未排入回充：开始一次回充延迟（一次性，延迟走完后不得重启）
-                if (profanedSoulShieldDurability <= 0 && !profanedSoulShieldRechargeArmed)
-                {
-                    profanedSoulShieldRechargeArmed = true;
-                    profanedSoulShieldRechargeDelay = profanedShieldDelay;
-                    profanedSoulShieldRechargeProgress = 0f;
-                }
-                // 耐久重新长出（开始逐帧回充）后解除闸门，下次被打空才会重新计时
-                if (profanedSoulShieldDurability > 0)
-                    profanedSoulShieldRechargeArmed = false;
-                if (profanedSoulShieldDurability < profanedShieldMax)
-                {
-                    if (profanedSoulShieldRechargeDelay > 0)
-                        profanedSoulShieldRechargeDelay--;
-                    else
-                    {
-                        profanedSoulShieldRechargeProgress += profanedShieldMax / (float)profanedShieldRechargeTime;   // 逐帧累计充能进度
-                        int recharged = (int)profanedSoulShieldRechargeProgress;
-                        if (recharged > 0)
-                        {
-                            profanedSoulShieldRechargeProgress -= recharged;
-                            profanedSoulShieldDurability = Math.Min(profanedSoulShieldDurability + recharged, profanedShieldMax);
-                        }
-                    }
-                }
-            }
-            // 冷却机架：只有本地玩家需要冷却条 UI（护盾耐久未做网络同步，与护罩绘制同一口径）
+            // 冷却机架：只有本地玩家需要冷却条 UI
             if (Player.whoAmI == Main.myPlayer)
             {
-                // 耐久条：装备神器且护盾大于 0 时存在；duration 固定为耐久上限，timeLeft 始终等于当前耐久（耐久变化即同步）
-                if (profanedSoulArtifact && profanedSoulShieldDurability > 0)
-                {
-                    if (!cooldowns.TryGetValue(ProfanedSoulShield.ID, out CooldownInstance durabilityCD))
-                        durabilityCD = Player.AddCooldown(ProfanedSoulShield.ID, profanedShieldMax);
-                    if (durabilityCD is not null)
-                    {
-                        durabilityCD.duration = profanedShieldMax;   // 总长恒为耐久上限，不随当前耐久变化
-                        durabilityCD.timeLeft = profanedSoulShieldDurability;               // 剩余量 = 当前耐久，驱动圆环长度
-                    }
-                }
-                else if (cooldowns.ContainsKey(ProfanedSoulShield.ID))
-                    cooldowns.Remove(ProfanedSoulShield.ID);                                 // 未装备或护盾归零：撤掉耐久条
-                // 回充条：只在回充延迟期间同步显示剩余延迟；延迟结束后不再同步，让它自然到期（到期时播结束音效并被移除）。
-                // 注意：本工程护盾回充完全由上面的耐久逻辑逐帧完成，这里不再像灾厄 OnCompleted 那样额外赠 1 点耐久
-                if (profanedSoulArtifact && profanedSoulShieldDurability <= 0 && profanedSoulShieldRechargeDelay > 0)
-                {
-                    if (!cooldowns.TryGetValue(ProfanedSoulShieldRecharge.ID, out CooldownInstance rechargeCD))
-                        rechargeCD = Player.AddCooldown(ProfanedSoulShieldRecharge.ID, profanedShieldDelay);
-                    if (rechargeCD is not null)
-                    {
-                        rechargeCD.duration = profanedShieldDelay;
-                        rechargeCD.timeLeft = profanedSoulShieldRechargeDelay;               // 与剩余回充延迟同步
-                    }
-                }
-                // 注：卸下神器时**故意不撤掉**回充条——灾厄如此（防热插拔蹭回充），让它自然到期即可；
-                // ShouldPlayEndSound 已限定只有装备状态才播结束音效
                 // 逐帧结算所有冷却：允许倒计时者递减，Tick 恒执行，到期（timeLeft < 0）时执行 OnCompleted、播结束音效并移除
                 IList<string> expiredCooldowns = new List<string>(16);
                 var cdIterator = cooldowns.GetEnumerator();
@@ -2999,7 +2721,7 @@ namespace CalamityDemutation.Players
                     CooldownInstance cdInstance = kv.Value;
                     CooldownHandler cdHandler = cdInstance.handler;
                     if (cdHandler.CanTickDown)
-                        --cdInstance.timeLeft;   // 亵渎护盾耐久条自带同步，不依赖此处的递减
+                        --cdInstance.timeLeft;   // 逐帧递减剩余时间
                     cdHandler.Tick();
                     if (cdInstance.timeLeft < 0)
                     {
@@ -3294,123 +3016,6 @@ namespace CalamityDemutation.Players
                 if (hasVoltaicJelly) Player.maxMinions += 1;
                 if (hasJellyBattery) Player.maxMinions += 1;
             }
-        }
-        // ── 亵渎之魂水晶：变身外观（对齐 2.2.2 的 TransformFrameEffects / TransformPostUpdate） ──
-        /// <summary>变身腿部动画的三态（对应灾厄的 AnimationType）</summary>
-        private enum AnimationType
-        {
-            Idle,
-            Jump,
-            Walk
-        }
-        /// <summary>
-        /// tModLoader 的 FrameEffects 钩子：每帧在可见装备结算之后调用。
-        /// 本工程没有 IL，故不照搬灾厄 TransformationAccessory 扫描饰品栏的做法，
-        /// 而是在**变身外观可见时**（饰品可见性打开，或水晶放在时装栏）直接把 player.head/body/legs/wings
-        /// 写成昼夜两套变身装备槽（身体只有白天一套，夜晚沿用，与 2.2.2 的 EquipSlots 一致），随后执行变身翅膀动画。
-        /// 注意：这里只看 profanedCrystalVisible，不看 profanedCrystal——水晶放时装栏时后者为 false，
-        /// 但外观照样要显示（且不给任何属性加成）
-        /// </summary>
-        public override void FrameEffects()
-        {
-            if (!profanedCrystalVisible)
-                return;
-            Player.head = Main.dayTime ? ProfanedSoulCrystal.DayHeadSlot : ProfanedSoulCrystal.NightHeadSlot;    // 昼夜头贴图
-            Player.body = ProfanedSoulCrystal.DayBodySlot;                                                       // 身体：夜晚沿用白天贴图
-            Player.legs = Main.dayTime ? ProfanedSoulCrystal.DayLegsSlot : ProfanedSoulCrystal.NightLegsSlot;    // 昼夜腿贴图
-            Player.wings = Main.dayTime ? ProfanedSoulCrystal.DayWingsSlot : ProfanedSoulCrystal.NightWingsSlot; // 昼夜翅贴图
-            bool enrage = pscState >= (int)ProfanedSoulCrystal.ProfanedSoulCrystalState.Enraged;
-            // 翅动画：当前帧停留帧数归零就换下一帧（4 帧循环），每帧停留 Enraged 及以上 5 帧、平常 8 帧
-            if (profanedCrystalWingCounter.Value == 0)
-            {
-                int key = profanedCrystalWingCounter.Key;
-                profanedCrystalWingCounter = new KeyValuePair<int, int>(key == 3 ? 0 : key + 1, enrage ? 5 : 8);
-            }
-            Player.wingFrame = profanedCrystalWingCounter.Key;
-            profanedCrystalWingCounter = new KeyValuePair<int, int>(profanedCrystalWingCounter.Key, profanedCrystalWingCounter.Value - 1);
-            Player.armorEffectDrawOutlines = true;
-            if (profanedCrystalBuffs)
-            {
-                Player.armorEffectDrawShadow = true;
-                if (enrage)
-                    Player.armorEffectDrawOutlinesForbidden = true;
-            }
-        }
-        /// <summary>
-        /// tModLoader 的 PostUpdate 钩子：每帧在玩家更新末尾调用，执行变身腿部动画（对齐 2.2.2 的 TransformPostUpdate）。
-        /// 腿槽为本水晶的变身贴图时，按三态（待机 / 跳跃 / 行走）推进帧号并写 player.legFrame.Y。
-        /// 与 FrameEffects 同口径：只要求"外观可见"（时装栏也算），腿槽是不是变身贴图由 validEquipSlot 再兜一层
-        /// </summary>
-        public override void PostUpdate()
-        {
-            if (!profanedCrystalVisible)
-                return;
-            bool validEquipSlot = Player.legs == ProfanedSoulCrystal.DayLegsSlot || Player.legs == ProfanedSoulCrystal.NightLegsSlot;
-            if (!validEquipSlot)
-                return;
-            bool usingCarpet = Player.carpetTime > 0 && Player.controlJump;   // 飞毯：有实地时按待机处理，用跳跃帧说不通
-            AnimationType animType = AnimationType.Walk;
-            if ((Player.sliding || Player.velocity.Y != 0f || Player.mount.Active || Player.grappling[0] != -1 || !OnSolidGround(Player) || Player.GoingDownWithGrapple) && !usingCarpet)
-                animType = AnimationType.Jump;
-            else if (Player.velocity.X == 0f || usingCarpet)
-                animType = AnimationType.Idle;
-            int frame = HandlePscAnimationFrames(animType);
-            Player.legFrame.Y = Player.legFrame.Height * frame;
-        }
-        /// <summary>
-        /// 玩家是否站在实心地面上（复刻灾厄 PlayerUtils.CheckSolidGround 的无参版本）：
-        /// 纵向速度必须为 0，且脚下那一格是实心块（IsTileSolidGround：含平台等 tileSolidTop 命中物）
-        /// </summary>
-        private static bool OnSolidGround(Player player)
-        {
-            if (player.velocity.Y != 0f)
-                return false;
-            int tileX = (int)player.Center.X / 16;
-            int tileY = (int)(player.position.Y + player.height - 1f) / 16 + 1;
-            if (!WorldGen.InWorld(tileX, tileY, 1))
-                return false;
-            Tile tile = Main.tile[tileX, tileY];
-            return tile != null && tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]);
-        }
-        /// <summary>
-        /// 判断当前动作能否切到新动作（移植自 2.2.2 的 IsValidTransitionFrame）：
-        /// 跳跃之间的切换立即生效；待机↔行走只在指定过渡帧（待机→行走 2/6；行走→待机 11/15/19）且计时归零时切换，
-        /// 其余情况先跑完当前动作，避免切换时帧号跳变
-        /// </summary>
-        private bool IsValidTransitionFrame(AnimationType currentAnim, AnimationType newAnim, int frame, int counter)
-        {
-            bool result = newAnim != AnimationType.Jump && currentAnim != AnimationType.Jump;
-            if (currentAnim == AnimationType.Walk && newAnim == AnimationType.Idle)
-                result = counter <= 0 && (frame == 11 || frame == 15 || frame == 19);
-            else if (currentAnim == AnimationType.Idle && newAnim == AnimationType.Walk)
-                result = counter <= 0 && (frame == 2 || frame == 6);
-            return currentAnim != newAnim && result; // 切跳跃要即时，不必等计时归零
-        }
-        /// <summary>
-        /// 推进变身腿部动画帧（移植自 2.2.2 的 HandlePSCAnimationFrames）：
-        /// 帧号 0..7 待机、8 跳跃、9..21 行走；行走动作或"水晶态且生命 ≤ 50%"时每帧停留 7 帧、其余 10 帧；
-        /// 计时归零或允许切换时推进帧号，越界则回到该动作的起始帧
-        /// </summary>
-        private int HandlePscAnimationFrames(AnimationType newType)
-        {
-            int key = profanedCrystalAnimCounter.Key;   // 0 基帧号
-            int value = profanedCrystalAnimCounter.Value - 1;
-            AnimationType currentType = key < 8 ? AnimationType.Idle : key == 8 ? AnimationType.Jump : AnimationType.Walk;
-            bool isInvalidTransFrame = !IsValidTransitionFrame(currentType, newType, key, value);   // 待机↔行走要挑过渡帧，切换才顺滑
-            AnimationType type = isInvalidTransFrame ? newType : currentType;
-            int frameCount = type == AnimationType.Walk || (profanedCrystal && Player.statLife <= (int)(Player.statLifeMax2 * 0.5)) ? 7 : 10;
-            int lowerRange = type == AnimationType.Idle ? 0 : type == AnimationType.Jump ? 8 : 9;
-            int upperRange = type == AnimationType.Idle ? 7 : type == AnimationType.Jump ? 8 : 22;
-            if (value <= 0 || !isInvalidTransFrame)
-            {
-                value = frameCount;
-                if (key >= lowerRange && key < upperRange)
-                    key++;
-                else
-                    key = lowerRange;
-            }
-            profanedCrystalAnimCounter = new KeyValuePair<int, int>(key, value);
-            return profanedCrystalAnimCounter.Key;
         }
         public override void ModifyWeaponKnockback(Item item, ref StatModifier knockback)
         {
@@ -4330,17 +3935,10 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// tModLoader 的 FreeDodge 钩子：完全闪避伤害（不受常规闪避冷却影响）。
         /// 聚合大脑 1/10、大杂烩（The Amalgam）1/8 概率完全免伤；
-        /// 弑神者胸甲 / 金源胸甲（godSlayerReflect）5% 概率完全免伤（数值膨胀关闭时为源值 2%）；
-        /// 亵渎之魂护盾把本次伤害全额吃下时也走这条路（对应原版 freeDodgeFromShieldAbsorption），
-        /// 让击退与减益一并落空——无敌帧已在 ModifyHurtInfo_ProfanedShield 里给过。
+        /// 弑神者胸甲 / 金源胸甲（godSlayerReflect）5% 概率完全免伤（数值膨胀关闭时为源值 2%）。
         /// </summary>
         public override bool FreeDodge(Player.HurtInfo info)
         {
-            if (profanedSoulShieldFreeDodge)
-            {
-                profanedSoulShieldFreeDodge = false;
-                return true;
-            }
             if(amalgamatedBrain && Main.rand.NextBool(10))
             {
                 return true;
@@ -4420,9 +4018,6 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
-            // 每次受击无条件复位"护盾完全吸收"标记（必须放在 if (profanedSoulArtifact) 之外）：
-            // 若上次完全吸收的那一击不可闪避（FreeDodge 未被调用），标记会残留到下一次可闪避的受击，白送一次无敌
-            profanedSoulShieldFreeDodge = false;
             double damageMult = 1.0 + ((bloodPact && Main.rand.NextBool(4)) ? 1.5 : 0.0) + (enraged ? 0.25 : 0.0);
             modifiers.FinalDamage *= (float)damageMult;
             if (theAbsorber)
@@ -4441,153 +4036,10 @@ namespace CalamityDemutation.Players
                 if (Player.statLife > Player.statLifeMax2)
                     Player.statLife = Player.statLifeMax2;
             }
-            if (profanedSoulArtifact)
-            {
-                // 每次受击都暂停回充：神器档 10 秒、水晶档 5 秒（对齐灾厄 HitHurt 的 60*10 / 60*5）：
-                // 未破盾的普通受击同样打断回充，但已累积的耐久保留
-                profanedSoulShieldRechargeArmed = true;
-                profanedSoulShieldRechargeDelay = profanedCrystal ? ProfanedSoulCrystal.ShieldRechargeDelayOnHit : ProfanedSoulArtifact.ShieldRechargeDelayOnHit;
-                profanedSoulShieldRechargeProgress = 0f;
-                // 护盾的实际吸收挂在 HurtInfo 定稿阶段（对齐灾厄把吸收挂到 modifiers.ModifyHurtInfo 上的做法）：
-                // 那里拿到的 info.Damage 已定稿，且能安全地写无敌帧与"整次命中作废"标记，见 ModifyHurtInfo_ProfanedShield
-                modifiers.ModifyHurtInfo += ModifyHurtInfo_ProfanedShield;
-                // 受击音效（对齐 2.2.2 的 ProfanedSoulCrystal.HurtSound）：护盾在位播守护者护盾关闭音，
-                // 护盾为零时改播亵渎天神受击音；两者都用 20 帧节流避免连续受击叠音
-                if (profanedSoulShieldHurtSoundTimer == 0)
-                {
-                    modifiers.DisableSound();
-                    SoundEngine.PlaySound(profanedSoulShieldDurability > 0 ? CalamityDemutationSounds.GuardianShieldDeactivate : CalamityDemutationSounds.ProvidenceHurt, Player.Center);
-                    profanedSoulShieldHurtSoundTimer = 20;
-                }
-            }
             if ((godSlayerDamage && modifiers.SourceDamage.Base <= 80) || modifiers.SourceDamage.Base < 1)
             {
                 modifiers.SourceDamage.Base = 1f;
             }
-        }
-        /// <summary>
-        /// 亵渎之魂护盾的实际吸收（由 ModifyHurt 挂到 modifiers.ModifyHurtInfo 上，对齐灾厄 2.2.2 的
-        /// ModifyHurtInfo_Calamity）：从定稿伤害 info.Damage 里扣掉耐久能吃下的部分。
-        /// 完全吃下时补原版无敌帧并置"整次命中作废"标记，再由 FreeDodge 返回 true 取消这次受击——
-        /// 伤害、击退、减益一并免除。本工程此前只把伤害归零，击退与减益仍会落到玩家身上。
-        /// </summary>
-        private void ModifyHurtInfo_ProfanedShield(ref Player.HurtInfo info)
-        {
-            if (!profanedSoulArtifact || profanedSoulShieldDurability <= 0)
-                return;
-            bool fullyAbsorbed = profanedSoulShieldDurability >= info.Damage;   // 这一盾能否吃下全部伤害
-            int blocked = Math.Min(profanedSoulShieldDurability, info.Damage);
-            profanedSoulShieldDurability -= info.Damage;                        // 对齐原版：先全额扣，再夹到 0
-            if (profanedSoulShieldDurability < 0)
-                profanedSoulShieldDurability = 0;
-            // 护盾受击反馈（对齐灾厄 HitHurt 的 shieldsTookHit 段，部分吸收同样触发）：
-            // 战斗文字显示本次被护盾吃下的伤害（原版为 CombatText.NewText(玩家上方 16 像素的矩形, Color.LightBlue, 被吸收量)）
-            Rectangle shieldTextArea = new Rectangle((int)Player.position.X, (int)Player.position.Y - 16, Player.width, Player.height);
-            CombatText.NewText(shieldTextArea, Color.LightBlue, (-blocked).ToString());
-            // 护盾受击粉尘：4~8 颗、初速以 3.5 为半径随机、整体上飘 1~3、缩放 1.15~1.45（照抄原版）
-            // 原为灾厄 CalamityDusts.ProfanedFire，本工程按既有映射（MiniGuardianHealer.HolyDustType）改用原版 DustID.GoldFlame
-            for (int i = 0; i < Main.rand.Next(4, 8); i++)
-            {
-                Dust dust = Dust.NewDustDirect(Player.position, Player.width, Player.height, DustID.GoldFlame);
-                dust.velocity = Main.rand.NextVector2Circular(3.5f, 3.5f);
-                dust.velocity.Y -= Main.rand.NextFloat(1f, 3f);
-                dust.scale = Main.rand.NextFloat(1.15f, 1.45f);
-            }
-            // 原版此处还会加屏幕震动（Player.Calamity().GeneralScreenShakePower += 2f，破盾时 0.5f）：本工程无该体系，未实现
-            if (profanedSoulShieldDurability <= 0)
-                SoundEngine.PlaySound(SoundID.DD2_BetsyFlameBreath, Player.Center);   // 破盾音效（原版贝茜喷火）；回充暂停已由 ModifyHurt 处理
-            info.Damage -= blocked;                                             // 扣掉护盾吃下的部分，余下的继续打玩家
-            if (fullyAbsorbed)
-            {
-                // 完全吸收：补原版无敌帧，并置标记让 FreeDodge 取消整次命中。
-                // 原版走的是灾厄扩展 Player.ComputeHitIFrames / Player.GiveIFrames（Utilities/PlayerUtils.cs），
-                // 本工程内联其等价实现：帧数 = 原版默认 40 + 十字项链加成 40（灾厄还会叠加神之护身符等额外帧数，未移植）；
-                // 写帧数时必须同时写 hurtCooldowns[槽位]（原版 GiveIFrames 的关键一步，只写 immuneTime 会被原版覆盖）
-                int shieldHitIFrames = 40 + (Player.longInvince ? 40 : 0);
-                int cooldownSlot = info.CooldownCounter;
-                bool anyIFramesWouldBeGiven = cooldownSlot < 0 ? Player.immuneTime < shieldHitIFrames : Player.hurtCooldowns[cooldownSlot] < shieldHitIFrames;
-                if (anyIFramesWouldBeGiven)
-                {
-                    Player.immune = true;
-                    Player.immuneNoBlink = false;   // 原版 GiveIFrames(..., blink: true)
-                    if (cooldownSlot < 0)
-                    {
-                        if (Player.immuneTime < shieldHitIFrames)
-                            Player.immuneTime = shieldHitIFrames;
-                    }
-                    else if (Player.hurtCooldowns[cooldownSlot] < shieldHitIFrames)
-                        Player.hurtCooldowns[cooldownSlot] = shieldHitIFrames;
-                }
-                profanedSoulShieldFreeDodge = true;
-            }
-        }
-        /// <summary>
-        /// 亵渎之魂的"追加长矛"（移植自灾厄 2.2.2 的 CalamityPlayer.rollBabSpears）：
-        /// 以 1/randAmt 的概率（randAmt ≤ 0 或目标不可追击则直接跳过）从**进攻守护者**身上朝四周喷一圈长矛——
-        /// 水晶态 12 枚、每枚按守护者的 originalDamage 全额；神器态 6 枚、每枚只 1/4 伤害。
-        /// 长矛以 ai[0] = 当前四态、ai[1] = 0 生成（ai[0] 决定神圣配色，ai[1] = 0 让它走"蓄势→加速→索敌"的自导流程）。
-        /// 只在主人本机执行；最多取两名守护者当发射源（对齐原版 spearsFired == 2 的闸门）。
-        /// 由各转化弹幕与守护者本体在命中时调用（见 MiniGuardianAttack 与 ProfanedCrystal* 各处）
-        /// </summary>
-        internal void rollBabSpears(int randAmt, bool chaseable)
-        {
-            if (Player.whoAmI != Main.myPlayer || randAmt <= 0 || !chaseable)
-                return;
-            if (!Main.rand.NextBool(randAmt))
-                return;
-            var source = Player.GetSource_ItemUse(Player.HeldItem);
-            int spearsFired = 0;
-            for (int i = 0; i < Main.maxProjectiles; i++)
-            {
-                Projectile guardian = Main.projectile[i];
-                // 原版用 foreach + 计数闸门，语义等价：凑够两名发射源就不再往下找
-                if (spearsFired >= 2)
-                    return;
-                if (!guardian.active || guardian.owner != Player.whoAmI || !guardian.friendly)
-                    continue;
-                if (guardian.type != ModContent.ProjectileType<MiniGuardianAttack>())
-                    continue;
-                int numSpears = profanedCrystalBuffs ? 12 : 6;
-                int damage = (int)(guardian.originalDamage * (profanedCrystalBuffs ? 1f : 0.25f));
-                for (int x = 0; x < numSpears; x++)
-                {
-                    float angle = MathHelper.TwoPi / numSpears * x;
-                    int proj = Projectile.NewProjectile(source, guardian.Center, angle.ToRotationVector2().RotatedBy(Math.Atan(-45f)) * 8f, ModContent.ProjectileType<MiniGuardianSpear>(), damage, 0f, Player.whoAmI, pscState, 0f);
-                    if (Main.projectile.IndexInRange(proj))
-                        Main.projectile[proj].originalDamage = damage;
-                }
-                spearsFired++;
-            }
-        }
-        /// <summary>
-        /// tModLoader 的 PostItemCheck 钩子：每帧在玩家的物品使用检查之后调用（**每帧都会调，与武器是否处于挥砍动画无关**）。
-        /// 亵渎之魂水晶的武器转化派发放在这里，是为了还原原版的**每帧**节奏：
-        /// 灾厄原版在 CanUseItem 里派发、并且 return false **把武器顶替掉**——正因为武器被顶替，
-        /// itemAnimation 永远是 0，vanilla 才会每帧重新去问 CanUseItem，于是 TransformItemUsage 里的计数器
-        /// （近战 6、魔法 20/25、鞭 10，全都按帧）才能跑出"每秒十几发"的密度。
-        /// 本工程保留原武器：一旦武器开始挥砍，CanUseItem 就只在"这刀砍完、准备下一刀"的那一帧被调一次，
-        /// 密度会掉到原版的 1/useTime（实测确认），故必须挪到本钩子。
-        /// 触发条件：持有水晶且处于激活态 + 按住攻击键 + 未被控制 + 右键未参与 + 非矿井钻头挖矿
-        /// + 非镐/斧/锤、不空手 + 属于四类职业武器之一 + 连发闸门（`item.autoReuse || 鞭`）。
-        /// 连发闸门 2026-09-22 恢复为灾厄原版写法：当初去掉它，是为了让召唤法杖（本工程用召唤槽承接原版盗贼槽的
-        /// 水晶螺旋）能进门；该槽整条删除后这条豁免失去对象，故重新与灾厄一致地要求 autoReuse（鞭恒算连发）。
-        /// </summary>
-        public override void PostItemCheck()
-        {
-            if (!profanedCrystalBuffs || !Player.controlUseItem || Player.CCed || Player.altFunctionUse != 0)
-                return;
-            // 骑矿井钻头（DCU）挖矿时，按住使用键同样会每帧走到这里；原版专门为此早退
-            // （灾厄源码注释：用 DCU 时"下面的检查会 EVERY FRAME 地跑，包括用 PSC 攻击"），否则挖矿会顺带狂喷转化弹幕
-            if (Player.mount.Type == MountID.Drill)
-                return;
-            Item item = Player.HeldItem;
-            if (item.IsAir || item.pick > 0 || item.axe > 0 || item.hammer > 0)
-                return;
-            // 连发闸门（灾厄原版写法；鞭恒算连发），再按职业过滤
-            if ((item.autoReuse || item.CountsAsClass<SummonMeleeSpeedDamageClass>())
-                && (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<RangedDamageClass>() || item.CountsAsClass<MagicDamageClass>()
-                    || item.CountsAsClass<SummonMeleeSpeedDamageClass>()))
-                ProfanedSoulCrystal.TransformItemUsage(item, Player);
         }
         /// <summary>
         /// tModLoader 的 OnHurt 钩子：玩家受到伤害后调用。
@@ -4724,7 +4176,7 @@ namespace CalamityDemutation.Players
             // 召唤师跨职业 nerf 回调：灾厄在 ModifyHitNPCWithProj 里对「手持非召唤职业武器时的召唤弹幕」×0.75
             // （CalamityPlayerHitHurt.cs:663-678 + Utilities/PlayerUtils.cs:1005-1032 ShouldTriggerSummonPenalty）。
             // 判据照抄灾厄：必须手持「近战/远程/魔法/投掷」职业武器、可用、非工具/饰品/弹药，
-            // 且不在豁免名单内（禁忌甲+法师武器、真言水晶、撒旦军事件；灾厄自有的 fearmonger/GemTech/
+            // 且不在豁免名单内（禁忌甲+法师武器、撒旦军事件；灾厄自有的 fearmonger/GemTech/
             // 各类 CalamityItemSets 名单本模组读不到，暂不覆盖）。
             if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod") && proj.CountsAsClass<SummonDamageClass>())
             {
@@ -4733,7 +4185,7 @@ namespace CalamityDemutation.Players
                     && Player.armor[1].type == ItemID.AncientBattleArmorShirt
                     && Player.armor[2].type == ItemID.AncientBattleArmorPants
                     && heldItem.CountsAsClass<MagicDamageClass>();
-                bool crossClassNerfDisabled = forbiddenWithMagicWeapon || profanedCrystalBuffs || Terraria.GameContent.Events.DD2Event.Ongoing;
+                bool crossClassNerfDisabled = forbiddenWithMagicWeapon || Terraria.GameContent.Events.DD2Event.Ongoing;
                 bool heldClassedWeapon = !heldItem.CountsAsClass<SummonDamageClass>()
                     && (heldItem.CountsAsClass<MeleeDamageClass>()
                         || heldItem.CountsAsClass<RangedDamageClass>()
@@ -5246,19 +4698,6 @@ namespace CalamityDemutation.Players
             {
                 target.AddBuff(BuffID.ShadowFlame, 300);
             }
-            // 亵渎之魂：召唤类（非鞭）或本水晶体系的弹幕命中时施加圣焰；水晶态 600 帧、神器态 300 帧
-            // （对齐灾厄 CalamityPlayerOnHit 里 summon && !whip 的分支，水晶档原为 600；经典版灾厄该 buff 名为 HolyLight。
-            // IsPscProjectile 现收录三只守护者、其从属弹幕与全部武器转化弹幕）
-            if ((proj.CountsAsClass<SummonDamageClass>() && !proj.CountsAsClass<SummonMeleeSpeedDamageClass>())
-                || ProfanedSoulCrystal.IsPscProjectile(proj))
-            {
-                int profanedHolyFlameFrames = profanedCrystal ? 600 : profanedSoulArtifact ? 300 : 0;
-                if (profanedHolyFlameFrames > 0)
-                {
-                    ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", profanedHolyFlameFrames);
-                    ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", profanedHolyFlameFrames);
-                }
-            }
             if (demonshadeSetBonus)
             {
                 if (Main.rand.NextBool(4))
@@ -5431,12 +4870,6 @@ namespace CalamityDemutation.Players
             if (hellfireExplosion)
             {
                 damageSource = PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was slain in hell."));
-            }
-            // 水晶态变身期间死亡：换成亵渎死因（对齐 2.2.2 挂在 Item Sources 段的 Status.Death.ProfanedSoulCrystal，
-            // 原文即 "{0} was summoned too soon."；原版还要求 Transformation 为水晶本身，本工程水晶态即等价条件）
-            if (profanedCrystalBuffs)
-            {
-                damageSource = PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was summoned too soon."));
             }
             return true;
         }
