@@ -248,6 +248,29 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**始源林海套装按职业补齐·第四件 = 射手头（SilvaHornedHelm）**。
+  口径同前三件：单件照经典版、套装效果走经典版。
+  ① 新增 `Content/Items/Armors/Silva/SilvaHornedHelm.cs`（贴图 `SilvaHornedHelm.png` 26×24 /
+  `SilvaHornedHelm_Head.png` 40×1120 取自经典版 1.4.2.101）：18x18（经典源码即 18，贴图实际 26×24）、
+  价值 90 金、**防御 36**（比近战头的 52 低，经典版原样）、月后稀有度 15；单件远程 13/13。
+  显示名：en `Silva Horned Helm`、zh **始源林海角盔**（近战头保持 `Silva Helm` / 始源林海战盔；CI 同名件亦译「始源林海角盔」）。
+  ② 玩家侧新增 `silvaRanged`（字段 + 两处复位）；套装里置 `silvaSet` + `silvaRanged`，**不置** `silvaMelee`
+  （经典版射手头无近战专属三项，故套装文本相应比近战头少三行）。
+  ③ 两条远程向效果：
+  (a)「提高所有远程武器射速」→ `PostUpdateMiscEffects`：持远程武器且 `useTime > 3` 时
+  `Player.GetAttackSpeed<RangedDamageClass>() += 0.1f`。**口径备注**：经典版把它写成 `UseTimeMultiplier`
+  返回 `1.1/1.2`——tML 里该值 >1 表示「更慢」（现代灾厄同类写法一律 <1 表示更快），与 tooltip 相反、属写反；
+  CI 还原件 `SilvaHeadRanged.UpdateArmorSet` 按 +10% 远程攻速实现，本工程从 CI（让 tooltip 成真）。
+  (b)「始源林海无敌期间远程武器伤害 +40%」→ `ModifyHitNPCWithProj`：
+  `silvaRanged && silvaCountdown > 0 && hasSilvaEffect && proj 属远程` 时 `damageMult += 0.4`（判据与数值同经典版）。
+  ④ 本地化：中英各补 `Items.SilvaHornedHelm`（DisplayName / Tooltip / SetBonus，套装文本 = 通用 7 行 + 远程 2 行，无占位符）。
+  ⑤ 配方与既有近战头**逐字一致**（现代 `PlantyMush`×30 + `EffulgentFeather`×8 + `AscendantSpiritEssence`×2 @ 宇宙砧；
+  经典 `DarksunFragment`×5 + `EffulgentFeather`×5 + `CosmiliteBar`×5 + `Tenebris`×6 + `NightmareFuel`×14 +
+  `EndothermicEnergy`×14 @ 德雷顿熔炉；两条都另需本模组的 `LeadCore`）。
+  **四版本差异备查**：防 36 经典版与 CI（`SilvaHeadRanged`）一致；**现代 2.0.x 已无射手头**（目录只剩 Magic/Summon，与 9.2 表一致）；
+  CI 配方是 `PlantyMush`×6 + `EffulgentFeather`×5 + `AscendantSpiritEssence`×2 @ 宇宙砧（工程按「与近战头一致」口径，未采纳）；
+  CI 的射速 +10% 与无敌期 +40% 伤害（`SilvaRangedSetLegacy`）均与经典同。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**弑神者套装按职业补齐·第三件 = 射手头（GodSlayerHelmet）**。
   口径与前两件同：单件照经典版、套装效果走经典版。
   ① 新增 `Content/Items/Armors/GodSlayer/GodSlayerHelmet.cs`（贴图两张取自经典版 1.4.2.101）：
@@ -482,6 +505,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 5. **【功能缺口】每套只有近战头，且配方直接引用自己的近战头。**
    CI 用 `RecipeGroup("CalamityInheritance:AnyGodSlayerHeadMelee")` 之类接受任意职业头，工程接受不到 ——
    戴法师/远程/召唤头的玩家无法升阶。要么补 5 头（大工程），要么至少在配方注释里写明。
+   **进度（2026-10-04）**：射手头已补齐龙蒿 / 血炎 / 弑神者 / 始源林海 四套（见第 8 节逐笔）；
+   剩金源（AuricTesla）与欧米茄蓝（OmegaBlue）两套待补。法师头 / 召唤头尚未开始。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。
 

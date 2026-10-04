@@ -1536,6 +1536,27 @@ Items: {
 			'''
 	}
 
+	SilvaHornedHelm: {
+		DisplayName: Silva Horned Helm
+		Tooltip:
+			'''
+			13% increased ranged damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+
+			You are immune to almost all debuffs
+			All projectiles spawn healing leaf orbs on enemy hits
+			Max run speed and acceleration boosted by 5%
+			If you are reduced to 1 HP you will not die from any further damage for 10 seconds
+			If you get reduced to 1 HP again while this effect is active you will lose 100 max life
+			This effect only triggers once per life and if you are reduced to 400 max life the invincibility effect will stop
+			Your max life will return to normal if you die
+			Increases your rate of fire with all ranged weapons
+			During the silva invulnerability time your ranged weapons will do 40% more damage
+			'''
+	}
+
 	SilvaLeggings: {
 		DisplayName: Silva Leggings
 		Tooltip:

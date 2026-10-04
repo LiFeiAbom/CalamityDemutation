@@ -578,6 +578,7 @@ namespace CalamityDemutation.Players
         public int silvaCountdown = 600;
         public int silvaHitCounter = 0;
         public bool silvaMelee = false;
+        public bool silvaRanged = false;
         public bool silvaSet = false;
         /// <summary>
         /// 塞壬娘（SirenLure）仆从在场标记：由 SirenLure 召唤增益每帧置位，受魅惑之饵驱动
@@ -817,6 +818,7 @@ namespace CalamityDemutation.Players
             shieldSlamDash = ShieldSlamDash.None;
             sigilofCalamitas = false;
             silvaMelee = false;
+            silvaRanged = false;
             silvaSet = false;
             sirenLureWaifu = false;
             soaring = false;
@@ -978,6 +980,7 @@ namespace CalamityDemutation.Players
             silvaCountdown = 600;
             silvaHitCounter = 0;
             silvaMelee = false;
+            silvaRanged = false;
             silvaSet = false;
             sirenLureWaifu = false;
             soaring = false;
@@ -2597,6 +2600,15 @@ namespace CalamityDemutation.Players
                 double multiplier = (double)Player.statLife / (double)Player.statLifeMax2;
                 Player.GetDamage<MeleeDamageClass>() += (float)(multiplier * 0.2); //ranges from 1.2 times to 1 times
             }
+            // 始源林海射手套装：持远程武器时射速 +10%（silvaRanged）。
+            // 经典版把它写成 UseTimeMultiplier 返回 1.1/1.2——tML 里该值 >1 表示「更慢」，与 tooltip 相反；
+            // CI 的还原件（SilvaHeadRanged.UpdateArmorSet）按 +10% 远程攻速实现，本工程从 CI，让 tooltip 成真。
+            if (silvaRanged)
+            {
+                Item heldItem = Player.HeldItem;
+                if (heldItem.useTime > 3 && heldItem.CountsAsClass<RangedDamageClass>())
+                    Player.GetAttackSpeed<RangedDamageClass>() += 0.1f;
+            }
             if (godSlayerDamageProtect)
             {
                 if (godSlayerDamageProtectMax < 80)
@@ -4202,6 +4214,11 @@ namespace CalamityDemutation.Players
                 double multiplier = (double)Player.statLife / (double)Player.statLifeMax2;
                 damageMult += multiplier * 0.2;
             }
+            // 始源林海射手套装：免死无敌窗口内远程伤害 +40%
+            // （经典版 CalamityPlayerPreTrailer.ModifyHitNPCWithProj 的 damageMult += 0.4，判据与源一致：
+            //  无敌窗口开启 + 射手头在套装内 + 本次弹幕属于远程职业）
+            if (silvaRanged && silvaCountdown > 0 && hasSilvaEffect && proj.CountsAsClass<RangedDamageClass>())
+                damageMult += 0.4;
             // 弑神者射手套装：远程暴击有几率「再次暴击」，把暴击的 2 倍变成 4 倍
             // （经典版 setBonus 原文 causing 4 times the damage；源把它写在 OnHitNPCWithProj 里改 hit.Damage，
             //  但那里的 HitInfo 是按值传递、改不动伤害，故本工程改写在此处：CritDamage 只对暴击生效，
