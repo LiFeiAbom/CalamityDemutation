@@ -863,7 +863,6 @@ namespace CalamityDemutation.Players
             omegaBlueSet = false;
             omegaBlueHentai = false;
             ornateShield = false;
-            ownSonYharon = false;
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;
@@ -1030,7 +1029,6 @@ namespace CalamityDemutation.Players
             omegaBlueSet = false;
             omegaBlueCooldown = 0;
             ornateShield = false;
-            ownSonYharon = false;
             photosynthesis = false;
             psychoticAmulet = false;
             profanedRage = false;

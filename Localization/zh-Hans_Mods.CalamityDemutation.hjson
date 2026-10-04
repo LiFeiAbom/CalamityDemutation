@@ -74,11 +74,6 @@ Buffs: {
 		Description: 你处于无敌状态
 	}
 
-	SonYharonBuff: {
-		DisplayName: 犽戎之子
-		Description: 犽戎之子为你而战
-	}
-
 	SirenLure: {
 		Description: 塞壬会保护你
 		DisplayName: 塞壬
@@ -1802,16 +1797,6 @@ Items: {
 		Tooltip: 为所有进攻与防御属性提供不错的增益
 	}
 
-	YharonSonStaff: {
-		DisplayName: 巨龙七星灯
-		Tooltip:
-			'''
-			召唤一只强大的犽戎之子为你而战
-			每个召唤物消耗4召唤栏
-			"别看了, 这肥鸡可不好吃"
-			'''
-	}
-
 	CadencePotion: {
 		DisplayName: 韵律药水
 		Tooltip:
@@ -2128,7 +2113,6 @@ Projectiles: {
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
 	VoidFractalHeld.DisplayName: 虚空分形
 	FinalFractalHeld.DisplayName: 最终分形
-	SonYharon.DisplayName: 犽戎之子
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流
 	EssenceFlame2.DisplayName: 精魂烈焰

@@ -74,11 +74,6 @@ Buffs: {
 		Description: You are invulnerable
 	}
 
-	SonYharonBuff: {
-		DisplayName: Son Yharon
-		Description: Son Yharon will fight for you
-	}
-
 	SirenLure: {
 		Description: The siren will protect you
 		DisplayName: Siren
@@ -1803,16 +1798,6 @@ Items: {
 		Tooltip: Gives decent buffs to all offensive and defensive stats
 	}
 
-	YharonSonStaff: {
-		DisplayName: Yharon's Kindle Staff
-		Tooltip:
-			'''
-			Summons a powerful son of Yharon fights for you
-			Requires 4 minions to use
-			No, they don't look that delicious.
-			'''
-	}
-
 	CadencePotion: {
 		DisplayName: Cadence Potion
 		Tooltip:
@@ -2129,7 +2114,6 @@ Projectiles: {
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
 	VoidFractalHeld.DisplayName: Void Fractal Held
 	FinalFractalHeld.DisplayName: Final Fractal Held
-	SonYharon.DisplayName: Son Yharon
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
 	EssenceFlame2.DisplayName: Essence Flame

@@ -40,8 +40,6 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle SwiftSliceSound = new("CalamityDemutation/Sounds/Custom/SwiftSlice");
         /// <summary>吞噬涡流爆炸（SubsumingVortexExplosion）：TerratomereExplosion 首帧播放（灾厄原为 SubsumingVortex.ExplosionSound）</summary>
         public static readonly SoundStyle SubsumingVortexExplosion = new("CalamityDemutation/Sounds/Custom/SubsumingVortexExplosion");
-        /// <summary>犽戎烈焰（灾厄原名 YharonInfernado）：巨龙七星灯出手时播放（CI 侧为 CommonCalamitySounds.FlareSound）</summary>
-        public static readonly SoundStyle YharonInfernado = new("CalamityDemutation/Sounds/Item/YharonInfernado");
         /// <summary>电浆烈焰（灾厄原名 ELRFire）：熵之舞挥砍中每次射出熵之飞刃时播放，音高按第几发递增、音量 0.45</summary>
         public static readonly SoundStyle ELRFire = new("CalamityDemutation/Sounds/Item/ELRFire");
         /// <summary>掷出咒刃（灾厄原名 CursedDaggerThrow）：禅心剑真近战命中时播放，每次挥砍只响一次（灾厄原为 Ataraxia 的 hitsound 分支）</summary>

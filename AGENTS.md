@@ -156,13 +156,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      `CombinedHooks.ModifyWeaponDamage`，所以像崇高誓约之刃那样用
      `player.GetWeaponDamage(player.HeldItem) * 2` 算出来的追加伤害**天然跟随膨胀**，不必改。
      `Player.ItemCheck_Inner` 也是从这个入口取面板值，召唤物弹幕的 `originalDamage` 由此而来
-     （巨龙七星灯召唤物的伤害因此跟随）。
+     （故召唤杖的面板膨胀会带动召唤物伤害）。
   2. `Projectile.minionSlots` 是**每帧实时汇总**的：`Player.Update` 每帧把 `slotsMinions` 归零，
      各仆从在 `Projectile.Update` 里累加自己的 `minionSlots`（判据 `slotsMinions + minionSlots > maxMinions`）。
-     所以在仆从 AI 里每帧改写它就能让开关即时生效，**已召唤的仆从不必重召**（巨龙七星灯 4→2 就是这么落的）。
+     所以在仆从 AI 里每帧改写它就能让开关即时生效，**已召唤的仆从不必重召**。
 - **开关不只管伤害**：同一开关也可以门控「数量 / 栏位」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
-  （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）、巨龙七星灯的仆从栏位 4→2。
-  以后遇到类似点照此办理（同样运行时读配置，别写进 `SetDefaults`）。
+  （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）。以后遇到类似点照此办理
+  （同样运行时读配置，别写进 `SetDefaults`）。
 - **已完成的膨胀表**（关 = 源值 / 开 = 膨胀值，全部受开关控制）：
 
 | 武器 | 关 | 开 | 备注 |
@@ -197,7 +197,6 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 真·环境之刃 | 160 | 400 | |
 | 银河 | 99 | 425 | |
 | 焚灭天惩 | 244 | 388 | 同一开关额外把每次洒落的火球数 10→15 |
-| 巨龙七星灯 | 120 | 750 | 同一开关额外把仆从栏位 4→2 |
 | 暴政 | 890 | 2200 | 同一开关额外把每次挥砍的火焰 6→10、单枚火焰伤害 25%→75% |
 
 跳过（用户明确点名，不接入）：混乱之刃 150、霜火之刃 125、禁忌誓约之刃 110。
@@ -207,7 +206,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   神吞后 3× / 犽戎后 5× / 星流巨械后 7× / 至尊灾厄后 8× / 魔影 10×。
   该包 `/D:\Game\Terraria\ModModel\Lilac-Arcane-Pack-master` 的 `LAPGlobalItemModifyDamage.cs`
   还提供了一个「拿目标面板反推倍率」的 `SetCustomMult_Int` 写法，思路可借鉴。
-- **进度**：工程内 35 把武器（34 近战 + 1 召唤）已全部过筛——**32 把已接入**、
+- **进度**：工程内 34 把武器（全为近战）已全部过筛——**31 把已接入**、
   **3 把按用户口径跳过**，没有剩下的待接入项。
 - **盔甲（同一开关，2026-10-01 接入）**：口径是「按 `310c3cf`（第三轮削弱，2026-09-27）逐件回滚」——
   膨胀开启时恢复那次削弱前的值。单件加成写在各自的 `UpdateEquip` 里；**防御**因为 `Item.defense` 只能在
@@ -247,6 +246,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**按用户要求删除巨龙七星灯（YharonSonStaff）**。连同其全套牵连一并清除：
+  物品 `Content/Items/Weapons/Summon/YharonSonStaff.cs`（+png）、召唤物
+  `Content/Projectiles/Summon/SonYharon.cs`（+png）、增益 `Content/Buffs/SummonBuffs/SonYharonBuff.cs`（+png）、
+  玩家侧 partial `Players/CalamityDemutationPlayer.SonYharon.cs`（`ownSonYharon` 标记，主类两处复位语句同步删）、
+  音效 `Sounds/Item/YharonInfernado.ogg` 与其 `SoundStyle` 字段、两版犽戎宝袋的各一条掉落、
+  以及中英文本地化条目（`SonYharonBuff` / `YharonSonStaff` / `SonYharon.DisplayName`）。
+  该武器原属第 7 节膨胀表 → 表内条目与"35 把武器（34 近战 + 1 召唤）"的统计同步修正为 34 把全近战。
 - 最近一批工作（2026-10-03）：① **移植暴政（TheEnforcer）**，源 = 灾厄 **2.0.3.9** 的
   `Items/Weapons/Melee/TheEnforcer.cs`，落地为 `Content/Items/Weapons/Melee/TheEnforcer.cs`
   （+`TheEnforcer.png`/`TheEnforcerGlow.png`）与 `Content/Projectiles/Melee/EssenceFlame2.cs`
@@ -265,8 +271,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   tooltip 免死几率 20% → 10%（对齐代码里的 `Main.rand.NextBool(10)`）。
 - 再往前一批：① **数值膨胀第二批**：按用户逐把点名（清单第 1~20 项）接入 **17 把**武器（`cb26d18`），
   另 3 把（混乱之刃 / 霜火之刃 / 禁忌誓约之刃）用户明确跳过；至此 34 把武器全部过筛、
-  31 把已接入（模板与清单见第 7 节）。本批还落地了两类「非伤害联动」：焚灭天惩火球数 10→15、
-  巨龙七星灯仆从栏位 4→2。
+  31 把已接入（模板与清单见第 7 节）。本批还落地了「非伤害联动」：焚灭天惩火球数 10→15。
   ② 顺带用 IL 查清两条机制并写进第 7 节：`GetWeaponDamage` 会跑 `ModifyWeaponDamage`
   （`GetWeaponDamage(HeldItem)` 型派生伤害天然跟随）、`Projectile.minionSlots` 每帧实时汇总。
 - 更早一批：① 庇护之刃右键巨刃 / 元素圣剑右键真近战 / 死神擢升左键引导挥砍（`aa117b4`）
