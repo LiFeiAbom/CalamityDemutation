@@ -248,6 +248,33 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**弑神者套装按职业补齐·第三件 = 射手头（GodSlayerHelmet）**。
+  口径与前两件同：单件照经典版、套装效果走经典版。
+  ① 新增 `Content/Items/Armors/GodSlayer/GodSlayerHelmet.cs`（贴图两张取自经典版 1.4.2.101）：
+  18x18、价值 75 金、**防御 35**（比近战头的 48 低，经典版原样）、月后稀有度 14；单件远程 14/14；
+  配方与既有近战头一致（现代 `CosmiliteBar`×10 + `AscendantSpiritEssence`×2 @ 宇宙砧，= 1.4.4 公开源码值；
+  经典 `CosmiliteBar`×14 + `NightmareFuel`×8 + `EndothermicEnergy`×8 @ 德雷顿熔炉）。
+  显示名：en `God Slayer Helmet`、zh **弑神者战盔**（近战头保持 `God Slayer Helm` / 弑神者头盔，避免重名）。
+  ② 玩家侧新增 `godSlayerRanged`（字段 + 两处复位），套装里只置 `godSlayer` + `godSlayerRanged`——
+  **不置** `godSlayerDamage`（≤80 压制）也**不加荆棘**，因为经典版的射手头就没有这两项（其套装文本也少两行）。
+  ③ 两条远程向效果：
+  (a) 「远程暴击有几率再次暴击、造成 4 倍伤害」→ 写在 `ModifyHitNPCWithProj`：概率同源（`1/max(15, 100-远程暴击率)`），
+  命中即 `modifiers.CritDamage *= 2f`（CritDamage 只对暴击生效，故"每次命中掷概率、暴击时才翻倍"与源概率等价）。
+  **注意**：经典版把这段写在 `OnHitNPCWithProj` 里改 `hit.Damage`，而那里的 `NPC.HitInfo` 是按值传递、**改不动伤害**——
+  属死代码，故本工程按"让 tooltip 成真"的既有口径（见第 9.3 条第 1 项）改写到了真正生效的位置。
+  (b) 「发射远程武器时有几率射出弑神者破片弹」→ `CalamityDemutationGlobalItem.Shoot`：5% 概率追加 `GodSlayerShrapnelRound`，
+  伤害 = 本次射击 ×2.1（穿金源套 ×3.2）、弹速 ×1.25（口径照经典版；该版的 `!rogue` 判定因本工程无盗贼职业省略）。
+  ④ 新增弹幕 `Content/Projectiles/Typeless/GodSlayerShrapnelRound.cs`（8x8、300 帧、紫色尘尾，
+  消散时炸开 4~6 枚破片、每枚 = 本弹幕 ×0.3）与 `GodSlayerShrapnel.cs`（6x12、90 帧、前 5 帧平飞后受重力、
+  撞地形不消失——源里 `OnTileCollide` 返回 false）。
+  ⑤ 本地化：中英各补 `Items.GodSlayerHelmet`（DisplayName / Tooltip / SetBonus，套装文本用 `[{0}]` 接
+  `KeybindsSystem.GodslayerDashKeyDisplay`）与 2 条弹幕名。
+  **版本差异备查**：防 35 / 远程 14/14 各版一致；配方 1.4.4 是 `CosmiliteBar`×10（工程采用）、2.0 是 ×14、2.0.3.9 是 ×7；
+  破片弹两版差得远——经典是「每次射击 5%、伤害 ×2.1（金源 ×3.2）」，现代 2.0.3.9 改成 `canFireGodSlayerRangedProjectile`
+  冷却闸门 + 伤害 = `DamageSoftCap(damage, 800)`；「暴击再暴击」现代已整条删除。
+  **CI 对照**（`GodSlayerHeadRangedold`）：防 35、DeepBlue 稀有度、远程 14/14，**套装内**再给远程暴击 +10%，
+  配方 `CosmiliteBar`×7 @ 宇宙砧，并带 `GodSlayerSetBonusesChange` 配置开关切换新旧套装逻辑——与本工程"经典 1:1"口径不同。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**血炎套装按职业补齐·第二件 = 射手头（BloodflareHornedHelm）**。
   用户口径同射手头那一轮：单件照经典版、不吸收其它版本差异、套装效果走经典版。
   ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHornedHelm.cs`（贴图两张取自经典版 1.4.2.101）：

@@ -252,6 +252,17 @@ namespace CalamityDemutation.Content.Items
                     Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<BloodBomb>(), bombDamage, 2f, player.whoAmI);
                 }
             }
+            // 弑神者射手套装（godSlayerRanged）的「发射远程武器时有几率射出弑神者破片弹」：
+            // 每次射击 5% 概率追加一枚 GodSlayerShrapnelRound，伤害 = 本次射击伤害 ×2.1（穿金源套时 ×3.2）、弹速 ×1.25，
+            // 口径照经典版 CalamityGlobalItem.Shoot（该版另判 !rogue，本工程无盗贼职业故省略）。
+            if (modPlayer.godSlayerRanged && item.CountsAsClass<RangedDamageClass>() && Main.rand.Next(0, 100) >= 95)
+            {
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    int roundDamage = (int)(damage * (modPlayer.auricSet ? 3.2f : 2.1f));
+                    Projectile.NewProjectile(source, position, velocity * 1.25f, ModContent.ProjectileType<GodSlayerShrapnelRound>(), roundDamage, 2f, player.whoAmI);
+                }
+            }
             return true;
         }
         /// <summary>

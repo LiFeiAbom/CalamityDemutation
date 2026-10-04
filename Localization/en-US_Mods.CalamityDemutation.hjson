@@ -1141,6 +1141,26 @@ Items: {
 			'''
 	}
 
+	GodSlayerHelmet: {
+		DisplayName: God Slayer Helmet
+		Tooltip:
+			'''
+			14% increased ranged damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+
+			You will survive fatal damage and will be healed 300 HP if an attack would have killed you
+			This effect can only occur once every 45 seconds
+			While the cooldown for this effect is active you gain a 10% increase to all damage
+			Your ranged critical hits have a chance to critically hit, causing 4 times the damage
+			You have a chance to fire a god killer shrapnel round while firing ranged weapons
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
+	}
+
 	GodSlayerLeggings: {
 		DisplayName: God Slayer Leggings
 		Tooltip:
@@ -2088,4 +2108,6 @@ Projectiles: {
 	BloodflareSoul.DisplayName: Blood Soul
 	BloodBomb.DisplayName: Blood Bomb
 	BloodBombExplosion.DisplayName: Blood Bomb Explosion
+	GodSlayerShrapnelRound.DisplayName: God Slayer Shrapnel Round
+	GodSlayerShrapnel.DisplayName: God Slayer Shrapnel
 }

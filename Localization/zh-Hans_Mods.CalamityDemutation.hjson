@@ -1138,6 +1138,26 @@ Items: {
 			本应造成 80 点或更低伤害的攻击，伤害会被削减为 1
 			按 [{0}] 可向八个方向冲刺
 			造成大量伤害，并在接触时施加弑神者地狱火减益
+		该效果有 45 秒冷却
+			'''
+	}
+
+	GodSlayerHelmet: {
+		DisplayName: 弑神者战盔
+		Tooltip:
+			'''
+			远程伤害与暴击率提高 14%
+			'''
+		SetBonus:
+			'''
+
+			致命伤害不会杀死你：若一次攻击本应杀死你，你将存活并回复 300 点生命
+			该效果每 45 秒只能触发一次
+			该效果冷却期间，你的所有伤害提高 10%
+			你的远程暴击有几率再次暴击，造成 4 倍伤害
+			发射远程武器时有几率射出弑神者破片弹
+			按 [{0}] 可向八个方向冲刺
+			造成大量伤害，并在接触时施加弑神者地狱火减益
 			该效果有 45 秒冷却
 			'''
 	}
@@ -2087,4 +2107,6 @@ Projectiles: {
 	BloodflareSoul.DisplayName: 血炎之魂
 	BloodBomb.DisplayName: 血液爆炸光球
 	BloodBombExplosion.DisplayName: 血液爆炸
+	GodSlayerShrapnelRound.DisplayName: 弑神者破片弹
+	GodSlayerShrapnel.DisplayName: 弑神者破片
 }

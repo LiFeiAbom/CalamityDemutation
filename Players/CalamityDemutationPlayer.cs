@@ -405,6 +405,12 @@ namespace CalamityDemutation.Players
         public bool godSlayerCooldown = false;
         public bool godSlayerMelee = false;
         public int godSlayerMeleefireCD = 0;
+        /// <summary>
+        /// 弑神者套装·远程向（GodSlayerHelmet 的套装标记）：远程暴击有几率再次暴击造成 4 倍伤害
+        /// （见 ModifyHitNPCWithProj），远程射击有几率追加弑神者破片弹
+        /// （见 CalamityDemutationGlobalItem.Shoot）
+        /// </summary>
+        public bool godSlayerRanged = false;
         public bool godSlayerReflect = false;
         /// <summary>
         /// 已穿弑神者套 / 金源套：把单次不超过 80 的基础伤害压到 1，由套装方法置位、<see cref="ModifyHurt"/> 消费。
@@ -764,6 +770,7 @@ namespace CalamityDemutation.Players
             godSlayerDamage = false;
             godSlayerDamageProtect = false;
             godSlayerMelee = false;
+            godSlayerRanged = false;
             godSlayerReflect = false;
             grandGelatin = false;
             heartoftheElements = false;
@@ -918,6 +925,7 @@ namespace CalamityDemutation.Players
             godSlayerDamage = false;
             godSlayerDamageProtect = false;
             godSlayerMelee = false;
+            godSlayerRanged = false;
             godSlayerReflect = false;
             grandGelatin = false;
             hasSilvaEffect = false;
@@ -4193,6 +4201,19 @@ namespace CalamityDemutation.Players
             {
                 double multiplier = (double)Player.statLife / (double)Player.statLifeMax2;
                 damageMult += multiplier * 0.2;
+            }
+            // 弑神者射手套装：远程暴击有几率「再次暴击」，把暴击的 2 倍变成 4 倍
+            // （经典版 setBonus 原文 causing 4 times the damage；源把它写在 OnHitNPCWithProj 里改 hit.Damage，
+            //  但那里的 HitInfo 是按值传递、改不动伤害，故本工程改写在此处：CritDamage 只对暴击生效，
+            //  于是"每次远程命中掷一次概率、命中暴击时才真正翻倍"与源的期望概率完全等价）。
+            // 概率：1/max(15, 100 - 远程暴击率)，与源同式。
+            if (godSlayerRanged && proj.CountsAsClass<RangedDamageClass>())
+            {
+                int randomChance = 100 - (int)Player.GetCritChance<RangedDamageClass>();
+                if (randomChance < 15)
+                    randomChance = 15;
+                if (Main.rand.Next(randomChance) == 0)
+                    modifiers.CritDamage *= 2f;
             }
             modifiers.FinalDamage *= (float)damageMult;
             // 召唤师跨职业 nerf 回调：灾厄在 ModifyHitNPCWithProj 里对「手持非召唤职业武器时的召唤弹幕」×0.75
