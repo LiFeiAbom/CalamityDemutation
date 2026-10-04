@@ -248,6 +248,29 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**古圣金源射手头（AuricTeslaHoodedFacemask，金兜铁面盔）——「合并」下位四套的射手效果**。
+  口径与既有近战头（AuricTeslaHelm）对称：**单件与套装效果都照经典版 1:1**。
+  ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaHoodedFacemask.cs`（贴图两张取自经典版 1.4.2.101）：
+  18x18（贴图实际 26×26）、价值 1 铂金 80 金、**防御 40**（近战头是 54，经典版原样）、月后稀有度 20；
+  单件远程 30/30 + `auricBoost`。**没有**远程攻速（经典与现代此件都没有；射手侧那 +10% 由置位的 `silvaRanged` 提供）。
+  ② 套装 = **把下位四套的射手侧合并进来**：置 `tarraSet+tarraRanged`、`bloodflareSet+bloodflareRanged`、
+  `godSlayer+godSlayerRanged`、`silvaSet+silvaRanged`、`auricSet`；外加荆棘 +3、`lavaMax+240`、`ignoreWater`、
+  `crimsonRegen`，以及泡岩浆时 +30 防 / +10 回血。按经典版原样**不加 aggro、不置 `godSlayerDamage`**
+  （那两项只有近战头有）。于是这一颗头同时吃到：龙蒿树叶爆炸＋生命能量分裂、血炎的 Y 键灵魂爆发＋2% 血液爆炸光球、
+  弑神的 2.5 秒破片弹＋溢暴击、林海的 +10% 攻速＋无敌期 +40% 增伤。
+  ③ 套装文案 = 经典 3 行（射手四套效果 / 金源光球 / 跑速 +10%）＋ 3 行冲刺说明——**沿用近战头的写法**：
+  因 `godSlayer` 已置位、弑神冲刺确实可用，按「让 tooltip 成真」补上；用 `[{0}]` 占位接
+  `KeybindsSystem.GodslayerDashKeyDisplay`。
+  ④ 配方 = 与近战头**逐字同构**，只把下位头换成射手件（龙蒿面甲 + 血炎角盔 + 始源林海角盔 + 弑神者战盔）：
+  现代 `AuricBar`×10 + `PsychoticAmulet` @ 宇宙砧（AuricBar 数量取 1.4.4 的 10）；经典 `AuricOre`×60 + 吸热 10 +
+  噩梦 10 + 幻影质 8 + 暗黑碎片 6 + 生命锭 5 + 地狱施法者碎片 5 + 灾厄核心 2 + 银河奇点 1 + `PsychoticAmulet` @ 德雷顿熔炉。
+  ⑤ 本地化：中英各补 `Items.AuricTeslaHoodedFacemask`（DisplayName / Tooltip / SetBonus）。
+  显示名：en `Auric Tesla Hooded Facemask`、zh **金兜铁面盔**（用户 2026-10-04 指定；近战头仍是「古圣金源头盔」）。
+  **未抄**近战头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的无效残留（9.2 已判定是死代码）。
+  **四版本差异备查**：防 40 经典/现代一致；现代 2.0.4 已**删掉 silvaSet/silvaRanged 与 lavaMax/lavaWet**、
+  `ArmorSetShadows` 改用 `armorEffectDrawOutlines`；CI `AuricTeslaHeadRanged` 额外给持远程武器时 +20% 远程攻速与
+  `AuricbloodflareRangedSoul`、沿用 CI 自己的旧金源件——工程走经典。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**弑神者射手头两处机制向 CI 靠拢**（用户 2026-10-04 指定「只改这条、其余不动」）。
   ① 破片弹：由经典版「每次射击 5% 概率、伤害 ×2.1（金源 ×3.2）」改为 CI 模型——
   每 **2.5 秒**（150 帧）闸门放行一次，射击时若闸门开启即**必定**追加一枚、随即关闸；
@@ -523,8 +546,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 5. **【功能缺口】每套只有近战头，且配方直接引用自己的近战头。**
    CI 用 `RecipeGroup("CalamityInheritance:AnyGodSlayerHeadMelee")` 之类接受任意职业头，工程接受不到 ——
    戴法师/远程/召唤头的玩家无法升阶。要么补 5 头（大工程），要么至少在配方注释里写明。
-   **进度（2026-10-04）**：射手头已补齐龙蒿 / 血炎 / 弑神者 / 始源林海 四套（见第 8 节逐笔）；
-   剩金源（AuricTesla）与欧米茄蓝（OmegaBlue）两套待补。法师头 / 召唤头尚未开始。
+   **进度（2026-10-04）**：射手头已补齐龙蒿 / 血炎 / 弑神者 / 始源林海 / 金源五套（见第 8 节逐笔；
+   金源那颗是「合并下位四套」的 AuricTeslaHoodedFacemask）；只剩欧米茄蓝（OmegaBlue）待补。
+   法师头 / 召唤头尚未开始。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。
 
