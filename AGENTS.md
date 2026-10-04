@@ -52,8 +52,10 @@
   `Configs.<配置类名>.<选项名>.Label` / `.Tooltip`（例：`Configs.ConfigSystem.StatInflation`）。
   忘了补时 `dotnet build` 会自动追加缺失键，但**只补英文默认值**；zh-Hans 那边追加的是 `//` 注释占位，
   中文必须自己填。补完同样要把行尾整回 CRLF。
-- **音效**：全部登记在 `Sounds/CalamityDemutationSounds.cs` 的 `SoundStyle` 字段，音频放 `Sounds/Item/<CE 原名>.<ogg|wav|mp3>`；
-  音高按"CE 值 − 1"的既有口径换算。
+- **音效**：全部登记在 `Sounds/CalamityDemutationSounds.cs` 的 `SoundStyle` 字段。目录只有两层：`Sounds/` 下开
+  `Item/` 与 `Custom/` 两个平面目录，**里面不再套子目录**——物品/武器自身的挥砍·蓄力·使用音放
+  `Sounds/Item/<原名>.<ogg|wav|mp3>`，借用的灾厄 Boss / 特效冲击音（冲刺、爆炸、死亡音）与其他自备音放
+  `Sounds/Custom/<原名>`。音高按"CE 值 − 1"的既有口径换算。
 - **粒子**：本工程自研 `Content/Particles`（基类 `BaseParticle`，注册与驱动在 `Content/Particles/Core/DRKLoader.cs`，
   `DRKLoader.NewParticle(particle, pos, vel, color, scale)` + 粒子自己的 `Configure(...)`）。
 - **弹幕基类**：手持类武器走 `Content/Projectiles/BaseProjectiles/BaseHeldProjCO`、CWR 系走
@@ -246,6 +248,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**音效目录整理** —— 删掉 `Sounds/Custom/SCalSounds/` 这一层，5 个文件平铺进
+  `Sounds/Custom/`：`CatastropheResonanceSlash`（巨龙之怒挥砍）、`DevourerDeath` / `DevourerDeathImpact`
+  （弑神者冲刺起手与命中）、`DevourerSegmentBreak1`（阿斯加德之庇护冲刺撞击）、`ProvidenceHolyBlastImpact`
+  （极乐之庇护冲刺撞击）。`CalamityDemutationSounds` 里 5 条 `SoundStyle` 路径同步去掉 `SCalSounds/` 段，
+  代码其他位置都经由字段引用、无需改动。编译 0 警告 0 错误。
 - 最近一批工作（2026-10-04）：**按用户要求删除渎神魂晶（ProfanedSoulCrystal）及其下位渎魂神物（ProfanedSoulArtifact）的全部内容**。
   这两件是同一套召唤向综合饰品（神器 → 水晶），删除共 83 个文件＋一批既有代码，清单：
   ① 物品与变身装备贴图：`Content/Items/Accessories/Comprehensive/` 下的 `ProfanedSoulCrystal` / `ProfanedSoulArtifact`

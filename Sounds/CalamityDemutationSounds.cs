@@ -7,15 +7,15 @@ namespace CalamityDemutation.Sounds
     public static class CalamityDemutationSounds
     {
         /// <summary>至尊灾厄大挥砍（CatastropheSwing）</summary>
-        public static readonly SoundStyle CatastropheSwing = new("CalamityDemutation/Sounds/Custom/SCalSounds/CatastropheResonanceSlash");
+        public static readonly SoundStyle CatastropheSwing = new("CalamityDemutation/Sounds/Custom/CatastropheResonanceSlash");
         /// <summary>弑神者冲刺起手：吞噬者死亡动画音效（DevourerDeath）</summary>
-        public static readonly SoundStyle DevourerDeath = new("CalamityDemutation/Sounds/Custom/SCalSounds/DevourerDeath");
+        public static readonly SoundStyle DevourerDeath = new("CalamityDemutation/Sounds/Custom/DevourerDeath");
         /// <summary>弑神者冲刺命中：吞噬者死亡冲击音效（DevourerDeathImpact）</summary>
-        public static readonly SoundStyle DevourerDeathImpact = new("CalamityDemutation/Sounds/Custom/SCalSounds/DevourerDeathImpact");
+        public static readonly SoundStyle DevourerDeathImpact = new("CalamityDemutation/Sounds/Custom/DevourerDeathImpact");
         /// <summary>吞噬者体节碎裂（DevourerSegmentBreak1）：阿斯加德之庇护冲刺撞击的宇宙爆炸音</summary>
-        public static readonly SoundStyle DevourerSegmentBreak1 = new("CalamityDemutation/Sounds/Custom/SCalSounds/DevourerSegmentBreak1") { Volume = 0.3f };
+        public static readonly SoundStyle DevourerSegmentBreak1 = new("CalamityDemutation/Sounds/Custom/DevourerSegmentBreak1") { Volume = 0.3f };
         /// <summary>亵渎天神神圣爆破冲击（ProvidenceHolyBlastImpact）：极乐之庇护冲刺撞击的神圣爆炸音</summary>
-        public static readonly SoundStyle ProvidenceHolyBlastImpact = new("CalamityDemutation/Sounds/Custom/SCalSounds/ProvidenceHolyBlastImpact") { Volume = 0.6f };
+        public static readonly SoundStyle ProvidenceHolyBlastImpact = new("CalamityDemutation/Sounds/Custom/ProvidenceHolyBlastImpact") { Volume = 0.6f };
         /// <summary>肉感斩击（MeatySlash）</summary>
         public static readonly SoundStyle MeatySlashSound = new("CalamityDemutation/Sounds/Custom/MeatySlash");
         /// <summary>血炎游侠头激活音（女妖之爪重制版引导/收招时使用，音频取自灾厄 2.0.3.9）</summary>
