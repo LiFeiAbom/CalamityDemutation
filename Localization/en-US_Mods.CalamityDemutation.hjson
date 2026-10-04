@@ -1153,8 +1153,9 @@ Items: {
 			You will survive fatal damage and will be healed 300 HP if an attack would have killed you
 			This effect can only occur once every 45 seconds
 			While the cooldown for this effect is active you gain a 10% increase to all damage
-			Your ranged critical hits have a chance to critically hit, causing 4 times the damage
-			You have a chance to fire a god killer shrapnel round while firing ranged weapons
+			If your ranged critical strike chance exceeds 100%, the excess grants a chance to critically hit again, causing 4 times the damage
+			If it does not exceed 100%, ranged critical hits have a 5% chance to deal 4 times the damage
+			You fire a god killer shrapnel round every 2.5 seconds while firing ranged weapons
 			Press [{0}] to dash in any of eight directions
 			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
 			This effect has a 45-second cooldown

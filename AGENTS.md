@@ -248,6 +248,23 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**弑神者射手头两处机制向 CI 靠拢**（用户 2026-10-04 指定「只改这条、其余不动」）。
+  ① 破片弹：由经典版「每次射击 5% 概率、伤害 ×2.1（金源 ×3.2）」改为 CI 模型——
+  每 **2.5 秒**（150 帧）闸门放行一次，射击时若闸门开启即**必定**追加一枚、随即关闸；
+  伤害 = `DamageSoftCap(本次射击 ×2, 1500)`、弹速 ×1.25。
+  CI 原实现蹭现代灾厄的 `CalamityPlayer.canFireGodSlayerRangedProjectile`（现代版在 `Player.miscCounter % 150 == 0` 复位）；
+  工程不写死灾厄类型，改在 `CalamityDemutationPlayer` 自建跨帧计时器 `godSlayerShrapnelCooldown`
+  （字段 ~407、UpdateDead 复位、PostUpdateMiscEffects 递减），并顺手把既有的 `DamageSoftCap`
+  由 `private static` 提为 `internal static` 供 `CalamityDemutationGlobalItem.Shoot` 复用。
+  ② 远程暴击「再次暴击」：由经典版 `1/max(15, 100 − 远程暴击率)` 单次骰子改为 CI 的**溢暴击**模型——
+  总暴击率（`Player.GetTotalCritChance(DamageClass.Ranged)`）> 100% 时按溢出部分（−100 后）的百分比概率触发，
+  否则退化为固定 5%（`Main.rand.NextBool(20)`）；触发后 `modifiers.CritDamage *= 2f`（暴击 2 倍 → 4 倍）。
+  **备注**：CI 源码该 5% 分支写成 `hitInfo.Damage *= 4`，叠加在已含暴击（2 倍）的伤害上等于 **8 倍**，
+  与 CI 自身 tooltip「造成四倍伤害」矛盾，属笔误；工程取 tooltip 口径（两分支都翻倍到 4 倍），只让触发条件照 CI。
+  ③ 本地化：中英各把弑神者战盔套装文本的两行改成 CI 口径（「超过 100% 按溢出部分再次暴击」／
+  「未超过时 5% 概率 4 倍」／「每 2.5 秒射出一枚破片弹」）。
+  **未动**：保命回血 300（9.3 第 3 条悬案照旧）、配方、稀有度、林海射手头及一切其他内容。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**始源林海套装按职业补齐·第四件 = 射手头（SilvaHornedHelm）**。
   口径同前三件：单件照经典版、套装效果走经典版。
   ① 新增 `Content/Items/Armors/Silva/SilvaHornedHelm.cs`（贴图 `SilvaHornedHelm.png` 26×24 /
@@ -295,6 +312,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **版本差异备查**：防 35 / 远程 14/14 各版一致；配方 1.4.4 是 `CosmiliteBar`×10（工程采用）、2.0 是 ×14、2.0.3.9 是 ×7；
   破片弹两版差得远——经典是「每次射击 5%、伤害 ×2.1（金源 ×3.2）」，现代 2.0.3.9 改成 `canFireGodSlayerRangedProjectile`
   冷却闸门 + 伤害 = `DamageSoftCap(damage, 800)`；「暴击再暴击」现代已整条删除。
+  **（2026-10-04 更新：这两条已按用户口径整条改走 CI 的「2.5 秒闸门 + SoftCap(×2,1500)」与「溢暴击」模型，见本节最新一笔。）**
   **CI 对照**（`GodSlayerHeadRangedold`）：防 35、DeepBlue 稀有度、远程 14/14，**套装内**再给远程暴击 +10%，
   配方 `CosmiliteBar`×7 @ 宇宙砧，并带 `GodSlayerSetBonusesChange` 配置开关切换新旧套装逻辑——与本工程"经典 1:1"口径不同。
   验证：编译 0 警告 0 错误，资源自检 143 条全命中。

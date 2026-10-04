@@ -406,9 +406,16 @@ namespace CalamityDemutation.Players
         public bool godSlayerMelee = false;
         public int godSlayerMeleefireCD = 0;
         /// <summary>
+        /// 弑神者射手套装的破片弹闸门（帧，150 = 2.5 秒；跨帧计时器，只在死亡时复位）。
+        /// CI/现代灾厄用 <c>CalamityPlayer.canFireGodSlayerRangedProjectile</c>（<c>Player.miscCounter % 150 == 0</c> 复位）
+        /// 每 2.5 秒放行一次；本工程按同样节奏自建闸门，射击时若闸门开启则必定追加破片弹并关闸 150 帧。
+        /// 见 CalamityDemutationGlobalItem.Shoot。
+        /// </summary>
+        public int godSlayerShrapnelCooldown = 0;
+        /// <summary>
         /// 弑神者套装·远程向（GodSlayerHelmet 的套装标记）：远程暴击有几率再次暴击造成 4 倍伤害
-        /// （见 ModifyHitNPCWithProj），远程射击有几率追加弑神者破片弹
-        /// （见 CalamityDemutationGlobalItem.Shoot）
+        /// （见 ModifyHitNPCWithProj，2026-10-04 起走 CI 的「溢暴击」模型），
+        /// 发射远程武器时每 2.5 秒射出一枚弑神者破片弹（见 CalamityDemutationGlobalItem.Shoot）
         /// </summary>
         public bool godSlayerRanged = false;
         public bool godSlayerReflect = false;
@@ -929,6 +936,7 @@ namespace CalamityDemutation.Players
             godSlayerMelee = false;
             godSlayerRanged = false;
             godSlayerReflect = false;
+            godSlayerShrapnelCooldown = 0;
             grandGelatin = false;
             hasSilvaEffect = false;
             heartoftheElements = false;
@@ -2620,6 +2628,9 @@ namespace CalamityDemutation.Players
             }
             if (godSlayerMeleefireCD > 0)
                 godSlayerMeleefireCD--;
+            // 弑神者射手套装的破片弹闸门：与 abaddonCritCooldown 同为跨帧计时器，只在死亡时复位
+            if (godSlayerShrapnelCooldown > 0)
+                godSlayerShrapnelCooldown--;
             if (abaddonCritCooldown > 0)
                 abaddonCritCooldown--;
             if (frostBarrier)
@@ -4219,17 +4230,21 @@ namespace CalamityDemutation.Players
             //  无敌窗口开启 + 射手头在套装内 + 本次弹幕属于远程职业）
             if (silvaRanged && silvaCountdown > 0 && hasSilvaEffect && proj.CountsAsClass<RangedDamageClass>())
                 damageMult += 0.4;
-            // 弑神者射手套装：远程暴击有几率「再次暴击」，把暴击的 2 倍变成 4 倍
-            // （经典版 setBonus 原文 causing 4 times the damage；源把它写在 OnHitNPCWithProj 里改 hit.Damage，
-            //  但那里的 HitInfo 是按值传递、改不动伤害，故本工程改写在此处：CritDamage 只对暴击生效，
-            //  于是"每次远程命中掷一次概率、命中暴击时才真正翻倍"与源的期望概率完全等价）。
-            // 概率：1/max(15, 100 - 远程暴击率)，与源同式。
+            // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 CI 模型，
+            // 取代原先经典版的 1/max(15, 100-暴击率) 单次骰子：
+            // · 总暴击率 >100% 时，按「溢出部分」（总暴击率 − 100）的百分比概率触发（CI 的 randomChance > 1 分支）；
+            // · 未超过 100%（或溢出 ≤1%）时，退化为固定 5% 概率（CI 的 Main.rand.NextBool(20)）。
+            // 触发后把暴击伤害翻倍：CritDamage 只对暴击生效，故等价于「暴击时造成 4 倍伤害」。
+            // 备注：CI 源码该 5% 分支写作 hitInfo.Damage *= 4——叠加在已含暴击（2 倍）的伤害上即 8 倍，
+            // 与 CI 自身 tooltip「造成四倍伤害」矛盾，属笔误；本工程取 tooltip 口径（两分支都翻倍到 4 倍），
+            // 只让触发条件照 CI。
             if (godSlayerRanged && proj.CountsAsClass<RangedDamageClass>())
             {
-                int randomChance = 100 - (int)Player.GetCritChance<RangedDamageClass>();
-                if (randomChance < 15)
-                    randomChance = 15;
-                if (Main.rand.Next(randomChance) == 0)
+                int excessCrit = (int)Player.GetTotalCritChance(DamageClass.Ranged) - 100;
+                bool againCrit = excessCrit > 1
+                    ? Main.rand.Next(1, 101) <= excessCrit   // 溢出暴击率% 的概率
+                    : Main.rand.NextBool(20);                // 未溢出时固定 5%
+                if (againCrit)
                     modifiers.CritDamage *= 2f;
             }
             modifiers.FinalDamage *= (float)damageMult;
@@ -5131,9 +5146,10 @@ namespace CalamityDemutation.Players
         // ── 私有工具 ──
         /// <summary>
         /// 伤害软上限（内联灾厄 CalamityUtils.DamageSoftCap）：未超上限时原样返回；
-        /// 超过后按 sqrt(超出倍数)/1.25 + 0.2 折算，抑制超模伤害线性堆叠（阿巴顿暴击爆炸用，上限 25）。
+        /// 超过后按 sqrt(超出倍数)/1.25 + 0.2 折算，抑制超模伤害线性堆叠。
+        /// 使用者：阿巴顿暴击爆炸（上限 25）、弑神者射手套装破片弹（上限 1500，见 CalamityDemutationGlobalItem.Shoot）。
         /// </summary>
-        private static int DamageSoftCap(double dmgInput, int cap)
+        internal static int DamageSoftCap(double dmgInput, int cap)
         {
             if (dmgInput < cap)
                 return (int)dmgInput;
