@@ -1629,6 +1629,26 @@ Items: {
 			'''
 	}
 
+	TarragonVisage: {
+		DisplayName: 龙蒿面甲
+		Tooltip:
+			'''
+			暂时免疫岩浆，免疫诅咒地狱火、着火、诅咒与寒冷减益
+			可以在液体中自由移动
+			伤害减免提高 5%
+			远程伤害与暴击率提高 10%
+			'''
+		SetBonus:
+			'''
+
+			降低敌怪的生成速率
+			红心拾取范围提升
+			敌怪死亡时有几率掉落额外红心
+			远程暴击命中会引发一场树叶爆炸
+			远程弹幕在消失时有几率分裂出生命能量
+			'''
+	}
+
 	Terratomere: {
 		DisplayName: 泰拉巨刃
 		Tooltip:
@@ -2044,4 +2064,5 @@ Projectiles: {
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流
 	EssenceFlame2.DisplayName: 精魂烈焰
+	TarraEnergy.DisplayName: 龙蒿生命能量
 }

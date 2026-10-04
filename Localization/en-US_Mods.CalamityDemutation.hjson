@@ -1628,6 +1628,26 @@ Items: {
 			'''
 	}
 
+	TarragonVisage: {
+		DisplayName: Tarragon Visage
+		Tooltip:
+			'''
+			Temporary immunity to lava and immunity to cursed inferno, fire, cursed, and chilled debuffs
+			Can move freely through liquids
+			5% increased damage reduction
+			10% increased ranged damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+
+			Reduces enemy spawn rates
+			Increased heart pickup range
+			Enemies have a chance to drop extra hearts on death
+			Ranged critical strikes will cause an explosion of leaves
+			Ranged projectiles have a chance to split into life energy on death
+			'''
+	}
+
 	Terratomere: {
 		DisplayName: Terratomere
 		Tooltip:
@@ -2045,4 +2065,5 @@ Projectiles: {
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
 	EssenceFlame2.DisplayName: Essence Flame
+	TarraEnergy.DisplayName: Tarragon Life Energy
 }

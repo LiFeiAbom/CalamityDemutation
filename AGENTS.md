@@ -248,6 +248,28 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-04）：**龙蒿套装按职业补齐·第一件 = 射手头（TarragonVisage）**。
+  用户口径：单件照经典版、**不吸收** 1.4.4 的差异、套装效果**走经典版**。
+  ① 新增 `Content/Items/Armors/Tarragon/TarragonVisage.cs`（贴图 `TarragonVisage.png` / `TarragonVisage_Head.png`
+  取自经典版灾厄 1.4.2.101）：18x18、价值 50 金、防御 21、月后稀有度 12；单件远程 10/10 + 减伤 5% +
+  `lavaMax += 240` + `ignoreWater` + 免疫诅咒地狱/着火/诅咒/冷冻；配方双版本（现代 `UelibloomBar`×12 + `DivineGeode`×6，
+  经典 `UeliaceBar`×7 + `DivineGeode`×6，均用 `TileID.LunarCraftingStation`）——与近战头同规矩，现代分支取 1.4.4 的数量。
+  ② 玩家侧新增 `tarraRanged` 标记（字段 + `ResetEffects`/`UpdateDead` 复位），落地经典版两条远程套效：
+  远程**暴击**命中 → 敌人处炸出 2~3 枚 `ProjectileID.Leaf`（伤害 = 本弹幕 ×0.25），写在
+  `CalamityDemutationPlayer.OnHitNPCWithProj`（命中回调只在主人端跑，无需判据）；
+  远程**弹幕消失**时 12% 概率分裂 2~3 枚生命能量（伤害 = min(本弹幕 ×0.33, 65)），写在
+  `CalamityDemutationGlobalProjectile.OnKill`——**OnKill 每个端都跑，故加了 `owner == Main.myPlayer` 判据**。
+  ③ 新弹幕 `Content/Projectiles/Typeless/TarraEnergy.cs`：直线飞行、穿透 1、120 帧、本体全透明
+  （引共用隐形贴图 `Content/Projectiles/InvisibleProj.png`，不新增素材）+ 每帧 3 颗 `DustID.TerraBlade` 尘尾。
+  ④ 本地化：中英各补 `Items.TarragonVisage`（DisplayName / Tooltip / SetBonus）与 `Projectiles.TarraEnergy.DisplayName`。
+  **两条口径备注**：(a) 源里的裸数字已用 Mono.Cecil 反查实名——尘 107 = `DustID.TerraBlade`、弹幕 206 = `ProjectileID.Leaf`；
+  (b) 经典版 TarraEnergy 写了 `dust.alpha = Projectile.alpha`（=255），会把本体与尘一起设成全透明、整套特效看不见，
+  现代版已删该行——本工程取**可见**的那一版，机械行为仍按经典（直线、不追踪）；要严格复刻只需补回那一行。
+  **射手头四版本对照**（其余职业头可照此比对）：经典 `TarragonVisage` 防 21 / 远程 10/10 / 减伤 5% / lavaMax / ignoreWater / 四减益免疫；
+  2.0 `TarragonHeadRanged` 与之相同但**无**那四项减益免疫；2.0.3.9 再删 `lavaMax`/`ignoreWater`；
+  2.0.4 改成远程 +10%（**无暴击**）+ 减伤 10%；1.4.4 是防 28 / 暴击 +7 / 弹药消耗 -25%；
+  **CI 没有龙蒿职业头**（那边只有 `AncientTarragon` 三件套、单头、盗贼/召唤混合体）。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**音效目录整理** —— 删掉 `Sounds/Custom/SCalSounds/` 这一层，5 个文件平铺进
   `Sounds/Custom/`：`CatastropheResonanceSlash`（巨龙之怒挥砍）、`DevourerDeath` / `DevourerDeathImpact`
   （弑神者冲刺起手与命中）、`DevourerSegmentBreak1`（阿斯加德之庇护冲刺撞击）、`ProvidenceHolyBlastImpact`

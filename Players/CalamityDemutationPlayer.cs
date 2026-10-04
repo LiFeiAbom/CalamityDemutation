@@ -596,6 +596,12 @@ namespace CalamityDemutation.Players
         public int tarraDefenseTime = 600;
         public bool tarraLifeRegen = false;
         public bool tarraMelee = false;
+        /// <summary>
+        /// 龙蒿套装·远程向（TarragonVisage 的套装标记）：远程暴击命中引发树叶爆炸
+        /// （见 OnHitNPCWithProj），远程弹幕消失时概率分裂出生命能量
+        /// （见 CalamityDemutationGlobalProjectile.OnKill）
+        /// </summary>
+        public bool tarraRanged = false;
         public bool tarraSet = false;
         /// <summary>
         /// 已装备吞噬者（The Absorber）：综合生命/魔力/移速/荆棘/减伤/静止回复，
@@ -804,6 +810,7 @@ namespace CalamityDemutation.Players
             statisCurse = false;
             tarraLifeRegen = false;
             tarraMelee = false;
+            tarraRanged = false;
             tarraSet = false;
             theAmalgam = false;
             theAbsorber = false;
@@ -964,6 +971,7 @@ namespace CalamityDemutation.Players
             tarraDefenseTime = 0;
             tarraLifeRegen = false;
             tarraMelee = false;
+            tarraRanged = false;
             tarraSet = false;
             theAmalgam = false;
             theAbsorber = false;
@@ -4736,6 +4744,18 @@ namespace CalamityDemutation.Players
             }
             if (proj.CountsAsClass<MeleeDamageClass>() && silvaMelee && Main.rand.NextBool(4))
                 target.AddBuff(ModContent.BuffType<SilvaHysteresis>(), 20);
+            // 龙蒿射手套装：远程暴击命中时在敌人处炸出一场树叶（经典版 CalamityPlayerPreTrailer.OnHitNPCWithProj 的口径：
+            // 2~3 枚 ProjectileID.Leaf，每枚伤害 = 本次弹幕伤害 × 0.25，随机方向、速度 7.0~10.0）。
+            // 源写在这条命中回调里，按工程口径只在主人端跑，无需额外判据
+            if (tarraRanged && hit.Crit && proj.CountsAsClass<RangedDamageClass>())
+            {
+                int leafCount = Main.rand.Next(2, 4);
+                for (int i = 0; i < leafCount; i++)
+                {
+                    Vector2 leafVelocity = Main.rand.NextVector2Unit() * (Main.rand.Next(70, 101) * 0.1f);
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), target.Center, leafVelocity, ProjectileID.Leaf, (int)(proj.damage * 0.25), 0f, Player.whoAmI);
+                }
+            }
             Player player = Main.player[proj.owner];
             int weaponDamage = player.HeldItem.damage;
             // 阿巴顿：暴击命中时在敌人中心炸出硫磺爆炸（与灾厄一致只在弹幕命中分支触发，真近战命中的 item 分支不触发）

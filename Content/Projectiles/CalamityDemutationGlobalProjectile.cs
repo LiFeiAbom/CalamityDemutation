@@ -5,9 +5,11 @@ using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Projectiles.Healing;
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Content.Projectiles.Typeless;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -369,6 +371,33 @@ namespace CalamityDemutation.Content.Projectiles
                     }
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
+            }
+        }
+        /// <summary>
+        /// tModLoader 的 OnKill 钩子：弹幕消失时调用。
+        /// 龙蒿射手套装（tarraRanged）的经典版口径：远程弹幕消失时 12% 概率在残骸处分裂出 2~3 枚
+        /// 生命能量 TarraEnergy，每枚伤害 = min(本弹幕伤害 × 0.33, 65)（源在 CalamityGlobalProjectile.OnKill 里）。
+        /// 与命中回调不同，OnKill 在**每个端**都会跑，故必须限定只在弹幕主人的本机生成，
+        /// 否则多人下每位玩家都会替别人各分裂一份。
+        /// </summary>
+        public override void OnKill(Projectile projectile, int timeLeft)
+        {
+            if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers || projectile.owner != Main.myPlayer)
+                return;
+            if (!projectile.friendly || !projectile.CountsAsClass<RangedDamageClass>())
+                return;
+            if (!Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().tarraRanged)
+                return;
+            if (Main.rand.Next(0, 100) >= 12)
+                return;
+            int energyCount = Main.rand.Next(2, 4);
+            for (int i = 0; i < energyCount; i++)
+            {
+                Vector2 energyVelocity = Main.rand.NextVector2Unit() * (Main.rand.Next(70, 101) * 0.1f);
+                int energyDamage = (int)(projectile.damage * 0.33);
+                if (energyDamage > 65)
+                    energyDamage = 65;
+                Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.oldPosition + new Vector2(projectile.width / 2f, projectile.height / 2f), energyVelocity, ModContent.ProjectileType<TarraEnergy>(), energyDamage, 0f, projectile.owner);
             }
         }
     }
