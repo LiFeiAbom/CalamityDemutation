@@ -12,6 +12,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// 由引导分支从鼠标位置拉出：<c>ai[0] = 0</c> 时沿初速冲刺并逐步减速；命中任意目标后转为
     /// <c>ai[0] = 1</c> 的锁敌猛扑（每 20 帧重扑一次），并且每次命中都有 1/5 概率额外甩出惊惧之灵。
     /// 目标消失时把自身剩下的威力转成一枚追踪主人的治疗之灵（<c>AbominateSpirit</c> 的 Status 3）。
+    /// <para>
+    /// 与源的唯一差异（联机修正，2026-10-05）：<c>OnHitNPC</c> 写入锁敌状态（<c>ai[0] = 1</c>、<c>ai[2] = 目标索引</c>）
+    /// 后补了一条 <c>Projectile.netUpdate = true</c>——上游 CWR 三个版本都漏了这一步，而项目同步包（msg 27）
+    /// 正好携带 <c>ai[0] / ai[1] / ai[2]</c>，补上之后其它客户端才会跟着进入锁敌猛扑。
+    /// </para>
     /// </summary>
     internal class AbominateHookScythe : ModProjectile
     {
@@ -99,6 +104,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Projectile.ai[0] = 1;
             if (Projectile.ai[2] == 0)
                 Projectile.ai[2] = target.whoAmI;
+            Projectile.netUpdate = true;   // 锁敌状态要发出去，否则别端的这把镰刀不会进入锁敌猛扑
         }
         public override Color? GetAlpha(Color lightColor)
         {

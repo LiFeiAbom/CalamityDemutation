@@ -102,6 +102,14 @@
   （`Player.Update → UpdateArmorSets`，且整条链上没有 `whoAmI == Main.myPlayer` 守卫）。这两处生成弹幕
   **必须**加 `player.whoAmI == Main.myPlayer`，否则客户端会替别的玩家生成一份 owner 记成本机玩家的弹幕，
   服务端更会以 `Main.myPlayer = 255` 当 owner。（2026-09-30 已按此修好魔影头盔 ×4 与蓝欧米伽触手。）
+- **`ModPlayer.OnHurt` / `PostHurt` 同属"每名玩家 × 每一端"**（2026-10-05 补记，IL 口径）：
+  `Player.Hurt(Player.HurtInfo, bool)` 内部会调 `PlayerLoader::OnHurt`（IL_00c7）与 `PostHurt`（IL_096c），
+  而 `MessageBuffer::GetData` 收到 `PlayerHurt` / `PlayerHurtV2` 时会调这同一个重载给**别的玩家**重放，
+  于是每名客户端（含服务端）都会为"受伤的那名玩家"跑一遍这两个钩子。此处生成弹幕同样**必须**加
+  `Player.whoAmI == Main.myPlayer`——上游 Calamity 也是这么写的（`CalamityPlayerHitHurt.cs` 的
+  `OnHurt` 2103 行、`PostHurt` 2396 行两道外层判据把整段反击效果裹住）。
+  **已修（2026-10-05）**：移植时丢了外层判据的 5 处——OnHurt 的混乱脑弹幕（BrainOfConfusion），
+  PostHurt 的恶魔之影套 ShadowBeamFriendly ×2 + DemonScythe ×5、神圣护符 HallowStar ×3、神谕壁垒 HallowStar ×6。
 - **查"某钩子跑在哪一端"的捷径**：tModLoader 安装目录 `D:\Game\Steam\steamapps\common\tModLoader`，
   `tModLoader.dll` 就是把原版类合并进去的程序集；用同目录
   `Libraries\mono.cecil\0.11.6\lib\netstandard2.0\Mono.Cecil.dll` 在 PowerShell 里 `ReadAssembly` 后
@@ -131,7 +139,7 @@
 - 联网受限时的绕道：`raw.githubusercontent.com` 不通，改用 jsDelivr
   （`https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path>`）或 GitHub API 均可正常访问。
 
-## 7. 数值膨胀（StatInflation：武器 34 把 + 盔甲 12 件，2026-10-01 全量接入完毕）
+## 7. 数值膨胀（StatInflation：武器 35 把 + 盔甲 12 件，2026-10-01 全量接入完毕，2026-10-05 补齐女妖之爪条目）
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -200,6 +208,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 银河 | 99 | 425 | |
 | 焚灭天惩 | 244 | 388 | 同一开关额外把每次洒落的火球数 10→15 |
 | 暴政 | 890 | 2200 | 同一开关额外把每次挥砍的火焰 6→10、单枚火焰伤害 25%→75% |
+| 女妖之爪（BansheeHook） | 220 | 250 | 用户 2026-10-03 指定；关态 220 取自大修重制版（源本体 250），2026-10-05 审计时补登记 |
 
 跳过（用户明确点名，不接入）：混乱之刃 150、霜火之刃 125、禁忌誓约之刃 110。
 
@@ -208,8 +217,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   神吞后 3× / 犽戎后 5× / 星流巨械后 7× / 至尊灾厄后 8× / 魔影 10×。
   该包 `/D:\Game\Terraria\ModModel\Lilac-Arcane-Pack-master` 的 `LAPGlobalItemModifyDamage.cs`
   还提供了一个「拿目标面板反推倍率」的 `SetCustomMult_Int` 写法，思路可借鉴。
-- **进度**：工程内 34 把武器（全为近战）已全部过筛——**31 把已接入**、
-  **3 把按用户口径跳过**，没有剩下的待接入项。
+- **进度**：工程内 **35 把**武器（全为近战）已全部过筛——**32 把已接入**、
+  **3 把按用户口径跳过**，没有剩下的待接入项。（2026-10-05 修正：此前记的 34/31 漏了女妖之爪。）
 - **盔甲（同一开关，2026-10-01 接入）**：口径是「按 `310c3cf`（第三轮削弱，2026-09-27）逐件回滚」——
   膨胀开启时恢复那次削弱前的值。单件加成写在各自的 `UpdateEquip` 里；**防御**因为 `Item.defense` 只能在
   `SetDefaults` 里一次性赋值（运行中切配置不会刷新），统一改走 `UpdateEquip` 里的 `player.statDefense += 差值`
@@ -235,19 +244,108 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   再乘玩家通用伤害加成（`player.GetTotalDamage<GenericDamageClass>().ApplyTo(300)`，原先是固定 1500、
   且完全不吃玩家的伤害加成）；其 tooltip 的免死几率已按实现从 20% 改成 **10%**。
 - **待办**：`ConfigSystem.StatInflation` 的 tooltip 文案仍写着「按旧版（灾厄 2.0 之前）口径抬高」，
-  与现在的「逐把点名 + 档位倍率」口径不一致，待用户决定是否改。
+  与现在的「逐把点名 + 档位倍率」口径不一致——**2026-10-05 已按用户确认改写**：中英两份 tooltip 改成
+  「按用户点名的档位抬高本模组的武器与盔甲数值 / 武器 32 把、盔甲 12 件各自读这一个开关…」，
+  同批把 `ConfigSystem.StatInflation` 的代码注释口径一并改齐（见第 8 节）。
   另外被 `310c3cf` 同步削过的盔甲 tooltip（中英文）原先仍写削弱后的数，膨胀开启时对不上——
-  现已落地按开关切文案的机制（2026-10-02，**目前只接了魔影 6 件**）：装备在 `ModifyTooltips` 里调
+  现已落地按开关切文案的机制（2026-10-02 首接魔影 6 件，2026-10-05 审计确认**已全面接完**）：装备在 `ModifyTooltips` 里调
   `CDUtil.ApplyInflatedTooltip`（`Utilities/CDUtil_Tooltip.cs`），膨胀开启时用本地化键
   `Items.<内部名>.TooltipInflated` 整段替换原版正文（只替换名字以 `Tooltip` 开头的行，SetBonus 原样保留），
   并按传入的 `defenseBonus` 把原版自动生成的「防御」行数字改成实际生效值
   （膨胀下防御只能在 `UpdateEquip` 补差值，`Item.defense` 运行期改不了，故 tooltip 与实现靠这里对齐）。
   欧米茄蓝只有胸甲的「禁止正面生命再生」随开关变化（膨胀时该限制整体失效），已接；
   其头盔/护腿没有任何随膨胀变化的数字，无需文案。
-  其余 5 件盔甲（弑神者/席尔瓦/龙蒿/血炎/金源）尚未照此补文案，待续。
+  2026-10-05 审计复核：**13 个调用 `ApplyInflatedTooltip` 的物品（含弑神者胸甲/始源林海胸甲/龙蒿胸甲/血炎胸甲/金源胸甲
+  这 5 件）在中英两份 hjson 里都有 `TooltipInflated` 文案**，"其余 5 件待补"这条待办已作废。
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-05）：**全工程三部分体检（① 缺陷/BUG 扫描 ② 中文注释 ③ 代码 ↔ 本地化核对）**，本轮已确证并落地：
+  ① **联机缺陷（已修）**：`ModPlayer.OnHurt` / `PostHurt` 里 5 处弹幕生成缺 `Player.whoAmI == Main.myPlayer` 判据。
+  上游 Calamity 的 `CalamityPlayerHitHurt.cs` 用两道外层判据（OnHurt 2103 行 / PostHurt 2396 行）裹住整段反击效果，
+  移植时只保留了部分内层判据；IL 上确认 `Player.Hurt(HurtInfo,bool)` → `PlayerLoader.OnHurt/PostHurt`，
+  而 `MessageBuffer.GetData` 收到 PlayerHurt(V2) 会给别的玩家重放同一重载 ⇒ 每端都会替受伤玩家多生成一份弹幕。
+  已按最小改法给 5 处补判据（口径与清单见第 5 节新条目）。
+  ② **本地化孤儿条目（已删，2026-10-05）**：`Projectiles` 段原有 10 条代码 0 引用的残留——
+  `AbyssFractalHeld` / `BrilliantFractalHeld` / `ElementalFractalHeld` / `FinalFractalHeld` / `SpiritFractalHeld` /
+  `StarlitFractalHeld` / `VoidFractalHeld` / `WelkinFractalHeld`（CWR 分形系列）与 `RuneBolt` / `RuneSongHeld`，
+  中英两份都有，属删除 CWR/CE 内容时的残留（`Items` / `Buffs` 段无孤儿）；已从中英两份各删 10 行。
+  ③ **数值膨胀残留**：弑神近战套的弑神飞镖伤害读 `Player.HeldItem.damage`（base 值，不随膨胀开关），
+  见 `Players/CalamityDemutationPlayer.cs` 的 `OnHitNPCWithItem` 与 `Content/Items/CalamityDemutationGlobalItem.cs` 的 `OnHitPvp`。
+  **用户 2026-10-05 定口径：不接膨胀、维持现状（读武器自身数据），按"不改"结案**，别再动。
+  ④ **第 1 批（A5 同步端 / A6 伤害结算判据）已扫完（2026-10-05）**：
+  A6 方面 `ApplyDamageToNPC` / `npc.immune[]` 的调用点全数复核——Item 与 Projectile 的 `OnHitNPC`/`OnHitPvp` 属主人端钩子无需判据；
+  弑神者冲刺 `GodSlayerDashHits`（`GodSlayerDashMovement` 开头对非本机玩家 early-return）与盾牌冲撞 `ShieldSlamDashHits`（同款前置判据）均安全。
+  A5 方面扫了「在非 AI 钩子里写 `ai[]`/`localAI[]` 却不发 `netUpdate`」的全部弹幕：真问题只有
+  **`AbominateHookScythe`**——锁敌状态（`ai[0] = 1` / `ai[2] = 目标索引`）只在主人端 `OnHitNPC` 写、上游 CWR 三个版本都没发 `netUpdate`，
+  已补一行 `Projectile.netUpdate = true`（IL 已确认项目同步包 msg 27 携带 `ai[0]/ai[1]/ai[2]`，故补发即生效）；
+  其余命中均为 `==` 比较的误报，或主人端专用的视觉闩锁（`BansheeHookProj.localAI[0]`）、
+  各端确定性递增的计时器（`GodSlayerDart.ai[1]`、`EntropicClaymoreHeld.ai[1]/ai[2]`）、以及 `ReceiveExtraAI` 的接收写入，均无需同步。
+  ⑥ **第 2 批（E1 移植回归 / E2 死代码）已扫完（2026-10-05）：无新增缺陷**。E1 把 25 个"判据数明显少于上游"的候选逐个对照，
+  结论分三类：**(a) 源版本对不上**——银河 / 欧米茄环境之刃 / 真·环境之刃的 `HoldItem` 右键与 attunement 只存在于现代版，
+  本工程按经典版 1.4.2.101 移植，经典源同名文件里同样没有这些东西（已逐行核对）；
+  **(b) 实现位置不同**——Gehenna / VoidofExtinction / Affliction / LeviathanAmbergris / RampartofDeities / BloomStone
+  的饰品效果本工程写在 `ModPlayer.PostUpdateMiscEffects`（带判据），物品文件只留旗标与数值；
+  **(c) 等价或更稳**——`Main.player[Main.myPlayer].lifeSteal` 这类是把 `Main.myPlayer` 当索引用（ExoComet / OmegaBlueTentacle），
+  而 `OnHitNPC` 本来只在主人端跑，TheEnforcer / PhoenixBlade / StellarStriker 用 `player.whoAmI` 比上游的 `Main.myPlayer` 更稳。
+  E2：全工程 **0 空方法体**、**0 处对按值结构体**（`NPC.HitInfo` / `Player.HurtInfo` / `NPC.HitModifiers`）**的死写**；
+  唯二的"可疑点"是 `bloomCounter` / `seaCounter` 恒真的 `flag = counter % 60 == 0` 与空 `if (counter >= 180) { }`——
+  **上游灾厄（1.3 / 1.4.2.101 / 2.0 / CI 各版）里这两个计数器同样是方法内局部变量**，属继承的历史残留，非移植回归，故不动。
+  ⑦ **第 3 批（C1 数值膨胀派生伤害 / E3 分叉实现）已扫完（2026-10-05）**：
+  C1 全量过筛 **32 把已接入膨胀的武器**——派生点里**没有任何一处直读 `Item.damage`**（唯一命中的都是 `Item.DamageType` 的大小写误报），
+  第 7 节点名的 7 个派生点（禅心剑 70% 真近战、破灭魔王剑 ×4、月炎之锋陨石雨、庇护之刃 DefenseBlast、
+  彗星陨刃两处陨石、宙宇波能刃 LaserFountains、凤凰之刃 6 处）**全部接在 `BaseDamage` 上**，未被改回 `Item.damage`。
+  顺带发现并修正了文档缺口：**女妖之爪（BansheeHook，220 → 250，用户 2026-10-03 指定）此前没进第 7 节的表**，
+  连带把「34 把（31 接入 + 3 跳过）」修正为「**35 把（32 接入 + 3 跳过）**」（工程内近战 ModItem 实测 35 把）。
+  E3 找到一处**待定的口径不一致**（未改，等用户定）：PvP 走 `CalamityDemutationGlobalItem.OnHitPvp`（本工程自加，上游无对应实现），
+  PvE 走 `CalamityDemutationPlayer.OnHitNPCWithItem`；后者对亚利姆徽章 / 元素手套 / 血炎近战 / 弑神近战都加了**近战职业门控**
+  （`item.CountsAsClass<MeleeDamageClass>()` 或 `hit.DamageType == Melee/MeleeNoSpeed`），PvP 那份没有门控
+  ⇒ 穿着这些近战饰品、用非近战武器在 PvP 里打人也会触发（元素手套全套减益、弑神飞镖、血炎命中计数与回血）。
+  另外 PvP 的血炎回血没有 PvE 那层的 `canGhostHeal && !moonLeech` 限制（PvP 目标是玩家，无 `canGhostHeal` 可比）。
+  **用户 2026-10-05 定口径：PvP 对齐 PvE** → 已给四段补 `meleeHit`（近战 / 无攻速近战）门控，回血那半补了可对齐的 `!player.moonLeech`
+  （`canGhostHeal` 是 NPC 属性，PvP 无对应，故无法对齐）。
+  ⑧ **第 4 批（D 类健壮性）已扫完（2026-10-05）：未发现崩溃/越界缺陷**，几处"看着像问题"的都查到了权威依据：
+  - `Main.player[Main.myPlayer]`（3 处）全部在 `owner == Main.myPlayer` 判据内，服务端 `Main.myPlayer = 255` 时不会执行；
+  - `Main.projectile[NewProjectile 返回值]`（约 20 处）**安全**：IL 确认本 build 的 `Projectile.NewProjectile` 只有一处 `ret`，
+    返回的是空位索引或数组满时 `FindOldestProjectile()` 顶替的索引，**不可能返回 -1**；顺带更正了 `RedDevil.cs` 里
+    "NewProjectile 失败时返回 -1"的错误注释（保留原有的防御性边界校验，无害）；
+  - `Main.dust[Dust.NewDust 返回值]`（约 325 处）**安全**：`Main::.cctor` 里 `Main.dust` 是按 **6001** 个元素分配的，
+    `Dust.NewDust` 的失败哨兵值 6000 恰好是合法的哑元下标；
+  - 循环上界统一是 `< 200` / `Main.maxNPCs` / `Main.npc.Length`，无 `<= 200` 之类的越界写法；
+  - 除法/NaN：`speed / direction.Length()` 之前有 `direction.Y >= 20f` 的钳制；`i / count` 处在 `i < count` 循环内；
+    风险点普遍用 `SafeNormalize` 兜底；
+  - null 解引用：`Owner.HeldItem` 类访问都带 `Owner != null && Owner.active` 前置；没有对 `HeldItem.ModItem` 的无保护解引用；
+  - 软依赖：133 个 `TryFind` 名与 18 个减益名全部能在参考源里找到，配方/掉落都先过 `TryGetMod`/`TryFind` 再注册，
+    无写死的灾厄类型引用（弱引用口径成立）。
+  ⑨ **第 5 批（B3 后缀贴图 / B5 音效 / C4 稀有度 / F1 存档同步）已扫完（2026-10-05）**，Part 1 至此收尾：
+  - B3：全工程只有 5 处"贴图路径 + 后缀"拼接，逐个对盘全命中——`BansheeHookGlow` / `TheEnforcerGlow` /
+    `AuricTeslaBodyArmor_Back` / `DeathLaser` 用的 `RayBeamBody`+`RayBeamHead`+`RayBeamDon`
+    （注意 `DeathLaser` 的 `Texture` 指向 `RayBeam`，后缀拼出来的是 **RayBeam\* 而不是 DeathLaser\***，四个文件都在）；
+    其余 `...Glow` 与 `CalamityDemutationConstant.*` 拼接由 `Tools\CheckResources.ps1` 覆盖（143 条全命中）。
+  - B5：`Sounds/CalamityDemutationSounds.cs` 的 17 个 `SoundStyle` 路径全部命中素材；音高站点 11 处。
+    备注：其中 `MurasamaHitOrganic { Pitch = 1.25f }` 与 `DragonRage { Pitch = 0.3f + Level * 0.25f }`
+    会超过 ±1——XNA 的 `SoundEffectInstance.Pitch` 上限是 ±1（IL 确认 `LegacySoundPlayer` 也是按 ±0.01~0.7 这类 XNA 单位写入的），
+    所以这两处会被引擎夹到 1.0。这是"CE 值 − 1"换算后的预期饱和，不是崩溃，暂不改。
+  - C4：`postMoonLordRarity` 取值分布 = 10 / 12~17 / 20，全部合法（10 档是 `GreatswordofJudgement` 的有意例外，
+    名称保持红色）；另有约 42 个物品**没有显式写 `Item.rare`**，但 `CalamityDemutationGlobalItem.SetDefaults` 会在
+    `postMoonLordRarity != 0` 时统一补成 `ItemRarityID.Red`，所以观感与口径都成立，无需逐个补那一行。
+  - F1：`ModPlayer` 的 `SaveData`/`LoadData` 键完全对称（6 个永久解锁标志），`CopyClientState`/`SendClientChanges` 同步同一组 6 个键；
+    `GlobalItem` 的 `SaveData`/`LoadData`/`NetSend`/`NetReceive` 与 `postMoonLordRarity` 成对。
+    147 个 bool 字段里只有这 6 个持久化字段复位次数 ≤1，其余全部在 `ResetEffects` 与 `OnEnterWorld` 两处复位（复位对称性通过）。
+    **顺手修了三处过期注释**（Part 2 范畴）：类注释、`SaveData`/`LoadData` 注释、`CopyClientState`/`SendClientChanges` 注释
+    原先都写"两个永久标志（洋葱/拜月契约）"，实际早已是 6 个（另加四件永久增益消耗品），已按实现改写。
+- **Part 2（中文注释修正，2026-10-05 完成）**：核查角度与结论——
+  ① 覆盖度：385 个 .cs **全部含中文注释**（唯一没有的是 `obj/` 构建产物），类级 `///` 摘要只缺 3 个 struct/interface（不需要）；
+  ② 注释数字 vs 代码：归一化检测（百分数↔小数、`<= 15` 差一写法、跨文件引用、本地化文本）后剩 31 条可疑，**逐条人工核对全部准确**；
+  ③ `<see cref>` 断链 **0 条**；④ 注释引用的 `.cs` 文件名 **0 条**对不上（项目内 + 7 个上游源都查了）。
+  本批改掉的过期注释：`TheEnforcer`（17→14 帧）、`AbominateHookScythe`（补记 netUpdate 差异）、`RedDevil`（"-1"错误说法）、
+  `CalamityDemutationPlayer`（永久解锁 2→6 个，4 处）、`CalamityDemutationGlobalItem`（PvP 对齐说明）、
+  `ConfigSystem.StatInflation`（口径 + "只有武器消费"）、`IDrawWarp`（搬迁后的命名空间）、AGENTS 本身。
+  另按用户确认改写了「数值膨胀」配置项的中英 tooltip（旧口径"旧版灾厄 2.0 之前"→"逐把点名 + 盔甲 12 件"），
+  改完 `dotnet build` 未再改写本地化文件（diff 仍是 2 增 12 删）。
+  ⑤ **本轮核过没问题的**：资源自检 143 条全命中；`.fx`/`.fxc` 全配对；隐式贴图全命中（缺项仅 3 个抽象基类与 ModPlayer，无关）；
+  ModItem 无可变实例字段；鼠标直读 8 处全在 Item 侧；13 个用 `ApplyInflatedTooltip` 的物品都有 `TooltipInflated` 文案；
+  中英本地化键集 572 = 572 且无未翻译条目；133 个 `TryFind` 名与 18 个减益名都能在参考源里找到。
 - 最近一批工作（2026-10-05）：两处小改。
   ① **暴政（TheEnforcer）使用时间与挥舞动画 17 → 14 帧**（用户 2026-10-05 指定；改的是
   `SetDefaults` 里的 `Item.useAnimation = Item.useTime`，两项一起）。

@@ -214,8 +214,8 @@ Configs: {
 			Label: Stat Inflation
 			Tooltip:
 				'''
-				Raises this mod's weapon values to the legacy (pre-Calamity 2.0) numbers.
-				Every weapon reads this single switch: when on, each weapon restores its legacy damage; when off, values stay as they are.
+				Raises this mod's weapon and armor values to the numbers specified for each item.
+				32 weapons and 12 armor pieces read this single switch: when on, each restores its specified values; when off, values stay as they are.
 				Independent from the two "revert nerfs" options above; they can be toggled separately.
 				Default: Off.
 				'''
@@ -2035,7 +2035,6 @@ Keybinds: {
 
 Projectiles: {
 	AbaddonCrit.DisplayName: Brimstone Blast
-	AbyssFractalHeld.DisplayName: Abyssal Fractal Held
 	AbominateHookScythe.DisplayName: Dreadful Scythe
 	AbominateSpirit.DisplayName: Dreadful Spirit
 	AnarchyBeam.DisplayName: Anarchy Beam
@@ -2072,7 +2071,6 @@ Projectiles: {
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
 	ElementBall.DisplayName: Ball
-	ElementalFractalHeld.DisplayName: Elemental Fractal Held
 	EntropicClaymoreHeld.DisplayName: Entropic Claymore Held
 	EntropicClaymoreProj.DisplayName: Entropic Flechette
 	EonBeam.DisplayName: Beam
@@ -2085,7 +2083,6 @@ Projectiles: {
 	ExoBoom.DisplayName: Exo Explosion
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
-	BrilliantFractalHeld.DisplayName: Brilliant Fractal Held
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump
 	FungalHeal.DisplayName: Fungal Heal
@@ -2107,8 +2104,6 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PoisonousSeawater.DisplayName: Poisonous Seawater
 	RedDevil.DisplayName: Red Devil
-	RuneBolt.DisplayName: Rune Bolt
-	RuneSongHeld.DisplayName: Archaic Song
 	SandBolt.DisplayName: Bolt
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
@@ -2116,11 +2111,9 @@ Projectiles: {
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
-	SpiritFractalHeld.DisplayName: Spirit Fractal Held
 	SpiritFlame.DisplayName: Spirit Flame
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
-	StarlitFractalHeld.DisplayName: Starlit Fractal Held
 	StellarStrikerBeam.DisplayName: Stellar Striker Beam
 	TerraBall.DisplayName: Ball
 	TerratomereBeams.DisplayName: Terratomere Beams
@@ -2132,10 +2125,7 @@ Projectiles: {
 	TerratomereSlashCreator.DisplayName: Terratomere Slash Creator
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
-	WelkinFractalHeld.DisplayName: Welkin Fractal Held
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
-	VoidFractalHeld.DisplayName: Void Fractal Held
-	FinalFractalHeld.DisplayName: Final Fractal Held
 	EssenceBeam.DisplayName: Essence Beam
 	StreamGougeProj.DisplayName: Stream Gouge
 	EssenceFlame2.DisplayName: Essence Flame

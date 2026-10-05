@@ -526,14 +526,17 @@ namespace CalamityDemutation.Content.Items
         {
             // player = 攻击者 A，target = 被打中的 B
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
+            // 与 PvE 侧（CalamityDemutationPlayer.OnHitNPCWithItem）对齐：亚利姆徽章 / 元素手套 / 血炎近战 / 弑神近战
+            // 这四项都是"近战饰品/套装"效果，只有近战（含无攻速近战）武器命中才生效，拿法师/远程武器打人也该不触发。
+            bool meleeHit = item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<MeleeNoSpeedDamageClass>();
             // 亚利姆徽章 / 元素手套：直接查 A 的实际装备（不依赖 ModPlayer 标志位）
-            if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<YharimsInsignia>()))
+            if (meleeHit && CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<YharimsInsignia>()))
             {
                 // 亚利姆徽章：给受害者施加圣焰（现代版）/圣光（经典版），随机时长
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
                 CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
             }
-            if (CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<ElementalGauntlet>()))
+            if (meleeHit && CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<ElementalGauntlet>()))
             {
                 // 元素手套：给受害者施加全套元素 debuff（原版 + 两灾厄变体）
                 target.AddBuff(BuffID.Poisoned, 120, false);
@@ -581,13 +584,15 @@ namespace CalamityDemutation.Content.Items
                     target.AddBuff(ModContent.BuffType<DemonFlames>(), 120, false);
             }
             // 血焰套装（bloodflareMelee）：累计命中数并在本端小额回血（与 OnHitNPCWithItem 同构）
-            if (modPlayer.bloodflareMelee)
+            if (modPlayer.bloodflareMelee && meleeHit)
             {
                 if (modPlayer.bloodflareMeleeHits < 15 && modPlayer.bloodflareFrenzyTimer <= 0 && modPlayer.bloodflareFrenzyCooldown <= 0)
                 {
                     modPlayer.bloodflareMeleeHits++;
                 }
-                if (player.whoAmI == Main.myPlayer)
+                // PvE 侧还要求 target.canGhostHeal（NPC 属性，PvP 无对应）与 !Player.moonLeech；
+                // 这里只对齐可对齐的 moonLeech 一项。
+                if (player.whoAmI == Main.myPlayer && !player.moonLeech)
                 {
                     int healAmount = Main.rand.Next(3) + 1;
                     player.statLife += healAmount;
@@ -597,7 +602,7 @@ namespace CalamityDemutation.Content.Items
                 }
             }
             // 弑神近战（godSlayerMelee）：生成弑神飞镖（与 OnHitNPCWithItem 同构）
-            if (modPlayer.godSlayerMelee && modPlayer.godSlayerMeleefireCD <= 0)
+            if (modPlayer.godSlayerMelee && modPlayer.godSlayerMeleefireCD <= 0 && meleeHit)
             {
                 int finalDamage = 500 + player.HeldItem.damage / 2;
                 Vector2 spawnPos = new(player.Center.X, player.Center.Y);

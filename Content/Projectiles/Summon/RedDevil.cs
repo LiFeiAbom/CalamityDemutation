@@ -300,7 +300,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                         value19.Normalize();
                         value19 *= scaleFactor3;
                         int num659 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.X, Projectile.Center.Y, value19.X, value19.Y, num658, Projectile.damage, 0f, Main.myPlayer, 0f, 0f);
-                        // NewProjectile 失败时返回 -1，直接索引 Main.projectile[-1] 会越界崩溃，故先做边界校验
+                        // 防御性边界校验。注意（2026-10-05 审计修正）：本 build 的 Projectile.NewProjectile **不会**返回 -1——
+                        // IL 里该方法只有一处 ret，返回的是"搜索到的空位"或数组满时 FindOldestProjectile() 顶掉的最旧弹幕索引，
+                        // 恒落在 0..Main.maxProjectiles-1。此前注释写的"失败时返回 -1"与实现不符，故更正。
                         if (num659 >= 0 && num659 < Main.maxProjectiles)
                         {
                             Main.projectile[num659].timeLeft = 300;                  // 子弹幕寿命限制 300 帧

@@ -214,8 +214,8 @@ Configs: {
 			Label: 数值膨胀
 			Tooltip:
 				'''
-				按旧版（灾厄 2.0 之前）口径抬高本模组的武器数值。
-				所有武器统一读取这一个开关：开启后各武器把面板回调到旧版数值，关闭则维持现状。
+				按用户点名的档位抬高本模组的武器与盔甲数值。
+				武器 32 把、盔甲 12 件各自读这一个开关：开启后回调到指定档位，关闭则维持现状。
 				与「还原原版削弱 / 还原灾厄内容削弱」是两个独立的口径，可分别开关。
 				默认：关闭。
 				'''
@@ -2034,7 +2034,6 @@ Keybinds: {
 
 Projectiles: {
 	AbaddonCrit.DisplayName: 硫磺爆裂
-	AbyssFractalHeld.DisplayName: 深渊分形
 	AbominateHookScythe.DisplayName: 惊惧巨镰
 	AbominateSpirit.DisplayName: 惊惧之灵
 	AnarchyBeam.DisplayName: 硫磺光束
@@ -2071,7 +2070,6 @@ Projectiles: {
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
 	ElementBall.DisplayName: 元素球
-	ElementalFractalHeld.DisplayName: 元素分形
 	EntropicClaymoreHeld.DisplayName: 熵之舞（手持）
 	EntropicClaymoreProj.DisplayName: 熵之飞刃
 	EonBeam.DisplayName: 远古光束
@@ -2084,7 +2082,6 @@ Projectiles: {
 	ExoBoom.DisplayName: 星流爆炸
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
-	BrilliantFractalHeld.DisplayName: 光辉分形
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
@@ -2106,8 +2103,6 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PoisonousSeawater.DisplayName: 有毒海水
 	RedDevil.DisplayName: 红色恶魔
-	RuneBolt.DisplayName: 符文脉冲束
-	RuneSongHeld.DisplayName: 符文之歌
 	SandBolt.DisplayName: 沙弹
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
@@ -2115,11 +2110,9 @@ Projectiles: {
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
-	SpiritFractalHeld.DisplayName: 聚魂分形
 	SpiritFlame.DisplayName: 鬼火
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
-	StarlitFractalHeld.DisplayName: 星熠分形
 	StellarStrikerBeam.DisplayName: 星流束
 	TerraBall.DisplayName: 泰拉球
 	TerratomereBeams.DisplayName: 泰拉光束剑气
@@ -2131,10 +2124,7 @@ Projectiles: {
 	TerratomereSlashCreator.DisplayName: 泰拉刀光创造者
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛
-	WelkinFractalHeld.DisplayName: 苍穹分形
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
-	VoidFractalHeld.DisplayName: 虚空分形
-	FinalFractalHeld.DisplayName: 最终分形
 	EssenceBeam.DisplayName: 宇宙精粹
 	StreamGougeProj.DisplayName: 宇宙暗流
 	EssenceFlame2.DisplayName: 精魂烈焰

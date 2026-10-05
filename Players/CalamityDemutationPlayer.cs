@@ -42,8 +42,9 @@ namespace CalamityDemutation.Players
     /// 本模组的玩家数据类（ModPlayer）
     /// 通过布尔字段记录各饰品是否已装备，并实现装备效果的数值结算、
     /// 命中 debuff、PvP 命中 debuff、闪避等逻辑。
-    /// 另含天界洋葱/拜月契约的永久解锁标志（extraAccessoryML / extraWingSlot），
-    /// 并由 SaveData / LoadData 负责这两个字段的持久化。
+    /// 另含 6 个**永久解锁标志**——天界洋葱（extraAccessoryML）/ 拜月契约（extraWingSlot）
+    /// 与四件永久增益消耗品（sugarheartCitrus / organicPod / freshBlueberry / moltenMagmaFruit），
+    /// 由 SaveData / LoadData 持久化、CopyClientState / SendClientChanges 负责联机同步。
     /// </summary>
     internal partial class CalamityDemutationPlayer : ModPlayer
     {
@@ -4136,7 +4137,13 @@ namespace CalamityDemutation.Players
                     }
                 }
                 // 同时朝玩家速度方向抛出一颗混乱脑弹幕（纯视觉）
-                Projectile.NewProjectile(Entity.GetSource_FromThis(), Player.Center.X + (float)Main.rand.Next(-40, 40), Player.Center.Y - (float)Main.rand.Next(20, 60), Player.velocity.X * 0.3f, Player.velocity.Y * 0.3f, ProjectileID.BrainOfConfusion, 0, 0f, Player.whoAmI, 0f, 0f);
+                // OnHurt / PostHurt 是"每名玩家 × 每一端"都跑的钩子（Player.Hurt → PlayerLoader.OnHurt/PostHurt，
+                // 网络端收到 PlayerHurt 也会给别的玩家重放一遍），弹幕必须只在主人客户端生成，否则每端各多一份。
+                // 源头把整段裹在 if (Player.whoAmI == Main.myPlayer) 里（CalamityPlayerHitHurt.cs OnHurt），移植时漏了。
+                if (Player.whoAmI == Main.myPlayer)
+                {
+                    Projectile.NewProjectile(Entity.GetSource_FromThis(), Player.Center.X + (float)Main.rand.Next(-40, 40), Player.Center.Y - (float)Main.rand.Next(20, 60), Player.velocity.X * 0.3f, Player.velocity.Y * 0.3f, ProjectileID.BrainOfConfusion, 0, 0f, Player.whoAmI, 0f, 0f);
+                }
             }
             if (tarraMelee)
             {
@@ -4401,8 +4408,12 @@ namespace CalamityDemutation.Players
                     num18 = (float)num17 / num18;
                     num15 *= num18;
                     num16 *= num18;
-                    int num19 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num15, num16, ProjectileID.ShadowBeamFriendly, shadowBeamDamage, 7f, Player.whoAmI, 0f, 0f);
-                    Main.projectile[num19].ai[1] = Player.position.Y;
+                    // 弹幕只在主人客户端生成（源头把这两段也裹在 whoAmI == Main.myPlayer 里）
+                    if (Player.whoAmI == Main.myPlayer)
+                    {
+                        int num19 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num15, num16, ProjectileID.ShadowBeamFriendly, shadowBeamDamage, 7f, Player.whoAmI, 0f, 0f);
+                        Main.projectile[num19].ai[1] = Player.position.Y;
+                    }
                 }
                 for (int l = 0; l < 5; l++)
                 {
@@ -4417,8 +4428,11 @@ namespace CalamityDemutation.Players
                     num18 = (float)num17 / num18;
                     num15 *= num18;
                     num16 *= num18;
-                    int num19 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num15, num16, ProjectileID.DemonScythe, demonScytheDamage, 7f, Player.whoAmI, 0f, 0f);
-                    Main.projectile[num19].ai[1] = Player.position.Y;
+                    if (Player.whoAmI == Main.myPlayer)
+                    {
+                        int num19 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num15, num16, ProjectileID.DemonScythe, demonScytheDamage, 7f, Player.whoAmI, 0f, 0f);
+                        Main.projectile[num19].ai[1] = Player.position.Y;
+                    }
                 }
             }
             if (deificAmulet)
@@ -4444,9 +4458,13 @@ namespace CalamityDemutation.Players
                     num16 = (float)num15 / num16;
                     num13 *= num16;
                     num14 *= num16;
-                    int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(130), 4f, Player.whoAmI, 0f, 0f);
-                    Main.projectile[num17].usesLocalNPCImmunity = true;
-                    Main.projectile[num17].localNPCHitCooldown = 5;
+                    // 神圣护符的反击星辰：同样只在主人客户端生成
+                    if (Player.whoAmI == Main.myPlayer)
+                    {
+                        int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(130), 4f, Player.whoAmI, 0f, 0f);
+                        Main.projectile[num17].usesLocalNPCImmunity = true;
+                        Main.projectile[num17].localNPCHitCooldown = 5;
+                    }
                 }
             }
             if (rampartofDeities)
@@ -4472,9 +4490,13 @@ namespace CalamityDemutation.Players
                     num16 = (float)num15 / num16;
                     num13 *= num16;
                     num14 *= num16;
-                    int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(130), 4f, Player.whoAmI, 0f, 0f);
-                    Main.projectile[num17].usesLocalNPCImmunity = true;
-                    Main.projectile[num17].localNPCHitCooldown = 5;
+                    // 神谕壁垒的反击星辰：同样只在主人客户端生成
+                    if (Player.whoAmI == Main.myPlayer)
+                    {
+                        int num17 = Projectile.NewProjectile(Entity.GetSource_FromThis(), x, y, num13, num14, ProjectileID.HallowStar, (int)Player.GetDamage<GenericDamageClass>().ApplyTo(130), 4f, Player.whoAmI, 0f, 0f);
+                        Main.projectile[num17].usesLocalNPCImmunity = true;
+                        Main.projectile[num17].localNPCHitCooldown = 5;
+                    }
                 }
             }
             if (godSlayerMelee)
@@ -5002,8 +5024,9 @@ namespace CalamityDemutation.Players
             return true;
         }
         /// <summary>
-        /// 洋葱类永久标志的持久化（extraAccessoryML 天界洋葱 / extraWingSlot 拜月契约；
-        /// 其余字段每帧由装备重新计算，无需保存）
+        /// 永久解锁标志的持久化，共 6 项：extraAccessoryML 天界洋葱 / extraWingSlot 拜月契约
+        /// / sugarheartCitrus / organicPod / freshBlueberry / moltenMagmaFruit（四件永久增益消耗品）；
+        /// 其余字段每帧由装备重新计算，无需保存
         /// </summary>
         public override void SaveData(TagCompound tag)
         {
@@ -5016,8 +5039,8 @@ namespace CalamityDemutation.Players
             tag["moltenMagmaFruit"] = moltenMagmaFruit;
         }
         /// <summary>
-        /// tModLoader 的 LoadData 钩子：读档时恢复洋葱类永久解锁标志。
-        /// 与 SaveData 严格对应，只读取两个持久化字段。
+        /// tModLoader 的 LoadData 钩子：读档时恢复永久解锁标志。
+        /// 与 SaveData 严格对应，读取同样 6 个键。
         /// </summary>
         public override void LoadData(TagCompound tag)
         {
@@ -5029,8 +5052,8 @@ namespace CalamityDemutation.Players
             moltenMagmaFruit = tag.GetBool("moltenMagmaFruit");
         }
         /// <summary>
-        /// 联机时把本地玩家的洋葱解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
-        /// 只同步这两个永久标志；其余字段每帧由装备重算，无需跨端传输。
+        /// 联机时把本地玩家的 6 个永久解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
+        /// 只同步这 6 个标志；其余字段每帧由装备重算，无需跨端传输。
         /// </summary>
         public override void CopyClientState(ModPlayer targetCopy)
         {
@@ -5043,7 +5066,7 @@ namespace CalamityDemutation.Players
             copy.moltenMagmaFruit = moltenMagmaFruit;
         }
         /// <summary>
-        /// 客户端状态变更上报：当本地洋葱解锁标志相对基准副本变化（例如非主机端吃了洋葱，
+        /// 客户端状态变更上报：当本地任一永久解锁标志相对基准副本变化（例如非主机端吃了洋葱，
         /// 服务器本身不知道）时，向服务器发一条带新标志的消息，由主类 HandlePacket
         /// 更新服务器上的玩家副本并广播 SyncPlayer 给所有端。
         /// </summary>
