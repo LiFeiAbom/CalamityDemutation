@@ -200,6 +200,16 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
                 modifiers.SetCrit();
         }
         /// <summary>
+        /// PvP 近似：深渊疯狂（omegaBlueHentai）下 PvE 侧用 <c>modifiers.SetCrit()</c> 强制暴击；
+        /// 玩家受伤路径既没有 CritDamage 也没有暴击标记，故改用等价手段——把最终伤害直接乘 2
+        ///（原版暴击即 2 倍伤害），效果与"必定暴击"一致。
+        /// </summary>
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (Main.player[Projectile.owner].GetModPlayer<CalamityDemutationPlayer>().omegaBlueHentai)
+                modifiers.FinalDamage *= 2f;
+        }
+        /// <summary>
         /// 命中 NPC：本地端且玩家还有吸血额度时，按「敌人伤害 / 弹幕伤害」换算治疗量，
         /// 扣减玩家 lifeSteal 预算并生成原版 SpiritHeal（治疗光球）把血量补给玩家。
         /// 深渊疯狂下必定暴击、治疗更频繁，故返还一半预算以保持同样的吸血间隔。

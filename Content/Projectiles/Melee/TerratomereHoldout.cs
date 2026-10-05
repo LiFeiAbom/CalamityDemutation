@@ -254,6 +254,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GlacialState", Terratomere.TrueMeleeGlacialStateTime, BuffID.Frostburn);
             OnHitHealEffect();
+            // PvP 近似：PvE 侧命中会额外召一个 TerratomereSlashCreator 继续追打（绑 NPC 索引）；
+            // 玩家没有 NPC 载体，故按该弹幕新增的负索引编码 -(whoAmI + 2) 把玩家当作目标传进去。
+            int creator = ModContent.ProjectileType<TerratomereSlashCreator>();
+            if (Owner.ownedProjectileCounts[creator] < 2)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, creator, Projectile.damage, Projectile.knockBack, Projectile.owner, -(target.whoAmI + 2), Main.rand.NextFloat(MathF.PI * 2f));
+                Owner.ownedProjectileCounts[creator]++;   // 同帧可能连续命中多个目标，手动 +1 才能让上面的计数判断当帧生效
+            }
         }
         // ── 内联灾厄 PiecewiseAnimation（只保留 PolyIn/PolyOut，Terratomere 四段弧线专用）──
         /// <summary>缓入：amount 的 degree 次幂</summary>

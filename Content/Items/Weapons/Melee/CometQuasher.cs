@@ -69,6 +69,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>暴击伤害减半（大修原设定）</summary>
         public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers) => modifiers.CritDamage *= 0.5f;
+        /// <summary>
+        /// PvP 近似：与 <see cref="AnarchyBlade"/> 同款——PvE 侧暴击伤害减半，玩家侧无暴击信息，
+        /// 故按期望值折算 <c>(1 + 0.5c) / (1 + c)</c>（c = 本武器总暴击率）。
+        /// </summary>
+        public override void ModifyHitPvp(Player player, Player target, ref Player.HurtModifiers modifiers)
+        {
+            float crit = Math.Clamp(player.GetWeaponCrit(Item), 0, 100) / 100f;
+            modifiers.FinalDamage *= (1f + 0.5f * crit) / (1f + crit);
+        }
         /// <summary>近战命中：在目标上方 500~600 像素处再生成一颗陨石砸下（伤害取满面板）</summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {

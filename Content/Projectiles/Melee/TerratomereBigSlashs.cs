@@ -1,6 +1,7 @@
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Graphics.Primitives;
 using CalamityDemutation.NPCs;
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -75,6 +76,29 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 int types = ModContent.ProjectileType<TerratomereSlashCreator>();
                 if (Main.npc[TargetIndex].GetGlobalNPC<CalamityDemutationGlobalNPC>().TerratomereBoltOnHitNum > 5 && Main.player[Projectile.owner].ownedProjectileCounts[types] < 3)
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), Main.npc[TargetIndex].Center, Vector2.Zero, types, Projectile.damage, Projectile.knockBack, Projectile.owner, TargetIndex, Main.rand.NextFloat(MathF.PI * 2f));
+            }
+        }
+        /// <summary>
+        /// PvP 近似：与 OnHitNPC 同构的"每 6 次电击触发一次爆炸"。
+        /// 两处与 PvE 的差异：(a) 计数改记在**攻击者的 ModPlayer**（<c>terratomerePvpBoltHits</c>）——
+        /// PvE 的计数挂在每个敌怪的 GlobalNPC 上，玩家侧没有对应载体；(b) 生成用与索引无关的
+        /// <see cref="TerratomereExplosion"/>；PvE 侧那条"再召 SlashCreator 继续追打"依赖 NPC 索引
+        /// （<c>TerratomereSlashCreator.Target => Main.npc[(int)ai[0]]</c>），PvP 侧无从对应，故不做。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.owner < 0 || Projectile.owner >= Main.maxPlayers)
+                return;
+            CalamityDemutationPlayer mp = Main.player[Projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            mp.terratomerePvpBoltHits++;
+            if (mp.terratomerePvpBoltHits > 6)
+                mp.terratomerePvpBoltHits = 0;
+            if (mp.terratomerePvpBoltHits > 5 && Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<TerratomereExplosion>()] <= 3)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<TerratomereExplosion>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                Projectile.velocity *= 0.2f;   // 触发爆炸后本刀光停住并失效，避免二次结算
+                Projectile.damage = 0;
+                Projectile.netUpdate = true;
             }
         }
         /// <summary>ExobladePierce 着色器沿 oldPos 画 4 遍刀光（BlobbyNoise + Extra_189）</summary>

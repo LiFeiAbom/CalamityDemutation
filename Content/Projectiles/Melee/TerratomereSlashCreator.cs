@@ -13,8 +13,21 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     internal class TerratomereSlashCreator : ModProjectile
     {
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
-        /// <summary>目标 NPC（存于 ai[0]）</summary>
-        public NPC Target => Main.npc[(int)Projectile.ai[0]];
+        /// <summary>
+        /// 目标中心。编码：<c>ai[0] >= 0</c> 为 NPC 索引（PvE，原样）；<c>ai[0] &lt;= -2</c> 为玩家索引
+        /// （PvP 近似：玩家没有 NPC 载体，用 <c>-(whoAmI + 2)</c> 编码，-1 保留给"无目标"）。
+        /// </summary>
+        public Vector2 TargetCenter => Projectile.ai[0] >= 0f
+            ? Main.npc[(int)Projectile.ai[0]].Center
+            : Main.player[-(int)Projectile.ai[0] - 2].Center;
+        /// <summary>目标宽度（NPC 或玩家），用于限制刀光的随机偏移上限</summary>
+        public float TargetWidth => Projectile.ai[0] >= 0f
+            ? Main.npc[(int)Projectile.ai[0]].width
+            : Main.player[-(int)Projectile.ai[0] - 2].width;
+        /// <summary>目标是否仍有效（索引在界内且实体存活），无效时不再放刀光</summary>
+        private bool HasValidTarget => Projectile.ai[0] >= 0f
+            ? Main.npc.IndexInRange((int)Projectile.ai[0]) && Main.npc[(int)Projectile.ai[0]].active
+            : Projectile.ai[0] <= -2f && Main.player.IndexInRange(-(int)Projectile.ai[0] - 2) && Main.player[-(int)Projectile.ai[0] - 2].active;
         /// <summary>刀光朝向（存于 ai[1]；超过 π 视为完全随机朝向）</summary>
         public float SlashDirection => Projectile.ai[1] > MathHelper.Pi
             ? Main.rand.NextFloatDirection()
@@ -42,12 +55,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 SoundEngine.PlaySound(CalamityDemutationSounds.SwiftSliceSound, Projectile.Center);
                 if (Main.myPlayer == Projectile.owner)
                 {
-                    float maxOffset = Target.width * 0.4f;
+                    if (!HasValidTarget)
+                        return;
+                    float maxOffset = TargetWidth * 0.4f;
                     if (maxOffset > 300f)
                         maxOffset = 300f;
                     Vector2 spawnOffset = SlashDirection.ToRotationVector2() * Main.rand.NextFloatDirection() * maxOffset;
                     Vector2 sliceVelocity = spawnOffset.SafeNormalize(Vector2.UnitY) * 0.1f;
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Target.Center + spawnOffset, sliceVelocity
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), TargetCenter + spawnOffset, sliceVelocity
                         , ModContent.ProjectileType<TerratomereSlash>(), (int)(Projectile.damage * 0.4f), 0f, Projectile.owner);
                 }
             }

@@ -417,6 +417,18 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
         }
         /// <summary>
+        /// PvP 近似：突刺（<c>ai[0] == 3</c>）在 PvE 侧把 <c>DefenseEffectiveness</c> 归零即"无视目标防御"；
+        /// <c>Player.HurtModifiers</c> 没有该字段，故改用等效手段——把 <c>ArmorPenetration</c> 加到
+        /// **目标当前防御全额**，结算时防御被全部抵消，效果与"无视防御"一致。
+        /// </summary>
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (Projectile.ai[0] == 3)
+            {
+                modifiers.ArmorPenetration += (float)target.statDefense;
+            }
+        }
+        /// <summary>
         /// 自定义碰撞：不用默认矩形碰撞盒，而是取「玩家中心指向弹幕中心」的方向，从弹幕中心向外延伸
         /// <c>Length * scale * 1.3</c> 得到刀尖端点，再以宽度 <c>25 * scale</c> 的线段与目标 AABB 做碰撞检测。
         /// </summary>

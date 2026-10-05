@@ -2,6 +2,7 @@ using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -92,6 +93,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>暴击伤害减半（大修原设定）</summary>
         public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers) => modifiers.CritDamage *= 0.5f;
+        /// <summary>
+        /// PvP 近似：本武器在 PvE 侧把暴击伤害减半（<c>CritDamage *= 0.5f</c>）。玩家受伤不吃暴击伤害倍率
+        /// （<c>Player.HurtModifiers</c> 没有 CritDamage，<c>HurtInfo</c> 也没有暴击标记），无法精确表达，
+        /// 故按**期望值**折算：暴击率 c 时原期望为 1+c，减半后为 1+0.5c，把两者之比乘进最终伤害即可。
+        /// </summary>
+        public override void ModifyHitPvp(Player player, Player target, ref Player.HurtModifiers modifiers)
+        {
+            float crit = Math.Clamp(player.GetWeaponCrit(Item), 0, 100) / 100f;
+            modifiers.FinalDamage *= (1f + 0.5f * crit) / (1f + crit);
+        }
         /// <summary>
         /// 右键命中：原地炸出硫磺爆炸并附加硫磺火；自身血量 ≤ 半血时 1/5 概率直接抹杀非 Boss 敌人
         /// （场上存在任何 Boss 时抹杀不触发）。

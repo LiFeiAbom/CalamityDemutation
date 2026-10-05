@@ -282,17 +282,26 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   GlobalItem / GlobalProjectile 上。`Player.HurtModifiers` 的字段只有
   `SourceDamage / FinalDamage / IncomingDamageMultiplier / ArmorPenetration / ScalingArmorPenetration / Knockback`，
   **没有** `CritDamage`、`DefenseEffectiveness`、`SetCrit`。
-  **确认不镜像（机制上无法等价，别再试）**：
-  - `AnarchyBlade` / `CometQuasher` 的 `CritDamage *= 0.5f`、弑神者射手的「再次暴击」→ 玩家受伤没有暴击伤害倍率；
-  - `DragonRageHeld`（`ai[0] == 3` 时 `DefenseEffectiveness *= 0f`）→ HurtModifiers 无此字段；
-  - `OmegaBlueTentacle` 的 `modifiers.SetCrit()` → 同上；
-  - `EntropicClaymoreProj` 的「打蠕虫体节 ×0.6」→ 玩家没有蠕虫体节；
-  - `EssenceBeam` 的 `target.immune[owner] = 2` → NPC 的 local immunity 按攻击者隔离，玩家免疫帧是全局的，
-    压到 2 会让这道穿透 10 的光束在 PvP 连打十下，不是等价行为；
-  - `TerratomereHoldout` / `TerratomereBigSlashs` 的生成与计数依赖 **NPC 索引**
-    （`TerratomereSlashCreator.Target => Main.npc[(int)Projectile.ai[0]]`）与 `GlobalNPC` 上的每敌计数器，
-    要镜像得先做玩家版弹幕 + 玩家侧计数器，属**新设计**而非镜像；
+  **第二轮：精确表达不了的改用近似（用户 2026-10-05 要求"试一试近似处理"）**：
+  - `DragonRageHeld` 突刺的破防（`DefenseEffectiveness *= 0f`）→ 改用 `modifiers.ArmorPenetration += target.statDefense`，
+    把目标防御全额穿透，效果等价于"无视防御"；
+  - `OmegaBlueTentacle` 的强制暴击（`SetCrit()`）→ 改用 `modifiers.FinalDamage *= 2f`（原版暴击即 2 倍伤害，等价于"必定暴击"）；
+  - `AnarchyBlade` / `CometQuasher` 的暴击伤害减半（`CritDamage *= 0.5f`）→ 按**期望值**折算
+    `(1 + 0.5c) / (1 + c)`（c = 本武器总暴击率），落在 `ModifyHitPvp`；
+  - `TerratomereBigSlashs` 的"每 6 次电击触发一次爆炸"→ 新增玩家侧计数
+    `CalamityDemutationPlayer.terratomerePvpBoltHits`（PvE 的计数挂在每个敌怪的 GlobalNPC 上，玩家侧没有载体，
+    故记在**攻击者**身上，同样不随 `ResetEffects` 复位、只在死亡时清零），阈值到了就在目标玩家处生成
+    与索引无关的 `TerratomereExplosion`；
+  - `TerratomereHoldout` 的"再召 SlashCreator 追打"→ 给 `TerratomereSlashCreator` 的目标解析加了**负索引编码**：
+    `ai[0] >= 0` 仍是 NPC 索引（PvE 原样），`ai[0] <= -2` 表示玩家 `-(whoAmI + 2)`，
+    并补了 `HasValidTarget` 越界/存活保护。
+  **仍未做（机制上没有可近似的对应物）**：
+  - `EntropicClaymoreProj` 的「打蠕虫体节 ×0.6」→ 玩家没有蠕虫体节，没有可近似的行为；
+  - `EssenceBeam` 的 `target.immune[owner] = 2` → NPC 的 local immunity 按攻击者隔离、玩家免疫帧是全局的，
+    压到 2 会让这道穿透 10 的光束在 PvP 连打十下，**不是**等价行为，故刻意不做；
   - `Ataraxia` 是审计**误报**：它的 PvP 分支挂的是本工程增强版 `Shadowflame`（与 NPC 侧 `BuffID.ShadowFlame` 只是重名）。
+  另注：`ModItem.ModifyHitPvp` 的签名是 `(Player player, Player target, ref Player.HurtModifiers)`——
+  **不带 `Item` 参数**；带 `Item` 的是 `GlobalItem.ModifyHitPvp(Item item, Player, Player, ref ...)`（这次踩过一次）。
   验证：编译 0 警告 0 错误。
 - 最近一批工作（2026-10-05）：**召唤线第三件 = 弑神者角盔（GodSlayerHornedHelm）+ 噬神机械蠕虫 + 弑神幻影；召唤头统一属性由 10% 提到 11%。**
   ① **统一单件口径更新（用户 2026-10-05 定）**：召唤头的三条额外属性由 +10% 改为 **+11%**

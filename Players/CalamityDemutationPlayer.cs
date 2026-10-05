@@ -658,6 +658,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public int tarraLifeAuraTimer = 0;
         /// <summary>
+        /// 泰拉巨刃在 **PvP** 下的电击命中计数：与 PvE 侧 <c>GlobalNPC.TerratomereBoltOnHitNum</c> 同构
+        ///（每次命中 +1、上限 6，超过 5 触发一次爆炸后清零）。
+        /// 差异：PvE 的计数挂在每个敌怪身上，玩家侧没有 GlobalPlayer 载体，故记在**攻击者**身上
+        ///（同一攻击者对多人的连续命中共用一份计数）；与源一样**不随 ResetEffects 复位**，只在死亡时清零。
+        /// </summary>
+        public int terratomerePvpBoltHits = 0;
+        /// <summary>
         /// 已装备吞噬者（The Absorber）：综合生命/魔力/移速/荆棘/减伤/静止回复，
         /// 浸水增益、受击回血并触发龟壳爆发
         /// </summary>
@@ -978,6 +985,7 @@ namespace CalamityDemutation.Players
             godSlayerSummon = false;
             godSlayerDmg = 0f;
             mWorm = false;
+            terratomerePvpBoltHits = 0;
             grandGelatin = false;
             hasSilvaEffect = false;
             heartoftheElements = false;
