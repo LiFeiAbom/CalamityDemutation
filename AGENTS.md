@@ -265,6 +265,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- **2026-10-05 全天一览（11 笔，倒序）**：`f812d5a` PvP 无法精确镜像的 5 处改近似（破防 / 必暴 / 暴伤期望值折算 / 泰拉电击）｜
+  `4ba77a0` **PvP 全覆盖审计**（补齐 8 处，重点是 GlobalItem/GlobalProjectile 补 `ModifyHitPvp` / `ModifyHitPlayer`，
+  套装增伤在 PvP 才终于生效）｜`9dbd662` §9.3 第 5 条改写为"逐套补职业头"长期任务并记进度｜
+  `f2b71a6` 召唤线第三件 **弑神者角盔**（+ Mechworm 四段 + GodSlayerPhantom）｜
+  `0482888` 召唤线第二件 **血炎狂龙盔**（+ GhostlyMine，并定下召唤头统一单件口径）｜
+  `28ac093` 召唤线第一件 **龙蒿角盔**｜`47bf312` §9.3 第 4 条结案（12 件盔甲按工程现状、不回源）｜
+  `738df6e` 弑神保命回复量改受开关门控｜`c55baa6` 金源胸甲补回 CI 漏搬的 `godSlayerDamageProtect`｜
+  `13d84b1` §9.3 第 1 条结案（免伤 2% / 膨胀 5%）｜`b46440a` Part 2 收尾。
+  **本日两处口径变更**：① 召唤头统一单件属性由 +10% 提到 **+11%**（召唤伤害 / 鞭子范围 / 鞭子攻速）；
+  ② 弑神保命回复量由"恒 300"改为 **关态 100 / 开态 300**（受 `StatInflation` 门控）。
 - 最近一批工作（2026-10-05）：**PvP 全覆盖审计（用户点名）——找出"对 NPC 生效、对玩家不生效"的效果并逐条镜像。**
   **做法**：临时脚本抽出每个文件的 `OnHitNPC` 与 `OnHitPvp` / `OnHitPlayer` 两份方法体，对比其中
   「打在**目标参数**上的减益（`AddBuff` / `ApplyCalamityBuff`）」与「`NewProjectile` 生成」清单，取差集。
