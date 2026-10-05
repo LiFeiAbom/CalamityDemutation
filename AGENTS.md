@@ -170,10 +170,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   2. `Projectile.minionSlots` 是**每帧实时汇总**的：`Player.Update` 每帧把 `slotsMinions` 归零，
      各仆从在 `Projectile.Update` 里累加自己的 `minionSlots`（判据 `slotsMinions + minionSlots > maxMinions`）。
      所以在仆从 AI 里每帧改写它就能让开关即时生效，**已召唤的仆从不必重召**。
-- **开关不只管伤害**：同一开关也可以门控「数量 / 栏位 / 几率」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
+- **开关不只管伤害**：同一开关也可以门控「数量 / 栏位 / 几率 / 回复量」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
   （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）；弑神者胸甲 / 金源胸甲的「受击概率完全免伤」2%→5%
-  （`FreeDodge` 里读 `StatInflationEnabled ? 20 : 50`，站点与口径见 9.3 第 1 条）。以后遇到类似点照此办理
-  （同样运行时读配置，别写进 `SetDefaults`）。
+  （`FreeDodge` 里读 `StatInflationEnabled ? 20 : 50`，见 9.3 第 1 条）；弑神保命回复量 100→300
+  （见 9.3 第 3 条）。以后遇到类似点照此办理（同样运行时读配置，别写进 `SetDefaults`）。
 - **已完成的膨胀表**（关 = 源值 / 开 = 膨胀值，全部受开关控制）：
 
 | 武器 | 关 | 开 | 备注 |
@@ -656,9 +656,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    `GodSlayerReflect` / `GodSlayerDMGprotect` / `fBarrier` 三行连写，工程只搬了首尾两行；
    已给 `AuricTeslaBodyArmor.UpdateEquip` 补上 `godSlayerDamageProtect = true`（一行代码，无 tooltip 变更——
    中英文案本来就没写这条机制，与 `GodSlayerChestplate` 的处理一致）。
-3. **【数值】弑神保命回复 300 ≠ 源的 150。**
-   `PreKill` 里 `int heal = draconicSurge ? statLifeMax2 : 300;`（经典版是 150；CI 那行是 `statLife = +100` 的笔误；
-   现代灾厄**整套保命机制已删除**，只剩冲刺）。开关关态该不该回到 150，等你拍板。
+3. **【数值】弑神保命回复 300 ≠ 源的 150 —— 已结（2026-10-05 用户定：关态 100 / 开态 300）。**
+   原问题：`PreKill` 里 `int heal = draconicSurge ? statLifeMax2 : 300;` 恒为 300，与各源都对不上
+   （经典版 150；CI 那行是 `statLife += 100` 的笔误；现代灾厄**整套保命机制已删除**，只剩冲刺）。
+   落地：改成 `ConfigSystem.StatInflationEnabled ? 300 : 100`——关态取 CI 的 100，开态维持 300。
+   文案同步：两个弑神者头盔的 `SetBonus` 那行改用 `{1}` 占位（`Format(冲刺键显示名, 回复量)`），
+   `DraconicElixir` 的 tooltip 去掉硬编码的 300，改成"其常规回复量"。
 4. **【数值方向】12 件的通用伤害/暴击全部高于所有源，且召唤/盗贼吃满。**
    根因是五职业分列 → `GenericDamageClass` 合并时选了更强的一档（例：金源胸 8%/5%→22%/22%）。
    需要你先给方向：**"复刻经典版"** 还是 **"以工程现在这套强度为准"**。定了我再逐件过。

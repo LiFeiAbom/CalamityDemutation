@@ -4917,7 +4917,7 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 PreKill 钩子：玩家即将死亡前调用，三支保命按源（经典版 PreKill）的顺序判定：
-        /// 星云核心（1/10 概率，回复 100 点生命）→ 弑神者（龙之涌动时回满、否则 300，并挂 45 秒冷却）
+        /// 星云核心（1/10 概率，回复 100 点生命）→ 弑神者（龙之涌动时回满，否则关态 100 / 膨胀 300，并挂 45 秒冷却）
         /// → 始源林海（保至 1 点生命并开启 600 帧保护窗口，窗口内再致死每次扣 100 最大生命上限）。
         /// 任何一支生效都返回 false 取消本次死亡；三支都不满足时才走到替换死因文案。
         /// </summary>
@@ -4970,7 +4970,9 @@ namespace CalamityDemutation.Players
                         Main.dust[num].scale *= 1f + (float)Main.rand.Next(40) * 0.01f;
                     }
                 }
-                int heal = draconicSurge ? Player.statLifeMax2 : 300;
+                // 保命回复量同样受数值膨胀开关门控：关态取 CI 源值 100，开态 300（用户 2026-10-05 定）。
+                // 文案侧由两个弑神者头盔的 SetBonus 用 {1} 占位同步（GodSlayerHelm / GodSlayerHelmet）。
+                int heal = draconicSurge ? Player.statLifeMax2 : (ConfigSystem.StatInflationEnabled ? 300 : 100);
                 Player.statLife += heal;
                 Player.HealEffect(heal);
                 if (Player.statLife > Player.statLifeMax2)

@@ -1147,7 +1147,7 @@ Items: {
 		SetBonus:
 			'''
 
-			You will survive fatal damage and will be healed 300 HP if an attack would have killed you
+			You will survive fatal damage and will be healed {1} HP if an attack would have killed you
 			This effect can only occur once every 45 seconds
 			While the cooldown for this effect is active you gain a 10% increase to all damage
 			Taking over 80 damage in one hit will cause you to release a swarm of high-damage god killer darts
@@ -1166,7 +1166,7 @@ Items: {
 		SetBonus:
 			'''
 
-			You will survive fatal damage and will be healed 300 HP if an attack would have killed you
+			You will survive fatal damage and will be healed {1} HP if an attack would have killed you
 			This effect can only occur once every 45 seconds
 			While the cooldown for this effect is active you gain a 10% increase to all damage
 			If your ranged critical strike chance exceeds 100%, the excess grants a chance to critically hit again, causing 4 times the damage
@@ -1977,7 +1977,7 @@ Items: {
 		Tooltip:
 			'''
 			Greatly increases wing flight time and speed and increases defense by 16
-			God slayer revival heals you to full HP instead of 300 HP when triggered
+			God slayer revival heals you to full HP instead of its normal amount when triggered
 			Silva invincibility heals you to full HP when triggered
 			If you trigger the above heals you cannot drink this potion again for 30 seconds
 			'''

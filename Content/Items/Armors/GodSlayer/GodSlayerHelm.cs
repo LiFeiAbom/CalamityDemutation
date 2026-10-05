@@ -54,7 +54,8 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             modPlayer.godSlayer = true;
             modPlayer.godSlayerMelee = true;
             modPlayer.godSlayerDamage = true;   // 低伤压制（≤80 → 1）：与源一致，属整套效果而非胸甲单件
-            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);
+            // SetBonus 里的 {1} = 保命回复量，随数值膨胀开关切换（关 100 / 开 300），与 PreKill 的实现保持一致
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, ConfigSystem.StatInflationEnabled ? 300 : 100);
             player.thorns += 2.5f;  // 反伤倍率 +2.5（与胸甲的 +0.9 叠加）
         }
         /// <summary>

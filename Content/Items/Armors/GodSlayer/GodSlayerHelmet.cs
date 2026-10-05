@@ -53,7 +53,8 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.godSlayer = true;
             modPlayer.godSlayerRanged = true;
-            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay);
+            // SetBonus 里的 {1} = 保命回复量，随数值膨胀开关切换（关 100 / 开 300），与 PreKill 的实现保持一致
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, ConfigSystem.StatInflationEnabled ? 300 : 100);
         }
         /// <summary>
         /// 单件属性：远程伤害 / 远程暴击各 +14%（与近战头同值、不同职业）
