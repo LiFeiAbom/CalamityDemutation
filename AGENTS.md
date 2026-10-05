@@ -243,8 +243,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - **饰品的例外口径**：星云之核（`NebulousCore`）的星云之星伤害**不参与数值膨胀**——固定 300 基准
   再乘玩家通用伤害加成（`player.GetTotalDamage<GenericDamageClass>().ApplyTo(300)`，原先是固定 1500、
   且完全不吃玩家的伤害加成）；其 tooltip 的免死几率已按实现从 20% 改成 **10%**。
-- **待办**：`ConfigSystem.StatInflation` 的 tooltip 文案仍写着「按旧版（灾厄 2.0 之前）口径抬高」，
-  与现在的「逐把点名 + 档位倍率」口径不一致——**2026-10-05 已按用户确认改写**：中英两份 tooltip 改成
+- **已结（2026-10-05）**：`ConfigSystem.StatInflation` 的 tooltip 文案原先写着「按旧版（灾厄 2.0 之前）口径抬高」，
+  与现在的「逐把点名 + 档位倍率」口径不一致——**已按用户确认改写**：中英两份 tooltip 改成
   「按用户点名的档位抬高本模组的武器与盔甲数值 / 武器 32 把、盔甲 12 件各自读这一个开关…」，
   同批把 `ConfigSystem.StatInflation` 的代码注释口径一并改齐（见第 8 节）。
   另外被 `310c3cf` 同步削过的盔甲 tooltip（中英文）原先仍写削弱后的数，膨胀开启时对不上——
@@ -281,7 +281,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   已补一行 `Projectile.netUpdate = true`（IL 已确认项目同步包 msg 27 携带 `ai[0]/ai[1]/ai[2]`，故补发即生效）；
   其余命中均为 `==` 比较的误报，或主人端专用的视觉闩锁（`BansheeHookProj.localAI[0]`）、
   各端确定性递增的计时器（`GodSlayerDart.ai[1]`、`EntropicClaymoreHeld.ai[1]/ai[2]`）、以及 `ReceiveExtraAI` 的接收写入，均无需同步。
-  ⑥ **第 2 批（E1 移植回归 / E2 死代码）已扫完（2026-10-05）：无新增缺陷**。E1 把 25 个"判据数明显少于上游"的候选逐个对照，
+  ⑤ **第 2 批（E1 移植回归 / E2 死代码）已扫完（2026-10-05）：无新增缺陷**。E1 把 25 个"判据数明显少于上游"的候选逐个对照，
   结论分三类：**(a) 源版本对不上**——银河 / 欧米茄环境之刃 / 真·环境之刃的 `HoldItem` 右键与 attunement 只存在于现代版，
   本工程按经典版 1.4.2.101 移植，经典源同名文件里同样没有这些东西（已逐行核对）；
   **(b) 实现位置不同**——Gehenna / VoidofExtinction / Affliction / LeviathanAmbergris / RampartofDeities / BloomStone
@@ -291,7 +291,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   E2：全工程 **0 空方法体**、**0 处对按值结构体**（`NPC.HitInfo` / `Player.HurtInfo` / `NPC.HitModifiers`）**的死写**；
   唯二的"可疑点"是 `bloomCounter` / `seaCounter` 恒真的 `flag = counter % 60 == 0` 与空 `if (counter >= 180) { }`——
   **上游灾厄（1.3 / 1.4.2.101 / 2.0 / CI 各版）里这两个计数器同样是方法内局部变量**，属继承的历史残留，非移植回归，故不动。
-  ⑦ **第 3 批（C1 数值膨胀派生伤害 / E3 分叉实现）已扫完（2026-10-05）**：
+  ⑥ **第 3 批（C1 数值膨胀派生伤害 / E3 分叉实现）已扫完（2026-10-05）**：
   C1 全量过筛 **32 把已接入膨胀的武器**——派生点里**没有任何一处直读 `Item.damage`**（唯一命中的都是 `Item.DamageType` 的大小写误报），
   第 7 节点名的 7 个派生点（禅心剑 70% 真近战、破灭魔王剑 ×4、月炎之锋陨石雨、庇护之刃 DefenseBlast、
   彗星陨刃两处陨石、宙宇波能刃 LaserFountains、凤凰之刃 6 处）**全部接在 `BaseDamage` 上**，未被改回 `Item.damage`。
@@ -304,7 +304,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   另外 PvP 的血炎回血没有 PvE 那层的 `canGhostHeal && !moonLeech` 限制（PvP 目标是玩家，无 `canGhostHeal` 可比）。
   **用户 2026-10-05 定口径：PvP 对齐 PvE** → 已给四段补 `meleeHit`（近战 / 无攻速近战）门控，回血那半补了可对齐的 `!player.moonLeech`
   （`canGhostHeal` 是 NPC 属性，PvP 无对应，故无法对齐）。
-  ⑧ **第 4 批（D 类健壮性）已扫完（2026-10-05）：未发现崩溃/越界缺陷**，几处"看着像问题"的都查到了权威依据：
+  ⑦ **第 4 批（D 类健壮性）已扫完（2026-10-05）：未发现崩溃/越界缺陷**，几处"看着像问题"的都查到了权威依据：
   - `Main.player[Main.myPlayer]`（3 处）全部在 `owner == Main.myPlayer` 判据内，服务端 `Main.myPlayer = 255` 时不会执行；
   - `Main.projectile[NewProjectile 返回值]`（约 20 处）**安全**：IL 确认本 build 的 `Projectile.NewProjectile` 只有一处 `ret`，
     返回的是空位索引或数组满时 `FindOldestProjectile()` 顶替的索引，**不可能返回 -1**；顺带更正了 `RedDevil.cs` 里
@@ -317,7 +317,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   - null 解引用：`Owner.HeldItem` 类访问都带 `Owner != null && Owner.active` 前置；没有对 `HeldItem.ModItem` 的无保护解引用；
   - 软依赖：133 个 `TryFind` 名与 18 个减益名全部能在参考源里找到，配方/掉落都先过 `TryGetMod`/`TryFind` 再注册，
     无写死的灾厄类型引用（弱引用口径成立）。
-  ⑨ **第 5 批（B3 后缀贴图 / B5 音效 / C4 稀有度 / F1 存档同步）已扫完（2026-10-05）**，Part 1 至此收尾：
+  ⑧ **第 5 批（B3 后缀贴图 / B5 音效 / C4 稀有度 / F1 存档同步）已扫完（2026-10-05）**，Part 1 至此收尾：
   - B3：全工程只有 5 处"贴图路径 + 后缀"拼接，逐个对盘全命中——`BansheeHookGlow` / `TheEnforcerGlow` /
     `AuricTeslaBodyArmor_Back` / `DeathLaser` 用的 `RayBeamBody`+`RayBeamHead`+`RayBeamDon`
     （注意 `DeathLaser` 的 `Texture` 指向 `RayBeam`，后缀拼出来的是 **RayBeam\* 而不是 DeathLaser\***，四个文件都在）；
@@ -345,7 +345,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   改完 `dotnet build` 未再改写本地化文件（diff 仍是 2 增 12 删）。
   ⑤ **本轮核过没问题的**：资源自检 143 条全命中；`.fx`/`.fxc` 全配对；隐式贴图全命中（缺项仅 3 个抽象基类与 ModPlayer，无关）；
   ModItem 无可变实例字段；鼠标直读 8 处全在 Item 侧；13 个用 `ApplyInflatedTooltip` 的物品都有 `TooltipInflated` 文案；
-  中英本地化键集 572 = 572 且无未翻译条目；133 个 `TryFind` 名与 18 个减益名都能在参考源里找到。
+  中英本地化键集 **562 = 562** 且无未翻译条目（原记 572 是删那 10 条孤儿之前的旧值）；133 个 `TryFind` 名与 18 个减益名都能在参考源里找到。
+  ⑥ **收尾复核（2026-10-05 二次实测）**：`rg --no-ignore` 计得 **385** 个 `.cs`（唯一无汉字的是 `obj/` 构建产物）；
+  中英叶键 **562 = 562**、不对称 0、zh 侧无纯 ASCII 值；`TryFind` 名 133、`CalamityDemutationPlayer` 的 bool 字段 147
+  （另有 5 条同名方法/属性不计）；`.fx`/`.fxc` 12 对全配、`ApplyInflatedTooltip` 13 处调用（另 1 处方法定义）。以上与本节各条一致。
 - 最近一批工作（2026-10-05）：两处小改。
   ① **暴政（TheEnforcer）使用时间与挥舞动画 17 → 14 帧**（用户 2026-10-05 指定；改的是
   `SetDefaults` 里的 `Item.useAnimation = Item.useTime`，两项一起）。
