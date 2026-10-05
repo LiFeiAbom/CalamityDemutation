@@ -1692,6 +1692,27 @@ Items: {
 			'''
 	}
 
+	TarragonHornedHelm: {
+		DisplayName: Tarragon Horned Helm
+		Tooltip:
+			'''
+			Temporary immunity to lava and immunity to cursed inferno, fire, cursed, and chilled debuffs
+			Can move freely through liquids
+			5% increased damage reduction
+			+3 max minions
+			'''
+		SetBonus:
+			'''
+
+			50% increased summon damage
+			Reduces enemy spawn rates
+			Increased heart pickup range
+			Enemies have a chance to drop extra hearts on death
+			At full health you gain +2 max minions and 10% increased summon damage
+			Summons a life aura around you that damages nearby enemies
+			'''
+	}
+
 	TarragonLeggings: {
 		DisplayName: Tarragon Leggings
 		Tooltip:

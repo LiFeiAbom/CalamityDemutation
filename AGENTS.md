@@ -265,6 +265,26 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-05）：**龙蒿套装召唤头 = 龙蒿角盔（TarragonHornedHelm）**，召唤线第一件。
+  口径：单件照经典版，**防御按用户指定取 7**（源经典 = 现代 = 3）；套装效果走经典版，但
+  **生命光环取现代灾厄口径**——经典把计时器写成方法内局部变量、闸门恒真，实际每帧都打（约 60 倍），属上游 bug，未照搬。
+  ① 新增 `Content/Items/Armors/Tarragon/TarragonHornedHelm.cs`（贴图两张取自经典版 1.4.2.101）：
+  18x18、价值 50 金、防御 7、月后稀有度 12；单件 +3 仆从上限 / 减伤 5% / `lavaMax +240` / `ignoreWater` /
+  免疫诅咒地狱·着火了·诅咒·冷冻。
+  ② 套装：`tarraSet` + **新增的 `tarraSummon`**，`player.GetDamage<SummonDamageClass>() += 0.5f`；
+  文案 6 行（含用户要求单列的「满血时额外 +2 仆从上限与 +10% 召唤伤害」）。
+  ③ 玩家侧新增 `tarraSummon`（字段 + 两处复位）与跨帧计时器 `tarraLifeAuraTimer`（**不随 ResetEffects 复位**，照现代版）。
+  `PostUpdateMiscEffects` 里落地三条：绿色光照、满血 +2 仆从上限 / +10% 召唤伤害、
+  生命光环（300 像素内每 80 帧一次，伤害 = `GetTotalDamage<SummonDamageClass>().ApplyTo(120)`，
+  用 `Player.ApplyDamageToNPC(..., DamageClass.Summon)` 结算，带 `whoAmI == Main.myPlayer` 判据）。
+  ④ 配方与其余龙蒿头同规矩：现代 `UelibloomBar`×12 + `DivineGeode`×6；经典 `UeliaceBar`×7 + `DivineGeode`×6，均月球工作台。
+  ⑤ 本地化中英各补 `Items.TarragonHornedHelm`（DisplayName / Tooltip / SetBonus），行尾已整回 CRLF。
+  **四版本差异备查**：防 3 经典 = 现代（CI **没有**独立的龙蒿召唤头，它沿用现代那颗 `TarragonHeadSummon`，
+  CI 自己在龙蒿线上只有 `AncientTarragonHelm` 与「合并头」`AuricTeslaHeadSummon`）。
+  单件经典是 `maxMinions+3 / 减伤 5% / lavaMax / ignoreWater / 四减益免疫`，现代改成 `减伤 10% / 召唤伤害 +5%`
+  并把 `maxMinions+3` 挪到套装的 UpdateArmorSet；**满血加成现代已删除**，工程按用户口径保留。
+  光环三版对照：经典固定 200 且每帧（局部计时器 bug）／现代 120 按召唤伤害缩放、每 80 帧、经 `TarragonAura` 弹幕结算。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-05）：**全工程三部分体检（① 缺陷/BUG 扫描 ② 中文注释 ③ 代码 ↔ 本地化核对）**，本轮已确证并落地：
   ① **联机缺陷（已修）**：`ModPlayer.OnHurt` / `PostHurt` 里 5 处弹幕生成缺 `Player.whoAmI == Main.myPlayer` 判据。
   上游 Calamity 的 `CalamityPlayerHitHurt.cs` 用两道外层判据（OnHurt 2103 行 / PostHurt 2396 行）裹住整段反击效果，

@@ -627,6 +627,16 @@ namespace CalamityDemutation.Players
         public bool tarraRanged = false;
         public bool tarraSet = false;
         /// <summary>
+        /// 龙蒿套装·召唤向（TarragonHornedHelm 的套装标记）：绿色光照、生命光环（每 80 帧结算一次）
+        /// 与满血时的 +2 仆从上限 / +10% 召唤伤害，均在 PostUpdateMiscEffects 里结算
+        /// </summary>
+        public bool tarraSummon = false;
+        /// <summary>
+        /// 生命光环的跨帧计时器。照现代灾厄的做法：字段持久、模 80 触发，**不随 ResetEffects 复位**
+        /// （经典版把计时器写成方法内局部变量、闸门恒真，等于每帧都打，属上游 bug，未照搬）
+        /// </summary>
+        public int tarraLifeAuraTimer = 0;
+        /// <summary>
         /// 已装备吞噬者（The Absorber）：综合生命/魔力/移速/荆棘/减伤/静止回复，
         /// 浸水增益、受击回血并触发龟壳爆发
         /// </summary>
@@ -838,6 +848,7 @@ namespace CalamityDemutation.Players
             tarraMelee = false;
             tarraRanged = false;
             tarraSet = false;
+            tarraSummon = false;
             theAmalgam = false;
             theAbsorber = false;
             theCommunity = false;
@@ -1004,6 +1015,7 @@ namespace CalamityDemutation.Players
             tarraMelee = false;
             tarraRanged = false;
             tarraSet = false;
+            tarraSummon = false;
             theAmalgam = false;
             theAbsorber = false;
             theCommunity = false;
@@ -2475,6 +2487,34 @@ namespace CalamityDemutation.Players
             {
                 Player.calmed = (!tarraMelee);
                 Player.lifeMagnet = true;
+            }
+            // 龙蒿召唤头（TarragonHornedHelm）的 tarraSummon 套装效果（照现代灾厄的实现口径）：
+            // ① 玩家中心常驻绿色光照；② 满血时额外 +2 仆从上限与 +10% 召唤伤害；
+            // ③ 生命光环：300 像素内每 80 帧对敌对 NPC 结算一次召唤伤害（120 基础 × 召唤伤害加成）。
+            // 经典版把计时器写成方法内局部变量、闸门恒真，等于每帧都打（约 60 倍），属上游 bug，故取现代口径。
+            // 生成/结算只在主人端做：本钩子每名玩家 × 每一端都会跑。
+            if (tarraSummon)
+            {
+                Lighting.AddLight((int)(Player.Center.X / 16f), (int)(Player.Center.Y / 16f), 0f, 3f, 0f);
+                if (Player.statLife >= Player.statLifeMax2)
+                {
+                    Player.GetDamage<SummonDamageClass>() += 0.1f;
+                    Player.maxMinions += 2;
+                }
+                const int FramesPerHit = 80;
+                tarraLifeAuraTimer = (tarraLifeAuraTimer + 1) % FramesPerHit;
+                if (tarraLifeAuraTimer == 0 && Player.whoAmI == Main.myPlayer)
+                {
+                    int auraDamage = (int)Player.GetTotalDamage<SummonDamageClass>().ApplyTo(120f);
+                    for (int i = 0; i < Main.maxNPCs; i++)
+                    {
+                        NPC npc = Main.npc[i];
+                        if (!npc.active || npc.friendly || npc.dontTakeDamage)
+                            continue;
+                        if (Vector2.Distance(Player.Center, npc.Center) <= 300f)
+                            Player.ApplyDamageToNPC(npc, auraDamage, 0f, 0, false, DamageClass.Summon);
+                    }
+                }
             }
             if (tarraMelee)
             {
