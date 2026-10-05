@@ -1162,10 +1162,7 @@ Items: {
 
 	GodSlayerHelmet: {
 		DisplayName: God Slayer Helmet
-		Tooltip:
-			'''
-			14% increased ranged damage and critical strike chance
-			'''
+		Tooltip: 14% increased ranged damage and critical strike chance
 		SetBonus:
 			'''
 
@@ -1558,10 +1555,7 @@ Items: {
 
 	SilvaHornedHelm: {
 		DisplayName: Silva Horned Helm
-		Tooltip:
-			'''
-			13% increased ranged damage and critical strike chance
-			'''
+		Tooltip: 13% increased ranged damage and critical strike chance
 		SetBonus:
 			'''
 

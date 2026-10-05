@@ -3,6 +3,7 @@ using CalamityDemutation.Content.Particles;
 using CalamityDemutation.Content.Particles.Core;
 using CalamityDemutation.Content.Projectiles.BaseProjectiles;
 using CalamityDemutation.Systems;
+using CalamityDemutation.Systems.Graphic;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

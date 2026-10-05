@@ -248,6 +248,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-05）：两处小改。
+  ① **暴政（TheEnforcer）使用时间与挥舞动画 17 → 14 帧**（用户 2026-10-05 指定；改的是
+  `SetDefaults` 里的 `Item.useAnimation = Item.useTime`，两项一起）。
+  ② **`IDrawWarp` 接口自 `Content/Projectiles/IDrawWarp.cs` 移到 `Systems/Graphic/IDrawWarp.cs`**，
+  命名空间随之改为 `CalamityDemutation.Systems.Graphic`（与 `IExtendedHat`、`IDrawArmOverShoulder` 同处）；
+  引用方补 `using CalamityDemutation.Systems.Graphic;`：`Common/Effects/EffectsSystem.cs`、
+  `Content/Projectiles/Melee/EntropicClaymoreHeld.cs`、`Core/BaseSwingCO.cs`（后者只在 XML cref 里提到）。
+  验证：编译 0 警告 0 错误。
 - 最近一批工作（2026-10-04）：**古圣金源射手头（AuricTeslaHoodedFacemask，金兜铁面盔）——「合并」下位四套的射手效果**。
   口径与既有近战头（AuricTeslaHelm）对称：**单件与套装效果都照经典版 1:1**。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaHoodedFacemask.cs`（贴图两张取自经典版 1.4.2.101）：

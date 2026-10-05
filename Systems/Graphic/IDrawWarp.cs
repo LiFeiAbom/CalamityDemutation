@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
-namespace CalamityDemutation.Content.Projectiles
+namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 屏幕扭曲绘制接口（移植自 CWR 的 IDrawWarp）：
@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Projectiles
         bool canDraw() => false;
         /// <summary>
         /// 是否不使用蓝移效果，默认为 false（即走蓝移桶）。
-        /// 返回 true 的弹幕会被 <see cref="Common.Effects.EffectsSystem"/> 分到"无蓝移"桶里单独合成
+        /// 返回 true 的弹幕会被 <see cref="CalamityDemutation.Common.Effects.EffectsSystem"/> 分到"无蓝移"桶里单独合成
         /// （WarpShader 的 blueValue 由 30.11 降为 0.11），避免扭曲区域泛蓝。
         /// </summary>
         bool noBlueshift() => false;

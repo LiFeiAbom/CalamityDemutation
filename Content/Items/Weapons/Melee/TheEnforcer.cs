@@ -18,10 +18,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 才在玩家附近随机撒 5 枚 <c>EssenceFlame2</c>（那两段还是逐行重复的同一份代码）；
     /// 本工程改成**发射逻辑**：每次挥砍（<see cref="Shoot"/>）不求命中，直接在鼠标处炸开一圈共
     /// <see cref="FlamesPerBarrage"/> 枚追踪火焰，火焰伤害仍取面板的 25%。
-    /// 其余数值照搬源：100×100 贴图、缩放 1.5、伤害 890、17 帧使用与挥舞、击退 9、必击退/可转向、
+    /// 其余数值照搬源：100×100 贴图、缩放 1.5、伤害 890、击退 9、必击退/可转向、
     /// 使用音 Item20、1 铂 40 金（源的 <c>RarityDarkBlueBuyPrice</c>）、月后稀有度 14
     /// （源的 <c>Rarities/DarkBlue</c> 颜色为 (43,96,222)，与本工程 14 档完全一致，故不换算）；
     /// 世界中的物品同样带 <c>TheEnforcerGlow</c> 发光蒙版。
+    /// 使用时间与挥舞动画源为 17 帧，用户 2026-10-05 指定改为 14 帧（两项一起）。
     /// </para>
     /// <para>
     /// 数值膨胀（用户 2026-10-03 点名，同一开关三项联动）：面板 890 → **2200**
@@ -65,7 +66,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 物品基础属性：100×100、缩放 1.5、伤害 890、17 帧使用与挥舞、击退 9、可转向、
+        /// 物品基础属性：100×100、缩放 1.5、伤害 890、14 帧使用与挥舞（用户 2026-10-05 指定：源 17 → 14）、击退 9、可转向、
         /// 红色基础稀有度 + 月后稀有度 14（真正的名字颜色由全局物品覆盖）；
         /// 主弹幕挂 <see cref="EssenceFlame2"/>，只为让 <see cref="Shoot"/> 被调用（实际生成数由那里决定）。
         /// </summary>
@@ -76,7 +77,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.scale = 1.5f;
             Item.damage = 890;
             Item.DamageType = DamageClass.Melee;
-            Item.useAnimation = Item.useTime = 17;
+            Item.useAnimation = Item.useTime = 14;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTurn = true;
             Item.knockBack = 9f;

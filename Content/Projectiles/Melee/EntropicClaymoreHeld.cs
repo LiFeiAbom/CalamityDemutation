@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Projectiles.Melee.Core;
 using CalamityDemutation.Sounds;
+using CalamityDemutation.Systems.Graphic;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

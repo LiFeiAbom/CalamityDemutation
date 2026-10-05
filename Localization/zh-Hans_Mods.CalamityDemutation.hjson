@@ -1157,16 +1157,13 @@ Items: {
 			本应造成 80 点或更低伤害的攻击，伤害会被削减为 1
 			按 [{0}] 可向八个方向冲刺
 			造成大量伤害，并在接触时施加弑神者地狱火减益
-		该效果有 45 秒冷却
+			该效果有 45 秒冷却
 			'''
 	}
 
 	GodSlayerHelmet: {
 		DisplayName: 弑神者战盔
-		Tooltip:
-			'''
-			远程伤害与暴击率提高 14%
-			'''
+		Tooltip: 远程伤害与暴击率提高 14%
 		SetBonus:
 			'''
 
@@ -1559,10 +1556,7 @@ Items: {
 
 	SilvaHornedHelm: {
 		DisplayName: 始源林海角盔
-		Tooltip:
-			'''
-			远程伤害与暴击率提高 13%
-			'''
+		Tooltip: 远程伤害与暴击率提高 13%
 		SetBonus:
 			'''
 
