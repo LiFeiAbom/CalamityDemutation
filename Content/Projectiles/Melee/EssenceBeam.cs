@@ -72,6 +72,15 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GodSlayerInferno", 300, BuffID.CursedInferno);
             target.immune[Projectile.owner] = 2;
         }
+        /// <summary>
+        /// PvP 命中：与 OnHitNPC 同构，给玩家挂 300 帧神裁狱火（双版本容错，两版灾厄都取不到时退回原版诅咒地狱）。
+        /// **不镜像** NPC 侧那句 <c>target.immune[Projectile.owner] = 2</c>：NPC 的 local immunity 是按"攻击者"隔离的，
+        /// 而玩家的免疫帧是全局的，强行压到 2 会让这道穿透 10 的光束在 PvP 里连打十下，不是等价行为。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GodSlayerInferno", 300, BuffID.CursedInferno);
+        }
         /// <summary>消亡：播放原版音效，并沿速度反方向甩出一串暗影束尘（照源：i 从 4 到 30，位移与速度按 30/i 衰减）</summary>
         public override void OnKill(int timeLeft)
         {

@@ -147,6 +147,14 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GodSlayerInferno", 600);
         }
         /// <summary>
+        /// PvP 命中：与 OnHitNPC 同构，给玩家挂 600 帧弑神者地狱火（按现代/经典两版分别查找，未安装则不生效）
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "GodSlayerInferno", 600);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "GodSlayerInferno", 600);
+        }
+        /// <summary>
         /// 消亡：把判定框撑到 40×40，炸一圈 ShadowbeamStaff 尘，并结算一次范围伤害
         ///（<c>Projectile.Damage()</c> 只会由主人端结算，非主人端自动跳过，无需判据）
         /// </summary>

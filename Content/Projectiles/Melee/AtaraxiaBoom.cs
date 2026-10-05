@@ -84,6 +84,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (Projectile.damage < 1)
                 Projectile.damage = 1;
         }
+        /// <summary>PvP 命中：与 NPC 侧同构——同一发爆炸每多命中一次就衰减 12% 伤害（下限 1）</summary>
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (Projectile.numHits > 0)
+                Projectile.damage = (int)(Projectile.damage * 0.88f);
+            if (Projectile.damage < 1)
+                Projectile.damage = 1;
+        }
         /// <summary>
         /// 圆形判定（内联灾厄 <c>CollisionUtils.CircularHitboxCollision</c>，写法照本工程 AbaddonCrit）：
         /// 圆心落在目标框内直接算命中，否则取圆心到目标框四角的最小距离与半径比较（四角近似，与灾厄一致）。

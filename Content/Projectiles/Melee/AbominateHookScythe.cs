@@ -106,6 +106,23 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Projectile.ai[2] = target.whoAmI;
             Projectile.netUpdate = true;   // 锁敌状态要发出去，否则别端的这把镰刀不会进入锁敌猛扑
         }
+        /// <summary>
+        /// PvP 命中：与 OnHitNPC 同构，按同样概率在玩家身后生成一枚惊惧之灵，并同样缩短本镰刀寿命。
+        /// **不镜像**锁敌那三行（<c>ai[0] = 1</c> / <c>ai[2] = 目标索引</c>）：<c>ai[2]</c> 存的是 **NPC 索引**，
+        /// 锁敌 AI 会拿它去 <c>Main.npc</c> 里取目标，塞玩家索引进去只会指向无关的敌怪，故 PvP 只做生成那一半。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Main.rand.NextBool(5) && Projectile.numHits < 5)
+            {
+                Vector2 offset = RandomVectorInDegrees(70f, 110f, Main.rand.Next(500, 600));
+                Vector2 spanPos = target.Center + offset;
+                int status = Main.rand.Next(3);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), spanPos, offset.UnitVector() * -13f,
+                    ModContent.ProjectileType<AbominateSpirit>(), Projectile.damage / 3, 0f, Projectile.owner, status);
+            }
+            Projectile.timeLeft -= 10;
+        }
         public override Color? GetAlpha(Color lightColor)
         {
             if (Projectile.timeLeft < 85)

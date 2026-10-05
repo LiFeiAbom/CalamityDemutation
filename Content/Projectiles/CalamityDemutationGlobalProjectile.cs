@@ -202,6 +202,30 @@ namespace CalamityDemutation.Content.Projectiles
             }
         }
         /// <summary>
+        /// PvP：弹幕命中玩家时的**伤害修正**，与 PvE 侧 <c>CalamityDemutationPlayer.ModifyHitNPCWithProj</c> 对齐——
+        /// 狂怒 buff ×2.25；金源套 + 女巫近战的近战弹幕按当前生命比例追加至多 +0.2 倍；
+        /// 女巫射手套装免死窗口内远程伤害 +0.4。
+        /// <para>
+        /// **未镜像**弑神者射手套装的「再次暴击」：它靠 <c>HitModifiers.CritDamage</c> 实现，而
+        /// <c>Player.HurtModifiers</c> 根本没有 CritDamage 字段（玩家受伤不吃暴击伤害倍率），机制上无法等价表达。
+        /// </para>
+        /// </summary>
+        public override void ModifyHitPlayer(Projectile projectile, Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers)
+                return;
+            Player attacker = Main.player[projectile.owner];
+            CalamityDemutationPlayer modPlayer = attacker.GetModPlayer<CalamityDemutationPlayer>();
+            float damageMult = 1f;
+            if (modPlayer.enraged)
+                damageMult += 1.25f;
+            if (modPlayer.auricSet && modPlayer.silvaMelee && projectile.CountsAsClass<MeleeDamageClass>())
+                damageMult += (float)((double)attacker.statLife / attacker.statLifeMax2) * 0.2f;
+            if (modPlayer.silvaRanged && modPlayer.silvaCountdown > 0 && modPlayer.hasSilvaEffect && projectile.CountsAsClass<RangedDamageClass>())
+                damageMult += 0.4f;
+            modifiers.FinalDamage *= damageMult;
+        }
+        /// <summary>
         /// 弹幕命中玩家（PvP）时，按攻击者的装备 / 套装 / 身上的 buff 给目标施加效果，
         /// 效果集合与 OnHitNPCWithProj 对齐（不按伤害类型过滤的项一律放在近战早退之前）：
         /// - 神圣之怒 buff（HolyWrath）：120 帧神圣火（现代版）与圣光（经典版）；

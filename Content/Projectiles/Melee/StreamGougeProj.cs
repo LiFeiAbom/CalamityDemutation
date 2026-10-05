@@ -172,5 +172,10 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         {
             CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GodSlayerInferno", 300, BuffID.CursedInferno);
         }
+        /// <summary>PvP 命中：与 OnHitNPC 同构，给玩家挂 300 帧神裁狱火（双版本容错，退回原版诅咒地狱）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "GodSlayerInferno", 300, BuffID.CursedInferno);
+        }
     }
 }

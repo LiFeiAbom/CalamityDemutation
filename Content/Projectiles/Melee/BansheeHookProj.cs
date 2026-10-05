@@ -398,6 +398,15 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     ModContent.ProjectileType<BansheeHookBoom>(), (int)(hit.Damage * 0.25), 10f, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
             }
         }
+        /// <summary>PvP 命中：与 OnHitNPC 同构——在玩家身上炸出一枚女妖爆裂（伤害取本次命中的 25%）</summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Projectile.owner == Main.myPlayer)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero,
+                    ModContent.ProjectileType<BansheeHookBoom>(), (int)(info.Damage * 0.25), 10f, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
+            }
+        }
         /// <summary>按角度区间随机取方向向量（对应源的 CWRUtils.GetRandomVevtor）</summary>
         private static Vector2 RandomVectorInDegrees(float startAngle, float targetAngle, float length)
         {

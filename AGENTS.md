@@ -265,6 +265,35 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-05）：**PvP 全覆盖审计（用户点名）——找出"对 NPC 生效、对玩家不生效"的效果并逐条镜像。**
+  **做法**：临时脚本抽出每个文件的 `OnHitNPC` 与 `OnHitPvp` / `OnHitPlayer` 两份方法体，对比其中
+  「打在**目标参数**上的减益（`AddBuff` / `ApplyCalamityBuff`）」与「`NewProjectile` 生成」清单，取差集。
+  口径：只算 `target.` / `npc.` 上的减益——打在 owner 自己身上的 buff（如 `AbominateSpirit` 的武器灌注）不算。
+  **已补 8 处**：
+  ① 减益类：`EssenceBeam`、`StreamGougeProj`（各补 300 帧神裁狱火）、`GodSlayerPhantom`（补 600 帧地狱火）、
+  `AbominateSpirit`（补 Status 0 的暗影焰/烈火3/诅咒地狱与 Status 2 的血腥屠夫/破晓），均落在 `OnHitPlayer`。
+  ② 生成类：`BansheeHookProj`（补女妖爆裂）、`AbominateHookScythe`（补惊惧之灵）。
+  ③ 伤害修正类（**这批最大的一块**）：`CalamityDemutationGlobalItem` 原本只有 `OnHitPvp`、`CalamityDemutationGlobalProjectile`
+  只有 `OnHitPlayer`，于是**套装增伤在 PvP 里完全不生效**；已补 `ModifyHitPvp` / `ModifyHitPlayer`：
+  狂怒 ×2.25、女巫近战 1/4 ×5.0、金源+女巫近战按当前生命追加 ≤+0.2、女巫射手免死窗口 +0.4。
+  另补 `AtaraxiaBoom` 的"多段命中每段衰减 12%"（PvP 侧同构）。
+  **IL 依据（别再重复考古）**：`Terraria.ModLoader.ModPlayer` **没有任何** `ModifyHitPvp*` / `OnHitPvp*` 钩子
+  （只有 `CanHitPvp` / `CanHitPvpWithProj` 这类权限判定），所以玩家侧的伤害钩子**只能**写在
+  GlobalItem / GlobalProjectile 上。`Player.HurtModifiers` 的字段只有
+  `SourceDamage / FinalDamage / IncomingDamageMultiplier / ArmorPenetration / ScalingArmorPenetration / Knockback`，
+  **没有** `CritDamage`、`DefenseEffectiveness`、`SetCrit`。
+  **确认不镜像（机制上无法等价，别再试）**：
+  - `AnarchyBlade` / `CometQuasher` 的 `CritDamage *= 0.5f`、弑神者射手的「再次暴击」→ 玩家受伤没有暴击伤害倍率；
+  - `DragonRageHeld`（`ai[0] == 3` 时 `DefenseEffectiveness *= 0f`）→ HurtModifiers 无此字段；
+  - `OmegaBlueTentacle` 的 `modifiers.SetCrit()` → 同上；
+  - `EntropicClaymoreProj` 的「打蠕虫体节 ×0.6」→ 玩家没有蠕虫体节；
+  - `EssenceBeam` 的 `target.immune[owner] = 2` → NPC 的 local immunity 按攻击者隔离，玩家免疫帧是全局的，
+    压到 2 会让这道穿透 10 的光束在 PvP 连打十下，不是等价行为；
+  - `TerratomereHoldout` / `TerratomereBigSlashs` 的生成与计数依赖 **NPC 索引**
+    （`TerratomereSlashCreator.Target => Main.npc[(int)Projectile.ai[0]]`）与 `GlobalNPC` 上的每敌计数器，
+    要镜像得先做玩家版弹幕 + 玩家侧计数器，属**新设计**而非镜像；
+  - `Ataraxia` 是审计**误报**：它的 PvP 分支挂的是本工程增强版 `Shadowflame`（与 NPC 侧 `BuffID.ShadowFlame` 只是重名）。
+  验证：编译 0 警告 0 错误。
 - 最近一批工作（2026-10-05）：**召唤线第三件 = 弑神者角盔（GodSlayerHornedHelm）+ 噬神机械蠕虫 + 弑神幻影；召唤头统一属性由 10% 提到 11%。**
   ① **统一单件口径更新（用户 2026-10-05 定）**：召唤头的三条额外属性由 +10% 改为 **+11%**
   （召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度），已同步改回龙蒿角盔与血炎狂龙盔（连同中英 tooltip）。

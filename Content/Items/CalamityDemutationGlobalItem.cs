@@ -511,6 +511,27 @@ namespace CalamityDemutation.Content.Items
             return true;
         }
         /// <summary>
+        /// PvP：近战武器直接挥砍命中玩家时的**伤害修正**，与 PvE 侧
+        /// <c>CalamityDemutationPlayer.ModifyHitNPCWithItem</c> 对齐——
+        /// 狂怒 buff（enraged）解除 Boss Rush 限制后 ×2.25；女巫套近战（silvaMelee）1/4 概率追加 +4.0 倍（合计 ×5.0）。
+        /// <para>
+        /// 说明：这两项原本只写在 <c>ModPlayer.ModifyHitNPCWithItem</c> 里，而 tML 的 <c>ModPlayer</c> **没有**
+        /// PvP 版伤害钩子（IL 已核：只有 <c>CanHitPvp</c> / <c>CanHitPvpWithProj</c> 这类权限判定），
+        /// 故只能在本全局物品类里重写一份 PvP 镜像。
+        /// </para>
+        /// </summary>
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref Player.HurtModifiers modifiers)
+        {
+            CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
+            float damageMult = 1f;
+            if (modPlayer.enraged)
+                damageMult += 1.25f;   // 狂怒：解除 BOSSRUSH 限制的 ×2.25
+            if (modPlayer.silvaMelee && Main.rand.NextBool(4)
+                && (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<MeleeNoSpeedDamageClass>()))
+                damageMult += 4f;      // 女巫近战：1/4 概率追加 +4.0（合计 ×5.0）
+            modifiers.FinalDamage *= damageMult;
+        }
+        /// <summary>
         /// PvP：近战武器直接挥砍命中玩家时，按攻击者的装备 / 套装 / 身上的 buff 给受害者施加效果，
         /// 效果集合与 OnHitNPCWithItem 对齐：
         /// - 亚利姆徽章：随机 120/240/360 帧神圣火（现代版）与圣光（经典版）；

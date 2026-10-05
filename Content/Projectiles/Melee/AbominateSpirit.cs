@@ -152,6 +152,49 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             }
             Projectile.damage -= 20;
         }
+        /// <summary>
+        /// PvP 命中：逐条与 OnHitNPC 同构——Status 0 给玩家挂暗影焰/烈火3/诅咒地狱，Status 2 挂血腥屠夫/破晓；
+        /// Status 1 仍是给主人自己上随机武器灌注；末尾同样让本弹幕伤害 -20。
+        /// </summary>
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            switch ((int)Status)
+            {
+                case 0:
+                    target.AddBuff(BuffID.ShadowFlame, 360);
+                    target.AddBuff(BuffID.OnFire3, 360);
+                    target.AddBuff(BuffID.CursedInferno, 360);
+                    break;
+                case 1:
+                    int type = Main.rand.Next(0, 5);
+                    Player owner = Main.player[Projectile.owner];
+                    if (owner == null || !owner.active) return;
+                    switch (type)
+                    {
+                        case 0:
+                            owner.AddBuff(BuffID.WeaponImbueCursedFlames, 160);
+                            break;
+                        case 1:
+                            owner.AddBuff(BuffID.WeaponImbueFire, 160);
+                            break;
+                        case 2:
+                            owner.AddBuff(BuffID.WeaponImbueIchor, 160);
+                            break;
+                        case 3:
+                            owner.AddBuff(BuffID.WeaponImbuePoison, 160);
+                            break;
+                        case 4:
+                            owner.AddBuff(BuffID.WeaponImbueNanites, 160);
+                            break;
+                    }
+                    break;
+                case 2:
+                    target.AddBuff(BuffID.BloodButcherer, 360);
+                    target.AddBuff(BuffID.Daybreak, 360);
+                    break;
+            }
+            Projectile.damage -= 20;
+        }
         /// <summary>按 Status 着色（暗红/暗绿/蓝/金）并与白色对半混合后绘制</summary>
         public override bool PreDraw(ref Color lightColor)
         {
