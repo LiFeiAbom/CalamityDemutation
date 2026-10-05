@@ -525,9 +525,9 @@ Items: {
 			'''
 			你可以在液体中自由移动，并获得暂时的岩浆免疫
 			仆从上限 +3
-			召唤伤害提高 10%
-			鞭子攻击范围提高 10%
-			鞭子攻击速度提高 10%
+			召唤伤害提高 11%
+			鞭子攻击范围提高 11%
+			鞭子攻击速度提高 11%
 			'''
 		SetBonus:
 			'''
@@ -1202,6 +1202,30 @@ Items: {
 			'''
 	}
 
+	GodSlayerHornedHelm: {
+		DisplayName: 弑神者角盔
+		Tooltip:
+			'''
+			仆从上限 +3
+			召唤伤害提高 11%
+			鞭子攻击范围提高 11%
+			鞭子攻击速度提高 11%
+			'''
+		SetBonus:
+			'''
+
+			召唤伤害提高 65%
+			致命伤害不会杀死你：若一次攻击本应杀死你，你将存活并回复 {1} 点生命
+			该效果每 45 秒只能触发一次
+			该效果冷却期间，你的所有伤害提高 10%
+			命中敌人时会召唤弑神幻影
+			召唤一条噬神机械蠕虫为你作战
+			按 [{0}] 可向八个方向冲刺
+			造成大量伤害，并在接触时施加弑神者地狱火减益
+			该效果有 45 秒冷却
+			'''
+	}
+
 	GodSlayerLeggings: {
 		DisplayName: 弑神者腿甲
 		Tooltip:
@@ -1357,6 +1381,11 @@ Items: {
 			最大法力 +20
 			静止不动时提升法力再生
 			'''
+	}
+
+	Mechworm: {
+		DisplayName: 机械蠕虫
+		Description: 机械蠕虫会保护你
 	}
 
 	MoonPact: {
@@ -1724,9 +1753,9 @@ Items: {
 			可以在液体中自由移动
 			伤害减免提高 5%
 			仆从上限 +3
-			召唤伤害提高 10%
-			鞭子攻击范围提高 10%
-			鞭子攻击速度提高 10%
+			召唤伤害提高 11%
+			鞭子攻击范围提高 11%
+			鞭子攻击速度提高 11%
 			'''
 		SetBonus:
 			'''
@@ -2137,11 +2166,16 @@ Projectiles: {
 	GalaxyBlast.DisplayName: 星系爆弹
 	GhostlyMine.DisplayName: 幽灵地雷
 	GodSlayerDart.DisplayName: 弑神者飞镖
+	GodSlayerPhantom.DisplayName: 弑神幻影
 	HellfireExplosionFriendly.DisplayName: 地狱火爆炸
 	HellfireExplosionFriendly2.DisplayName: 地狱火爆炸 2
 	HolyExplosionSupreme.DisplayName: 至圣神圣爆炸
 	JudgementBeam.DisplayName: 审判光束
 	LaserFountains.DisplayName: 激光喷泉
+	MechwormBody.DisplayName: 机械蠕虫身体
+	MechwormBody2.DisplayName: 机械蠕虫身体 2
+	MechwormHead.DisplayName: 机械蠕虫
+	MechwormTail.DisplayName: 机械蠕虫尾巴
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星
 	Oathblade.DisplayName: 誓约之刃

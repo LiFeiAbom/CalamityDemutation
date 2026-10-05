@@ -429,6 +429,19 @@ namespace CalamityDemutation.Players
         public bool godSlayerRanged = false;
         public bool godSlayerReflect = false;
         /// <summary>
+        /// 弑神者套装·召唤向（GodSlayerHornedHelm 的套装标记）：命中敌人时召出弑神幻影
+        /// （见 CalamityDemutationGlobalProjectile.OnHitNPC），并每帧维护噬神机械蠕虫
+        ///（见 <see cref="UpdateGodSlayerMechworm"/>）
+        /// </summary>
+        public bool godSlayerSummon = false;
+        /// <summary>
+        /// 弑神幻影的节流预算：每召出一枚按"本次命中伤害的一半"累加，每帧衰减 2.5，归零后才允许再召
+        ///（经典版 CalamityPlayerPreTrailer.cs:3806-3809 原样；源不在此处复位，靠衰减自清）
+        /// </summary>
+        public float godSlayerDmg = 0f;
+        /// <summary>噬神机械蠕虫是否在场（由 MechwormHead.AI 与 Mechworm buff 每帧置位，供蠕虫各段续命）</summary>
+        public bool mWorm = false;
+        /// <summary>
         /// 已穿弑神者套 / 金源套：把单次不超过 80 的基础伤害压到 1，由套装方法置位、<see cref="ModifyHurt"/> 消费。
         /// 对应经典版的同名标记（源里同样写在近战头的 <c>UpdateArmorSet</c> 而非单件 UpdateEquip）。
         /// 与胸甲的 <see cref="godSlayerReflect"/>（概率完全免伤）分工：低伤压制看整套，闪避看胸甲。
@@ -800,6 +813,8 @@ namespace CalamityDemutation.Players
             godSlayerMelee = false;
             godSlayerRanged = false;
             godSlayerReflect = false;
+            godSlayerSummon = false;
+            mWorm = false;
             grandGelatin = false;
             heartoftheElements = false;
             heartoftheElementshideVisual = false;
@@ -960,6 +975,9 @@ namespace CalamityDemutation.Players
             godSlayerRanged = false;
             godSlayerReflect = false;
             godSlayerShrapnelCooldown = 0;
+            godSlayerSummon = false;
+            godSlayerDmg = 0f;
+            mWorm = false;
             grandGelatin = false;
             hasSilvaEffect = false;
             heartoftheElements = false;
@@ -2600,6 +2618,15 @@ namespace CalamityDemutation.Players
                     }
                 }
             }
+            // 弑神者召唤头（GodSlayerHornedHelm）的两件事：
+            // ① 幻影节流预算每帧衰减 2.5（经典版 CalamityPlayerPreTrailer.cs:3806-3809 原样）；
+            // ② 每帧维护噬神机械蠕虫（生成只在 UpdateGodSlayerMechworm 内做主人端判据）。
+            if (godSlayerDmg > 0f)
+                godSlayerDmg -= 2.5f;
+            if (godSlayerDmg < 0f)
+                godSlayerDmg = 0f;
+            if (godSlayerSummon)
+                UpdateGodSlayerMechworm();
             if (bloodflareMelee)
             {
                 if (bloodflareMeleeHits >= 15)

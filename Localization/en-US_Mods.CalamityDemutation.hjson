@@ -525,9 +525,9 @@ Items: {
 			'''
 			You can move freely through liquids and have temporary immunity to lava
 			+3 max minions
-			10% increased summon damage
-			10% increased whip range
-			10% increased whip attack speed
+			11% increased summon damage
+			11% increased whip range
+			11% increased whip attack speed
 			'''
 		SetBonus:
 			'''
@@ -1201,6 +1201,30 @@ Items: {
 			'''
 	}
 
+	GodSlayerHornedHelm: {
+		DisplayName: God Slayer Horned Helm
+		Tooltip:
+			'''
+			+3 max minions
+			11% increased summon damage
+			11% increased whip range
+			11% increased whip attack speed
+			'''
+		SetBonus:
+			'''
+
+			65% increased summon damage
+			You will survive fatal damage and will be healed {1} HP if an attack would have killed you
+			This effect can only occur once every 45 seconds
+			While the cooldown for this effect is active you gain a 10% increase to all damage
+			Hitting enemies will summon god slayer phantoms
+			Summons a god-eating mechworm to fight for you
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
+	}
+
 	GodSlayerLeggings: {
 		DisplayName: God Slayer Leggings
 		Tooltip:
@@ -1356,6 +1380,11 @@ Items: {
 			+20 max mana
 			Standing still boosts mana regen
 			'''
+	}
+
+	Mechworm: {
+		DisplayName: Mechworm
+		Description: The mechworm will protect you
 	}
 
 	MoonPact: {
@@ -1723,9 +1752,9 @@ Items: {
 			Can move freely through liquids
 			5% increased damage reduction
 			+3 max minions
-			10% increased summon damage
-			10% increased whip range
-			10% increased whip attack speed
+			11% increased summon damage
+			11% increased whip range
+			11% increased whip attack speed
 			'''
 		SetBonus:
 			'''
@@ -2138,11 +2167,16 @@ Projectiles: {
 	GalaxyBlast.DisplayName: Galaxy Blast
 	GhostlyMine.DisplayName: Ghostly Mine
 	GodSlayerDart.DisplayName: God Slayer Dart
+	GodSlayerPhantom.DisplayName: God Slayer Phantom
 	HellfireExplosionFriendly.DisplayName: Explosion
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
 	HolyExplosionSupreme.DisplayName: Supreme Holy Explosion
 	JudgementBeam.DisplayName: Judgement Beam
 	LaserFountains.DisplayName: Laser Fountains
+	MechwormBody.DisplayName: Mechworm Body
+	MechwormBody2.DisplayName: Mechworm Body 2
+	MechwormHead.DisplayName: Mechworm
+	MechwormTail.DisplayName: Mechworm Tail
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
 	Oathblade.DisplayName: Oathblade

@@ -163,6 +163,43 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
+            // 弑神者召唤套装（godSlayerSummon）：召唤物 / 哨兵命中敌人时，若节流预算归零就召出一枚弑神幻影
+            //（经典版 CalamityGlobalProjectile.cs:848 起；条件同样只认 minion / sentry，不含鞭类弹幕）。
+            // 源里那段"挑一个 800 像素内的敌怪"选出的索引其实从未被使用——幻影固定生成在弹幕自身位置、方向纯随机，
+            // 所以这里只保留其真实作用（附近存在可追击的敌人就放行）。
+            CalamityDemutationPlayer summonPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if ((projectile.minion || projectile.sentry) && summonPlayer.godSlayerSummon && summonPlayer.godSlayerDmg <= 0f)
+            {
+                int phantomDamage = projectile.damage / 2;
+                float phantomAi = Main.rand.NextFloat() + 0.5f;
+                summonPlayer.godSlayerDmg += phantomDamage;
+                bool hasNearbyTarget = false;
+                for (int i = 0; i < 200; i++)
+                {
+                    if (!Main.npc[i].CanBeChasedBy(projectile, false))
+                        continue;
+                    float manhattan = Math.Abs(Main.npc[i].position.X + Main.npc[i].width / 2 - projectile.position.X + projectile.width / 2)
+                        + Math.Abs(Main.npc[i].position.Y + Main.npc[i].height / 2 - projectile.position.Y + projectile.height / 2);
+                    if (manhattan < 800f)
+                    {
+                        hasNearbyTarget = true;
+                        break;
+                    }
+                }
+                // 源在此处会 return（放弃整个 OnHitNPC 余下逻辑）；本工程只跳过生成，避免吞掉后面的效果
+                if (hasNearbyTarget)
+                {
+                    const float phantomSpeed = 15f;
+                    float velX = Main.rand.Next(-100, 101);
+                    float velY = Main.rand.Next(-100, 101);
+                    float length = (float)Math.Sqrt(velX * velX + velY * velY);
+                    length = phantomSpeed / length;
+                    velX *= length;
+                    velY *= length;
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, velX, velY,
+                        ModContent.ProjectileType<GodSlayerPhantom>(), phantomDamage * 2, 0f, projectile.owner, 0f, phantomAi);
+                }
+            }
         }
         /// <summary>
         /// 弹幕命中玩家（PvP）时，按攻击者的装备 / 套装 / 身上的 buff 给目标施加效果，

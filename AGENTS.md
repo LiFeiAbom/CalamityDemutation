@@ -265,6 +265,37 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-05）：**召唤线第三件 = 弑神者角盔（GodSlayerHornedHelm）+ 噬神机械蠕虫 + 弑神幻影；召唤头统一属性由 10% 提到 11%。**
+  ① **统一单件口径更新（用户 2026-10-05 定）**：召唤头的三条额外属性由 +10% 改为 **+11%**
+  （召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度），已同步改回龙蒿角盔与血炎狂龙盔（连同中英 tooltip）。
+  ② 新增 `Content/Items/Armors/GodSlayer/GodSlayerHornedHelm.cs`（贴图两张取自经典版 1.4.2.101）：
+  18x18、价值 75 金、防御 12、月后稀有度 14；单件 +3 仆从上限 + 三条统一属性。
+  套装：`godSlayer` + **新增的 `godSlayerSummon`**，`GetDamage<Summon>() += 0.65f`；**不置** `godSlayerMelee`
+  与 `godSlayerDamage`（经典版召唤头就没有这两项）。显示名：en `God Slayer Horned Helm` / zh **弑神者角盔**
+  （用户未指定，按经典源名直译，与「龙蒿角盔」对称）。
+  ③ 新增噬神机械蠕虫：`Content/Buffs/SummonBuffs/Mechworm.cs` + `Content/Projectiles/Summon/MechwormHead.cs`
+  （含 `MechwormHeadGlow` 发光层；源里裸数字尘 234 已 Cecil 反查为 `DustID.BoneTorch`）、`MechwormBody.cs`、
+  `MechwormBody2.cs`、`MechwormTail.cs`（四段共 5 张贴图）。头在鼠标处召唤，有目标就追击（限速 50）、
+  无目标回到玩家身边（限速 25）；身体与尾巴靠 `ai[0]` 链到前一段、并把段序 `localAI[0]+1` 回写实现逐节放大。
+  维护逻辑按第 5 节口径从物品的 `UpdateArmorSet` 挪到玩家侧
+  （新 partial `Players/CalamityDemutationPlayer.GodSlayerSummon.cs` 的 `UpdateGodSlayerMechworm()`），
+  由 `PostUpdateMiscEffects` 每帧调用。
+  **与源的两处差异（经典/现代同源，均已核对）**：(a) 源那段"在尾巴前插入新身体节"的分支被包在"没有蠕虫头"的外层条件下，
+  条件自相矛盾、永远不执行，故只实现可达的"整条重召"，不搬那段死代码；(b) 蠕虫伤害公式经典只取 `Multiplicative`，
+  现代/CI 改用 `Additive + Multiplicative`，工程取后者（公式本身不变，仆从数封顶 10）。
+  ④ 新增 `Content/Projectiles/Typeless/GodSlayerPhantom.cs`：召唤物/哨兵命中敌人且节流预算 `godSlayerDmg` 归零时，
+  在弹幕位置朝随机方向生成一枚（伤害 = 本次命中伤害的一半 ×2）；命中附 600 帧弑神者地狱火，
+  消亡时炸一圈 `DustID.ShadowbeamStaff` 尘（源裸数字 173，已反查）并 `Projectile.Damage()` 结算。
+  接入点在 `CalamityDemutationGlobalProjectile.OnHitNPC`，判定用 `projectile.minion || projectile.sentry`，与源一致。
+  **与源的两处差异**：源挑出的目标索引 `num6` 从未被使用（幻影固定生成在弹幕自身位置、方向纯随机），
+  故只保留其真实作用（附近有敌人就放行）；源无目标时会 `return` 掉整个 OnHitNPC 余下逻辑，
+  工程只跳过生成，避免吞掉后面的效果。
+  玩家侧新增 `godSlayerSummon` / `godSlayerDmg`（float，每帧衰减 2.5，源在 CalamityPlayerPreTrailer.cs:3806-3809）/ `mWorm`。
+  ⑤ 配方与既有弑神者头同规矩：现代 `CosmiliteBar`×10 + `AscendantSpiritEssence`×2 @ 宇宙砧；
+  经典 `CosmiliteBar`×14 + `NightmareFuel`×8 + `EndothermicEnergy`×8 @ 德雷顿熔炉。
+  ⑥ 本地化：中英各补 `Items.GodSlayerHornedHelm`、`Buffs.Mechworm`、`Projectiles.GodSlayerPhantom` 与
+  `MechwormHead/Body/Body2/Tail` 共 7 条；另把两处召唤头的 10% 改成 11%。行尾已整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检 **144** 条全命中（新增 `MechwormHeadGlow` 的显式路径）。
 - 最近一批工作（2026-10-05）：**召唤线第二件 = 血炎狂龙盔（BloodflareHelmet）；同时定下召唤头的统一单件口径。**
   ① **召唤头统一单件口径（用户 2026-10-05 定）**：所有召唤职业头在经典版单件之上，额外给
   **召唤伤害 +10% / 鞭子攻击范围 +10% / 鞭子攻击速度 +10%**（`GetDamage<SummonDamageClass>()`、
