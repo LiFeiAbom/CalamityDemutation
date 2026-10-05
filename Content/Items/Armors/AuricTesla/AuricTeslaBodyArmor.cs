@@ -14,7 +14,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
 {
     /// <summary>
     /// 金之特斯拉胸甲（Auric Tesla Body Armor） - 金之特斯拉套（AuricTesla）身体防具
-    /// 提供生命上限、通用伤害与暴击、移速，并置位霜冻屏障与弑神者反射标记；
+    /// 提供生命上限、通用伤害与暴击、移速，并置位霜冻屏障、弑神者反射与低伤保护标记；
     /// 另注册背面装备贴图（_Back），穿齐后显示披风。套装判定见 AuricTeslaHelm。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
@@ -49,7 +49,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         }
         /// <summary>
         /// 单件装备加成：生命上限、移速、通用伤害与暴击，
-        /// 并置位霜冻屏障（frostBarrier）与弑神者反射（godSlayerReflect）标记
+        /// 并置位霜冻屏障（frostBarrier）、弑神者反射（godSlayerReflect）与低伤保护（godSlayerDamageProtect）标记
         /// </summary>
         public override void UpdateEquip(Player player)
         {
@@ -58,6 +58,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             // 置位弑神者反射标记：FreeDodge 结算完全免伤（膨胀开启 5%、关闭源值 2%）；
             // 低伤压制（≤80 → 1）跟随整套，由近战头的套装方法置 godSlayerDamage
             modPlayer.godSlayerReflect = true;
+            // 低伤保护：对齐 CI AuricTeslaBodyArmorold.cs:47-49 的「Reflect / DMGprotect / fBarrier」三行连写
+            //（工程原先把中间那行漏了）。≤80 的伤害在 FreeDodge 里被完全闪避，保护上限触发后重置为 20 并逐帧回升；
+            // 与近战头的 godSlayerDamage（≤80 → 1）分工：那条属经典版整套路径，这条属 CI 的单件路径。
+            modPlayer.godSlayerDamageProtect = true;
             bool legacy = ConfigSystem.StatInflationEnabled;
             player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 100;   // 最大生命：常态 +100 / 膨胀 +400（削弱前旧值）
             if (legacy)

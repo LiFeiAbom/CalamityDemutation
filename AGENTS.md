@@ -644,9 +644,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    并自行补 15 帧无敌（原版 FreeDodge 分支只归零伤害、不代补无敌帧）；
    几率经用户 2026-10-05 确认取 **关态 2%（1/50，= 经典版本意与 CI 实际值）/ 开态 5%（1/20）**，受 `StatInflation` 门控（见第 7 节）。
    同步改动：`GodSlayerChestplate` / `AuricTeslaBodyArmor` 的置位与类注释，以及两份 hjson 里这两件的 `Tooltip`（2%）与 `TooltipInflated`（5%）。
-2. **【语义】"≤80 伤害削为 1" 的置位从近战头搬到了胸甲。**
-   工程由 `GodSlayerChestplate` 置 `godSlayerReflect`，经典版由近战头的 `godSlayerDamage` 置。
-   结果：只穿胸甲不戴头也能吃这个减伤，反之不能。要么搬回头，要么确认这是有意为之。
+2. **【语义】"≤80 伤害削为 1" 的置位从近战头搬到了胸甲 —— 已结（2026-10-03 `45c8e30` 归还整套，2026-10-05 复核确认）。**
+   原问题：工程由 `GodSlayerChestplate` 置 `godSlayerReflect`、经典版由近战头置 `godSlayerDamage`，
+   于是"只穿胸甲不戴头也能吃这个减伤"。
+   现状：≤80 → 1 已回归近战头（`GodSlayerHelm.cs:56`、`AuricTeslaHelm.cs:65`；射手头按经典版故意不置），
+   消费判据与经典源 `CalamityPlayerPreTrailer.cs:7559` 逐字相同。三个同族标记的分工：
+   - `godSlayerDamage`（≤80 → 1）＝ **经典版**整套路径，由近战头置位；
+   - `godSlayerReflect`（2% / 膨胀 5% 概率完全免伤）＝ CI 的 `GodSlayerReflect`，两件胸甲都置；
+   - `godSlayerDamageProtect`（≤80 完全闪避、保护上限触发后重置为 20 并逐帧回升）＝ CI 的 `GodSlayerDMGprotect`。
+   **2026-10-05 顺带补了一处移植漏行**：CI 的 `AuricTeslaBodyArmorold.cs:47-49` 是
+   `GodSlayerReflect` / `GodSlayerDMGprotect` / `fBarrier` 三行连写，工程只搬了首尾两行；
+   已给 `AuricTeslaBodyArmor.UpdateEquip` 补上 `godSlayerDamageProtect = true`（一行代码，无 tooltip 变更——
+   中英文案本来就没写这条机制，与 `GodSlayerChestplate` 的处理一致）。
 3. **【数值】弑神保命回复 300 ≠ 源的 150。**
    `PreKill` 里 `int heal = draconicSurge ? statLifeMax2 : 300;`（经典版是 150；CI 那行是 `statLife = +100` 的笔误；
    现代灾厄**整套保命机制已删除**，只剩冲刺）。开关关态该不该回到 150，等你拍板。
