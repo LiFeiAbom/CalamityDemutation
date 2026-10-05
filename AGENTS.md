@@ -170,8 +170,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   2. `Projectile.minionSlots` 是**每帧实时汇总**的：`Player.Update` 每帧把 `slotsMinions` 归零，
      各仆从在 `Projectile.Update` 里累加自己的 `minionSlots`（判据 `slotsMinions + minionSlots > maxMinions`）。
      所以在仆从 AI 里每帧改写它就能让开关即时生效，**已召唤的仆从不必重召**。
-- **开关不只管伤害**：同一开关也可以门控「数量 / 栏位」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
-  （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）。以后遇到类似点照此办理
+- **开关不只管伤害**：同一开关也可以门控「数量 / 栏位 / 几率」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
+  （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）；弑神者胸甲 / 金源胸甲的「受击概率完全免伤」2%→5%
+  （`FreeDodge` 里读 `StatInflationEnabled ? 20 : 50`，站点与口径见 9.3 第 1 条）。以后遇到类似点照此办理
   （同样运行时读配置，别写进 `SetDefaults`）。
 - **已完成的膨胀表**（关 = 源值 / 开 = 膨胀值，全部受开关控制）：
 
@@ -636,13 +637,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ### 9.3 明天要处理的清单（建议按此顺序）
 
-1. **【行为 bug】「5% 完全无效」是空操作，中英语 tooltip 在骗人。**
-   位置：`Players/CalamityDemutationPlayer.cs` 的 `ModifyHurt` 里 `if (godSlayerReflect && Main.rand.NextBool(20))`
-   → 只写了 `Player.immune/immuneNoBlink`。IL 已证实（见 9.4）这**不会**取消本次伤害，等于白设标记。
-   修法：把随机判定挪进 `FreeDodge` 里 `return true`（CI 是置 `freeDodgeFromShieldAbsorption` 再被 FreeDodge 吃掉，等价）。
-   涉及 tooltip：`AuricTeslaBodyArmor`（中英各一行"你受到的攻击有 5% 的几率完全无效"）、
-   `GodSlayerChestplate` 同款；`GodSlayerChestplate` 的类注释也要跟着改。
-   顺带定口径：经典版想要 2%（`rand.Next(50)==0` 且函数体是空的死代码）、CI 是 1/50 真生效，工程现在是 1/20。
+1. **【行为 bug】「5% 完全无效」是空操作 —— 已结（2026-10-03 `45c8e30` 修好、2026-10-05 复核确认）。**
+   原问题：`Players/CalamityDemutationPlayer.cs` 的 `ModifyHurt` 里 `if (godSlayerReflect && Main.rand.NextBool(20))`
+   → 只写了 `Player.immune/immuneNoBlink`，IL 已证实（见 9.4）这**不会**取消本次伤害，等于白设标记、tooltip 在骗人。
+   落地：随机判定挪进 `FreeDodge` 里 `return true`（CI 是置 `freeDodgeFromShieldAbsorption` 再被 FreeDodge 吃掉，等价），
+   并自行补 15 帧无敌（原版 FreeDodge 分支只归零伤害、不代补无敌帧）；
+   几率经用户 2026-10-05 确认取 **关态 2%（1/50，= 经典版本意与 CI 实际值）/ 开态 5%（1/20）**，受 `StatInflation` 门控（见第 7 节）。
+   同步改动：`GodSlayerChestplate` / `AuricTeslaBodyArmor` 的置位与类注释，以及两份 hjson 里这两件的 `Tooltip`（2%）与 `TooltipInflated`（5%）。
 2. **【语义】"≤80 伤害削为 1" 的置位从近战头搬到了胸甲。**
    工程由 `GodSlayerChestplate` 置 `godSlayerReflect`，经典版由近战头的 `godSlayerDamage` 置。
    结果：只穿胸甲不戴头也能吃这个减伤，反之不能。要么搬回头，要么确认这是有意为之。
