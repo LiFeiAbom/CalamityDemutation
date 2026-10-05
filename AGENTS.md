@@ -371,7 +371,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   现代 `AuricBar`×10 + `PsychoticAmulet` @ 宇宙砧（AuricBar 数量取 1.4.4 的 10）；经典 `AuricOre`×60 + 吸热 10 +
   噩梦 10 + 幻影质 8 + 暗黑碎片 6 + 生命锭 5 + 地狱施法者碎片 5 + 灾厄核心 2 + 银河奇点 1 + `PsychoticAmulet` @ 德雷顿熔炉。
   ⑤ 本地化：中英各补 `Items.AuricTeslaHoodedFacemask`（DisplayName / Tooltip / SetBonus）。
-  显示名：en `Auric Tesla Hooded Facemask`、zh **金兜铁面盔**（用户 2026-10-04 指定；近战头仍是「古圣金源头盔」）。
+  显示名：en `Auric Tesla Hooded Facemask`、zh **金兜铁面盔**（用户 2026-10-04 指定）。
+  近战头显示名后于 2026-10-05 由用户改为 en `Auric Tesla Royal Helm` / zh **金源耀日盔**（原「古圣金源头盔」）。
   **未抄**近战头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的无效残留（9.2 已判定是死代码）。
   **四版本差异备查**：防 40 经典/现代一致；现代 2.0.4 已**删掉 silvaSet/silvaRanged 与 lavaMax/lavaWet**、
   `ArmorSetShadows` 改用 `armorEffectDrawOutlines`；CI `AuricTeslaHeadRanged` 额外给持远程武器时 +20% 远程攻速与
@@ -585,7 +586,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 工程里的 5 套 12 件（金源 3 + 龙蒿 3 + 血炎 3 + 弑神者 3 + 始源林海 3）是
 **`CalamityModClassicPreTrailer`（预发布经典版）的逐行移植**，再叠三层外来物：
 
-1. **近战攻速**取自现代灾厄（经典版近战头都没有攻速）：金源头 28%、血炎面具 18%、龙蒿头 15%、弑神头 20%。
+1. **近战攻速**取自现代灾厄（经典版近战头都没有攻速）：金源头 28%、血碾溃阵盔（原「血炎面具」）18%、龙蒿头 15%、弑神头 20%。
 2. **从 CI 借的件**：现代版配方（四件坯料 + AuricBar + CosmicAnvil）、`GodSlayerDMGprotect`
    （≤阈值完全免伤、触发后阈值跌回 20 每帧 +1）、CI 式两段飞镖 `GodSlayerDart`、以及"近战命中每 60 帧放一枚飞镖"。
 3. **工程自调**：五职业分列加成合并成 `GenericDamageClass` 并把伤害/暴击抬高（**暴击一律抬到与伤害同值**）＋
@@ -615,7 +616,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 金源胸 | 移速 +25%；通用 **22/22** | **无移速**；通用 8/5 | 移速 +25%；8/5；+GodSlayerDMGprotect | 移速 +25%；8/5 |
 | 金源腿 | 通用 **14/14** | 移速仅 +10%；12/5 | 移速 +50%；12/10 | 移速 +50%；12/5 |
 | 龙蒿胸/腿 | 通用 10/10（腿半血再 +15% 移速） | `lifeRegen=3`；胸 10/5；腿移速仅 10%、8/8 | `AncientTarragon` 是另一套召唤/盗贼混合体，**与工程无关** | `lifeRegen=2`；胸 10/5；腿 6/6 |
-| 血炎面具 | 保留 lavaMax240/ignoreWater；10/10＋攻速 18% | 10/5；攻速在套装；**无 lavaMax/ignoreWater** | CI 直接用灾厄本体那件 | 无攻速 |
+| 血碾溃阵盔（原血炎面具） | 保留 lavaMax240/ignoreWater；10/10＋攻速 18% | 10/5；攻速在套装；**无 lavaMax/ignoreWater** | CI 直接用灾厄本体那件 | 无攻速 |
 | 血炎胸/腿 | 通用 14/14；腿移速 30% | 12/8；腿移速 17%、10/7 | — | 12/8；腿 30%、10/7 |
 | 弑神头 | 14/14＋攻速 20% | 14/**7**；攻速在套装 | old：48 防、14/14/20%、aggro+1000 | 14/14；无攻速 |
 | 弑神胸 | 反伤 **+0.9**；通用 **15/15** | 反伤 +0.5；**无移速**；11/6 | old：反伤 +0.5、移速 15%、10/6 | 反伤 +0.5、移速 15%、11/6 |

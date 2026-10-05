@@ -380,7 +380,7 @@ Items: {
 	}
 
 	AuricTeslaHelm: {
-		DisplayName: 古圣金源头盔
+		DisplayName: 金源耀日盔
 		Tooltip:
 			'''
 			近战伤害与暴击率提高 20%
@@ -539,7 +539,7 @@ Items: {
 	}
 
 	BloodflareMask: {
-		DisplayName: 血炎面具
+		DisplayName: 血碾溃阵盔
 		Tooltip:
 			'''
 			你可以在液体中自由移动，并获得暂时的岩浆免疫

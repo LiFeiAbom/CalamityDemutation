@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Bloodflare
 {
     /// <summary>
-    /// 炎血面具（BloodflareMask） - 炎血套（Bloodflare）头部防具
+    /// 血碾溃阵盔（BloodflareMask，英文名 Bloodflare Ram Mask） - 血炎套（Bloodflare）头部防具
     /// 防御与近战输出向头部，提供岩浆免疫时长、水下行动自如与近战加成；
     /// 集齐头/胸/腿后由 UpdateArmorSet 置位 bloodflareSet、bloodflareMelee，
     /// 套装效果最终在 CalamityDemutationPlayer 与 CalamityDemutationGlobalNPC 中结算。

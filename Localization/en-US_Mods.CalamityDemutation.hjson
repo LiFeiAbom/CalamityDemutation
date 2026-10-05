@@ -380,7 +380,7 @@ Items: {
 	}
 
 	AuricTeslaHelm: {
-		DisplayName: Auric Tesla Helm
+		DisplayName: Auric Tesla Royal Helm
 		Tooltip:
 			'''
 			20% increased melee damage and critical strike chance
@@ -539,7 +539,7 @@ Items: {
 	}
 
 	BloodflareMask: {
-		DisplayName: Bloodflare Mask
+		DisplayName: Bloodflare Ram Mask
 		Tooltip:
 			'''
 			You can move freely through liquids and have temporary immunity to lava

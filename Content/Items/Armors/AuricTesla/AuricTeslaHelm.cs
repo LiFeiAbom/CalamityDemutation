@@ -12,7 +12,8 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.AuricTesla
 {
     /// <summary>
-    /// 金之特斯拉头盔 - 月后终极套装头部：一身承载塔拉贡/血焰/弑神者/席尔瓦四套效果。
+    /// 金源耀日盔（AuricTeslaHelm，英文名 Auric Tesla Royal Helm）- 月后终极套装头部：
+    /// 一身承载龙蒿/血炎/弑神者/始源林海四套的**近战**侧效果。
     /// 弑神者冲刺同样可用（依赖套装置位的 godSlayer 标记），冲刺本体由本模组自持实现，
     /// 见 CalamityDemutationPlayer.GodSlayerDash.cs。
     /// </summary>
@@ -139,7 +140,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             player.GetAttackSpeed<MeleeDamageClass>() += 0.28f;
         }
         /// <summary>
-        /// 配方：由塔拉贡头 + 血焰面具 + 席尔瓦头 + 弑神者头升阶，
+        /// 配方：由龙蒿战盔 + 血碾溃阵盔 + 始源林海战盔 + 弑神者头盔升阶，
         /// 现代版灾厄用 10 个金之锭 + 宇宙砧，经典版用若干后期材料 + 德雷顿熔炉。
         /// </summary>
         public override void AddRecipes()
@@ -151,7 +152,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient<TarragonHelm>();          // 塔拉贡头（本模组移植物）
-                    recipe.AddIngredient<BloodflareMask>();        // 血焰面具
+                    recipe.AddIngredient<BloodflareMask>();        // 血碾溃阵盔（Bloodflare Ram Mask）
                     recipe.AddIngredient<SilvaHelm>();             // 席尔瓦头
                     recipe.AddIngredient<GodSlayerHelm>();         // 弑神者头
                     recipe.AddIngredient(auricBar.Type, 10);       // 灾厄材料：金之锭 ×10
