@@ -9,6 +9,8 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
     ///（按经典版灾厄同名件 1:1 移植，对应现代版 TarragonHeadSummon）。
     /// 单件：仆从上限 +3、伤害减免 +5%，另给 +240 岩浆免疫时长、液体中自由移动，
     /// 并免疫诅咒地狱/着火了/诅咒/冷冻。
+    /// 另有用户 2026-10-05 指定的三条额外单件属性：召唤伤害 +10%、鞭子攻击范围 +10%、鞭子攻击速度 +10%
+    ///（作为"召唤头"的统一口径，后续同类件照此办理）。
     /// 防御按用户 2026-10-05 指定取 **7**（经典版与现代版源码都写 `Item.defense = 3; //98`，未照搬 3）。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1. 召唤伤害 +50%（本类 UpdateArmorSet 内直接加，经典版原样）
@@ -67,6 +69,9 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
         public override void UpdateEquip(Player player)
         {
             player.maxMinions += 3;                           // 仆从上限 +3
+            player.GetDamage<SummonDamageClass>() += 0.1f;    // 召唤伤害 +10%（用户指定的额外单件属性）
+            player.whipRangeMultiplier += 0.1f;               // 鞭子攻击范围 +10%（同上）
+            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.1f;  // 鞭子攻击速度 +10%（同上；鞭子走 SummonMeleeSpeed 攻速类）
             player.endurance += 0.05f;                        // 伤害减免 +5%
             player.lavaMax += 240;                            // 岩浆免疫时长 +240 帧（4 秒）
             player.ignoreWater = true;                        // 水中不受移速/跳跃惩罚

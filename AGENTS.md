@@ -265,6 +265,34 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-05）：**召唤线第二件 = 血炎狂龙盔（BloodflareHelmet）；同时定下召唤头的统一单件口径。**
+  ① **召唤头统一单件口径（用户 2026-10-05 定）**：所有召唤职业头在经典版单件之上，额外给
+  **召唤伤害 +10% / 鞭子攻击范围 +10% / 鞭子攻击速度 +10%**（`GetDamage<SummonDamageClass>()`、
+  `whipRangeMultiplier`、`GetAttackSpeed<SummonMeleeSpeedDamageClass>()`）。已应用于龙蒿角盔与血炎狂龙盔，后续召唤头照此办理。
+  ② 新增 `Content/Items/Armors/Bloodflare/BloodflareHelmet.cs`（贴图两张取自经典版 1.4.2.101）：
+  18x18、价值 60 金、防御 16、月后稀有度 13；单件 +3 仆从上限 / `lavaMax +240` / `ignoreWater` / 上述三条统加属性。
+  套装：`bloodflareSet` + **新增的 `bloodflareSummon`**，`GetDamage<Summon>() += 0.55f`、`crimsonRegen = true`，文案 8 行。
+  显示名由用户指定：en `Bloodflare Wyvern Helm` / zh **血炎狂龙盔**
+  （三个源里都没有 Wyvern 这个名字，源名是 "Bloodflare Helmet" / 现代 `BloodflareHeadSummon`）。
+  ③ 玩家侧新增 `bloodflareSummon`（字段 + 两处复位）与跨帧计时器 `bloodflareSummonTimer`（只在死亡时复位）：
+  `PostUpdateMiscEffects` 里落地生命 ≥90% 的 +10% 召唤伤害、≤50% 的 +20 防御与 +2 生命再生，
+  以及每 900 帧（15 秒）在主人端围绕自身 550 像素生成 3 枚 `GhostlyMine`。
+  **伤害口径**：经典版写的是 `(auricSet ? 15000 : 5000) × 召唤伤害的 Multiplicative 部分`（只吃乘算，属笔误）；
+  工程保留金源档位但改按完整召唤伤害加成缩放（`GetTotalDamage<SummonDamageClass>().ApplyTo(基准)`），
+  并在生成后写 `originalDamage` + `DamageType = DamageClass.Generic` 防二次缩放（照现代版做法）。
+  ④ 新增弹幕 `Content/Projectiles/Summon/GhostlyMine.cs`（贴图取自经典版）：30×30、友方、不占仆从栏、
+  存活 900 帧、穿透 1、穿地形；以主人为中心 550 像素按 `ai[1]` 每帧 +1 度环绕；首帧播 `SoundID.Item20` 并喷
+  `DustID.DungeonSpirit` 尘（源里写裸数字 180，已用 Cecil 反查实名）；命中撑到 150×150 并播 `SoundID.Item14`。
+  **与源的差异**：源里依赖 `CalamityGlobalProjectile` 的"仆从伤害变化时重算 damage"，本工程没有该全局，故略去。
+  ⑤ 配方与其余血炎头同规矩：现代 `Bloodstone`×25 + `BloodOrb`×10 + `RuinousSoul`×2；
+  经典 `BloodstoneCore`×11 + `RuinousSoul`×2，均月球工作台。
+  ⑥ 本地化：中英各补 `Items.BloodflareHelmet`（DisplayName / Tooltip / SetBonus）与 `Projectiles.GhostlyMine.DisplayName`，
+  另给龙蒿角盔补上三条统一属性对应的 3 行 tooltip；行尾已整回 CRLF。
+  **四版本差异备查**：防 16 经典 = 现代（CI **没有**独立血炎召唤头，沿用现代那颗）；单件经典是
+  `maxMinions+3 / lavaMax / ignoreWater`，现代改成召唤伤害 +5% 并把 `maxMinions+3` 挪到套装的 UpdateArmorSet；
+  套装召唤伤害经典 55%、现代 50%；**现代删掉了 ≤50% 生命时的 +2 生命再生**（只留 +20 防御），
+  地雷伤害模型同时换成 `CalcIntDamage<SummonDamageClass>(3750)`。
+  验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-05）：**龙蒿套装召唤头 = 龙蒿角盔（TarragonHornedHelm）**，召唤线第一件。
   口径：单件照经典版，**防御按用户指定取 7**（源经典 = 现代 = 3）；套装效果走经典版，但
   **生命光环取现代灾厄口径**——经典把计时器写成方法内局部变量、闸门恒真，实际每帧都打（约 60 倍），属上游 bug，未照搬。

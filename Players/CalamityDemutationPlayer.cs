@@ -242,6 +242,14 @@ namespace CalamityDemutation.Players
         public int bloodflareRangedCooldown = 0;
         public bool bloodflareSet = false;
         /// <summary>
+        /// 血炎套装·召唤向（BloodflareHelmet 的套装标记）：生命 ≥90% 时 +10% 召唤伤害、
+        /// ≤50% 时 +20 防御与 +2 生命再生，并每 900 帧召唤 3 枚环绕自身的 GhostlyMine，
+        /// 三条均在 PostUpdateMiscEffects 里结算
+        /// </summary>
+        public bool bloodflareSummon = false;
+        /// <summary>血炎召唤套装召唤地雷的冷却（帧，900 = 15 秒；跨帧计时器，只在死亡时复位）</summary>
+        public int bloodflareSummonTimer = 0;
+        /// <summary>
         /// 血契已装备（最大生命翻倍，代价是有 25% 概率被暴击）
         /// </summary>
         public bool bloodPact = false;
@@ -744,6 +752,7 @@ namespace CalamityDemutation.Players
             bloodflareMelee = false;
             bloodflareRanged = false;
             bloodflareSet = false;
+            bloodflareSummon = false;
             bloomStone = false;
             bloodPact = false;
             bloodyWormScarf = false;
@@ -899,6 +908,8 @@ namespace CalamityDemutation.Players
             bloodflareRanged = false;
             bloodflareRangedCooldown = 0;
             bloodflareSet = false;
+            bloodflareSummon = false;
+            bloodflareSummonTimer = 0;
             bloomStone = false;
             bloodPact = false;
             bloodyWormScarf = false;
@@ -2553,6 +2564,41 @@ namespace CalamityDemutation.Players
                     bloodflareHeartTimer--;
                 if (bloodflareManaTimer > 0)
                     bloodflareManaTimer--;
+            }
+            // 血炎召唤头（BloodflareHelmet）的 bloodflareSummon 套装效果（照经典版）：
+            // ① 生命 ≥90% 时 +10% 召唤伤害；≤50% 时 +20 防御与 +2 生命再生（两者互斥）；
+            // ② 每 900 帧（15 秒）在主人端围绕自身 550 像素生成 3 枚 GhostlyMine（初始角度 ai[0] = I×120）。
+            // 本钩子每名玩家 × 每一端都会跑，故生成侧带 whoAmI 判据。
+            if (bloodflareSummon)
+            {
+                if (Player.statLife >= (int)(Player.statLifeMax2 * 0.9))
+                {
+                    Player.GetDamage<SummonDamageClass>() += 0.1f;
+                }
+                else if (Player.statLife <= (int)(Player.statLifeMax2 * 0.5))
+                {
+                    Player.statDefense += 20;
+                    Player.lifeRegen += 2;
+                }
+                if (bloodflareSummonTimer > 0)
+                    bloodflareSummonTimer--;
+                if (Player.whoAmI == Main.myPlayer && bloodflareSummonTimer <= 0)
+                {
+                    bloodflareSummonTimer = 900;
+                    // 伤害口径：经典版写的是 (auricSet ? 15000 : 5000) × 召唤伤害的 Multiplicative 部分，
+                    // 只吃乘算、几乎不随配装增长，属笔误；这里保留金源档位，改按完整召唤伤害加成缩放。
+                    int mineBase = auricSet ? 15000 : 5000;
+                    int mineDamage = (int)Player.GetTotalDamage<SummonDamageClass>().ApplyTo(mineBase);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        float orbitAngle = i * 120f;
+                        int mine = Projectile.NewProjectile(Player.GetSource_FromThis(),
+                            Player.Center.X + (float)(Math.Sin(orbitAngle) * 550), Player.Center.Y + (float)(Math.Cos(orbitAngle) * 550),
+                            0f, 0f, ModContent.ProjectileType<GhostlyMine>(), mineDamage, 1f, Player.whoAmI, orbitAngle, 0f);
+                        Main.projectile[mine].originalDamage = mineBase;         // 供 tML 的仆从伤害缩放口径参照
+                        Main.projectile[mine].DamageType = DamageClass.Generic;  // 伤害已在生成方算好，避免再乘一次召唤加成
+                    }
+                }
             }
             if (bloodflareMelee)
             {

@@ -519,6 +519,29 @@ Items: {
 		Tooltip: 30% increased movement speed; increases all damage and critical strike chance by 10%
 	}
 
+	BloodflareHelmet: {
+		DisplayName: Bloodflare Wyvern Helm
+		Tooltip:
+			'''
+			You can move freely through liquids and have temporary immunity to lava
+			+3 max minions
+			10% increased summon damage
+			10% increased whip range
+			10% increased whip attack speed
+			'''
+		SetBonus:
+			'''
+			55% increased summon damage
+			Greatly increases life regen
+			Enemies below 50% life have a chance to drop hearts when struck
+			Enemies above 50% life have a chance to drop mana stars when struck
+			Enemies killed during a Blood Moon have a much higher chance to drop Blood Orbs
+			Summons polterghast mines to circle you
+			At 90% life and above you gain 10% increased summon damage
+			At 50% life and below you gain 20 defense and 2 life regen
+			'''
+	}
+
 	BloodflareHornedHelm: {
 		DisplayName: Bloodflare Demon Helm
 		Tooltip:
@@ -1700,6 +1723,9 @@ Items: {
 			Can move freely through liquids
 			5% increased damage reduction
 			+3 max minions
+			10% increased summon damage
+			10% increased whip range
+			10% increased whip attack speed
 			'''
 		SetBonus:
 			'''
@@ -2110,6 +2136,7 @@ Projectiles: {
 	GalacticaComet.DisplayName: Galactus Comet
 	Galaxia.DisplayName: Orb
 	GalaxyBlast.DisplayName: Galaxy Blast
+	GhostlyMine.DisplayName: Ghostly Mine
 	GodSlayerDart.DisplayName: God Slayer Dart
 	HellfireExplosionFriendly.DisplayName: Explosion
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2

@@ -519,6 +519,29 @@ Items: {
 		Tooltip: 移动速度提高 30%，所有伤害和暴击率提高 10%
 	}
 
+	BloodflareHelmet: {
+		DisplayName: 血炎狂龙盔
+		Tooltip:
+			'''
+			你可以在液体中自由移动，并获得暂时的岩浆免疫
+			仆从上限 +3
+			召唤伤害提高 10%
+			鞭子攻击范围提高 10%
+			鞭子攻击速度提高 10%
+			'''
+		SetBonus:
+			'''
+			召唤伤害提高 55%
+			极大幅提升生命再生
+			生命值低于 50% 的敌怪被击中时有几率掉落红心
+			生命值高于 50% 的敌怪被击中时有几率掉落法力星
+			血月期间被杀死的敌怪掉落鲜血球的几率大幅提高
+			召唤波尔特加斯特地雷环绕自身
+			生命值高于等于 90% 时获得 10% 召唤伤害加成
+			生命值低于等于 50% 时获得 20 点防御与 2 点生命再生
+			'''
+	}
+
 	BloodflareHornedHelm: {
 		DisplayName: 血弑魔颅盔
 		Tooltip:
@@ -1701,6 +1724,9 @@ Items: {
 			可以在液体中自由移动
 			伤害减免提高 5%
 			仆从上限 +3
+			召唤伤害提高 10%
+			鞭子攻击范围提高 10%
+			鞭子攻击速度提高 10%
 			'''
 		SetBonus:
 			'''
@@ -2109,6 +2135,7 @@ Projectiles: {
 	GalacticaComet.DisplayName: 星河彗星
 	Galaxia.DisplayName: 银河之星光球
 	GalaxyBlast.DisplayName: 星系爆弹
+	GhostlyMine.DisplayName: 幽灵地雷
 	GodSlayerDart.DisplayName: 弑神者飞镖
 	HellfireExplosionFriendly.DisplayName: 地狱火爆炸
 	HellfireExplosionFriendly2.DisplayName: 地狱火爆炸 2
