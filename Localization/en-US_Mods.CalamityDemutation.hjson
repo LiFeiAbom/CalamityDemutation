@@ -429,6 +429,29 @@ Items: {
 			'''
 	}
 
+	AuricTeslaPlumedHelm: {
+		DisplayName: Auric Tesla Plumed Helm
+		Tooltip:
+			'''
+			20% increased rogue damage and critical strike chance
+			Not moving boosts all damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+
+			Rogue Tarragon, Bloodflare, God Slayer, and Silva armor effects
+			All projectiles spawn healing auric orbs on enemy hits
+			Max run speed and acceleration boosted by 10%
+			Rogue weapon critical strikes will do 1.25 times damage while you are above 50% HP
+			Rogue stealth builds while not attacking and not moving, up to a max of 160
+			Rogue stealth only reduces when you attack, it does not reduce while moving
+			The higher your rogue stealth the higher your rogue damage, crit, and movement speed
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
+	}
+
 	AuricTeslaSpaceHelmet: {
 		DisplayName: Auric Tesla Space Helmet
 		Tooltip:
@@ -1810,7 +1833,11 @@ Items: {
 
 	SilvaMask: {
 		DisplayName: Silva Mask
-		Tooltip: 13% increased rogue damage and critical strike chance
+		Tooltip:
+			'''
+			13% increased rogue damage and critical strike chance
+			20% increased movement speed
+			'''
 		SetBonus:
 			'''
 

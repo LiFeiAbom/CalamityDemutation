@@ -265,6 +265,26 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**盗贼线收尾·第五件 = 古圣金源复合盗贼头——金羽十杀盔（AuricTeslaPlumedHelm）**；
+  另按用户点名给始源林海面具补上 CI 的**移速 +20%**。
+  ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaPlumedHelm.cs`（贴图 30×20 / `_Head.png` 40×1120，
+  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、**防御 34**
+  （经典/CI 同值，源码同行另留 `//132`）、月后稀有度 20。
+  ② 套装（照经典版 1:1）：置位 `tarraSet+tarraThrowing` / `bloodflareSet+bloodflareThrowing` /
+  `godSlayer+godSlayerThrowing` / `silvaSet+silvaThrowing` / `auricSet`；另加荆棘 3、lavaMax 240、
+  ignoreWater、crimsonRegen、岩浆中 +30 防御 / +10 回血；**潜行上限 160**（`GrantRogueStealth(1.6f)`）。
+  按经典版原样**不置** `godSlayerDamage`、**不加** aggro、**套装不给额外盗贼伤害**。
+  ③ 四条盗贼效果全部由下位既有实现承接（本件只置位标记）：龙蒿的 25 次暴击免伤与带减益加伤、
+  血炎的生命阈值加成与暴击 50% 回血、弑神者的满血 +10% 属性与 >80 额外无敌帧、林海的 >50% 攻速 /
+  无敌后 +10% / 以及与 `auricSet` 联动的「>50% 生命时盗贼暴击 1.25 倍伤害」——
+  **最后这条正是本件套装文案里那一行**，也解释了经典版为什么把那段写在 `if (auricSet)` 里面。
+  ④ 单件：`auricBoost` + 盗贼伤害/暴击各 +20%（经典版原样）。
+  ⑤ 配方：四件下位**盗贼**头（龙蒿头盔 + 血饮魔精盔 + 弑神者面具 + 始源林海面具）＋
+  现代 AuricBar×10 / 经典 AuricOre×60 等 ＋妄想护符；两分支的坯料清单与另四颗金源头逐字一致。
+  ⑥ 中英本地化各补 `Items.AuricTeslaPlumedHelm`（en `Auric Tesla Plumed Helm` / zh **金羽十杀盔**，
+  两个名字都由用户给定）。**CI 对照结论见 9.3 第 7 条追记（CI 多移速 +25%、潜行写成 1.3+当前/6、
+  ArmorSetShadows 用轮廓线、且省掉了 lavaMax/岩浆奖励）。**
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线第四件 = 始源林海盗贼头——始源林海面具（SilvaMask）**。
   ⚠️ 命名：经典版里 **`SilvaMask` 才是盗贼头**（`SilvaHelm` 近战 / `SilvaHornedHelm` 射手 /
   `SilvaHelmet` 召唤 / `SilvaMaskedCap` 法师）；**现代版 Silva 套没有盗贼头**，CI 对应件 `SilvaHeadRogue`。
@@ -1183,13 +1203,23 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
    | 项 | 我们（源 = 经典版） | CI（SilvaHeadRogue） | 差异 |
    |---|---|---|---|
-   | 单件移速 | 无 | **+20%**（`moveSpeed += 0.2f`） | CI 多一条**移速** |
+   | 单件移速 | 无 | **+20%**（`moveSpeed += 0.2f`） | **已补**（用户 2026-10-06 点名，中英 tooltip 同步加了一行） |
    | 潜行上限 | **150**（1.5f） | **125**（1.25f） | CI 低 25 |
    | 无敌加伤的档位/时机 | 无敌**结束后**盗贼伤害 **+10%** | 无敌**窗口/冷却期**（`HasCooldown(SilvaRevive)` 或 `HasBuff(SilvaRevival)`）盗贼伤害 **+40%** | **档位与时机都不同**（CI 由 `SilvaRougeSetLegacy` 实现，见 `CalamityInheritancePlayerMiscEffects.cs:714/826`） |
    | 投掷速率 | 生命 >50% 盗贼攻速 +10%（本工程从 CI） | 同左（CI 的 UpdateArmorSet 原式） | 一致 |
 
    注：CI 的 `SilvaHeadRogue` 只挂 `SilvaRougeSetLegacy` + `SilvaRebornMark` + `AuricSilvaSet`，
    通用七条由 CI 自己的 Silva/Auric 体系承担；本工程的通用七条在 `silvaSet` 里（与其余四颗头共用）。
+
+   **2026-10-06 追记 · 金源复合盗贼头（AuricTeslaPlumedHelm）的 CI 对照（**待用户拍板**）：**
+
+   | 项 | 我们（源 = 经典版） | CI（AuricTeslaHeadRogue） | 差异 |
+   |---|---|---|---|
+   | 单件移速 | 无 | **+25%**（`moveSpeed += 0.25f`） | CI 多一条**移速** |
+   | 潜行上限 | **160**（`rogueStealthMax = 1.6f` 直接赋值） | **1.3 + 1.3/6 ≈ 152**（`+= 1.3f` 再 `+= 当前上限/6`） | 数值接近、写法不同 |
+   | lavaMax / 岩浆奖励 | 有（+240、泡岩浆 +30 防 +10 回血） | **没有** | CI 省掉了岩浆相关 |
+   | ArmorSetShadows | `armorEffectDrawShadow` | `armorEffectDrawOutlines` | 表现不同（工程一律走经典） |
+   | 配方 AuricBar | 工程口径 ×10（照 1.4.4 公开源码） | ×12 | 工程口径，不动 |
 
 > 改任何 tooltip 都要同步 `Localization/en-US_…hjson` 与 `zh-Hans_…hjson` 两处，并把行尾整回 CRLF（第 4 节口径）。
 

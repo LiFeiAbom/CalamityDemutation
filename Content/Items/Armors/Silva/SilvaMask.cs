@@ -10,7 +10,8 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
     ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；CI 对应件 SilvaHeadRogue）。
     /// 注意与同目录另外四颗区分：<see cref="SilvaHelm"/> 近战 / <see cref="SilvaHornedHelm"/> 射手 /
     /// <see cref="SilvaHelmet"/> 召唤 / <see cref="SilvaMaskedCap"/> 法师，经典版里这颗 <c>SilvaMask</c> 才是盗贼头。
-    /// 单件：盗贼伤害 +13%、盗贼暴击 +13%。
+    /// 单件：盗贼伤害 +13%、盗贼暴击 +13%、移速 +20%
+    ///（移速这一条经典版没有、取自 CI 的 SilvaHeadRogue，用户 2026-10-06 点名补上）。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1~7. 通用七条（免疫减益 / 治疗叶球 / 移速加速度 +5% / 免死无敌四连）——silvaSet，
     ///      与其余四颗头共用同一套实现（见 SilvaHelm / CalamityDemutationPlayer）
@@ -83,6 +84,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             player.GetDamage(rogue) += 0.13f;                  // 盗贼伤害 +13%
             player.GetCritChance(rogue) += 13;                 // 盗贼暴击率 +13%
             CDUtil.AddClassicThrowingStats(player, 0.13f, 13); // 经典版：写进它的自定义投掷字段（反射）
+            player.moveSpeed += 0.2f;                          // 移速 +20%（经典版没有，CI 的 SilvaHeadRogue 有，用户 2026-10-06 点名补上）
         }
         /// <summary>
         /// 配方：与其余始源林海头部逐字一致（经典分支照经典版源码；现代分支沿用工程既有写法），均需本模组材料 LeadCore
