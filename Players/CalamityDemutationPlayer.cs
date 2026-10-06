@@ -610,6 +610,15 @@ namespace CalamityDemutation.Players
         public bool silvaRanged = false;
         public bool silvaSet = false;
         /// <summary>
+        /// 始源林海召唤头（SilvaHelmet）套装标记：驱动免死无敌窗口结束后的召唤强化
+        ///（结束后 +2 仆从上限与 +10% 召唤伤害；对应经典版 CalamityPlayerPreTrailer 的 silvaSummon）
+        /// </summary>
+        public bool silvaSummon = false;
+        /// <summary>
+        /// 远古叶棱晶（SilvaCrystal）在场标记：由同名召唤增益每帧置位，供叶棱晶弹幕续命（对应源的 sCrystal）
+        /// </summary>
+        public bool sCrystal = false;
+        /// <summary>
         /// 塞壬娘（SirenLure）仆从在场标记：由 SirenLure 召唤增益每帧置位，受魅惑之饵驱动
         /// </summary>
         public bool sirenLureWaifu = false;
@@ -869,6 +878,8 @@ namespace CalamityDemutation.Players
             silvaMelee = false;
             silvaRanged = false;
             silvaSet = false;
+            silvaSummon = false;
+            sCrystal = false;
             sirenLureWaifu = false;
             soaring = false;
             sponge = false;
@@ -1039,6 +1050,8 @@ namespace CalamityDemutation.Players
             silvaMelee = false;
             silvaRanged = false;
             silvaSet = false;
+            silvaSummon = false;
+            sCrystal = false;
             sirenLureWaifu = false;
             soaring = false;
             sponge = false;
@@ -2730,6 +2743,10 @@ namespace CalamityDemutation.Players
                 double multiplier = (double)Player.statLife / (double)Player.statLifeMax2;
                 Player.GetDamage<MeleeDamageClass>() += (float)(multiplier * 0.2); //ranges from 1.2 times to 1 times
             }
+            // 始源林海召唤头（SilvaHelmet）：免死无敌窗口结束后 +2 仆从上限
+            //（经典版 CalamityPlayerPreTrailer.cs:3950 的 silvaSummon 分支原样）。
+            if (silvaCountdown <= 0 && hasSilvaEffect && silvaSummon)
+                Player.maxMinions += 2;
             // 始源林海射手套装：持远程武器时射速 +10%（silvaRanged）。
             // 经典版把它写成 UseTimeMultiplier 返回 1.1/1.2——tML 里该值 >1 表示「更慢」，与 tooltip 相反；
             // CI 的还原件（SilvaHeadRanged.UpdateArmorSet）按 +10% 远程攻速实现，本工程从 CI，让 tooltip 成真。
@@ -4358,6 +4375,11 @@ namespace CalamityDemutation.Players
             //  无敌窗口开启 + 射手头在套装内 + 本次弹幕属于远程职业）
             if (silvaRanged && silvaCountdown > 0 && hasSilvaEffect && proj.CountsAsClass<RangedDamageClass>())
                 damageMult += 0.4;
+            // 始源林海召唤头（SilvaHelmet）：免死无敌窗口结束后，召唤弹幕伤害 +10%
+            //（经典版 CalamityPlayerPreTrailer.ModifyHitNPCWithProj 的 damageMult += 0.1；
+            //  源判据 isSummon = minion || sentry || 白名单，这里用召唤职业作等价判定）
+            if (silvaSummon && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<SummonDamageClass>())
+                damageMult += 0.1;
             // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 CI 模型，
             // 取代原先经典版的 1/max(15, 100-暴击率) 单次骰子：
             // · 总暴击率 >100% 时，按「溢出部分」（总暴击率 − 100）的百分比概率触发（CI 的 randomChance > 1 分支）；

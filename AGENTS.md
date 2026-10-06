@@ -265,6 +265,32 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**召唤线第四件 = 始源林海召唤头（SilvaHelmet）+ 远古叶棱晶（SilvaCrystal）**。
+  口径同前三件：单件照经典版（出处 = `CalamityModClassic-cal-1.4.2.101`，即 CalamityModClassicPreTrailer）、
+  套装效果走经典版、并额外挂统一三条 +11%。
+  ① 新增 `Content/Items/Armors/Silva/SilvaHelmet.cs`（贴图 `SilvaHelmet.png` 20×20 / `SilvaHelmet_Head.png` 40×1120
+  取自经典版）：18x18（经典源码即 18）、价值 90 金、**防御 13**（经典版召唤头值，源码同行另留 `//110`）、月后稀有度 15；
+  单件 **+5 仆从上限** + 统一三条（召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度各 +11%）。
+  显示名：en `Silva Helmet`、zh **始源林海头盔**（用户未点名，按经典源直译；与近战头「始源林海战盔」区分）。
+  ② 套装 `silvaSet` + 新增 `silvaSummon`：**+75% 召唤伤害**（经典版原样），并在主人端补 `SilvaCrystal` 增益 +
+  生成一只远古叶棱晶（伤害基准 1500，`originalDamage` 交给 tML 每帧按召唤伤害重算）。
+  ③ 新增弹幕 `Content/Projectiles/Summon/SilvaCrystal.cs`（钉在主人头顶上方 60 像素、淡入、锁定 1500 像素内目标后
+  每 25 帧朝目标射 3 枚爆裂、本体 `CanDamage=false`）与 `SilvaCrystalExplosion.cs`（原地停留 60 帧、拉一道指向本体的光带、
+  消亡时把判定框撑到 60×60 手工 `Damage()`），以及增益 `Content/Buffs/SummonBuffs/SilvaCrystal.cs`
+  （无时间条、无存档；靠玩家侧 `sCrystal` 与弹幕互为续命）。源裸数字尘 267 已 Cecil 反查为 `DustID.RainbowMk2`。
+  **与源的两处差异**：(a) 源用灾厄扩展 `SafeDirectionTo`，tML 只有 `DirectionTo`，按经典源的 `HasNaNs()` 兜底实现；
+  (b) 源里"仆从伤害变化时重算 `Projectile.damage`"依赖 `CalamityGlobalProjectile`，工程没有该全局，改用 tML 原生
+  `originalDamage`——Cecil 已确认 `NewProjectile` 经 `ApplyStatsFromSource` 自动写 `originalDamage`，且只有
+  `minion/sentry/ContinuouslyUpdateDamageStats` 才每帧按 `GetTotalDamage(DamageType).ApplyTo(originalDamage)` 重算，
+  故爆炸（非 minion）不会被二次缩放、叶棱晶（minion）会随配装实时更新。
+  ④ 玩家侧新增 `silvaSummon` / `sCrystal`（字段 + `ResetEffects` 与 `UpdateDead` 两处复位）；两条召唤向效果：
+  (a)「无敌窗口结束后 +2 仆从上限」→ `PostUpdateMiscEffects`（经典版 `CalamityPlayerPreTrailer.cs:3950` 原样）；
+  (b)「无敌窗口结束后召唤弹幕伤害 +10%」→ `ModifyHitNPCWithProj`（经典版同函数的 `damageMult += 0.1`，
+  判据由源的 `isSummon = minion || sentry || 白名单` 换成召唤职业等价判定）。
+  ⑤ 配方与其余始源林海头逐字一致（现代 CosmicAnvil / 经典 DraedonsForge，双版本各需本模组 `LeadCore`）；
+  中英本地化各补 `Items.SilvaHelmet`（DisplayName / Tooltip / SetBonus）、`Buffs.SilvaCrystal`、
+  `Projectiles.SilvaCrystal.DisplayName`、`Projectiles.SilvaCrystalExplosion.DisplayName`，行尾已整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检 144 条全命中。
 - **2026-10-05 全天一览（11 笔，倒序）**：`f812d5a` PvP 无法精确镜像的 5 处改近似（破防 / 必暴 / 暴伤期望值折算 / 泰拉电击）｜
   `4ba77a0` **PvP 全覆盖审计**（补齐 8 处，重点是 GlobalItem/GlobalProjectile 补 `ModifyHitPvp` / `ModifyHitPlayer`，
   套装增伤在 PvP 才终于生效）｜`9dbd662` §9.3 第 5 条改写为"逐套补职业头"长期任务并记进度｜
@@ -804,8 +830,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    **进度（2026-10-05）**：
    - **射手头**：龙蒿 / 血炎 / 弑神者 / 始源林海 / 金源五套已补（见第 8 节逐笔；金源那颗是「合并下位四套」的
      `AuricTeslaHoodedFacemask`）；只剩欧米茄蓝（OmegaBlue，**三个源都没有职业头**，要做就是自创件）待定。
-   - **召唤头**：龙蒿角盔（`TarragonHornedHelm`）/ 血炎狂龙盔（`BloodflareHelmet`）/ 弑神者角盔（`GodSlayerHornedHelm`）
-     三套已补，见第 8 节逐笔。**剩始源林海、金源**。三套共用同一条统一口径：
+   - **召唤头**：龙蒿角盔（`TarragonHornedHelm`）/ 血炎狂龙盔（`BloodflareHelmet`）/ 弑神者角盔（`GodSlayerHornedHelm`）/
+     始源林海头盔（`SilvaHelmet`，2026-10-06 补）四套已补，见第 8 节逐笔。**剩金源**。各套共用同一条统一口径：
      **召唤伤害 +11% / 鞭子攻击范围 +11% / 鞭子攻击速度 +11%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%）。
    - **法师头**：尚未开始（每套还差 1 件）。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。

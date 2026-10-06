@@ -64,6 +64,11 @@ Buffs: {
 		Description: Speed is boosted
 	}
 
+	SilvaCrystal: {
+		DisplayName: Silva Crystal
+		Description: The crystal will protect you
+	}
+
 	SilvaHysteresis: {
 		DisplayName: Silva Hysteresis
 		Description: Heavy yet crumbling
@@ -1605,6 +1610,31 @@ Items: {
 			'''
 	}
 
+	SilvaHelmet: {
+		DisplayName: Silva Helmet
+		Tooltip:
+			'''
+			+5 max minions
+			11% increased summon damage
+			11% increased whip range
+			11% increased whip attack speed
+			'''
+		SetBonus:
+			'''
+
+			75% increased summon damage
+			You are immune to almost all debuffs
+			All projectiles spawn healing leaf orbs on enemy hits
+			Max run speed and acceleration boosted by 5%
+			If you are reduced to 1 HP you will not die from any further damage for 10 seconds
+			If you get reduced to 1 HP again while this effect is active you will lose 100 max life
+			This effect only triggers once per life and if you are reduced to 400 max life the invincibility effect will stop
+			Your max life will return to normal if you die
+			Summons an ancient leaf prism to blast your enemies with life energy
+			After the silva invulnerability your minions will deal 10% more damage and you will gain +2 max minions
+			'''
+	}
+
 	SilvaHornedHelm: {
 		DisplayName: Silva Horned Helm
 		Tooltip: 13% increased ranged damage and critical strike chance
@@ -2190,6 +2220,8 @@ Projectiles: {
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
 	SandyWaifu.DisplayName: Waifu
+	SilvaCrystal.DisplayName: Silva Crystal
+	SilvaCrystalExplosion.DisplayName: Explosion
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song

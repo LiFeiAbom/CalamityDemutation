@@ -64,6 +64,11 @@ Buffs: {
 		Description: 移动速度提升
 	}
 
+	SilvaCrystal: {
+		DisplayName: 始源林海水晶
+		Description: 水晶会保护你
+	}
+
 	SilvaHysteresis: {
 		DisplayName: 始源林海迟滞
 		Description: 沉重却正在崩解
@@ -1606,6 +1611,31 @@ Items: {
 			'''
 	}
 
+	SilvaHelmet: {
+		DisplayName: 始源林海头盔
+		Tooltip:
+			'''
+			仆从上限 +5
+			召唤伤害提高 11%
+			鞭子攻击范围提高 11%
+			鞭子攻击速度提高 11%
+			'''
+		SetBonus:
+			'''
+
+			召唤伤害提高 75%
+			你免疫几乎所有减益
+			所有弹幕命中敌人时生成治疗叶球
+			最大奔跑速度与加速度提高 5%
+			生命被压至 1 点时，10 秒内你不会因任何后续伤害死亡
+			若该效果生效期间再次被压至 1 点生命，你会失去 100 最大生命
+			该效果每条命只触发一次；最大生命降至 400 时，无敌效果会停止
+			死亡后最大生命会恢复正常
+			召唤一枚远古叶棱晶，用生命能量轰击你的敌人
+			始源林海无敌结束后，你的仆从伤害提高 10%，且仆从上限 +2
+			'''
+	}
+
 	SilvaHornedHelm: {
 		DisplayName: 始源林海角盔
 		Tooltip: 远程伤害与暴击率提高 13%
@@ -2189,6 +2219,8 @@ Projectiles: {
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
 	SandyWaifu.DisplayName: 沙元素
+	SilvaCrystal.DisplayName: 始源林海水晶
+	SilvaCrystalExplosion.DisplayName: 爆裂
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
