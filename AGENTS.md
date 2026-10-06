@@ -265,6 +265,34 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**盗贼线开线·第一件 = 龙蒿盗贼头——龙蒿头盔（TarragonHelmet）**。
+  ⚠️ **命名坑**：经典版里 **`TarragonHelmet` 才是盗贼头**（`TarragonHelm` 近战 / `TarragonMask` 法师 /
+  `TarragonVisage` 射手 / `TarragonHornedHelm` 召唤）；现代版对应 `TarragonHeadRogue`，显示名同为 Tarragon Helmet。
+  ① 新增 `Content/Items/Armors/Tarragon/TarragonHelmet.cs`（贴图 `TarragonHelmet.png` 24×24 /
+  `_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 50 金、
+  **防御 15**（源码同行另留 `//98`）、月后稀有度 12。
+  ② 单件（照经典版）：盗贼伤害 +10% / 盗贼暴击 +10%（经 `CDUtil.GetRogueDamageClass` 加类、
+  另走经典版投掷桥 `CDUtil.AddClassicThrowingStats`）、减伤 +5%、lavaMax +240、ignoreWater、
+  四条 debuff 免疫（诅咒地狱 / 着火了 / 诅咒 / 冷冻）。
+  ③ 套装 `tarraSet + tarraThrowing` + **潜行上限 130**（`CDUtil.GrantRogueStealth(player, 1.3f)`），
+  三条盗贼专属效果（照经典版 CalamityPlayerPreTrailer.cs:3179 / 3870-3891 / 6158）：
+  (a)「每 25 次盗贼暴击 → 5 秒免伤」——**计数**在 `CalamityDemutationGlobalProjectile.OnHitNPC`
+  （判据 `hit.Crit && CDUtil.IsRogueProjectile(projectile)`，且冷却归零、未满 25）；
+  **触发**与「免伤帧上限放宽到 300（源里非盗贼套是 120）」都在 `PostUpdateMiscEffects`，冷却 1800 帧（30 秒）。
+  (b)「带减益时 +10% 盗贼伤害」——同处每帧扫 buff 槽；**源是按减益槽逐条累加**（挂 3 条 = +30%），
+  与 tooltip 的单数说法不符，属源实现如此，本工程照源。
+  ④ **盗贼弹幕判定**（本次新增 `CDUtil.IsRogueProjectile`）：现代版盗贼武器在 SetDefaults 里
+  `Item.DamageType = RogueDamageClass.Instance`（弹幕继承该类型）→ 按类判定即可；
+  **经典版盗贼弹幕不带 DamageType**（武器不带类型、伤害靠 `throwingDamage` 自定义倍率），
+  盗贼身份记在它自己的 `CalamityGlobalProjectile.rogue` 布尔上 → 反射读该全局弹幕实例的字段
+  （句柄缓存，且只在暴击路径调用）。
+  ⑤ 玩家侧新增 `tarraThrowing` / `tarraThrowingCrits` / `tarraThrowingCritTimer`：
+  `tarraThrowing` 随 `ResetEffects` 与 `UpdateDead` 复位；**暴击计数照源不随 ResetEffects 复位**
+  （只在触发与死亡时清零）；冷却只在死亡清零、`PostUpdateMiscEffects` 里递减。
+  ⑥ 配方与其余龙蒿头逐字一致（现代 UelibloomBar×12 + DivineGeode×6 / 经典 UeliaceBar×7 + DivineGeode×6，月台）；
+  中英本地化各补 `Items.TarragonHelmet`（en `Tarragon Helmet`、zh **龙蒿头盔**——按本套「Helm→战盔」的对照，
+  Helmet 取「头盔」；与弑神者那套的对照正好相反，别被带偏）。
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**移植盗贼魔影头——魔影面罩（DemonshadeHelmRogue）**，
   顺带把「盗贼伤害类」与「盗贼潜行值」这两条跨模组接口查清并落地。
   ① 新增 `Content/Items/Armors/Demonshade/DemonshadeHelmRogue.cs`：源 = 灾厄大修（CWR）0.4.0.1.3 的

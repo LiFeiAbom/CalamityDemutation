@@ -265,5 +265,62 @@ namespace CalamityDemutation.Utilities
 
         /// <summary>是否已探测过经典版投掷字段（无论成败只探测一次）</summary>
         private static bool classicThrowingDamageProbed;
+
+        /// <summary>是否已探测过经典版的盗贼弹幕标记（无论成败只探测一次）</summary>
+        private static bool classicRogueProjProbed;
+        /// <summary>经典版 CalamityGlobalProjectile.rogue 的字段句柄</summary>
+        private static FieldInfo classicRogueFlagField;
+        /// <summary>Projectile.GetGlobalProjectile&lt;CalamityGlobalProjectile&gt;() 的方法句柄</summary>
+        private static MethodInfo classicGetGlobalProjectile;
+
+        /// <summary>
+        /// 判定一个弹幕算不算「盗贼」弹幕（龙蒿/魔影盗贼套的「每 25 次盗贼暴击」计数用）。
+        /// <para>
+        /// 现代版：灾厄盗贼武器在 SetDefaults 里写 <c>Item.DamageType = RogueDamageClass.Instance</c>，
+        /// 弹幕继承该类型 → <c>CountsAsClass(真·盗贼类)</c> 即可命中。
+        /// </para>
+        /// <para>
+        /// 经典版：它的盗贼弹幕**没有 DamageType**（武器不带类型，伤害靠
+        /// <c>CalamityCustomThrowingDamagePlayer.throwingDamage</c> 那个自定义倍率结算），
+        /// 盗贼身份记在它自己的 <c>CalamityGlobalProjectile.rogue</c> 布尔上（由各盗贼弹幕自己置位）
+        /// → 只能反射读该全局弹幕实例的字段。
+        /// </para>
+        /// <para>两版各查一次（允许同时装两个模组），任一命中即算盗贼。只在暴击命中路径上调用，开销可接受。</para>
+        /// </summary>
+        public static bool IsRogueProjectile(Projectile projectile)
+        {
+            if (ModLoader.HasMod("CalamityMod") && projectile.CountsAsClass(GetRogueDamageClass()))
+                return true;
+            return IsClassicRogueProjectile(projectile);
+        }
+
+        /// <summary>
+        /// 经典版判定：反射读 <c>CalamityGlobalProjectile.rogue</c>。句柄只在首次调用时探测并缓存。
+        /// </summary>
+        private static bool IsClassicRogueProjectile(Projectile projectile)
+        {
+            if (!classicRogueProjProbed)
+            {
+                classicRogueProjProbed = true;
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
+                {
+                    Type classicGlobalProjType = classic.Code.GetTypes()
+                        .FirstOrDefault(t => t.Name == "CalamityGlobalProjectile" && t.IsSubclassOf(typeof(GlobalProjectile)));
+                    FieldInfo rogueField = classicGlobalProjType?.GetField("rogue", BindingFlags.Public | BindingFlags.Instance);
+                    MethodInfo getter = classicGlobalProjType == null
+                        ? null
+                        : typeof(Projectile).GetMethod("GetGlobalProjectile", Type.EmptyTypes)?.MakeGenericMethod(classicGlobalProjType);
+                    if (rogueField != null && getter != null)
+                    {
+                        classicRogueFlagField = rogueField;
+                        classicGetGlobalProjectile = getter;
+                    }
+                }
+            }
+            if (classicRogueFlagField == null || classicGetGlobalProjectile == null)
+                return false;
+            return classicGetGlobalProjectile.Invoke(projectile, null) is GlobalProjectile classicGlobal
+                && classicRogueFlagField.GetValue(classicGlobal) is bool isRogue && isRogue;
+        }
     }
 }

@@ -709,6 +709,18 @@ namespace CalamityDemutation.Players
         /// </summary>
         public int tarraLifeAuraTimer = 0;
         /// <summary>
+        /// 龙蒿套装·盗贼向（TarragonHelmet 的套装标记）：每 25 次盗贼暴击触发 5 秒免伤（30 秒冷却），
+        /// 带减益时 +10% 盗贼伤害；潜行上限 130 由该头盔的 UpdateArmorSet 经 CDUtil.GrantRogueStealth 补给灾厄侧。
+        /// </summary>
+        public bool tarraThrowing = false;
+        /// <summary>
+        /// 盗贼暴击计数（满 25 触发免伤并清零）。照经典版口径：**不随 ResetEffects 复位**，
+        /// 只在触发与死亡时清零。
+        /// </summary>
+        public int tarraThrowingCrits = 0;
+        /// <summary>盗贼免伤的跨帧冷却（源 1800 帧 = 30 秒；只在死亡时复位，PostUpdateMiscEffects 里递减）</summary>
+        public int tarraThrowingCritTimer = 0;
+        /// <summary>
         /// 泰拉巨刃在 **PvP** 下的电击命中计数：与 PvE 侧 <c>GlobalNPC.TerratomereBoltOnHitNum</c> 同构
         ///（每次命中 +1、上限 6，超过 5 触发一次爆炸后清零）。
         /// 差异：PvE 的计数挂在每个敌怪身上，玩家侧没有 GlobalPlayer 载体，故记在**攻击者**身上
@@ -938,6 +950,7 @@ namespace CalamityDemutation.Players
             tarraRanged = false;
             tarraSet = false;
             tarraSummon = false;
+            tarraThrowing = false;
             theAmalgam = false;
             theAbsorber = false;
             theCommunity = false;
@@ -1120,6 +1133,9 @@ namespace CalamityDemutation.Players
             tarraRanged = false;
             tarraSet = false;
             tarraSummon = false;
+            tarraThrowing = false;
+            tarraThrowingCrits = 0;
+            tarraThrowingCritTimer = 0;
             theAmalgam = false;
             theAbsorber = false;
             theCommunity = false;
@@ -2655,6 +2671,36 @@ namespace CalamityDemutation.Players
             //（经典版 CalamityPlayerPreTrailer.cs:3796 为无条件递减）
             if (tarraMageHealCooldown > 0)
                 tarraMageHealCooldown--;
+            // 龙蒿盗贼头（TarragonHelmet）的 tarraThrowing 套装效果
+            //（照经典版 CalamityPlayerPreTrailer.cs:3179 与 3870-3891）：
+            // ① 免伤帧上限放宽到 300（5 秒）——这是下面那条"5 秒免伤"能站得住的前提（源里非盗贼套时上限是 120）；
+            // ② 每 25 次盗贼暴击（计数在 GlobalProjectile.OnHitNPC）触发一次 5 秒免伤 + 30 秒冷却；
+            // ③ 身上每挂一条减益就 +10% 盗贼伤害——**源是按 buff 槽逐条累加**（挂 3 条就是 +30%），
+            //    与 tooltip 的单数说法不符，属源实现如此，本工程照源。
+            if (tarraThrowing)
+            {
+                if (Player.immuneTime > 300)
+                    Player.immuneTime = 300;
+                if (tarraThrowingCritTimer > 0)
+                    tarraThrowingCritTimer--;
+                if (tarraThrowingCrits >= 25)
+                {
+                    tarraThrowingCrits = 0;
+                    tarraThrowingCritTimer = 1800;   // 30 秒冷却
+                    Player.immune = true;
+                    Player.immuneTime = 300;         // 5 秒免伤
+                }
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                for (int i = 0; i < Player.buffTime.Length; i++)
+                {
+                    int buffType = Player.buffType[i];
+                    if (buffType > 0 && Player.buffTime[i] > 0 && Main.debuff[buffType] && !IsBuffInCommunityBlacklist(buffType))
+                    {
+                        Player.GetDamage(rogue) += 0.1f;                  // 现代版：直接加到盗贼伤害类
+                        CDUtil.AddClassicThrowingStats(Player, 0.1f, 0);  // 经典版：加到它的自定义投掷倍率
+                    }
+                }
+            }
             if (bloodflareSet)
             {
                 if (bloodflareHeartTimer > 0)

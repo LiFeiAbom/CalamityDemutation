@@ -164,6 +164,16 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
+            // 龙蒿盗贼套装（tarraThrowing）的「每 25 次盗贼暴击」计数
+            //（照经典版 CalamityPlayerPreTrailer.cs:6158：要求暴击 + 弹幕算盗贼弹幕，且冷却归零、未满 25；
+            //  判定方式见 CDUtil.IsRogueProjectile——现代版按 RogueDamageClass，经典版读它自己的
+            //  CalamityGlobalProjectile.rogue，因为经典盗贼弹幕不带 DamageType）。
+            CalamityDemutationPlayer roguePlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (roguePlayer.tarraThrowing && roguePlayer.tarraThrowingCritTimer <= 0 && roguePlayer.tarraThrowingCrits < 25
+                && hit.Crit && CDUtil.IsRogueProjectile(projectile))
+            {
+                roguePlayer.tarraThrowingCrits++;
+            }
             // 龙蒿法师套装（tarraMage）的两件事（口径照经典版 CalamityGlobalProjectile.cs:440-462）：
             // ① 统计魔法暴击次数，满 5 由 CalamityDemutationGlobalItem.Shoot 喷出叶暴风；
             // ② 命中时按弹幕伤害回血：比例 = 0.03 - numHits × 0.015，剂量 = 弹幕伤害 ÷50（穿金源时 ÷100），
