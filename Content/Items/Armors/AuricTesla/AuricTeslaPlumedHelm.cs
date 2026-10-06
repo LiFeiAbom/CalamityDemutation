@@ -87,7 +87,8 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// 单件效果：置位 auricBoost 标记（静止时增伤/增暴击与击退加成），
         /// 并提升盗贼伤害 20%、盗贼暴击 20%（经典版 UpdateEquip 原样；
         /// 源里写的是 <c>CalamityCustomThrowingDamagePlayer.throwingDamage += 0.2f / throwingCrit += 20</c>）。
-        /// 注意 CI 的对应件单件还多一条移速 +25%（经典版没有），本工程照经典暂未接入——见工程记忆 9.3 第 7 条的对照结论。
+        /// 另加**移速 +25%**——这一条经典版没有、是 **CI 对应件 AuricTeslaHeadRogue** 的设计，
+        /// 用户 2026-10-06 对 CI 照后点名补上（CI 五颗金源头里只有盗贼这颗带移速）。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
@@ -97,6 +98,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             player.GetDamage(rogue) += 0.2f;                    // 盗贼伤害 +20%
             player.GetCritChance(rogue) += 20;                  // 盗贼暴击率 +20%
             CDUtil.AddClassicThrowingStats(player, 0.2f, 20);   // 经典版：写进它的自定义投掷字段（反射）
+            player.moveSpeed += 0.25f;                          // 移速 +25%（CI 的 AuricTeslaHeadRogue 原样）
         }
         /// <summary>
         /// 配方：由龙蒿头盔 + 血炎魔盔 + 弑神者面具 + 始源林海面具（四件下位**盗贼**头）升阶。

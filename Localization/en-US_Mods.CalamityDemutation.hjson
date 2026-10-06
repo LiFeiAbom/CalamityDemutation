@@ -434,6 +434,7 @@ Items: {
 		Tooltip:
 			'''
 			20% increased rogue damage and critical strike chance
+			25% increased movement speed
 			Not moving boosts all damage and critical strike chance
 			'''
 		SetBonus:

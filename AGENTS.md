@@ -1215,7 +1215,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
    | 项 | 我们（源 = 经典版） | CI（AuricTeslaHeadRogue） | 差异 |
    |---|---|---|---|
-   | 单件移速 | 无 | **+25%**（`moveSpeed += 0.25f`） | CI 多一条**移速** |
+   | 单件移速 | 无 | **+25%**（`moveSpeed += 0.25f`） | **已补**（用户 2026-10-06 点名；CI 五颗金源头里只有盗贼这颗带移速，中英 tooltip 同步加了一行） |
    | 潜行上限 | **160**（`rogueStealthMax = 1.6f` 直接赋值） | **1.3 + 1.3/6 ≈ 152**（`+= 1.3f` 再 `+= 当前上限/6`） | 数值接近、写法不同 |
    | lavaMax / 岩浆奖励 | 有（+240、泡岩浆 +30 防 +10 回血） | **没有** | CI 省掉了岩浆相关 |
    | ArmorSetShadows | `armorEffectDrawShadow` | `armorEffectDrawOutlines` | 表现不同（工程一律走经典） |
