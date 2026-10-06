@@ -1270,3 +1270,60 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    现代灾厄**已经没有 AuricOrb**（只有 SilvaOrb，走 `HealingProjectile` 体系）。
    `Content/Projectiles/Melee/GodSlayerDart.cs` 则来自 CI 的 `ArmorProj/GodslayerDart.cs`（两段式），
    不是灾厄本体的 `GodKiller`（一代只有"被打 80+ 触发的单段直飞"）。
+
+## 10. 饰品速查（血神核心及其下位，2026-10-06 侦察）
+
+> 用户 2026-10-06 点名「查找饰品：血神核心，展示属性及其下位」。本节记该链的完整属性 / 来源 / 命名对照，
+> 供后续饰品类任务直接引用；以后侦察到别的饰品链也往这里追加（按物品或链分小节即可）。
+
+### 10.1 合成树
+
+```
+血神核心 CoreOfTheBloodGod
+├─ 血腥蠕虫围巾 BloodyWormScarf ← 血腥蠕虫牙 BloodyWormTooth + 虫围巾(ItemID.WormScarf)（现代另 +暗影之魂×3）@ 秘银砧
+├─ 血契 BloodPact
+├─ 血肉图腾 FleshTotem
+└─ 血炎晶核 BloodflareCore
+```
+
+四件前置件都是「血神核心」的合成素材；其中**血炎晶核 / 血契 / 血肉图腾没有配方、靠掉落**，
+只有**血腥蠕虫围巾**是可合成的下位件（它下位又是掉落的血腥蠕虫牙）。
+
+### 10.2 逐件属性（工程现值）
+
+| 物品（显示名） | 内部名 | 尺寸/价值/稀有度 | 效果 | 来源 |
+|---|---|---|---|---|
+| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；减伤 +10%；**近战攻速 +10%（2026-10-06 用户追加）**；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半 | 合成（见 10.3） |
+| 血炎晶核 | `BloodflareCore`（Comprehensive） | 26×26 / 45 金 / 专家 | 吸血光环；防御<100 → +15% 通用伤害；生命≤50% → 减伤+15%/通用伤害+10%/暴击+10%；生命≤15% → 减伤+30%/通用伤害+20%/暴击+20% | 掠夺者（Ravager）宝藏袋，需已击败亵渎（`BossSystem.Providence`） |
+| 血腥蠕虫围巾 | `BloodyWormScarf`（JobAcc/Melee，`EquipType.Neck`） | 26×42 / 15 金 / 专家 | 近战伤害 +10%、近战攻速 +10%、减伤 +15% | 合成（见 10.3） |
+| 血契 | `BloodPact`（Defense） | 26×26 / 24 金 / 黄 | 最大生命翻倍；代价是 25% 概率被暴击（受击约 ×2.5） | 掠夺者宝藏袋 |
+| 血肉图腾 | `FleshTotem`（Defense） | 26×26 / 24 金 / 黄 | 敌怪接触伤害减半，触发后 20 秒冷却（1200 帧） | 掠夺者宝藏袋 |
+| 血腥蠕虫牙 | `BloodyWormTooth`（JobAcc/Melee） | 12×15 / 9 金 / 专家 | 生命<50% → 近战伤害/攻速/减伤各 +10%；否则各 +5% | 毁灭者（Perforator）宝藏袋 |
+
+### 10.3 配方
+
+- **血神核心**：血腥蠕虫围巾 + 血契 + 血肉图腾 + 血炎晶核，
+  现代版另 + `CosmiliteBar`×5 + `Necroplasm`×5 @ 宇宙砧；经典版另 + `CosmiliteBar`×5 + `Phantoplasm`×5 @ 德雷顿熔炉。
+- **血腥蠕虫围巾**：血腥蠕虫牙 + `ItemID.WormScarf`（现代版另 + `ItemID.SoulofNight`×3）@ 秘银砧。
+
+### 10.4 实现锚点（改这几件时看这里）
+
+- 装备标志位：`CalamityDemutationPlayer` 里 `coreOfTheBloodGod` / `bloodflareCore` / `bloodyWormScarf` /
+  `bloodyWormTooth` / `bloodPact` / `fleshTotem`（均每帧由 `ResetEffects` + `OnEnterWorld` 复位），
+  另有 `fleshTotemCooldown`（int，死亡时清零）。
+- 结算相位：`PostUpdateMiscEffects` 里 `bloodflareCore` 块（吸血光环 + 低血/低防加成）、`coreOfTheBloodGod` 块
+  （本体属性 + 光环）、`bloodyWormScarf` / `bloodyWormTooth`（近战）、`bloodPact`（生命翻倍）。
+- **血神核心"继承血肉图腾"是靠 `UpdateAccessory` 里顺带置 `fleshTotem = true`**（不是配方残留）——
+  接触伤害减半的统一入口在 `ModifyHitByNPC`：`if (fleshTotem && fleshTotemCooldown <= 0) { fleshTotemCooldown = 1200; modifiers.FinalDamage *= 0.5f; }`。
+- **吸血光环**：`PostUpdateMiscEffects` 里 `Projectile.NewProjectile(..., ProjectileID.SoulDrain, 40, 0f, Main.myPlayer, 0f, 0f)`
+  并把返回值设 `usesLocalNPCImmunity = true` / `localNPCHitCooldown = 5`；**只在 `Player.whoAmI == Main.myPlayer` 生成**（联机口径，见第 5 节）。
+- **血契代价**在 `ModifyHurt`：`damageMult = 1.0 + ((bloodPact && Main.rand.NextBool(4)) ? 1.5 : 0.0) + (enraged ? 0.25 : 0.0)`。
+
+### 10.5 命名对照（代码注释 vs 本地化显示名，对不上，以显示名为准）
+
+| 内部名 | 代码注释写的 | 本地化显示名（zh） | en |
+|---|---|---|---|
+| `BloodflareCore` | 血耀核心 | **血炎晶核** | Blood flare Core |
+| `BloodyWormScarf` | 血蠕虫围巾 | **血腥蠕虫围巾** | Bloody Worm Scarf |
+| `BloodyWormTooth` | 血蠕虫牙 | **血腥蠕虫牙** | Bloody Worm Tooth |
+| `CoreOfTheBloodGod` / `BloodPact` / `FleshTotem` | 血神核心 / 血契 / 血肉图腾 | 一致 | Core Of The Blood God / Blood Pact / Flesh Totem |
