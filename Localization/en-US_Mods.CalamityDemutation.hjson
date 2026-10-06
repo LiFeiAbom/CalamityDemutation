@@ -1280,6 +1280,27 @@ Items: {
 			'''
 	}
 
+	GodSlayerVisage: {
+		DisplayName: God Slayer Visage
+		Tooltip:
+			'''
+			14% increased magic damage and critical strike chance
+			+100 max mana
+			'''
+		SetBonus:
+			'''
+
+			You will survive fatal damage and will be healed {1} HP if an attack would have killed you
+			This effect can only occur once every 45 seconds
+			While the cooldown for this effect is active you gain a 10% increase to all damage
+			Enemies will release god slayer flames and healing flames when hit with magic attacks
+			Taking damage will cause you to release a magical god slayer explosion
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
+	}
+
 	GrandGelatin: {
 		DisplayName: Grand Gelatin
 		Tooltip:
@@ -2259,7 +2280,10 @@ Projectiles: {
 	GalaxyBlast.DisplayName: Galaxy Blast
 	GhostlyBolt.DisplayName: Ghostly Bolt
 	GhostlyMine.DisplayName: Ghostly Mine
+	GodSlayerBlaze.DisplayName: Blaze
 	GodSlayerDart.DisplayName: God Slayer Dart
+	GodSlayerHealOrb.DisplayName: God Slayer Heal Orb
+	GodSlayerOrb.DisplayName: God Slayer Orb
 	GodSlayerPhantom.DisplayName: God Slayer Phantom
 	HellfireExplosionFriendly.DisplayName: Explosion
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2

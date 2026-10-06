@@ -265,6 +265,37 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**法师线第三件 = 弑神者法师头——弑神者面甲（GodSlayerVisage）**。
+  ⚠️ **命名坑**：经典版里 `GodSlayerMask` 是**盗贼头**（工程无盗贼职业故不移植），法师头叫
+  `GodSlayerVisage` —— 别再按名字猜。现代版已无此件，CI 对应件 `GodSlayerHeadMagicold`（数值同为防 21 / 14-14）。
+  ① 新增 `Content/Items/Armors/GodSlayer/GodSlayerVisage.cs`（贴图 `GodSlayerVisage.png` 20×24 /
+  `_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 75 金、
+  **防御 21**（源码同行另留 `//96`）、月后稀有度 14。
+  ② 单件：魔法伤害 +14%、魔法暴击 +14%、最大法力 +100（经典版 UpdateEquip 原样）。
+  ③ 套装 `godSlayer + godSlayerMage`（**不置** `godSlayerDamage` / `godSlayerSummon`——那两组分别是
+  近战头 / 召唤头专属），两条法师专属效果（都照经典版）：
+  (a)「魔法攻击命中敌人时释放弑神者烈焰与治疗烈焰」——`CalamityDemutationGlobalProjectile.OnHitNPC` 里
+  在 800 像素内挑目标（优先有视线且距离 >50 的），射一枚 **GodSlayerOrb**（半伤 ×1.5，穿金源 ×2.0，
+  ai[0] = 目标索引）；目标可吸血时再补一枚 **GodSlayerHealOrb** 飞向 1200 像素内血亏最多的队友
+  （治疗比例 0.06 / 穿金源 0.03，随 numHits 每层再 -0.015）。**节流预算 `godSlayerDmg` 与召唤侧的
+  弑神幻影共用**（经典版原本就共用同一个字段），每帧衰减 2.5。
+  (b)「受到伤害时释放魔法弑神爆炸」——`CalamityDemutationPlayer.PostHurt` 里炸一枚 **GodSlayerBlaze**
+  （伤害 = 穿金源 2400 / 否则 1200），带主人端判据（该钩子每名玩家 × 每一端都跑）。
+  ④ 新增三个弹幕（都补了 `OnHitPlayer` 镜像，沿用 PvP 全覆盖审计口径）：
+  - `Content/Projectiles/Typeless/GodSlayerOrb.cs`：4×4、穿透 1、穿地形、200 帧、额外 1 次更新；
+    以 12 像素/帧上限追踪 600 像素内最近的、有视线的敌人（速度按 20:1 插值）；命中挂 200 帧弑神者地狱火。
+  - `Content/Projectiles/Typeless/GodSlayerBlaze.cs`：250×250、无限穿透、每敌 5 帧局部无敌；源把 ai[0] 当
+    **半径累加器**（每帧 +4、每帧尘量由 25 递减到 0，半径 >230 自毁，实际约 58 帧）；命中挂 500 帧地狱火。
+  - `Content/Projectiles/Healing/GodSlayerHealOrb.cs`：4×4、240 帧、额外 3 次更新；朝 ai[0] 指定的玩家
+    加速（上限 6.5），接触回 ai[1] 点生命，主人端结算 + `MessageID.SpiritHeal` 同步。
+  贴图全部随件搬运（4×4 / 250×250 / 4×4）；源里尘的裸数字 173 已 Cecil 反查为 `DustID.ShadowbeamStaff`。
+  ⑤ 玩家侧新增 `godSlayerMage`（`ResetEffects`/`UpdateDead` 两处复位；本件**没有**独立冷却字段）。
+  ⑥ 配方与其余弑神者头逐字一致（现代 CosmiliteBar×10 + AscendantSpiritEssence×2 @ 宇宙砧 /
+  经典 CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8 @ 德雷顿熔炉）；
+  中英本地化各补 `Items.GodSlayerVisage`（DisplayName / Tooltip / SetBonus）与
+  `Projectiles.GodSlayerBlaze / GodSlayerHealOrb / GodSlayerOrb.DisplayName`，行尾整回 CRLF。
+  显示名：en `God Slayer Visage`、zh **弑神者面甲**（沿用 TarragonVisage = 龙蒿面甲 的「Visage → 面甲」口径）。
+  验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线第二件 = 血炎法师头——血魇九头盔（BloodflareHornedMask，英文名
   Bloodflare Hydra Hood）**，另把龙蒿面具防御由 10 调到 **14**（用户指定）。
   口径同前两线：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；
@@ -908,8 +939,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **五套已补完**，见第 8 节逐笔。各套共用同一条统一口径：
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
-   - **法师头**：龙蒿面具（`TarragonMask`）/ 血魇九头盔（`BloodflareHornedMask`）两套已补（2026-10-06，见第 8 节逐笔）。
-     **剩弑神者、始源林海、金源**三套。
+   - **法师头**：龙蒿面具（`TarragonMask`）/ 血魇九头盔（`BloodflareHornedMask`）/ 弑神者面甲（`GodSlayerVisage`）
+     三套已补（2026-10-06，见第 8 节逐笔）。**剩始源林海、金源**两套。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。

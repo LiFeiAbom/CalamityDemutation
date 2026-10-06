@@ -443,6 +443,12 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool godSlayerSummon = false;
         /// <summary>
+        /// 弑神者套装·法师向（GodSlayerVisage 的套装标记）：魔法攻击命中敌人时召出弑神者烈焰与治疗烈焰
+        ///（见 CalamityDemutationGlobalProjectile.OnHitNPC，节流预算与召唤侧的弑神幻影共用 godSlayerDmg），
+        /// 并在受到伤害时炸出一圈魔法弑神爆炸（见 PostHurt）
+        /// </summary>
+        public bool godSlayerMage = false;
+        /// <summary>
         /// 弑神幻影的节流预算：每召出一枚按"本次命中伤害的一半"累加，每帧衰减 2.5，归零后才允许再召
         ///（经典版 CalamityPlayerPreTrailer.cs:3806-3809 原样；源不在此处复位，靠衰减自清）
         /// </summary>
@@ -851,6 +857,7 @@ namespace CalamityDemutation.Players
             godSlayerCooldown = false;
             godSlayerDamage = false;
             godSlayerDamageProtect = false;
+            godSlayerMage = false;
             godSlayerMelee = false;
             godSlayerRanged = false;
             godSlayerReflect = false;
@@ -1017,6 +1024,7 @@ namespace CalamityDemutation.Players
             godSlayerCooldown = false;
             godSlayerDamage = false;
             godSlayerDamageProtect = false;
+            godSlayerMage = false;
             godSlayerMelee = false;
             godSlayerRanged = false;
             godSlayerReflect = false;
@@ -4467,6 +4475,19 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void PostHurt(Player.HurtInfo info)
         {
+            // 弑神者法师套装（godSlayerMage）的「受到伤害时释放魔法弑神爆炸」：
+            // 任何一次有效受击都在脚下炸出一枚 GodSlayerBlaze（伤害 = 穿金源 2400 / 否则 1200），
+            // 口径照经典版 CalamityPlayerPreTrailer.cs:8168（PostHurt 里与 godSlayerDamage 互斥的 else-if 分支）。
+            // 本钩子每名玩家 × 每一端都会跑，故生成侧带主人端判据（见工程记忆第 5 节）。
+            if (godSlayerMage && info.Damage > 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item74, Player.position);
+                if (Player.whoAmI == Main.myPlayer)
+                {
+                    Projectile.NewProjectile(Entity.GetSource_FromThis(), Player.Center.X, Player.Center.Y, 0f, 0f,
+                        ModContent.ProjectileType<GodSlayerBlaze>(), auricSet ? 2400 : 1200, 1f, Player.whoAmI);
+                }
+            }
             bool hardMode = Main.hardMode;
             // 亚米迪亚斯火花/吞噬者：受伤后向四周迸发两圈电火花
             if (amidiasSpark || theAbsorber)

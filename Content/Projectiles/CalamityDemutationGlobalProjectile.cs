@@ -219,6 +219,83 @@ namespace CalamityDemutation.Content.Projectiles
                     Main.projectile[fire].netUpdate = true;
                 }
             }
+            // 弑神者法师套装（godSlayerMage）的「魔法攻击命中敌人时释放弑神者烈焰与治疗烈焰」：
+            // 口径照经典版 CalamityGlobalProjectile.cs:659-726。节流预算 godSlayerDmg 与召唤侧的弑神幻影共用——
+            // 每触发一次按"本次命中伤害的一半"累加，随即在它衰减到 0 之前不再触发（每帧 -2.5）。
+            // ① 在 800 像素内挑一个敌人（优先有视线且距离 > 50 的），朝它射一枚 GodSlayerOrb
+            //    （伤害 = 半伤 ×1.5，穿金源 ×2.0，ai[0] = 目标索引）；
+            // ② 若该敌人允许吸血（canGhostHeal），再补一枚 GodSlayerHealOrb 飞向 1200 像素内血亏最多的队友
+            //    （治疗比例 = 0.06，穿金源 0.03，随 numHits 每层再 -0.015）。
+            CalamityDemutationPlayer godMage = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (projectile.CountsAsClass<MagicDamageClass>() && godMage.godSlayerMage && godMage.godSlayerDmg <= 0f)
+            {
+                int orbBase = projectile.damage / 2;
+                godMage.godSlayerDmg += orbBase;
+                int[] candidates = new int[Main.maxNPCs];
+                int sightCount = 0;      // 有视线且距离 > 50 的优先目标
+                int fallbackCount = 0;   // 无视线 / 距离 ≤ 50 的兜底目标
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    if (!Main.npc[i].CanBeChasedBy(projectile, false))
+                        continue;
+                    float manhattan = Math.Abs(Main.npc[i].position.X + Main.npc[i].width / 2 - projectile.position.X + projectile.width / 2)
+                        + Math.Abs(Main.npc[i].position.Y + Main.npc[i].height / 2 - projectile.position.Y + projectile.height / 2);
+                    if (manhattan < 800f)
+                    {
+                        if (Collision.CanHit(projectile.position, 1, 1, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height) && manhattan > 50f)
+                        {
+                            candidates[sightCount] = i;
+                            sightCount++;
+                        }
+                        else if (sightCount == 0)
+                        {
+                            candidates[fallbackCount] = i;
+                            fallbackCount++;
+                        }
+                    }
+                }
+                // 源在"一个目标都挑不到"时直接 return（放弃余下逻辑）；本工程只跳过这两枚弹幕的生成
+                if (sightCount > 0 || fallbackCount > 0)
+                {
+                    int orbTarget = sightCount > 0 ? candidates[Main.rand.Next(sightCount)] : candidates[Main.rand.Next(fallbackCount)];
+                    // 源固定 20 像素/帧的随机方向初速（GodSlayerOrb 随后自行追踪）
+                    float orbVelX = Main.rand.Next(-100, 101);
+                    float orbVelY = Main.rand.Next(-100, 101);
+                    float orbVelDist = (float)Math.Sqrt(orbVelX * orbVelX + orbVelY * orbVelY);
+                    orbVelDist = 20f / orbVelDist;
+                    orbVelX *= orbVelDist;
+                    orbVelY *= orbVelDist;
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, orbVelX, orbVelY,
+                        ModContent.ProjectileType<GodSlayerOrb>(), (int)(orbBase * (godMage.auricSet ? 2.0f : 1.5f)), 0f, projectile.owner, orbTarget, 0f);
+                    if (target.canGhostHeal)
+                    {
+                        float healMult = godMage.auricSet ? 0.03f : 0.06f;
+                        healMult -= (float)projectile.numHits * 0.015f;
+                        float healValue = (float)projectile.damage * healMult;
+                        if (healMult > 0f && (int)healValue > 0 && Main.LocalPlayer.lifeSteal > 0f)
+                        {
+                            Main.LocalPlayer.lifeSteal -= healValue * 1.5f;
+                            float worstMissing = 0f;
+                            int healTarget = projectile.owner;
+                            for (int i = 0; i < Main.maxPlayers; i++)
+                            {
+                                if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
+                                {
+                                    float manhattan = Math.Abs(Main.player[i].position.X + Main.player[i].width / 2 - projectile.position.X + projectile.width / 2)
+                                        + Math.Abs(Main.player[i].position.Y + Main.player[i].height / 2 - projectile.position.Y + projectile.height / 2);
+                                    if (manhattan < 1200f && Main.player[i].statLifeMax2 - Main.player[i].statLife > worstMissing)
+                                    {
+                                        worstMissing = Main.player[i].statLifeMax2 - Main.player[i].statLife;
+                                        healTarget = i;
+                                    }
+                                }
+                            }
+                            Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,
+                                ModContent.ProjectileType<GodSlayerHealOrb>(), 0, 0f, projectile.owner, healTarget, healValue);
+                        }
+                    }
+                }
+            }
             // 弑神者召唤套装（godSlayerSummon）：召唤物 / 哨兵命中敌人时，若节流预算归零就召出一枚弑神幻影
             //（经典版 CalamityGlobalProjectile.cs:848 起；条件同样只认 minion / sentry，不含鞭类弹幕）。
             // 源里那段"挑一个 800 像素内的敌怪"选出的索引其实从未被使用——幻影固定生成在弹幕自身位置、方向纯随机，
