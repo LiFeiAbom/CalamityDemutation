@@ -42,8 +42,7 @@ namespace CalamityDemutation.Players
     /// 本模组的玩家数据类（ModPlayer）
     /// 通过布尔字段记录各饰品是否已装备，并实现装备效果的数值结算、
     /// 命中 debuff、PvP 命中 debuff、闪避等逻辑。
-    /// 另含 6 个**永久解锁标志**——天界洋葱（extraAccessoryML）/ 拜月契约（extraWingSlot）
-    /// 与四件永久增益消耗品（sugarheartCitrus / organicPod / freshBlueberry / moltenMagmaFruit），
+    /// 另含 2 个**永久解锁标志**——天界洋葱（extraAccessoryML）/ 拜月契约（extraWingSlot），
     /// 由 SaveData / LoadData 持久化、CopyClientState / SendClientChanges 负责联机同步。
     /// </summary>
     internal partial class CalamityDemutationPlayer : ModPlayer
@@ -375,14 +374,6 @@ namespace CalamityDemutation.Players
         /// 天界洋葱已使用（永久开启一个额外饰品栏）
         /// </summary>
         public bool extraAccessoryML = false;
-        /// <summary>糖心柑橘：永久 +4% 近战攻击速度（商人处 1 金，击败血肉之墙后上架）</summary>
-        public bool sugarheartCitrus = false;
-        /// <summary>有机豆荚：永久 +4% 伤害减免（商人处 1 金，击败血肉之墙后上架）</summary>
-        public bool organicPod = false;
-        /// <summary>新鲜蓝莓：永久 +4 点护甲穿透（商人处 1 金，击败血肉之墙后上架）</summary>
-        public bool freshBlueberry = false;
-        /// <summary>熔岩浆果：永久 +4% 伤害 / +4% 暴击率 / +4 点护甲穿透（商人处 4 金，击败月球领主后上架）</summary>
-        public bool moltenMagmaFruit = false;
         /// <summary>
         /// 拜月契约已使用（永久开启一个专用翅膀饰品栏）
         /// </summary>
@@ -3422,27 +3413,6 @@ namespace CalamityDemutation.Players
             //（它每帧把潜行上限清零）、早于它 PostUpdateMiscEffects（那里才积攒潜行）。
             if (demonshadeRogue)
                 CDUtil.GrantRogueStealth(Player, 2f);
-            // ── 永久增益消耗品（糖心柑橘 / 有机豆荚 / 新鲜蓝莓 / 熔岩浆果）──
-            // 一次性解锁、标志随存档持久化（见 SaveData/LoadData），加成每帧按标志叠加。
-            // 必须放 PostUpdateEquips 而不是 ResetEffects：ResetEffects 的职责是把这些属性清零，加成要在它之后加
-            if (sugarheartCitrus)
-            {
-                Player.GetAttackSpeed<MeleeDamageClass>() += 0.04f;
-            }
-            if (organicPod)
-            {
-                Player.endurance += 0.04f;
-            }
-            if (freshBlueberry)
-            {
-                Player.GetArmorPenetration<GenericDamageClass>() += 4;
-            }
-            if (moltenMagmaFruit)
-            {
-                Player.GetDamage<GenericDamageClass>() += 0.04f;
-                Player.GetCritChance<GenericDamageClass>() += 4;
-                Player.GetArmorPenetration<GenericDamageClass>() += 4;
-            }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)
@@ -5384,46 +5354,32 @@ namespace CalamityDemutation.Players
             return true;
         }
         /// <summary>
-        /// 永久解锁标志的持久化，共 6 项：extraAccessoryML 天界洋葱 / extraWingSlot 拜月契约
-        /// / sugarheartCitrus / organicPod / freshBlueberry / moltenMagmaFruit（四件永久增益消耗品）；
+        /// 永久解锁标志的持久化，共 2 项：extraAccessoryML 天界洋葱 / extraWingSlot 拜月契约；
         /// 其余字段每帧由装备重新计算，无需保存
         /// </summary>
         public override void SaveData(TagCompound tag)
         {
             tag["extraAccessoryML"] = extraAccessoryML;
             tag["extraWingSlot"] = extraWingSlot;
-            // 四件永久增益消耗品
-            tag["sugarheartCitrus"] = sugarheartCitrus;
-            tag["organicPod"] = organicPod;
-            tag["freshBlueberry"] = freshBlueberry;
-            tag["moltenMagmaFruit"] = moltenMagmaFruit;
         }
         /// <summary>
         /// tModLoader 的 LoadData 钩子：读档时恢复永久解锁标志。
-        /// 与 SaveData 严格对应，读取同样 6 个键。
+        /// 与 SaveData 严格对应，读取同样 2 个键。
         /// </summary>
         public override void LoadData(TagCompound tag)
         {
             extraAccessoryML = tag.GetBool("extraAccessoryML");
             extraWingSlot = tag.GetBool("extraWingSlot");
-            sugarheartCitrus = tag.GetBool("sugarheartCitrus");
-            organicPod = tag.GetBool("organicPod");
-            freshBlueberry = tag.GetBool("freshBlueberry");
-            moltenMagmaFruit = tag.GetBool("moltenMagmaFruit");
         }
         /// <summary>
-        /// 联机时把本地玩家的 6 个永久解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
-        /// 只同步这 6 个标志；其余字段每帧由装备重算，无需跨端传输。
+        /// 联机时把本地玩家的 2 个永久解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
+        /// 只同步这 2 个标志；其余字段每帧由装备重算，无需跨端传输。
         /// </summary>
         public override void CopyClientState(ModPlayer targetCopy)
         {
             CalamityDemutationPlayer copy = (CalamityDemutationPlayer)targetCopy;
             copy.extraAccessoryML = extraAccessoryML;
             copy.extraWingSlot = extraWingSlot;
-            copy.sugarheartCitrus = sugarheartCitrus;
-            copy.organicPod = organicPod;
-            copy.freshBlueberry = freshBlueberry;
-            copy.moltenMagmaFruit = moltenMagmaFruit;
         }
         /// <summary>
         /// 客户端状态变更上报：当本地任一永久解锁标志相对基准副本变化（例如非主机端吃了洋葱，
@@ -5433,19 +5389,13 @@ namespace CalamityDemutation.Players
         public override void SendClientChanges(ModPlayer clientPlayer)
         {
             CalamityDemutationPlayer old = (CalamityDemutationPlayer)clientPlayer;
-            if (old.extraAccessoryML != extraAccessoryML || old.extraWingSlot != extraWingSlot
-                || old.sugarheartCitrus != sugarheartCitrus || old.organicPod != organicPod
-                || old.freshBlueberry != freshBlueberry || old.moltenMagmaFruit != moltenMagmaFruit)
+            if (old.extraAccessoryML != extraAccessoryML || old.extraWingSlot != extraWingSlot)
             {
                 ModPacket packet = Mod.GetPacket();
                 packet.Write((byte)MsgPermanentUnlock);
                 packet.Write(Player.whoAmI);
                 packet.Write(extraAccessoryML);
                 packet.Write(extraWingSlot);
-                packet.Write(sugarheartCitrus);
-                packet.Write(organicPod);
-                packet.Write(freshBlueberry);
-                packet.Write(moltenMagmaFruit);
                 packet.Send();
             }
         }

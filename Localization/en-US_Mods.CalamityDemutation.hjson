@@ -2374,25 +2374,6 @@ Items: {
 			'''
 	}
 
-	SugarheartCitrus: {
-		DisplayName: Sugarheart Citrus
-		Tooltip: Permanently increases melee attack speed by 4% (one time only per character)
-	}
-
-	OrganicPod: {
-		DisplayName: Organic Pod
-		Tooltip: Permanently increases damage reduction by 4% (one time only per character)
-	}
-
-	FreshBlueberry: {
-		DisplayName: Fresh Blueberry
-		Tooltip: Permanently increases armor penetration by 4 (one time only per character)
-	}
-
-	MoltenMagmaFruit: {
-		DisplayName: Molten Magma Fruit
-		Tooltip: Permanently increases all damage and critical strike chance by 4%, and armor penetration by 4 (one time only per character)
-	}
 }
 
 Keybinds: {

@@ -265,6 +265,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**按用户点名删除四件永久增益消耗品并取消其效果**。
+  删除对象：糖心柑橘（`SugarheartCitrus`）/ 有机豆荚（`OrganicPod`）/ 新鲜蓝莓（`FreshBlueberry`）/
+  熔岩浆果（`MoltenMagmaFruit`）——四件均为本工程自研件（非移植），故无来源合规问题。
+  连带的清理：① 4 个 `.cs` + 4 个 `.png` 全删；
+  ② `CalamityDemutationPlayer` 的 4 个永久标志字段、`PostUpdateEquips` 里的四段加成结算
+  （+4% 近战攻速 / +4% 减伤 / +4 穿透 / +4% 通用伤害+暴击+穿透）、`SaveData`/`LoadData`、
+  `CopyClientState`/`SendClientChanges` 与类注释一并撤掉——**永久解锁标志随之从 6 个回到 2 个**
+  （只剩天界洋葱 `extraAccessoryML`、拜月契约 `extraWingSlot`）；
+  ③ `CalamityDemutation.cs` 的 `MsgPermanentUnlock` 包内读写字段同步收窄到那 2 个；
+  ④ `CalamityDemutationGlobalNPC.ModifyShop` 里商人处那四条上架（困难模式 ×3 + 月后 ×1）删除；
+  ⑤ 中英两份 hjson 各删 4 条 `Items.<内部名>`（DisplayName / Tooltip），行尾整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检全命中。
 - 最近一批工作（2026-10-06）：**修改勇气勋章（BadgeofBravery）的属性**（用户点名）：
   +10% 近战伤害 / +10% 近战暴击 / 近战穿透 **+5 → +10**，并新增一条条件效果
   「穿戴全套龙蒿近战套（`tarraSet && tarraMelee`）时额外 **+15% 近战攻速**」。
@@ -812,11 +824,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   - C4：`postMoonLordRarity` 取值分布 = 10 / 12~17 / 20，全部合法（10 档是 `GreatswordofJudgement` 的有意例外，
     名称保持红色）；另有约 42 个物品**没有显式写 `Item.rare`**，但 `CalamityDemutationGlobalItem.SetDefaults` 会在
     `postMoonLordRarity != 0` 时统一补成 `ItemRarityID.Red`，所以观感与口径都成立，无需逐个补那一行。
-  - F1：`ModPlayer` 的 `SaveData`/`LoadData` 键完全对称（6 个永久解锁标志），`CopyClientState`/`SendClientChanges` 同步同一组 6 个键；
-    `GlobalItem` 的 `SaveData`/`LoadData`/`NetSend`/`NetReceive` 与 `postMoonLordRarity` 成对。
-    147 个 bool 字段里只有这 6 个持久化字段复位次数 ≤1，其余全部在 `ResetEffects` 与 `OnEnterWorld` 两处复位（复位对称性通过）。
-    **顺手修了三处过期注释**（Part 2 范畴）：类注释、`SaveData`/`LoadData` 注释、`CopyClientState`/`SendClientChanges` 注释
-    原先都写"两个永久标志（洋葱/拜月契约）"，实际早已是 6 个（另加四件永久增益消耗品），已按实现改写。
+   - F1：`ModPlayer` 的 `SaveData`/`LoadData` 键完全对称（**现 2 个**永久解锁标志；2026-10-05 审计时为 6 个，
+     四件永久增益消耗品 2026-10-06 删后回到 2），`CopyClientState`/`SendClientChanges` 同步同一组键；
+     `GlobalItem` 的 `SaveData`/`LoadData`/`NetSend`/`NetReceive` 与 `postMoonLordRarity` 成对。
+     bool 字段里只有这 2 个持久化字段复位次数 ≤1，其余全部在 `ResetEffects` 与 `OnEnterWorld` 两处复位（复位对称性通过）。
+     **顺手修了三处过期注释**（Part 2 范畴）：类注释、`SaveData`/`LoadData` 注释、`CopyClientState`/`SendClientChanges` 注释
+     原先都写"两个永久标志（洋葱/拜月契约）"，当年实际是 6 个（另加四件永久增益消耗品），已按实现改写；
+     那四件现已删除，注释与实现都回到 2 个标志口径。
 - **Part 2（中文注释修正，2026-10-05 完成）**：核查角度与结论——
   ① 覆盖度：385 个 .cs **全部含中文注释**（唯一没有的是 `obj/` 构建产物），类级 `///` 摘要只缺 3 个 struct/interface（不需要）；
   ② 注释数字 vs 代码：归一化检测（百分数↔小数、`<= 15` 差一写法、跨文件引用、本地化文本）后剩 31 条可疑，**逐条人工核对全部准确**；

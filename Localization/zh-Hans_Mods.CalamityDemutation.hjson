@@ -2373,25 +2373,6 @@ Items: {
 			'''
 	}
 
-	SugarheartCitrus: {
-		DisplayName: 糖心柑橘
-		Tooltip: 永久提高 4% 近战攻击速度（每个角色仅限一次）
-	}
-
-	OrganicPod: {
-		DisplayName: 有机豆荚
-		Tooltip: 永久提高 4% 伤害减免（每个角色仅限一次）
-	}
-
-	FreshBlueberry: {
-		DisplayName: 新鲜蓝莓
-		Tooltip: 永久提高 4 点护甲穿透（每个角色仅限一次）
-	}
-
-	MoltenMagmaFruit: {
-		DisplayName: 熔岩浆果
-		Tooltip: 永久提高所有伤害与暴击率 4%、护甲穿透 4 点（每个角色仅限一次）
-	}
 }
 
 Keybinds: {

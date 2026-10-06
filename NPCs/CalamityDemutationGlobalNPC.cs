@@ -310,16 +310,6 @@ namespace CalamityDemutation.NPCs
             {
                 shop.Add(ModContent.ItemType<FrostBarrier>());
             }
-            // 四件永久增益消耗品挂商人处，按 Boss 进度解锁：
-            // 前三件要困难模式（= 击败血肉之墙），熔岩浆果要击败月球领主。
-            // 用的都是 tML 内置条件，故无需自定义 Conditions 本地化键
-            if (shop.NpcType == NPCID.Merchant)
-            {
-                shop.Add(ModContent.ItemType<SugarheartCitrus>(), Condition.Hardmode);
-                shop.Add(ModContent.ItemType<OrganicPod>(), Condition.Hardmode);
-                shop.Add(ModContent.ItemType<FreshBlueberry>(), Condition.Hardmode);
-                shop.Add(ModContent.ItemType<MoltenMagmaFruit>(), Condition.DownedMoonLord);
-            }
         }
         /// <summary>
         /// tModLoader 的 UpdateLifeRegen 钩子：每帧结算 NPC 生命回复时调用，
