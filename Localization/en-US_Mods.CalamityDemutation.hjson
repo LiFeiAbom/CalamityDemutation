@@ -589,6 +589,24 @@ Items: {
 			'''
 	}
 
+	BloodflareHornedMask: {
+		DisplayName: Bloodflare Hydra Hood
+		Tooltip:
+			'''
+			You can move freely through liquids and have temporary immunity to lava
+			10% increased magic damage and critical strike chance and +100 max mana
+			'''
+		SetBonus:
+			'''
+			Greatly increases life regen
+			Enemies below 50% life have a chance to drop hearts when struck
+			Enemies above 50% life have a chance to drop mana stars when struck
+			Enemies killed during a Blood Moon have a much higher chance to drop Blood Orbs
+			Magic weapons will sometimes fire ghostly bolts
+			Magic critical strikes cause flame explosions every 2 seconds
+			'''
+	}
+
 	BloodflareMask: {
 		DisplayName: Bloodflare Ram Mask
 		Tooltip:
@@ -2239,6 +2257,7 @@ Projectiles: {
 	GalacticaComet.DisplayName: Galactus Comet
 	Galaxia.DisplayName: Orb
 	GalaxyBlast.DisplayName: Galaxy Blast
+	GhostlyBolt.DisplayName: Ghostly Bolt
 	GhostlyMine.DisplayName: Ghostly Mine
 	GodSlayerDart.DisplayName: God Slayer Dart
 	GodSlayerPhantom.DisplayName: God Slayer Phantom

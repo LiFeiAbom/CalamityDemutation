@@ -29,7 +29,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             Item.width = 18;                          // 贴图宽（像素，照经典版源码；贴图实际为 22×30）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 50, 0, 0);  // 价值 50 金（与其余龙蒿部件一致）
-            Item.defense = 10;                        // 防御 10（经典版值，源码同行另留 //98 注释，系开发期遗留数字）
+            Item.defense = 14;                        // 防御 14（用户 2026-10-06 指定；源经典/现代都是 10，源码同行另留 //98 注释）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;  // 月后自定义稀有度 12 级
         }
         /// <summary>

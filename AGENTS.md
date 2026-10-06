@@ -265,13 +265,38 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**法师线第二件 = 血炎法师头——血魇九头盔（BloodflareHornedMask，英文名
+  Bloodflare Hydra Hood）**，另把龙蒿面具防御由 10 调到 **14**（用户指定）。
+  口径同前两线：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；
+  英文显示名取**现代版**的（`Bloodflare Hydra Hood`，与其余血炎件「Wyvern Helm / Demon Helm / Ram Mask」
+  同一套命名），中文名由用户给定（血魇九头盔）。
+  ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHornedMask.cs`（贴图取自经典版 cal-1.4.2.101：
+  `BloodflareHornedMask.png` 22×26 / `_Head.png` 40×1120）：18x18（源码即 18）、价值 60 金、
+  **防御 22**（源码同行另留 `//85`）、月后稀有度 13。
+  ② 单件：lavaMax +240、ignoreWater、魔法伤害 +10%、魔法暴击 +10%、最大法力 +100（经典版 UpdateEquip 原样）。
+  ③ 套装 `bloodflareSet + bloodflareMage` + crimsonRegen，两条法师专属效果（都照经典版）：
+  (a)「魔法武器有时射出幽灵魔弹」——`CalamityDemutationGlobalItem.Shoot` 里 5% 概率
+  （`rand(0,100) >= 95`）追加一枚 **GhostlyBolt**，伤害 = 本次射击 ×2.6（穿金源 ×4.2）；
+  (b)「魔法暴击每 2 秒引发火焰爆炸」——命中钩子里 `hit.Crit && 魔法职业` 且冷却归零时，
+  在目标中心朝随机方向喷 **3 枚 `ProjectileID.BallofFire`**（源裸数字 15 已 Cecil 反查），
+  伤害 = 本次弹幕 ×0.5，冷却 **120 帧**。
+  ④ 新增弹幕 `Content/Projectiles/Typeless/GhostlyBolt.cs`：本体不可见（源与现代版都靠尘表现，无绘制），
+  第 6 帧播 `SoundID.Item8` + 喷 40 粒 `DustID.GiantCursedSkullBolt` 尘（源裸数字 181 已 Cecil 反查），
+  之后每帧 3 粒拖尾尘；贴图沿用工程共用隐形图 `Content/Projectiles/InvisibleProj`（不新增贴图，避免资源路径坑）。
+  ⑤ 玩家侧新增 `bloodflareMage`（`ResetEffects`/`UpdateDead` 两处复位）与 `bloodflareMageCooldown`
+  （跨帧计时器，只在死亡清零、`PostUpdateMiscEffects` 里递减）。
+  ⑥ 配方与其余血炎头逐字一致（现代 Bloodstone×25 + BloodOrb×10 + RuinousSoul×2 /
+  经典 BloodstoneCore×11 + RuinousSoul×2，均在 `TileID.LunarCraftingStation`）；
+  中英本地化各补 `Items.BloodflareHornedMask`（DisplayName / Tooltip / SetBonus）与
+  `Projectiles.GhostlyBolt.DisplayName`，行尾整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检 145 条全命中（新增隐形贴图引用 1 条）。
 - 最近一批工作（2026-10-06）：**法师线开始·第一件 = 龙蒿法师头——龙蒿面具（TarragonMask）**。
   口径同射手/召唤线：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植
   （现代版对应 TarragonHeadMagic，仅作对照：它改给 15% 法伤 / 10% 减伤 / 15% 蓝耗减免，
   且回血走通用吸血球体系，与经典版完全不同）。
   ① 新增 `Content/Items/Armors/Tarragon/TarragonMask.cs`（贴图 `TarragonMask.png` 22×30 /
   `TarragonMask_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 50 金、
-  **防御 10**（源码同行另留 `//98`）、月后稀有度 12。
+  **防御 14**（用户 2026-10-06 指定；源经典/现代都是 10，源码同行另留 `//98`）、月后稀有度 12。
   ② 单件：魔法伤害 +10%、魔法暴击 +10%、减伤 +5%、最大法力 +100、lavaMax +240、ignoreWater，
   并免疫诅咒地狱/着火了/诅咒/冷冻（经典版 UpdateEquip 原样）。
   ③ 套装 `tarraSet + tarraMage`，两条法师专属效果（都照经典版）：
@@ -883,7 +908,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **五套已补完**，见第 8 节逐笔。各套共用同一条统一口径：
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
-   - **法师头**：龙蒿面具（`TarragonMask`，2026-10-06 起手，见第 8 节逐笔）。**剩血炎、弑神者、始源林海、金源**四套。
+   - **法师头**：龙蒿面具（`TarragonMask`）/ 血魇九头盔（`BloodflareHornedMask`）两套已补（2026-10-06，见第 8 节逐笔）。
+     **剩弑神者、始源林海、金源**三套。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。

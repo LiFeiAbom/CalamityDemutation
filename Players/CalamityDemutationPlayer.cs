@@ -234,6 +234,14 @@ namespace CalamityDemutation.Players
         public bool bloodflareMelee = false;
         public int bloodflareMeleeHits = 0;
         /// <summary>
+        /// 血炎套装·法师向（BloodflareHornedMask 的套装标记）：魔法武器射击时有 5% 几率追加幽灵魔弹
+        /// （见 CalamityDemutationGlobalItem.Shoot），魔法暴击每 2 秒引发一次三连火焰爆炸
+        /// （见 CalamityDemutationGlobalProjectile.OnHitNPC）
+        /// </summary>
+        public bool bloodflareMage = false;
+        /// <summary>血炎法师套装火焰爆炸的冷却（帧，120 = 2 秒；跨帧计时器，只在死亡时复位）</summary>
+        public int bloodflareMageCooldown = 0;
+        /// <summary>
         /// 血炎套装·远程向（BloodflareHornedHelm 的套装标记）：按 [键] 释放波尔特加斯特的迷失灵魂
         /// （见按键块），远程武器射击时有几率追加血液爆炸光球（见 CalamityDemutationGlobalItem.Shoot）
         /// </summary>
@@ -795,6 +803,7 @@ namespace CalamityDemutation.Players
             beeResist = false;
             bloodflareCore = false;
             bloodflareMelee = false;
+            bloodflareMage = false;
             bloodflareRanged = false;
             bloodflareSet = false;
             bloodflareSummon = false;
@@ -955,6 +964,8 @@ namespace CalamityDemutation.Players
             bloodflareMelee = false;
             bloodflareManaTimer = 0;
             bloodflareMeleeHits = 0;
+            bloodflareMage = false;
+            bloodflareMageCooldown = 0;
             bloodflareRanged = false;
             bloodflareRangedCooldown = 0;
             bloodflareSet = false;
@@ -2710,6 +2721,10 @@ namespace CalamityDemutation.Players
             // 血炎射手套装的灵魂爆发冷却：与近战狂怒冷却同为跨帧计时器，只在死亡时复位
             if (bloodflareRangedCooldown > 0)
                 bloodflareRangedCooldown--;
+            // 血炎法师套装的火焰爆炸冷却：跨帧计时器，只在死亡时复位
+            //（经典版 CalamityPlayerPreTrailer.cs:3794 原样）
+            if (bloodflareMageCooldown > 0)
+                bloodflareMageCooldown--;
             if (silvaSet)
             {
                 foreach (int debuff in CalamityDemutation.debuffList)

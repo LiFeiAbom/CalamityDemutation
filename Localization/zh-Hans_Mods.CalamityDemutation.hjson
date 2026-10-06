@@ -589,6 +589,24 @@ Items: {
 			'''
 	}
 
+	BloodflareHornedMask: {
+		DisplayName: 血魇九头盔
+		Tooltip:
+			'''
+			你可以在液体中自由移动，并获得暂时的岩浆免疫
+			魔法伤害与暴击率提高 10%，最大法力 +100
+			'''
+		SetBonus:
+			'''
+			极大幅提升生命再生
+			生命值低于 50% 的敌怪被击中时有几率掉落红心
+			生命值高于 50% 的敌怪被击中时有几率掉落法力星
+			血月期间被杀死的敌怪掉落鲜血球的几率大幅提高
+			魔法武器有时会射出幽灵魔弹
+			魔法暴击每 2 秒引发一次火焰爆炸
+			'''
+	}
+
 	BloodflareMask: {
 		DisplayName: 血碾溃阵盔
 		Tooltip:
@@ -2238,6 +2256,7 @@ Projectiles: {
 	GalacticaComet.DisplayName: 星河彗星
 	Galaxia.DisplayName: 银河之星光球
 	GalaxyBlast.DisplayName: 星系爆弹
+	GhostlyBolt.DisplayName: 幽灵魔弹
 	GhostlyMine.DisplayName: 幽灵地雷
 	GodSlayerDart.DisplayName: 弑神者飞镖
 	GodSlayerPhantom.DisplayName: 弑神幻影

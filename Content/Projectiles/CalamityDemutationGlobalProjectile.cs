@@ -197,6 +197,28 @@ namespace CalamityDemutation.Content.Projectiles
                     }
                 }
             }
+            // 血炎法师套装（bloodflareMage）的「魔法暴击每 2 秒引发一次火焰爆炸」：
+            // 源写在玩家侧命中钩子里（CalamityPlayerPreTrailer.cs:6249），本工程挪到弹幕侧——
+            // hit.Crit 同源、同样只在主人端跑。在目标中心朝随机方向喷 3 枚原版火球
+            //（ProjectileID.BallofFire，源里裸数字 15 已 Cecil 反查），伤害 = 本次弹幕伤害 ×0.5，
+            // 冷却 120 帧（2 秒）。
+            CalamityDemutationPlayer bloodMage = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (bloodMage.bloodflareMage && bloodMage.bloodflareMageCooldown <= 0 && hit.Crit && projectile.CountsAsClass<MagicDamageClass>())
+            {
+                bloodMage.bloodflareMageCooldown = 120;
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 fireVel = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
+                    while (fireVel.X == 0f && fireVel.Y == 0f)
+                    {
+                        fireVel = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
+                    }
+                    fireVel.Normalize();
+                    fireVel *= Main.rand.Next(70, 101) * 0.1f;
+                    int fire = Projectile.NewProjectile(projectile.GetSource_FromThis(), target.Center, fireVel, ProjectileID.BallofFire, (int)(projectile.damage * 0.5f), 0f, projectile.owner);
+                    Main.projectile[fire].netUpdate = true;
+                }
+            }
             // 弑神者召唤套装（godSlayerSummon）：召唤物 / 哨兵命中敌人时，若节流预算归零就召出一枚弑神幻影
             //（经典版 CalamityGlobalProjectile.cs:848 起；条件同样只认 minion / sentry，不含鞭类弹幕）。
             // 源里那段"挑一个 800 像素内的敌怪"选出的索引其实从未被使用——幻影固定生成在弹幕自身位置、方向纯随机，

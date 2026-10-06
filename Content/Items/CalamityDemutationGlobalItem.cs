@@ -291,6 +291,17 @@ namespace CalamityDemutation.Content.Items
                     }
                 }
             }
+            // 血炎法师套装（bloodflareMage）的「魔法武器有时射出幽灵魔弹」：
+            // 每次射击 5% 概率追加一枚 GhostlyBolt，伤害 = 本次射击 ×2.6（穿金源套时 ×4.2）、
+            // 速度系数 1；口径照经典版 CalamityGlobalItem.Shoot（同处的 !rogue 判定本工程无盗贼职业故省略）。
+            if (modPlayer.bloodflareMage && item.CountsAsClass<MagicDamageClass>() && Main.rand.Next(0, 100) >= 95)
+            {
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    int boltDamage = (int)(damage * (modPlayer.auricSet ? 4.2f : 2.6f));
+                    Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<GhostlyBolt>(), boltDamage, 1f, player.whoAmI);
+                }
+            }
             return true;
         }
         /// <summary>
