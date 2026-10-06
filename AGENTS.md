@@ -265,6 +265,29 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**法师线第四件 = 始源林海法师头——始源林海罩帽（SilvaMaskedCap）**。
+  口径同前几件：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植
+  （现代版对应 SilvaHeadMagic，防御同为 21）。
+  ① 新增 `Content/Items/Armors/Silva/SilvaMaskedCap.cs`（贴图 `SilvaMaskedCap.png` 26×22 /
+  `SilvaMaskedCap_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 90 金、
+  **防御 21**（源码同行另留 `//110`）、月后稀有度 15。
+  ② 单件：魔法伤害 +13%、魔法暴击 +13%、最大法力 +100（经典版 UpdateEquip 原样）。
+  ③ 套装 `silvaSet + silvaMage`（**不置** silvaMelee / silvaRanged / silvaSummon），两条法师专属效果：
+  (a)「魔法弹幕命中敌人时有几率引发巨型爆炸」——`CalamityDemutationGlobalProjectile.OnHitNPC` 里
+  播 `SoundID.Zombie103`、把判定框临时撑到 96×96、喷一圈 `DustID.ChlorophyteWeapon` 尘
+  （源裸数字 157 已 Cecil 反查），把本次伤害乘 4（穿金源 ×7）后再 `Damage()` 结算一次。
+  **注意**：源 tooltip 写「10% 几率」，实现却是 `Main.rand.Next(0, 100) >= 97` = **3%**，
+  且只对「穿透为 1 的魔法弹幕」生效——本工程照源实现、保留原文案
+  （与 tarraMage 的「50% 几率」同类，别再当 bug 去"修"）。
+  (b)「无敌窗口结束后魔法武器伤害 +10%」——`ModifyHitNPCWithProj`
+  （经典版 CalamityPlayerPreTrailer.cs:6639 原样，判据 silvaCountdown <= 0 && hasSilvaEffect && silvaMage && 魔法职业）。
+  ④ 玩家侧新增 `silvaMage`（`ResetEffects`/`UpdateDead` 两处复位；本件无独立冷却字段）。
+  ⑤ 配方与其余始源林海头逐字一致（现代 PlantyMush×30 + EffulgentFeather×8 + AscendantSpiritEssence×2 /
+  经典 DarksunFragment×5 + EffulgentFeather×5 + CosmiliteBar×5 + Tenebris×6 + NightmareFuel×14 +
+  EndothermicEnergy×14，两分支都需本模组 `LeadCore`）；中英本地化各补 `Items.SilvaMaskedCap`
+  （DisplayName / Tooltip / SetBonus），行尾整回 CRLF。
+  显示名：en `Silva Masked Cap`、zh **始源林海罩帽**（用户未点名，按英文意译）。
+  验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线第三件 = 弑神者法师头——弑神者面甲（GodSlayerVisage）**。
   ⚠️ **命名坑**：经典版里 `GodSlayerMask` 是**盗贼头**（工程无盗贼职业故不移植），法师头叫
   `GodSlayerVisage` —— 别再按名字猜。现代版已无此件，CI 对应件 `GodSlayerHeadMagicold`（数值同为防 21 / 14-14）。
@@ -939,8 +962,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **五套已补完**，见第 8 节逐笔。各套共用同一条统一口径：
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
-   - **法师头**：龙蒿面具（`TarragonMask`）/ 血魇九头盔（`BloodflareHornedMask`）/ 弑神者面甲（`GodSlayerVisage`）
-     三套已补（2026-10-06，见第 8 节逐笔）。**剩始源林海、金源**两套。
+   - **法师头**：龙蒿面具（`TarragonMask`）/ 血魇九头盔（`BloodflareHornedMask`）/ 弑神者面甲（`GodSlayerVisage`）/
+     始源林海罩帽（`SilvaMaskedCap`）四套已补（2026-10-06，见第 8 节逐笔）。**剩金源**一套。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。

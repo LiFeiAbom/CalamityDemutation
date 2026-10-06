@@ -620,6 +620,12 @@ namespace CalamityDemutation.Players
         public bool sigilofCalamitas = false;
         public int silvaCountdown = 600;
         public int silvaHitCounter = 0;
+        /// <summary>
+        /// 始源林海套装·法师向（SilvaMaskedCap 的套装标记）：魔法弹幕命中敌人时有几率引发巨型爆炸
+        /// （见 CalamityDemutationGlobalProjectile.OnHitNPC），无敌窗口结束后魔法武器伤害 +10%
+        /// （见 ModifyHitNPCWithProj）
+        /// </summary>
+        public bool silvaMage = false;
         public bool silvaMelee = false;
         public bool silvaRanged = false;
         public bool silvaSet = false;
@@ -907,6 +913,7 @@ namespace CalamityDemutation.Players
             shieldoftheOcean = false;
             shieldSlamDash = ShieldSlamDash.None;
             sigilofCalamitas = false;
+            silvaMage = false;
             silvaMelee = false;
             silvaRanged = false;
             silvaSet = false;
@@ -1083,6 +1090,7 @@ namespace CalamityDemutation.Players
             sigilofCalamitas = false;
             silvaCountdown = 600;
             silvaHitCounter = 0;
+            silvaMage = false;
             silvaMelee = false;
             silvaRanged = false;
             silvaSet = false;
@@ -4425,6 +4433,10 @@ namespace CalamityDemutation.Players
             //（经典版 CalamityPlayerPreTrailer.ModifyHitNPCWithProj 的 damageMult += 0.1；
             //  源判据 isSummon = minion || sentry || 白名单，这里用召唤职业作等价判定）
             if (silvaSummon && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<SummonDamageClass>())
+                damageMult += 0.1;
+            // 始源林海法师头（SilvaMaskedCap）：免死无敌窗口结束后，魔法弹幕伤害 +10%
+            //（经典版 CalamityPlayerPreTrailer.cs:6639 原样：silvaCountdown <= 0 && hasSilvaEffect && silvaMage && 魔法职业）
+            if (silvaMage && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<MagicDamageClass>())
                 damageMult += 0.1;
             // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 CI 模型，
             // 取代原先经典版的 1/max(15, 100-暴击率) 单次骰子：

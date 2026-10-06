@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -295,6 +296,36 @@ namespace CalamityDemutation.Content.Projectiles
                         }
                     }
                 }
+            }
+            // 始源林海法师套装（silvaMage）的「魔法弹幕命中敌人时有几率引发巨型爆炸」：
+            // 口径照经典版 CalamityGlobalProjectile.cs:416-438。**注意**：源 tooltip 写「10% 几率」，
+            // 但实现是 `Main.rand.Next(0, 100) >= 97` = **3%**，且只对「穿透为 1 的魔法弹幕」生效——
+            // 本工程照源实现、保留原文案。
+            // 效果：播 SoundID.Zombie103，把本次判定框临时撑到 96×96，喷一圈 ChlorophyteWeapon 尘
+            //（源裸数字 157 已 Cecil 反查），把本次伤害乘 4（穿金源 ×7）后再结算一次 Damage()。
+            CalamityDemutationPlayer silvaMagePlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (projectile.CountsAsClass<MagicDamageClass>() && silvaMagePlayer.silvaMage && projectile.penetrate == 1 && Main.rand.Next(0, 100) >= 97)
+            {
+                SoundEngine.PlaySound(SoundID.Zombie103, projectile.position);
+                projectile.position = projectile.Center;
+                projectile.width = projectile.height = 96;
+                projectile.position.X -= projectile.width / 2;
+                projectile.position.Y -= projectile.height / 2;
+                for (int i = 0; i < 3; i++)
+                {
+                    Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.ChlorophyteWeapon, 0f, 0f, 100, new Color(Main.DiscoR, 203, 103), 1.5f);
+                }
+                for (int i = 0; i < 30; i++)
+                {
+                    int blastDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.ChlorophyteWeapon, 0f, 0f, 0, new Color(Main.DiscoR, 203, 103), 2.5f);
+                    Main.dust[blastDust].noGravity = true;
+                    Main.dust[blastDust].velocity *= 3f;
+                    blastDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.ChlorophyteWeapon, 0f, 0f, 100, new Color(Main.DiscoR, 203, 103), 1.5f);
+                    Main.dust[blastDust].velocity *= 2f;
+                    Main.dust[blastDust].noGravity = true;
+                }
+                projectile.damage *= silvaMagePlayer.auricSet ? 7 : 4;
+                projectile.Damage();
             }
             // 弑神者召唤套装（godSlayerSummon）：召唤物 / 哨兵命中敌人时，若节流预算归零就召出一枚弑神幻影
             //（经典版 CalamityGlobalProjectile.cs:848 起；条件同样只认 minion / sentry，不含鞭类弹幕）。
