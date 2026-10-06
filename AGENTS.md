@@ -265,6 +265,26 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**召唤线收尾·第五件 = 古圣金源召唤头——金源星穹盔（AuricTeslaSpaceHelmet），
+  复合下位四套召唤效果**（用户点名「进行复合，主要参照 CI 版和经典版」）。
+  ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaSpaceHelmet.cs`（贴图 `AuricTeslaSpaceHelmet.png` 26×20 /
+  `AuricTeslaSpaceHelmet_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、
+  **防御 12**（经典版与 CI 同值，源码同行另留 `//132`）、月后稀有度 20。
+  ② 套装（照经典版 1:1，CI 同值）：置位 `tarraSet+tarraSummon` / `bloodflareSet+bloodflareSummon` /
+  `godSlayer+godSlayerSummon` / `silvaSet+silvaSummon` / `auricSet`，**+120% 召唤伤害**；
+  另加荆棘 3、lavaMax 240、ignoreWater、crimsonRegen、岩浆中 +30 防御 / +10 回血。
+  按经典版原样**不置** `godSlayerDamage`、**不加** aggro（两者都只有近战头有）。
+  ③ 招牌召唤物：主人端补 `SilvaCrystal` 增益并保证**叶棱晶**在场（基础伤害 **3000**，经典版/CI 同值，
+  仍走 `originalDamage`）；**噬神机械蠕虫不在此生成**——由已有玩家侧 `UpdateGodSlayerMechworm()`
+  （`godSlayerSummon` 触发）统一维护，与下位弑神者头共用同一条路径。
+  ④ 单件：`auricBoost` + **+7 仆从上限**（经典版/CI 原样）；**另按本工程召唤头统一口径**补
+  召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度各 **+12%**——源里没有这三条，属工程自调（与四件下位召唤头一致）。
+  ⑤ 配方：四件下位**召唤**头（龙蒿角盔 + 血炎狂龙盔 + 始源林海头盔 + 弑神者角盔）＋
+  现代 AuricBar×10 / 经典 AuricOre×60 等材料 ＋妄想护符；两分支的坯料清单与既有近战/射手金源头逐字一致，
+  只把下位头换成召唤件。
+  显示名：en `Auric Tesla Space Helmet`、zh **金源星穹盔**（用户未点名，按英文意译，与「金源耀日盔 / 金兜铁面盔」同风格）。
+  ⑥ 中英本地化各补 `Items.AuricTeslaSpaceHelmet`（DisplayName / Tooltip / SetBonus），行尾整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检 144 条全命中。
 - 最近一批工作（2026-10-06）：**召唤线第四件 = 始源林海召唤头（SilvaHelmet）+ 远古叶棱晶（SilvaCrystal）**。
   口径同前三件：单件照经典版（出处 = `CalamityModClassic-cal-1.4.2.101`，即 CalamityModClassicPreTrailer）、
   套装效果走经典版、并额外挂统一三条 +12%。
@@ -777,6 +797,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 部件 | 工程 | 灾厄 2.0.4 | CI Beta1.12 | 灾厄经典 |
 |---|---|---|---|---|
 | 金源头 | 防 54；近战 20/20；**攻速 28% 在单件** | 防 54；近战 20/10；攻速 28% 在套装；套装另给 aggro+1200 | 防 54；20/20/28 | 防 54；20/20；**无攻速** |
+| 金源召唤头 | 防 12；单件 +7 仆从＋统一三条 12%（召唤伤害/鞭子范围/鞭子攻速）；套装 +120%、含 godSlayer、叶棱晶 3000 | 防 12；单件仅 +15% 召唤伤害；套装 +75%、+6 仆从、**无 godSlayer**、叶棱晶 750 | 防 12；+7；套装 +120%、+1 仆从、叶棱晶 3000 | 防 12；+7；套装 +120%、叶棱晶 3000、含 lavaMax 与岩浆奖励 |
 | 金源胸 | 移速 +25%；通用 **22/22** | **无移速**；通用 8/5 | 移速 +25%；8/5；+GodSlayerDMGprotect | 移速 +25%；8/5 |
 | 金源腿 | 通用 **14/14** | 移速仅 +10%；12/5 | 移速 +50%；12/10 | 移速 +50%；12/5 |
 | 龙蒿胸/腿 | 通用 10/10（腿半血再 +15% 移速） | `lifeRegen=3`；胸 10/5；腿移速仅 10%、8/8 | `AncientTarragon` 是另一套召唤/盗贼混合体，**与工程无关** | `lifeRegen=2`；胸 10/5；腿 6/6 |
@@ -834,7 +855,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    - **射手头**：龙蒿 / 血炎 / 弑神者 / 始源林海 / 金源五套已补（见第 8 节逐笔；金源那颗是「合并下位四套」的
      `AuricTeslaHoodedFacemask`）；只剩欧米茄蓝（OmegaBlue，**三个源都没有职业头**，要做就是自创件）待定。
    - **召唤头**：龙蒿角盔（`TarragonHornedHelm`）/ 血炎狂龙盔（`BloodflareHelmet`）/ 弑神者角盔（`GodSlayerHornedHelm`）/
-     始源林海头盔（`SilvaHelmet`，2026-10-06 补）四套已补，见第 8 节逐笔。**剩金源**。各套共用同一条统一口径：
+     始源林海头盔（`SilvaHelmet`，2026-10-06 补）/ 金源星穹盔（`AuricTeslaSpaceHelmet`，2026-10-06 复合收尾）
+     **五套已补完**，见第 8 节逐笔。各套共用同一条统一口径：
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
    - **法师头**：尚未开始（每套还差 1 件）。

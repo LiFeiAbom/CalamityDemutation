@@ -424,6 +424,29 @@ Items: {
 			'''
 	}
 
+	AuricTeslaSpaceHelmet: {
+		DisplayName: Auric Tesla Space Helmet
+		Tooltip:
+			'''
+			+7 max minions
+			12% increased summon damage
+			12% increased whip range
+			12% increased whip attack speed
+			Not moving boosts all damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+
+			Summoner Tarragon, Bloodflare, God Slayer, and Silva armor effects
+			All projectiles spawn healing auric orbs on enemy hits
+			Max run speed and acceleration boosted by 10%
+			120% increased minion damage
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
+	}
+
 	AsgardianAegis: {
 		DisplayName: Asgardian Aegis
 		Tooltip:
