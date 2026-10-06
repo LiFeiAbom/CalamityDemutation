@@ -1274,12 +1274,19 @@ namespace CalamityDemutation.Players
             {
                 Player.statLifeMax2 += Player.statLifeMax2;
             }
-            // 勇士徽章：+10%近战伤害、+10%近战暴击率、+5近战穿透
+            // 勇气勋章：+10% 近战伤害、+10% 近战暴击率、+10 近战穿透；
+            // 穿戴全套龙蒿近战套（tarraSet + tarraMelee）时额外 +15% 近战攻速（用户 2026-10-06 指定）。
+            // tarraSet/tarraMelee 由龙蒿头的 UpdateArmorSet 在本帧更早的装备结算阶段置位，
+            // 本方法（PostUpdateMiscEffects）读到的就是本帧的套装状态。
             if (badgeOfBravery)
             {
                 Player.GetDamage<MeleeDamageClass>() += 0.1f;
                 Player.GetCritChance<MeleeDamageClass>() += 10;
-                Player.GetArmorPenetration<MeleeDamageClass>() += 5;
+                Player.GetArmorPenetration<MeleeDamageClass>() += 10;
+                if (tarraSet && tarraMelee)
+                {
+                    Player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
+                }
             }
             // 血蠕虫围巾：+10% 近战伤害、+10% 近战攻速、+15% 伤害减免
             if (bloodyWormScarf)

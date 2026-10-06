@@ -5,8 +5,10 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
 {
     /// <summary>
-    /// 勇士徽章 - 近战职业饰品
-    /// +10% 近战伤害、+10% 近战暴击、+5 近战穿透。
+    /// 勇气勋章（BadgeofBravery） - 近战职业饰品
+    /// +10% 近战伤害、+10% 近战暴击、+10 近战穿透；
+    /// 穿戴全套龙蒿近战套（tarraSet + tarraMelee）时额外 +15% 近战攻速
+    ///（用户 2026-10-06 指定）。数值统一在 CalamityDemutationPlayer.PostUpdateMiscEffects 结算。
     /// </summary>
     internal class BadgeofBravery : ModItem
     {

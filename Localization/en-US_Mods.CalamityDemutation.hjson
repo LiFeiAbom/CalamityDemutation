@@ -541,7 +541,8 @@ Items: {
 			'''
 			Increases melee damage by 10%
 			Increases melee critical strike chance by 10%
-			Increases melee armor penetration by 5
+			Increases melee armor penetration by 10
+			Increases melee attack speed by 15% while wearing the full Tarragon melee set
 			'''
 	}
 

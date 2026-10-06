@@ -265,6 +265,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**修改勇气勋章（BadgeofBravery）的属性**（用户点名）：
+  +10% 近战伤害 / +10% 近战暴击 / 近战穿透 **+5 → +10**，并新增一条条件效果
+  「穿戴全套龙蒿近战套（`tarraSet && tarraMelee`）时额外 **+15% 近战攻速**」。
+  数值统一在 `CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `badgeOfBravery` 块里结算
+  （该块与龙蒿相关块同在 `PostUpdateMiscEffects`，且龙蒿标记由装备结算阶段更早置位，故条件判定安全）；
+  中英 tooltip 同步改穿透为 10 并补条件行。验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线收尾·第五件 = 古圣金源复合盗贼头——金羽十杀盔（AuricTeslaPlumedHelm）**；
   另按用户点名给始源林海面具补上 CI 的**移速 +20%**。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaPlumedHelm.cs`（贴图 30×20 / `_Head.png` 40×1120，
