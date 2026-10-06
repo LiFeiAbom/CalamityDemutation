@@ -174,6 +174,28 @@ namespace CalamityDemutation.Content.Projectiles
             {
                 roguePlayer.tarraThrowingCrits++;
             }
+            // 血炎盗贼套装（bloodflareThrowing）的「盗贼暴击 50% 几率治疗你」
+            //（照经典版 CalamityPlayerPreTrailer.cs:6226-6246）：
+            // 要求暴击 + 弹幕算盗贼弹幕 + 骰中 50%，且目标允许吸血（canGhostHeal）。
+            // **注意源只回 1 点生命**——算出来的数值只是拿去扣 lifeSteal 额度（×2），并不是治疗量，本工程照源。
+            CalamityDemutationPlayer bloodThrowing = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (bloodThrowing.bloodflareThrowing && hit.Crit && Main.rand.Next(2) == 0
+                && CDUtil.IsRogueProjectile(projectile) && target.canGhostHeal)
+            {
+                float healCostMult = 0.03f - (float)projectile.numHits * 0.015f;
+                if (healCostMult < 0f)
+                    healCostMult = 0f;
+                float lifeStealCost = (float)projectile.damage * healCostMult;
+                if (lifeStealCost < 0f)
+                    lifeStealCost = 0f;
+                Player bloodOwner = Main.player[projectile.owner];
+                if (bloodOwner.lifeSteal > 0f)
+                {
+                    bloodOwner.statLife += 1;
+                    bloodOwner.HealEffect(1);
+                    bloodOwner.lifeSteal -= lifeStealCost * 2f;
+                }
+            }
             // 龙蒿法师套装（tarraMage）的两件事（口径照经典版 CalamityGlobalProjectile.cs:440-462）：
             // ① 统计魔法暴击次数，满 5 由 CalamityDemutationGlobalItem.Shoot 喷出叶暴风；
             // ② 命中时按弹幕伤害回血：比例 = 0.03 - numHits × 0.015，剂量 = 弹幕伤害 ÷50（穿金源时 ÷100），

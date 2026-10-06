@@ -571,6 +571,28 @@ Items: {
 		Tooltip: 30% increased movement speed; increases all damage and critical strike chance by 10%
 	}
 
+	BloodflareHelm: {
+		DisplayName: Bloodflare Imp Mask
+		Tooltip:
+			'''
+			You can move freely through liquids and have temporary immunity to lava
+			10% increased rogue damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+			Greatly increases life regen
+			Enemies below 50% life have a chance to drop hearts when struck
+			Enemies above 50% life have a chance to drop mana stars when struck
+			Enemies killed during a Blood Moon have a much higher chance to drop Blood Orbs
+			Being over 80% life boosts your defense by 30 and rogue crit by 5%
+			Being below 80% life boosts your rogue damage by 10%
+			Rogue critical strikes have a 50% chance to heal you
+			Rogue stealth builds while not attacking and not moving, up to a max of 135
+			Rogue stealth only reduces when you attack, it does not reduce while moving
+			The higher your rogue stealth the higher your rogue damage, crit, and movement speed
+			'''
+	}
+
 	BloodflareHelmet: {
 		DisplayName: Bloodflare Wyvern Helm
 		Tooltip:

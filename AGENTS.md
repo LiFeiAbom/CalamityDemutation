@@ -265,6 +265,26 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**盗贼线第二件 = 血炎盗贼头——血饮魔精盔（BloodflareHelm）**。
+  ⚠️ 命名：经典版里 **`BloodflareHelm` 才是盗贼头**（`BloodflareMask` 近战 / `BloodflareHornedHelm` 射手 /
+  `BloodflareHelmet` 召唤 / `BloodflareHornedMask` 法师）；现代版对应 `BloodflareHeadRogue`。
+  显示名由用户给定：en `Bloodflare Imp Mask`、zh **血饮魔精盔**。
+  ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHelm.cs`（贴图 `BloodflareHelm.png` 26×24 /
+  `_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 60 金、
+  **防御 28**（源码同行另留 `//85`）、月后稀有度 13。
+  ② 单件（照经典版）：lavaMax +240、ignoreWater、盗贼伤害 +10% / 盗贼暴击 +10%
+  （经 `CDUtil.GetRogueDamageClass` 加类 + 经典版投掷桥 `CDUtil.AddClassicThrowingStats`）。
+  ③ 套装 `bloodflareSet + bloodflareThrowing` + `crimsonRegen` + **潜行上限 135**（`GrantRogueStealth(1.35f)`），
+  两条盗贼专属效果（照经典版 CalamityPlayerPreTrailer.cs:5142-5152 / 6226-6246）：
+  (a)「生命 >80% 上限时 +30 防御与 +5% 盗贼暴击；否则 +10% 盗贼伤害」——源是 if/else 互斥，
+  落在 `PostUpdateMiscEffects`；
+  (b)「盗贼暴击 50% 几率治疗你」——落在 `GlobalProjectile.OnHitNPC`：要求暴击 + 盗贼弹幕
+  （`CDUtil.IsRogueProjectile`）+ `Main.rand.Next(2) == 0` + 目标 `canGhostHeal`；
+  **源只回 1 点生命**（算出来的数值只用于扣 lifeSteal 额度 ×2），照源。
+  ④ 玩家侧新增 `bloodflareThrowing`（`ResetEffects` / `UpdateDead` 两处复位；本件没有跨帧计时器）。
+  ⑤ 配方与其余血炎头逐字一致（现代 Bloodstone×25 + BloodOrb×10 + RuinousSoul×2 /
+  经典 BloodstoneCore×11 + RuinousSoul×2，月台）；中英本地化各补 `Items.BloodflareHelm`，行尾整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线开线·第一件 = 龙蒿盗贼头——龙蒿头盔（TarragonHelmet）**。
   ⚠️ **命名坑**：经典版里 **`TarragonHelmet` 才是盗贼头**（`TarragonHelm` 近战 / `TarragonMask` 法师 /
   `TarragonVisage` 射手 / `TarragonHornedHelm` 召唤）；现代版对应 `TarragonHeadRogue`，显示名同为 Tarragon Helmet。

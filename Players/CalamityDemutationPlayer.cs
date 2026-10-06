@@ -258,6 +258,12 @@ namespace CalamityDemutation.Players
         /// <summary>血炎召唤套装召唤地雷的冷却（帧，900 = 15 秒；跨帧计时器，只在死亡时复位）</summary>
         public int bloodflareSummonTimer = 0;
         /// <summary>
+        /// 血炎套装·盗贼向（BloodflareHelm 的套装标记）：生命 ≥80% 时 +30 防御与 +5% 盗贼暴击、
+        /// 低于 80% 时 +10% 盗贼伤害（见 PostUpdateMiscEffects）；另有盗贼暴击 50% 几率回血
+        /// （见 CalamityDemutationGlobalProjectile.OnHitNPC）；潜行上限 135 由该头盔的 UpdateArmorSet 补给灾厄侧。
+        /// </summary>
+        public bool bloodflareThrowing = false;
+        /// <summary>
         /// 血契已装备（最大生命翻倍，代价是有 25% 概率被暴击）
         /// </summary>
         public bool bloodPact = false;
@@ -837,6 +843,7 @@ namespace CalamityDemutation.Players
             bloodflareRanged = false;
             bloodflareSet = false;
             bloodflareSummon = false;
+            bloodflareThrowing = false;
             bloomStone = false;
             bloodPact = false;
             bloodyWormScarf = false;
@@ -1005,6 +1012,7 @@ namespace CalamityDemutation.Players
             bloodflareSet = false;
             bloodflareSummon = false;
             bloodflareSummonTimer = 0;
+            bloodflareThrowing = false;
             bloomStone = false;
             bloodPact = false;
             bloodyWormScarf = false;
@@ -2707,6 +2715,25 @@ namespace CalamityDemutation.Players
                     bloodflareHeartTimer--;
                 if (bloodflareManaTimer > 0)
                     bloodflareManaTimer--;
+            }
+            // 血炎盗贼头（BloodflareHelm）的 bloodflareThrowing 套装效果
+            //（照经典版 CalamityPlayerPreTrailer.cs:5142-5152）：
+            // 生命高于 80% 上限时 +5% 盗贼暴击与 +30 防御；否则 +10% 盗贼伤害。源是 if/else，两者互斥。
+            // 与其它套装加成一样按"每帧叠加、随 ResetEffects 清零"的方式生效。
+            if (bloodflareThrowing)
+            {
+                DamageClass throwingClass = CDUtil.GetRogueDamageClass();
+                if (Player.statLife > (int)(Player.statLifeMax2 * 0.8))
+                {
+                    Player.GetCritChance(throwingClass) += 5;          // 盗贼暴击率 +5%（现代版走伤害类）
+                    CDUtil.AddClassicThrowingStats(Player, 0f, 5);     // 经典版：写进它的自定义投掷字段
+                    Player.statDefense += 30;                          // 防御 +30
+                }
+                else
+                {
+                    Player.GetDamage(throwingClass) += 0.1f;           // 盗贼伤害 +10%（现代版走伤害类）
+                    CDUtil.AddClassicThrowingStats(Player, 0.1f, 0);   // 经典版：写进它的自定义投掷字段
+                }
             }
             // 血炎召唤头（BloodflareHelmet）的 bloodflareSummon 套装效果（照经典版）：
             // ① 生命 ≥90% 时 +10% 召唤伤害；≤50% 时 +20 防御与 +2 生命再生（两者互斥）；
