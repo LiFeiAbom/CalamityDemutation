@@ -163,6 +163,40 @@ namespace CalamityDemutation.Content.Projectiles
                 }
                 Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
+            // 龙蒿法师套装（tarraMage）的两件事（口径照经典版 CalamityGlobalProjectile.cs:440-462）：
+            // ① 统计魔法暴击次数，满 5 由 CalamityDemutationGlobalItem.Shoot 喷出叶暴风；
+            // ② 命中时按弹幕伤害回血：比例 = 0.03 - numHits × 0.015，剂量 = 弹幕伤害 ÷50（穿金源时 ÷100），
+            //    90 帧冷却，且要求本机玩家的 lifeSteal 额度 > 0（与上面两条吸血同源的闸门）。
+            //    注：源 tooltip 写「50% 几率」，但经典版实现里只有冷却、没有随机骰——本工程照源实现、保留原文案。
+            CalamityDemutationPlayer magePlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (magePlayer.tarraMage)
+            {
+                if (hit.Crit && projectile.CountsAsClass<MagicDamageClass>())
+                {
+                    magePlayer.tarraCrits++;
+                }
+                if (target.canGhostHeal && magePlayer.tarraMageHealCooldown <= 0)
+                {
+                    magePlayer.tarraMageHealCooldown = 90;
+                    float healMult = 0.03f - (float)projectile.numHits * 0.015f;
+                    if (healMult > 0f)
+                    {
+                        float lifeStealCost = (float)projectile.damage * healMult;
+                        if ((int)lifeStealCost > 0 && Main.LocalPlayer.lifeSteal > 0f)
+                        {
+                            Main.LocalPlayer.lifeSteal -= lifeStealCost * 1.5f;
+                            int healAmount = magePlayer.auricSet ? projectile.damage / 100 : projectile.damage / 50;
+                            Player healTarget = Main.player[projectile.owner];
+                            healTarget.statLife += healAmount;
+                            healTarget.HealEffect(healAmount);
+                            if (healTarget.statLife > healTarget.statLifeMax2)
+                            {
+                                healTarget.statLife = healTarget.statLifeMax2;
+                            }
+                        }
+                    }
+                }
+            }
             // 弑神者召唤套装（godSlayerSummon）：召唤物 / 哨兵命中敌人时，若节流预算归零就召出一枚弑神幻影
             //（经典版 CalamityGlobalProjectile.cs:848 起；条件同样只认 minion / sentry，不含鞭类弹幕）。
             // 源里那段"挑一个 800 像素内的敌怪"选出的索引其实从未被使用——幻影固定生成在弹幕自身位置、方向纯随机，

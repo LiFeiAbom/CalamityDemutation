@@ -648,6 +648,22 @@ namespace CalamityDemutation.Players
         public bool tarraDefense = false;
         public int tarraDefenseTime = 600;
         public bool tarraLifeRegen = false;
+        /// <summary>
+        /// 龙蒿套装·法师向（TarragonMask 的套装标记）：每第 5 次魔法暴击射出一阵叶暴风
+        /// （计数见 <see cref="tarraCrits"/>，触发见 CalamityDemutationGlobalItem.Shoot），
+        /// 魔法弹幕命中时按弹幕伤害回血（见 CalamityDemutationGlobalProjectile.OnHitNPC）
+        /// </summary>
+        public bool tarraMage = false;
+        /// <summary>
+        /// 龙蒿法师头法弹回血的跨帧冷却（源 90 帧）。照经典版口径：**不随 ResetEffects 复位**，
+        /// 只在死亡时清零（否则冷却形同虚设）。
+        /// </summary>
+        public int tarraMageHealCooldown = 0;
+        /// <summary>
+        /// 龙蒿法师头的「魔法暴击次数」计数：满 5 次由 CalamityDemutationGlobalItem.Shoot 清零并喷叶暴风。
+        /// 照经典版口径：不随任何复位清零，只在消耗时归零。
+        /// </summary>
+        public int tarraCrits = 0;
         public bool tarraMelee = false;
         /// <summary>
         /// 龙蒿套装·远程向（TarragonVisage 的套装标记）：远程暴击命中引发树叶爆炸
@@ -887,6 +903,7 @@ namespace CalamityDemutation.Players
             statisBeltOfCurses = false;
             statisCurse = false;
             tarraLifeRegen = false;
+            tarraMage = false;
             tarraMelee = false;
             tarraRanged = false;
             tarraSet = false;
@@ -1062,6 +1079,8 @@ namespace CalamityDemutation.Players
             tarraDefense = false;
             tarraDefenseTime = 0;
             tarraLifeRegen = false;
+            tarraMage = false;
+            tarraMageHealCooldown = 0;
             tarraMelee = false;
             tarraRanged = false;
             tarraSet = false;
@@ -2597,6 +2616,10 @@ namespace CalamityDemutation.Players
                 if (tarraCooldown > 0)
                     tarraCooldown--;
             }
+            // 龙蒿法师头（TarragonMask）的法弹回血冷却：跨帧计时器，只在死亡时复位
+            //（经典版 CalamityPlayerPreTrailer.cs:3796 为无条件递减）
+            if (tarraMageHealCooldown > 0)
+                tarraMageHealCooldown--;
             if (bloodflareSet)
             {
                 if (bloodflareHeartTimer > 0)

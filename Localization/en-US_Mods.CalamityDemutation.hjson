@@ -1831,6 +1831,27 @@ Items: {
 			'''
 	}
 
+	TarragonMask: {
+		DisplayName: Tarragon Mask
+		Tooltip:
+			'''
+			Temporary immunity to lava and immunity to cursed inferno, fire, cursed, and chilled debuffs
+			Can move freely through liquids
+			10% increased magic damage and critical strike chance
+			5% increased damage reduction and +100 max mana
+			'''
+		SetBonus:
+			'''
+
+			Reduces enemy spawn rates
+			Increased heart pickup range
+			Enemies have a chance to drop extra hearts on death
+			On every 5th critical strike you will fire a leaf storm
+			Magic projectiles have a 50% chance to heal you on enemy hits
+			Amount healed is based on projectile damage
+			'''
+	}
+
 	TarragonVisage: {
 		DisplayName: Tarragon Visage
 		Tooltip:

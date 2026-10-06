@@ -265,6 +265,29 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**法师线开始·第一件 = 龙蒿法师头——龙蒿面具（TarragonMask）**。
+  口径同射手/召唤线：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植
+  （现代版对应 TarragonHeadMagic，仅作对照：它改给 15% 法伤 / 10% 减伤 / 15% 蓝耗减免，
+  且回血走通用吸血球体系，与经典版完全不同）。
+  ① 新增 `Content/Items/Armors/Tarragon/TarragonMask.cs`（贴图 `TarragonMask.png` 22×30 /
+  `TarragonMask_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 50 金、
+  **防御 10**（源码同行另留 `//98`）、月后稀有度 12。
+  ② 单件：魔法伤害 +10%、魔法暴击 +10%、减伤 +5%、最大法力 +100、lavaMax +240、ignoreWater，
+  并免疫诅咒地狱/着火了/诅咒/冷冻（经典版 UpdateEquip 原样）。
+  ③ 套装 `tarraSet + tarraMage`，两条法师专属效果（都照经典版）：
+  (a)「每第 5 次魔法暴击射出一阵叶暴风」——暴击计数在 `CalamityDemutationGlobalProjectile.OnHitNPC`
+  （`hit.Crit && CountsAsClass<MagicDamageClass>()`），满 5 时在 `CalamityDemutationGlobalItem.Shoot` 清零并喷
+  **9~11 枚 `ProjectileID.Leaf`**（源里裸数字 206 已 Cecil 反查为 Leaf）、伤害 = 本次射击 ×0.2；
+  (b)「魔法弹幕命中回血」——同一 OnHitNPC 里按 `0.03 - numHits×0.015` 的比例扣 lifeSteal、剂量
+  弹幕伤害 ÷50（穿金源时 ÷100）、**90 帧冷却**。**注意**：源 tooltip 写「50% 几率」，但经典版实现里
+  只有冷却、没有随机骰——本工程照源实现并保留原文案（已在代码注释与本节记明，别再当 bug 去"修"）。
+  ④ 玩家侧新增 `tarraMage` / `tarraMageHealCooldown` / `tarraCrits` 三个字段：`tarraMage` 随
+  `ResetEffects` 与 `UpdateDead` 两处复位；`tarraMageHealCooldown` 只在死亡清零、`PostUpdateMiscEffects` 里递减；
+  `tarraCrits` 不随任何复位清零（照源，只在消耗时归零）。
+  ⑤ 配方与其余龙蒿头逐字一致（现代 UelibloomBar×12 + DivineGeode×6 / 经典 UeliaceBar×7 + DivineGeode×6，
+  均在 `TileID.LunarCraftingStation`）；中英本地化各补 `Items.TarragonMask`（DisplayName / Tooltip / SetBonus），
+  行尾整回 CRLF。显示名：en `Tarragon Mask`、zh **龙蒿面具**。
+  验证：编译 0 警告 0 错误，资源自检 144 条全命中。
 - 最近一批工作（2026-10-06）：**召唤线收尾·第五件 = 古圣金源召唤头——金宇星界盔（AuricTeslaSpaceHelmet），
   复合下位四套召唤效果**（用户点名「进行复合，主要参照 CI 版和经典版」）。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaSpaceHelmet.cs`（贴图 `AuricTeslaSpaceHelmet.png` 26×20 /
@@ -860,7 +883,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **五套已补完**，见第 8 节逐笔。各套共用同一条统一口径：
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
-   - **法师头**：尚未开始（每套还差 1 件）。
+   - **法师头**：龙蒿面具（`TarragonMask`，2026-10-06 起手，见第 8 节逐笔）。**剩血炎、弑神者、始源林海、金源**四套。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。

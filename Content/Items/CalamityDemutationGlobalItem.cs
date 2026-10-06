@@ -268,6 +268,29 @@ namespace CalamityDemutation.Content.Items
                     Projectile.NewProjectile(source, position, velocity * 1.25f, ModContent.ProjectileType<GodSlayerShrapnelRound>(), roundDamage, 2f, player.whoAmI);
                 }
             }
+            // 龙蒿法师套装（tarraMage）的「每第 5 次魔法暴击射出一阵叶暴风」：
+            // 暴击次数由 CalamityDemutationGlobalProjectile.OnHitNPC 累加，满 5 次在这里清零并喷出
+            // 9~11 枚原版树叶（ProjectileID.Leaf，已 Cecil 反查源里的裸数字 206），伤害 = 本次射击 ×0.2，
+            // 初速在本次射击速度的基础上逐个加宽散布；口径照经典版 CalamityGlobalItem.Shoot。
+            if (modPlayer.tarraMage && modPlayer.tarraCrits >= 5)
+            {
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    modPlayer.tarraCrits = 0;
+                    int leafAmt = 9 + Main.rand.Next(3);   // 9 / 10 / 11
+                    for (int l = 0; l < leafAmt; l++)
+                    {
+                        float spreadMult = 0.025f * l;
+                        float leafVelX = velocity.X + Main.rand.Next(-25, 26) * spreadMult;
+                        float leafVelY = velocity.Y + Main.rand.Next(-25, 26) * spreadMult;
+                        float speed = velocity.Length();
+                        speed = item.shootSpeed / speed;   // 源原样：把散布向量重新标定到武器的 shootSpeed
+                        leafVelX *= speed;
+                        leafVelY *= speed;
+                        Projectile.NewProjectile(source, position, new Vector2(leafVelX, leafVelY), ProjectileID.Leaf, (int)(damage * 0.2), knockback, player.whoAmI);
+                    }
+                }
+            }
             return true;
         }
         /// <summary>
