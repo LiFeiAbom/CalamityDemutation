@@ -12,7 +12,7 @@ using SilvaCrystalProj = CalamityDemutation.Content.Projectiles.Summon.SilvaCrys
 namespace CalamityDemutation.Content.Items.Armors.AuricTesla
 {
     /// <summary>
-    /// 金源星穹盔（AuricTeslaSpaceHelmet，英文名 Auric Tesla Space Helmet） - 古圣金源套装的召唤向头部部件：
+    /// 金宇星界盔（AuricTeslaSpaceHelmet，英文名 Auric Tesla Space Helmet） - 古圣金源套装的召唤向头部部件：
     /// 一身**复合**承载龙蒿 / 血炎 / 弑神者 / 始源林海四套的**召唤**效果
     ///（按经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；CI 对应件 AuricTeslaHeadSummon
     /// 的防御、单件 +7 仆从、套装 +120% 召唤伤害、叶棱晶基础伤害 3000 与配方材料均一致，仅实现细节有别）。

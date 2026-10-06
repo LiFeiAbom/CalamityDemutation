@@ -265,7 +265,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- 最近一批工作（2026-10-06）：**召唤线收尾·第五件 = 古圣金源召唤头——金源星穹盔（AuricTeslaSpaceHelmet），
+- 最近一批工作（2026-10-06）：**召唤线收尾·第五件 = 古圣金源召唤头——金宇星界盔（AuricTeslaSpaceHelmet），
   复合下位四套召唤效果**（用户点名「进行复合，主要参照 CI 版和经典版」）。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaSpaceHelmet.cs`（贴图 `AuricTeslaSpaceHelmet.png` 26×20 /
   `AuricTeslaSpaceHelmet_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、
@@ -282,7 +282,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⑤ 配方：四件下位**召唤**头（龙蒿角盔 + 血炎狂龙盔 + 始源林海头盔 + 弑神者角盔）＋
   现代 AuricBar×10 / 经典 AuricOre×60 等材料 ＋妄想护符；两分支的坯料清单与既有近战/射手金源头逐字一致，
   只把下位头换成召唤件。
-  显示名：en `Auric Tesla Space Helmet`、zh **金源星穹盔**（用户未点名，按英文意译，与「金源耀日盔 / 金兜铁面盔」同风格）。
+  显示名：en `Auric Tesla Space Helmet`、zh **金宇星界盔**（用户 2026-10-06 指定；注意此件用「金宇」，
+  与其余金源件的「金源耀日盔 / 金兜铁面盔」不同字，系用户口径，勿擅改）。
   ⑥ 中英本地化各补 `Items.AuricTeslaSpaceHelmet`（DisplayName / Tooltip / SetBonus），行尾整回 CRLF。
   验证：编译 0 警告 0 错误，资源自检 144 条全命中。
 - 最近一批工作（2026-10-06）：**召唤线第四件 = 始源林海召唤头（SilvaHelmet）+ 远古叶棱晶（SilvaCrystal）**。
@@ -855,7 +856,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    - **射手头**：龙蒿 / 血炎 / 弑神者 / 始源林海 / 金源五套已补（见第 8 节逐笔；金源那颗是「合并下位四套」的
      `AuricTeslaHoodedFacemask`）；只剩欧米茄蓝（OmegaBlue，**三个源都没有职业头**，要做就是自创件）待定。
    - **召唤头**：龙蒿角盔（`TarragonHornedHelm`）/ 血炎狂龙盔（`BloodflareHelmet`）/ 弑神者角盔（`GodSlayerHornedHelm`）/
-     始源林海头盔（`SilvaHelmet`，2026-10-06 补）/ 金源星穹盔（`AuricTeslaSpaceHelmet`，2026-10-06 复合收尾）
+     始源林海头盔（`SilvaHelmet`，2026-10-06 补）/ 金宇星界盔（`AuricTeslaSpaceHelmet`，2026-10-06 复合收尾）
      **五套已补完**，见第 8 节逐笔。各套共用同一条统一口径：
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
