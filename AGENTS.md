@@ -265,6 +265,25 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**把「我们穿金源套」镜像给现代版灾厄（`auricSet` 反射桥）**，
+  顺手正法了金源近战头里的死代码（用户点名「看看如何用 system 函数把 auricSet 反射过来」）。
+  背景：`AuricTeslaHelm.UpdateArmorSet` 末尾原有两段反射读灾厄 `CalamityPlayer.auricSet` 的代码，
+  但只是 `bool auricSet = (bool)field.GetValue(calPlayer); auricSet = true;`——**改的是局部变量，从未写回**；
+  而且这段每帧都要 `calamity.Code.GetTypes()` 扫一遍类型。
+  ① 新增 `Utilities/CDUtil_CalamityReflect.cs`（`internal static partial class CDUtil` 的第 5 个分部）：
+  `CDUtil.MirrorAuricSetToCalamity(Player)` —— 首次调用时一次性探测并缓存 `CalamityPlayer` 的类型、
+  `auricSet` 的 `FieldInfo`、`Player.GetModPlayer<T>()` 的 `MethodInfo`（任一步失败都记作已探测、之后直接短路，
+  未装灾厄时不会每帧扫类型）；写回用缓存的装箱 `true`，逐帧零分配。
+  ② 调用点：`CalamityDemutationPlayer.PostUpdateEquips()` 开头
+  `if (auricSet) CDUtil.MirrorAuricSetToCalamity(Player);` —— **时机是关键**：
+  灾厄在 `ResetEffects` 里每帧清零，到它自己的 `PostUpdateMiscEffects` 与绘制期才读取，
+  而我们的 `PostUpdateEquips` 相位严格早于那个相位，正好落点（写早了会被抹掉）。
+  四颗金源头（近战 / 射手 / 召唤 / 法师）都置位本模组的 `auricSet`，故一处调用覆盖全部；
+  每名玩家 × 每一端都会跑，联机下服务端也拿到正确状态。
+  ③ **只镜像现代版**（理由见 9.2 末条：现代版 auricSet 零数值、纯外观与世界交互；
+  经典版还带 +10% 跑速，镜像会与工程自己的那份叠成双份）。
+  ④ 删除 `AuricTeslaHelm` 里的两段死代码与随之无用的 `using System; / System.Linq;`，类注释改为指向新机制。
+  验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线收尾·第五件 = 古圣金源复合法师头——金虚万象盔（AuricTeslaWireHemmedVisage，
   英文名 Auric Tesla Wire-Hemmed Visage）**。口径同另三颗金源头：按经典版同名件 1:1 移植
   （CI 的 `AuricTeslaHeadMagic` 与现代版同名件的防御同为 24，套装侧各家写法不同）。
@@ -679,7 +698,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⑤ 本地化：中英各补 `Items.AuricTeslaHoodedFacemask`（DisplayName / Tooltip / SetBonus）。
   显示名：en `Auric Tesla Hooded Facemask`、zh **金兜铁面盔**（用户 2026-10-04 指定）。
   近战头显示名后于 2026-10-05 由用户改为 en `Auric Tesla Royal Helm` / zh **金源耀日盔**（原「古圣金源头盔」）。
-  **未抄**近战头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的无效残留（9.2 已判定是死代码）。
+  **未抄**近战头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的无效残留（9.2 已判定是死代码；
+  整件事后来由反射桥取代，见 9.2 末条与第 8 节的 2026-10-06 记录）。
   **四版本差异备查**：防 40 经典/现代一致；现代 2.0.4 已**删掉 silvaSet/silvaRanged 与 lavaMax/lavaWet**、
   `ArmorSetShadows` 改用 `armorEffectDrawOutlines`；CI `AuricTeslaHeadRanged` 额外给持远程武器时 +20% 远程攻速与
   `AuricbloodflareRangedSoul`、沿用 CI 自己的旧金源件——工程走经典。
@@ -937,7 +957,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 金源配方：经典分支 1:1；现代分支＝CI 的坯料清单（四件套＋妄想护符），但 AuricBar 数量取 **1.4.4 公开源码**
   的 10/20/15（CI 与 2.0.4 都是 12/18/15）；且**漏了 CI 现代胸甲要求的霜冻屏障**（工程只放在经典分支）。
 - `ArmorSetShadows`：工程/经典＝`armorEffectDrawShadow`；现代与 CI＝`armorEffectDrawOutlines`。
-- 金源头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的代码是**无效残留**（读进局部变量就丢，没写回）。
+- 金源头里原先那两段反射读灾厄 `CalamityPlayer.auricSet` 的代码是**无效残留**（读进局部变量就丢、没写回）——
+  **2026-10-06 已正法**：死代码删除，改由 `Utilities/CDUtil_CalamityReflect.cs` 的
+  `CDUtil.MirrorAuricSetToCalamity` 每帧把本模组的 `auricSet` 镜像到**现代版灾厄**；调用点 =
+  `CalamityDemutationPlayer.PostUpdateEquips`（必须在灾厄 `ResetEffects` 清零之后、它 `PostUpdateMiscEffects` 读取之前）。
+  **考证结论（别再重查）**：
+  - `auricSet` 是 `CalamityPlayer` / `CalamityPlayerPreTrailer` 的 **public bool 字段**
+    （1.4.4-release `CalPlayer/CalamityPlayer.cs:1299`；2.0.4 同名；经典版 `CalamityPlayerPreTrailer.cs:639`），
+    两边都在 `ResetEffects`/`UpdateDead` 里每帧清零。
+  - **`Mod.Call` 里没有 auric 入口**：`ModCalls`（1.4.4-release 与 2.0.4 都是 `CalamityMod.Call → ModCalls.Call`）
+    只有 Rogue / PostML 召唤 / Wearing... 那几个套装开关，外加 `SetPlayerColdImmune` / `SetPlayerHeatImmune` /
+    `SetPlayerDefenseDamageImmune`；搜 `auric|rejection` **0 命中**。所以这件事只能走反射。
+  - 1.4.4-release 的 `CalamityPlayer` 有一段 `#region External variables -- Not used by Calamity, only via Mod.Call or reflection`，
+    其中 `externalAuricRejectionImmunity`（25FEB2025 加入）**只**授予金源矿石的排斥免疫
+    （`CalamityPlayerMiscEffects.cs:917` 的 `auricSet || seraphTracers || creativeGodMode || externalAuricRejectionImmunity`），
+    不是整套 auricSet；且 2.0.4 **没有**这个字段（版本差异）。故未采用。
+  - **现代版 `auricSet` 没有任何数值加成**，只控制：① 矿石排斥免疫（`:917`，否则 300 伤害 + 大幅击退）
+    ② 飞毯贴图（`:1140`）③ 灾厄自己叶棱晶的伤害档（`:4002`，需它自己的 silvaSummon，我们不会触发）
+    ④ 金源拖影与纳米粒子（`CalamityPlayerDrawEffects.cs:453`）→ 镜像过去**零平衡副作用**。
+  - **经典版不能镜像**：它的 auricSet 在 `PostUpdateRunSpeeds` 里无条件给 +10% 跑速/加速度
+    （`CalamityPlayerPreTrailer.cs:5477/5492`），而工程自己也实现了一份同样的 +10% → 会变双份。故只镜像现代版；
+    经典版其余 auricSet 分支都还要求它自己的 *Set 标记，我们不置位，本就不会触发。
 
 ### 9.3 明天要处理的清单（建议按此顺序）
 

@@ -5,8 +5,6 @@ using CalamityDemutation.Content.Items.Armors.Silva;
 using CalamityDemutation.Content.Items.Armors.Tarragon;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
-using System;
-using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.AuricTesla
@@ -49,8 +47,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// <summary>
         /// 套装效果：一身承载塔拉贡/血焰/弑神者/席尔瓦四套，附加荆棘、岩浆延时、水下呼吸、
         /// 血腥再生、仇恨提升与岩浆中额外防御/回血。
-        /// 末尾两段反射只把灾厄（现代版/经典版）CalamityPlayer.auricSet 读进局部变量便丢弃，
-        /// 并未写回，属无效残留代码（本文件下方注释亦明确不应写 auricSet）；如需灾厄侧生效须另行处理。
+        /// 这里只置位**本模组**的 auricSet；把「我们穿了金源套」这件事同步给**现代版灾厄**的工作
+        /// 已挪到 <see cref="CalamityDemutation.Utilities.CDUtil.MirrorAuricSetToCalamity"/>，
+        /// 由 CalamityDemutationPlayer.PostUpdateEquips 在 auricSet 为真时每帧写回
+        ///（原先写在这里的两段反射是无效残留：读进局部变量就丢，从没写回；已删除）。
         /// </summary>
         public override void UpdateArmorSet(Player player)
         {
@@ -75,57 +75,6 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             {
                 player.statDefense += 30;       // 泡在岩浆里额外 +30 防御
                 player.lifeRegen += 10;         // 以及 +10 生命回复
-            }
-            // ── 以下两段反射只是把灾厄 CalamityPlayer.auricSet 读进局部变量后丢弃，未写回，属无效残留（见类注释） ──
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
-            {
-                var calamityPlayerType = calamity.Code.GetTypes()
-                    .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
-                if (calamityPlayerType != null)
-                {
-                    var getModPlayerMethod = typeof(Player).GetMethod("GetModPlayer", [])
-                        ?.MakeGenericMethod(calamityPlayerType);
-                    if (getModPlayerMethod != null)
-                    {
-                        if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
-                        {
-                            var field = calamityPlayerType.GetField("auricSet",
-                                System.Reflection.BindingFlags.Public |
-                                System.Reflection.BindingFlags.NonPublic |
-                                System.Reflection.BindingFlags.Instance);
-                            if (field != null)
-                            {
-                                bool auricSet = (bool)field.GetValue(calPlayer);
-                                auricSet = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
-            {
-                var calamityPlayerType = classic.Code.GetTypes()
-                    .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
-                if (calamityPlayerType != null)
-                {
-                    var getModPlayerMethod = typeof(Player).GetMethod("GetModPlayer", [])
-                        ?.MakeGenericMethod(calamityPlayerType);
-                    if (getModPlayerMethod != null)
-                    {
-                        if (getModPlayerMethod.Invoke(player, null) is ModPlayer calPlayer)
-                        {
-                            var field = calamityPlayerType.GetField("auricSet",
-                                 System.Reflection.BindingFlags.Public |
-                                 System.Reflection.BindingFlags.NonPublic |
-                                 System.Reflection.BindingFlags.Instance);
-                            if (field != null)
-                            {
-                                bool auricSet = (bool)field.GetValue(calPlayer);
-                                auricSet = true;
-                            }
-                        }
-                    }
-                }
             }
         }
         /// <summary>

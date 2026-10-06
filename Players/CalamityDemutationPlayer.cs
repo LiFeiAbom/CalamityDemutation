@@ -3291,6 +3291,12 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void PostUpdateEquips()
         {
+            // 金源套镜像：玩家穿本模组金源套时，把现代版灾厄的 CalamityPlayer.auricSet 也置真，
+            // 让灾厄侧自己的 auricSet 分支（金源矿石排斥免疫 / 金源飞毯贴图 / 金源拖影）跟着生效。
+            // 必须写在这里：灾厄在 ResetEffects 里每帧清零，而它的读取点在 PostUpdateMiscEffects（更晚的相位）。
+            // 细节与"为什么不对经典版镜像"见 Utilities/CDUtil_CalamityReflect.cs 的类注释。
+            if (auricSet)
+                CDUtil.MirrorAuricSetToCalamity(Player);
             // ── 永久增益消耗品（糖心柑橘 / 有机豆荚 / 新鲜蓝莓 / 熔岩浆果）──
             // 一次性解锁、标志随存档持久化（见 SaveData/LoadData），加成每帧按标志叠加。
             // 必须放 PostUpdateEquips 而不是 ResetEffects：ResetEffects 的职责是把这些属性清零，加成要在它之后加
