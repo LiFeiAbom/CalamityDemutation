@@ -447,6 +447,25 @@ Items: {
 			'''
 	}
 
+	AuricTeslaWireHemmedVisage: {
+		DisplayName: Auric Tesla Wire-Hemmed Visage
+		Tooltip:
+			'''
+			20% increased magic damage and critical strike chance and +100 max mana
+			Not moving boosts all damage and critical strike chance
+			'''
+		SetBonus:
+			'''
+
+			Magic Tarragon, Bloodflare, God Slayer, and Silva armor effects
+			All projectiles spawn healing auric orbs on enemy hits
+			Max run speed and acceleration boosted by 10%
+			Press [{0}] to dash in any of eight directions
+			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
+			This effect has a 45-second cooldown
+			'''
+	}
+
 	AsgardianAegis: {
 		DisplayName: Asgardian Aegis
 		Tooltip:

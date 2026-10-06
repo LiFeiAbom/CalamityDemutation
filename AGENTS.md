@@ -265,6 +265,25 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**法师线收尾·第五件 = 古圣金源复合法师头——金虚万象盔（AuricTeslaWireHemmedVisage，
+  英文名 Auric Tesla Wire-Hemmed Visage）**。口径同另三颗金源头：按经典版同名件 1:1 移植
+  （CI 的 `AuricTeslaHeadMagic` 与现代版同名件的防御同为 24，套装侧各家写法不同）。
+  ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaWireHemmedVisage.cs`（贴图 34×20 / `_Head.png` 40×1120，
+  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、**防御 24**（源码另留 `//132`）、月后稀有度 20。
+  ② 套装（照经典版 1:1）：置位 `tarraSet+tarraMage` / `bloodflareSet+bloodflareMage` /
+  `godSlayer+godSlayerMage` / `silvaSet+silvaMage` / `auricSet`；另加荆棘 3、lavaMax 240、ignoreWater、
+  crimsonRegen、岩浆中 +30 防御 / +10 回血。按经典版原样**不置** `godSlayerDamage`、**不加** aggro；
+  **套装不给额外法伤**——法伤全在单件的 +20%（这点与召唤头的「套装 +120%」不同，别再照抄召唤头）。
+  ③ 四条法师效果**全部由下位各自的既有实现承接**，本件只负责置位标记（无需新增任何弹幕或玩家侧逻辑）：
+  龙蒿叶暴风与法弹回血、血炎幽灵魔弹与暴击火焰爆炸、弑神者烈焰/治疗烈焰与受击魔法爆炸、
+  始源林海法弹巨型爆炸与无敌后法伤加成。
+  ④ 单件：`auricBoost` + 魔法伤害 +20%、魔法暴击 +20%、最大法力 +100（经典版原样；
+  现代/CI 是 30/20 + 蓝耗 ×0.8，工程走经典）。
+  ⑤ 配方：四件下位**法师**头（龙蒿面具 + 血魇九头盔 + 弑神者面甲 + 始源林海罩帽）＋
+  现代 AuricBar×10 / 经典 AuricOre×60 等材料 ＋妄想护符；两分支的坯料清单与另三颗金源头逐字一致。
+  ⑥ 中英本地化各补 `Items.AuricTeslaWireHemmedVisage`（DisplayName / Tooltip / SetBonus），行尾整回 CRLF。
+  显示名：en `Auric Tesla Wire-Hemmed Visage`、zh **金虚万象盔**（两个名字都由用户给定）。
+  验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线第四件 = 始源林海法师头——始源林海罩帽（SilvaMaskedCap）**。
   口径同前几件：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植
   （现代版对应 SilvaHeadMagic，防御同为 21）。
@@ -901,6 +920,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 |---|---|---|---|---|
 | 金源头 | 防 54；近战 20/20；**攻速 28% 在单件** | 防 54；近战 20/10；攻速 28% 在套装；套装另给 aggro+1200 | 防 54；20/20/28 | 防 54；20/20；**无攻速** |
 | 金源召唤头 | 防 12；单件 +7 仆从＋统一三条 12%（召唤伤害/鞭子范围/鞭子攻速）；套装 +120%、含 godSlayer、叶棱晶 3000 | 防 12；单件仅 +15% 召唤伤害；套装 +75%、+6 仆从、**无 godSlayer**、叶棱晶 750 | 防 12；+7；套装 +120%、+1 仆从、叶棱晶 3000 | 防 12；+7；套装 +120%、叶棱晶 3000、含 lavaMax 与岩浆奖励 |
+| 金源法师头 | 防 24；单件法伤 **20/20** + 法力 100；套装无额外法伤、含 godSlayer 与 lavaMax/岩浆奖励 | 防 24；单件 30/20＋蓝耗 ×0.8；套装**无 godSlayer**、ArmorSetShadows 用轮廓线 | 防 24；单件 30/20＋蓝耗 ×0.8；套装**无 lavaMax** | 防 24；单件 20/20 + 法力 100、含 lavaMax 与岩浆奖励 |
 | 金源胸 | 移速 +25%；通用 **22/22** | **无移速**；通用 8/5 | 移速 +25%；8/5；+GodSlayerDMGprotect | 移速 +25%；8/5 |
 | 金源腿 | 通用 **14/14** | 移速仅 +10%；12/5 | 移速 +50%；12/10 | 移速 +50%；12/5 |
 | 龙蒿胸/腿 | 通用 10/10（腿半血再 +15% 移速） | `lifeRegen=3`；胸 10/5；腿移速仅 10%、8/8 | `AncientTarragon` 是另一套召唤/盗贼混合体，**与工程无关** | `lifeRegen=2`；胸 10/5；腿 6/6 |
@@ -963,7 +983,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
      2026-10-06 再提到 12%）。
    - **法师头**：龙蒿面具（`TarragonMask`）/ 血魇九头盔（`BloodflareHornedMask`）/ 弑神者面甲（`GodSlayerVisage`）/
-     始源林海罩帽（`SilvaMaskedCap`）四套已补（2026-10-06，见第 8 节逐笔）。**剩金源**一套。
+     始源林海罩帽（`SilvaMaskedCap`）/ 金虚万象盔（`AuricTeslaWireHemmedVisage`，复合收尾）
+     **五套已补完**（2026-10-06，见第 8 节逐笔）。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。
