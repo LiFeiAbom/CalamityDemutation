@@ -130,25 +130,7 @@ namespace CalamityDemutation.Utilities
         /// </summary>
         private static void GrantClassicRogueStealth(Player player, float maxStealth)
         {
-            if (!classicStealthProbed)
-            {
-                classicStealthProbed = true;
-                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
-                {
-                    Type classicPlayerType = classic.Code.GetTypes()
-                        .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
-                    FieldInfo stealthField = classicPlayerType?.GetField("rogueStealthMax",
-                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                    MethodInfo getModPlayer = classicPlayerType == null
-                        ? null
-                        : typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(classicPlayerType);
-                    if (stealthField != null && getModPlayer != null)
-                    {
-                        classicRogueStealthMaxField = stealthField;
-                        classicGetModPlayerForStealth = getModPlayer;
-                    }
-                }
-            }
+            ProbeClassicStealthBridge();
             if (classicRogueStealthMaxField == null || classicGetModPlayerForStealth == null)
                 return;
             if (classicGetModPlayerForStealth.Invoke(player, null) is ModPlayer classicPlayer)
@@ -157,6 +139,60 @@ namespace CalamityDemutation.Utilities
                 float current = classicRogueStealthMaxField.GetValue(classicPlayer) is float f ? f : 0f;
                 classicRogueStealthMaxField.SetValue(classicPlayer, current + maxStealth);
             }
+        }
+
+        /// <summary>
+        /// 一次性探测经典版的 <c>CalamityPlayerPreTrailer.rogueStealthMax</c> 与其取 ModPlayer 的方法并缓存。
+        /// </summary>
+        private static void ProbeClassicStealthBridge()
+        {
+            if (classicStealthProbed)
+                return;
+            classicStealthProbed = true;
+            if (!ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
+                return;
+            Type classicPlayerType = classic.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
+            FieldInfo stealthField = classicPlayerType?.GetField("rogueStealthMax",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo getModPlayer = classicPlayerType == null
+                ? null
+                : typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(classicPlayerType);
+            if (stealthField != null && getModPlayer != null)
+            {
+                classicRogueStealthMaxField = stealthField;
+                classicGetModPlayerForStealth = getModPlayer;
+            }
+        }
+
+        /// <summary>
+        /// 读当前盗贼潜行上限：现代版走官方 ModCall <c>GetMaxStealth</c>，经典版反射读 <c>rogueStealthMax</c>；
+        /// 两边都拿不到就返回 0。
+        /// </summary>
+        public static float GetRogueStealthMax(Player player)
+        {
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && calamity.Call("GetMaxStealth", player) is float modernMax)
+                return modernMax;
+            ProbeClassicStealthBridge();
+            if (classicRogueStealthMaxField != null && classicGetModPlayerForStealth != null
+                && classicGetModPlayerForStealth.Invoke(player, null) is ModPlayer classicPlayer
+                && classicRogueStealthMaxField.GetValue(classicPlayer) is float classicMax)
+            {
+                return classicMax;
+            }
+            return 0f;
+        }
+
+        /// <summary>
+        /// 按**当前潜行上限的比例**再追加一档（CI 的弑神者盗贼头写法：<c>rogueStealthMax += 当前上限 / 7</c>，
+        /// 即 ratio = 1/7）。必须在 <see cref="GrantRogueStealth"/> 之后调用——它读的是"加上基础档之后"的实时上限，
+        /// 所以会连带把玩家其它盗贼装备给的上限一起按比例放大，与 CI 的行为一致。
+        /// </summary>
+        public static void GrantRogueStealthRatio(Player player, float ratio)
+        {
+            float current = GetRogueStealthMax(player);
+            if (current > 0f)
+                GrantRogueStealth(player, current * ratio);
         }
 
         // ── 盗贼伤害 / 暴击桥（魔影面罩用）──

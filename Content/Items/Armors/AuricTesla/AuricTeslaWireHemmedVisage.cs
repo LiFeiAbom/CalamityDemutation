@@ -81,15 +81,18 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         }
         /// <summary>
         /// 单件效果：置位 auricBoost 标记（静止时增伤/增暴击与击退加成），
-        /// 并提升魔法伤害 20%、魔法暴击 20%、最大法力 100（经典版 UpdateEquip 原样）
+        /// 并提升魔法伤害 **30%**、魔法暴击 20%、最大法力 100、法力消耗 ×0.8。
+        /// 注：经典版此件单件是 +20% 法伤且没有蓝耗减免，用户 2026-10-06 要求**跟 CI 一致**
+        ///（CI 的 AuricTeslaHeadMagic：manaCost ×0.8 + 法伤 +0.3 + 暴击 +20 + 法力 +100），故取 CI 值。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.auricBoost = true;
-            player.GetDamage<MagicDamageClass>() += 0.2f;   // 魔法伤害 +20%
+            player.GetDamage<MagicDamageClass>() += 0.3f;   // 魔法伤害 +30%（CI 口径，用户点名跟 CI 一致）
             player.GetCritChance<MagicDamageClass>() += 20; // 魔法暴击率 +20%
             player.statManaMax2 += 100;                     // 最大法力 +100
+            player.manaCost *= 0.8f;                        // 法力消耗 ×0.8（CI 的 AuricTeslaHeadMagic 原样）
         }
         /// <summary>
         /// 配方：由龙蒿面具 + 血炎角面 + 弑神者面甲 + 始源林海罩帽（四件下位**法师**头）升阶。

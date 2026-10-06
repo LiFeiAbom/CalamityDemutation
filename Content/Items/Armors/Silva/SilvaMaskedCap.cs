@@ -61,12 +61,15 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         }
         /// <summary>
         /// 穿戴时的属性加成：魔法三连（伤害 / 暴击 / 法力），经典版 UpdateEquip 原样
+        /// 另加「法力消耗 ×0.81」——这一条经典版没有、是 **CI 对应件 SilvaHeadMagicold** 的设计，
+        /// 用户 2026-10-06 对 CI 照后点名补上。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
             player.GetDamage<MagicDamageClass>() += 0.13f;     // 魔法伤害 +13%
             player.GetCritChance<MagicDamageClass>() += 13;    // 魔法暴击率 +13%
             player.statManaMax2 += 100;                        // 最大法力 +100
+            player.manaCost *= 0.81f;                          // 法力消耗 ×0.81（CI 的 SilvaHeadMagicold 原样）
         }
         /// <summary>
         /// 配方：与其余始源林海头部逐字一致（经典分支照经典版源码；现代分支沿用工程既有写法），均需本模组材料 LeadCore

@@ -63,7 +63,9 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             modPlayer.godSlayerThrowing = true;
             // SetBonus 里的 {0} = 冲刺键显示名，{1} = 保命回复量（随数值膨胀开关切换，见 PreKill）
             player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, ConfigSystem.StatInflationEnabled ? 300 : 100);
-            CDUtil.GrantRogueStealth(player, 1.4f);   // 潜行上限 140（源 rogueStealthMax = 1.4f；内部值 1f = 显示 100 点）
+            CDUtil.GrantRogueStealth(player, 1.4f);              // 潜行上限 140（源 rogueStealthMax = 1.4f；内部值 1f = 显示 100 点）
+            CDUtil.GrantRogueStealthRatio(player, 1f / 7f);      // 再按当前上限 +1/7（CI 的 GodSlayerHeadRogueold 写法；
+                                                                 // 单戴此头时 140 → 160，用户 2026-10-06 点名补上）
         }
         /// <summary>
         /// 单件装备加成：盗贼伤害 / 盗贼暴击各 +14（经典版 UpdateEquip 原样；
@@ -76,6 +78,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             player.GetDamage(rogue) += 0.14f;                  // 盗贼伤害 +14%
             player.GetCritChance(rogue) += 14;                 // 盗贼暴击率 +14%
             CDUtil.AddClassicThrowingStats(player, 0.14f, 14); // 经典版：写进它的自定义投掷字段（反射）
+            player.moveSpeed += 0.18f;                         // 移速 +18%（CI 的 GodSlayerHeadRogueold 原样，用户点名补上）
         }
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（与既有弑神者头同规矩）

@@ -82,6 +82,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             player.ignoreWater = true;          // 水下不减速
             player.crimsonRegen = true;         // 血腥再生（原版猩红装备的那套）
             player.GetDamage<SummonDamageClass>() += 1.2f;   // 召唤伤害 +120%（经典版 UpdateArmorSet 原样）
+            player.maxMinions += 1;                          // 仆从上限 +1（CI 的 AuricTeslaHeadSummon 套装项，用户 2026-10-06 点名补上）
             if (player.lavaWet)
             {
                 player.statDefense += 30;       // 泡在岩浆里额外 +30 防御

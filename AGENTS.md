@@ -265,6 +265,19 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**按用户点名，把本次新建的职业头跟 CI 逐件对照，并落实 5 处调整**（对照表见 9.3 第 7 条）：
+  ① 始源林海法师头（SilvaMaskedCap）：**加「法力消耗 ×0.81」**（CI 的 SilvaHeadMagicold）。
+  ② 弑神者法师头（GodSlayerVisage）：**加「法力消耗 ×0.83」**（CI 的 GodSlayerHeadMagicold）。
+  ③ 弑神者盗贼头（GodSlayerMask）：**加「移速 +18%」**与**「潜行上限再 +当前上限/7」**
+  （CI 的 GodSlayerHeadRogueold 写法；单戴此头时 140 → 160）。后者为此新加了
+  `CDUtil.GetRogueStealthMax`（现代走 ModCall `GetMaxStealth`、经典反射）与 `CDUtil.GrantRogueStealthRatio`——
+  它读的是"加上基础档之后的实时上限"，所以会连带把玩家其它盗贼装备给的上限一起按比例放大，与 CI 行为一致。
+  ④ 金源召唤头（AuricTeslaSpaceHelmet）：套装**补 +1 仆从**（CI 的 AuricTeslaHeadSummon）。
+  ⑤ 金源法师头（AuricTeslaWireHemmedVisage）：**跟 CI 一致**——法伤 +20% → **+30%**，并补「法力消耗 ×0.8」。
+  用户明确"不动"的两件：始源林海召唤头（不取 CI 的鞭速 +15%）、弑神者召唤头（防御保持 12，不取 CI 的 29）。
+  中英本地化同步：两颗法师头 tooltip 各补「法力消耗降低 19% / 17%」、金源法师头改 30% + 蓝耗 20%、
+  金源召唤头套装补「仆从上限 +1」、弑神者面具补「移速 +18%」与三行潜行说明（上限 160）。
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线第三件 = 弑神者盗贼头——弑神者面具（GodSlayerMask）**。
   ⚠️ 命名：经典版里 **`GodSlayerMask` 才是盗贼头**（`GodSlayerHelm` 近战 / `GodSlayerHelmet` 射手 /
   `GodSlayerVisage` 法师 / `GodSlayerHornedHelm` 召唤）——就是早先判定"是盗贼头、先不移植"的那颗；
@@ -1129,6 +1142,21 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
    （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。
+
+7. **【对照】2026-10-06 新建职业头 × CI 逐件对照（用户已拍板，5 处已落地，别再重查）：**
+
+   | 我们的件 | 我们（源 = 经典版） | CI 对应件 | 差异 | 处置 |
+   |---|---|---|---|---|
+   | SilvaHelmet 召唤 | 防 13 / +5 仆从 / 套 +75% / 叶棱晶 1500 | SilvaHeadSummonold | CI 多鞭速 +15%、SilvaSummonSetLegacy | **不动**（鞭速由工程统一 12/12/12 覆盖） |
+   | SilvaMaskedCap 法师 | 防 21 / 法伤 13-13 / 法力 100 | SilvaHeadMagicold | CI 多 **蓝耗 ×0.81** | **已补** |
+   | GodSlayerHornedHelm 召唤 | 防 **12** / +3 仆从 / 套 +65% | GodSlayerHeadSummonold | CI 防御 **29** | **不动** |
+   | GodSlayerVisage 法师 | 防 21 / 法伤 14-14 / 法力 100 | GodSlayerHeadMagicold | CI 多 **蓝耗 ×0.83** | **已补** |
+   | GodSlayerMask 盗贼 | 防 29 / 盗贼 14-14 / 潜行 140 | GodSlayerHeadRogueold | CI 多 **移速 +18%**、**潜行 +当前上限/7** | **已补**（潜行 140 → 160） |
+   | AuricTeslaSpaceHelmet 召唤 | 防 12 / +7 仆从 / 套 +120% / 叶棱晶 3000 | AuricTeslaHeadSummon | CI 套装多 **+1 仆从** | **已补** |
+   | AuricTeslaWireHemmedVisage 法师 | 防 24 / 法伤 **+20**-20 / 法力 100 | AuricTeslaHeadMagic | CI 多 **蓝耗 ×0.8**、法伤 **+30** | **按 CI 对齐** |
+
+   **没有 CI 对照的**：龙蒿 / 血炎两套（CI 里没有自己的甲，直接引用灾厄本体件）、魔影套（CI 无）——
+   这几件的对照基准只能是**现代版**，不是 CI。
 
 > 改任何 tooltip 都要同步 `Localization/en-US_…hjson` 与 `zh-Hans_…hjson` 两处，并把行尾整回 CRLF（第 4 节口径）。
 

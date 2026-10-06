@@ -445,6 +445,7 @@ Items: {
 			Summoner Tarragon, Bloodflare, God Slayer, and Silva armor effects
 			All projectiles spawn healing auric orbs on enemy hits
 			Max run speed and acceleration boosted by 10%
+			+1 max minion
 			120% increased minion damage
 			Press [{0}] to dash in any of eight directions
 			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
@@ -456,7 +457,7 @@ Items: {
 		DisplayName: Auric Tesla Wire-Hemmed Visage
 		Tooltip:
 			'''
-			20% increased magic damage and critical strike chance and +100 max mana
+			30% increased magic damage and critical strike chance, +100 max mana, and 20% reduced mana cost
 			Not moving boosts all damage and critical strike chance
 			'''
 		SetBonus:
@@ -1345,7 +1346,11 @@ Items: {
 
 	GodSlayerMask: {
 		DisplayName: God Slayer Mask
-		Tooltip: 14% increased rogue damage and critical strike chance
+		Tooltip:
+			'''
+			14% increased rogue damage and critical strike chance
+			18% increased movement speed
+			'''
 		SetBonus:
 			'''
 
@@ -1354,6 +1359,9 @@ Items: {
 			While the cooldown for this effect is active you gain a 10% increase to all damage
 			While at full HP all of your rogue stats are boosted by 10%
 			If you take over 80 damage in one hit you will be given extra immunity frames
+			Rogue stealth builds while not attacking and not moving, up to a max of 160
+			Rogue stealth only reduces when you attack, it does not reduce while moving
+			The higher your rogue stealth the higher your rogue damage, crit, and movement speed
 			Press [{0}] to dash in any of eight directions
 			Dealing great damage and inflicting the God Slayer Inferno debuff on contact
 			This effect has a 45-second cooldown
@@ -1366,6 +1374,7 @@ Items: {
 			'''
 			14% increased magic damage and critical strike chance
 			+100 max mana
+			17% reduced mana cost
 			'''
 		SetBonus:
 			'''
@@ -1805,6 +1814,7 @@ Items: {
 			'''
 			13% increased magic damage and critical strike chance
 			+100 max mana
+			19% reduced mana cost
 			'''
 		SetBonus:
 			'''

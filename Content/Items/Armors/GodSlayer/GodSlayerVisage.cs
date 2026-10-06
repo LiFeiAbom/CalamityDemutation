@@ -62,12 +62,15 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
         }
         /// <summary>
         /// 单件装备加成：魔法三连（伤害 / 暴击 / 法力），经典版 UpdateEquip 原样
+        /// 另加「法力消耗 ×0.83」——这一条经典版没有、是 **CI 对应件 GodSlayerHeadMagicold** 的设计，
+        /// 用户 2026-10-06 对 CI 照后点名补上。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
             player.GetDamage<MagicDamageClass>() += 0.14f;     // 魔法伤害 +14%
             player.GetCritChance<MagicDamageClass>() += 14;    // 魔法暴击率 +14%
             player.statManaMax2 += 100;                        // 最大法力 +100
+            player.manaCost *= 0.83f;                          // 法力消耗 ×0.83（CI 的 GodSlayerHeadMagicold 原样）
         }
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（与既有弑神者头同规矩）
