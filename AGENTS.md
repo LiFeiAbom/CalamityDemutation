@@ -267,10 +267,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 - 最近一批工作（2026-10-06）：**召唤线第四件 = 始源林海召唤头（SilvaHelmet）+ 远古叶棱晶（SilvaCrystal）**。
   口径同前三件：单件照经典版（出处 = `CalamityModClassic-cal-1.4.2.101`，即 CalamityModClassicPreTrailer）、
-  套装效果走经典版、并额外挂统一三条 +11%。
+  套装效果走经典版、并额外挂统一三条 +12%。
   ① 新增 `Content/Items/Armors/Silva/SilvaHelmet.cs`（贴图 `SilvaHelmet.png` 20×20 / `SilvaHelmet_Head.png` 40×1120
   取自经典版）：18x18（经典源码即 18）、价值 90 金、**防御 13**（经典版召唤头值，源码同行另留 `//110`）、月后稀有度 15；
-  单件 **+5 仆从上限** + 统一三条（召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度各 +11%）。
+  单件 **+5 仆从上限** + 统一三条（召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度各 +12%）。
   显示名：en `Silva Helmet`、zh **始源林海头盔**（用户未点名，按经典源直译；与近战头「始源林海战盔」区分）。
   ② 套装 `silvaSet` + 新增 `silvaSummon`：**+75% 召唤伤害**（经典版原样），并在主人端补 `SilvaCrystal` 增益 +
   生成一只远古叶棱晶（伤害基准 1500，`originalDamage` 交给 tML 每帧按召唤伤害重算）。
@@ -291,6 +291,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   中英本地化各补 `Items.SilvaHelmet`（DisplayName / Tooltip / SetBonus）、`Buffs.SilvaCrystal`、
   `Projectiles.SilvaCrystal.DisplayName`、`Projectiles.SilvaCrystalExplosion.DisplayName`，行尾已整回 CRLF。
   验证：编译 0 警告 0 错误，资源自检 144 条全命中。
+  **同批口径变更（2026-10-06 用户定）**：召唤头统一单件属性由 +11% 提到 **+12%**
+  （召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度各 +12%）——龙蒿角盔、血炎狂龙盔、弑神者角盔、始源林海头盔
+  四件连同中英 tooltip 一并同步；弑神者护腿那条 +11% 全伤害/暴击与本次无关，未动。
 - **2026-10-05 全天一览（11 笔，倒序）**：`f812d5a` PvP 无法精确镜像的 5 处改近似（破防 / 必暴 / 暴伤期望值折算 / 泰拉电击）｜
   `4ba77a0` **PvP 全覆盖审计**（补齐 8 处，重点是 GlobalItem/GlobalProjectile 补 `ModifyHitPvp` / `ModifyHitPlayer`，
   套装增伤在 PvP 才终于生效）｜`9dbd662` §9.3 第 5 条改写为"逐套补职业头"长期任务并记进度｜
@@ -832,7 +835,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      `AuricTeslaHoodedFacemask`）；只剩欧米茄蓝（OmegaBlue，**三个源都没有职业头**，要做就是自创件）待定。
    - **召唤头**：龙蒿角盔（`TarragonHornedHelm`）/ 血炎狂龙盔（`BloodflareHelmet`）/ 弑神者角盔（`GodSlayerHornedHelm`）/
      始源林海头盔（`SilvaHelmet`，2026-10-06 补）四套已补，见第 8 节逐笔。**剩金源**。各套共用同一条统一口径：
-     **召唤伤害 +11% / 鞭子攻击范围 +11% / 鞭子攻击速度 +11%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%）。
+     **召唤伤害 +12% / 鞭子攻击范围 +12% / 鞭子攻击速度 +12%**（用户 2026-10-05 定，先按 10% 落地、随后提到 11%，
+     2026-10-06 再提到 12%）。
    - **法师头**：尚未开始（每套还差 1 件）。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物

@@ -530,9 +530,9 @@ Items: {
 			'''
 			You can move freely through liquids and have temporary immunity to lava
 			+3 max minions
-			11% increased summon damage
-			11% increased whip range
-			11% increased whip attack speed
+			12% increased summon damage
+			12% increased whip range
+			12% increased whip attack speed
 			'''
 		SetBonus:
 			'''
@@ -1211,9 +1211,9 @@ Items: {
 		Tooltip:
 			'''
 			+3 max minions
-			11% increased summon damage
-			11% increased whip range
-			11% increased whip attack speed
+			12% increased summon damage
+			12% increased whip range
+			12% increased whip attack speed
 			'''
 		SetBonus:
 			'''
@@ -1615,9 +1615,9 @@ Items: {
 		Tooltip:
 			'''
 			+5 max minions
-			11% increased summon damage
-			11% increased whip range
-			11% increased whip attack speed
+			12% increased summon damage
+			12% increased whip range
+			12% increased whip attack speed
 			'''
 		SetBonus:
 			'''
@@ -1782,9 +1782,9 @@ Items: {
 			Can move freely through liquids
 			5% increased damage reduction
 			+3 max minions
-			11% increased summon damage
-			11% increased whip range
-			11% increased whip attack speed
+			12% increased summon damage
+			12% increased whip range
+			12% increased whip attack speed
 			'''
 		SetBonus:
 			'''

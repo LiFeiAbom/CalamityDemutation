@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
     ///（按经典版灾厄同名件 1:1 移植，对应现代版 BloodflareHeadSummon）。
     /// 单件：仆从上限 +3、岩浆免疫时长 +240、水中自由移动；
     /// 另有用户 2026-10-05 指定的三条额外单件属性（召唤头的统一口径）：
-    /// 召唤伤害 +11%、鞭子攻击范围 +11%、鞭子攻击速度 +11%。
+    /// 召唤伤害 +12%、鞭子攻击范围 +12%、鞭子攻击速度 +12%。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1. 召唤伤害 +55%（本类 UpdateArmorSet 内直接加，经典版原样）
     /// 2. 极大幅提升生命再生（player.crimsonRegen）
@@ -68,9 +68,9 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
         public override void UpdateEquip(Player player)
         {
             player.maxMinions += 3;                           // 仆从上限 +3
-            player.GetDamage<SummonDamageClass>() += 0.11f;   // 召唤伤害 +11%（用户指定的额外单件属性）
-            player.whipRangeMultiplier += 0.11f;              // 鞭子攻击范围 +11%（同上）
-            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.11f;  // 鞭子攻击速度 +11%（同上；鞭子走 SummonMeleeSpeed 攻速类）
+            player.GetDamage<SummonDamageClass>() += 0.12f;   // 召唤伤害 +12%（用户指定的额外单件属性）
+            player.whipRangeMultiplier += 0.12f;              // 鞭子攻击范围 +12%（同上）
+            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.12f;  // 鞭子攻击速度 +12%（同上；鞭子走 SummonMeleeSpeed 攻速类）
             player.lavaMax += 240;                            // 岩浆免疫时长 +240 帧（4 秒）
             player.ignoreWater = true;                        // 水中不受移动减速
         }

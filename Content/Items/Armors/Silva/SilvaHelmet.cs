@@ -11,7 +11,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
     ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 SilvaHeadSummon，
     /// 本工程沿用经典版的类名/防御/单件与套装数值）。
     /// 单件：仆从上限 +5；另有用户 2026-10-05 指定的三条召唤头统一属性
-    ///（召唤伤害 +11%、鞭子攻击范围 +11%、鞭子攻击速度 +11%）。
+    ///（召唤伤害 +12%、鞭子攻击范围 +12%、鞭子攻击速度 +12%）。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1. 召唤伤害 +75%（本类 UpdateArmorSet 内直接加，经典版原样）
     /// 2. 免疫几乎所有减益（silvaSet → CalamityDemutationPlayer.PostUpdateMiscEffects）
@@ -91,9 +91,9 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         public override void UpdateEquip(Player player)
         {
             player.maxMinions += 5;                           // 仆从上限 +5（经典版原样）
-            player.GetDamage<SummonDamageClass>() += 0.11f;   // 召唤伤害 +11%（用户指定的额外单件属性）
-            player.whipRangeMultiplier += 0.11f;              // 鞭子攻击范围 +11%（同上）
-            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.11f;  // 鞭子攻击速度 +11%（同上）
+            player.GetDamage<SummonDamageClass>() += 0.12f;   // 召唤伤害 +12%（用户指定的额外单件属性）
+            player.whipRangeMultiplier += 0.12f;              // 鞭子攻击范围 +12%（同上）
+            player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.12f;  // 鞭子攻击速度 +12%（同上）
         }
         /// <summary>
         /// 配方：与其余始源林海头部逐字一致（经典分支照经典版源码；现代分支沿用工程既有写法），均需本模组材料 LeadCore
