@@ -265,6 +265,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**盗贼线第四件 = 始源林海盗贼头——始源林海面具（SilvaMask）**。
+  ⚠️ 命名：经典版里 **`SilvaMask` 才是盗贼头**（`SilvaHelm` 近战 / `SilvaHornedHelm` 射手 /
+  `SilvaHelmet` 召唤 / `SilvaMaskedCap` 法师）；**现代版 Silva 套没有盗贼头**，CI 对应件 `SilvaHeadRogue`。
+  显示名 en `Silva Mask`、zh **始源林海面具**（用户未点名，按「Mask → 面具」口径）。
+  ① 新增 `Content/Items/Armors/Silva/SilvaMask.cs`（贴图 `SilvaMask.png` 20×22 / `_Head.png` 40×1120，
+  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 90 金、**防御 30**（源码同行另留 `//110`）、月后稀有度 15。
+  ② 单件：盗贼伤害 +13% / 盗贼暴击 +13%（`CDUtil.GetRogueDamageClass` 加类 + 经典版投掷桥）。
+  ③ 套装 `silvaSet + silvaThrowing` + **潜行上限 150**（`GrantRogueStealth(1.5f)`）：
+  (a)「生命 >50% 时盗贼武器投掷更快」——经典版写在 `UseTimeMultiplier` 里返回 **1.1f**
+  （tML 里该值 >1 表示"更慢"，与 tooltip 相反），本工程沿用射手头当年的处置——**从 CI**：
+  `player.GetAttackSpeed(rogue) += 0.1f`，判据照 CI（生命 >50% + 手持盗贼类 + `useTime > 3`）。
+  注意经典侧没有盗贼 DamageClass，只装经典版时手持无类型武器不会命中该判据。
+  (b)「无敌窗口结束后盗贼武器伤害 +10%」——落在 `ModifyHitNPCWithProj`（经典 6635 原样，
+  盗贼判定换成 `CDUtil.IsRogueProjectile`）。
+  (c) **源里的隐藏项**（不在 tooltip 内）：生命 >50% 且盗贼暴击 → 伤害 ×1.25，**被 `auricSet` 门控**
+  （经典 CalamityPlayerPreTrailer.cs:6136-6144）——落在 `GlobalProjectile.OnHitNPC`；
+  因 tML 的 `HitInfo` 按值传入改不动已结算伤害，改为**事后补打 25% 实伤**（线性缩放下等效）。
+  ④ 玩家侧新增 `silvaThrowing`（`ResetEffects` / `UpdateDead` 两处复位）。
+  ⑤ 配方与其余始源林海头逐字一致（现代 PlantyMush×30 等 / 经典 DarksunFragment×5 等 + LeadCore）；
+  中英本地化各补 `Items.SilvaMask`。**CI 对照结论与待拍板项见 9.3 第 7 条。**
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**按用户点名，把本次新建的职业头跟 CI 逐件对照，并落实 5 处调整**（对照表见 9.3 第 7 条）：
   ① 始源林海法师头（SilvaMaskedCap）：**加「法力消耗 ×0.81」**（CI 的 SilvaHeadMagicold）。
   ② 弑神者法师头（GodSlayerVisage）：**加「法力消耗 ×0.83」**（CI 的 GodSlayerHeadMagicold）。
@@ -1157,6 +1178,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
    **没有 CI 对照的**：龙蒿 / 血炎两套（CI 里没有自己的甲，直接引用灾厄本体件）、魔影套（CI 无）——
    这几件的对照基准只能是**现代版**，不是 CI。
+
+   **2026-10-06 追记 · 始源林海盗贼头（SilvaMask）的 CI 对照（**待用户拍板**）：**
+
+   | 项 | 我们（源 = 经典版） | CI（SilvaHeadRogue） | 差异 |
+   |---|---|---|---|
+   | 单件移速 | 无 | **+20%**（`moveSpeed += 0.2f`） | CI 多一条**移速** |
+   | 潜行上限 | **150**（1.5f） | **125**（1.25f） | CI 低 25 |
+   | 无敌加伤的档位/时机 | 无敌**结束后**盗贼伤害 **+10%** | 无敌**窗口/冷却期**（`HasCooldown(SilvaRevive)` 或 `HasBuff(SilvaRevival)`）盗贼伤害 **+40%** | **档位与时机都不同**（CI 由 `SilvaRougeSetLegacy` 实现，见 `CalamityInheritancePlayerMiscEffects.cs:714/826`） |
+   | 投掷速率 | 生命 >50% 盗贼攻速 +10%（本工程从 CI） | 同左（CI 的 UpdateArmorSet 原式） | 一致 |
+
+   注：CI 的 `SilvaHeadRogue` 只挂 `SilvaRougeSetLegacy` + `SilvaRebornMark` + `AuricSilvaSet`，
+   通用七条由 CI 自己的 Silva/Auric 体系承担；本工程的通用七条在 `silvaSet` 里（与其余四颗头共用）。
 
 > 改任何 tooltip 都要同步 `Localization/en-US_…hjson` 与 `zh-Hans_…hjson` 两处，并把行尾整回 CRLF（第 4 节口径）。
 

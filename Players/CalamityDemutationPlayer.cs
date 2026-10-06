@@ -653,6 +653,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool silvaSummon = false;
         /// <summary>
+        /// 始源林海套装·盗贼向（SilvaMask 的套装标记）：生命 >50% 时盗贼攻速 +10%（见该件的 UpdateArmorSet）、
+        /// 无敌窗口结束后盗贼弹幕伤害 +10%（见 ModifyHitNPCWithProj）、
+        /// 以及源里那条被 auricSet 门控的隐藏项「生命 >50% 且盗贼暴击 → 伤害 ×1.25」
+        ///（见 CalamityDemutationGlobalProjectile.OnHitNPC）；潜行上限 150 由该件的套装方法补给灾厄侧。
+        /// </summary>
+        public bool silvaThrowing = false;
+        /// <summary>
         /// 远古叶棱晶（SilvaCrystal）在场标记：由同名召唤增益每帧置位，供叶棱晶弹幕续命（对应源的 sCrystal）
         /// </summary>
         public bool sCrystal = false;
@@ -951,6 +958,7 @@ namespace CalamityDemutation.Players
             silvaRanged = false;
             silvaSet = false;
             silvaSummon = false;
+            silvaThrowing = false;
             sCrystal = false;
             sirenLureWaifu = false;
             soaring = false;
@@ -1132,6 +1140,7 @@ namespace CalamityDemutation.Players
             silvaRanged = false;
             silvaSet = false;
             silvaSummon = false;
+            silvaThrowing = false;
             sCrystal = false;
             sirenLureWaifu = false;
             soaring = false;
@@ -4552,6 +4561,11 @@ namespace CalamityDemutation.Players
             // 始源林海法师头（SilvaMaskedCap）：免死无敌窗口结束后，魔法弹幕伤害 +10%
             //（经典版 CalamityPlayerPreTrailer.cs:6639 原样：silvaCountdown <= 0 && hasSilvaEffect && silvaMage && 魔法职业）
             if (silvaMage && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<MagicDamageClass>())
+                damageMult += 0.1;
+            // 始源林海盗贼头（SilvaMask）：免死无敌窗口结束后，盗贼弹幕伤害 +10%
+            //（经典版 CalamityPlayerPreTrailer.cs:6635 原样：silvaCountdown <= 0 && hasSilvaEffect && silvaThrowing && 盗贼弹幕；
+            //  盗贼判定换成 CDUtil.IsRogueProjectile，覆盖"现代按 RogueDamageClass / 经典读它自己的 rogue 标记"两条路）
+            if (silvaThrowing && silvaCountdown <= 0 && hasSilvaEffect && CDUtil.IsRogueProjectile(proj))
                 damageMult += 0.1;
             // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 CI 模型，
             // 取代原先经典版的 1/max(15, 100-暴击率) 单次骰子：

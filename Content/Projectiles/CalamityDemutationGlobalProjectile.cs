@@ -196,6 +196,22 @@ namespace CalamityDemutation.Content.Projectiles
                     bloodOwner.lifeSteal -= lifeStealCost * 2f;
                 }
             }
+            // 始源林海盗贼头（SilvaMask）在经典版里还带一条**隐藏**加成（不在 tooltip 内，被 auricSet 门控）：
+            // `if (auricSet) { if (silvaThrowing && 盗贼弹幕 && hit.Crit && 生命 >50%) hit.Damage *= 1.25; }`
+            //（CalamityPlayerPreTrailer.cs:6136-6144）—— 源如此：单穿始源林海套不生效，得配上金源套才吃，本工程照源。
+            // 实现差异：源是在命中**结算前**把 hit.Damage ×1.25；tML 的 GlobalProjectile.OnHitNPC 拿到的 HitInfo
+            // 是按值传的、改不动已结算伤害，故改为**事后补打 25% 的实伤**（对线性缩放的最终伤害等效）。
+            CalamityDemutationPlayer silvaThrowingPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (silvaThrowingPlayer.auricSet && silvaThrowingPlayer.silvaThrowing && hit.Crit
+                && Main.player[projectile.owner].statLife > (int)(Main.player[projectile.owner].statLifeMax2 * 0.5)
+                && CDUtil.IsRogueProjectile(projectile))
+            {
+                int bonusDamage = (int)(damageDone * 0.25f);
+                if (bonusDamage > 0)
+                {
+                    Main.player[projectile.owner].ApplyDamageToNPC(target, bonusDamage, 0f, 0, false, CDUtil.GetRogueDamageClass());
+                }
+            }
             // 龙蒿法师套装（tarraMage）的两件事（口径照经典版 CalamityGlobalProjectile.cs:440-462）：
             // ① 统计魔法暴击次数，满 5 由 CalamityDemutationGlobalItem.Shoot 喷出叶暴风；
             // ② 命中时按弹幕伤害回血：比例 = 0.03 - numHits × 0.015，剂量 = 弹幕伤害 ÷50（穿金源时 ÷100），
