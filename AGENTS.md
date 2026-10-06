@@ -265,6 +265,41 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**移植盗贼魔影头——魔影面罩（DemonshadeHelmRogue）**，
+  顺带把「盗贼伤害类」与「盗贼潜行值」这两条跨模组接口查清并落地。
+  ① 新增 `Content/Items/Armors/Demonshade/DemonshadeHelmRogue.cs`：源 = 灾厄大修（CWR）0.4.0.1.3 的
+  `Content/Items/Armor/DemonshadeExter/DemonshadeHelmRogue`（**注意该件在 CWR 里被 `IsLoadingEnabled => false`
+  停用**，属未完工件，本工程按用户要求补全）；贴图三张取自 CWR 的 `DemonshadeHelmRogue*.png`
+  （`_Head_Frome` → 本工程的 `_Extension`，48×1280）。防御 35、价值 5 铂金、稀有度 16；
+  附加层偏移 **(-4,-14)**（取自 CWR `CWRPlayerDraw` 的 Rogue 分支）。
+  ② 单件：**盗贼伤害 +50% / 盗贼暴击 +25%（膨胀 +50%）**——用户指定"与近战头一致"，
+  但**明确删去攻速加成**（近战头自身仍有 +30% 攻速，与本件无关）。套装 `demonshadeSetBonus + redDevil +
+  demonshadeClass + demonshadeRogue`、**+100% 盗贼伤害**，红魔 buff / 召唤 / 每帧伤害同步与其余变体逐行同构。
+  ③ **盗贼伤害类（1.4.4 口径，别再考古）**：现代版灾厄的盗贼类是**真 `DamageClass`**
+  （`CalamityMod/RogueDamageClass`，1.4.4-release 与 2.0.4 同名；`StealthDamageClass` 是它的子类、只给潜行打击用）；
+  `DamageClass` 在 tML 里是 `ModType`，所以用 `ModContent.TryFind("CalamityMod", "RogueDamageClass", out DamageClass)`
+  直接取，**零反射**，取不到才退到 `DamageClass.Throwing`（CWR 那颗头就是图省事用 Throwing 的）。
+  **方向性要点**：灾厄 `RogueDamageClass` 对 Throwing 是**完全继承**
+  （`DamageClasses/RogueDamageClasses.cs` 的 `GetModifierInheritance → StatInheritanceData.Full`），
+  所以给 Throwing 加成**能**作用到盗贼武器；但反之不成立——`DamageType = Throwing` 的弹幕
+  **吃不到玩家"盗贼专属"的加成**，故本工程用真·盗贼类。
+  **经典版根本没有盗贼 DamageClass**：它的盗贼数值是一对自定义 ModPlayer 字段
+  （`CalamityCustomThrowingDamagePlayer.throwingDamage` 基准 1f / `.throwingCrit` 基准 4，每帧复位），
+  盗贼武器按 `基准 × (throwingDamage + 玩家召唤伤害 additive)` 结算（见经典 `Items/Weapons/LunicEye.cs:47`）
+  → 本工程为此加了反射桥 `CDUtil.AddClassicThrowingStats`（每帧加算）与 `CDUtil.GetRogueScaledDamage`。
+  ④ **盗贼潜行（用户指定 200%）**：现代版走**官方 Mod.Call** —— `AddMaxStealth` + `SetWearingRogueArmor`
+  （这两个键在 2.0.4 与 1.4.4-release 的 ModCalls 里都有；现代版的闸门是**独立的** `wearingRogueArmor` 布尔，
+  两个调用缺一不可。同族入口还有 `GetStealth / GetMaxStealth / ConsumeStealth / SetStealthProjectile /
+  AddRogueVelocity / StealthStrikeAvailable` 等）。经典版 Call 里只有 zone/boss 查询 → 反射写 `rogueStealthMax`
+  （经典版**没有** `wearingRogueArmor` 字段，闸门就是"上限 > 0"）。两边都按**加算**、且**必须每帧写**
+  （灾厄在 ResetEffects 里把上限清零），调用点 = `CalamityDemutationPlayer.PostUpdateEquips`
+  （`if (demonshadeRogue) CDUtil.GrantRogueStealth(Player, 2f);`；内部值 1f = 显示 100 点，2f = 200）。
+  ⑤ 玩家侧新增 `demonshadeRogue`（`ResetEffects` / `UpdateDead` 两处复位）。
+  ⑥ 配方与其余魔影头一致（ShadowspecBar×40 @ 德雷顿熔炉；CWR 源是 ×12，本工程按既有口径取 40）。
+  中英本地化各补 `Items.DemonshadeHelmRogue`（en `Demonshade Helm Rogue` / zh **魔影面罩**——两个名字都取自
+  CWR 自己的本地化文件；Tooltip / TooltipInflated / SetBonus 自拟，其中 SetBonus 末行
+  「最大盗贼潜行值提高到 200」是本工程补充的说明，CWR 原版没有 setBonus 文案）。
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**把「我们穿金源套」镜像给现代版灾厄（`auricSet` 反射桥）**，
   顺手正法了金源近战头里的死代码（用户点名「看看如何用 system 函数把 auricSet 反射过来」）。
   背景：`AuricTeslaHelm.UpdateArmorSet` 末尾原有两段反射读灾厄 `CalamityPlayer.auricSet` 的代码，

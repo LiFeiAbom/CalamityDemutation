@@ -335,6 +335,12 @@ namespace CalamityDemutation.Players
         /// </summary>
         public DamageClass demonshadeClass = null;
         public bool demonshadeSetBonus = false;
+        /// <summary>
+        /// 魔影套·盗贼变体（DemonshadeHelmRogue）的套装标记：由该头盔的 UpdateArmorSet 置位，
+        /// PostUpdateEquips 据此把盗贼潜行（上限 200 + "算作盗贼甲"）补给灾厄侧，
+        /// 见 <see cref="CalamityDemutation.Utilities.CDUtil.GrantRogueStealth"/>。
+        /// </summary>
+        public bool demonshadeRogue = false;
         public bool draconicSurge = false;
         public int draconicSurgeCooldown = 0;
         /// <summary>
@@ -842,6 +848,7 @@ namespace CalamityDemutation.Players
             deificAmulet = false;
             demonshadeClass = null;
             demonshadeSetBonus = false;
+            demonshadeRogue = false;
             draconicSurge = false;
             drewsSandyWaifu = false;
             elementalGauntlet = false;
@@ -1008,6 +1015,7 @@ namespace CalamityDemutation.Players
             deificAmulet = false;
             demonshadeClass = null;
             demonshadeSetBonus = false;
+            demonshadeRogue = false;
             draconicSurge = false;
             draconicSurgeCooldown = 0;
             drewsSandyWaifu = false;
@@ -3297,6 +3305,12 @@ namespace CalamityDemutation.Players
             // 细节与"为什么不对经典版镜像"见 Utilities/CDUtil_CalamityReflect.cs 的类注释。
             if (auricSet)
                 CDUtil.MirrorAuricSetToCalamity(Player);
+            // 魔影面罩（盗贼变体）：把潜行上限抬到 200（内部 2f）并标成"算作盗贼甲"。
+            // 现代版走灾厄官方 Mod.Call（AddMaxStealth / SetWearingRogueArmor），经典版走反射——
+            // 细节见 Utilities/CDUtil_CalamityReflect.cs。时机同金源镜像：必须晚于灾厄 ResetEffects
+            //（它每帧把潜行上限清零）、早于它 PostUpdateMiscEffects（那里才积攒潜行）。
+            if (demonshadeRogue)
+                CDUtil.GrantRogueStealth(Player, 2f);
             // ── 永久增益消耗品（糖心柑橘 / 有机豆荚 / 新鲜蓝莓 / 熔岩浆果）──
             // 一次性解锁、标志随存档持久化（见 SaveData/LoadData），加成每帧按标志叠加。
             // 必须放 PostUpdateEquips 而不是 ResetEffects：ResetEffects 的职责是把这些属性清零，加成要在它之后加

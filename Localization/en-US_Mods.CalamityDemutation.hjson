@@ -934,6 +934,23 @@ Items: {
 			'''
 	}
 
+	DemonshadeHelmRogue: {
+		DisplayName: Demonshade Helm Rogue
+		Tooltip: 50% increased rogue damage and 25% increased rogue crit chance
+		TooltipInflated: 50% increased rogue damage and 50% increased rogue crit chance
+		SetBonus:
+			'''
+
+			100% increased rogue damage
+			Inflicts the Demonshade Flames debuff on attack
+			Shadowbeams and demon scythes will fire down when you are hit
+			A friendly red devil follows you around
+			Press Y to enrage nearby enemies with a dark magic spell for 10 seconds
+			This makes them do 25% more damage but they also take 125% more damage
+			Increases maximum stealth to 200
+			'''
+	}
+
 	DemonshadeHelmSummon: {
 		DisplayName: Demonshade Visor
 		Tooltip:

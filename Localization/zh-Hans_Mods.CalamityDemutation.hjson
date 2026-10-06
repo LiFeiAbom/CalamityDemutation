@@ -934,6 +934,23 @@ Items: {
 			'''
 	}
 
+	DemonshadeHelmRogue: {
+		DisplayName: 魔影面罩
+		Tooltip: 盗贼伤害提高 50%，盗贼暴击率提高 25%
+		TooltipInflated: 盗贼伤害提高 50%，盗贼暴击率提高 50%
+		SetBonus:
+			'''
+
+			盗贼伤害提高 100%
+			施加攻击时造成魔影炙炎减益
+			受击时天降暗影束与恶魔镰刀
+			一只友方红魔会跟随你
+			按 Y 用黑暗魔法激怒附近敌怪，持续 10 秒
+			这会使它们造成的伤害提高 25%，但它们受到的伤害提高 125%
+			最大盗贼潜行值提高到 200
+			'''
+	}
+
 	DemonshadeHelmSummon: {
 		DisplayName: 魔影面甲
 		Tooltip:
