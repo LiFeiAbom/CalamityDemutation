@@ -265,6 +265,77 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**【行为 bug】`OnHitNPC` 的提前 `return` 把金源套的"功能复合"整段吃掉 —— 已修。**
+  用户实测：穿龙蒿套有叶风暴，穿古圣金源没有。
+  **根因**：`Content/Projectiles/CalamityDemutationGlobalProjectile.OnHitNPC` 里 silvaSet / auricSet
+  两条吸血分支原先照抄了源的三个 `return;`（`num11 <= 0` / `(int)num12 <= 0` / `lifeSteal <= 0`），
+  而本工程把**一票套装效果全塞在同一个方法里、且排在这两条分支之后**
+  （龙蒿盗贼计数、血炎盗贼、林海盗贼 1.25 倍、**龙蒿法师暴击计数**、龙蒿法师回血、血炎法师火焰爆炸、
+   弑神者法师烈焰/治疗球、林海法师巨型爆炸、弑神者召唤幻影 —— 即"金源头复合四套"的全部内容）。
+  于是凡进这两条分支且判据不满足者，**整个方法直接返回，后面全部跳过**。
+  **为什么只有金源套看得出来**：塔拉贡/血炎/弑神者单独穿时 `silvaSet`、`auricSet` 都是 false，
+  根本进不了这两条分支；**金源套必定同时置 silvaSet 与 auricSet**，一穿就踩到。
+  同理**始源林海套**也会中招（它自己置 silvaSet，会吃掉自己的 `silvaMage` 巨型爆炸与 `silvaThrowing` 1.25 倍）。
+  **源的对照（别再考古）**：经典版把 `tarraCrits++` 写在**玩家侧** `CalamityPlayerPreTrailer.cs:6156`
+  的 `ModifyHitNPCWithProj` 里，其余法师效果也分散在 `CalamityGlobalItem.Shoot` / 玩家钩子中，
+  **天然不受 `CalamityGlobalProjectile.OnHitNPC` 里那三处 `return` 影响**；是移植时把效果集中到一处才暴露出来。
+  **修法**：两条吸血分支的三个"放弃"判据改写成一句嵌套 `if (num11 > 0f && (int)num12 > 0 && Main.LocalPlayer.lifeSteal > 0f)`
+  （判据与短路顺序与原三条 `return` 完全等价），并加长注释警告**此处绝不可 `return`**。
+  `OnHitPlayer`（PvP）的同类吸血分支位于方法**末尾**、后面没有别的效果，故无需改动（已核）。
+  **顺带审计**：五颗金源头置的 21 个职业标记（`tarra/bloodflare/godSlayer/silva × Melee/Ranged/Mage/Summon/Throwing`）
+  逐个查过消费点，全部有实现；修的只是可达性。**复合是"按头分职业"的**（法师头 → 四套的法师效果），
+  与 CI 的 `AuricTeslaHeadMagic`、经典版同构 —— **不是**"戴任意金源头都给全部效果"。
+  验证：编译 0 警告 0 错误。
+- 最近一批工作（2026-10-06）：**移植魔能谐振仪（Mana Polarizer，法师饰品）**，口径取灾厄 **2.0.3.9**，
+  数值与配方按用户点名改写。
+  ① 新增 `Content/Items/Accessories/JobAcc/Magic/ManaPolarizer.cs`（+`ManaPolarizer.png`，取 2.0.3.9）：
+  30×30、饰品；**稀有度与价格按用户后续指定改成与虚无箭袋同档**：月后稀有度 **12**（青绿）+
+  **1 铂金 50 金**（源为浅红 `ItemRarityID.LightRed` + 12 金，已废弃该口径）。
+  装备时置位 `manaOverloader` 并 `statManaMax2 += 100`（源 50 → 用户指定 **100**）。
+  **标记名沿用源的 `manaOverloader`**（该件旧名 ManaOverloader）。
+  ② `CalamityDemutationPlayer.PostUpdateMiscEffects` 新增 `manaOverloader` 块：魔法伤害 **+12%**（源 6%）、
+  魔法暴击 **+12%**（源无此项）。`UpdateLifeRegen` 末尾新增「魔力 > 上限一半时 `lifeRegen -= 4`」＝ **−2 HP/s**
+  （源 −1.5 HP/s，写成了 `totalNegativeLifeRegen += 4`）——**注意这段没放进 `UpdateBadLifeRegen`**：
+  本工程实测那个钩子在原版 `Player.UpdateLifeRegen` 里只走"再生为负"的分支（IL 佐证：它在 `lifeRegen -= 100`
+  之后才被调用），放那儿会常漏加，故挪到每帧必跑、且早于结算点的 `UpdateLifeRegen`。
+  ③ 新增 `Content/Projectiles/Healing/ManaPolarizerHealOrb.cs`：隐形 4×4、存活 180 帧、`extraUpdates 3`、
+  朝 ai[0] 玩家以速度 3 平滑追踪，50 像素内重叠即回血并销毁；每帧 1 粒幽魂法杖尘（源裸数字 175 经 Cecil 反查
+  = `DustID.SpectreStaff`），缩放 1.3。源走的 `HealingProjectile` 扩展本工程没有，照同目录
+  SilvaOrb / GodSlayerHealOrb 的既有写法展开；源里的 `lifeMagnet` 加速未保留（与本工程其余 5 个治疗球一致）。
+  ④ `CalamityDemutationGlobalProjectile.OnHitNPC` 开头新增 manaOverloader 吸血分支：手持魔法武器时，
+  魔法弹幕命中按 `伤害 × (0.2 − numHits×0.05) × (当前魔力/魔力上限)` 生成治疗球，单次封顶 10，`lifeSteal` 扣 3 倍。
+  该块**刻意不写提前 `return`**——源里它与 silvaSet/auricSet 两条分支不在同一条 else 链上，写成 return 会在
+  治疗量算成 0 时把套装吸血一并跳过。（2.0.3.9 另有一处重复的 manaOverloader 分支带 50% 骰子 + `otherHealTypes`
+  门控，2.0.4 已删除，本工程取清理后的口径。）
+  ⑤ 配方（用户指定，源无配方——原版是史莱姆之神掉落 / 宝藏袋）：枯萎凝胶 ×140 + 纯净凝胶 ×140 + 死灵质 ×140 +
+  夜明锭 ×15 + 起源之簇 ×15 @ **远古操纵机**，分双版本注册。**材料改名坑**：枯萎凝胶现代 `BlightedGel` / 经典
+  `EbonianGel`；死灵质现代 `Necroplasm`（2.0.4+）、**2.0.3.9 叫 `Polterplasm`**、更早与经典叫 `Phantoplasm`；
+  起源之簇现代 `ExodiumCluster` / 经典 `ExodiumClusterOre`；夜明锭 `ItemID.LunarBar` 与远古操纵机
+  `TileID.LunarCraftingStation` 两版通用。故 `AddRecipes` 里加了个局部函数 `TryFindAny(mod, out item, 多个名字)`
+  逐个试名。
+  中英本地化各补 `Items.ManaPolarizer`（en `Mana Polarizer` / zh **魔能谐振仪**）与
+  `Projectiles.ManaPolarizerHealOrb.DisplayName`。验证：编译 0 警告 0 错误，资源自检 149 条全命中。
+- 最近一批工作（2026-10-06）：**移植虚无箭袋（Quiver of Nihility，现代版灾厄 2.0.4 独有件）**，
+  并按用户点名把基础属性修正为「远程伤害 +12%、远程暴击率 +12%」（源只有远程暴击 +5）。
+  ① 新增 `Content/Items/Accessories/JobAcc/Ranged/QuiverofNihility.cs`（+同名 `.png` / `_Back.png`，均取 2.0.4）：
+  42×36、价值 1 铂金 50 金（照 2.0.4 的 `RarityTurquoiseBuyPrice`）、`AutoloadEquip(EquipType.Back)`、
+  月后稀有度 **12**（源 `Turquoise` → 本工程 12 青绿，口径同勇气勋章）；`CanEquipAccessory` 照源用 `voidField`
+  互斥（禁止双装叠加场数）；背包内按 0.55× 自定义缩放绘制（源 `DrawInventoryCustomScale` 的内联版）。
+  ② 新增弹幕 `Content/Projectiles/Typeless/VoidFieldGenerator.cs`（+`.png` / `_Glow.png`）：绕主人半径 300 环绕，
+  每帧把 65 像素内的己方箭矢伤害 ×1.75、`extraUpdates +1`（即"双倍速度"），用 `nihilicArrow` 标记去重；
+  存续靠 `voidField` 续命。`_Glow` 在本工程没有自动绘制的全局钩子，由弹幕 `PostDraw` 显式补画。
+  ③ 新增元球 `Graphics/Metaballs/VoidGeneratorMetaball.cs`：照源挂 **BeforeProjectiles** 层、EdgeColor 为深紫、
+  场内纹理用灾厄的 `StreamGougeLayer`、圆用 `BasicCircle`——为此在 `Systems/Graphic/GeneralDrawLayerSystem.cs`
+  里补接了 BeforeProjectiles 档（原先只接了 AfterDusts/AfterProjectiles/AfterPlayers；DrawProjectiles 钩子内
+  绘制前/后各触发一次，顺序才确定）。④ `Players/CalamityDemutationPlayer` 加 `voidField` 字段
+  （`ResetEffects` / `UpdateDead` 两处复位）与 `PostUpdateMiscEffects` 的 +12% 远程伤害 / +12 远程暴击块；
+  `Content/Projectiles/CalamityDemutationGlobalProjectile` 加 `nihilicArrow` 标记。
+  ⑤ 配方照 2.0.4（任意箭袋 + `DarkPlasma`×3 + `GalacticaSingularity`×5 @ 远古操纵机）分双版本注册；
+  **经典版灾厄没有 `AnyQuiver` 配方组**，故新建 `Systems/RecipeSystem.cs`（ModSystem——`Mod.AddRecipeGroups`
+  已标记过时，写在 Mod 里会刷 CS0672 警告）自建 `CalamityDemutation:AnyQuiver`（魔法/熔火/潜猎者箭袋，同源内容）。
+  ⑥ 另从灾厄取了 `Assets/ExtraTextures/BasicCircle.png` 与 `Graphics/Metaballs/StreamGougeLayer.png`。
+  中英本地化各补 `Items.QuiverofNihility`（en `Quiver of Nihility` / zh **虚无箭袋**）与
+  `Projectiles.VoidFieldGenerator.DisplayName`。验证：编译 0 警告 0 错误，资源自检 148 条全命中。
 - 最近一批工作（2026-10-06）：**给血神核心（CoreOfTheBloodGod）追加 +10% 近战攻击速度**（用户点名，「其他不改」）。
   在 `CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块里加一行
   `Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;`；中英 tooltip 各补一行（zh「近战攻击速度提高 10%」/
@@ -1222,7 +1293,42 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    | AuricTeslaWireHemmedVisage 法师 | 防 24 / 法伤 **+20**-20 / 法力 100 | AuricTeslaHeadMagic | CI 多 **蓝耗 ×0.8**、法伤 **+30** | **按 CI 对齐** |
 
    **没有 CI 对照的**：龙蒿 / 血炎两套（CI 里没有自己的甲，直接引用灾厄本体件）、魔影套（CI 无）——
-   这几件的对照基准只能是**现代版**，不是 CI。
+  这几件的对照基准只能是**现代版**，不是 CI。
+
+   **2026-10-06 追记 · 法师线五件复核（**逐行重读代码，非照抄旧记录**；待用户拍板）：**
+
+   CI 侧只有 3 颗法师头，工程这 3 件的**单件数值已完全一致**（复核确认，无需再动）：
+
+   | 我们的件 | 我们（现值） | CI | 单件结论 |
+   |---|---|---|---|
+   | SilvaMaskedCap | 防 21 / +13% / +13 / 法力 100 / **蓝耗 ×0.81** | SilvaHeadMagicold 同 | **一致** |
+   | GodSlayerVisage | 防 21 / +14% / +14 / 法力 100 / **蓝耗 ×0.83** | GodSlayerHeadMagicold 同 | **一致** |
+   | AuricTeslaWireHemmedVisage | 防 24 / **+30% / +20** / 法力 100 / **蓝耗 ×0.8** | AuricTeslaHeadMagic 同 | **一致** |
+
+   **套装效果才是真差异（工程一律走经典版口径）：**
+
+   | 项 | 我们（经典版） | CI | 差异 |
+   |---|---|---|---|
+   | 林海法师·法弹巨型爆炸 | `penetrate == 1` 命中时 **3% 概率**（`rand(0,100)>=97`），撑大判定框后把本次伤害 ×4（金源 ×7）再结算 | `SilvaMagicSetLegacy`：`(penetrate==1 \\|\\| timeLeft<=5)` 时 **100% 触发、300 帧冷却**，生成独立 `SilvaBurst`，伤害 = `800 + 0.6×弹幕伤害` | **机制与数值都不同**（概率制 vs 冷却制） |
+   | 林海法师·无敌期法伤 | **+10%**，且要求 `silvaCountdown <= 0`（无敌**结束后**） | `HasCooldown(SilvaRevive) \\|\\| HasBuff(SilvaRevival)` 期间 **+60%** | 数值差 6 倍、时机也不同 |
+   | 弑神者法师·弑神火 | 节流预算 `godSlayerDmg`（每帧 -2.5，与召唤侧共用），射 `GodSlayerOrb`，伤害 = 半伤 ×1.5（金源 ×2.0） | `fireCD = 2`，随机方向射 `GodSlayerOrb`，伤害 = `(400 + 手持武器伤害/2) × 5` | **伤害公式完全不同** |
+   | 弑神者法师·治疗烈焰 | `healMult = 0.06`（金源 0.03）− numHits×0.015，走 `GodSlayerHealOrb` | 固定 `rand(5, 11)` 点，`GodSlayerHealOrb`，距离 3000 / 冷却倍率 2 | **比例制 vs 固定随机** |
+   | 弑神者法师·受击爆炸 | `GodSlayerBlaze` 1200（金源 2400） | `GodSlayerBlaze` 1200（金源不翻倍） | 仅金源档差 2 倍 |
+   | `AuricSilvaSet`（CI 独有） | **无对应标记**（金源法师头置 `silvaSet`，走 3% 递减吸血） | 任意弹幕命中即生成 `SilvaOrb` 回血 `rand(5,11)`，距离 3000 / 倍率 2 | CI 多一条"任意命中回血" |
+
+   注：CI 的 `CalamityInheritancePlayer.cs:398/400` 那段 `AuricSilvaSet ? 0.05f` 的移速是**死代码**
+   （`_ = 1f + …` 赋给了弃元），不生效，不用照搬。
+
+   **龙蒿面具 / 血魇九头盔：CI 无对应件**（CI 只在自己的远古套里出现，且金源法师头的配方直接引用
+   `CalamityMod.Items.Armor.{Tarragon,Bloodflare}.*HeadMagic`）→ 基准取**现代版 2.0.4**：
+
+   | 我们的件 | 我们 | 现代 2.0.4 | 差异 |
+   |---|---|---|---|
+   | TarragonMask 法师 | 防 **14**（用户 2026-10-06 指定，经典/现代都是 10）/ 法伤 **+10%** / 暴击 +10 / 法力 100 / **无蓝耗** | 防 10 / 法伤 **+15%** / 暴击 +10 / 法力 100 / **蓝耗 ×0.85** | 工程少 蓝耗减免、法伤低 5% |
+   | BloodflareHornedMask 法师 | 防 22 / 法伤 **+10%** / 暴击 +10 / 法力 100 / **无蓝耗** | 防 22 / 法伤 **+20%** / 暴击 +10 / 法力 100 / **蓝耗 ×0.83** | 工程少 蓝耗减免、法伤低 10% |
+
+   ⇒ **这两颗是五颗法师头里唯二没有蓝耗减免的**（其余三颗 CI/现代都挂了 0.8~0.83），
+   若要统一口径，最保守的补法是照现代版补 `manaCost *= 0.85f` / `*= 0.83f`。
 
    **2026-10-06 追记 · 始源林海盗贼头（SilvaMask）的 CI 对照（**待用户拍板**）：**
 

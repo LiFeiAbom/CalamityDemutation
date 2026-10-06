@@ -1564,6 +1564,18 @@ Items: {
 			'''
 	}
 
+	ManaPolarizer: {
+		DisplayName: Mana Polarizer
+		Tooltip:
+			'''
+			Increases max mana by 100, magic damage by 12% and magic critical strike chance by 12%
+			-2 HP/s life regen if mana is above 50% of its maximum
+			Grants spectre healing, the amount healed scales with your mana
+			The healing only works while holding a magic weapon
+			The more mana you have, the more you heal
+			'''
+	}
+
 	MoonPact: {
 		DisplayName: Moon Pact
 		Tooltip:
@@ -1675,6 +1687,17 @@ Items: {
 			'''
 			Boosts ranged damage and critical strike chance by 5%
 			Grants a massive boost to these stats if you aren't moving
+			'''
+	}
+
+	QuiverofNihility: {
+		DisplayName: Quiver of Nihility
+		Tooltip:
+			'''
+			12% increased ranged damage and 12% increased ranged critical strike chance
+			Summons a ring of four void fields to orbit you
+			Arrows that pass through these fields gain a 75% damage boost and double speed
+			'Filled with a substance darker than the night sky'
 			'''
 	}
 
@@ -2374,7 +2397,6 @@ Items: {
 			Greatly reduces the damage dealt by damage-over-time debuffs
 			'''
 	}
-
 }
 
 Keybinds: {
@@ -2499,4 +2521,6 @@ Projectiles: {
 	BloodBombExplosion.DisplayName: Blood Bomb Explosion
 	GodSlayerShrapnelRound.DisplayName: God Slayer Shrapnel Round
 	GodSlayerShrapnel.DisplayName: God Slayer Shrapnel
+	ManaPolarizerHealOrb.DisplayName: Mana Polarizer Heal Orb
+	VoidFieldGenerator.DisplayName: Void Field Generator
 }

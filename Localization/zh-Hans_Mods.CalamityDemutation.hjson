@@ -1565,6 +1565,18 @@ Items: {
 			'''
 	}
 
+	ManaPolarizer: {
+		DisplayName: 魔能谐振仪
+		Tooltip:
+			'''
+			魔力上限提高 100，魔法伤害提高 12%，魔法暴击率提高 12%
+			魔力高于上限一半时，生命再生 −2 HP/s
+			获得幽魂吸血，治疗量随当前魔力提高
+			仅在手持魔法武器时生效
+			魔力越满，回复越多
+			'''
+	}
+
 	MoonPact: {
 		DisplayName: 拜月契约
 		Tooltip:
@@ -1676,6 +1688,17 @@ Items: {
 			'''
 			远程伤害与暴击率提高 5%
 			静止不动时，这些属性会获得大幅提升
+			'''
+	}
+
+	QuiverofNihility: {
+		DisplayName: 虚无箭袋
+		Tooltip:
+			'''
+			远程伤害提高 12%，远程暴击率提高 12%
+			召唤四个虚空场环绕自身
+			穿过虚空场的箭矢伤害提高 75%，速度翻倍
+			「其中充盈着比夜空更幽暗的物质」
 			'''
 	}
 
@@ -2373,7 +2396,6 @@ Items: {
 			大幅减免持续伤害类减益造成的伤害
 			'''
 	}
-
 }
 
 Keybinds: {
@@ -2498,4 +2520,6 @@ Projectiles: {
 	BloodBombExplosion.DisplayName: 血液爆炸
 	GodSlayerShrapnelRound.DisplayName: 弑神者破片弹
 	GodSlayerShrapnel.DisplayName: 弑神者破片
+	ManaPolarizerHealOrb.DisplayName: 魔能谐振仪治疗球
+	VoidFieldGenerator.DisplayName: 虚空场发生器
 }

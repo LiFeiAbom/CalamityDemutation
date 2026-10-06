@@ -6,7 +6,7 @@ namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
     /// 绘制层系统（移植自灾厄的 GeneralDrawLayerSystem）。
-    /// 通过 On_Main.DrawProjectiles 在弹幕绘制后触发 AfterProjectiles 层，
+    /// 通过 On_Main.DrawProjectiles 在弹幕绘制前触发 BeforeProjectiles 层、绘制后触发 AfterProjectiles 层，
     /// 通过 On_Main.DrawPlayers_AfterProjectiles 在玩家绘制后触发 AfterPlayers 层，
     /// 通过 On_Main.DrawDust 在尘埃绘制后触发 AfterDusts 层。
     /// </summary>
@@ -22,14 +22,14 @@ namespace CalamityDemutation.Systems.Graphic
         public static event Action OnPrepareDraw;
         /// <summary>
         /// 加载时挂上四个 On_Main 钩子：CheckMonoliths（触发 OnPrepareDraw 准备阶段）、
-        /// DrawProjectiles（弹幕绘制后触发 AfterProjectiles 层）、DrawPlayers_AfterProjectiles（玩家绘制后触发 AfterPlayers 层）
-        /// 与 DrawDust（尘埃绘制后触发 AfterDusts 层）
+        /// DrawProjectiles（弹幕绘制前后分别触发 BeforeProjectiles / AfterProjectiles 层）、
+        /// DrawPlayers_AfterProjectiles（玩家绘制后触发 AfterPlayers 层）与 DrawDust（尘埃绘制后触发 AfterDusts 层）
         /// </summary>
         public override void Load()
         {
             On_Main.CheckMonoliths += CheckMonoliths;
             On_Main.DrawDust += GeneralDrawLayer_DrawToLayer_AfterDusts;
-            On_Main.DrawProjectiles += GeneralDrawLayer_DrawToLayer_AfterProjectiles;
+            On_Main.DrawProjectiles += GeneralDrawLayer_DrawToLayer_Projectiles;
             On_Main.DrawPlayers_AfterProjectiles += GeneralDrawLayer_DrawToLayer_AfterPlayers;
         }
         /// <summary>
@@ -60,11 +60,14 @@ namespace CalamityDemutation.Systems.Graphic
             OnDrawLayer?.Invoke(GeneralDrawLayer.AfterDusts);
         }
         /// <summary>
-        /// On_Main.DrawProjectiles 钩子：先执行原版弹幕绘制，再触发 AfterProjectiles 层事件，
-        /// 让龙息 Metaball 等要求在弹幕之上合成的图形绘制在弹幕之后
+        /// On_Main.DrawProjectiles 钩子：弹幕绘制前先触发 BeforeProjectiles 层事件，再执行原版弹幕绘制，
+        /// 最后触发 AfterProjectiles 层事件。虚空场元球（VoidGeneratorMetaball）挂在 BeforeProjectiles
+        /// （要画在箭矢之下），龙息 Metaball 等挂在 AfterProjectiles（要画在弹幕之上）。
+        /// 两个档位包在同一个钩子里，触发顺序才是确定的（不依赖多个 On_ 钩子之间的注册次序）。
         /// </summary>
-        private static void GeneralDrawLayer_DrawToLayer_AfterProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
+        private static void GeneralDrawLayer_DrawToLayer_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
+            OnDrawLayer?.Invoke(GeneralDrawLayer.BeforeProjectiles);
             orig(self);
             OnDrawLayer?.Invoke(GeneralDrawLayer.AfterProjectiles);
         }

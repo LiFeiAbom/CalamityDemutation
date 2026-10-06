@@ -31,6 +31,12 @@ namespace CalamityDemutation.Content.Projectiles
         /// ProjUtil 需要临时改动 extraUpdates 时会先缓存原值，用完再写回，避免叠加修改后无法还原。
         /// </summary>
         public int defExtraUpdates = -1;
+        /// <summary>
+        /// 该箭矢是否已被虚无箭袋的虚空场强化过（对应灾厄 CalamityGlobalProjectile 的同名字段）。
+        /// 虚空场（<c>VoidFieldGenerator</c>）每帧扫描周围 65 像素内的己方箭矢，
+        /// 只强化一次（伤害 ×1.75、<c>extraUpdates + 1</c>），用本标记去重。
+        /// </summary>
+        public bool nihilicArrow = false;
         // ── 属性 ──
         /// <summary>
         /// 弹幕按实例保存状态，故开启 per-entity
@@ -90,79 +96,104 @@ namespace CalamityDemutation.Content.Projectiles
         /// 随后在 1200 像素内挑出存活且生命缺口最大的队友，于弹幕位置生成 SilvaOrb / AuricOrb 弹幕
         /// （写入目标玩家索引与治疗量）为其回血。仅当 target.canGhostHeal 为真（该敌人允许吸血）时触发，
         /// 口径对齐经典版灾厄 CalamityGlobalProjectile.cs:346/380。
+        /// 另有一条独立分支：装备魔能谐振仪（manaOverloader）且手持魔法武器时，魔法弹幕命中会按
+        /// "伤害 × (0.2 − 已命中次数×0.05) × 当前魔力比例"（单次封顶 10）生成 ManaPolarizerHealOrb。
         /// </summary>
         public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             // 无主弹幕（owner = 255 = Main.maxPlayers）会越界，先做范围校验
             if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers)
                 return;
+            // 魔能谐振仪（manaOverloader）：手持魔法武器时，魔法弹幕命中敌人按其伤害与当前魔力比例吸血
+            // （源 CalamityPlayerOnHit 的 manaOverloader 分支）。它与下面的套装吸血相互独立（源里两者不在同一条
+            // else 链上），故本块刻意不写提前 return——否则一旦这里的治疗量算成 0，会把套装吸血一起跳过。
+            CalamityDemutationPlayer manaPolarizerPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (manaPolarizerPlayer.manaOverloader && projectile.CountsAsClass<MagicDamageClass>() && Main.player[projectile.owner].HeldItem.CountsAsClass<MagicDamageClass>())
+            {
+                float manaRatio = Main.player[projectile.owner].statMana / (float)Main.player[projectile.owner].statManaMax2;
+                float manaHealMult = 0.2f - projectile.numHits * 0.05f;
+                float manaHeal = projectile.damage * manaHealMult * manaRatio;
+                if (manaHeal > 10f)
+                    manaHeal = 10f;   // 源用 CalamityMod.lifeStealCap = 10
+                // lifeSteal 预算的判断与本文件里 silvaSet / auricSet 两条分支口径一致
+                // （现代版灾厄 2.0 之后已把这道判据挪进了 SpawnLifeStealProjectile）
+                if (manaHealMult > 0f && (int)manaHeal > 0 && Main.LocalPlayer.lifeSteal > 0f)
+                {
+                    Main.LocalPlayer.lifeSteal -= manaHeal * 3f;   // 源 SpawnLifeStealProjectile 的 cooldownMultiplier = 3
+                    float num13 = 0f;
+                    int num14 = projectile.owner;
+                    for (int i = 0; i < 255; i++)
+                    {
+                        if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
+                        {
+                            float num15 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - projectile.position.X + (float)(projectile.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - projectile.position.Y + (float)(projectile.height / 2));
+                            if (num15 < 1200f && (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife) > num13)
+                            {
+                                num13 = (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife);
+                                num14 = i;
+                            }
+                        }
+                    }
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<ManaPolarizerHealOrb>(), 0, 0f, projectile.owner, (float)num14, manaHeal);
+                }
+            }
+            // ⚠️ 这两条吸血分支**绝不能用 return 提前退出**：本方法后面还有一票套装效果
+            // （龙蒿盗贼计数、血炎盗贼、林海盗贼的 1.25 倍、龙蒿法师暴击计数与回血、血炎法师火焰爆炸、
+            //  弑神者法师烈焰/治疗球、林海法师巨型爆炸、弑神者召唤幻影——即"金源头复合四套"的全部内容），
+            //  提前 return 会把它们一并跳过。金源套同时置 silvaSet 与 auricSet，必进这两条分支，
+            //  一旦 lifeSteal 额度耗尽就会整个方法返回 —— 这正是"穿龙蒿有叶风暴、穿金源没有"的原因。
+            //  源（经典版）把后面这些效果写在玩家侧 CalamityPlayerPreTrailer.ModifyHitNPCWithProj、
+            //  CalamityGlobalItem.Shoot 等钩子里，天然不受这两处 return 影响；本工程把它们集中到了本方法，
+            //  故必须把"放弃"改写成嵌套 if（判据与顺序与原三条 return 完全等价）。
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet && target.canGhostHeal)
             {
                 float num11 = 0.03f;
                 num11 -= (float)projectile.numHits * 0.015f;
-                if (num11 <= 0f)
-                {
-                    return;
-                }
                 float num12 = (float)projectile.damage * num11;
-                if ((int)num12 <= 0)
+                if (num11 > 0f && (int)num12 > 0 && Main.LocalPlayer.lifeSteal > 0f)
                 {
-                    return;
-                }
-                if (Main.LocalPlayer.lifeSteal <= 0f)
-                {
-                    return;
-                }
-                Main.LocalPlayer.lifeSteal -= num12 * 1.5f;
-                float num13 = 0f;
-                int num14 = projectile.owner;
-                for (int i = 0; i < 255; i++)
-                {
-                    if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
+                    Main.LocalPlayer.lifeSteal -= num12 * 1.5f;
+                    float num13 = 0f;
+                    int num14 = projectile.owner;
+                    for (int i = 0; i < 255; i++)
                     {
-                        float num15 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - projectile.position.X + (float)(projectile.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - projectile.position.Y + (float)(projectile.height / 2));
-                        if (num15 < 1200f && (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife) > num13)
+                        if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
                         {
-                            num13 = (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife);
-                            num14 = i;
+                            float num15 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - projectile.position.X + (float)(projectile.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - projectile.position.Y + (float)(projectile.height / 2));
+                            if (num15 < 1200f && (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife) > num13)
+                            {
+                                num13 = (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife);
+                                num14 = i;
+                            }
                         }
                     }
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
                 }
-                Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
             else if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().auricSet && target.canGhostHeal)// AuricTeslaHelm 同时置 silva/auric 两标记，else if 防双倍吸血
             {
                 float num11 = 0.05f;
                 num11 -= (float)projectile.numHits * 0.025f;
-                if (num11 <= 0f)
-                {
-                    return;
-                }
                 float num12 = (float)projectile.damage * num11;
-                if ((int)num12 <= 0)
+                if (num11 > 0f && (int)num12 > 0 && Main.LocalPlayer.lifeSteal > 0f)
                 {
-                    return;
-                }
-                if (Main.LocalPlayer.lifeSteal <= 0f)
-                {
-                    return;
-                }
-                Main.LocalPlayer.lifeSteal -= num12 * 1.5f;
-                float num13 = 0f;
-                int num14 = projectile.owner;
-                for (int i = 0; i < 255; i++)
-                {
-                    if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
+                    Main.LocalPlayer.lifeSteal -= num12 * 1.5f;
+                    float num13 = 0f;
+                    int num14 = projectile.owner;
+                    for (int i = 0; i < 255; i++)
                     {
-                        float num15 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - projectile.position.X + (float)(projectile.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - projectile.position.Y + (float)(projectile.height / 2));
-                        if (num15 < 1200f && (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife) > num13)
+                        if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
                         {
-                            num13 = (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife);
-                            num14 = i;
+                            float num15 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - projectile.position.X + (float)(projectile.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - projectile.position.Y + (float)(projectile.height / 2));
+                            if (num15 < 1200f && (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife) > num13)
+                            {
+                                num13 = (float)(Main.player[i].statLifeMax2 - Main.player[i].statLife);
+                                num14 = i;
+                            }
                         }
                     }
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
                 }
-                Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
             }
             // 龙蒿盗贼套装（tarraThrowing）的「每 25 次盗贼暴击」计数
             //（照经典版 CalamityPlayerPreTrailer.cs:6158：要求暴击 + 弹幕算盗贼弹幕，且冷却归零、未满 25；

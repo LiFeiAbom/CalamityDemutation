@@ -542,6 +542,13 @@ namespace CalamityDemutation.Players
         /// 已装备魔力凝胶：+20 魔力上限，静止不动时额外魔力回复
         /// </summary>
         public bool manaJelly = false;
+        /// <summary>
+        /// 已装备魔能谐振仪（ManaPolarizer）：+100 魔力上限、+12% 魔法伤害与 +12% 魔法暴击率，
+        /// 魔力高于上限一半时生命再生 −2 HP/s；手持魔法武器时魔法弹幕命中会生成治疗球吸血。
+        /// 字段名沿用源的 <c>manaOverloader</c>（该饰品的旧名是 ManaOverloader）。
+        /// 每帧由饰品的 UpdateAccessory 置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool manaOverloader = false;
         public float modStealth = 1f;
         public int modStealthTimer;
         /// <summary>
@@ -790,6 +797,12 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool vitalJelly = false;
         /// <summary>
+        /// 已装备虚无箭袋：+12% 远程伤害与 +12% 远程暴击率，并在周身半径 300 处环绕四座虚空场。
+        /// 每帧由饰品的 UpdateAccessory 置位、ResetEffects/UpdateDead 清零；
+        /// 虚空场弹幕（VoidFieldGenerator）读本标记续命，饰品之间也用它做"已装第二件"的互斥判据。
+        /// </summary>
+        public bool voidField = false;
+        /// <summary>
         /// 虚空之烬流星雨发射倒计时（帧）：归零时齐射一轮并重置为 600
         /// </summary>
         public int voidFireCountdown = 0;
@@ -915,6 +928,7 @@ namespace CalamityDemutation.Players
             livingDewHalveDebuffs = false;
             lureofEnthrallment = false;
             manaJelly = false;
+            manaOverloader = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
             necklaceOfVexation = false;
@@ -971,6 +985,7 @@ namespace CalamityDemutation.Players
             titanScale = false;
             triumph = false;
             vitalJelly = false;
+            voidField = false;
             voidofExtinction = false;
             wifeinaBottle = false;
             wifeinaBottlewithBoobs = false;
@@ -1092,6 +1107,7 @@ namespace CalamityDemutation.Players
             livingDewHalveDebuffs = false;
             lureofEnthrallment = false;
             manaJelly = false;
+            manaOverloader = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
             necklaceOfVexation = false;
@@ -1159,6 +1175,7 @@ namespace CalamityDemutation.Players
             titanScale = false;
             triumph = false;
             vitalJelly = false;
+            voidField = false;
             voidofExtinction = false;
             wifeinaBottle = false;
             wifeinaBottlewithBoobs = false;
@@ -1380,6 +1397,12 @@ namespace CalamityDemutation.Players
                 Player.GetKnockback<SummonDamageClass>().Base += 0.5f;
                 Player.pickSpeed -= 0.15f;
             }
+            // 虚无箭袋：远程增伤/暴击（四座虚空场的强化判定见 Projectiles.Typeless.VoidFieldGenerator）
+            if (voidField)
+            {
+                Player.GetDamage<RangedDamageClass>() += 0.12f;
+                Player.GetCritChance<RangedDamageClass>() += 12;
+            }
             // 灾厄符印：魔法增伤/暴击/魔力上限与减耗，附带寻宝/药剂
             if (sigilofCalamitas)
             {
@@ -1400,6 +1423,12 @@ namespace CalamityDemutation.Players
                 Player.findTreasure = true;
                 Player.pStone = true;
                 Player.manaFlower = true;
+            }
+            // 魔能谐振仪：魔法增伤/暴击（魔力上限见饰品本身；扣再生见 UpdateLifeRegen，吸血见 GlobalProjectile.OnHitNPC）
+            if (manaOverloader)
+            {
+                Player.GetDamage<MagicDamageClass>() += 0.12f;   // 用户 2026-10-06 指定：源的 6% → 12%
+                Player.GetCritChance<MagicDamageClass>() += 12;   // 用户 2026-10-06 指定：源没有暴击项，新增 12%
             }
             // 时滞祝福：召唤增伤/击退 + 3 召唤栏
             if (statisBlessing)
@@ -3685,6 +3714,15 @@ namespace CalamityDemutation.Players
             if (tarraLifeRegen)
             {
                 Player.lifeRegen += 10;
+            }
+            // 魔能谐振仪：魔力高于上限一半时生命再生 −2 HP/s
+            // （1 HP/s = 2 点 lifeRegen，故源里的 totalNegativeLifeRegen += 4 在此直接写成 -= 4。
+            //  源把它写在 CalamityPlayerLifeRegen 的 UpdateBadLifeRegen 里，但本工程实测那个钩子只在"再生为负"
+            //  的分支才被调用（见下方 OmegaBlueNoLifeRegen 的注释），放在那儿常漏加；本钩子每帧必跑、
+            //  且晚于各类加成、早于原版的换算与结算点，故挪到这里。）
+            if (manaOverloader && Player.statMana > (int)(Player.statManaMax2 * 0.5))
+            {
+                Player.lifeRegen -= 4;
             }
             // 欧米茄蓝胸甲：禁止一切正面生命再生（同上，放在本钩子末尾以覆盖本方法内先加上的各项）
             OmegaBlueNoLifeRegen();

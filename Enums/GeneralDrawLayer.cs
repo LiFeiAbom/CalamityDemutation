@@ -3,7 +3,8 @@ namespace CalamityDemutation.Enums
 {
     /// <summary>
     /// 泰拉整体绘制顺序中的一组锚点，供粒子等图形系统挂接绘制层。
-    /// 移植自灾厄的 GeneralDrawLayer（完整保留全部层级，当前 AfterDusts / AfterProjectiles / AfterPlayers 三档已接线）。
+    /// 移植自灾厄的 GeneralDrawLayer（完整保留全部层级，当前 BeforeProjectiles / AfterProjectiles /
+    /// AfterPlayers / AfterDusts 四档已接线）。
     /// </summary>
     [Flags]
     public enum GeneralDrawLayer
