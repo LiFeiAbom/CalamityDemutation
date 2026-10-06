@@ -169,6 +169,8 @@ namespace CalamityDemutation.Utilities
         private static FieldInfo classicThrowingDamageField;
         /// <summary>经典版 CalamityCustomThrowingDamagePlayer.throwingCrit 的字段句柄</summary>
         private static FieldInfo classicThrowingCritField;
+        /// <summary>经典版 CalamityCustomThrowingDamagePlayer.throwingVelocity 的字段句柄</summary>
+        private static FieldInfo classicThrowingVelocityField;
         /// <summary>Player.GetModPlayer&lt;CalamityCustomThrowingDamagePlayer&gt;() 的方法句柄</summary>
         private static MethodInfo classicGetThrowingModPlayer;
 
@@ -255,16 +257,38 @@ namespace CalamityDemutation.Utilities
                 return;
             FieldInfo damageField = throwingPlayerType.GetField("throwingDamage", BindingFlags.Public | BindingFlags.Instance);
             FieldInfo critField = throwingPlayerType.GetField("throwingCrit", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo velocityField = throwingPlayerType.GetField("throwingVelocity", BindingFlags.Public | BindingFlags.Instance);
             MethodInfo getter = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(throwingPlayerType);
             if (damageField == null || critField == null || getter == null)
                 return;
             classicThrowingDamageField = damageField;
             classicThrowingCritField = critField;
+            classicThrowingVelocityField = velocityField;
             classicGetThrowingModPlayer = getter;
         }
 
         /// <summary>是否已探测过经典版投掷字段（无论成败只探测一次）</summary>
         private static bool classicThrowingDamageProbed;
+
+        /// <summary>
+        /// 盗贼**弹速**加成：现代版走灾厄官方 ModCall（<c>AddRogueVelocity</c>，2.0.4 与 1.4.4-release 都有）；
+        /// 经典版没有对应 Call → 反射给 <c>CalamityCustomThrowingDamagePlayer.throwingVelocity</c> 加算
+        /// （基准 1f，每帧复位，所以同样必须每帧调用）。
+        /// 目前只有弑神者盗贼头的「满血时盗贼全属性 +10%」用得到这条。
+        /// </summary>
+        public static void AddRogueVelocity(Player player, float add)
+        {
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                calamity.Call("AddRogueVelocity", player, add);
+            ProbeClassicThrowingBridge();
+            if (classicThrowingVelocityField == null || classicGetThrowingModPlayer == null)
+                return;
+            if (classicGetThrowingModPlayer.Invoke(player, null) is ModPlayer throwingPlayer)
+            {
+                float velocity = classicThrowingVelocityField.GetValue(throwingPlayer) is float v ? v + add : 1f + add;
+                classicThrowingVelocityField.SetValue(throwingPlayer, velocity);
+            }
+        }
 
         /// <summary>是否已探测过经典版的盗贼弹幕标记（无论成败只探测一次）</summary>
         private static bool classicRogueProjProbed;

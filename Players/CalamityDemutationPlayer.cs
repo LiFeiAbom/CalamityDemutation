@@ -461,6 +461,12 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool godSlayerMage = false;
         /// <summary>
+        /// 弑神者套装·盗贼向（GodSlayerMask 的套装标记）：满生命时所有盗贼属性 +10%（伤害 / 暴击 / 弹速，
+        /// 见 PostUpdateMiscEffects），单次受到超过 80 点伤害时额外获得 30 帧无敌（见 PostHurt）；
+        /// 潜行上限 140 由该头盔的 UpdateArmorSet 补给灾厄侧。
+        /// </summary>
+        public bool godSlayerThrowing = false;
+        /// <summary>
         /// 弑神幻影的节流预算：每召出一枚按"本次命中伤害的一半"累加，每帧衰减 2.5，归零后才允许再召
         ///（经典版 CalamityPlayerPreTrailer.cs:3806-3809 原样；源不在此处复位，靠衰减自清）
         /// </summary>
@@ -894,6 +900,7 @@ namespace CalamityDemutation.Players
             godSlayerRanged = false;
             godSlayerReflect = false;
             godSlayerSummon = false;
+            godSlayerThrowing = false;
             mWorm = false;
             grandGelatin = false;
             heartoftheElements = false;
@@ -1067,6 +1074,7 @@ namespace CalamityDemutation.Players
             godSlayerShrapnelCooldown = 0;
             godSlayerSummon = false;
             godSlayerDmg = 0f;
+            godSlayerThrowing = false;
             mWorm = false;
             terratomerePvpBoltHits = 0;
             grandGelatin = false;
@@ -2777,6 +2785,20 @@ namespace CalamityDemutation.Players
                 godSlayerDmg -= 2.5f;
             if (godSlayerDmg < 0f)
                 godSlayerDmg = 0f;
+            // 弑神者盗贼头（GodSlayerMask）的 godSlayerThrowing 套装效果
+            //（照经典版 CalamityPlayerPreTrailer.cs:5225-5235）：**满生命时**（源用 >= 判定）盗贼伤害 +10%、
+            // 盗贼暴击 +10、盗贼弹速 +10%。三项都按"每帧叠加、随 ResetEffects 清零"生效。
+            if (godSlayerThrowing)
+            {
+                if (Player.statLife >= Player.statLifeMax2)
+                {
+                    DamageClass throwingClass = CDUtil.GetRogueDamageClass();
+                    Player.GetDamage(throwingClass) += 0.1f;           // 现代版：加到真·盗贼伤害类
+                    Player.GetCritChance(throwingClass) += 10;
+                    CDUtil.AddClassicThrowingStats(Player, 0.1f, 10);  // 经典版：写进它的自定义投掷字段
+                    CDUtil.AddRogueVelocity(Player, 0.1f);             // 盗贼弹速（现代官方 ModCall / 经典反射）
+                }
+            }
             if (godSlayerSummon)
                 UpdateGodSlayerMechworm();
             if (bloodflareMelee)
@@ -4592,6 +4614,14 @@ namespace CalamityDemutation.Players
                     Projectile.NewProjectile(Entity.GetSource_FromThis(), Player.Center.X, Player.Center.Y, 0f, 0f,
                         ModContent.ProjectileType<GodSlayerBlaze>(), auricSet ? 2400 : 1200, 1f, Player.whoAmI);
                 }
+            }
+            // 弑神者盗贼头（GodSlayerMask）的「单次受伤超过 80 点 → 额外无敌帧」
+            //（照经典版 CalamityPlayerPreTrailer.cs:7931-7936：info.Damage > 80 时 Player.immuneTime += 30）。
+            // 源把整段裹在 if (Player.whoAmI == Main.myPlayer) 里（PostHurt 是"每名玩家 × 每一端"都跑的钩子，
+            // 见工程记忆第 5 节），本工程照此加判据。
+            if (godSlayerThrowing && Player.whoAmI == Main.myPlayer && info.Damage > 80)
+            {
+                Player.immuneTime += 30;
             }
             bool hardMode = Main.hardMode;
             // 亚米迪亚斯火花/吞噬者：受伤后向四周迸发两圈电火花

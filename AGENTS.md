@@ -265,6 +265,24 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**盗贼线第三件 = 弑神者盗贼头——弑神者面具（GodSlayerMask）**。
+  ⚠️ 命名：经典版里 **`GodSlayerMask` 才是盗贼头**（`GodSlayerHelm` 近战 / `GodSlayerHelmet` 射手 /
+  `GodSlayerVisage` 法师 / `GodSlayerHornedHelm` 召唤）——就是早先判定"是盗贼头、先不移植"的那颗；
+  现代版对应 `GodSlayerHeadRogue`，CI 对应 `GodSlayerHeadRogueold`。显示名 en `God Slayer Mask`、
+  zh **弑神者面具**（用户未点名，按 TarragonMask = 龙蒿面具 的「Mask → 面具」口径取）。
+  ① 新增 `Content/Items/Armors/GodSlayer/GodSlayerMask.cs`（贴图 20×22 / `_Head.png` 40×1120，
+  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 75 金、**防御 29**（源码同行另留 `//96`）、月后稀有度 14。
+  ② 单件：盗贼伤害 +14% / 盗贼暴击 +14%（`CDUtil.GetRogueDamageClass` 加类 + 经典版投掷桥）。
+  ③ 套装 `godSlayer + godSlayerThrowing`（**不置** `godSlayerDamage`——那是近战头专属）+ **潜行上限 140**
+  （`GrantRogueStealth(1.4f)`）；两条盗贼效果（照经典版 CalamityPlayerPreTrailer.cs:5225-5235 / 7931-7936）：
+  (a)「满生命时所有盗贼属性 +10%」——落在 `PostUpdateMiscEffects`：伤害 +10%、暴击 +10、**弹速 +10%**；
+  弹速这条新加了 `CDUtil.AddRogueVelocity`（现代走官方 ModCall `AddRogueVelocity`、经典反射 `throwingVelocity`）。
+  (b)「单次受伤 >80 → 额外无敌帧」——落在 `PostHurt`：`Player.immuneTime += 30`，带
+  `whoAmI == Main.myPlayer` 判据（源也这么裹；PostHurt 属"每名玩家 × 每一端"钩子，见第 5 节）。
+  ④ 玩家侧新增 `godSlayerThrowing`（`ResetEffects` / `UpdateDead` 两处复位）。
+  ⑤ 配方与其余弑神者头逐字一致（现代 CosmiliteBar×10 + AscendantSpiritEssence×2 /
+  经典 CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8）；中英本地化各补 `Items.GodSlayerMask`。
+  验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线第二件 = 血炎盗贼头——血饮魔精盔（BloodflareHelm）**。
   ⚠️ 命名：经典版里 **`BloodflareHelm` 才是盗贼头**（`BloodflareMask` 近战 / `BloodflareHornedHelm` 射手 /
   `BloodflareHelmet` 召唤 / `BloodflareHornedMask` 法师）；现代版对应 `BloodflareHeadRogue`。
