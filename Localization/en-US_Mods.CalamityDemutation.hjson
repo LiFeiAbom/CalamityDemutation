@@ -173,6 +173,11 @@ Buffs: {
 		DisplayName: Abyssal Wish
 		Description: You can breathe underwater, even in the Abyss!
 	}
+
+	Mechworm: {
+		DisplayName: Mechworm
+		Description: The mechworm will protect you
+	}
 }
 
 Configs: {
@@ -1466,11 +1471,6 @@ Items: {
 			+20 max mana
 			Standing still boosts mana regen
 			'''
-	}
-
-	Mechworm: {
-		DisplayName: Mechworm
-		Description: The mechworm will protect you
 	}
 
 	MoonPact: {
