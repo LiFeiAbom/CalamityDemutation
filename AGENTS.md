@@ -265,6 +265,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-06）：**给血神核心（CoreOfTheBloodGod）追加 +10% 近战攻击速度**（用户点名，「其他不改」）。
+  在 `CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块里加一行
+  `Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;`；中英 tooltip 各补一行（zh「近战攻击速度提高 10%」/
+  en「10% increased melee attack speed」）、物品类注释同步；行尾整回 CRLF。
+  验证：编译 0 警告 0 错误，资源自检全命中。
 - 最近一批工作（2026-10-06）：**按用户点名删除四件永久增益消耗品并取消其效果**。
   删除对象：糖心柑橘（`SugarheartCitrus`）/ 有机豆荚（`OrganicPod`）/ 新鲜蓝莓（`FreshBlueberry`）/
   熔岩浆果（`MoltenMagmaFruit`）——四件均为本工程自研件（非移植），故无来源合规问题。

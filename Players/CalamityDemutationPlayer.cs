@@ -1341,6 +1341,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 血神核心：+10% 最大生命、+12% 暴击率与伤害、+10% 减伤，
+            // +10% 近战攻击速度（用户 2026-10-06 追加），
             // 防御不足 100 时再 +15% 伤害，并每帧生成一个灵魂虹吸弹幕形成吸血光环
             if (coreOfTheBloodGod)
             {
@@ -1348,6 +1349,7 @@ namespace CalamityDemutation.Players
                 Player.GetCritChance<GenericDamageClass>() += 12;
                 Player.GetDamage<GenericDamageClass>() += 0.12f;
                 Player.endurance += 0.1f;
+                Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;
                 if (Player.statDefense < 100)
                 {
                     Player.GetDamage<GenericDamageClass>() += 0.15f;
