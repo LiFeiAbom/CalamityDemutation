@@ -24,9 +24,15 @@
 
 ## 2. 本机参考源码（侦察用）
 
-`D:\Game\Terraria\ModModel\` 下：`CalamityModPublic-2.0.4`（缩放后内有同名子目录）、`CalamityModPublic-2.0.3.9`、
-`CalamityModPublic-1.4.4-release`、`CalamityInheritance-Beta1.12`、`CalamityOverhaul-*`、
-`CalamityEntropy-master`、`InnoVault-main`。灾厄中文名对照可查
+`D:\Game\Terraria\ModModel\` 下（2026-10-07 全量盘点，**每个目录里还套着一层同名子目录**）：
+现代版世系 `CalamityModPublic-2.0`、`-2.0.3.9`、`-2.0.4`、`-2.0.7.2-archipelago`、
+`-1.4.4`、`-1.4.4-release`、`-1.3-release`；经典版世系 `CalamityModClassic-cal-1.0`、`-cal-1.1`、`-cal-1.2`、
+`-cal-1.4.2.101`（**cal-1.2 的命名空间是 `CalamityModClassic1Point2`**，与后续几版的 `...PreTrailer` 不同）；
+以及 `CalamityInheritance-Beta1.12`、`CalamityOverhaul-0.4.0.1.3` / `-0.4.0.3.5` / `-0.5.0.1.7` / `-main`、
+`CalamityEntropy-master`、`InnoVault-main`、`Luminance-main`、`FargosSoulsMod-1.6` / `-master`、
+`Lilac-Arcane-Pack-master`、`Player and World`。
+**已装 mod 的权威内容**另有两条路：`ModReader\<mod>\`（tML 的"解包"输出，**可能落后好几个版本，别当权威**）
+与第 6 节的 .tmod 直读法（最准）。灾厄中文名对照可查
 `C:\Users\28155\Documents\My Games\Terraria\tModLoader\ModLocalization\CalamityMod\Localization\zh-Hans\`。
 
 ## 3. 已确立的换算/口径
@@ -148,6 +154,16 @@
   `ModLocalization/<mod>/`（同理；且里面 `//` 开头的行只表示"这份语言文件没填翻译"，不代表键不存在）。
   另 `Mods\*.tmod` 的文件名前缀（如 `2026.6`）是**构建该 mod 的 tModLoader 版本**，不是 mod 版本；
   要确认装的是哪版看 `tModLoader-Logs\client.log` 的 `Selected <ModName> <版本>` 行。
+- **用户的"批量移植"剧本（2026-10-07 定型，同类任务照办）**：① 先在参考源里**逐版出数据**
+  （2.0 / 2.0.3.9 / 2.0.4 / 1.4.4-release 的尺寸·档位·价值·效果·配方·玩家侧实现差异）摆给用户；
+  ② 用户**逐条拍板**（取哪版数值、配方走哪版、要不要与本体同名件互斥、中文名、要不要追加基础属性）；
+  ③ 再**一件一件**落地，顺序按"从链条下位往上"（先做最底的材料/前件，再做上位的）；
+  每件都走：实现 → `dotnet build` 0/0 + 资源自检 → 更新本文件 → 提交推送。
+  **已固化的口径（"老规矩"）**：默认取 **2.0**（旧版回归）；**允许与灾厄本体同名件同时佩戴**（不做互斥，
+  用户明确要叠加）；中文名沿用通用译法（CalamityCN 没翻的件自己定）；可按用户点名追加基础属性，
+  加在盗贼路上（`CDUtil.GetRogueDamageClass()`）。
+- **提交信息用消息文件**：正文含中文引号/换行时 `git commit -m $body` 会被 PowerShell 拆坏（报 pathspec 错），
+  改成 `[System.IO.File]::WriteAllText($env:TEMP\msg.txt, (... -join "`n"), UTF8(no BOM))` 再 `git commit -F`。
 
 ## 7. 数值膨胀（StatInflation：武器 35 把 + 盔甲 12 件，2026-10-01 全量接入完毕，2026-10-05 补齐女妖之爪条目）
 
@@ -275,6 +291,17 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- **【接续点 · 2026-10-07 晚】当前批次：「暗物质剑鞘」链（用户指定优先做），进度 1/4。**
+  链条顺序 = **静默剑鞘 ✅ 已做（提交 `99dadc0`）→ 毁灭徽章（下一件）→ 暗物质剑鞘 → 日蚀魔镜（口径已拍板）**。
+  **下一件：毁灭徽章（RuinMedallion）**，数据已备好（四版**数值一致**：20×28、粉档 `Rarity5` = 20 金、
+  盗贼伤害/暴击 **+6%/+6**；配方 = 欺骗硬币 `CoinofDeceit` + 不洁核心×4 + 灾祸精华×2 @ 秘银砧；
+  2.0 的灾祸精华写作 `EssenceofChaos`，2.0.3.9+ 写作 `EssenceofHavoc`），**待用户拍板三点**：
+  ① 潜行打击消耗取 **2.0 的"半价"**（`stealthStrikeHalfCost`）还是 **2.0.3.9+ 的"只需 75% 上限"**
+  （`stealthStrike75Cost`）；② 要不要追加基础属性（前四件都加了）；③ 经典分支怎么办——
+  经典版**没有**欺骗硬币/灾祸精华（只有 `EssenceofChaos`），所以这一件大概率是现代独占或要换材料。
+  工作区当前**干净、与 `origin/master` 同步**，最后一次提交 = `99dadc0`；下次开工直接接着做即可。
+  （本批次已固化的两条工程手法：潜行相关字段必须写在 `PostUpdateEquips`；潜行上限的"百分比"走
+  `GrantRogueStealthRatio`、"点数"走 `GrantRogueStealth`。）
 - 最近一批工作（2026-10-07）：**移植静默剑鞘（SilencingSheath）—— "暗物质剑鞘"批次的第一件（链条底）。**
   用户拍板口径：走 **2.0**（潜行上限 **+20 点**、站定与移动恢复**各 +15%**、橙档 4 金；
   2.0.3.9 起被本体削到 +10 点 / 各 +4%，档位还降成绿档 2 金——本件刻意保留旧数值）；中文名**静默剑鞘**（不改）；
