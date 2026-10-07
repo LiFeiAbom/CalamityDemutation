@@ -448,5 +448,76 @@ namespace CalamityDemutation.Utilities
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             calamityGetGlobalProjectileForStealth = getter;
         }
+
+        // ── 潜行恢复速度桥（幻影魔镜用）──
+
+        /// <summary>是否已探测过灾厄 CalamityPlayer 的潜行恢复字段（无论成败只探测一次）</summary>
+        private static bool calamityStealthGenProbed;
+        /// <summary>CalamityPlayer.stealthGenStandstill 的字段句柄</summary>
+        private static FieldInfo calamityStealthGenStandstillField;
+        /// <summary>CalamityPlayer.stealthGenMoving 的字段句柄</summary>
+        private static FieldInfo calamityStealthGenMovingField;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
+        private static MethodInfo calamityGetModPlayerForStealthGen;
+
+        /// <summary>
+        /// 提高盗贼潜行恢复速度：给灾厄的 <c>stealthGenStandstill</c> / <c>stealthGenMoving</c> 加算
+        /// （两字段基准 1f，灾厄在它自己的 ResetEffects 里每帧复位、在 PostUpdateMiscEffects 之后才读取，
+        /// 所以必须每帧调用且调用点要晚于它的 ResetEffects——本工程挂在 <c>PostUpdateEquips</c>）。
+        /// <para>
+        /// 灾厄的 Mod.Call 列表里**没有**潜行恢复这一项（只有 AddMaxStealth / AddRogueVelocity / 各类潜行查询），
+        /// 故这里走反射；经典版灾厄**根本没有这两个字段**（它的盗贼是旧的自定义投掷倍率 + modStealth），
+        /// 所以本方法对经典版直接短路——潜行恢复加成是现代版独占的，与纳米技术的潜行打击同理。
+        /// </para>
+        /// <para>
+        /// 换算口径（1.4.4 世系）：站定每帧恢复 = (潜行上限 / 4 秒) × stealthGenStandstill；
+        /// 移动 = 上式 × 0.5 × stealthGenMoving × stealthAcceleration。即 +0.25f = 站定回满从 4 秒缩到 3.2 秒。
+        /// </para>
+        /// </summary>
+        public static void AddStealthGen(Player player, float standstillAdd, float movingAdd)
+        {
+            ProbeCalamityStealthGenBridge();
+            if (calamityStealthGenStandstillField == null || calamityGetModPlayerForStealthGen == null)
+                return;
+            if (calamityGetModPlayerForStealthGen.Invoke(player, null) is ModPlayer calamityPlayer)
+            {
+                // 读现值再加：灾厄自己的潜行饰品/药水也往这两个字段上加，直接赋值会盖掉它们
+                float standstill = calamityStealthGenStandstillField.GetValue(calamityPlayer) is float s ? s + standstillAdd : 1f + standstillAdd;
+                calamityStealthGenStandstillField.SetValue(calamityPlayer, standstill);
+                if (calamityStealthGenMovingField != null)
+                {
+                    float moving = calamityStealthGenMovingField.GetValue(calamityPlayer) is float m ? m + movingAdd : 1f + movingAdd;
+                    calamityStealthGenMovingField.SetValue(calamityPlayer, moving);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 一次性探测灾厄 CalamityPlayer 的两个潜行恢复字段与取 ModPlayer 的方法并缓存；
+        /// 任一步失败都放弃并记为已探测。
+        /// </summary>
+        private static void ProbeCalamityStealthGenBridge()
+        {
+            if (calamityStealthGenProbed)
+                return;
+            calamityStealthGenProbed = true;
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                return;
+            Type calamityPlayerType = calamity.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
+            if (calamityPlayerType == null)
+                return;   // 灾厄改了类名：放弃
+            FieldInfo standstillField = calamityPlayerType.GetField("stealthGenStandstill",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (standstillField == null)
+                return;   // 该版本没有潜行恢复字段：放弃
+            MethodInfo getter = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(calamityPlayerType);
+            if (getter == null)
+                return;
+            calamityStealthGenStandstillField = standstillField;
+            calamityStealthGenMovingField = calamityPlayerType.GetField("stealthGenMoving",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            calamityGetModPlayerForStealthGen = getter;
+        }
     }
 }

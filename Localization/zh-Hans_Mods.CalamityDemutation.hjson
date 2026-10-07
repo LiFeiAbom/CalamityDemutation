@@ -1577,6 +1577,18 @@ Items: {
 			'''
 	}
 
+	MirageMirror: {
+		DisplayName: 幻影魔镜
+		Tooltip:
+			'''
+			深渊之外降低敌人仇恨
+			最大潜行值提高 15%
+			盗贼伤害与暴击率提高 2%
+			站定时潜行恢复速度提高 30%，移动时提高 20%
+			'让光在你周围偏折'
+			'''
+	}
+
 	MoonPact: {
 		DisplayName: 拜月契约
 		Tooltip:

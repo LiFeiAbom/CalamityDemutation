@@ -1576,6 +1576,18 @@ Items: {
 			'''
 	}
 
+	MirageMirror: {
+		DisplayName: Mirage Mirror
+		Tooltip:
+			'''
+			Reduces enemy aggression outside of the abyss
+			Increases maximum stealth by 15%
+			2% increased rogue damage and rogue crit chance
+			Stealth generates 30% faster when standing still and 20% faster while moving
+			'Bend light around you'
+			'''
+	}
+
 	MoonPact: {
 		DisplayName: Moon Pact
 		Tooltip:

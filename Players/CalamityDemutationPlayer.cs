@@ -549,6 +549,12 @@ namespace CalamityDemutation.Players
         /// 每帧由饰品的 UpdateAccessory 置位、ResetEffects/UpdateDead 清零。
         /// </summary>
         public bool manaOverloader = false;
+        /// <summary>
+        /// 已装备幻影魔镜（Mirage Mirror）：站定潜行恢复 +30%、移动 +20%、潜行上限 +15%、
+        /// 盗贼伤害 +2%、盗贼暴击 +2、仇恨 −200。潜行相关的两条在 PostUpdateEquips 结算
+        /// （必须早于灾厄读取），其余在 PostUpdateMiscEffects。每帧由饰品置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool mirageMirror = false;
         public float modStealth = 1f;
         public int modStealthTimer;
         /// <summary>
@@ -936,6 +942,7 @@ namespace CalamityDemutation.Players
             lureofEnthrallment = false;
             manaJelly = false;
             manaOverloader = false;
+            mirageMirror = false;
             nanotech = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
@@ -1116,6 +1123,7 @@ namespace CalamityDemutation.Players
             lureofEnthrallment = false;
             manaJelly = false;
             manaOverloader = false;
+            mirageMirror = false;
             nanotech = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
@@ -1495,6 +1503,15 @@ namespace CalamityDemutation.Players
                     Player.endurance += 0.1f;   // 10% 伤害减免
                     Player.statDefense += 30;
                 }
+            }
+            // 幻影魔镜（Mirage Mirror）：盗贼 +2% 伤害 / +2 暴击、仇恨 −200
+            //（潜行恢复与潜行上限那两条在 PostUpdateEquips，原因见那里的注释）
+            if (mirageMirror)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.02f;
+                Player.GetCritChance(rogue) += 2;
+                Player.aggro -= 200;
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
@@ -3478,6 +3495,17 @@ namespace CalamityDemutation.Players
             //（它每帧把潜行上限清零）、早于它 PostUpdateMiscEffects（那里才积攒潜行）。
             if (demonshadeRogue)
                 CDUtil.GrantRogueStealth(Player, 2f);
+            // 幻影魔镜（Mirage Mirror）：潜行恢复 +30% 站定 / +20% 移动、潜行上限 **+15%（相对当前上限）**。
+            // 同样必须写在这里——灾厄在 ResetEffects 里每帧复位这些字段，到它 PostUpdateMiscEffects
+            // 之后才读取；潜行恢复在灾厄的 Mod.Call 里没有对应项，走 CDUtil 的反射桥
+            //（经典版灾厄没有这两个字段，会直接短路）。
+            if (mirageMirror)
+            {
+                CDUtil.AddStealthGen(Player, 0.30f, 0.20f);
+                // 走"按当前上限比例追加"的那条（读的是这一帧灾厄与其它装备都给完之后的实时上限）——
+                // 用户口径是 +15%，不是平铺 +15 点；上限为 100 时两者恰好都是 +15。
+                CDUtil.GrantRogueStealthRatio(Player, 0.15f);
+            }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)

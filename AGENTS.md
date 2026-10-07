@@ -275,6 +275,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**移植幻影魔镜（Mirage Mirror）—— 盗贼潜行链的第一件，数值取 2.0 旧口径。**
+  链条：**幻影（MirageMirror）→ 深渊（AbyssalMirror）→ 日蚀（EclipseMirror）**，本件是最下端的前期件
+  （工匠作坊档）。用户拍板：**走 2.0 版**（站定潜行恢复 **+30%**、移动 **+20%**、仇恨 **−200**；
+  2.0.3.9 起被本体削到 +25%/+12%）；**允许与灾厄本体那件同名件同时佩戴**（潜行恢复叠加，有意为之，
+  故**不做** `CanEquipAccessory` 互斥）；中文名定为**幻影魔镜**；另按用户点名追加基础属性：
+  **最大潜行值 +15%（相对当前上限）**、盗贼伤害 +2%、盗贼暴击 +2。
+  **配方照 2.0**（四版一致、全是原版材料）：魔法镜 **或** 冰雪镜 + 黑透镜 + 骨×50 @ 工匠作坊。
+  **落地**：`Content/Items/Accessories/JobAcc/Rogue/MirageMirror.cs`（+ 2.0 那份 30×30 贴图，四版贴图相同）；
+  效果**分两处写**——潜行相关两条（恢复速度 + 上限比例）必须写在 `CalamityDemutationPlayer.PostUpdateEquips`
+  （灾厄在 ResetEffects 里复位这些字段、PostUpdateMiscEffects 之后才读取，写晚了等于没写），
+  伤害/暴击/仇恨写在 `PostUpdateMiscEffects` 的 mirageMirror 块。
+  **新增反射桥 `CDUtil.AddStealthGen(player, standstill, moving)`**：灾厄的 Mod.Call 里**没有**潜行恢复这一项
+  （只有 AddMaxStealth / AddRogueVelocity / 各种潜行查询），只能反射写 `CalamityPlayer.stealthGenStandstill` /
+  `stealthGenMoving`（基准 1f，每帧复位）；**经典版灾厄根本没有这两个字段**，故该加成是现代版独占。
+  +15% 上限走工程已有的 `GrantRogueStealthRatio`（相对当前上限，**不是**平铺 +15 点）。
+  **备忘（整条链的换算口径，别忘）**：站定每帧恢复 = (上限 / 4 秒) × `stealthGenStandstill`；
+  移动 = 上式 × 0.5 × `stealthGenMoving` × `stealthAcceleration`（`BaseStealthGenTime=4s`、
+  `MovingStealthGenRatio=0.5`）。而潜行打击的**最大伤害**是按 `0.8×移动 + 0.2×站定` 反推的——
+  **恢复越快、单发上限越低**，移植时别当纯赚。另：现代 2.2.2 本体三件镜子都还在（配方与 1.4.4-release 一致），
+  所以这一系列都是"同名不同物 + 用户明确允许叠加"的口径。
+  验证：编译 0 警告 0 错误；资源自检 149 条全命中。
 - 最近一批工作（2026-10-07）：**移植纳米技术（Nanotech，盗贼饰品）—— 物品取经典版 1.4.2.101 口径，机制取 CI。**
   用户点名口径：盗贼伤害 **+20%**、盗贼暴击 **+20**（源 1.4.2 为 +15% / +10）、盗贼弹速 +15%；
   手持盗贼武器时额外 +30 防御与 10% 伤害减免（照 cal-1.2 `CalamityPlayer1Point2.cs:917`）；
