@@ -662,6 +662,12 @@ namespace CalamityDemutation.Players
         /// 附带寻宝与药剂效果
         /// </summary>
         public bool sigilofCalamitas = false;
+        /// <summary>
+        /// 已装备静默剑鞘（Silencing Sheath）：潜行上限 +20 点、站定与移动潜行恢复各 +15%（2.0 口径）、
+        /// 盗贼伤害 +2%、盗贼暴击 +2。潜行相关的两条在 PostUpdateEquips 结算（必须早于灾厄读取），
+        /// 其余在 PostUpdateMiscEffects；每帧由饰品置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool silencingSheath = false;
         public int silvaCountdown = 600;
         public int silvaHitCounter = 0;
         /// <summary>
@@ -989,6 +995,7 @@ namespace CalamityDemutation.Players
             shieldoftheOcean = false;
             shieldSlamDash = ShieldSlamDash.None;
             sigilofCalamitas = false;
+            silencingSheath = false;
             silvaMage = false;
             silvaMelee = false;
             silvaRanged = false;
@@ -1175,6 +1182,7 @@ namespace CalamityDemutation.Players
             shieldSlamDashElapsed = 0;
             shieldSlamDashCooldown = 0;
             sigilofCalamitas = false;
+            silencingSheath = false;
             silvaCountdown = 600;
             silvaHitCounter = 0;
             silvaMage = false;
@@ -1539,6 +1547,14 @@ namespace CalamityDemutation.Players
                 Player.GetDamage(rogue) += 0.05f;
                 Player.GetCritChance(rogue) += 5;
                 Player.aggro -= 450;
+            }
+            // 静默剑鞘（Silencing Sheath）：盗贼 +2% 伤害 / +2 暴击
+            //（潜行恢复与上限在 PostUpdateEquips）
+            if (silencingSheath)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.02f;
+                Player.GetCritChance(rogue) += 2;
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
@@ -3544,6 +3560,13 @@ namespace CalamityDemutation.Players
             {
                 CDUtil.AddStealthGen(Player, 0.30f, 0.20f);
                 CDUtil.GrantRogueStealthRatio(Player, 0.20f);
+            }
+            // 静默剑鞘（Silencing Sheath）：潜行上限 +20 **点**（2.0 是平铺点数，不是百分比）、
+            // 站定与移动恢复各 +15%。与上面两件同一处、同一原因。
+            if (silencingSheath)
+            {
+                CDUtil.AddStealthGen(Player, 0.15f, 0.15f);
+                CDUtil.GrantRogueStealth(Player, 0.20f);
             }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {

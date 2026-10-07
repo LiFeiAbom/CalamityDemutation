@@ -1807,6 +1807,16 @@ Items: {
 			'''
 	}
 
+	SilencingSheath: {
+		DisplayName: 静默剑鞘
+		Tooltip:
+			'''
+			最大潜行值提高 20
+			盗贼伤害与暴击率提高 2%
+			潜行恢复速度提高 15%
+			'''
+	}
+
 	SilvaArmor: {
 		DisplayName: 始源林海盔甲
 		Tooltip:

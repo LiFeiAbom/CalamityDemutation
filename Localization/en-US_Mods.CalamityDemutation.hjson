@@ -1806,6 +1806,16 @@ Items: {
 			'''
 	}
 
+	SilencingSheath: {
+		DisplayName: Silencing Sheath
+		Tooltip:
+			'''
+			Increases maximum stealth by 20
+			2% increased rogue damage and rogue crit chance
+			Stealth generates 15% faster
+			'''
+	}
+
 	SilvaArmor: {
 		DisplayName: Silva Armor
 		Tooltip:

@@ -275,6 +275,23 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**移植静默剑鞘（SilencingSheath）—— "暗物质剑鞘"批次的第一件（链条底）。**
+  用户拍板口径：走 **2.0**（潜行上限 **+20 点**、站定与移动恢复**各 +15%**、橙档 4 金；
+  2.0.3.9 起被本体削到 +10 点 / 各 +4%，档位还降成绿档 2 金——本件刻意保留旧数值）；中文名**静默剑鞘**（不改）；
+  另按用户点名追加基础属性 **盗贼伤害 +2%、盗贼暴击 +2**（同前几件的盗贼路写法）。
+  **配方照 2.0**（四版完全一致）：**任意魔金锭×8 + 丝绸×10 + 任意二阶 Boss 材料×3 @ 工匠作坊**。
+  源配方用的是灾厄自建的 `AnyEvilBar` / `Boss2Material` 两个配方组（内容全是原版物品：魔金锭/血金锭、
+  暗影鳞片/组织样本），本件刻意**不依赖灾厄**，故在 `Systems/RecipeSystem.cs` 里自建同内容组
+  `CalamityDemutation:AnyEvilBar` / `CalamityDemutation:Boss2Material` 供它使用（与 AnyQuiver 同款做法）。
+  **落地**：`Content/Items/Accessories/JobAcc/Rogue/SilencingSheath.cs`（+ 2.0 那份 34×32 贴图）；
+  潜行相关两条（`CDUtil.AddStealthGen(0.15f, 0.15f)` + `CDUtil.GrantRogueStealth(0.2f)`——
+  本件是**平铺点数**不是百分比，与幻影/深渊那两件的 `GrantRogueStealthRatio` 写法不同）写在
+  `PostUpdateEquips`，盗贼 +2%/+2 写在 `PostUpdateMiscEffects`；中英 tooltip 与物品名一并补齐。
+  验证：编译 0 警告 0 错误；资源自检 150 条全命中。
+  **批次进度**：① 静默剑鞘 ✅ → ② **毁灭徽章（RuinMedallion）**（下一件：欺骗硬币 + 不洁核心×4 +
+  灾祸精华×2 @ 秘银砧；四版数值一致 20×28 / 粉档 20 金 / 盗贼 +6/+6，差别只在"潜行打击消耗"——
+  2.0 是**半价** `stealthStrikeHalfCost`、2.0.3.9+ 改成**75%** `stealthStrike75Cost`）
+  → ③ 暗物质剑鞘 → ④ 日蚀魔镜（口径已拍板，见上一条）。
 - 最近一批工作（2026-10-07）：**日蚀魔镜（EclipseMirror）已拍板待移植 + 转向"暗物质剑鞘"批次（用户要求先做链条下位）。**
   **日蚀魔镜已定口径（拍板，尚未落地）**：
   ① 基础效果：盗贼伤害 **+11%**、盗贼暴击 **+11**（源为 +6/+6，用户点名提高）、**潜行上限 +25 点**（平铺点数，
