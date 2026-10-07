@@ -788,6 +788,15 @@ Items: {
 		DisplayName: 混沌石
 	}
 
+	CoinofDeceit: {
+		DisplayName: 欺诈硬币
+		Tooltip:
+			'''
+			潜行打击只消耗潜行上限的 75%
+			盗贼暴击率提高 6%
+			'''
+	}
+
 	CometQuasher: {
 		DisplayName: 彗星陨刃
 		Tooltip:

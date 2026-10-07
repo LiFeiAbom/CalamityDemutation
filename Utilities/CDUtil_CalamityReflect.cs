@@ -449,6 +449,77 @@ namespace CalamityDemutation.Utilities
             calamityGetGlobalProjectileForStealth = getter;
         }
 
+        // ── 潜行打击消耗档桥（欺诈硬币 / 毁灭徽章用）──
+
+        /// <summary>是否已探测过现代版 CalamityPlayer 的潜行打击消耗字段（无论成败只探测一次）</summary>
+        private static bool calamityStealthCostProbed;
+        /// <summary>CalamityPlayer.stealthStrikeHalfCost 的字段句柄</summary>
+        private static FieldInfo calamityStealthHalfCostField;
+        /// <summary>CalamityPlayer.stealthStrike75Cost 的字段句柄</summary>
+        private static FieldInfo calamityStealth75CostField;
+        /// <summary>CalamityPlayer.stealthStrike90Cost 的字段句柄</summary>
+        private static FieldInfo calamityStealth90CostField;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
+        private static MethodInfo calamityGetModPlayerForStealthCost;
+
+        /// <summary>
+        /// 把盗贼「潜行打击」的消耗降到潜行上限的某个比例：<paramref name="costRatio"/> 取
+        /// 0.5（半价 = <c>stealthStrikeHalfCost</c>）/ 0.75（<c>stealthStrike75Cost</c>）/
+        /// 0.9（<c>stealthStrike90Cost</c>），只把对应的那一个布尔置真。
+        /// <para>
+        /// 灾厄在它自己的 ResetEffects 里每帧把这三个字段复位、在攻击结算（<c>StealthStrikeAvailable</c> /
+        /// <c>ConsumeStealthByAttacking</c>）时按 half → 75 → 90 的优先级读取，所以本方法必须每帧调用、
+        /// 且调用点要晚于它的 ResetEffects——本工程挂在 <c>PostUpdateEquips</c>。
+        /// 三个档位字段在 2.0 / 2.0.3.9 / 2.0.4 / 已装 2.2.2 里都存在，走反射即可
+        ///（2.0.3.9+ 还短暂有过 85% 档，已被删除，这里不涉及）。
+        /// </para>
+        /// <para>
+        /// 经典版灾厄没有潜行打击这套机制（它的盗贼走自定义投掷倍率），本方法直接短路。
+        /// </para>
+        /// </summary>
+        public static void SetStealthStrikeCost(Player player, float costRatio)
+        {
+            ProbeCalamityStealthCostBridge();
+            if (calamityGetModPlayerForStealthCost == null)
+                return;
+            FieldInfo target = costRatio <= 0.5f ? calamityStealthHalfCostField
+                : costRatio >= 0.9f ? calamityStealth90CostField
+                : calamityStealth75CostField;
+            if (target == null)
+                return;
+            if (calamityGetModPlayerForStealthCost.Invoke(player, null) is ModPlayer calamityPlayer)
+                target.SetValue(calamityPlayer, true);
+        }
+
+        /// <summary>
+        /// 一次性探测现代版 <c>CalamityPlayer</c> 的三个潜行打击消耗字段与取 ModPlayer 的方法并缓存；
+        /// 任一步失败都放弃并记为已探测（<c>halfCost</c>/<c>75Cost</c> 至少要有，缺 <c>90Cost</c> 无妨）。
+        /// </summary>
+        private static void ProbeCalamityStealthCostBridge()
+        {
+            if (calamityStealthCostProbed)
+                return;
+            calamityStealthCostProbed = true;
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                return;
+            Type calamityPlayerType = calamity.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
+            if (calamityPlayerType == null)
+                return;   // 灾厄改了类名：放弃
+            FieldInfo halfField = calamityPlayerType.GetField("stealthStrikeHalfCost",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo cost75Field = calamityPlayerType.GetField("stealthStrike75Cost",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo getter = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(calamityPlayerType);
+            if (halfField == null || cost75Field == null || getter == null)
+                return;   // 该版本没有这套字段：放弃
+            calamityStealthHalfCostField = halfField;
+            calamityStealth75CostField = cost75Field;
+            calamityStealth90CostField = calamityPlayerType.GetField("stealthStrike90Cost",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            calamityGetModPlayerForStealthCost = getter;
+        }
+
         // ── 潜行恢复速度桥（幻影魔镜用）──
 
         /// <summary>是否已探测过灾厄 CalamityPlayer 的潜行恢复字段（无论成败只探测一次）</summary>

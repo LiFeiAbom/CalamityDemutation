@@ -315,6 +315,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool cloudWaifu = false;
         /// <summary>
+        /// 已装备欺诈硬币（Coin of Deceit）：盗贼暴击 **+6**、潜行打击只消耗潜行上限的 **75%**（2.0 口径）。
+        /// 盗贼暴击在 PostUpdateMiscEffects 结算（现代版加在灾厄盗贼类上、经典版反射写它自己的投掷暴击字段）；
+        /// 潜行打击消耗档是灾厄 CalamityPlayer 上的开关，必须写在 PostUpdateEquips（灾厄 ResetEffects 每帧复位、
+        /// 攻击结算时才读取），由 CDUtil 反射写入。每帧由饰品置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool coinofDeceit = false;
+        /// <summary>
         /// 血神核心已装备（综合增益 + 生命虹吸光环 + 减伤）
         /// </summary>
         public bool coreOfTheBloodGod = false;
@@ -908,6 +915,7 @@ namespace CalamityDemutation.Players
             ceaselessHunger = false;
             chaosStone = false;
             cloudWaifu = false;
+            coinofDeceit = false;
             coreOfTheBloodGod = false;
             corruptFlask = false;
             crawCarapace = false;
@@ -1085,6 +1093,7 @@ namespace CalamityDemutation.Players
             ceaselessHunger = false;
             chaosStone = false;
             cloudWaifu = false;
+            coinofDeceit = false;
             coreOfTheBloodGod = false;
             corruptFlask = false;
             crawCarapace = false;
@@ -1555,6 +1564,14 @@ namespace CalamityDemutation.Players
                 DamageClass rogue = CDUtil.GetRogueDamageClass();
                 Player.GetDamage(rogue) += 0.02f;
                 Player.GetCritChance(rogue) += 2;
+            }
+            // 欺诈硬币（Coin of Deceit）：盗贼暴击 +6
+            //（潜行打击消耗档 75% 在 PostUpdateEquips）；经典版没有盗贼伤害类，改由 CDUtil 反射写它自己的投掷暴击字段
+            if (coinofDeceit)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetCritChance(rogue) += 6;
+                CDUtil.AddClassicThrowingStats(Player, 0f, 6);
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
@@ -3568,6 +3585,11 @@ namespace CalamityDemutation.Players
                 CDUtil.AddStealthGen(Player, 0.15f, 0.15f);
                 CDUtil.GrantRogueStealth(Player, 0.20f);
             }
+            // 欺诈硬币（Coin of Deceit）：潜行打击只消耗潜行上限的 **75%**（2.0 口径）。
+            // 与上面几件同一处、同一原因（灾厄 ResetEffects 每帧复位这些字段、攻击结算时才读取），
+            // 走 CDUtil 的反射桥写进灾厄 CalamityPlayer（经典版没有潜行打击机制，会直接短路）。
+            if (coinofDeceit)
+                CDUtil.SetStealthStrikeCost(Player, 0.75f);
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)

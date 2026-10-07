@@ -788,6 +788,15 @@ Items: {
 		DisplayName: Chaos Stone
 	}
 
+	CoinofDeceit: {
+		DisplayName: Coin of Deceit
+		Tooltip:
+			'''
+			Stealth strikes only expend 75% of your max stealth
+			6% increased rogue crit chance
+			'''
+	}
+
 	CometQuasher: {
 		DisplayName: Comet Quasher
 		Tooltip:
