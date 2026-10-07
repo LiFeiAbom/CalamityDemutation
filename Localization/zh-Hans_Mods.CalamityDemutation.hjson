@@ -1791,6 +1791,16 @@ Items: {
 			'''
 	}
 
+	RuinMedallion: {
+		DisplayName: 毁灭徽章
+		Tooltip:
+			'''
+			潜行打击只消耗潜行上限的 50%
+			最大潜行值提高 10
+			盗贼伤害与暴击率提高 4%
+			'''
+	}
+
 	SeaShell: {
 		DisplayName: 海螺壳
 		Tooltip:

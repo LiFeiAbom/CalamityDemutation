@@ -1790,6 +1790,16 @@ Items: {
 			'''
 	}
 
+	RuinMedallion: {
+		DisplayName: Ruin Medallion
+		Tooltip:
+			'''
+			Stealth strikes only expend 50% of your max stealth
+			Increases maximum stealth by 10
+			4% increased rogue damage and rogue crit chance
+			'''
+	}
+
 	SeaShell: {
 		DisplayName: Sea Shell
 		Tooltip:

@@ -646,6 +646,15 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool rottenBrain = false;
         /// <summary>
+        /// 已装备毁灭徽章（Ruin Medallion）：盗贼 **+4% 伤害 / +4 暴击**、最大潜行值 **+10 点**、
+        /// 潜行打击只消耗潜行上限的 **50%（半价，2.0 口径）**。
+        /// 盗贼伤害/暴击在 PostUpdateMiscEffects 结算（现代版加在灾厄盗贼类上、经典版反射写它自己的投掷字段）；
+        /// 潜行上限与潜行打击消耗档是灾厄 CalamityPlayer 上的状态，必须写在 PostUpdateEquips
+        /// （灾厄 ResetEffects 每帧复位、之后才读取），由 CDUtil 反射写入。
+        /// 每帧由饰品置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool ruinMedallion = false;
+        /// <summary>
         /// 沙之娘（SandyWaifu）仆从在场标记：由对应召唤增益每帧置位，受瓶中妻子驱动
         /// </summary>
         public bool sandyWaifu = false;
@@ -995,6 +1004,7 @@ namespace CalamityDemutation.Players
             roseStone = false;
             roseStoneVisible = false;
             rottenBrain = false;
+            ruinMedallion = false;
             sandyWaifu = false;
             seaShell = false;
             shellBoost = false;
@@ -1181,6 +1191,7 @@ namespace CalamityDemutation.Players
             roseStone = false;
             roseStoneVisible = false;
             rottenBrain = false;
+            ruinMedallion = false;
             sandyWaifu = false;
             seaShell = false;
             shadeRegen = false;
@@ -1574,6 +1585,15 @@ namespace CalamityDemutation.Players
                 Player.GetDamage(rogue) += 0.03f;
                 Player.GetCritChance(rogue) += 3;
                 CDUtil.AddClassicThrowingStats(Player, 0.03f, 3);
+            }
+            // 毁灭徽章（Ruin Medallion）：盗贼 +4% 伤害 / +4 暴击（用户 2026-10-07 指定，源为 +6%/+6）
+            //（潜行上限 +10 与潜行打击半价在 PostUpdateEquips）；经典版走 CDUtil 反射写它自己的投掷字段
+            if (ruinMedallion)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.04f;
+                Player.GetCritChance(rogue) += 4;
+                CDUtil.AddClassicThrowingStats(Player, 0.04f, 4);
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
@@ -3592,6 +3612,13 @@ namespace CalamityDemutation.Players
             // 走 CDUtil 的反射桥写进灾厄 CalamityPlayer（经典版没有潜行打击机制，会直接短路）。
             if (coinofDeceit)
                 CDUtil.SetStealthStrikeCost(Player, 0.75f);
+            // 毁灭徽章（Ruin Medallion）：最大潜行值 +10 点（平铺点数，非百分比）、潜行打击半价（2.0 口径）。
+            // 与上面几件同一处、同一原因（灾厄 ResetEffects 每帧复位这些字段、之后才读取），走 CDUtil 的反射桥。
+            if (ruinMedallion)
+            {
+                CDUtil.GrantRogueStealth(Player, 0.10f);
+                CDUtil.SetStealthStrikeCost(Player, 0.5f);
+            }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)
