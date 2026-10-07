@@ -138,6 +138,16 @@
   UTF-8 源文件要用 `Get-Content -Encoding UTF8`，否则中文注释会花屏。
 - 联网受限时的绕道：`raw.githubusercontent.com` 不通，改用 jsDelivr
   （`https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path>`）或 GitHub API 均可正常访问。
+- **读「已装 mod」的真实内容（本机权威口径，2026-10-07 起）**：`.tmod` 不是 zip——结构是 `"TMOD"` +
+  tML 版本串（7 位长度前缀字符串） + 16 字节哈希 + **明文文件表** + 逐文件**原始 deflate 流**。
+  文件表 = mod 名（长度前缀字符串）、mod 版本、`int32` 文件数，然后每条 = 路径（长度前缀字符串）+
+  `int32` 未压缩长度 + `int32` 磁盘长度（两者相等即原样存储）；数据区按表顺序紧接其后。用
+  `BinaryReader` 定位表头、`DeflateStream` 逐个解压，就能拿到任意**已装** mod 的 `.dll`，再上 Cecil
+  反查真实类名 / 配方 IL——本次"2.2.2 里 GalacticaSingularity 已被删除"就是这么坐实的。
+  两处缓存**不可当权威**：`ModReader/<mod>/`（提取时的旧版本，可能落后好几版）与
+  `ModLocalization/<mod>/`（同理；且里面 `//` 开头的行只表示"这份语言文件没填翻译"，不代表键不存在）。
+  另 `Mods\*.tmod` 的文件名前缀（如 `2026.6`）是**构建该 mod 的 tModLoader 版本**，不是 mod 版本；
+  要确认装的是哪版看 `tModLoader-Logs\client.log` 的 `Selected <ModName> <版本>` 行。
 
 ## 7. 数值膨胀（StatInflation：武器 35 把 + 盔甲 12 件，2026-10-01 全量接入完毕，2026-10-05 补齐女妖之爪条目）
 
@@ -265,6 +275,28 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**修正「虚无箭袋配方不见了」——根因是"软依赖材料的单名 gate 静默吞配方"，同类隐患已全线审计。**
+  用户实测：虚无箭袋没有配方。**根因不在配方本身**：`QuiverofNihility.AddRecipes` 照 2.0.4 写死了
+  `calamity.TryFind<ModItem>("GalacticaSingularity", …)`，而本机装的是**灾厄 2.2.2**，银河奇点这个材料
+  已被本体**整个删除** → `TryFind` 返回 false → 整个 `if` 块跳过 → **一条配方都没注册，日志里零报错**
+  （`TryFind` 是"查询"不是"断言"，名字对不上天然静默；这也是本次排查绕远路的原因）。
+  **2.2.2 的本体口径**（用第 6 节那套 .tmod 读法从实装 dll 的 IL 直接读的）：`QuiverofNihility` =
+  任意箭袋（`AnyQuiver` 组，灾厄那边就是 `RecipeGroup.RegisterGroup("AnyQuiver", …)`，无 mod 前缀、
+  tML 也不做名字规范化）+ **涡流碎片**（`ItemID.FragmentVortex` = 3456）×5 + `DarkPlasma`×3 @
+  **秘银砧**（IL 是裸数字 `134` = `TileID.MythrilAnvil`；本工程本来写的 `TileID.LunarCraftingStation`
+  在 1.4.4 = **412** 远古操纵机，两者不是一回事）；2.0.4 的旧口径是「银河奇点 ×5 @ 远古操纵机」。
+  **改动**：`AddRecipes` 改为按版本自适应——有银河奇点就照 2.0.4 老口径，没有就照本体现用的涡流碎片 +
+  秘银砧；经典版（`CalamityModClassicPreTrailer` 1.0.0.17）两样材料都还在，照旧走源配方。两分支共用
+  局部方法 `AddNihilityRecipe`，配方组先用灾厄自带的 `AnyQuiver`、按名查不到才退到本模组自建的
+  `CalamityDemutation:AnyQuiver`；材料缺失时补一条 `Mod.Logger.Warn`，以后不再静默消失。
+  **顺带审计（方法值得复用）**：先按文件建"变量→mod"映射（`TryGetMod("…", out Mod var)`），再把工程里
+  **901 处** `<modVar>.TryFind<ModXxx>("名字")` 逐条对着实装 dll 的类名集（Cecil 取 `BaseType` 为
+  `ModItem/ModTile/ModBuff/ModProjectile/…` 的类型名）核对。结果：经典分支全命中；现代分支另有 2 处同类
+  隐患——`AnarchyBlade` 用 `CoreofHavoc`（2.2.2 已删，本体改用 `CoreofCalamity`：本体配方 =
+  毁灭刃 + `UnholyCore`×8 + `CoreofCalamity`×1 @ 秘银砧）、`EntropicClaymore` 用 `MeldConstruct`
+  （现名 `MeldBlob`，本体配方 = `MeldBlob`×18 @ 远古操纵机）。**这两处待用户点名再改**（会动到配方的
+  材料与数量，属平衡口径，不擅自替换）。
+  验证：编译 0 警告 0 错误；资源自检 149 条全命中。
 - 最近一批工作（2026-10-07）：**【行为 bug】`OnHitNPC` 的提前 `return` 把金源套的"功能复合"整段吃掉 —— 已修。**
   用户实测：穿龙蒿套有叶风暴，穿古圣金源没有。
   **根因**：`Content/Projectiles/CalamityDemutationGlobalProjectile.OnHitNPC` 里 silvaSet / auricSet
