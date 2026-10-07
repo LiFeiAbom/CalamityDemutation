@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Projectiles;
 using CalamityDemutation.Content.Projectiles.Typeless;
+using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,10 +23,11 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
     /// ② 稀有度走本工程的月后体系：源的 <c>Turquoise</c>（灾厄 Rarity12，青绿）→ <c>ItemRarityID.Red</c>
     ///    + <c>postMoonLordRarity = 12</c>（同为青绿），价值照 2.0.4 的 <c>RarityTurquoiseBuyPrice</c>
     ///    = 1 铂金 50 金；
-    /// ③ 配方按「材料 / 站台以各自版本实际有的为准」注册（细节见 <see cref="AddRecipes"/>）：任意箭袋
-    ///    + 暗黑等离子 ×3 + 月亮材料 ×5，现代版 / 经典版各一条——经典版灾厄没有 <c>AnyQuiver</c> 配方组，
-    ///    故回退到本模组自建的 <c>CalamityDemutation:AnyQuiver</c> 组（内容与灾厄一致：
-    ///    魔法箭袋 / 熔火箭袋 / 潜猎者箭袋）；
+    /// ③ 配方照 2.0.4：任意箭袋 + 银河奇点 ×5 + 暗黑等离子 ×3 @ 远古操纵机，现代版 / 经典版各一条。
+    ///    **银河奇点按本工程既有口径分版本取**（同 <c>CeaselessHungerPotion</c> / <c>ArkoftheElements</c> 的写法）：
+    ///    现代版用本模组自写的 <see cref="GalacticaSingularity"/>（灾厄 2.2.x 已把自己的银河奇点删掉），
+    ///    经典版取经典版灾厄的；经典版灾厄没有 <c>AnyQuiver</c> 配方组，故退回本模组自建的
+    ///    <c>CalamityDemutation:AnyQuiver</c> 组（内容与灾厄一致：魔法箭袋 / 熔火箭袋 / 潜猎者箭袋）；
     /// ④ 源的 <c>donorItem</c> 标记属灾厄的"捐助者物品"体系，本工程没有对应机制，不保留。
     /// </para>
     /// </summary>
@@ -76,31 +78,28 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
             }
         }
         /// <summary>
-        /// 配方：现代版 / 经典版灾厄各注册一条，材料与站台一律**按各自版本实际存在的取**。
+        /// 配方：照 2.0.4 的「任意箭袋 + 银河奇点 ×5 + 暗黑等离子 ×3 @ 远古操纵机」，现代 / 经典版各一条。
         /// <para>
-        /// 现代版灾厄 2.0.x 的源配方是「任意箭袋 + 暗黑等离子 ×3 + 银河奇点（GalacticaSingularity）×5
-        /// @ 远古操纵机」；但 2.2.x 起本体把银河奇点整个删掉了，自己的同名配方改成了
-        /// 「任意箭袋 + 涡流碎片（<see cref="ItemID.FragmentVortex"/>）×5 + 暗黑等离子 ×3 @ 秘银砧」。
-        /// 若照 2.0.4 硬写银河奇点，在 2.2.x 上 <c>TryFind</c> 会返回 false 而把整条配方**静默跳过**
-        /// （2026-10-07 玩家实测的"配方不见了"就是这个：日志里一条报错都不会有），故这里按版本自适应：
-        /// 有银河奇点就照 2.0.4 的老口径，没有就照本体现用的涡流碎片 + 秘银砧。
-        /// 经典版灾厄（CalamityModClassicPreTrailer）两样材料都还在，继续照 2.0.4 的原始口径。
+        /// **银河奇点按本工程既有口径取用**（同 <c>CeaselessHungerPotion</c> / <c>ArkoftheElements</c>）：
+        /// 现代版灾厄 2.2.x 已把自己那件银河奇点整个删除，故现代分支直接用**本模组自写的**
+        /// <see cref="GalacticaSingularity"/>（四种月亮碎片 @ 远古操纵机，同源同口径）；经典版灾厄两样
+        /// 材料都还在，继续取经典版自己的。
+        /// </para>
+        /// <para>
+        /// **别再照 2.0.4 硬写 <c>calamity.TryFind&lt;ModItem&gt;("GalacticaSingularity")</c>**：
+        /// 2026-10-07 玩家实测的"配方不见了"就是这么来的——2.2.x 上该名字查不到，<c>TryFind</c> 返回
+        /// false 后整个 <c>if</c> 块被跳过，**一条配方都没注册且日志零报错**。软依赖材料要么有"取不到"
+        /// 的退路，要么直接改用本模组自持件。
         /// </para>
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：暗黑等离子是两版都有的必备材料，"月亮材料 + 站台"按版本取
+            // 现代版灾厄：银河奇点用本模组自写件补位；暗黑等离子仍是灾厄材料（两版都还在）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasmaModern))
                 {
-                    // 2.0.x：银河奇点 ×5 @ 远古操纵机（源配方）；2.2.x：银河奇点已被删除，改用本体现用的涡流碎片 ×5 @ 秘银砧
-                    bool hasGalactica = calamity.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaModern);
-                    AddNihilityRecipe(
-                        quiverGroup: "AnyQuiver",
-                        moonMaterialType: hasGalactica ? galacticaModern.Type : ItemID.FragmentVortex,
-                        darkPlasmaType: darkPlasmaModern.Type,
-                        craftingStation: hasGalactica ? TileID.LunarCraftingStation : TileID.MythrilAnvil);
+                    AddNihilityRecipe("AnyQuiver", ModContent.ItemType<GalacticaSingularity>(), darkPlasmaModern.Type);
                 }
                 else
                 {
@@ -108,17 +107,13 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
                 }
             }
 
-            // 经典版灾厄：银河奇点 / 暗黑等离子都在，照 2.0.4 源配方；它没有 AnyQuiver 配方组，用本模组自建的同内容组
+            // 经典版灾厄：银河奇点 / 暗黑等离子都还在，照 2.0.4 源配方；它没有 AnyQuiver 配方组，用本模组自建的同内容组
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasmaClassic) &&
                     classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaClassic))
                 {
-                    AddNihilityRecipe(
-                        quiverGroup: "CalamityDemutation:AnyQuiver",
-                        moonMaterialType: galacticaClassic.Type,
-                        darkPlasmaType: darkPlasmaClassic.Type,
-                        craftingStation: TileID.LunarCraftingStation);
+                    AddNihilityRecipe("CalamityDemutation:AnyQuiver", galacticaClassic.Type, darkPlasmaClassic.Type);
                 }
                 else
                 {
@@ -129,21 +124,21 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
 
         /// <summary>
         /// 注册一条虚无箭袋配方（两个版本分支共用）：
-        /// 「<paramref name="quiverGroup"/> 任意箭袋 + 月亮材料 ×5 + 暗黑等离子 ×3 @ 指定站台」。
+        /// 「<paramref name="quiverGroup"/> 任意箭袋 + 银河奇点 ×5 + 暗黑等离子 ×3 @ 远古操纵机」。
         /// 现代版灾厄自带 <c>AnyQuiver</c> 配方组（照源直接用）；经典版没有，故传本模组自建的
         /// <c>CalamityDemutation:AnyQuiver</c>（两组的有效物品一致：魔法箭袋 / 熔火箭袋 / 潜猎者箭袋）。
         /// 配方组在本模组的 ModSystem 里登记，而 tML 的加载顺序是「所有模组的 AddRecipeGroups → 所有
         /// 模组的 AddRecipes」（<c>Recipe.SetupRecipeGroups</c> 早于 <c>RecipeLoader.AddRecipes</c>），
-        /// 所以这里两个名字都能按名查到；万一组名不存在时才退到本模组自己的组。
+        /// 所以两个名字都能按名查到；万一组名不存在时才退到本模组自己的组。
         /// </summary>
-        private void AddNihilityRecipe(string quiverGroup, int moonMaterialType, int darkPlasmaType, int craftingStation)
+        private void AddNihilityRecipe(string quiverGroup, int galacticaType, int darkPlasmaType)
         {
             string groupName = RecipeGroup.recipeGroupIDs.ContainsKey(quiverGroup) ? quiverGroup : "CalamityDemutation:AnyQuiver";
             Recipe recipe = CreateRecipe();
             recipe.AddRecipeGroup(groupName);
-            recipe.AddIngredient(moonMaterialType, 5);
+            recipe.AddIngredient(galacticaType, 5);
             recipe.AddIngredient(darkPlasmaType, 3);
-            recipe.AddTile(craftingStation);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.Register();
         }
         /// <summary>

@@ -275,27 +275,37 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- 最近一批工作（2026-10-07）：**修正「虚无箭袋配方不见了」——根因是"软依赖材料的单名 gate 静默吞配方"，同类隐患已全线审计。**
-  用户实测：虚无箭袋没有配方。**根因不在配方本身**：`QuiverofNihility.AddRecipes` 照 2.0.4 写死了
-  `calamity.TryFind<ModItem>("GalacticaSingularity", …)`，而本机装的是**灾厄 2.2.2**，银河奇点这个材料
-  已被本体**整个删除** → `TryFind` 返回 false → 整个 `if` 块跳过 → **一条配方都没注册，日志里零报错**
-  （`TryFind` 是"查询"不是"断言"，名字对不上天然静默；这也是本次排查绕远路的原因）。
-  **2.2.2 的本体口径**（用第 6 节那套 .tmod 读法从实装 dll 的 IL 直接读的）：`QuiverofNihility` =
-  任意箭袋（`AnyQuiver` 组，灾厄那边就是 `RecipeGroup.RegisterGroup("AnyQuiver", …)`，无 mod 前缀、
-  tML 也不做名字规范化）+ **涡流碎片**（`ItemID.FragmentVortex` = 3456）×5 + `DarkPlasma`×3 @
-  **秘银砧**（IL 是裸数字 `134` = `TileID.MythrilAnvil`；本工程本来写的 `TileID.LunarCraftingStation`
-  在 1.4.4 = **412** 远古操纵机，两者不是一回事）；2.0.4 的旧口径是「银河奇点 ×5 @ 远古操纵机」。
-  **改动**：`AddRecipes` 改为按版本自适应——有银河奇点就照 2.0.4 老口径，没有就照本体现用的涡流碎片 +
-  秘银砧；经典版（`CalamityModClassicPreTrailer` 1.0.0.17）两样材料都还在，照旧走源配方。两分支共用
-  局部方法 `AddNihilityRecipe`，配方组先用灾厄自带的 `AnyQuiver`、按名查不到才退到本模组自建的
-  `CalamityDemutation:AnyQuiver`；材料缺失时补一条 `Mod.Logger.Warn`，以后不再静默消失。
+- 最近一批工作（2026-10-07）：**修正「配方静默消失」三连（虚无箭袋 / 混乱之刃 / 熵之舞）——根因都是"软依赖材料的单名 gate"。**
+  症状：虚无箭袋没有配方。**根因不在配方本身**：`AddRecipes` 照源版本写死了
+  `calamity.TryFind<ModItem>("X", …)`，而本机装的是**灾厄 2.2.2**，那件材料已被本体删除 → `TryFind`
+  返回 false → 整个 `if` 块跳过 → **一条配方都没注册，日志里零报错**（`TryFind` 是"查询"不是"断言"，
+  名字对不上天然静默；这也是本次排查绕远路的原因）。
+  **本工程口径（2026-10-07 用户点名）**：凡"灾厄本体删掉/改名"的材料，**现代分支优先用本工程自写的同名件
+  补位，经典分支取经典版灾厄的**——既有先例就是 `CeaselessHungerPotion` / `ArkoftheElements` 的银河奇点。
+  本工程自备材料（`Content/Items/Materials/`）：`GalacticaSingularity`（银河奇点，四月亮碎片 @ 远古操纵机）、
+  `CoreofChaos` / `CoreofCinder` / `CoreofEleum`（三核心，配方 = `EssenceofX` + 灵气 ×3 @ 秘银砧）、
+  `MurkyPaste` / `TrapperBulb`（丛林前期）。
+  **三处落地**：
+  ① **虚无箭袋**（`QuiverofNihility`）：现代 = 任意箭袋 + **本工程 `GalacticaSingularity`×5** +
+     `DarkPlasma`×3 @ **远古操纵机**；经典 = 经典版灾厄的 `GalacticaSingularity`×5 + `DarkPlasma`×3
+     （照 2.0.4 源）。两分支共用局部方法 `AddNihilityRecipe`，配方组先用灾厄自带的 `AnyQuiver`、
+     按名查不到才退到本模组自建的 `CalamityDemutation:AnyQuiver`。
+     **没跟** 2.2.2 本体同名武器自己的配方（涡流碎片 `ItemID.FragmentVortex`(3456)×5 + `DarkPlasma`×3 @
+     **秘银砧**，IL 里裸数字 `134` = `TileID.MythrilAnvil`；本工程用的 `TileID.LunarCraftingStation`
+     在 1.4.4 = **412** 远古操纵机，两者不是一回事）。
+  ② **混乱之刃**（`AnarchyBlade`）：`CoreofHavoc` 在 2.0.4 带 `[LegacyName("CoreofChaos")]`
+     （配方 = 灾祸精华 + 灵气 ×3 @ 秘银砧），2.2.x 与 `CoreofEleum/Cinder/Sunlight` 一族整体被删 →
+     现代分支改用**本工程 `CoreofChaos`×3**（同名同配方）；不洁核心 `UnholyCore`×5 仍走灾厄软依赖。
+  ③ **熵之舞**（`EntropicClaymore`）：熵构体 `MeldConstruct`（2.0.4 里 = `MeldBlob`×6 +
+     `StarblightSoot`×3 @ 远古操纵机，每次产 3 个）2.2.x 被删，且**本工程没有同类自备件** → 现代分支
+     按"等价展开"填回 **`MeldBlob`×30 + `StarblightSoot`×15** @ 远古操纵机（成本与源配方一致）。
+     本体同名武器 2.2.x 自己改用 `MeldBlob`×18，**没跟**（会把原成本砍掉）；若日后想改这两条口径，
+     只动 `EntropicClaymore.AddRecipes` 一处即可。
+  三个分支都补了 `Mod.Logger.Warn`，材料再对不上时日志里会说话，不再静默。
   **顺带审计（方法值得复用）**：先按文件建"变量→mod"映射（`TryGetMod("…", out Mod var)`），再把工程里
   **901 处** `<modVar>.TryFind<ModXxx>("名字")` 逐条对着实装 dll 的类名集（Cecil 取 `BaseType` 为
-  `ModItem/ModTile/ModBuff/ModProjectile/…` 的类型名）核对。结果：经典分支全命中；现代分支另有 2 处同类
-  隐患——`AnarchyBlade` 用 `CoreofHavoc`（2.2.2 已删，本体改用 `CoreofCalamity`：本体配方 =
-  毁灭刃 + `UnholyCore`×8 + `CoreofCalamity`×1 @ 秘银砧）、`EntropicClaymore` 用 `MeldConstruct`
-  （现名 `MeldBlob`，本体配方 = `MeldBlob`×18 @ 远古操纵机）。**这两处待用户点名再改**（会动到配方的
-  材料与数量，属平衡口径，不擅自替换）。
+  `ModItem/ModTile/ModBuff/ModProjectile/…` 的类型名）核对——**这是唯一能查出"静默吞配方"的办法**；
+  本次结果：经典分支全命中，现代分支就是上面三处（现已全部处理）。
   验证：编译 0 警告 0 错误；资源自检 149 条全命中。
 - 最近一批工作（2026-10-07）：**【行为 bug】`OnHitNPC` 的提前 `return` 把金源套的"功能复合"整段吃掉 —— 已修。**
   用户实测：穿龙蒿套有叶风暴，穿古圣金源没有。

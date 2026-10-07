@@ -12,7 +12,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 每次挥砍把玩家锁进一个 28 帧的挥砍体（<see cref="EntropicClaymoreHeld"/>），
     /// 挥砍途中每 20×攻速 帧朝准心射出一枚熵之飞刃（<see cref="EntropicClaymoreProj"/>，伤害同手持体），
     /// 飞刃随发数张开成扇面、速度逐发递增；命中后自身伤害递减、对蠕虫体节减半。
-    /// 配方：熵构体×15 @ 月球工作台（熵构体 MeldConstruct 是灾厄材料，走软依赖）。
+    /// 配方：熵构体×15 @ 远古操纵机（灾厄材料，走软依赖）。熵构体 <c>MeldConstruct</c> 在 2.2.x 被本体
+    /// 删除，故现代版 2.2.x 起按它原本的合成（<c>MeldBlob</c>×6 + <c>StarblightSoot</c>×3 产 3 个）
+    /// 把 15 个等价展开为 <c>MeldBlob</c>×30 + <c>StarblightSoot</c>×15（见 <see cref="AddRecipes"/>）。
     /// </summary>
     internal class EntropicClaymore : ModItem
     {
@@ -57,17 +59,42 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             damage.Base = BaseDamage;
         }
-        /// <summary>配方：熵构体×15 @ 月球工作台（灾厄材料，走软依赖，未加载灾厄时不注册）</summary>
+        /// <summary>
+        /// 配方：熵构体×15 @ 远古操纵机（灾厄材料，走软依赖，未加载灾厄时不注册）。
+        /// <para>
+        /// 2.0.x 有熵构体 <c>MeldConstruct</c>（2.0.4 里 = <c>MeldBlob</c>×6 + <c>StarblightSoot</c>×3
+        /// @ 远古操纵机，每次产 3 个），照源直接用；2.2.x 起本体把它删了，照 2.0.4 硬写
+        /// <c>TryFind("MeldConstruct")</c> 只会返回 false 把整条配方静默吃掉（2026-10-07 已踩过），
+        /// 故 2.2.x 走"按原始合成把 15 个等价展开"的分支：5 次合成 = <c>MeldBlob</c>×30 +
+        /// <c>StarblightSoot</c>×15，成本与源配方一致、站台不变（这两样 2.0.x / 2.2.x 都在）。
+        /// 注：本体同名武器在 2.2.x 改用 <c>MeldBlob</c>×18 直接合成，本工程不跟这条（会砍掉原成本）。
+        /// </para>
+        /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
+                // 2.0.x：照源配方，直接用熵构体 ×15
                 if (calamity.TryFind<ModItem>("MeldConstruct", out ModItem meldConstruct))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(meldConstruct.Type, 15);
                     recipe.AddTile(TileID.LunarCraftingStation);
                     recipe.Register();
+                }
+                // 2.2.x：熵构体已被删除，按它的原始合成展开（15 个 = 5 次 × (MeldBlob×6 + StarblightSoot×3)）
+                else if (calamity.TryFind<ModItem>("MeldBlob", out ModItem meldBlob) &&
+                    calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
+                {
+                    Recipe recipe = CreateRecipe();
+                    recipe.AddIngredient(meldBlob.Type, 30);
+                    recipe.AddIngredient(starblightSoot.Type, 15);
+                    recipe.AddTile(TileID.LunarCraftingStation);
+                    recipe.Register();
+                }
+                else
+                {
+                    Mod.Logger.Warn("熵之舞：现代版灾厄里找不到 MeldConstruct，也找不到 MeldBlob + StarblightSoot，本条配方未注册。");
                 }
             }
         }

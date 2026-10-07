@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
@@ -15,7 +16,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 左键：每 3 次挥砍射出一道硫磺光束（<see cref="AnarchyBeam"/>）；受伤越重伤害越高（生命差 ×0.1 加算到基础伤害）。
     /// 右键：挥砍体积放大到 1.2 倍，命中时原地炸出硫磺爆炸并附加硫磺火；
     /// 自身血量低于一半时，每次右键命中还有 1/5 概率直接抹杀非 Boss 敌人（场上有任何 Boss 时不触发）。
-    /// 配方：毁灭刃 + 不洁核心×5 + 灾祸核心×3 @ 秘银砧（后两样是灾厄材料，走软依赖）。
+    /// 配方：毁灭刃 + 不洁核心×5 + 灾祸核心×3 @ 秘银砧。不洁核心（<c>UnholyCore</c>）走灾厄软依赖；
+    /// 灾祸核心在 2.0.x 叫 <c>CoreofHavoc</c>，2.2.x 连同 CoreofEleum/Cinder/Sunlight 一整族被本体删除，
+    /// 故现代分支改用**本模组自写的** <see cref="CoreofChaos"/> 补位（见 <see cref="AddRecipes"/>）。
     /// 硫磺爆炸弹幕用的是灾厄本体 <c>BrimstoneBoom</c>，同样走软依赖。
     /// </summary>
     internal class AnarchyBlade : ModItem
@@ -156,20 +159,32 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             && target.type != NPCID.Creeper && target.type != NPCID.MourningWood && target.type != NPCID.Everscream
             && target.type != NPCID.SantaNK1 && target.type != NPCID.GolemFistLeft && target.type != NPCID.GolemFistRight
             && target.type != NPCID.DD2Betsy;
-        /// <summary>配方：毁灭刃 + 不洁核心×5 + 灾祸核心×3 @ 秘银砧（两样核心走灾厄软依赖）</summary>
+        /// <summary>
+        /// 配方：毁灭刃 + 不洁核心×5 + 灾祸核心×3 @ 秘银砧。
+        /// <para>
+        /// 灾祸核心在灾厄 2.0.x 叫 <c>CoreofHavoc</c>——2.0.4 源码里它带着
+        /// <c>[LegacyName("CoreofChaos")]</c>（即更早的旧名就是 CoreofChaos），配方 = 灾祸精华 + 灵气 ×3
+        /// @ 秘银砧；2.2.x 起这一族核心被本体整体删除（只留 <c>CoreofCalamity</c>），照 2.0.4 硬写
+        /// <c>TryFind("CoreofHavoc")</c> 只会返回 false 把整条配方静默吃掉（2026-10-07 已踩过）。
+        /// 故现代分支改用**本模组自写的** <see cref="CoreofChaos"/>（同名同配方，本身就是照那件做的）。
+        /// </para>
+        /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                if (calamity.TryFind<ModItem>("UnholyCore", out ModItem unholyCore)
-                    && calamity.TryFind<ModItem>("CoreofHavoc", out ModItem coreofHavoc))
+                if (calamity.TryFind<ModItem>("UnholyCore", out ModItem unholyCore))
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient(ItemID.BreakerBlade);
                     recipe.AddIngredient(unholyCore.Type, 5);
-                    recipe.AddIngredient(coreofHavoc.Type, 3);
+                    recipe.AddIngredient<CoreofChaos>(3);
                     recipe.AddTile(TileID.MythrilAnvil);
                     recipe.Register();
+                }
+                else
+                {
+                    Mod.Logger.Warn("混乱之刃：现代版灾厄里找不到 UnholyCore，本条配方未注册。");
                 }
             }
         }
