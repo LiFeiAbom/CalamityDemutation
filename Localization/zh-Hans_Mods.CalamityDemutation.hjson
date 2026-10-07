@@ -1591,6 +1591,19 @@ Items: {
 		Tooltip: 从丛林的黏滑生物身上刮下的稠物
 	}
 
+	Nanotech: {
+		DisplayName: 纳米技术
+		Tooltip:
+			'''
+			盗贼弹幕飞行时留下纳米刀刃
+			潜行打击命中敌人时召来纳米光束与火花
+			潜行打击附加 20 点护甲穿透
+			盗贼伤害与暴击率提高 20%
+			盗贼弹速提高 15%
+			手持盗贼武器时获得 30 点防御与 10% 伤害减免
+			'''
+	}
+
 	NebulousCore: {
 		DisplayName: 星云核心
 		Tooltip:
@@ -2480,6 +2493,7 @@ Projectiles: {
 	MechwormBody2.DisplayName: 机械蠕虫身体 2
 	MechwormHead.DisplayName: 机械蠕虫
 	MechwormTail.DisplayName: 机械蠕虫尾巴
+	Nanotech.DisplayName: 纳米刀刃
 	NebulaDust.DisplayName: 星云之尘
 	NebulaStar.DisplayName: 星云之星
 	Oathblade.DisplayName: 誓约之刃

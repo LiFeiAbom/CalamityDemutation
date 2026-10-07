@@ -275,6 +275,30 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**移植纳米技术（Nanotech，盗贼饰品）—— 物品取经典版 1.4.2.101 口径，机制取 CI。**
+  用户点名口径：盗贼伤害 **+20%**、盗贼暴击 **+20**（源 1.4.2 为 +15% / +10）、盗贼弹速 +15%；
+  手持盗贼武器时额外 +30 防御与 10% 伤害减免（照 cal-1.2 `CalamityPlayer1Point2.cs:917`）；
+  **纳米刀刃 / 潜行打击两条机制照 CI 的 `NanotechOld`**（不是 1.4.2 / cal-1.2 的旧写法）：刀刃
+  **每 30 帧**留一枚、**前 30 帧不能命中**、第 30 帧起才追踪（800 像素 / 速度 12 / 惯性 20）；
+  潜行打击命中时从画面上方砸下 6 枚灾厄本体的 `NanoFlare`，潜行打击弹幕 +20 护甲穿透；
+  **刀刃伤害类型 = 盗贼**（CI 原版强设 Generic，用户要求改成盗贼）。
+  **秒杀不做**：经典版那条 1/15 概率把 `FinalDamage.Base` 改成 `npc.lifeMax * 5`，靠写死的 NPC
+  排除表，多模组环境下不可靠，效果与文案都不写。
+  **落地**：`Content/Items/Accessories/JobAcc/Rogue/Nanotech.cs`（**新建了盗贼职业目录**——工程原先
+  只有 Melee/Ranged/Magic/Summon 四格）+ `Content/Projectiles/Rogue/Nanotech.cs` + 两张 1.4.2 贴图
+  （物品 24×38、刀刃 26×26）；玩家侧在 `CalamityDemutationPlayer.PostUpdateMiscEffects` 的 nanotech 块；
+  弹幕侧在 `CalamityDemutationGlobalProjectile.AI`（留刀刃 + 护甲穿透一次性）与 `OnHitNPC`（砸 NanoFlare，
+  **不写提前 return**）。
+  **新增反射桥**：`CDUtil.IsStealthStrike(projectile, out hitCount)`——软依赖下读不到灾厄的
+  `projectile.Calamity().stealthStrike`，只能反射 `CalamityMod.Projectiles.CalamityGlobalProjectile` 的
+  `stealthStrike` / `stealthStrikeHitCount` 字段（2.2.2 实测字段名与类型）；经典版没有这套，恒 false，
+  故潜行打击是现代版独占。顺手复用了工程已有的 `CDUtil.IsRogueProjectile`（现代走伤害类、经典反射读它的
+  `rogue` 字段）与 `CDUtil.AddRogueVelocity`（现代走 Mod.Call、经典反射写 `throwingVelocity`）。
+  **坑位提醒**：CI 用的 `Projectile.FinalExtraUpdate()` 在本机 tML 里**不存在**（那是它依赖的 InnoVault
+  扩展），本机等价写法是 `projectile.numUpdates == 0`（工程里 `GalaxyBlast` 已在用）。
+  另注：灾厄 2.2.2 本体自带同名 `Nanotech`（46×46 / CosmicPurple / "盗贼徽章 + 吸血鬼护符 + 电工手套 …"
+  的合并配方），与本件（28×32 / 90 金 / 月后 20 档）同名不同物，属"旧版回归"的既定做法。
+  验证：编译 0 警告 0 错误；资源自检 149 条全命中（新增两张类同名隐式贴图已人工核对路径）。
 - 最近一批工作（2026-10-07）：**斯塔提斯诅咒腰带（StatisBeltOfCurses）改成「盗贼 + 召唤」双职业饰品。**
   用户点名：补盗贼伤害 **+20%** 与**盗贼**暴击率 **+20%**（跟着盗贼路走，不是通用暴击）；经典版 tooltip 里
   那条「仆从攻击有概率秒杀普通敌人」**明确不移植**——源实现（经典版 `CalamityGlobalNPC.OnHitByProjectile`）

@@ -1590,6 +1590,19 @@ Items: {
 		Tooltip: A thick sludge scraped off the slimy creatures of the jungle
 	}
 
+	Nanotech: {
+		DisplayName: Nanotech
+		Tooltip:
+			'''
+			Rogue projectiles create nanoblades as they travel
+			Stealth strikes summon nanobeams and sparks on enemy hits
+			Stealth strikes have +20 armor penetration
+			20% increased rogue damage and critical strike chance
+			15% increased rogue velocity
+			While holding a rogue weapon, you gain 30 defense and 10% damage reduction
+			'''
+	}
+
 	NebulousCore: {
 		DisplayName: Nebulous Core
 		Tooltip:
@@ -2481,6 +2494,7 @@ Projectiles: {
 	MechwormBody2.DisplayName: Mechworm Body 2
 	MechwormHead.DisplayName: Mechworm
 	MechwormTail.DisplayName: Mechworm Tail
+	Nanotech.DisplayName: Nanoblade
 	NebulaDust.DisplayName: Dust
 	NebulaStar.DisplayName: Star
 	Oathblade.DisplayName: Oathblade

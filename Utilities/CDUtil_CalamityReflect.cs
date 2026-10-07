@@ -382,5 +382,71 @@ namespace CalamityDemutation.Utilities
             return classicGetGlobalProjectile.Invoke(projectile, null) is GlobalProjectile classicGlobal
                 && classicRogueFlagField.GetValue(classicGlobal) is bool isRogue && isRogue;
         }
+
+        // ── 潜行打击桥（纳米技术用）──
+
+        /// <summary>是否已探测过灾厄 GlobalProjectile 的潜行打击字段（无论成败只探测一次）</summary>
+        private static bool calamityStealthStrikeProbed;
+        /// <summary>CalamityMod.Projectiles.CalamityGlobalProjectile.stealthStrike 的字段句柄</summary>
+        private static FieldInfo calamityStealthStrikeField;
+        /// <summary>CalamityMod.Projectiles.CalamityGlobalProjectile.stealthStrikeHitCount 的字段句柄</summary>
+        private static FieldInfo calamityStealthStrikeHitCountField;
+        /// <summary>Projectile.GetGlobalProjectile&lt;CalamityGlobalProjectile&gt;() 的方法句柄</summary>
+        private static MethodInfo calamityGetGlobalProjectileForStealth;
+
+        /// <summary>
+        /// 判断这枚弹幕是不是「盗贼潜行打击」打出来的，并给出它已经命中过几次
+        /// （<paramref name="hitCount"/>；拿不到计数字段时给 0）。纳米技术用它决定要不要砸下纳米闪光。
+        /// <para>
+        /// 现代版灾厄把这两个状态放在 <c>CalamityMod.Projectiles.CalamityGlobalProjectile</c> 上
+        /// （<c>stealthStrike</c> / <c>stealthStrikeHitCount</c>，2.2.2 实测字段名与类型一致），
+        /// 本工程是软依赖，只能反射读——句柄在首次调用时探测并缓存，失败也记为已探测。
+        /// </para>
+        /// <para>
+        /// 经典版灾厄没有潜行打击这套东西（它的盗贼走自定义投掷倍率，全局弹幕上没有 stealthStrike），
+        /// 所以本方法对经典版恒为 false —— 纳米技术的潜行打击部分是现代版独占的。
+        /// </para>
+        /// </summary>
+        public static bool IsStealthStrike(Projectile projectile, out int hitCount)
+        {
+            hitCount = 0;
+            ProbeCalamityStealthStrikeBridge();
+            if (calamityStealthStrikeField == null || calamityGetGlobalProjectileForStealth == null)
+                return false;
+            if (!(calamityGetGlobalProjectileForStealth.Invoke(projectile, null) is GlobalProjectile globalProj))
+                return false;
+            if (!(calamityStealthStrikeField.GetValue(globalProj) is bool strike) || !strike)
+                return false;
+            if ((calamityStealthStrikeHitCountField?.GetValue(globalProj)) is int count)
+                hitCount = count;
+            return true;
+        }
+
+        /// <summary>
+        /// 一次性探测灾厄侧的潜行打击字段与取全局弹幕实例的方法并缓存；任一步失败都放弃并记为已探测。
+        /// </summary>
+        private static void ProbeCalamityStealthStrikeBridge()
+        {
+            if (calamityStealthStrikeProbed)
+                return;
+            calamityStealthStrikeProbed = true;
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                return;
+            Type globalProjType = calamity.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityGlobalProjectile" && t.IsSubclassOf(typeof(GlobalProjectile)));
+            if (globalProjType == null)
+                return;   // 灾厄改了类名：放弃
+            FieldInfo strikeField = globalProjType.GetField("stealthStrike",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (strikeField == null)
+                return;   // 该版本没有潜行打击字段：放弃
+            MethodInfo getter = typeof(Projectile).GetMethod("GetGlobalProjectile", Type.EmptyTypes)?.MakeGenericMethod(globalProjType);
+            if (getter == null)
+                return;
+            calamityStealthStrikeField = strikeField;
+            calamityStealthStrikeHitCountField = globalProjType.GetField("stealthStrikeHitCount",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            calamityGetGlobalProjectileForStealth = getter;
+        }
     }
 }

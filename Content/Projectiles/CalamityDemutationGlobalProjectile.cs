@@ -37,6 +37,11 @@ namespace CalamityDemutation.Content.Projectiles
         /// 只强化一次（伤害 ×1.75、<c>extraUpdates + 1</c>），用本标记去重。
         /// </summary>
         public bool nihilicArrow = false;
+        /// <summary>
+        /// 纳米技术（Nanotech）的潜行打击「+20 护甲穿透」是否已经给这枚弹幕加过。
+        /// 照 CI 的写法只在弹幕首次更新时加一次（本类 per-entity，字段随实例走）。
+        /// </summary>
+        public bool nanotechArmorPenApplied = false;
         // ── 属性 ──
         /// <summary>
         /// 弹幕按实例保存状态，故开启 per-entity
@@ -86,6 +91,29 @@ namespace CalamityDemutation.Content.Projectiles
                     }
                 }
             }
+            // 纳米技术（Nanotech）：盗贼弹幕飞行途中每 30 帧在原地留下一枚纳米刀刃。
+            // 机制照 CI 的 NanotechOld（用户 2026-10-07 指定）：判据为「友好 + 有伤害 + 非 NPC 弹幕/陷阱 +
+            // 算作盗贼弹幕」，节奏用 玩家 miscCounter % 30（numUpdates == 0 保证带 extraUpdates 的弹幕
+            // 一帧只判一次——本机 tML 没有 CI 依赖的 FinalExtraUpdate 扩展），生成只在主人端做。
+            CalamityDemutationPlayer nanotechPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (nanotechPlayer.nanotech && projectile.friendly && projectile.damage > 0
+                && !projectile.npcProj && !projectile.trap && CDUtil.IsRogueProjectile(projectile))
+            {
+                // 潜行打击的 +20 护甲穿透：每枚弹幕只加一次（CI 同样只在首次更新时加）
+                if (!nanotechArmorPenApplied && CDUtil.IsStealthStrike(projectile, out _))
+                {
+                    nanotechArmorPenApplied = true;
+                    projectile.ArmorPenetration += 20;
+                }
+                if (projectile.numUpdates == 0 && Main.player[projectile.owner].miscCounter % 30 == 0
+                    && projectile.owner == Main.myPlayer)
+                {
+                    int bladeIndex = Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center, Vector2.Zero,
+                        ModContent.ProjectileType<Rogue.Nanotech>(), (int)(projectile.damage * 0.15), 0f, projectile.owner);
+                    // 伤害类型 = 盗贼（用户指定；刀刃 SetDefaults 里也设了，这里显式再写一次）
+                    Main.projectile[bladeIndex].DamageType = CDUtil.GetRogueDamageClass();
+                }
+            }
         }
         /// <summary>
         /// tModLoader 的 OnHitNPC 钩子：弹幕命中 NPC 后调用。
@@ -104,6 +132,23 @@ namespace CalamityDemutation.Content.Projectiles
             // 无主弹幕（owner = 255 = Main.maxPlayers）会越界，先做范围校验
             if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers)
                 return;
+            // 纳米技术（Nanotech）：潜行打击命中时（这枚弹幕的潜行打击命中数还不到 3 次）从画面上方
+            // 砸下 6 枚灾厄本体的「纳米闪光」NanoFlare——机制照 CI 的 NanotechOld，用户 2026-10-07 指定。
+            // NanoFlare 走软依赖按名取（经典版灾厄没有这件，取不到就整段跳过）；潜行打击状态由 CDUtil
+            // 反射读灾厄 GlobalProjectile 的 stealthStrike，经典版恒为 false。本块不写提前 return。
+            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().nanotech
+                && projectile.owner == Main.myPlayer
+                && CDUtil.IsStealthStrike(projectile, out int nanotechStealthHits) && nanotechStealthHits < 3
+                && ModContent.TryFind<ModProjectile>("CalamityMod", "NanoFlare", out ModProjectile nanoFlare))
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    Vector2 flareSpawn = new Vector2(target.Center.X + Main.rand.Next(-201, 201), Main.screenPosition.Y - 600f - Main.rand.Next(50));
+                    Vector2 flareVelocity = (target.Center - flareSpawn) / 40f;
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), flareSpawn, flareVelocity, nanoFlare.Type,
+                        (int)(projectile.damage * 0.05), 3f, projectile.owner);
+                }
+            }
             // 魔能谐振仪（manaOverloader）：手持魔法武器时，魔法弹幕命中敌人按其伤害与当前魔力比例吸血
             // （源 CalamityPlayerOnHit 的 manaOverloader 分支）。它与下面的套装吸血相互独立（源里两者不在同一条
             // else 链上），故本块刻意不写提前 return——否则一旦这里的治疗量算成 0，会把套装吸血一起跳过。

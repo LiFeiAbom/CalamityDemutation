@@ -552,6 +552,13 @@ namespace CalamityDemutation.Players
         public float modStealth = 1f;
         public int modStealthTimer;
         /// <summary>
+        /// 已装备纳米技术（Nanotech）：盗贼伤害 +20%、盗贼暴击 +20、盗贼弹速 +15%，
+        /// 手持盗贼武器时额外 +30 防御与 +10% 伤害减免；盗贼弹幕每 30 帧留一枚纳米刀刃，
+        /// 潜行打击命中时砸下 6 枚灾厄的 NanoFlare（效果分别见 PostUpdateMiscEffects 与
+        /// CalamityDemutationGlobalProjectile）。每帧由饰品 UpdateAccessory 置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool nanotech = false;
+        /// <summary>
         /// 星云核心已装备（+20%通用伤害/暴击，20%概率免死并回复100生命）
         /// </summary>
         public bool nebulousCore = false;
@@ -929,6 +936,7 @@ namespace CalamityDemutation.Players
             lureofEnthrallment = false;
             manaJelly = false;
             manaOverloader = false;
+            nanotech = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
             necklaceOfVexation = false;
@@ -1108,6 +1116,7 @@ namespace CalamityDemutation.Players
             lureofEnthrallment = false;
             manaJelly = false;
             manaOverloader = false;
+            nanotech = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
             necklaceOfVexation = false;
@@ -1470,6 +1479,22 @@ namespace CalamityDemutation.Players
                 Player.dash = 1;          // 仅视觉字段，本身不授予冲刺
                 Player.dashType = 1;      // 1 = 忍者大师装备式冲刺，真正生效的是这一条
                 Player.spikedBoots = 2;
+            }
+            // 纳米技术（Nanotech）：盗贼 +20% 伤害 / +20 盗贼暴击 / +15% 盗贼弹速；
+            // 手持盗贼武器时额外 +30 防御与 +10% 伤害减免（减免口径照 cal-1.2 的 CalamityPlayer1Point2.cs:917，
+            // 数值按用户 2026-10-07 点名把伤害与暴击都提到 20%）。
+            if (nanotech)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.2f;
+                Player.GetCritChance(rogue) += 20;
+                CDUtil.AddRogueVelocity(Player, 0.15f);
+                // "手持盗贼武器"的判据：现代版是真·盗贼伤害类，只装经典版时回退到 tML 的 Throwing
+                if (Player.HeldItem.CountsAsClass(rogue))
+                {
+                    Player.endurance += 0.1f;   // 10% 伤害减免
+                    Player.statDefense += 30;
+                }
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
