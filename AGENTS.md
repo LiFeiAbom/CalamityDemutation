@@ -141,10 +141,18 @@
   `index.lock: Permission denied`；同时沙箱往环境注入 `HTTP(S)_PROXY=http://127.0.0.1:9`（丢弃端口），
   网络一律不通。**git 的写操作与 `push/pull` 都要提权（非沙箱）执行**，提权后走的是系统代理
   （`127.0.0.1:7897`），不再受那对注入变量影响。
+  **补记（2026-10-08）**：提权后的 shell 里 `HTTP_PROXY`/`HTTPS_PROXY` 是**空的**，git 也没配 http.proxy，
+  于是 `git ls-remote origin` 直连 github.com:443 会超时（约 21 秒后 `Failed to connect to github.com port 443`）。
+  此时显式指定本机代理即可：
+  `git -c http.proxy=http://127.0.0.1:7897 ls-remote origin refs/heads/master` /
+  `git -c http.proxy=http://127.0.0.1:7897 push origin master`
+  （先 `Test-NetConnection 127.0.0.1 -Port 7897 -InformationLevel Quiet` 应为 True）。
+  判断"是否已推送成功"就用这条 `ls-remote` 比对本地 `git rev-parse master`。
 - 提交：仓库未配置 user.name/email，命令行提交需带
   `git -c user.name='LiFeiAbom' -c user.email='LiFeiAbom@users.noreply.github.com' commit …`。
   提交信息风格：`类型: 描述`（移植 / 适配 / 修正 / 平衡 / 删除 / 清理 / 回退），可带要点正文。
-- 推送：`git push origin master`（网络偶发 `Connection was reset`，重试即可）。
+- 推送：`git push origin master`（网络偶发 `Connection was reset`，重试即可）；若报
+  `Failed to connect to github.com port 443`，改用 `git -c http.proxy=http://127.0.0.1:7897 push origin master`。
 - **本机 `rg` 必须显式带路径**：`rg -n '关键字' .`（结尾那个 `.` 不能省）。不带路径时它在本机会**静默**
   搜不到任何东西、直接返回空，看起来像"全工程 0 命中"——曾因此误判过好几轮。同理，读无 BOM 的
   UTF-8 源文件要用 `Get-Content -Encoding UTF8`，否则中文注释会花屏。
@@ -306,7 +314,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
   工程手法（本批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工作区当前**干净、与 `origin/master` 同步**。
+  工作区当前**干净、与 `origin/master` 同步**（2026-10-08 复核：远端 `refs/heads/master` = `4f683e9`，
+  本地同值；`dotnet build` 0 警告 0 错误、资源自检 150 条全命中）。
 - 最近一批工作（2026-10-08）：**修正加载期禁用 —— `Sounds/Custom/SilvaActivation` 同名双扩展名。**
   症状：进游戏时 `Disabling Mod: CalamityDemutation`，报
   `System.Exception: Multiple extensions for asset Sounds\Custom\SilvaActivation, (.ogg, .wav)`。
