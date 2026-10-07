@@ -1446,14 +1446,23 @@ namespace CalamityDemutation.Players
                 Player.whipRangeMultiplier += 0.1f;
                 Player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.1f;
             }
-            // 时滞诅咒腰带：召唤增伤/栏位 + 鞭子范围，外加移动/跳跃/闪避/冲刺
+            // 时滞诅咒腰带（斯塔提斯诅咒腰带）：**盗贼 + 召唤双职业**饰品，外加移动/跳跃/闪避/冲刺。
+            // 盗贼侧照用户 2026-10-07 点名：盗贼伤害 +20%、盗贼暴击 +20%（跟着盗贼路走，不是通用暴击）。
             if (statisBeltOfCurses)
             {
+                // 盗贼路：现代版加成加在灾厄的 RogueDamageClass 上；经典版没有盗贼伤害类，改由 CDUtil 反射
+                // 写进它的自定义投掷字段（基准 1f / 4，它自己每帧 ResetEffects 复位，所以这里每帧都要写）
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.2f;
+                Player.GetCritChance(rogue) += 20;
+                CDUtil.AddClassicThrowingStats(Player, 0.2f, 20);
+                // 召唤路
                 Player.GetKnockback<SummonDamageClass>().Base += 2.5f;
                 Player.GetDamage<SummonDamageClass>() += 0.2f;
                 Player.maxMinions += 4;
                 Player.whipRangeMultiplier += 0.2f;
                 Player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.2f;
+                // 机动性
                 Player.autoJump = true;
                 Player.jumpSpeedBoost += 1.2f;
                 Player.extraFall += 50;

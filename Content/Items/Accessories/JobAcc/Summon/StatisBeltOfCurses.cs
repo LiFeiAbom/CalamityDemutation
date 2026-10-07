@@ -6,10 +6,18 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
 {
     /// <summary>
-    /// 诅咒凝滞腰带 - 顶级召唤职业饰品
-    /// +20% 召唤伤害、+4 仆从上限、+20% 鞭范围与攻速，
-    /// 附带自动跳跃、二段跳加速、额外坠落速度、闪避、冲刺与尖刺靴等机动性效果。
+    /// 诅咒凝滞腰带（Statis' Belt of Curses）- 顶级**盗贼 / 召唤双职业**饰品（数值结算见
+    /// <c>CalamityDemutationPlayer.PostUpdateMiscEffects</c> 的 statisBeltOfCurses 块）。
+    /// 盗贼侧：盗贼伤害 +20%、盗贼暴击 +20%（现代版加灾厄的 RogueDamageClass，经典版经 CDUtil
+    /// 反射写它的自定义投掷字段）；召唤侧：召唤伤害 +20%、仆从上限 +4、鞭范围/鞭速各 +20%，
+    /// 仆从命中附带暗影焰与"哭泣"（TemporalSadness）；另附带自动跳跃、跳跃速度、额外坠落速度、
+    /// 闪避、冲刺与尖刺靴等机动性效果。
     /// 凝滞系列最终形态：凝滞祝福 → 凝滞诅咒 → 本件，由凝滞诅咒进阶而来。
+    /// <para>
+    /// 经典版 tooltip 里的「仆从攻击有概率秒杀普通敌人」**刻意不移植**：源实现（经典版
+    /// <c>CalamityGlobalNPC.OnHitByProjectile</c>）靠一张写死的 NPC 类型排除表 + "场上无任何 Boss"
+    /// 判据把弹幕伤害改成 <c>npc.lifeMax * 3</c>，多模组环境下既不可靠也无从维护，故效果与文案都不写。
+    /// </para>
     /// </summary>
     internal class StatisBeltOfCurses:ModItem
     {

@@ -275,6 +275,19 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**斯塔提斯诅咒腰带（StatisBeltOfCurses）改成「盗贼 + 召唤」双职业饰品。**
+  用户点名：补盗贼伤害 **+20%** 与**盗贼**暴击率 **+20%**（跟着盗贼路走，不是通用暴击）；经典版 tooltip 里
+  那条「仆从攻击有概率秒杀普通敌人」**明确不移植**——源实现（经典版 `CalamityGlobalNPC.OnHitByProjectile`）
+  靠一张写死的 NPC 类型排除表 + "场上无任何 Boss" 判据把弹幕伤害改成 `npc.lifeMax * 3`，
+  多模组环境下既不可靠也无从维护，故**效果与文案都不写**（用户原话：不好实现）。
+  落地：`Players/CalamityDemutationPlayer.cs` 的 `PostUpdateMiscEffects` 里 statisBeltOfCurses 块加
+  `DamageClass rogue = CDUtil.GetRogueDamageClass(); Player.GetDamage(rogue) += 0.2f;
+  Player.GetCritChance(rogue) += 20; CDUtil.AddClassicThrowingStats(Player, 0.2f, 20);`
+  ——现代版加灾厄 `RogueDamageClass`、经典版经 `CDUtil` 反射写它的自定义投掷字段（基准 1f / 4，
+  它自己每帧复位，所以必须每帧写）；两个都写、取到哪个算哪个，与血炎/龙蒿盗贼头同款写法。
+  中英 tooltip 各补两行：「盗贼与召唤双职业饰品 / 盗贼伤害与暴击率提高 20%」
+  （en: `Rogue and summon hybrid accessory` / `20% increased rogue damage and critical strike chance`）。
+  验证：编译 0 警告 0 错误；资源自检 149 条全命中。
 - 最近一批工作（2026-10-07）：**修正「配方静默消失」三连（虚无箭袋 / 混乱之刃 / 熵之舞）——根因都是"软依赖材料的单名 gate"。**
   症状：虚无箭袋没有配方。**根因不在配方本身**：`AddRecipes` 照源版本写死了
   `calamity.TryFind<ModItem>("X", …)`，而本机装的是**灾厄 2.2.2**，那件材料已被本体删除 → `TryFind`
