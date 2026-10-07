@@ -306,13 +306,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `GrantRogueStealthRatio`、"点数"走 `GrantRogueStealth`；潜行打击消耗档走 `CDUtil.SetStealthStrikeCost`。）
 - 最近一批工作（2026-10-07）：**移植欺诈硬币（CoinofDeceit）—— "暗物质剑鞘"链的链下位材料、毁灭徽章的前件。**
   用户拍板：为让整条链在**经典分支也能合成**，采用方案 (c)（连带移植本件）。
-  **效果取 2.0**：20×22、蓝档、1 金；盗贼暴击 **+6**、潜行打击只消耗潜行上限的 **75%**
-  （2.0.3.9/2.0.4 = 85%、1.4.4-release = 90%——本件刻意保留 2.0 的 75%）。
+  **效果取 2.0**：20×22、蓝档、1 金；潜行打击只消耗潜行上限的 **75%**
+  （2.0.3.9/2.0.4 = 85%、1.4.4-release = 90%——本件刻意保留 2.0 的 75%）；
+  盗贼基础属性按用户 2026-10-07 指定 **+3% 盗贼伤害 / +3 盗贼暴击**（源为 +6 盗贼暴击，拆一半到伤害上）。
   **配方取 1.4.4 / 2.0.3.9+ 一侧**（四版里唯一**全原版材料**的一条；2.0 的配方要酸木〔灾厄材料〕会锁死现代分支）：
   **任意铜锭×12 + 任意魔金锭×8 @ 铁砧**；源配方用灾厄自建的 `AnyCopperBar`/`AnyEvilBar` 组（内容全原版），
   本件不依赖灾厄，故在 `RecipeSystem` 里自建同内容的 `CalamityDemutation:AnyCopperBar`（复用已有的 AnyEvilBar）。
   **落地**：`Content/Items/Accessories/JobAcc/Rogue/CoinofDeceit.cs`（+ 四版同一张 20×22 贴图）；
-  盗贼暴击写 `PostUpdateMiscEffects`（现代走灾厄盗贼类、经典走 `CDUtil.AddClassicThrowingStats` 反射），
+  盗贼伤害/暴击写 `PostUpdateMiscEffects`（现代走灾厄盗贼类、经典走 `CDUtil.AddClassicThrowingStats` 反射），
   潜行打击消耗档写 `PostUpdateEquips`（新桥 `CDUtil.SetStealthStrikeCost(Player, 0.75f)`，反射写 CalamityPlayer 的
   `stealthStrikeHalfCost/75Cost/90Cost`，经典版短路）；中英 tooltip 与物品名（中文名**欺诈硬币**）一并补齐。
   验证：编译 0 警告 0 错误；资源自检 150 条全命中。

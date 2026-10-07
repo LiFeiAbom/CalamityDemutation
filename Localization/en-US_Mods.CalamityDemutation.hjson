@@ -793,7 +793,7 @@ Items: {
 		Tooltip:
 			'''
 			Stealth strikes only expend 75% of your max stealth
-			6% increased rogue crit chance
+			3% increased rogue damage and rogue crit chance
 			'''
 	}
 

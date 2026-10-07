@@ -8,8 +8,10 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// 欺诈硬币（Coin of Deceit）—— "暗物质剑鞘"那条链的下位材料
     /// （欺诈硬币 → 毁灭徽章 → 暗物质剑鞘 → 日蚀魔镜），前期铁砧档。
     /// <para>
-    /// ① 效果取 **2.0**：20×22、蓝档、1 金；盗贼暴击 **+6**、潜行打击只消耗潜行上限的 **75%**
-    /// （2.0.3.9 / 2.0.4 改成 85%、1.4.4-release 改成 90%——本件刻意保留 2.0 的 75%）。
+    /// ① 效果取 **2.0**：20×22、蓝档、1 金；潜行打击只消耗潜行上限的 **75%**
+    /// （2.0.3.9 / 2.0.4 改成 85%、1.4.4-release 改成 90%——本件刻意保留 2.0 的 75%）；
+    /// 盗贼基础属性按用户 2026-10-07 指定：**+3% 盗贼伤害 / +3 盗贼暴击**
+    /// （源为 +6 盗贼暴击，拆一半到伤害上）。
     /// </para>
     /// <para>
     /// ② 配方取 **1.4.4 / 2.0.3.9+ 那一侧**（四版里唯一**全原版材料**的一条）：
@@ -20,8 +22,8 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// <c>CalamityDemutation:AnyCopperBar</c> / <c>CalamityDemutation:AnyEvilBar</c>（见 RecipeSystem）。
     /// </para>
     /// <para>
-    /// 效果分两处落地：盗贼暴击写在 <c>CalamityDemutationPlayer.PostUpdateMiscEffects</c>
-    /// （现代版加成加在灾厄的盗贼类上、经典版反射写它自己的自定义投掷暴击字段）；"潜行打击消耗 75%"
+    /// 效果分两处落地：盗贼伤害/暴击写在 <c>CalamityDemutationPlayer.PostUpdateMiscEffects</c>
+    /// （现代版加成加在灾厄的盗贼类上、经典版反射写它自己的自定义投掷字段）；"潜行打击消耗 75%"
     /// 是灾厄 CalamityPlayer 上的开关，必须写在 <c>PostUpdateEquips</c>（灾厄在 ResetEffects 里每帧复位、
     /// 攻击结算时才读取），由 CDUtil 反射写入。
     /// </para>

@@ -315,8 +315,9 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool cloudWaifu = false;
         /// <summary>
-        /// 已装备欺诈硬币（Coin of Deceit）：盗贼暴击 **+6**、潜行打击只消耗潜行上限的 **75%**（2.0 口径）。
-        /// 盗贼暴击在 PostUpdateMiscEffects 结算（现代版加在灾厄盗贼类上、经典版反射写它自己的投掷暴击字段）；
+        /// 已装备欺诈硬币（Coin of Deceit）：盗贼 **+3% 伤害 / +3 暴击**（用户 2026-10-07 指定，源为 +6 暴击）、
+        /// 潜行打击只消耗潜行上限的 **75%**（2.0 口径）。
+        /// 盗贼伤害/暴击在 PostUpdateMiscEffects 结算（现代版加在灾厄盗贼类上、经典版反射写它自己的投掷字段）；
         /// 潜行打击消耗档是灾厄 CalamityPlayer 上的开关，必须写在 PostUpdateEquips（灾厄 ResetEffects 每帧复位、
         /// 攻击结算时才读取），由 CDUtil 反射写入。每帧由饰品置位、ResetEffects/UpdateDead 清零。
         /// </summary>
@@ -1565,13 +1566,14 @@ namespace CalamityDemutation.Players
                 Player.GetDamage(rogue) += 0.02f;
                 Player.GetCritChance(rogue) += 2;
             }
-            // 欺诈硬币（Coin of Deceit）：盗贼暴击 +6
-            //（潜行打击消耗档 75% 在 PostUpdateEquips）；经典版没有盗贼伤害类，改由 CDUtil 反射写它自己的投掷暴击字段
+            // 欺诈硬币（Coin of Deceit）：盗贼 +3% 伤害 / +3 暴击（用户 2026-10-07 指定，源为 +6 暴击）
+            //（潜行打击消耗档 75% 在 PostUpdateEquips）；经典版没有盗贼伤害类，改由 CDUtil 反射写它自己的投掷字段
             if (coinofDeceit)
             {
                 DamageClass rogue = CDUtil.GetRogueDamageClass();
-                Player.GetCritChance(rogue) += 6;
-                CDUtil.AddClassicThrowingStats(Player, 0f, 6);
+                Player.GetDamage(rogue) += 0.03f;
+                Player.GetCritChance(rogue) += 3;
+                CDUtil.AddClassicThrowingStats(Player, 0.03f, 3);
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
