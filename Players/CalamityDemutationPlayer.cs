@@ -4626,7 +4626,7 @@ namespace CalamityDemutation.Players
                 Player.immune = true;
                 Player.immuneTime = Player.longInvince ? 100 : 60;
                 CDUtil.AddRogueStealthValue(Player, 0.5f);
-                SoundEngine.PlaySound(CalamityDemutationSounds.SilvaActivation, Player.Center);
+                SoundEngine.PlaySound(CalamityDemutationSounds.SilvaActivationModern, Player.Center);
                 // 弹幕只在主人端生成（源同样把生成段裹在 Player.whoAmI == Main.myPlayer 里）
                 if (Player.whoAmI == Main.myPlayer)
                 {
@@ -5667,7 +5667,7 @@ namespace CalamityDemutation.Players
                 }
                 if (Player.FindBuffIndex(ModContent.BuffType<SilvaRevival>()) == -1)
                 {
-                    SoundEngine.PlaySound(new SoundStyle("CalamityDemutation/Sounds/Custom/SilvaActivation"), Player.position);
+                    SoundEngine.PlaySound(CalamityDemutationSounds.SilvaActivation, Player.position);
                     Player.AddBuff(ModContent.BuffType<SilvaRevival>(), 600);
                     if (draconicSurge)
                     {

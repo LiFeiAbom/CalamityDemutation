@@ -40,8 +40,13 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle ELRFire = new("CalamityDemutation/Sounds/Item/ELRFire");
         /// <summary>掷出咒刃（灾厄原名 CursedDaggerThrow）：禅心剑真近战命中时播放，每次挥砍只响一次（灾厄原为 Ataraxia 的 hitsound 分支）</summary>
         public static readonly SoundStyle CursedDaggerThrow = new("CalamityDemutation/Sounds/Item/CursedDaggerThrow") { Volume = 0.5f, Pitch = 0.9f, PitchVariance = 0.2f, MaxInstances = -1 };
-        /// <summary>女巫套激活音（灾厄原名 SilvaActivation，取自实装灾厄 Sounds/Custom/AbilitySounds/）：
-        /// 深渊魔镜的闪避触发时播放（源里借的是灾厄 SilvaHeadSummon.ActivationSound）</summary>
+        /// <summary>女巫套激活音（经典版 cal-1.4.2.101 同名 wav，源路径 Sounds/Custom/SilvaActivation）：
+        /// 女巫套装免死保命窗口开启时播放（经典版 CalamityPlayerPreTrailer.cs:5639 原样）</summary>
         public static readonly SoundStyle SilvaActivation = new("CalamityDemutation/Sounds/Custom/SilvaActivation");
+        /// <summary>女巫套激活音·现代版（2.0 的 Sounds/Custom/AbilitySounds/SilvaActivation.ogg）：
+        /// 深渊魔镜的闪避触发时播放（源里借的是灾厄 SilvaHeadSummon.ActivationSound）。
+        /// 与上面那条**不是同一段音频**（经典 4.8 秒 / 现代 2.4 秒），故用不同文件名共存——
+        /// 同名不同扩展名会让 tML 在加载期抛 Multiple extensions for asset 并禁用整个模组</summary>
+        public static readonly SoundStyle SilvaActivationModern = new("CalamityDemutation/Sounds/Custom/SilvaActivationModern");
     }
 }

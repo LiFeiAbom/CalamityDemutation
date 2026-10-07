@@ -62,6 +62,12 @@
   `Item/` 与 `Custom/` 两个平面目录，**里面不再套子目录**——物品/武器自身的挥砍·蓄力·使用音放
   `Sounds/Item/<原名>.<ogg|wav|mp3>`，借用的灾厄 Boss / 特效冲击音（冲刺、爆炸、死亡音）与其他自备音放
   `Sounds/Custom/<原名>`。音高按"CE 值 − 1"的既有口径换算。
+  **同名不同扩展名是加载期硬错（2026-10-08 踩过）**：同一个目录里出现 `X.ogg` 与 `X.wav` 时，tML 会在
+  `ReLogic.Content.Sources.ContentSource.SetAssetNames` 抛 `Multiple extensions for asset X, (.ogg, .wav)`，
+  同样把整个模组禁用（跟缺资源一个下场，`Tools/CheckResources.ps1` 查不到、`dotnet build` 也不报）。
+  两个版本世系里同名的音效若音频不同，必须给其中一个改名（本例：经典版保命音保留原名
+  `Sounds/Custom/SilvaActivation.wav`，现代版 2.0 的同名 ogg 改名 `SilvaActivationModern.ogg`）。
+  自查一行：`Get-ChildItem -Recurse -File -Include *.ogg,*.wav,*.mp3,*.png | Group-Object {$_.DirectoryName+'|'+$_.BaseName} | ? Count -gt 1`
 - **粒子**：本工程自研 `Content/Particles`（基类 `BaseParticle`，注册与驱动在 `Content/Particles/Core/DRKLoader.cs`，
   `DRKLoader.NewParticle(particle, pos, vel, color, scale)` + 粒子自己的 `Configure(...)`）。
 - **弹幕基类**：手持类武器走 `Content/Projectiles/BaseProjectiles/BaseHeldProjCO`、CWR 系走
@@ -301,6 +307,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   工程手法（本批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
   工作区当前**干净、与 `origin/master` 同步**。
+- 最近一批工作（2026-10-08）：**修正加载期禁用 —— `Sounds/Custom/SilvaActivation` 同名双扩展名。**
+  症状：进游戏时 `Disabling Mod: CalamityDemutation`，报
+  `System.Exception: Multiple extensions for asset Sounds\Custom\SilvaActivation, (.ogg, .wav)`。
+  成因：`a65cbfe`（深渊魔镜）从实装灾厄抽来的 `SilvaActivation.ogg` 与本工程**基线里就有的**
+  经典版 `SilvaActivation.wav`（女巫套保命音，cal-1.4.2.101 原文件）撞名——两条都留着才会炸。
+  修法（**两个都保留**，因为两段音频不同且各自都是自己源线的原声）：现代那份改名
+  `Sounds/Custom/SilvaActivationModern.ogg`，登记字段改名 `CalamityDemutationSounds.SilvaActivationModern`
+  （深渊魔镜用）；经典那份保持原名，女巫套保命那处内联 `new SoundStyle(...)` 收进
+  `CalamityDemutationSounds.SilvaActivation`。**教训已写进第 4 节音效条**：同目录同名不同扩展名
+  = 加载期异常 + 整个模组禁用，`dotnet build` 与 `CheckResources.ps1` 都查不出来。
 - 最近一批工作（2026-10-08）：**移植蚀日魔镜（EclipseMirror）—— "暗物质剑鞘"链的最后一环。**
   用户拍板：① 本体取 **2.0**（**38×38** 大方镜、月后稀有度 **14 蓝**、价值 **1 铂金 40 金** `Rarity14BuyPrice`）；
   ② 基础效果按用户点名：盗贼 **+11% 伤害 / +11 暴击**（源为 +6%/+6）、**最大潜行值 +25 点**（源为 +20）；
@@ -413,7 +429,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `Eutrophication`（**只有现代版有**）+ 经典版用 `CrushDepth` 近似替代（两条都发，与 omega 蓝胸甲同款惯例）；
   伤害类型设 Generic（源用 `forceClassless`，避免二次吃职业加成）。
   音效从实装灾厄 .tmod 里抽出 `Sounds/Custom/AbilitySounds/SilvaActivation.ogg`，登记为
-  `CalamityDemutationSounds.SilvaActivation`（工程"借用音放 Sounds/Custom"的既定口径）。
+  `CalamityDemutationSounds.SilvaActivationModern`（工程"借用音放 Sounds/Custom"的既定口径）。
+  **⚠️ 2026-10-08 修过一次加载期禁用**：工程 `Sounds/Custom/` 里**本来就有**一条经典版同名音效
+  `SilvaActivation.wav`（cal-1.4.2.101 原文件，女巫套保命触发时播的那个，见本文件第 4 节音效条），
+  与这次新放的 `SilvaActivation.ogg` 撞名 → tML 抛
+  `Multiple extensions for asset Sounds\Custom\SilvaActivation, (.ogg, .wav)` 并把整个模组禁用。
+  两段音频**不是同一段**（经典 wav 4.8 秒 / 现代 ogg 2.4 秒），且各自都是自己那条源线的原声
+  （经典 `CalamityPlayerPreTrailer.cs:5639` 的保命音 / 现代 `SilvaHeadSummon.ActivationSound`，
+  2.0 的深渊魔镜与女巫套保命共用它），故**两个都留**、把现代那份改名成 `SilvaActivationModern.ogg`：
+  深渊魔镜用 `SilvaActivationModern`，女巫套保命改用 `SilvaActivation`（同时把那处内联
+  `new SoundStyle(...)` 收进 `CalamityDemutationSounds`）。
   **配方**照 2.0：幻影魔镜 + 墨炸弹 + 幽灵锭×8 + 海棱镜×10 + 深层细胞×5 + 流明素×5 @ 秘银砧；
   两处按版本调整——吃**本工程自写**的幻影魔镜（链条自家闭环）；**经典分支去掉墨炸弹**（经典版没有 InkBomb）、
   流明素换经典版的 `Lumenite`（同源改名）。若日后想补齐经典配方，可把墨炸弹也移植进来。
