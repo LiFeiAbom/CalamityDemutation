@@ -1531,9 +1531,15 @@ namespace CalamityDemutation.Players
                 Player.GetCritChance(rogue) += 2;
                 Player.aggro -= 200;
             }
-            // 深渊魔镜（Abyssal Mirror）：仇恨 −450（潜行恢复在 PostUpdateEquips，闪避在 FreeDodge）
+            // 深渊魔镜（Abyssal Mirror）：仇恨 −450、盗贼 +5% 伤害 / +5 暴击
+            //（潜行恢复与潜行上限在 PostUpdateEquips，闪避在 FreeDodge）
             if (abyssalMirror)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.05f;
+                Player.GetCritChance(rogue) += 5;
                 Player.aggro -= 450;
+            }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
             {
@@ -3531,10 +3537,14 @@ namespace CalamityDemutation.Players
                 CDUtil.GrantRogueStealthRatio(Player, 0.15f);
             }
             // 深渊魔镜（Abyssal Mirror）：站定潜行恢复 +30%、移动 +20%（2.0 口径）。
-            // 与幻影魔镜同一处、同一原因（灾厄 ResetEffects 复位、PostUpdateMiscEffects 之后才读取）；
-            // 本件**没有**潜行上限加成，它的看点在那次闪避（见 FreeDodge 的 abyssalMirror 分支）。
+            // 与幻影魔镜同一处、同一原因（灾厄 ResetEffects 复位、PostUpdateMiscEffects 之后才读取）。
+            // 潜行上限 +20% 与幻影魔镜的 +15% 一样走"相对当前上限"的写法（用户 2026-10-07 追加口径）；
+            // 两件同时戴时按顺序各自读实时上限，比例会自然复合。闪避见 FreeDodge 的 abyssalMirror 分支。
             if (abyssalMirror)
+            {
                 CDUtil.AddStealthGen(Player, 0.30f, 0.20f);
+                CDUtil.GrantRogueStealthRatio(Player, 0.20f);
+            }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)

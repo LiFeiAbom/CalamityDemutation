@@ -279,6 +279,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   口径：站定潜行恢复 **+30%**、移动 **+20%**、仇恨 **−450**、闪避**固定 90 秒冷却且无伤害门槛**
   （2.0.4 才改成按伤害 15–90 秒并加"低于最大生命 5% 不触发"）；**允许与本体同名件同时佩戴**；
   中文名**深渊魔镜**。尺寸 30×38、青柠档（7）、48 金。
+  **追加基础属性（用户 2026-10-07，与幻影魔镜同款写法）**：**最大潜行值 +20%（相对当前上限，
+  走 `GrantRogueStealthRatio`）**、盗贼伤害 +5%、盗贼暴击 +5；两件同时戴时上限比例按顺序各自读实时值、
+  会自然复合（用户已确认允许叠加）。
   **闪避（本件核心）**：源是 `CalamityPlayer.AbyssMirrorEvade()`——无敌帧 60（吃十字项链 100）、
   `rogueStealth += 0.5f`、Silva 激活音、脚下炸 10 枚流明流体（伤害 = 盗贼伤害套用 55 基础值、
   随机初速与朝向、`forceClassless`）。本工程落在 `CalamityDemutationPlayer.FreeDodge` 的 abyssalMirror 分支：

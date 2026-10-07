@@ -9,6 +9,8 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// 口径按用户 2026-10-07 拍板取灾厄 **2.0** 版：30×38、青柠档（7）、48 金；
     /// 站定潜行恢复 **+30%**、移动 **+20%**（2.0.3.9 起被本体削到 +25%/+12%）、仇恨 **−450**，
     /// 并给一次**闪避**（详见 <c>CalamityDemutationPlayer.FreeDodge</c> 的 abyssalMirror 分支）。
+    /// 另按用户 2026-10-07 追加基础属性：**最大潜行值 +20%（相对当前上限，走 GrantRogueStealthRatio）**、
+    /// 盗贼伤害 +5%、盗贼暴击 +5。
     /// <para>
     /// 与幻影魔镜一样**允许与灾厄本体那件同名件同时佩戴**（用户明确要求，故不做互斥）。
     /// 潜行恢复走 <see cref="CalamityDemutation.Utilities.CDUtil.AddStealthGen"/> 的反射桥
