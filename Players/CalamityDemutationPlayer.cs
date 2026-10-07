@@ -352,6 +352,16 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool daedalusEmblem = false;
         /// <summary>
+        /// 已装备暗物质剑鞘（DarkMatterSheath，即 2.0 的 DarkGodsSheath 那版）：
+        /// 最大潜行值 **+20 点**、潜行打击**半价**、移动潜行加速旗标 `darkGodSheath`、
+        /// **盗贼潜行打击必定暴击**、盗贼 **+6% 伤害 / +6 暴击**。
+        /// 潜行三项（上限/消耗档/加速）写在 PostUpdateEquips（灾厄 ResetEffects 每帧复位、之后才读取）；
+        /// 盗贼伤害/暴击写 PostUpdateMiscEffects；"必定暴击"在 ModifyHitNPCWithProj 里用
+        /// <c>HitModifiers.SetCrit()</c> 落地（2.0 是在灾厄 CalamityGlobalProjectile.ModifyHitNPC 里
+        /// 把 <c>ref bool crit</c> 置真，1.4.4 的 tML 换成命中修饰符）。每帧由饰品置位、ResetEffects/UpdateDead 清零。
+        /// </summary>
+        public bool darkMatterSheath = false;
+        /// <summary>
         /// 已装备暗日之戒：+2 召唤栏、+12% 通用增伤与近战攻速、+5% 暴击与挖掘提速；
         /// 白昼额外回血，夜晚额外 +30 防御
         /// </summary>
@@ -933,6 +943,7 @@ namespace CalamityDemutation.Players
             crownJewel = false;
             cryoStone = false;
             daedalusEmblem = false;
+            darkMatterSheath = false;
             darkSunRing = false;
             deificAmulet = false;
             demonshadeClass = null;
@@ -1112,6 +1123,7 @@ namespace CalamityDemutation.Players
             crownJewel = false;
             cryoStone = false;
             daedalusEmblem = false;
+            darkMatterSheath = false;
             darkSunRing = false;
             deificAmulet = false;
             demonshadeClass = null;
@@ -1594,6 +1606,15 @@ namespace CalamityDemutation.Players
                 Player.GetDamage(rogue) += 0.04f;
                 Player.GetCritChance(rogue) += 4;
                 CDUtil.AddClassicThrowingStats(Player, 0.04f, 4);
+            }
+            // 暗物质剑鞘（DarkMatterSheath）：盗贼 +6% 伤害 / +6 暴击
+            //（潜行上限 +20、半价、加速旗标与"潜行打击必暴击"在别处）；经典版走 CDUtil 反射写它自己的投掷字段
+            if (darkMatterSheath)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.06f;
+                Player.GetCritChance(rogue) += 6;
+                CDUtil.AddClassicThrowingStats(Player, 0.06f, 6);
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
@@ -3619,6 +3640,15 @@ namespace CalamityDemutation.Players
                 CDUtil.GrantRogueStealth(Player, 0.10f);
                 CDUtil.SetStealthStrikeCost(Player, 0.5f);
             }
+            // 暗物质剑鞘（DarkMatterSheath）：最大潜行值 +20 点（2.0 是平铺点数，不是百分比）、潜行打击半价、
+            // 移动潜行加速旗标 darkGodSheath（灾厄 CalamityPlayer 的字段，走 CDUtil 反射；经典版没有则短路）。
+            // 与上面几件同一处、同一原因（灾厄 ResetEffects 每帧复位这些字段、之后才读取）。
+            if (darkMatterSheath)
+            {
+                CDUtil.GrantRogueStealth(Player, 0.20f);
+                CDUtil.SetStealthStrikeCost(Player, 0.5f);
+                CDUtil.SetDarkGodSheath(Player);
+            }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)
@@ -4809,6 +4839,16 @@ namespace CalamityDemutation.Players
                     : Main.rand.NextBool(20);                // 未溢出时固定 5%
                 if (againCrit)
                     modifiers.CritDamage *= 2f;
+            }
+            // 暗物质剑鞘（DarkMatterSheath）：盗贼潜行打击 **必定暴击**（2.0 口径）。
+            // 2.0 是在灾厄 CalamityGlobalProjectile.ModifyHitNPC 里把 ref bool crit 置真
+            //（判据：非 npcProj/陷阱、属盗贼职业、且这枚弹幕是潜行打击）；
+            // 1.4.4 的 tML 没有 ref bool crit，改用 HitModifiers.SetCrit()（内部把暴击"覆盖"为真，等价于必暴）。
+            // 潜行打击判定走 CDUtil.IsStealthStrike（经典版没有潜行打击这套机制，恒为 false）。
+            if (darkMatterSheath && !proj.npcProj && !proj.trap
+                && CDUtil.IsRogueProjectile(proj) && CDUtil.IsStealthStrike(proj, out _))
+            {
+                modifiers.SetCrit();
             }
             modifiers.FinalDamage *= (float)damageMult;
             // 召唤师跨职业 nerf 回调：灾厄在 ModifyHitNPCWithProj 里对「手持非召唤职业武器时的召唤弹幕」×0.75

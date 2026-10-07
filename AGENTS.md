@@ -291,18 +291,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-07 晚】当前批次：「暗物质剑鞘」链（用户指定优先做），进度 3/4 + 链下位材料 1 件。**
-  链条顺序 = **静默剑鞘 ✅（`99dadc0`）→ 欺诈硬币 ✅（链下位材料）→ 毁灭徽章 ✅（本次）
-  → 暗物质剑鞘（下一件）→ 日蚀魔镜（口径已拍板）**。
-  **下一件：暗物质剑鞘（DarkMatterSheath）**，数据已核：四版 48×62、贴图同一张（1446 字节）；
-  效果 = 潜行打击**半价** + 上限 **+10 点**（`rogueStealthMax += 0.1f`）+ 加速旗标 `darkGodSheath` + 盗贼 **+6%/+6**；
-  2.0 那版叫 **`DarkGodsSheath`**、额外带**必暴击**（`stealthStrikeAlwaysCrits`，已装 2.2.2 里没有此字段）、80 金/青档，
-  2.0.3.9+ 是 1 铂金/红档。配方（四版一致）= **静默剑鞘 + 毁灭徽章 + 熵构块 `MeldBlob`×14 @ 远古操纵机
-  （`TileID.LunarCraftingStation`，原版物）**。拍板时要用：① 取 2.0（必暴击 + 青档 80 金）还是 2.0.3.9+（1 铂金红档、无必暴击）；
-  ② 基础属性要不要按前几件追加；③ `darkGodSheath` / 必暴击都需要**新增反射桥**（`CDUtil`）；经典分支缺宇宙砧是另一件（日蚀魔镜）的事，本件用远古操纵机、两版都有。
-  工作区当前**干净、与 `origin/master` 同步**；下次开工直接接着做暗物质剑鞘即可。
+- **【接续点 · 2026-10-08】当前批次：「暗物质剑鞘」链（用户指定优先做），进度 4/4 + 链下位材料 1 件（链条已全部落地）。**
+  链条顺序 = **静默剑鞘 ✅（`99dadc0`）→ 欺诈硬币 ✅ → 毁灭徽章 ✅ → 暗物质剑鞘 ✅（本次）
+  → 日蚀魔镜（下一件，口径已拍板见下方"日蚀魔镜已定口径"条，尚未落地）**。
+  **下一件：日蚀魔镜（EclipseMirror）**——拍板里那条"2.0 独有：潜行打击必暴击要本工程自己实现"
+  **本次已在暗物质剑鞘上做出来、可复用**：判定走 `CDUtil.IsStealthStrike` + `CDUtil.IsRogueProjectile`，
+  在 `CalamityDemutationPlayer.ModifyHitNPCWithProj` 里调 `modifiers.SetCrit()`（2.0 是灾厄
+  `CalamityGlobalProjectile.ModifyHitNPC` 里的 `ref bool crit = true`；1.4.4 的 tML 没有 ref bool crit，改用命中修饰符）。
+  工作区当前**干净、与 `origin/master` 同步**；下次开工直接做日蚀魔镜即可。
   （本批次已固化的工程手法：潜行相关字段必须写在 `PostUpdateEquips`；潜行上限的"百分比"走
-  `GrantRogueStealthRatio`、"点数"走 `GrantRogueStealth`；潜行打击消耗档走 `CDUtil.SetStealthStrikeCost`。）
+  `GrantRogueStealthRatio`、"点数"走 `GrantRogueStealth`；潜行打击消耗档走 `CDUtil.SetStealthStrikeCost`；
+  移动潜行加速旗标走 `CDUtil.SetDarkGodSheath`；潜行打击必暴击走 `HitModifiers.SetCrit()`。）
+- 最近一批工作（2026-10-08）：**移植暗物质剑鞘（DarkMatterSheath）—— "暗物质剑鞘"链第三件。**
+  用户拍板取 **2.0**（该版里叫 `DarkGodsSheath`，2.0.3.9 起才改名）：48×62、**青档 80 金**（`Rarity9BuyPrice`；2.0.4/1.4.4 是红档 1 铂金）；
+  效果 = 最大潜行值 **+20 点**（2.0.3.9+ 削到 +10）、潜行打击**半价**、移动潜行加速旗标 `darkGodSheath`、
+  **盗贼潜行打击 100% 暴击**（2.0.3.9+ 已删）、盗贼 **+6%/+6**。
+  **配方取 1.4.4 那条**（源 2.0~2.0.4 用的是已删的熵构体 `MeldConstruct`×5）：静默剑鞘 + 毁灭徽章 + `MeldBlob`×14 @ 远古操纵机
+  （`MeldBlob` 现代/经典两版灾厄都有、远古操纵机是原版物 → 只注册一条、两分支通用）。
+  **落地**：`Content/Items/Accessories/JobAcc/Rogue/DarkMatterSheath.cs`（+ 那份 48×62 贴图）；
+  盗贼 +6%/+6 写 `PostUpdateMiscEffects`；潜行三项（上限 +20 / 半价 / 加速）写 `PostUpdateEquips`；
+  必暴击写 `ModifyHitNPCWithProj`（`HitModifiers.SetCrit()`）。**新增反射桥** `CDUtil.SetDarkGodSheath`。
+  中英 tooltip 与物品名（中文名**暗物质剑鞘**）一并补齐。验证：编译 0 警告 0 错误；资源自检 150 条全命中。
 - 最近一批工作（2026-10-07）：**移植毁灭徽章（RuinMedallion）—— "暗物质剑鞘"链第二件。**
   用户拍板：① 潜行打击取 **2.0 的半价**（`stealthStrikeHalfCost`）；② 基础属性按用户点名**替换**源数值——
   **最大潜行值 +10 点、盗贼伤害 +4%、盗贼暴击 +4**（源为 +6%/+6）；
@@ -360,8 +369,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **这批的版本差（已核，拍板时要用）**：静默剑鞘 2.0 = 潜行上限 +20 / 站定·移动恢复各 +15%、橙档 4 金；
   2.0.4+ = 上限 +10 / 各 +4%、**绿档 2 金**。毁灭徽章四版数值一致（20×28、粉档 20 金、盗贼 +6/+6），
   但 2.0 给的是"潜行打击**半价**"、2.0.3.9+ 改成"只需 **75%** 上限"（`stealthStrike75Cost`）。
-  暗物质剑鞘四版都是 48×62、**贴图完全同一张**（1446 字节）、上限 +10 + 半价 + 加速旗标 `darkGodSheath`
-  + 盗贼 +6/+6；2.0 那版（叫 `DarkGodsSheath`）额外带**必暴击**、80 金/青档，2.0.3.9+ 是 1 铂金/红档。
+  暗物质剑鞘四版都是 48×62、**贴图完全同一张**（1446 字节）、半价 + 加速旗标 `darkGodSheath` + 盗贼 +6/+6；
+  **2.0 那版（叫 `DarkGodsSheath`）= 上限 +20 + 必暴击 + 80 金/青档**；2.0.3.9 削成 +10、**仍是 80 金/青档**，
+  2.0.4 / 1.4.4-release 才改成红档 1 铂金、且已删必暴击。（2026-10-08 更正：先前记的"四版上限都 +10"与
+  "2.0.3.9+ 是红档"两处都不准，以本行为准。）
   链上物品在已装 2.2.2 里**全都在**（SilencingSheath / RuinMedallion / DarkMatterSheath / CoinofDeceit /
   MeldBlob / UnholyCore / EssenceofHavoc），而**经典版一件都没有**（只有 MeldBlob / UnholyCore /
   EssenceofChaos，且没有宇宙砧）→ 这批的经典分支要么换材料要么不注册，等用户点名。

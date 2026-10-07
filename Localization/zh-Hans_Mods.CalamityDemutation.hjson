@@ -884,6 +884,18 @@ Items: {
 			'''
 	}
 
+	DarkMatterSheath: {
+		DisplayName: 暗物质剑鞘
+		Tooltip:
+			'''
+			最大潜行值提高 20
+			未攻击时，移动中的潜行恢复加速
+			潜行打击有 100% 概率暴击
+			潜行打击只消耗潜行上限的 50%
+			盗贼伤害与暴击率提高 6%
+			'''
+	}
+
 	DarkSunRing: {
 		DisplayName: 蚀日尊戒
 		Tooltip:

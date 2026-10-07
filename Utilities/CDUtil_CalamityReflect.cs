@@ -520,6 +520,53 @@ namespace CalamityDemutation.Utilities
             calamityGetModPlayerForStealthCost = getter;
         }
 
+        // ── 潜行加速旗标桥（暗物质剑鞘用）──
+
+        /// <summary>是否已探测过现代版 CalamityPlayer.darkGodSheath（无论成败只探测一次）</summary>
+        private static bool calamityDarkGodSheathProbed;
+        /// <summary>CalamityPlayer.darkGodSheath 的字段句柄</summary>
+        private static FieldInfo calamityDarkGodSheathField;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
+        private static MethodInfo calamityGetModPlayerForDarkGodSheath;
+
+        /// <summary>
+        /// 置位灾厄 <c>CalamityPlayer.darkGodSheath</c>：让盗贼在**移动时**的潜行恢复来一点加速
+        ///（灾厄 <c>UpdateStealthGenStats</c> 里的 <c>else if (darkGodSheath) stealthAcceleration += 0.01f</c>）。
+        /// 与其它潜行字段同理：灾厄在 ResetEffects 里每帧复位、之后才读取，故必须每帧调用且挂在 PostUpdateEquips。
+        /// 经典版灾厄没有这套字段，会直接短路（暗物质剑鞘的"移动加速"是现代独占）。
+        /// </summary>
+        public static void SetDarkGodSheath(Player player)
+        {
+            ProbeCalamityDarkGodSheathBridge();
+            if (calamityGetModPlayerForDarkGodSheath == null || calamityDarkGodSheathField == null)
+                return;
+            if (calamityGetModPlayerForDarkGodSheath.Invoke(player, null) is ModPlayer calamityPlayer)
+                calamityDarkGodSheathField.SetValue(calamityPlayer, true);
+        }
+
+        /// <summary>
+        /// 一次性探测现代版 <c>CalamityPlayer.darkGodSheath</c> 与取 ModPlayer 的方法并缓存。
+        /// </summary>
+        private static void ProbeCalamityDarkGodSheathBridge()
+        {
+            if (calamityDarkGodSheathProbed)
+                return;
+            calamityDarkGodSheathProbed = true;
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                return;
+            Type calamityPlayerType = calamity.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
+            if (calamityPlayerType == null)
+                return;   // 灾厄改了类名：放弃
+            FieldInfo sheathField = calamityPlayerType.GetField("darkGodSheath",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo getter = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(calamityPlayerType);
+            if (sheathField == null || getter == null)
+                return;   // 该版本没有这个字段：放弃
+            calamityDarkGodSheathField = sheathField;
+            calamityGetModPlayerForDarkGodSheath = getter;
+        }
+
         // ── 潜行恢复速度桥（幻影魔镜用）──
 
         /// <summary>是否已探测过灾厄 CalamityPlayer 的潜行恢复字段（无论成败只探测一次）</summary>
