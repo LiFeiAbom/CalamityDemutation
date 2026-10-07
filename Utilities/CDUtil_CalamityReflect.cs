@@ -519,5 +519,85 @@ namespace CalamityDemutation.Utilities
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             calamityGetModPlayerForStealthGen = getter;
         }
+
+        // ── 当前潜行值桥（深渊 / 日蚀魔镜的闪避回潜行用）──
+
+        /// <summary>是否已探测过现代版 CalamityPlayer.rogueStealth（无论成败只探测一次）</summary>
+        private static bool calamityStealthValueProbed;
+        /// <summary>CalamityPlayer.rogueStealth 的字段句柄</summary>
+        private static FieldInfo calamityStealthValueField;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
+        private static MethodInfo calamityGetModPlayerForStealthValue;
+        /// <summary>是否已探测过经典版 CalamityPlayerPreTrailer.rogueStealth（无论成败只探测一次）</summary>
+        private static bool classicStealthValueProbed;
+        /// <summary>CalamityPlayerPreTrailer.rogueStealth 的字段句柄</summary>
+        private static FieldInfo classicStealthValueField;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayerPreTrailer&gt;() 的方法句柄</summary>
+        private static MethodInfo classicGetModPlayerForStealthValue;
+
+        /// <summary>
+        /// 给玩家的**当前潜行值**（不是上限）加一笔，用于镜子闪避的"回潜行"
+        /// （源写法：<c>rogueStealth += 0.5f</c>，内部 1f = 显示 100 点）。
+        /// <para>
+        /// 灾厄的 Mod.Call 只提供读取（<c>GetStealth</c> / <c>GetCurrentStealth</c>），**没有写入项**，
+        /// 所以两版都走反射：现代版写 <c>CalamityPlayer.rogueStealth</c>，经典版写
+        /// <c>CalamityPlayerPreTrailer.rogueStealth</c>（两版同名字段，都已实测存在）。
+        /// 与 <see cref="GrantRogueStealth"/> 一样，两边在位就两边都加（工程既有的双版本惯例）。
+        /// </para>
+        /// </summary>
+        public static void AddRogueStealthValue(Player player, float add)
+        {
+            if (!calamityStealthValueProbed)
+            {
+                calamityStealthValueProbed = true;
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                {
+                    Type calamityPlayerType = calamity.Code.GetTypes()
+                        .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
+                    FieldInfo stealthField = calamityPlayerType?.GetField("rogueStealth",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo getter = calamityPlayerType == null
+                        ? null
+                        : typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(calamityPlayerType);
+                    if (stealthField != null && getter != null)
+                    {
+                        calamityStealthValueField = stealthField;
+                        calamityGetModPlayerForStealthValue = getter;
+                    }
+                }
+            }
+            if (calamityStealthValueField != null && calamityGetModPlayerForStealthValue != null
+                && calamityGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer calamityPlayer)
+            {
+                float current = calamityStealthValueField.GetValue(calamityPlayer) is float c ? c + add : add;
+                calamityStealthValueField.SetValue(calamityPlayer, current);
+            }
+
+            if (!classicStealthValueProbed)
+            {
+                classicStealthValueProbed = true;
+                if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
+                {
+                    Type classicPlayerType = classic.Code.GetTypes()
+                        .FirstOrDefault(t => t.Name == "CalamityPlayerPreTrailer" && t.IsSubclassOf(typeof(ModPlayer)));
+                    FieldInfo stealthField = classicPlayerType?.GetField("rogueStealth",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo getter = classicPlayerType == null
+                        ? null
+                        : typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(classicPlayerType);
+                    if (stealthField != null && getter != null)
+                    {
+                        classicStealthValueField = stealthField;
+                        classicGetModPlayerForStealthValue = getter;
+                    }
+                }
+            }
+            if (classicStealthValueField != null && classicGetModPlayerForStealthValue != null
+                && classicGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer classicPlayer)
+            {
+                float current = classicStealthValueField.GetValue(classicPlayer) is float c ? c + add : add;
+                classicStealthValueField.SetValue(classicPlayer, current);
+            }
+        }
     }
 }

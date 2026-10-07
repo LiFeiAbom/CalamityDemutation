@@ -7,6 +7,7 @@ using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Content.Projectiles.Ranged;
+using CalamityDemutation.Content.Projectiles.Rogue;
 using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Content.Projectiles.Typeless;
 using CalamityDemutation.Content.Tiles;
@@ -157,6 +158,20 @@ namespace CalamityDemutation.Players
         /// 阿巴顿暴击爆炸的冷却（帧）：触发一次置 15，每帧递减（跨帧计时器，只在 UpdateDead 复位）
         /// </summary>
         public int abaddonCritCooldown = 0;
+        /// <summary>
+        /// 已装备深渊魔镜（Abyssal Mirror）：站定潜行恢复 +30%、移动 +20%、仇恨 −450，
+        /// 并给一次闪避（闪避后回 0.5 潜行、释放 10 枚流明流体，见 FreeDodge）。
+        /// 每帧由饰品置位、ResetEffects/UpdateDead 清零；潜行恢复在 PostUpdateEquips 结算。
+        /// </summary>
+        public bool abyssalMirror = false;
+        /// <summary>
+        /// 镜子系（深渊 / 日蚀）共享的闪避冷却（帧）：照灾厄 2.0 的 <c>MirrorDodgeCooldown = 5400</c>（90 秒）——
+        /// 源里两面镜子共用同一个 <c>GlobalDodge</c> 冷却，本工程自管一个字段等价实现。
+        /// 跨帧计时器，只在 UpdateDead 复位。
+        /// </summary>
+        public int mirrorDodgeCooldown = 0;
+        /// <summary>镜子闪避的固定冷却长度：5400 帧 = 90 秒（照灾厄 2.0 的 BalancingConstants.MirrorDodgeCooldown）</summary>
+        private const int MirrorDodgeCooldownFrames = 5400;
         /// <summary>
         /// 已装备风之石：+10% 移速、+2 跳跃力、+3% 通用增伤，青色照明
         /// </summary>
@@ -849,6 +864,7 @@ namespace CalamityDemutation.Players
         {
             aAmpoule = false;
             abaddon = false;
+            abyssalMirror = false;
             aeroStone = false;
             afflicted = false;
             affliction = false;
@@ -1016,6 +1032,7 @@ namespace CalamityDemutation.Players
             aAmpoule = false;
             abaddon = false;
             abaddonCritCooldown = 0;
+            abyssalMirror = false;
             aeroStone = false;
             afflicted = false;
             affliction = false;
@@ -1124,6 +1141,7 @@ namespace CalamityDemutation.Players
             manaJelly = false;
             manaOverloader = false;
             mirageMirror = false;
+            mirrorDodgeCooldown = 0;
             nanotech = false;
             nebulousCore = false;
             nebulousCoreVisible = false;
@@ -1513,6 +1531,9 @@ namespace CalamityDemutation.Players
                 Player.GetCritChance(rogue) += 2;
                 Player.aggro -= 200;
             }
+            // 深渊魔镜（Abyssal Mirror）：仇恨 −450（潜行恢复在 PostUpdateEquips，闪避在 FreeDodge）
+            if (abyssalMirror)
+                Player.aggro -= 450;
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
             {
@@ -3018,6 +3039,9 @@ namespace CalamityDemutation.Players
                 godSlayerShrapnelCooldown--;
             if (abaddonCritCooldown > 0)
                 abaddonCritCooldown--;
+            // 镜子系（深渊 / 日蚀）共享闪避冷却：与 abaddonCritCooldown 同为跨帧计时器，只在死亡时复位
+            if (mirrorDodgeCooldown > 0)
+                mirrorDodgeCooldown--;
             if (frostBarrier)
             {
                 Player.buffImmune[46] = true;
@@ -3506,6 +3530,11 @@ namespace CalamityDemutation.Players
                 // 用户口径是 +15%，不是平铺 +15 点；上限为 100 时两者恰好都是 +15。
                 CDUtil.GrantRogueStealthRatio(Player, 0.15f);
             }
+            // 深渊魔镜（Abyssal Mirror）：站定潜行恢复 +30%、移动 +20%（2.0 口径）。
+            // 与幻影魔镜同一处、同一原因（灾厄 ResetEffects 复位、PostUpdateMiscEffects 之后才读取）；
+            // 本件**没有**潜行上限加成，它的看点在那次闪避（见 FreeDodge 的 abyssalMirror 分支）。
+            if (abyssalMirror)
+                CDUtil.AddStealthGen(Player, 0.30f, 0.20f);
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)
@@ -4411,6 +4440,40 @@ namespace CalamityDemutation.Players
             {
                 Player.immune = true;
                 Player.immuneTime = 15;
+                return true;
+            }
+            // 深渊魔镜（Abyssal Mirror）的闪避 —— 照灾厄 2.0 的 AbyssMirrorEvade()：
+            // 任何命中都触发（**没有** 2.0.4 才加的"低于最大生命 5% 不触发"门槛）、固定 90 秒冷却、
+            // 无敌帧 60（吃十字项链 longInvince 时 100）、回 0.5 潜行（内部 1f = 显示 100 点）、
+            // 在脚下释放 10 枚流明流体（12×14、伤害 = 盗贼伤害套用 55 基础值、随机初速/朝向）。
+            // 与源的两点差异：① 源用灾厄自己的 GiveIFrames/GlobalDodge 冷却，本工程软依赖调不到，
+            // 改为直接写 Player.immune/immuneTime + 自管 mirrorDodgeCooldown（与日蚀魔镜共用一个字段，
+            // 对应源里"两面镜子共用同一个 GlobalDodge 冷却"）；② 源还会补发一次原版 Dodge 包
+            //（它自己的 TODO 都注明这会产生多余的忍者尘），这里不发。
+            if (abyssalMirror && mirrorDodgeCooldown <= 0)
+            {
+                mirrorDodgeCooldown = MirrorDodgeCooldownFrames;
+                Player.noKnockback = true;
+                Player.immune = true;
+                Player.immuneTime = Player.longInvince ? 100 : 60;
+                CDUtil.AddRogueStealthValue(Player, 0.5f);
+                SoundEngine.PlaySound(CalamityDemutationSounds.SilvaActivation, Player.Center);
+                // 弹幕只在主人端生成（源同样把生成段裹在 Player.whoAmI == Main.myPlayer 里）
+                if (Player.whoAmI == Main.myPlayer)
+                {
+                    int damage = (int)Player.GetTotalDamage(CDUtil.GetRogueDamageClass()).ApplyTo(55);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        int lumenyl = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center,
+                            new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f)),
+                            ModContent.ProjectileType<AbyssalMirrorProjectile>(),
+                            damage, 0f, Player.whoAmI);
+                        // 朝向与起始帧随机（源写法）；帧数取 3（源写的是 Next(0, 4)，会摸到第 4 帧，
+                        // 而贴图只有 3 帧，这里按实际帧数收口）
+                        Main.projectile[lumenyl].rotation = Main.rand.NextFloat(0f, 360f);
+                        Main.projectile[lumenyl].frame = Main.rand.Next(3);
+                    }
+                }
                 return true;
             }
             return false;

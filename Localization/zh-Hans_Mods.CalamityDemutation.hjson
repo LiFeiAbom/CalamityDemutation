@@ -267,6 +267,19 @@ Items: {
 			'''
 	}
 
+	AbyssalMirror: {
+		DisplayName: 深渊魔镜
+		Tooltip:
+			'''
+			大幅降低敌人仇恨，深渊之内同样有效
+			站定时潜行恢复速度提高 30%，移动时提高 20%
+			获得闪避攻击的能力，闪避时释放一团流明流体，伤害附近敌人
+			闪避攻击会回复大量潜行值，但有 90 秒冷却
+			该冷却与其它闪避、反射共享
+			'光无法抵达海洋深处'
+			'''
+	}
+
 	AeroStone: {
 		Tooltip:
 			'''
@@ -2437,6 +2450,7 @@ Projectiles: {
 	AbaddonCrit.DisplayName: 硫磺爆裂
 	AbominateHookScythe.DisplayName: 惊惧巨镰
 	AbominateSpirit.DisplayName: 惊惧之灵
+	AbyssalMirrorProjectile.DisplayName: 流明流体
 	AnarchyBeam.DisplayName: 硫磺光束
 	AtaraxiaBoom.DisplayName: 禅心爆发
 	AtaraxiaMain.DisplayName: 禅心主弹

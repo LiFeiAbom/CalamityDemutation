@@ -275,6 +275,30 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
+- 最近一批工作（2026-10-07）：**移植深渊魔镜（Abyssal Mirror）—— 潜行链第二件，沿用"老规矩"取 2.0 口径。**
+  口径：站定潜行恢复 **+30%**、移动 **+20%**、仇恨 **−450**、闪避**固定 90 秒冷却且无伤害门槛**
+  （2.0.4 才改成按伤害 15–90 秒并加"低于最大生命 5% 不触发"）；**允许与本体同名件同时佩戴**；
+  中文名**深渊魔镜**。尺寸 30×38、青柠档（7）、48 金。
+  **闪避（本件核心）**：源是 `CalamityPlayer.AbyssMirrorEvade()`——无敌帧 60（吃十字项链 100）、
+  `rogueStealth += 0.5f`、Silva 激活音、脚下炸 10 枚流明流体（伤害 = 盗贼伤害套用 55 基础值、
+  随机初速与朝向、`forceClassless`）。本工程落在 `CalamityDemutationPlayer.FreeDodge` 的 abyssalMirror 分支：
+  直接写 `Player.immune` / `immuneTime`，配**自管 `mirrorDodgeCooldown`（5400 帧，与日蚀魔镜将来**共用同一个
+  字段**——源里两面镜子共用灾厄的 `GlobalDodge` 冷却）**；**不发**原版 Dodge 包（源自己的 TODO 都嫌它会产生
+  多余的忍者尘）。
+  **两个软依赖坑（下件同理）**：① 灾厄的 `GiveIFrames` / `ComputeDodgeIFrames` / `GiveUniversalIFrames`
+  是它自己的扩展方法，本工程调不到 → 用原版 `Player.immune/immuneTime` 复刻；
+  ② 闪避"回潜行"在灾厄 Mod.Call 里**只有读没有写** → 新增反射桥
+  **`CDUtil.AddRogueStealthValue`**（现代写 `CalamityPlayer.rogueStealth`、经典写
+  `CalamityPlayerPreTrailer.rogueStealth`，两版同名字段）。
+  弹幕 `AbyssalMirrorProjectile`（流明流体，12×14、贴图 10×42 三帧、50 帧寿命、末 25 帧淡出）命中挂
+  `Eutrophication`（**只有现代版有**）+ 经典版用 `CrushDepth` 近似替代（两条都发，与 omega 蓝胸甲同款惯例）；
+  伤害类型设 Generic（源用 `forceClassless`，避免二次吃职业加成）。
+  音效从实装灾厄 .tmod 里抽出 `Sounds/Custom/AbilitySounds/SilvaActivation.ogg`，登记为
+  `CalamityDemutationSounds.SilvaActivation`（工程"借用音放 Sounds/Custom"的既定口径）。
+  **配方**照 2.0：幻影魔镜 + 墨炸弹 + 幽灵锭×8 + 海棱镜×10 + 深层细胞×5 + 流明素×5 @ 秘银砧；
+  两处按版本调整——吃**本工程自写**的幻影魔镜（链条自家闭环）；**经典分支去掉墨炸弹**（经典版没有 InkBomb）、
+  流明素换经典版的 `Lumenite`（同源改名）。若日后想补齐经典配方，可把墨炸弹也移植进来。
+  验证：编译 0 警告 0 错误；资源自检 150 条全命中（比上批多 1 条 = 新增音效）。
 - 最近一批工作（2026-10-07）：**移植幻影魔镜（Mirage Mirror）—— 盗贼潜行链的第一件，数值取 2.0 旧口径。**
   链条：**幻影（MirageMirror）→ 深渊（AbyssalMirror）→ 日蚀（EclipseMirror）**，本件是最下端的前期件
   （工匠作坊档）。用户拍板：**走 2.0 版**（站定潜行恢复 **+30%**、移动 **+20%**、仇恨 **−200**；

@@ -40,5 +40,8 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle ELRFire = new("CalamityDemutation/Sounds/Item/ELRFire");
         /// <summary>掷出咒刃（灾厄原名 CursedDaggerThrow）：禅心剑真近战命中时播放，每次挥砍只响一次（灾厄原为 Ataraxia 的 hitsound 分支）</summary>
         public static readonly SoundStyle CursedDaggerThrow = new("CalamityDemutation/Sounds/Item/CursedDaggerThrow") { Volume = 0.5f, Pitch = 0.9f, PitchVariance = 0.2f, MaxInstances = -1 };
+        /// <summary>女巫套激活音（灾厄原名 SilvaActivation，取自实装灾厄 Sounds/Custom/AbilitySounds/）：
+        /// 深渊魔镜的闪避触发时播放（源里借的是灾厄 SilvaHeadSummon.ActivationSound）</summary>
+        public static readonly SoundStyle SilvaActivation = new("CalamityDemutation/Sounds/Custom/SilvaActivation");
     }
 }
