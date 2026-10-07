@@ -153,6 +153,12 @@
   提交信息风格：`类型: 描述`（移植 / 适配 / 修正 / 平衡 / 删除 / 清理 / 回退），可带要点正文。
 - 推送：`git push origin master`（网络偶发 `Connection was reset`，重试即可）；若报
   `Failed to connect to github.com port 443`，改用 `git -c http.proxy=http://127.0.0.1:7897 push origin master`。
+  **另一种瞬时故障**（2026-10-08 实测）：GitHub 推送端点返回 `remote: Internal Server Error` +
+  `! [remote rejected] master -> master (Internal Server Error)`，**6 分钟内连遇 5 次**（每次约 7 秒失败），
+  按 40 秒间隔重试，第 6 次成功——纯 GitHub 侧问题，本地什么都不用改。
+  这一故障只影响 `push` 的对象传输阶段——同期 `ls-remote` 与 `push --dry-run` 都**正常返回**
+  （dry-run 会照常打印 `4f683e9..35b1756 master -> master`），所以 **dry-run 通过 ≠ push 会成功**，
+  别据此判断"推送没问题"，照重试即可。
 - **本机 `rg` 必须显式带路径**：`rg -n '关键字' .`（结尾那个 `.` 不能省）。不带路径时它在本机会**静默**
   搜不到任何东西、直接返回空，看起来像"全工程 0 命中"——曾因此误判过好几轮。同理，读无 BOM 的
   UTF-8 源文件要用 `Get-Content -Encoding UTF8`，否则中文注释会花屏。
