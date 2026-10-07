@@ -386,6 +386,15 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool drewsSandyWaifu = false;
         /// <summary>
+        /// 已装备蚀日魔镜（EclipseMirror，潜行链条的最后一环）：盗贼 **+11% 伤害 / +11 暴击**（用户点名，
+        /// 源为 +6%/+6）、最大潜行值 **+25 点**（源为 +20）、仇恨 **−700**、站定潜行恢复 **+20%**、
+        /// 移动潜行**指数加速**（`eclipseMirror` 旗标）、潜行打击**半价**、**盗贼潜行打击必定暴击**，
+        /// 并给一次**闪避**（回满潜行 + 固定 90 秒冷却，与深渊魔镜共用 <see cref="mirrorDodgeCooldown"/>，见 FreeDodge）。
+        /// 潜行四项写在 PostUpdateEquips（灾厄 ResetEffects 每帧复位、之后才读取）；
+        /// 盗贼伤害/暴击/仇恨写 PostUpdateMiscEffects；"必定暴击"在 ModifyHitNPCWithProj 里用 HitModifiers.SetCrit()。
+        /// </summary>
+        public bool eclipseMirror = false;
+        /// <summary>
         /// 元素手套已装备（近战攻速/伤害/暴击加成，附带自动挥舞、烈火手套等效果）
         /// </summary>
         public bool elementalGauntlet = false;
@@ -951,6 +960,7 @@ namespace CalamityDemutation.Players
             demonshadeRogue = false;
             draconicSurge = false;
             drewsSandyWaifu = false;
+            eclipseMirror = false;
             elementalGauntlet = false;
             elementalQuiver = false;
             elysianAegis = false;
@@ -1132,6 +1142,7 @@ namespace CalamityDemutation.Players
             draconicSurge = false;
             draconicSurgeCooldown = 0;
             drewsSandyWaifu = false;
+            eclipseMirror = false;
             elementalGauntlet = false;
             elementalQuiver = false;
             elysianAegis = false;
@@ -1615,6 +1626,16 @@ namespace CalamityDemutation.Players
                 Player.GetDamage(rogue) += 0.06f;
                 Player.GetCritChance(rogue) += 6;
                 CDUtil.AddClassicThrowingStats(Player, 0.06f, 6);
+            }
+            // 蚀日魔镜（EclipseMirror）：盗贼 +11% 伤害 / +11 暴击、仇恨 −700
+            //（用户点名把源 +6%/+6 提到 11；潜行四项与闪避在别处）；经典版走 CDUtil 反射写它自己的投掷字段
+            if (eclipseMirror)
+            {
+                DamageClass rogue = CDUtil.GetRogueDamageClass();
+                Player.GetDamage(rogue) += 0.11f;
+                Player.GetCritChance(rogue) += 11;
+                CDUtil.AddClassicThrowingStats(Player, 0.11f, 11);
+                Player.aggro -= 700;
             }
             // 暗日之戒：召唤栏/通用增伤/近战攻速/暴击/挖速；白昼回血、夜晚加防
             if (darkSunRing)
@@ -3649,6 +3670,16 @@ namespace CalamityDemutation.Players
                 CDUtil.SetStealthStrikeCost(Player, 0.5f);
                 CDUtil.SetDarkGodSheath(Player);
             }
+            // 蚀日魔镜（EclipseMirror）：站定潜行恢复 +20%、最大潜行值 +25 点、潜行打击半价、
+            // 移动潜行**指数加速**旗标 eclipseMirror（灾厄 CalamityPlayer 字段，走 CDUtil 反射；经典版没有则短路）。
+            // 与上面几件同一处、同一原因（灾厄 ResetEffects 每帧复位这些字段、之后才读取）。
+            if (eclipseMirror)
+            {
+                CDUtil.AddStealthGen(Player, 0.20f, 0f);
+                CDUtil.GrantRogueStealth(Player, 0.25f);
+                CDUtil.SetStealthStrikeCost(Player, 0.5f);
+                CDUtil.SetEclipseMirror(Player);
+            }
             if (silvaCountdown > 0 && hasSilvaEffect && silvaSet)
             {
                 if (Player.lifeRegen < 0)
@@ -4556,6 +4587,30 @@ namespace CalamityDemutation.Players
                 Player.immuneTime = 15;
                 return true;
             }
+            // 蚀日魔镜（EclipseMirror）的闪避 —— 照灾厄 2.0 的 EclipseMirrorEvade()：
+            // 任何命中都触发（**没有** 2.0.4 才加的"低于最大生命 5% 不触发"门槛）、固定 90 秒冷却
+            //（与深渊魔镜共用同一个 mirrorDodgeCooldown，对应源里两面镜子共用 GlobalDodge）、
+            // 无敌帧 60（吃十字项链 longInvince 时 100）、**回满潜行**、
+            // 在脚下炸开一圈暗日强光（EclipseMirrorBurst，伤害 = 盗贼伤害套用 2750 基础值）。
+            // 优先级照源：两面镜子都在时蚀日魔镜先判（2.0 的 HandleDodges 里 eclipseMirror 分支在前）。
+            if (eclipseMirror && mirrorDodgeCooldown <= 0)
+            {
+                mirrorDodgeCooldown = MirrorDodgeCooldownFrames;
+                Player.noKnockback = true;
+                Player.immune = true;
+                Player.immuneTime = Player.longInvince ? 100 : 60;
+                CDUtil.SetRogueStealthToMax(Player);
+                SoundEngine.PlaySound(SoundID.Item68, Player.Center);
+                // 弹幕只在主人端生成（源同样把生成段裹在 Player.whoAmI == Main.myPlayer 里）
+                if (Player.whoAmI == Main.myPlayer)
+                {
+                    int damage = (int)Player.GetTotalDamage(CDUtil.GetRogueDamageClass()).ApplyTo(2750);
+                    int eclipse = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero,
+                        ModContent.ProjectileType<EclipseMirrorBurst>(), damage, 0f, Player.whoAmI);
+                    Main.projectile[eclipse].DamageType = DamageClass.Generic;
+                }
+                return true;
+            }
             // 深渊魔镜（Abyssal Mirror）的闪避 —— 照灾厄 2.0 的 AbyssMirrorEvade()：
             // 任何命中都触发（**没有** 2.0.4 才加的"低于最大生命 5% 不触发"门槛）、固定 90 秒冷却、
             // 无敌帧 60（吃十字项链 longInvince 时 100）、回 0.5 潜行（内部 1f = 显示 100 点）、
@@ -4840,12 +4895,12 @@ namespace CalamityDemutation.Players
                 if (againCrit)
                     modifiers.CritDamage *= 2f;
             }
-            // 暗物质剑鞘（DarkMatterSheath）：盗贼潜行打击 **必定暴击**（2.0 口径）。
+            // 暗物质剑鞘（DarkMatterSheath）/ 蚀日魔镜（EclipseMirror）：盗贼潜行打击 **必定暴击**（2.0 口径）。
             // 2.0 是在灾厄 CalamityGlobalProjectile.ModifyHitNPC 里把 ref bool crit 置真
             //（判据：非 npcProj/陷阱、属盗贼职业、且这枚弹幕是潜行打击）；
             // 1.4.4 的 tML 没有 ref bool crit，改用 HitModifiers.SetCrit()（内部把暴击"覆盖"为真，等价于必暴）。
             // 潜行打击判定走 CDUtil.IsStealthStrike（经典版没有潜行打击这套机制，恒为 false）。
-            if (darkMatterSheath && !proj.npcProj && !proj.trap
+            if ((darkMatterSheath || eclipseMirror) && !proj.npcProj && !proj.trap
                 && CDUtil.IsRogueProjectile(proj) && CDUtil.IsStealthStrike(proj, out _))
             {
                 modifiers.SetCrit();

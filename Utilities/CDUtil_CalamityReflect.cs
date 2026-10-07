@@ -520,51 +520,70 @@ namespace CalamityDemutation.Utilities
             calamityGetModPlayerForStealthCost = getter;
         }
 
-        // ── 潜行加速旗标桥（暗物质剑鞘用）──
+        // ── 潜行加速旗标桥（暗物质剑鞘 / 蚀日魔镜用）──
 
-        /// <summary>是否已探测过现代版 CalamityPlayer.darkGodSheath（无论成败只探测一次）</summary>
-        private static bool calamityDarkGodSheathProbed;
-        /// <summary>CalamityPlayer.darkGodSheath 的字段句柄</summary>
+        /// <summary>是否已探测过现代版 CalamityPlayer 的两个潜行加速旗标（无论成败只探测一次）</summary>
+        private static bool calamityStealthFlagProbed;
+        /// <summary>CalamityPlayer.darkGodSheath 的字段句柄（暗物质剑鞘的移动加速）</summary>
         private static FieldInfo calamityDarkGodSheathField;
+        /// <summary>CalamityPlayer.eclipseMirror 的字段句柄（蚀日魔镜的移动加速 + 深渊仇恨压制）</summary>
+        private static FieldInfo calamityEclipseMirrorField;
         /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
-        private static MethodInfo calamityGetModPlayerForDarkGodSheath;
+        private static MethodInfo calamityGetModPlayerForStealthFlag;
 
         /// <summary>
         /// 置位灾厄 <c>CalamityPlayer.darkGodSheath</c>：让盗贼在**移动时**的潜行恢复来一点加速
-        ///（灾厄 <c>UpdateStealthGenStats</c> 里的 <c>else if (darkGodSheath) stealthAcceleration += 0.01f</c>）。
+        ///（灾厄 <c>UpdateStealthGenStats</c> 里的 <c>darkGodSheath → stealthAcceleration += 0.01f</c>）。
         /// 与其它潜行字段同理：灾厄在 ResetEffects 里每帧复位、之后才读取，故必须每帧调用且挂在 PostUpdateEquips。
         /// 经典版灾厄没有这套字段，会直接短路（暗物质剑鞘的"移动加速"是现代独占）。
         /// </summary>
-        public static void SetDarkGodSheath(Player player)
+        public static void SetDarkGodSheath(Player player) => SetCalamityStealthFlag(player, isEclipseMirror: false);
+
+        /// <summary>
+        /// 置位灾厄 <c>CalamityPlayer.eclipseMirror</c>：蚀日魔镜的移动潜行**指数加速**
+        ///（<c>stealthAcceleration += 0.01f; *= 1.0084f</c>，与 darkGodSheath 同时挂时更猛）与
+        /// 「深渊里也压制仇恨」（<c>range *= 0.3f</c>）。同样每帧、PostUpdateEquips。
+        /// <para>
+        /// 注意：1.4.4 世系里这个字段**只**管上面两条——闪避是由物品自己在
+        /// <c>DodgeEffects</c> 里注册的，所以置位它**不会**让灾厄自己去闪避，不会与本工程自写的闪避打架
+        ///（已按 1.4.4-release 源码逐处核对：eclipseMirror 的引用只有潜行加速 / 深渊压制 / 墨炸弹联动三处）。
+        /// </para>
+        /// </summary>
+        public static void SetEclipseMirror(Player player) => SetCalamityStealthFlag(player, isEclipseMirror: true);
+
+        /// <summary>置位两个潜行加速旗标中的一个（共用同一套探测与取 ModPlayer 句柄）。</summary>
+        private static void SetCalamityStealthFlag(Player player, bool isEclipseMirror)
         {
-            ProbeCalamityDarkGodSheathBridge();
-            if (calamityGetModPlayerForDarkGodSheath == null || calamityDarkGodSheathField == null)
+            ProbeCalamityStealthFlagBridge();
+            FieldInfo target = isEclipseMirror ? calamityEclipseMirrorField : calamityDarkGodSheathField;
+            if (target == null || calamityGetModPlayerForStealthFlag == null)
                 return;
-            if (calamityGetModPlayerForDarkGodSheath.Invoke(player, null) is ModPlayer calamityPlayer)
-                calamityDarkGodSheathField.SetValue(calamityPlayer, true);
+            if (calamityGetModPlayerForStealthFlag.Invoke(player, null) is ModPlayer calamityPlayer)
+                target.SetValue(calamityPlayer, true);
         }
 
         /// <summary>
-        /// 一次性探测现代版 <c>CalamityPlayer.darkGodSheath</c> 与取 ModPlayer 的方法并缓存。
+        /// 一次性探测现代版 <c>CalamityPlayer</c> 的 <c>darkGodSheath</c> / <c>eclipseMirror</c> 两个字段
+        /// 与取 ModPlayer 的方法并缓存（任一字段缺失只让对应那条短路，不影响另一条）。
         /// </summary>
-        private static void ProbeCalamityDarkGodSheathBridge()
+        private static void ProbeCalamityStealthFlagBridge()
         {
-            if (calamityDarkGodSheathProbed)
+            if (calamityStealthFlagProbed)
                 return;
-            calamityDarkGodSheathProbed = true;
+            calamityStealthFlagProbed = true;
             if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
                 return;
             Type calamityPlayerType = calamity.Code.GetTypes()
                 .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
             if (calamityPlayerType == null)
                 return;   // 灾厄改了类名：放弃
-            FieldInfo sheathField = calamityPlayerType.GetField("darkGodSheath",
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             MethodInfo getter = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(calamityPlayerType);
-            if (sheathField == null || getter == null)
-                return;   // 该版本没有这个字段：放弃
-            calamityDarkGodSheathField = sheathField;
-            calamityGetModPlayerForDarkGodSheath = getter;
+            if (getter == null)
+                return;
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            calamityDarkGodSheathField = calamityPlayerType.GetField("darkGodSheath", flags);
+            calamityEclipseMirrorField = calamityPlayerType.GetField("eclipseMirror", flags);
+            calamityGetModPlayerForStealthFlag = getter;
         }
 
         // ── 潜行恢复速度桥（幻影魔镜用）──
@@ -665,6 +684,50 @@ namespace CalamityDemutation.Utilities
         /// </summary>
         public static void AddRogueStealthValue(Player player, float add)
         {
+            ProbeStealthValueBridge();
+            if (calamityStealthValueField != null && calamityGetModPlayerForStealthValue != null
+                && calamityGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer calamityPlayer)
+            {
+                float current = calamityStealthValueField.GetValue(calamityPlayer) is float c ? c + add : add;
+                calamityStealthValueField.SetValue(calamityPlayer, current);
+            }
+            if (classicStealthValueField != null && classicGetModPlayerForStealthValue != null
+                && classicGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer classicPlayer)
+            {
+                float current = classicStealthValueField.GetValue(classicPlayer) is float c ? c + add : add;
+                classicStealthValueField.SetValue(classicPlayer, current);
+            }
+        }
+
+        /// <summary>
+        /// 把玩家的**当前潜行值**直接顶到上限（蚀日魔镜闪避的"回满潜行"用；源写法
+        /// <c>rogueStealth = rogueStealthMax</c>）。上限走 <see cref="GetRogueStealthMax"/>
+        /// （现代版 Mod.Call / 经典版反射），写入复用与 <see cref="AddRogueStealthValue"/> 相同的字段句柄。
+        /// </summary>
+        public static void SetRogueStealthToMax(Player player)
+        {
+            ProbeStealthValueBridge();
+            float max = GetRogueStealthMax(player);
+            if (max <= 0f)
+                return;
+            if (calamityStealthValueField != null && calamityGetModPlayerForStealthValue != null
+                && calamityGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer calamityPlayer)
+            {
+                calamityStealthValueField.SetValue(calamityPlayer, max);
+            }
+            if (classicStealthValueField != null && classicGetModPlayerForStealthValue != null
+                && classicGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer classicPlayer)
+            {
+                classicStealthValueField.SetValue(classicPlayer, max);
+            }
+        }
+
+        /// <summary>
+        /// 一次性探测两版 CalamityPlayer 的 <c>rogueStealth</c> 字段与取 ModPlayer 的方法并缓存
+        /// （现代版 <c>CalamityPlayer</c> / 经典版 <c>CalamityPlayerPreTrailer</c>，两版同名字段，都已实测存在）。
+        /// </summary>
+        private static void ProbeStealthValueBridge()
+        {
             if (!calamityStealthValueProbed)
             {
                 calamityStealthValueProbed = true;
@@ -684,13 +747,6 @@ namespace CalamityDemutation.Utilities
                     }
                 }
             }
-            if (calamityStealthValueField != null && calamityGetModPlayerForStealthValue != null
-                && calamityGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer calamityPlayer)
-            {
-                float current = calamityStealthValueField.GetValue(calamityPlayer) is float c ? c + add : add;
-                calamityStealthValueField.SetValue(calamityPlayer, current);
-            }
-
             if (!classicStealthValueProbed)
             {
                 classicStealthValueProbed = true;
@@ -709,12 +765,6 @@ namespace CalamityDemutation.Utilities
                         classicGetModPlayerForStealthValue = getter;
                     }
                 }
-            }
-            if (classicStealthValueField != null && classicGetModPlayerForStealthValue != null
-                && classicGetModPlayerForStealthValue.Invoke(player, null) is ModPlayer classicPlayer)
-            {
-                float current = classicStealthValueField.GetValue(classicPlayer) is float c ? c + add : add;
-                classicStealthValueField.SetValue(classicPlayer, current);
             }
         }
     }

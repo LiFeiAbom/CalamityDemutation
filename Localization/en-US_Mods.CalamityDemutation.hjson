@@ -1109,6 +1109,24 @@ Items: {
 			'''
 	}
 
+	EclipseMirror: {
+		DisplayName: Eclipse Mirror
+		Tooltip:
+			'''
+			Its reflection shows naught but darkness
+			+25 maximum stealth
+			11% increased rogue damage, and 11% increased rogue crit chance
+			Vastly reduces enemy aggression, even in the abyss
+			Stealth generates 20% faster when standing still
+			Mobile stealth generation exponentially accelerates while not attacking
+			Stealth strikes have a 100% critical hit chance
+			Stealth strikes only expend 50% of your max stealth
+			Grants the ability to evade attacks in a blast of darksun light, which inflicts extreme damage in a wide area
+			Evading an attack grants full stealth but has a 90 second cooldown
+			This cooldown is shared with all other dodges and reflects
+			'''
+	}
+
 	ElementalExcalibur: {
 		DisplayName: Elemental Excalibur
 		Tooltip:
@@ -2528,6 +2546,7 @@ Projectiles: {
 	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
+	EclipseMirrorBurst.DisplayName: Eclipse Mirror Flash
 	ElementBall.DisplayName: Ball
 	EntropicClaymoreHeld.DisplayName: Entropic Claymore Held
 	EntropicClaymoreProj.DisplayName: Entropic Flechette

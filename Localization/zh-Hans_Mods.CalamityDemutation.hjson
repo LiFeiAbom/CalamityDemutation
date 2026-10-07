@@ -1109,6 +1109,24 @@ Items: {
 			'''
 	}
 
+	EclipseMirror: {
+		DisplayName: 蚀日魔镜
+		Tooltip:
+			'''
+			镜中映出的唯有黑暗
+			最大潜行值提高 25
+			盗贼伤害与暴击率提高 11%
+			大幅降低敌人仇恨，深渊之内同样有效
+			站定不动时，潜行恢复速度提高 20%
+			未攻击时，移动中的潜行恢复呈指数级加速
+			潜行打击有 100% 概率暴击
+			潜行打击只消耗潜行上限的 50%
+			获得闪避攻击的能力，闪避时炸出一圈暗日强光，对大范围造成极高伤害
+			成功闪避后回满潜行，但有 90 秒冷却
+			该冷却与其它闪避、反射共享
+			'''
+	}
+
 	ElementalExcalibur: {
 		DisplayName: 元素圣剑
 		Tooltip:
@@ -2527,6 +2545,7 @@ Projectiles: {
 	DragonRageFireOrb.DisplayName: 巨龙之怒火球
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
+	EclipseMirrorBurst.DisplayName: 蚀日魔镜闪光
 	ElementBall.DisplayName: 元素球
 	EntropicClaymoreHeld.DisplayName: 熵之舞（手持）
 	EntropicClaymoreProj.DisplayName: 熵之飞刃

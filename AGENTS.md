@@ -291,17 +291,32 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-08】当前批次：「暗物质剑鞘」链（用户指定优先做），进度 4/4 + 链下位材料 1 件（链条已全部落地）。**
-  链条顺序 = **静默剑鞘 ✅（`99dadc0`）→ 欺诈硬币 ✅ → 毁灭徽章 ✅ → 暗物质剑鞘 ✅（本次）
-  → 日蚀魔镜（下一件，口径已拍板见下方"日蚀魔镜已定口径"条，尚未落地）**。
-  **下一件：日蚀魔镜（EclipseMirror）**——拍板里那条"2.0 独有：潜行打击必暴击要本工程自己实现"
-  **本次已在暗物质剑鞘上做出来、可复用**：判定走 `CDUtil.IsStealthStrike` + `CDUtil.IsRogueProjectile`，
-  在 `CalamityDemutationPlayer.ModifyHitNPCWithProj` 里调 `modifiers.SetCrit()`（2.0 是灾厄
-  `CalamityGlobalProjectile.ModifyHitNPC` 里的 `ref bool crit = true`；1.4.4 的 tML 没有 ref bool crit，改用命中修饰符）。
-  工作区当前**干净、与 `origin/master` 同步**；下次开工直接做日蚀魔镜即可。
-  （本批次已固化的工程手法：潜行相关字段必须写在 `PostUpdateEquips`；潜行上限的"百分比"走
-  `GrantRogueStealthRatio`、"点数"走 `GrantRogueStealth`；潜行打击消耗档走 `CDUtil.SetStealthStrikeCost`；
-  移动潜行加速旗标走 `CDUtil.SetDarkGodSheath`；潜行打击必暴击走 `HitModifiers.SetCrit()`。）
+- **【接续点 · 2026-10-08】「暗物质剑鞘」链（含链下位材料）已全部落地（4/4 + 1 件）——本批次收尾。**
+  链条顺序 = **静默剑鞘 ✅（`99dadc0`）→ 欺诈硬币 ✅ → 毁灭徽章 ✅ → 暗物质剑鞘 ✅ → 蚀日魔镜 ✅（本次）**。
+  **暂无下一件**；若要继续同类工作，按「批量移植」剧本重新开一批（逐版出数据 → 用户拍板 → 一件一件移植）。
+  本批次新固化的可复用桥（都在 `Utilities/CDUtil_CalamityReflect.cs`）：
+  潜行上限"点数" `GrantRogueStealth` / "百分比" `GrantRogueStealthRatio`；潜行恢复 `AddStealthGen`；
+  潜行打击消耗档 `SetStealthStrikeCost`；移动加速旗标 `SetDarkGodSheath` / `SetEclipseMirror`；
+  当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
+  工程手法（本批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
+  写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
+  工作区当前**干净、与 `origin/master` 同步**。
+- 最近一批工作（2026-10-08）：**移植蚀日魔镜（EclipseMirror）—— "暗物质剑鞘"链的最后一环。**
+  用户拍板：① 本体取 **2.0**（**38×38** 大方镜、月后稀有度 **14 蓝**、价值 **1 铂金 40 金** `Rarity14BuyPrice`）；
+  ② 基础效果按用户点名：盗贼 **+11% 伤害 / +11 暴击**（源为 +6%/+6）、**最大潜行值 +25 点**（源为 +20）；
+  其余照 2.0 全量：站定潜行恢复 **+20%**、移动潜行**指数加速**（`eclipseMirror` 旗标）、仇恨 **−700**、
+  潜行打击**半价**、**盗贼潜行打击必定暴击**；③ 闪避走 **2.0**：**回满潜行** + 固定 **90 秒**冷却 + 无伤害门槛
+  （与深渊魔镜**共用** `mirrorDodgeCooldown`；2.0.4 才改成按伤害 15–90 秒 + "低于 5% 不触发"）；
+  ④ 配方走 **1.4.4 那一侧**：**深渊魔镜（本工程）+ 暗物质剑鞘（本工程）+ 暗日碎片×20**，
+  现代版 @ 宇宙砧 `CosmicAnvil`、经典版 @ 嘉登熔炉 `DraedonsForge`（经典版没有宇宙砧，工程惯例）。
+  **落地**：`Content/Items/Accessories/JobAcc/Rogue/EclipseMirror.cs`（+ 38×38 贴图）
+  + `Content/Projectiles/Rogue/EclipseMirrorBurst.cs`（752×752×4 帧的暗日强光，伤害 = 盗贼伤害套用 **2750**，
+  自绘 2×2 网格；伤害类型设 Generic）；盗贼伤害/暴击/仇恨写 `PostUpdateMiscEffects`；潜行四项写 `PostUpdateEquips`；
+  闪避写 `FreeDodge`（照 2.0 的 `EclipseMirrorEvade`，优先级在深渊魔镜之前）；
+  必暴击并入既有的 `ModifyHitNPCWithProj` 判定（`darkMatterSheath || eclipseMirror`）。
+  **新增桥**：`CDUtil.SetEclipseMirror`（与 darkGodSheath 共用一套探测）、`CDUtil.SetRogueStealthToMax`。
+  中英 tooltip、物品名（中文名**蚀日魔镜**）与弹幕名（蚀日魔镜闪光）一并补齐。
+  验证：编译 0 警告 0 错误；资源自检 150 条全命中。
 - 最近一批工作（2026-10-08）：**移植暗物质剑鞘（DarkMatterSheath）—— "暗物质剑鞘"链第三件。**
   用户拍板取 **2.0**（该版里叫 `DarkGodsSheath`，2.0.3.9 起才改名）：48×62、**青档 80 金**（`Rarity9BuyPrice`；2.0.4/1.4.4 是红档 1 铂金）；
   效果 = 最大潜行值 **+20 点**（2.0.3.9+ 削到 +10）、潜行打击**半价**、移动潜行加速旗标 `darkGodSheath`、
