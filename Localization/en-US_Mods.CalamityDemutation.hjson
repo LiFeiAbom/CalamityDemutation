@@ -49,6 +49,11 @@ Buffs: {
 		DisplayName: Heart of the Elements
 	}
 
+	PlantationStaffBuff: {
+		DisplayName: Plantation
+		Description: The miniature Plantera will protect you
+	}
+
 	RedDevil: {
 		DisplayName: Red Devil
 		Description: The red devil will protect you
@@ -1802,6 +1807,16 @@ Items: {
 			'''
 	}
 
+	PlantationStaff: {
+		DisplayName: Plantation Staff
+		Tooltip:
+			'''
+			Summons a miniature Plantera to fight for you
+			It cycles through three attacks: thorn balls, seed bursts, and ramming
+			Ramming summons spore clouds and tentacles
+			'''
+	}
+
 	PsychoticAmulet: {
 		DisplayName: Psychotic Amulet
 		Tooltip:
@@ -2716,6 +2731,11 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PenumbraBomb.DisplayName: Penumbra Bomb
 	PenumbraSoul.DisplayName: Penumbra Soul
+	PlantationStaffSeed.DisplayName: Seed
+	PlantationStaffSporeCloud.DisplayName: Spore Cloud
+	PlantationStaffSummon.DisplayName: Plantation
+	PlantationStaffTentacle.DisplayName: Tentacle
+	PlantationStaffThornball.DisplayName: Thorn Ball
 	PoisonousSeawater.DisplayName: Poisonous Seawater
 	RedDevil.DisplayName: Red Devil
 	SandBolt.DisplayName: Bolt

@@ -49,6 +49,11 @@ Buffs: {
 		DisplayName: 元素之心
 	}
 
+	PlantationStaffBuff: {
+		DisplayName: 苍华之庭
+		Description: 小型世纪之花会保护你
+	}
+
 	RedDevil: {
 		DisplayName: 红色恶魔
 		Description: 红色恶魔会保护你
@@ -1803,6 +1808,16 @@ Items: {
 			'''
 	}
 
+	PlantationStaff: {
+		DisplayName: 苍华之庭
+		Tooltip:
+			'''
+			召唤一头小型世纪之花为你而战
+			它会循环三种攻击：荆棘球、种子连射与冲撞
+			冲撞时会喷出孢子云并挂出触手
+			'''
+	}
+
 	PsychoticAmulet: {
 		DisplayName: 疯狂护符
 		Tooltip:
@@ -2715,6 +2730,11 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PenumbraBomb.DisplayName: 半影炸弹
 	PenumbraSoul.DisplayName: 半影之魂
+	PlantationStaffSeed.DisplayName: 种子
+	PlantationStaffSporeCloud.DisplayName: 孢子云
+	PlantationStaffSummon.DisplayName: 苍华之庭
+	PlantationStaffTentacle.DisplayName: 触手
+	PlantationStaffThornball.DisplayName: 荆棘球
 	PoisonousSeawater.DisplayName: 有毒海水
 	RedDevil.DisplayName: 红色恶魔
 	SandBolt.DisplayName: 沙弹

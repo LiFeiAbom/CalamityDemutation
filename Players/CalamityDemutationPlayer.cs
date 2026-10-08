@@ -625,6 +625,11 @@ namespace CalamityDemutation.Players
         public int omegaBlueCooldown = 0;
         public bool ornateShield = false;
         public bool photosynthesis = false;
+        /// <summary>
+        /// 苍华之庭（PlantationStaffSummon）树灵在场标记：由同名召唤增益每帧置位，
+        /// 供树灵与它挂出的触手续命（对应源的 PlantationSummon）
+        /// </summary>
+        public bool plantationSummon = false;
         public bool psychoticAmulet = false;
         public bool profanedRage = false;
         /// <summary>
@@ -1031,6 +1036,7 @@ namespace CalamityDemutation.Players
             omegaBlueHentai = false;
             ornateShield = false;
             photosynthesis = false;
+            plantationSummon = false;
             psychoticAmulet = false;
             profanedRage = false;
             purity = false;
@@ -1222,6 +1228,7 @@ namespace CalamityDemutation.Players
             omegaBlueCooldown = 0;
             ornateShield = false;
             photosynthesis = false;
+            plantationSummon = false;
             psychoticAmulet = false;
             profanedRage = false;
             purity = false;

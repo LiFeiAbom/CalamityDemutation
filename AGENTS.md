@@ -353,11 +353,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：沙漠羽毛 → 太阳之灵法杖 → 太阳神杖 → **链尾 天狼星 `Sirius`**，
      四件都含配方（逐版侦察、软依赖改写与配方结论见「批次 B」）。
      **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
-  ② **唯一待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
+  ② **「归虚之灵」召唤链（进行中）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
+     （＝CI 的 `CosmicImmaterializerOld`，CI 官方中文写作「归虚之灵[Legacy]」）。
+     链（往回推）：**归虚之灵 ← 元素之斧（2.0.3.9）← 苍华之庭 `PlantationStaff`（2.0.3.9，最低下位）**。
+     **链底 苍华之庭 ✅ 已落地**（含配方：现代分支）；**下一件＝元素之斧（2.0.3.9）**。
+     逐版侦察结论、材料存亡矩阵与配方差见下面的「批次 C」。
+  ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
-     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **本链新落地的三件召唤武器（太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160）尚未点名开态值，等用户一并处理**。
-  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **161 条全命中**；
+    其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
+     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 这四件召唤武器尚未点名开态值，等用户一并处理**。
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **166 条全命中**；
     工作区干净、与 `origin/master` 同步。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
@@ -448,6 +453,48 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
   工程基线：`dotnet build` 0 警告 0 错误、资源自检 **160 条全命中**（超新星 + 三把膨胀档落地后复核）。
+- **【批次 C · 「归虚之灵」召唤链（CI 线）：从链底往上移植，配方环节停下来找用户拍板】**
+  用户 2026-10-08 点名：「我记得我需要移植的是召唤武器：**归墟之灵**，走的 CI 那条线」+「和之前一样，从最低下位开始」。
+  **身份**：CI 的 `Content.Items.Weapons.Summon.CosmicImmaterializerOld`（CI 官方中文名 **归虚之灵[Legacy]**，
+  本工程沿用 CI 的写法「归虚之灵」；用户口写"归墟"）。
+  **链（从下往上）**：**苍华之庭 `PlantationStaff`（2.0.3.9）** → **元素之斧 `ElementalAxe`（2.0.3.9）** → **归虚之灵（CI 口径）**。
+  **归虚之灵逐版数据（侦察已完成，拍板时直接引）**：
+  物品本体 **2.0 与 2.0.3.9 一模一样**：74×72、伤害 **560**、魔力 10、使用/动画 **10 帧**、击退 0、弹速 10、
+  音 `SoundID.Item60`、**稀有度 Violet = 月后 15 档（紫）**、价值 `Rarity15BuyPrice`（**2.0.3.9 实测 = 1 铂金 50 金**）；
+  `CanUseItem` 要 `maxMinions >= 10` 且全场只能一只；**出手点在鼠标处**；**没穿月后召唤套时伤害 ×0.66**；
+  两版唯一差别是稀有度写法（2.0 = 红底 + `Calamity().customRarity = Violet`；2.0.3.9 = `Item.rare = RarityType<Violet>()`）。
+  **配方两版不同（各 5 味，都 @ 嘉登熔炉）**：
+  2.0 = 元素之斧 + **乌鸦先驱者法杖 `CorvidHarbringerStaff`** + **古冰晶 `AncientIceChunk`** + **能量法杖 `EnergyStaff`** + 奇迹物质 `MiracleMatter`；
+  2.0.3.9（2.0.4 / 2.0.7.2 同）= 元素之斧 + **空灵征服者 `EtherealSubjugator`** + **宇宙灯笼 `Cosmilamp`** + **灾厄挽歌 `CalamarisLament`** + 奇迹物质。
+  **CI 版配方（8 味）** = 天狼星 `Sirius` + 古冰晶 + **元素之斧** + 圣化火花 `SanctifiedSpark` + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌 + 奇迹物质。
+  **实装 2.2.2 自己的配方（另一条，参考）** = 天军 `LegionofCelestia` + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌 + 奇迹物质 @ 嘉登熔炉
+  （天军自己 = 植灵法杖 + `ItemID 4758`×1 + `ItemID 3467`×5 + 生命合金×5 + `ItemID 3459`×5 @ 秘银砧；**经典版没有天军**）。
+  **仆从与弹幕（2.0 与 2.0.3.9 同构）**：`CosmicEnergySpiral` 78×78、**占 10 格召唤栏**、不造成接触伤害、彩虹染色、
+  跟随距离翻倍（1400 / 1600 / 2400）、出场先冷却 100 帧；之后每 100 帧喷 **5~8 枚小爆裂（伤害 ×0.5）+ 1 枚大爆裂（全额）**。
+  **2.0.3.9 额外有的**：残影（TrailCache 6 + TrailingMode 0）、爆裂命中从 `ExoDebuffs()`（神殇减益组）改成直接挂
+  `MiracleBlight`（小 180 / 大 300 帧）。爆裂收尾两版同风格：小弹 18×18 命中后把碰撞箱撑到 **144×144** 打范围伤害、
+  大弹 24×24 → **288×288**，都配 `SoundID.Zombie103`。
+  **材料存亡矩阵（2026-10-08 用 Cecil 逐条挖本机两版 `.tmod` 得出，别再重查）**：
+
+  | 材料 | 现代 2.2.2 | 经典 1.0.0.17 |
+  |---|---|---|
+  | 元素之斧 `ElementalAxe` | **已删（连弹幕都没了）** | ✔（而且经典自己就有元素之斧） |
+  | 植灵法杖 `PlantationStaff` | ✔（但被重制：50×50/发光/36 帧/占 3 栏/配方去掉刃杖） | ✗ |
+  | 夜眼 `EyeOfNight` | ✔（基本未改，只动过帧数/价码/加 buffType） | ✗ |
+  | 生命碎片 `LivingShard` / 生命合金 `LifeAlloy` | ✔ / ✔ | ✔ / ✗ |
+  | 古冰晶 / 空灵征服者 / 宇宙灯笼 / 灾厄挽歌 | ✔✔✔✔ | ✔✔✔✔ |
+  | 奇迹物质 `MiracleMatter` / 圣化火花 `SanctifiedSpark` | ✔ / ✔ | ✗ / ✗ |
+  | 天狼星 `Sirius` / 银河奇点 `GalacticaSingularity` | ✗ / ✗（**两个都是本工程已自持 ✅**） | ✗ / ✔（经典自带同名件） |
+
+  **约定口径（用户 2026-10-08「要自持，开始吧」）**：链上**缺失/被重制**的件一律自持 2.0.3.9 版，
+  顶层（归虚之灵）将来吃**本模组**的下位件。
+  **元素之斧（2.0.3.9）数据**：36×36、伤害 **57**、魔力 10、使用/动画 **15 帧**、击退 5、音 `SoundID.Item44`、
+  autoReuse、弹速 10、**紫档 + 1 铂金 10 金**（`Rarity11BuyPrice`）；出手在鼠标处（左键）；
+  仆从 `ElementalAxeMinion` 52×52、占 1 栏、逐敌 30 帧冷却、**旋转 + `ChargingMinionAI(1600, 1800, 2500, 400, 1, 30, 24, 12, (0,-60), 30, 16, true, true)`**，
+  命中挂 `ElementalMix`（现代有 / **经典没有** → 要兜底）。
+  配方（2.0.3.9）= 泰拉棱镜 `ItemID.EmpressBlade` + **植灵法杖** + 夜明锭 `ItemID.LunarBar`×5 + 生命合金×5 + 银河奇点×5 @ 远古操纵机。
+  **苍华之庭（2.0.3.9）数据**：见下面「最近一批工作」那条。
+
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
 - 最近一批工作（2026-10-08 更晚）：**按用户点名改 4 把盗贼武器的使用帧（源 2.0 值 → 用户值）。**
@@ -1893,6 +1940,28 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `Projectiles.SiriusMinion|SiriusBeam|SiriusExplosion.DisplayName`。
   验证：编译 **0 警告 0 错误**；资源自检 **162 条全命中**；同名不同扩展名自检无冲突。
   用户 2026-10-08 附注：**数值膨胀仍之后一并处理**（本链三件召唤武器的开态值尚未点名）。
+- 最近一批工作（2026-10-08 更晚）：**移植苍华之庭（PlantationStaff）—— 「归虚之灵」链的链底（批次 C 第一件）。**
+  口径取 2.0.3.9 并自持（现代版被重制：2.0.4 起 50×50 + 世界发光贴图、1.4.4 起 36 帧 / 占 3 栏 / 配方去掉刃杖）：
+  物品 46×48 / 伤害 **58** / 击退 1 / 魔力 10 / 使用 **20 帧** / **黄档** / **60 金**（`Rarity8BuyPrice`）/ 音 `SoundID.Item76`；
+  `CanUseItem` 卡单只；出手在鼠标处给一点随机初速。
+  新增**一整套 5 个弹幕 + 增益**：`PlantationStaffSummon`（48×48、占 **3 栏**、8 帧动画，四状态机：
+  闲置跟随 → 甩 2 颗荆棘球 → 3 波撒种（预判瞄准）→ 蓄力 15 帧后冲撞 240 帧；**冲撞态命中 ×2**，
+  进入冲撞那刻喷 12 团孢子云 + 挂 6 条触手）、`PlantationStaffTentacle`（22×22、缠身阶段用
+  `PlantationStaffTentacleChain` 铺链条、宿主离开冲撞态即脱落自行追击，序号 5 那条还负责把宿主画在链条之上）、
+  `PlantationStaffThornball`（30×30、命中即钉在敌人身上）、`PlantationStaffSeed`（14×14、两套贴图 + 残影）、
+  `PlantationStaffSporeCloud`（32×32、三套贴图、渐隐）、增益 `PlantationStaffBuff`；玩家标志 `plantationSummon`。
+  **为新链新增的可复用工具（`Utilities/CDUtil_Summon.cs`）**：`MinionHoming`（照灾厄 NPCUtils.MinionHoming，
+  底层复用工程既有 `FindClosestNPC`）与 `CalculatePredictiveAimToTarget`（两个重载，照灾厄 ProjectileUtils）。
+  **软依赖/移植改写（都在类注释里标了）**：㈠ 源在触手里读 `proj.ModProjectile<PlantationStaffSummon>().State`——
+  tML 的 `ModProjectile` 是**每类型单例**，跨弹幕读它会读到"最后被处理的弹幕"，故改读宿主弹幕的 `ai[0]`；
+  ㈡ 源的残影开关 `CalamityConfig.Instance.Afterimages` 换成工程既有的 `ConfigSystem.PerformanceMode`；
+  ㈢ 孢子云源里的灾厄 `SmallSmokeParticle` 无对应粒子，只保留同步生成的中毒尘（`DustID.Poisoned`）；
+  ㈣ 裸值尘 `40` = `DustID.JunglePlants`（tML 分析器会报魔法数字，必须写常量名）。
+  **配方（现代分支，照源 2.0.3.9 逐字）**：夜眼 `EyeOfNight` + 刃杖 `ItemID.Smolstar` + 生命碎片 `LivingShard`×12 @ 秘银砧；
+  **经典分支待用户拍板**——经典版有生命碎片但没有夜眼，故暂只注册现代分支（缺件时打警告）。
+  验证：编译 **0 警告 0 错误**；资源自检 **166 条全命中**；同名不同扩展名自检无冲突。
+  下一件：**元素之斧（2.0.3.9）**，需要先补它的共享 AI `ChargingMinionAI` / `MinionAntiClump`（源在灾厄
+  `GenericAIUtils.ChargingMinionAI` / `ProjectileUtils.MinionAntiClump`，本工程尚未移植）。
 
 ## 9. 古圣金源套（AuricTesla）与其四套下位 —— 对照结论与待办
 
