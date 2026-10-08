@@ -2320,6 +2320,16 @@ Items: {
 		Tooltip: Grants shadowflame powers to all minions
 	}
 
+	TotalityBreakers: {
+		DisplayName: Totality Breakers
+		Tooltip:
+			'''
+			Explodes into highly flammable black tar
+			Tar oils enemies and sets them alight
+			Stealth strikes leak tar as they fly
+			'''
+	}
+
 	TrapperBulb: {
 		DisplayName: Trapper Bulb
 		Tooltip: A tough bulb taken from within trapper plants
@@ -2638,6 +2648,10 @@ Projectiles: {
 	TerratomereHoldout.DisplayName: Terratomere Holdout
 	TerratomereSlash.DisplayName: Terratomere Slash
 	TerratomereSlashCreator.DisplayName: Terratomere Slash Creator
+	TotalMeltdown.DisplayName: Explosion
+	TotalityFire.DisplayName: Totality Fire
+	TotalityFlask.DisplayName: Totality Flask
+	TotalityTar.DisplayName: Totality Tar
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam

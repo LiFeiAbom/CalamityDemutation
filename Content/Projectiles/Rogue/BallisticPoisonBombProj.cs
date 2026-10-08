@@ -94,13 +94,13 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
                 int spikeAmount = Main.rand.Next(3, 5);
                 for (int i = 0; i < spikeAmount; i++)
                 {
-                    Vector2 velocity = RandomVelocity(100f, 70f, 100f);
+                    Vector2 velocity = CDUtil.RandomVelocity(100f, 70f, 100f);
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<BallisticPoisonBombSpike>(), (int)(Projectile.damage * 0.5f), 0f, Projectile.owner, 0f, 0f);
                 }
                 int cloudAmount = Main.rand.Next(8, 13);
                 for (int i = 0; i < cloudAmount; i++)
                 {
-                    Vector2 velocity = RandomVelocity(100f, 10f, 200f, 0.01f);
+                    Vector2 velocity = CDUtil.RandomVelocity(100f, 10f, 200f, 0.01f);
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<BallisticPoisonCloud>(), (int)(Projectile.damage * 0.25f), 1f, Projectile.owner, 0f, Main.rand.Next(-45, 1));
                 }
             }
@@ -133,19 +133,6 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
             Projectile.position = Projectile.Center;
             Projectile.width = Projectile.height = newSize;
             Projectile.position -= Projectile.Size * 0.5f;
-        }
-        /// <summary>
-        /// 内联灾厄 <c>ProjectileUtils.RandomVelocity</c>：在 ±directionMult 的方形里随机取一个方向，
-        /// 长度取 <c>rand(speedLowerLimit, speedCap) × speedMult</c>（避免零向量）。
-        /// </summary>
-        private static Vector2 RandomVelocity(float directionMult, float speedLowerLimit, float speedCap, float speedMult = 0.1f)
-        {
-            Vector2 velocity = new Vector2(Main.rand.NextFloat(-directionMult, directionMult), Main.rand.NextFloat(-directionMult, directionMult));
-            while (velocity.X == 0f && velocity.Y == 0f)
-                velocity = new Vector2(Main.rand.NextFloat(-directionMult, directionMult), Main.rand.NextFloat(-directionMult, directionMult));
-            velocity.Normalize();
-            velocity *= Main.rand.NextFloat(speedLowerLimit, speedCap) * speedMult;
-            return velocity;
         }
         /// <summary>
         /// 内联灾厄 <c>Projectile.StickToTiles(this Projectile, ignorePlatforms: true, stickToEverything: false)</c>：

@@ -2319,6 +2319,16 @@ Items: {
 		Tooltip: 赋予所有仆从暗影焰之力
 	}
 
+	TotalityBreakers: {
+		DisplayName: 破坏者
+		Tooltip:
+			'''
+			炸开成大片极易燃的黑焦油
+			焦油会把敌人油浸并点燃
+			潜行打击会让焦油沿途滴落
+			'''
+	}
+
 	TrapperBulb: {
 		DisplayName: 捕蝇草球茎
 		Tooltip: 从捕蝇草类生物体内取出的坚韧球茎
@@ -2637,6 +2647,10 @@ Projectiles: {
 	TerratomereHoldout.DisplayName: 泰拉巨刃（手持）
 	TerratomereSlash.DisplayName: 泰拉小刀光
 	TerratomereSlashCreator.DisplayName: 泰拉刀光创造者
+	TotalMeltdown.DisplayName: 熔毁爆炸
+	TotalityFire.DisplayName: 焦油烈焰
+	TotalityFlask.DisplayName: 破坏者火瓶
+	TotalityTar.DisplayName: 黑焦油
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束

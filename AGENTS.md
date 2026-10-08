@@ -311,9 +311,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 2 件，剩 5 件。**
-  **链条（从下往上，逐件做）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → **③ 破坏者 `TotalityBreakers`（下一件）**
-  → ④ 毁灭之星 `StarofDestruction` → ⑤ 封存奇点 `SealedSingularity` → ⑥ 半影 `Penumbra` → ⑦ 超新星 `Supernova`。
+- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 3 件，剩 5 件。**
+  **链条（从下往上，逐件做）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅
+  → **④ 熵构体 `MeldConstruct`（下一件，材料）→ ⑤ 毁灭之星 `StarofDestruction`（吃熵构体）**
+  → ⑥ 封存奇点 `SealedSingularity` → ⑦ 半影 `Penumbra` → ⑧ 超新星 `Supernova`。
+  **配方难题的处置（用户 2026-10-08 授权"你是主导者"，按方案 B 走）**：链上唯一被现代版删掉、
+  又挡在配方上的材料是**熵构体 `MeldConstruct`**（毁灭之星 2.0 配方要 ×10；2.0/2.0.3.9/2.0.4/2.0.7.2 都有，
+  1.4.4-release 与实装 2.2.2 都没有）；所以**把熵构体也搬进本模组**，毁灭之星保持 2.0 原配方一字不改。
+  熵构体 2.0 口径 = 15×12 判定 / 38×40 贴图 / 叠 999 / 卖 1 金 20 银 / 青档 / 研究 25；
+  配方 `MeldBlob×6 + Stardust×3 → ×3 @ 月亮事件站台`（**熔凝团与星尘现代/经典两版都在**，故一条配方两分支通用）。
+  **超新星本体的配方也由本工程自出**（不用用户找）：按 2.0 那条落地 =
+  封存奇点 + 毁灭之星 + 破坏者 + 弹道毒炸弹 + **震爆手雷×200** + **半影** + 奇迹物质 @ 嘉登熔炉。
+  其余 3 件（破坏者 / 封存奇点 / 半影）的 2.0 配方**没有任何缺失材料**，实装 2.2.2 全在，已逐件核过。
   这 5 件待做项都是超新星 **2.0 配方**点名的下位件：
   `SealedSingularity + StarofDestruction + TotalityBreakers + BallisticPoisonBomb + ShockGrenade×200 + Penumbra
   + MiracleMatter @ 嘉登熔炉`（2.0.3.9 起删掉震爆手雷×200 与半影，其余不动）。
@@ -362,7 +371,29 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **153 条全命中**（震爆手雷 + 弹道毒炸弹落地后复核）。
+  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **154 条全命中**（破坏者落地后复核）。
+- 最近一批工作（2026-10-08）：**移植破坏者（TotalityBreakers）—— "超新星"下位链第三件。**
+  口径：老规矩取 2.0：32×42、伤害 **55**、击退 5、使用/动画各 28 帧、**石灰档（Lime）**、价值 60 金、
+  弹速 12、使用音 `SoundID.Item106`（2.0.3.9 起是 50 伤害 + 潜行 1.3×、1.4.4-release 是 64——本件不取）。
+  效果：掷出黑焦油瓶，落地炸成一大片燃烧焦油；**潜行打击**这一瓶伤害 ×1.15，且飞行途中每 20 帧滴一团焦油。
+  **配方照 2.0**：燃烧瓶×50（原版）+ 圣化水 + 亵渎水 + 乏燃料容器 + 日纱×10 @ 秘银砧。
+  ⚠ **本件只有现代分支**：后四件灾厄件（ConsecratedWater / DesecratedWater / SpentFuelContainer / SolarVeil）
+  **经典版灾厄没有**（它们比经典版那条线晚），已核过 cal-1.4.2.101；缺件写 `Mod.Logger.Warn`，不静默。
+  **落地**：`Content/Items/Weapons/Rogue/TotalityBreakers.cs` + `Content/Projectiles/Rogue/` 下四枚：
+  `TotalityFlask`（20×20、穿透 1、存活 180 帧、走原版燃烧瓶 AI `ProjAIStyleID.MolotovCocktail`、贴图借用物品贴图）、
+  `TotalMeltdown`（120×122、13 帧 ×5 tick、同一敌人每 30 帧可再命中、命中挂 5 秒燃烧）、
+  `TotalityTar`（14×14、存活 30 帧、命中把敌人**油浸** 10 秒 + 点燃 4 秒，并**先解除敌人的油浸免疫**——源刻意写法，照抄）、
+  `TotalityFire`（14×14、存活 120 帧、同一敌人只吃一次、撞物块不消失只改姿态、2 点拖影）。
+  **两处源实现细节的处理方式**：
+  ① `TotalityFlask` 的 stealth 判定改 `CDUtil.IsStealthStrike`（软依赖）；
+  ② `TotalityFire` 源把"随机起始帧"记在 `ModProjectile` 的私有字段上，而 tML 的 `ModProjectile` 是**每类型单例**
+  （字段被所有同种弹幕共享）——本工程改用 `Projectile.localAI[2]` 做每实例标记（已在代码注释里写明差异）。
+  顺手把上一件 `BallisticPoisonBombProj` 里那份**重复的** `RandomVelocity` 私有实现删掉，
+  统一改用工程既有的 `CDUtil.RandomVelocity`（`Utilities/ProjUtil.cs:403`，与灾厄同名同参）。
+  **踩坑（新，与上一件同源）**：tML 的 ChangeMagicNumberToID 分析器还会盯**裸尘号**——
+  `191` 要写 `DustID.SpookyWood`、`31` 要写 `DustID.Smoke`，否则各报一条警告（工程基线 0 警告）。
+  零新增音频（`SoundID.Item106` / `Shatter` / `Item74`）；四张贴图从 2.0 源线复制。
+  中英本地化补物品（zh **破坏者**）与四条弹幕名。验证：编译 0 警告 0 错误；资源自检 154 条全命中。
 - 最近一批工作（2026-10-08）：**移植弹道毒炸弹（BallisticPoisonBomb）—— "超新星"下位链第二件。**
   口径同上一件（老规矩取 2.0）：30×38、伤害 **50**、击退 6.5、使用/动画各 26 帧、**石灰档（Lime）**、
   价值 60 金、弹速 12、使用音 `SoundID.Item1`
