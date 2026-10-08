@@ -1774,6 +1774,15 @@ Items: {
 			'''
 	}
 
+	Penumbra: {
+		DisplayName: 半影
+		Tooltip:
+			'''
+			掷出一枚暗影炸弹，炸开时迸出会追踪的暗影魂
+			潜行打击会让炸弹直接在鼠标位置显现，并炸出更多暗影魂
+			'''
+	}
+
 	PsychoticAmulet: {
 		DisplayName: 疯狂护符
 		Tooltip:
@@ -2645,6 +2654,8 @@ Projectiles: {
 	OmegaBiomeOrb.DisplayName: 欧米茄环境能量
 	OmegaBlueTentacle.DisplayName: 蓝色欧米茄触手
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
+	PenumbraBomb.DisplayName: 半影炸弹
+	PenumbraSoul.DisplayName: 半影之魂
 	PoisonousSeawater.DisplayName: 有毒海水
 	RedDevil.DisplayName: 红色恶魔
 	SandBolt.DisplayName: 沙弹

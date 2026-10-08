@@ -1773,6 +1773,15 @@ Items: {
 			'''
 	}
 
+	Penumbra: {
+		DisplayName: Penumbra
+		Tooltip:
+			'''
+			Throws a shadow bomb that explodes into homing souls
+			Stealth strikes make the bomb manifest on the cursor and explode into more souls
+			'''
+	}
+
 	PsychoticAmulet: {
 		DisplayName: Psychotic Amulet
 		Tooltip:
@@ -2646,6 +2655,8 @@ Projectiles: {
 	OmegaBiomeOrb.DisplayName: Orb
 	OmegaBlueTentacle.DisplayName: Omega Blue Tentacle
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
+	PenumbraBomb.DisplayName: Penumbra Bomb
+	PenumbraSoul.DisplayName: Penumbra Soul
 	PoisonousSeawater.DisplayName: Poisonous Seawater
 	RedDevil.DisplayName: Red Devil
 	SandBolt.DisplayName: Bolt
