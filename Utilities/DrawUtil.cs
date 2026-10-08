@@ -11,6 +11,70 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
+        /// 彩灯循环（移植自灾厄 <c>CalamityUtils.IterateDisco</c>）：把 <paramref name="c"/> 在
+        /// 红→黄→绿→青→蓝→紫之间每帧推进 <paramref name="discoIter"/> 点，<paramref name="aiParam"/>
+        /// 是记在调用方（通常是弹幕的某格 ai/localAI）里的相位，走满一圈自动回到 0。
+        /// 超新星的尖刺用它做"满亮彩虹色"。
+        /// </summary>
+        public static void IterateDisco(ref Color c, ref float aiParam, byte discoIter = 7)
+        {
+            switch (aiParam)
+            {
+                case 0f:
+                    c.G += discoIter;
+                    if (c.G >= 255)
+                    {
+                        c.G = 255;
+                        aiParam = 1f;
+                    }
+                    break;
+                case 1f:
+                    c.R -= discoIter;
+                    if (c.R <= 0)
+                    {
+                        c.R = 0;
+                        aiParam = 2f;
+                    }
+                    break;
+                case 2f:
+                    c.B += discoIter;
+                    if (c.B >= 255)
+                    {
+                        c.B = 255;
+                        aiParam = 3f;
+                    }
+                    break;
+                case 3f:
+                    c.G -= discoIter;
+                    if (c.G <= 0)
+                    {
+                        c.G = 0;
+                        aiParam = 4f;
+                    }
+                    break;
+                case 4f:
+                    c.R += discoIter;
+                    if (c.R >= 255)
+                    {
+                        c.R = 255;
+                        aiParam = 5f;
+                    }
+                    break;
+                case 5f:
+                    c.B -= discoIter;
+                    if (c.B <= 0)
+                    {
+                        c.B = 0;
+                        aiParam = 0f;
+                    }
+                    break;
+                default:
+                    aiParam = 0f;
+                    c = Color.Red;
+                    break;
+            }
+        }
+        /// <summary>
         /// 按权重逐通道混合多个颜色（对应 CWR 的 CWRUtils.RecombinationColor）：
         /// 本工程移植 CWR 弹幕时用它复现"本体色 + 描边色"的叠加配色。
         /// </summary>

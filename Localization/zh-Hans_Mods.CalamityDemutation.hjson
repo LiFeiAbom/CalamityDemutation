@@ -2132,6 +2132,16 @@ Items: {
 			'''
 	}
 
+	Supernova: {
+		DisplayName: 超新星
+		Tooltip:
+			'''
+			命中时引发一场剧烈的大爆炸
+			炸开时迸出尖刺与追踪能量
+			潜行打击会让能量在飞行途中不断释放
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: 龙蒿护甲
 		Tooltip:
@@ -2678,6 +2688,10 @@ Projectiles: {
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
 	StellarStrikerBeam.DisplayName: 星流束
+	SupernovaBomb.DisplayName: 超新星炸弹
+	SupernovaBoom.DisplayName: 爆炸
+	SupernovaHoming.DisplayName: 超新星能量
+	SupernovaSpike.DisplayName: 尖刺
 	TerraBall.DisplayName: 泰拉球
 	TerratomereBeams.DisplayName: 泰拉光束剑气
 	TerratomereBigSlashs.DisplayName: 泰拉大刀光

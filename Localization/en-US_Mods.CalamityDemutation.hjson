@@ -2131,6 +2131,16 @@ Items: {
 			'''
 	}
 
+	Supernova: {
+		DisplayName: Supernova
+		Tooltip:
+			'''
+			Creates a massive explosion on impact
+			Explodes into spikes and homing energy
+			Stealth strikes release energy as they fly
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: Tarragon Breastplate
 		Tooltip:
@@ -2679,6 +2689,10 @@ Projectiles: {
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
 	StellarStrikerBeam.DisplayName: Stellar Striker Beam
+	SupernovaBomb.DisplayName: Supernova Bomb
+	SupernovaBoom.DisplayName: Explosion
+	SupernovaHoming.DisplayName: Supernova Energy
+	SupernovaSpike.DisplayName: Spike
 	TerraBall.DisplayName: Ball
 	TerratomereBeams.DisplayName: Terratomere Beams
 	TerratomereBigSlashs.DisplayName: Terratomere Big Slashs
