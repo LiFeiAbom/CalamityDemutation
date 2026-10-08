@@ -1,0 +1,73 @@
+using CalamityDemutation.Content.Items.Materials;
+using CalamityDemutation.Content.Projectiles.Rogue;
+using CalamityDemutation.Utilities;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.ModLoader;
+namespace CalamityDemutation.Content.Items.Weapons.Rogue
+{
+    /// <summary>
+    /// 毁灭之星（Star of Destruction）—— 「超新星」下位链的第五件。
+    /// 老规矩取灾厄 **2.0**：94×94、伤害 150、击退 10、使用/动画各 38 帧、**青档（Cyan）**、
+    /// 价值 95 金、弹速 5、使用音 <c>SoundID.Item1</c>
+    /// （2.0.3.9 起使用帧变 40 并加潜行倍率 0.8×、2.0.4 改红档、1.4.4-release 整件重做——本件都不取）。
+    /// <para>
+    /// 效果：射出一枚巨大**毁灭地雷**，命中/消散时炸成毁灭弹；**弹数随命中数增长（最多 16）**，
+    /// **潜行打击**必定以最大弹数（16）炸开（源写法：潜行那一发伤害 ×0.8 并以 <c>ai[1] = 1</c> 生成）。
+    /// </para>
+    /// <para>
+    /// 配方照 2.0：**本模组的熵构体 <c>MeldConstruct</c>×10 @ 远古操纵机**。
+    /// 熵构体是本工程自持件、站台是原版，所以这一条**两分支通用**，不写版本判断。
+    /// （源 2.0 的熵构体在灾厄 1.4.4 起已被删除——这正是本批次把熵构体一起搬进来的原因。）
+    /// </para>
+    /// </summary>
+    internal class StarofDestruction : ModItem
+    {
+        /// <summary>潜行打击那一发的伤害倍率（照 2.0 源：<c>damage * 0.8f</c>）</summary>
+        private const float StealthDamageMultiplier = 0.8f;
+
+        /// <summary>研究解锁一份（源 2.0 写 SacrificeTotal = 1）</summary>
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 1;
+        }
+        /// <summary>基础属性：94×94、伤害 150、击退 10、38 帧、青档 95 金、弹速 5，伤害类型取盗贼</summary>
+        public override void SetDefaults()
+        {
+            Item.width = Item.height = 94;
+            Item.damage = 150;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.useAnimation = Item.useTime = 38;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 10f;
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = true;
+            Item.value = Item.buyPrice(0, 95, 0, 0);
+            Item.rare = ItemRarityID.Cyan;
+            Item.shoot = ModContent.ProjectileType<DestructionStar>();
+            Item.shootSpeed = 5f;
+            Item.DamageType = CDUtil.GetRogueDamageClass();
+        }
+        /// <summary>潜行打击就绪时射出"必爆 16 弹"的那一发（伤害 ×0.8、ai[1] = 1）并打上潜行标记</summary>
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            if (!CDUtil.CanStealthStrike(player))
+                return true;
+            int star = Projectile.NewProjectile(source, position, velocity, type, (int)(damage * StealthDamageMultiplier), knockback, player.whoAmI, 0f, 1f);
+            if (star >= 0 && star < Main.maxProjectiles)
+                CDUtil.SetStealthStrike(Main.projectile[star]);
+            return false;
+        }
+        /// <summary>配方照 2.0：本模组熵构体×10 @ 远古操纵机（自持件 + 原版站台 → 两分支通用）</summary>
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient<MeldConstruct>(10).
+                AddTile(TileID.LunarCraftingStation).
+                Register();
+        }
+    }
+}

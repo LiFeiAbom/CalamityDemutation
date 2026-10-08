@@ -2048,6 +2048,16 @@ Items: {
 			'''
 	}
 
+	StarofDestruction: {
+		DisplayName: 毁灭之星
+		Tooltip:
+			'''
+			射出一枚巨大的毁灭地雷，炸开时迸出毁灭鬼弹
+			命中敌人越多，迸出的鬼弹越多（最多 16 枚）
+			潜行打击必定以最大弹数炸开
+			'''
+	}
+
 	StatisBeltOfCurses: {
 		DisplayName: 斯塔提斯诅咒腰带
 		Tooltip:
@@ -2577,6 +2587,8 @@ Projectiles: {
 	DefenseBlast2.DisplayName: 防御爆裂 2
 	DefenseFlame.DisplayName: 防御烈焰
 	DemonFork.DisplayName: 恶魔叉
+	DestructionBolt.DisplayName: 毁灭鬼弹
+	DestructionStar.DisplayName: 毁灭之星
 	DragonRageFireOrb.DisplayName: 巨龙之怒火球
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素

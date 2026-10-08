@@ -2047,6 +2047,16 @@ Items: {
 			'''
 	}
 
+	StarofDestruction: {
+		DisplayName: Star of Destruction
+		Tooltip:
+			'''
+			Fires a huge destructive mine that explodes into destruction bolts
+			Amount of bolts scales with enemies hit, up to 16
+			Stealth strikes always explode into the max amount of bolts
+			'''
+	}
+
 	StatisBeltOfCurses: {
 		DisplayName: Statis' Belt of Curses
 		Tooltip:
@@ -2578,6 +2588,8 @@ Projectiles: {
 	DefenseBlast2.DisplayName: Defense Blast2
 	DefenseFlame.DisplayName: Defense Flame
 	DemonFork.DisplayName: Demon Fork
+	DestructionBolt.DisplayName: Destruction Bolt
+	DestructionStar.DisplayName: Star of Destruction
 	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu

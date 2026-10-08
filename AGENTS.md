@@ -311,10 +311,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 4 件，剩 4 件。**
+- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 5 件，剩 3 件。**
   **链条（从下往上，逐件做）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
-  → **⑤ 毁灭之星 `StarofDestruction`（下一件，吃本模组熵构体×10）**
-  → ⑥ 封存奇点 `SealedSingularity` → ⑦ 半影 `Penumbra` → ⑧ 超新星 `Supernova`。
+  → ⑤ 毁灭之星 ✅
+  → **⑥ 封存奇点 `SealedSingularity`（下一件）** → ⑦ 半影 `Penumbra` → ⑧ 超新星 `Supernova`。
+  **用户 2026-10-08 追加口径**：整条链移植完之后，**再统一做数值膨胀（StatInflation）**——
+  本批次 6 件武器（震爆手雷 / 弹道毒炸弹 / 破坏者 / 毁灭之星 / 封存奇点 / 半影）与最终的超新星
+  都要走「关态 = 本批次落的 2.0 源值 / 开态 = 用户点名值」的老模板（第 7 节），做之前逐把点名。
   **配方卡点复核（2026-10-08，已逐条核完，别再重查）**：
   ⑤ 毁灭之星 = 本模组熵构体×10 @ 远古操纵机 ✅（自持件，两分支通用）；
   ⑥ 封存奇点 = 尘暴瓶 `DuststormInABottle` + 暗等离子 `DarkPlasma`×3 @ 远古操纵机 ✅（两版灾厄都有这两味）；
@@ -379,7 +382,23 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **154 条全命中**（熵构体落地后复核）。
+  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **155 条全命中**（毁灭之星落地后复核）。
+- 最近一批工作（2026-10-08）：**移植毁灭之星（StarofDestruction）—— "超新星"下位链第五件。**
+  口径：老规矩取 2.0：94×94、伤害 **150**、击退 10、使用/动画各 38 帧、**青档（Cyan）**、价值 95 金、
+  弹速 5、使用音 `SoundID.Item1`（2.0.3.9 起 40 帧 + 潜行 0.8×、2.0.4 改红档、1.4.4-release 整件重做——都不取）。
+  效果：射出巨大**毁灭地雷**（实际按半径 47 的圆判命中、穿透 16、存活 300 帧、不撞物块），
+  消散时炸成**毁灭鬼弹**，弹数 = 命中数（最多 16）；**潜行打击**那一发伤害 ×0.8 且**必定 16 弹**。
+  **配方照 2.0**：本模组**熵构体×10 @ 远古操纵机**——自持件 + 原版站台，故**只注册一条、两分支通用**
+  （这正是上一件把熵构体搬进来的回报：源配方一字未改）。
+  **落地**：`Content/Items/Weapons/Rogue/StarofDestruction.cs` + `Content/Projectiles/Rogue/` 两枚：
+  `DestructionStar`（贴图借用物品贴图、94×94 判定、`Colliding` 内联圆形判定、消散时主人端甩 `hitCount` 枚鬼弹）、
+  `DestructionBolt`（12×12、穿透 1、淡入期不可伤害、**两段式归航状态机**照源逐行、10 点拖影模式 1、
+  消散时把判定框撑到 50 并补一次 `Projectile.Damage()`）。
+  **又一处"每类型单例"修正**：源 `DestructionStar` 把**弹数计数**记在 `ModProjectile` 的公开字段 `hitCount` 上
+  （所有毁灭地雷共用一颗计数，联机/连发会串），本工程改用 `Projectile.localAI[0]`，逻辑不变；
+  `DestructionBolt` 的 `dustType = 191` 字段同理改成常量 `DustID.SpookyWood`（顺带避开裸尘号警告）。
+  零新增音频（`SoundID.Item1` / `Item14`）；两张贴图从 2.0 源线复制；中英本地化补物品（zh **毁灭之星**）与两条弹幕名。
+  验证：编译 0 警告 0 错误；资源自检 155 条全命中；两张隐式贴图已 `Test-Path` 核对。
 - 最近一批工作（2026-10-08）：**移植熵构体（MeldConstruct）—— "超新星"下位链第四件，也是毁灭之星的前件。**
   为什么要自持：它被灾厄 **1.4.4-release 起删除**（实装 2.2.2 的 `.tmod` 里 0 命中），
   而毁灭之星 2.0 的配方要它 ×10。用户授权按方案 B（连它一起搬），于是毁灭之星可以照 2.0 原配方一字不改。
