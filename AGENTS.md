@@ -311,14 +311,37 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-08】新批次：「超新星」链 —— 第一件「震爆手雷」✅ 已落地，下一件是超新星本体。**
-  链条 = **震爆手雷 ✅（本次）→ 超新星 Supernova（待做）**。为什么这条链的"下位"是震爆手雷：
-  超新星 **2.0 的配方**要 `ShockGrenade`×200 + 半影，而震爆手雷在灾厄 **1.4.4-release 起被删除**
-  （本机实装 2.2.2 的 `.tmod` 文件表里 `ShockGrenade*` 一条都没有，实测 0）；
-  其余下位件（封存奇点 `SealedSingularity` / 毁灭之星 `StarofDestruction` / 破坏者 `TotalityBreakers` /
-  弹道毒炸弹 `BallisticPoisonBomb` / 奇迹物质 `MiracleMatter` / 半影 `Penumbra`）现代版都还在 → 直接引本体。
-  **超新星本体尚未落地**：用户尚未逐条拍板（本体取哪版 / 配方走哪版 / 中文名 / 是否追加基础属性 /
-  是否挂 StatInflation 档 / 经典分支怎么办——经典版灾厄既没有超新星，也没有封存奇点那几件，源配方搬不过去）。
+- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 2 件，剩 5 件。**
+  **链条（从下往上，逐件做）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → **③ 破坏者 `TotalityBreakers`（下一件）**
+  → ④ 毁灭之星 `StarofDestruction` → ⑤ 封存奇点 `SealedSingularity` → ⑥ 半影 `Penumbra` → ⑦ 超新星 `Supernova`。
+  这 5 件待做项都是超新星 **2.0 配方**点名的下位件：
+  `SealedSingularity + StarofDestruction + TotalityBreakers + BallisticPoisonBomb + ShockGrenade×200 + Penumbra
+  + MiracleMatter @ 嘉登熔炉`（2.0.3.9 起删掉震爆手雷×200 与半影，其余不动）。
+  **用户 2026-10-08 明确的两条口径（别再问）**：㈠ **走 2.0 / 2.0.3.9 那条线**，**不要现代版**；
+  ㈡ **超新星本体的配方由用户另给**，别照源写（源配方那条已核过，仅备查）。
+  为什么这条链要整条自备（而不是只用本体件）：本批次按"旧版回归 + 同名不同物"的老做法，
+  把 2.0/2.0.3.9 那条线的下位件全部搬进本模组，超新星将来吃的是**本模组的**下位件。
+- **待做 4 件的逐版数值（本次已侦察完，直接照这份落地）**：
+  破坏者 `TotalityBreakers` = 2.0 `32×42 / 55 / 击退 5 / 28 帧 / 石灰 Lime / 60 金 / 弹速 12 / 弹幕 TotalityFlask`；
+  2.0.3.9+ = 50 伤害 + 潜行倍率 1.3×；1.4.4-release = 64。
+  毁灭之星 `StarofDestruction` = 2.0 `94×94 / 150 / 击退 10 / 38 帧 / 青 Cyan / 95 金 / 弹速 5 / 弹幕 DestructionStar`；
+  2.0.3.9+ = 40 帧 + 潜行 0.8×；2.0.4 = 红档；1.4.4-release = 400 伤害 / 90 帧 / 弹速 12 / 潜行 0.25 / 弹幕 `DestructionBolt`（**大改**）。
+  封存奇点 `SealedSingularity` = 2.0 `34×34 / 260 / 击退 5 / 25 帧 / 灾厄 Turquoise（月后 12 青绿）/ 弹速 14 / 弹幕 SealedSingularityProj`；
+  2.0.3.9+ = 潜行 0.72×；1.4.4-release = `32×32 / 220 / 30 帧 / 击退 3 / 弹速 13 / 弹幕 SealedSingularityHoldout`（**大改**）。
+  半影 `Penumbra` = 2.0 `46×32 / 1008 / 击退 8 / 40 帧 / 红底+灾厄 DarkBlue（月后 14 蓝）/ 1 铂金 80 金 / 弹速 9 / 弹幕 PenumbraBomb`；
+  2.0.3.9/2.0.4 = 830 + 潜行 0.85×；1.4.4-release = 725 / 35 帧 / CosmicPurple / 潜行 0.9。
+  各件自己的 2.0 配方（留意下游材料）：破坏者 = 燃烧瓶×50 + 圣化水 + 亵渎水 + 乏燃料容器 + 日纱×10 @ 秘银砧；
+  毁灭之星 = 熵构体 `MeldConstruct`×10 @ 月亮事件站台（**熵构体现代已删**，届时要照暗物质剑鞘的做法换 1.4.4 侧材料）；
+  封存奇点 = 尘暴瓶 `DuststormInABottle` + 暗等离子 `DarkPlasma`×3 @ 月亮事件站台；
+  半影 = 灾厄魂 `RuinousSoul`×6 + 夜魇锭 `CosmiliteBar`×8 + 夜魇燃料 `NightmareFuel`×20 @ 宇宙砧。
+- **超新星本体的逐版数据（用户已明确不取现代版，这份只备查）**：
+  超新星 = 2.0 `34×36 / 675 / 24 帧 / 击退 8 / 红底+灾厄 Violet（月后 15 紫）/ 1 铂金 50 金 / 潜行 ×1.08`；
+  2.0.3.9 = 同 2.0 但配方已是新版；2.0.4 = `106×112 / 5036 / 70 帧 / 击退 18 / Violet / 2 铂金 40 金 / 潜行 0.7`
+  （智能炸弹 + `SupernovaStealthBoom` + 三个自备音 + Glowmask）；
+  1.4.4-release = `106×112 / 5200 / 70 帧 / ExoticRainbow / 潜行 0.8` + `SupernovaHoldout`（右键投掷、按住左键蓄潜行）。
+  2.0 的弹幕组 = `SupernovaBomb` → `SupernovaBoom` + 尖刺 3~4 + 追踪能量 6（潜行弹每 8 帧喷追踪能量），
+  全是原版音（`SoundID.Item15` / `Item14`）。
+  **实装 2.2.2 的配方（IL 直读，仅备查）** = 封存奇点 + 毁灭之星 + 破坏者 + 弹道毒炸弹 + 奇迹物质 @ 嘉登熔炉。
   **本题的逐版数据（侦察已完成，用户拍板时直接引这份）**：
   超新星 = 2.0 `34×36 / 675 / 24 帧 / 击退 8 / 红底+灾厄 Violet（月后 15 紫）/ 1 铂金 50 金 / 潜行 ×1.08`；
   2.0.3.9 = 同 2.0 但配方已是新版；2.0.4 = `106×112 / 5036 / 70 帧 / 击退 18 / Violet / 2 铂金 40 金 / 潜行 0.7`
@@ -339,7 +362,28 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **153 条全命中**（震爆手雷落地后复核）。
+  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **153 条全命中**（震爆手雷 + 弹道毒炸弹落地后复核）。
+- 最近一批工作（2026-10-08）：**移植弹道毒炸弹（BallisticPoisonBomb）—— "超新星"下位链第二件。**
+  口径同上一件（老规矩取 2.0）：30×38、伤害 **50**、击退 6.5、使用/动画各 26 帧、**石灰档（Lime）**、
+  价值 60 金、弹速 12、使用音 `SoundID.Item1`
+  （2.0.3.9/2.0.4 是 72 伤害 + `Rarity7BuyPrice`、1.4.4-release 又降到 57——本件都不取）。
+  效果：粘性炸弹，落地或命中后炸出 3~4 枚尖刺（伤害 ×0.5）+ 8~12 朵毒云（伤害 ×0.25），命中挂 3 秒「毒液」；
+  **潜行打击**一次抛 3 枚、每枚伤害取 `Math.Max(damage / 3, 1)`（照 2.0 源）。
+  **配方照 2.0**：海沫炸弹 `SeafoamBomb` + 深渊细胞 `DepthCells`×10 + 硫磺沙 `SulphurousSand`×20 +
+  暮色碎片 `Tenebris`×10 @ 秘银砧 —— 这四件**两版灾厄都有同名物**、站台是原版秘银砧，故只注册**一条**
+  （先现代版后经典版；都取不到就 `Mod.Logger.Warn`，不静默消失——这条是本工程对"配方静默吞"的既有做法）。
+  **落地**：`Content/Items/Weapons/Rogue/BallisticPoisonBomb.cs` + `Content/Projectiles/Rogue/` 下三枚：
+  `BallisticPoisonBombProj`（24×24、穿透无限、存活 200 帧、不撞物块而靠内联 `StickToTiles` 粘方块、
+  自然引爆前把判定框撑到 128）、`BallisticPoisonBombSpike`（10×10、逐帧淡入、穿透 3、`extraUpdates = 2`、
+  走原版钉子 AI、命中把 `npc.immune[owner]` 压到 1 帧）、`BallisticPoisonCloud`（32×32 判定、贴图 40×560 切 10 帧、
+  存活 3600 帧、`ai[0] ≥ 219` 后播完消散、同一敌人每 40 帧可再命中）。
+  **两个灾厄工具方法是内联的**（软依赖不能直接调）：`CalamityGlobalProjectile.ExpandHitboxBy`、
+  `ProjectileUtils.StickToTiles` 与 `ProjectileUtils.RandomVelocity`，都照源逐行搬进弹幕的私有方法。
+  **零新增音频**（使用 `SoundID.Item1`、引爆 `SoundID.Item14`）；四张贴图从 2.0 源线复制。
+  **踩坑（新）**：`Projectile.aiStyle = 93` 会被 tML 的 ChangeMagicNumberToID 分析器报 1 条警告
+  （工程基线是 0 警告，警告即视为没过）——必须写成 **`ProjAIStyleID.Nail`**；
+  顺带坐实了 93 就是原版钉子 AI 的编号（`AIType = ProjectileID.NailFriendly` 那一对写法在灾厄源码里成片出现）。
+  验证：编译 0 警告 0 错误；资源自检 153 条全命中；四张隐式贴图逐条 `Test-Path` 核对、同名不同扩展名自检为空。
 - 最近一批工作（2026-10-08）：**移植震爆手雷（ShockGrenade）—— "超新星"链的最下位件（本批次第一件）。**
   用户口径：老规矩（默认取 2.0）、从链条最底层开始、一件一件来。本件取灾厄 **2.0**：
   14×30、伤害 **90**、击退 1、使用/动画各 18 帧、**黄档**、价值 1 金、消耗品叠 **999**、弹速 12.5

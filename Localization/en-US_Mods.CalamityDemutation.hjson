@@ -561,6 +561,15 @@ Items: {
 			'''
 	}
 
+	BallisticPoisonBomb: {
+		DisplayName: Ballistic Poison Bomb
+		Tooltip:
+			'''
+			Throws a sticky bomb that explodes into spikes and poison clouds
+			Stealth strikes throw three at once
+			'''
+	}
+
 	BansheeHook: {
 		DisplayName: Banshee Hook
 		Tooltip:
@@ -2529,6 +2538,9 @@ Projectiles: {
 	AtaraxiaSplit.DisplayName: Ataraxia Needle
 	AuraRain.DisplayName: Aura Rain
 	AuricOrb.DisplayName: Auric Orb
+	BallisticPoisonBombProj.DisplayName: Poison Bomb
+	BallisticPoisonBombSpike.DisplayName: Spike
+	BallisticPoisonCloud.DisplayName: Cloud
 	BansheeHookBoom.DisplayName: Banshee Burst
 	BansheeHookProj.DisplayName: Banshee Hook
 	BansheeHookScythe.DisplayName: Sorrowful Scythe

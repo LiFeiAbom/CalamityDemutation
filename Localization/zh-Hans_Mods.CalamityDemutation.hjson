@@ -561,6 +561,15 @@ Items: {
 			'''
 	}
 
+	BallisticPoisonBomb: {
+		DisplayName: 弹道毒炸弹
+		Tooltip:
+			'''
+			投掷一枚粘性炸弹，炸开时迸出尖刺与毒云
+			潜行打击时一次抛出三枚
+			'''
+	}
+
 	BansheeHook: {
 		DisplayName: 女妖之爪
 		Tooltip:
@@ -2528,6 +2537,9 @@ Projectiles: {
 	AtaraxiaSplit.DisplayName: 禅心针叶弹
 	AuraRain.DisplayName: 光环之雨
 	AuricOrb.DisplayName: 金源光球
+	BallisticPoisonBombProj.DisplayName: 毒炸弹
+	BallisticPoisonBombSpike.DisplayName: 尖刺
+	BallisticPoisonCloud.DisplayName: 毒云
 	BansheeHookBoom.DisplayName: 女妖爆裂
 	BansheeHookProj.DisplayName: 女妖之爪
 	BansheeHookScythe.DisplayName: 哀怨之镰
