@@ -10,7 +10,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
 {
     /// <summary>
     /// 弹道毒炸弹（Ballistic Poison Bomb）—— 「超新星」下位链的第二件（震爆手雷 → **本件** → …）。
-    /// 老规矩取灾厄 **2.0**：30×38、伤害 50、击退 6.5、使用/动画各 26 帧、**石灰档（Lime）**、
+    /// 老规矩取灾厄 **2.0**：30×38、伤害 50、击退 6.5、**使用/动画各 23 帧**（2.0 源值 26，
+    /// 用户 2026-10-08 指定改为 23）、**石灰档（Lime）**、
     /// 价值 60 金、弹速 12（2.0.3.9 起本体抬到 72 伤害并换成 Rarity7 价，1.4.4-release 又降到 57——本件不取）。
     /// <para>
     /// 效果：投出一枚**粘性**炸弹，落下（或命中敌人）后炸成尖刺 + 一片毒云；
@@ -32,7 +33,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>基础属性：30×38、伤害 50、击退 6.5、26 帧、石灰档 60 金、弹速 12，伤害类型取盗贼</summary>
+        /// <summary>基础属性：30×38、伤害 50、击退 6.5、23 帧（用户 2026-10-08 指定，源 26）、石灰档 60 金、弹速 12</summary>
         public override void SetDefaults()
         {
             Item.width = 30;
@@ -40,7 +41,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.damage = 50;
             Item.noMelee = true;
             Item.noUseGraphic = true;
-            Item.useAnimation = Item.useTime = 26;
+            Item.useAnimation = Item.useTime = 23;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 6.5f;
             Item.UseSound = SoundID.Item1;

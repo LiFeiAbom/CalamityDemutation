@@ -438,6 +438,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   工程基线：`dotnet build` 0 警告 0 错误、资源自检 **160 条全命中**（超新星 + 三把膨胀档落地后复核）。
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
+- 最近一批工作（2026-10-08 更晚）：**按用户点名改 4 把盗贼武器的使用帧（源 2.0 值 → 用户值）。**
+  用户原话：「使用：弹道毒气弹 26→23、破坏者 28→24、毁灭之星 38→32、超新星 24→19」。
+  **注意这四件是"用户口径覆盖源值"，不是移植错了**——2.0 源分别是 26 / 28 / 38 / 24：
+  弹道毒炸弹 `BallisticPoisonBomb` **26 → 23**、破坏者 `TotalityBreakers` **28 → 24**、
+  毁灭之星 `StarofDestruction` **38 → 32**、超新星 `Supernova` **24 → 19**（四件都是
+  `Item.useAnimation = Item.useTime = X` 同改，类注释已标注"源值 X，用户 2026-10-08 指定改为 Y"）。
+  其余三件未动：震爆手雷 18、封存奇点 25、半影 40。
+  验证：编译 0 警告 0 错误；资源自检 160 条全命中。
   用户反馈：本批次的盗贼武器在哥布林那里点不出词缀。查清（IL 直读 `tModLoader.dll`，细节见第 4 节新条目）：
   tML 的前缀池入口 `ModItem.WeaponPrefix()` 默认为「近战前缀 或 通用前缀」，
   而灾厄 `RogueDamageClass` 的 `GetEffectInheritance` 只认 `Throwing` → 两边都不成立 → 前缀池为空。

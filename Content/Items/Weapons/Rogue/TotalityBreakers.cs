@@ -9,7 +9,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
 {
     /// <summary>
     /// 破坏者（Totality Breakers）—— 「超新星」下位链的第三件。
-    /// 老规矩取灾厄 **2.0**：32×42、伤害 55、击退 5、使用/动画各 28 帧、**石灰档（Lime）**、
+    /// 老规矩取灾厄 **2.0**：32×42、伤害 55、击退 5、**使用/动画各 24 帧**（2.0 源值 28，
+    /// 用户 2026-10-08 指定改为 24）、**石灰档（Lime）**、
     /// 价值 60 金、弹速 12、使用音 <c>SoundID.Item106</c>
     /// （2.0.3.9 起本体改成 50 伤害 + 潜行倍率 1.3×、1.4.4-release 是 64——本件不取）。
     /// <para>
@@ -33,7 +34,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>基础属性：32×42、伤害 55、击退 5、28 帧、石灰档 60 金、弹速 12，伤害类型取盗贼</summary>
+        /// <summary>基础属性：32×42、伤害 55、击退 5、24 帧（用户 2026-10-08 指定，源 28）、石灰档 60 金、弹速 12</summary>
         public override void SetDefaults()
         {
             Item.width = 32;
@@ -41,7 +42,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.damage = 55;
             Item.noMelee = true;
             Item.noUseGraphic = true;
-            Item.useAnimation = Item.useTime = 28;
+            Item.useAnimation = Item.useTime = 24;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 5f;
             Item.UseSound = SoundID.Item106;

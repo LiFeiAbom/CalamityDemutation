@@ -11,7 +11,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
 {
     /// <summary>
     /// 毁灭之星（Star of Destruction）—— 「超新星」下位链的第五件。
-    /// 老规矩取灾厄 **2.0**：94×94、伤害 150、击退 10、使用/动画各 38 帧、**青档（Cyan）**、
+    /// 老规矩取灾厄 **2.0**：94×94、伤害 150、击退 10、**使用/动画各 32 帧**（2.0 源值 38，
+    /// 用户 2026-10-08 指定改为 32）、**青档（Cyan）**、
     /// 价值 95 金、弹速 5、使用音 <c>SoundID.Item1</c>
     /// （2.0.3.9 起使用帧变 40 并加潜行倍率 0.8×、2.0.4 改红档、1.4.4-release 整件重做——本件都不取）。
     /// <para>
@@ -46,14 +47,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
         {
             damage.Base = BaseDamage;
         }
-        /// <summary>基础属性：94×94、伤害 150、击退 10、38 帧、青档 95 金、弹速 5，伤害类型取盗贼</summary>
+        /// <summary>基础属性：94×94、伤害 150、击退 10、32 帧（用户 2026-10-08 指定，源 38）、青档 95 金、弹速 5</summary>
         public override void SetDefaults()
         {
             Item.width = Item.height = 94;
             Item.damage = 150;
             Item.noMelee = true;
             Item.noUseGraphic = true;
-            Item.useAnimation = Item.useTime = 38;
+            Item.useAnimation = Item.useTime = 32;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 10f;
             Item.UseSound = SoundID.Item1;

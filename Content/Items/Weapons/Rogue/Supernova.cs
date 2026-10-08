@@ -10,7 +10,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
 {
     /// <summary>
     /// 超新星（Supernova）—— 「超新星」下位链的**最后一件**（链顶）。
-    /// 老规矩取灾厄 **2.0**：34×36、伤害 **675**、击退 8、使用/动画各 24 帧、
+    /// 老规矩取灾厄 **2.0**：34×36、伤害 **675**、击退 8、**使用/动画各 19 帧**（2.0 源值 24，
+    /// 用户 2026-10-08 指定改为 19）、
     /// **红底 + 月后 15 档（紫，＝灾厄 Violet）**、价值 **1 铂金 50 金**（`Rarity15BuyPrice`）、
     /// 弹速 16、使用音 <c>SoundID.Item15</c>
     /// （2.0.3.9 数值相同、2.0.4 起整件重做成 106×112 的智能炸弹 Holdout——本件都不取）。
@@ -52,7 +53,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
         {
             damage.Base = BaseDamage;
         }
-        /// <summary>基础属性：34×36、伤害 675、击退 8、24 帧、月后 15 档、1 铂金 50 金、弹速 16</summary>
+        /// <summary>基础属性：34×36、伤害 675、击退 8、19 帧（用户 2026-10-08 指定，源 24）、月后 15 档、1 铂金 50 金、弹速 16</summary>
         public override void SetDefaults()
         {
             Item.width = 34;
@@ -60,7 +61,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.damage = 675;
             Item.noMelee = true;
             Item.noUseGraphic = true;
-            Item.useAnimation = Item.useTime = 24;
+            Item.useAnimation = Item.useTime = 19;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 8f;
             Item.UseSound = SoundID.Item15;
