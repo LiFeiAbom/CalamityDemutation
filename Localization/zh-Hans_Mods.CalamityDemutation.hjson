@@ -1640,6 +1640,10 @@ Items: {
 			'''
 	}
 
+	MeldConstruct: {
+		DisplayName: 熵构体
+	}
+
 	MirageMirror: {
 		DisplayName: 幻影魔镜
 		Tooltip:
