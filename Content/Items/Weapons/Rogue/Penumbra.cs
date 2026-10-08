@@ -69,6 +69,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.shootSpeed = ShootSpeed;
             Item.DamageType = CDUtil.GetRogueDamageClass();
         }
+        /// <summary>
+        /// 允许本件进「任意武器」前缀池（掷出类武器可附魔的关键）：照灾厄 <c>RogueWeapon</c> 的做法，
+        /// 把 <c>WeaponPrefix()</c> 置真——tML 默认对自定义伤害类返回 false，详见震爆手雷里的长注释。
+        /// </summary>
+        public override bool WeaponPrefix() => true;
+        /// <summary>照灾厄 <c>RogueWeapon</c> 显式关掉远程前缀</summary>
+        public override bool RangedPrefix() => false;
         /// <summary>+16% 暴击（照源走 <c>ModifyWeaponCrit</c>，不写进 SetDefaults）</summary>
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += CritBonus;
         /// <summary>

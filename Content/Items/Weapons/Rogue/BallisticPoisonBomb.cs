@@ -52,6 +52,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.DamageType = CDUtil.GetRogueDamageClass();
         }
         /// <summary>
+        /// 允许本件进「任意武器」前缀池（掷出类武器可附魔的关键）：照灾厄 <c>RogueWeapon</c> 的做法，
+        /// 把 <c>WeaponPrefix()</c> 置真——tML 默认对自定义伤害类返回 false，详见震爆手雷里的长注释。
+        /// </summary>
+        public override bool WeaponPrefix() => true;
+        /// <summary>照灾厄 <c>RogueWeapon</c> 显式关掉远程前缀</summary>
+        public override bool RangedPrefix() => false;
+        /// <summary>
         /// 潜行打击就绪时一次抛出 3 枚（角度扇形散开、每枚伤害取 1/3），逐枚标记成潜行打击；
         /// 否则返回 true 走默认投掷。
         /// </summary>

@@ -92,6 +92,24 @@
   **整个模组会被 tModLoader 禁用**（不是"贴图不显示"）。同理，删 `.fx` 时记得连 `.fxc` 一起删。
 - **单文件装多类**：CE/CWR 来源的武器常把 物品 + 手持弹幕 + 标记弹幕 写在同一个文件里（CI/本体来源的多为分文件），
   移植时随源风格走。
+- **掷出（盗贼）武器必须自己开前缀池，否则没法附魔（2026-10-08 用户点名"盗贼武器没法进行附魔"后查清）**：
+  tML 决定物品能否进「任意武器」前缀池（`PrefixCategory.AnyWeapon`）的入口是
+  `ItemLoader.WeaponPrefix(item)` → `ModItem.WeaponPrefix()`，而它默认是
+  「`DamageType.GetsPrefixesFor(Melee)` 且非 `noUseGraphic` → true，否则 `GetsPrefixesFor(Generic)`」；
+  `GetsPrefixesFor` 又经 `GetPrefixInheritance` → `GetEffectInheritance`，
+  灾厄 `RogueDamageClass` 只声明了 `GetEffectInheritance(Throwing) => true`（Generic / Melee 都是 false）
+  → **前缀池为空、哥布林点不出词缀**。灾厄自己的 `RogueWeapon` 就是靠一句 `WeaponPrefix() => true` 解决的
+  （它源码注释："custom damage classes for weapons still don't allow for generic weapon prefixes"）。
+  **本工程的掷出类武器 → 一律在物品里写 `public override bool WeaponPrefix() => true;` 与
+  `public override bool RangedPrefix() => false;`**（软依赖下不必继承灾厄的 `RogueWeapon`，
+  这两条是 tML 的钩子、零灾厄类型依赖）。已挂：震爆手雷 / 弹道毒炸弹 / 破坏者 / 毁灭之星 / 封存奇点 / 半影 / 超新星。
+  配套事实（同批核过，别再查）：灾厄盗贼前缀 `RogueWeaponPrefix.CanRoll` 只要求
+  `item.CountsAsClass<ThrowingDamageClass>() && (maxStack == 1 || AllowReforgeForStackableItem)`
+  ——前者对「伤害类型＝灾厄 RogueDamageClass」的弹幕/武器天然成立；前缀的潜行伤害加成写在
+  `CalamityPlayer.ModifyWeaponDamage` 里、只判 `item.CountsAsClass<RogueDamageClass>()`，
+  **没有** `RogueWeapon` 类型检查，所以补上钩子后盗贼专属词缀（含 +潜行伤害那些）也会自动生效。
+  注意：**消耗品/可堆叠**武器（本工程的震爆手雷，maxStack 999）按灾厄同一口径**不**置
+  `Item.AllowReforgeForStackableItem`，因此它仍然不可附魔——与灾厄自己的同名件一致，需要改再说。
 
 ## 5. 联机（多人）约定
 
@@ -419,6 +437,19 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
   工程基线：`dotnet build` 0 警告 0 错误、资源自检 **160 条全命中**（超新星 + 三把膨胀档落地后复核）。
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
+- 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
+  用户反馈：本批次的盗贼武器在哥布林那里点不出词缀。查清（IL 直读 `tModLoader.dll`，细节见第 4 节新条目）：
+  tML 的前缀池入口 `ModItem.WeaponPrefix()` 默认为「近战前缀 或 通用前缀」，
+  而灾厄 `RogueDamageClass` 的 `GetEffectInheritance` 只认 `Throwing` → 两边都不成立 → 前缀池为空。
+  修法＝照灾厄 `RogueWeapon` 的做法，在 7 件物品里各加
+  **`public override bool WeaponPrefix() => true;`** 与 **`public override bool RangedPrefix() => false;`**
+  （tML 钩子，**不需要继承灾厄的类型**，因此仍是纯软依赖）。7 件＝震爆手雷 / 弹道毒炸弹 / 破坏者 /
+  毁灭之星 / 封存奇点 / 半影 / 超新星。
+  顺带核实（写进第 4 节）：盗贼前缀 `RogueWeaponPrefix.CanRoll` 的条件对我们天然成立；
+  前缀的潜行伤害加成在 `CalamityPlayer.ModifyWeaponDamage` 里只判 `CountsAsClass<RogueDamageClass>()`，
+  没有 `RogueWeapon` 类型检查 → 补钩子后连盗贼专属词缀一起生效。
+  唯一例外：**可堆叠的震爆手雷**按灾厄同口径不加 `AllowReforgeForStackableItem`，仍然不可附魔（与源一致）。
+  验证：编译 0 警告 0 错误；资源自检 160 条全命中。
   用户逐把点名：**毁灭之星 150 → 438**、**半影 1008 → 1600**、**超新星 675 → 2250**。
   落地方式＝第 7 节模板：`InflatedDamage` 常量 + `BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage`
   + `ModifyWeaponDamage(player, ref damage) => damage.Base = BaseDamage`（三件各自加 `using CalamityDemutation.Systems;`）。

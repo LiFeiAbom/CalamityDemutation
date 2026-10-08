@@ -1642,6 +1642,7 @@ Items: {
 
 	MeldConstruct: {
 		DisplayName: 熵构体
+		// Tooltip: ""
 	}
 
 	MirageMirror: {

@@ -1641,6 +1641,7 @@ Items: {
 
 	MeldConstruct: {
 		DisplayName: Meld Construct
+		Tooltip: ""
 	}
 
 	MirageMirror: {

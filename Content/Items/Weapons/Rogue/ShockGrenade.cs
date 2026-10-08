@@ -65,6 +65,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.DamageType = CDUtil.GetRogueDamageClass();
         }
         /// <summary>
+        /// 允许本件进「任意武器」前缀池——**掷出类武器能不能附魔就看这一条**。
+        /// tML 的 <c>ModItem.WeaponPrefix()</c> 默认走 <c>DamageType.GetsPrefixesFor(Melee/Generic)</c>，
+        /// 而灾厄 <c>RogueDamageClass</c> 只声明了 <c>GetEffectInheritance(Throwing) =&gt; true</c>
+        /// （对 Generic / Melee 都是 false）→ 前缀池为空、哥布林点不出词缀。
+        /// 灾厄自己的 <c>RogueWeapon</c> 就是靠 <c>WeaponPrefix() =&gt; true</c> 解决的
+        ///（源注释："custom damage classes for weapons still don't allow for generic weapon prefixes"）。
+        /// 本工程软依赖**不继承**它，直接把这两条钩子照搬。
+        /// </summary>
+        public override bool WeaponPrefix() => true;
+        /// <summary>照灾厄 <c>RogueWeapon</c> 显式关掉远程前缀（掷出类不吃远程前缀池）</summary>
+        public override bool RangedPrefix() => false;
+        /// <summary>
         /// 潜行打击就绪时自己生成一枚、并把它标记成潜行打击（灾厄的 <c>projectile.Calamity().stealthStrike</c>）；
         /// 否则返回 true 走默认投掷路径。
         /// </summary>
