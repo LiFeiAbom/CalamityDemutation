@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Rogue;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -32,11 +33,24 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
         private const float StealthDamageMultiplier = 1.08f;
         /// <summary>2.0 配方里震爆手雷的用量（照源）</summary>
         private const int ShockGrenadeCount = 200;
+        /// <summary>数值膨胀后的面板伤害（用户 2026-10-08 指定：675 → 2250）</summary>
+        private const float InflatedDamage = 2250f;
+        /// <summary>当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 675</summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
 
         /// <summary>研究解锁一份（源 2.0 写 SacrificeTotal = 1）</summary>
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
+        }
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
+        /// 本件派生伤害（炸弹 → 爆炸全额 / 尖刺 ×0.6 / 追踪能量 ×0.5、潜行外溢 ×0.48）
+        /// 全部由 <c>Shoot</c> 的 <c>damage</c> 与弹幕伤害往下传，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>基础属性：34×36、伤害 675、击退 8、24 帧、月后 15 档、1 铂金 50 金、弹速 16</summary>
         public override void SetDefaults()

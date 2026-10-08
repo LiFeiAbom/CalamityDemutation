@@ -257,6 +257,24 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 暴政 | 890 | 2200 | 同一开关额外把每次挥砍的火焰 6→10、单枚火焰伤害 25%→75% |
 | 女妖之爪（BansheeHook） | 220 | 250 | 用户 2026-10-03 指定；关态 220 取自大修重制版（源本体 250），2026-10-05 审计时补登记 |
 
+**「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
+
+| 武器 | 关态（本批次落的 2.0 源值） | 开态 | 备注 |
+|---|---|---|---|
+| 震爆手雷（ShockGrenade） | 90 | 待点名 | 消耗品投掷武器 |
+| 弹道毒炸弹（BallisticPoisonBomb） | 50 | 待点名 | |
+| 破坏者（TotalityBreakers） | 55 | 待点名 | |
+| 毁灭之星（StarofDestruction） | 150 | **438** | 用户 2026-10-08 指定 |
+| 封存奇点（SealedSingularity） | 260 | 待点名 | |
+| 半影（Penumbra） | 1008 | **1600** | 用户 2026-10-08 指定；另带 +16% 暴击（走 `ModifyWeaponCrit`，不随开关变） |
+| 超新星（Supernova） | 675 | **2250** | 用户 2026-10-08 指定 |
+
+这 7 把都是「盗贼路」武器（落地时已统一 `CDUtil.GetRogueDamageClass()`），膨胀模板同上
+（`InflatedDamage` + `BaseDamage` + `ModifyWeaponDamage`），而且**没有一件需要额外改派生点**：
+它们的派生伤害本来就走 `Shoot` 的 `damage` 参数与弹幕自身伤害（毁灭地雷 → 毁灭弹 ×0.5；
+超新星炸弹 → 爆炸全额 / 尖刺 ×0.6 / 追踪能量 ×0.5、潜行外溢 ×0.48；半影炸弹 → 暗影魂 ×0.15 / ×0.08 + 爆炸半伤），
+所以 `ModifyWeaponDamage` 一挂就整条跟随。
+
 跳过（用户明确点名，不接入）：混乱之刃 150、霜火之刃 125、禁忌誓约之刃 110。
 
 - **档位倍率参考**（Lilac-Arcane-Pack 的分档膨胀表，可用来核对「掉落源 → 倍率」）：
@@ -315,18 +333,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
   **下一步（用户 2026-10-08 定的顺序）＝数值膨胀**：本批次这 7 把武器一起挂 `ConfigSystem.StatInflation`
-  的「关态 → 开态」两档，模板与做法见第 7 节（`BaseDamage` + `ModifyWeaponDamage`，派生伤害要把
-  `Item.damage` 换成 `BaseDamage`）。**关态已经是各件落的 2.0 源值，开态等用户逐把点名**：
+  的「关态 → 开态」两档，模板与做法见第 7 节（`BaseDamage` + `ModifyWeaponDamage`）。
+  **进度：3/7 已接入**（用户 2026-10-08 逐把点名的那三把，其余四把的开态待点名）：
 
-  | 武器 | 关态（已落地，2.0 源值） | 开态（待用户点名） |
+  | 武器 | 关态（已落地，2.0 源值） | 开态 |
   |---|---|---|
-  | 震爆手雷 `ShockGrenade` | 90 | ？ |
-  | 弹道毒炸弹 `BallisticPoisonBomb` | 50 | ？ |
-  | 破坏者 `TotalityBreakers` | 55 | ？ |
-  | 毁灭之星 `StarofDestruction` | 150 | ？ |
-  | 封存奇点 `SealedSingularity` | 260 | ？ |
-  | 半影 `Penumbra` | 1008 | ？ |
-  | 超新星 `Supernova` | 675 | ？ |
+  | 震爆手雷 `ShockGrenade` | 90 | 待点名 |
+  | 弹道毒炸弹 `BallisticPoisonBomb` | 50 | 待点名 |
+  | 破坏者 `TotalityBreakers` | 55 | 待点名 |
+  | 毁灭之星 `StarofDestruction` | 150 | **438 ✅** |
+  | 封存奇点 `SealedSingularity` | 260 | 待点名 |
+  | 半影 `Penumbra` | 1008 | **1600 ✅** |
+  | 超新星 `Supernova` | 675 | **2250 ✅** |
 
   可选的"非伤害项"（第 7 节允许同一开关门控数量/栏位/几率，届时要不要一起挂）：
   超新星的潜行外溢能量间隔（8 帧）与喷发数、弹道毒炸弹的毒云/尖刺数量、
@@ -399,7 +417,17 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **160 条全命中**（超新星落地后复核）。
+  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **160 条全命中**（超新星 + 三把膨胀档落地后复核）。
+- 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
+  用户逐把点名：**毁灭之星 150 → 438**、**半影 1008 → 1600**、**超新星 675 → 2250**。
+  落地方式＝第 7 节模板：`InflatedDamage` 常量 + `BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage`
+  + `ModifyWeaponDamage(player, ref damage) => damage.Base = BaseDamage`（三件各自加 `using CalamityDemutation.Systems;`）。
+  **三件都不需要改派生点**（这是本批次"派生伤害一律走 `Shoot` 的 `damage` 参数"设计的直接好处）：
+  毁灭之星 → 地雷伤害跟着面板走、弹幕里再派生 ×0.5 的毁灭弹；
+  超新星 → 爆炸全额 / 尖刺 ×0.6 / 追踪能量 ×0.5 / 潜行外溢 ×0.48 全按弹幕伤害算；
+  半影 → 暗影魂 ×0.15（潜行 ×0.08）与爆炸半伤同理。
+  未开关时面板维持 2.0 源值，开关在游戏内即时生效（该配置项没有 `ReloadRequired`）。
+  验证：编译 0 警告 0 错误；资源自检 160 条全命中。
 - 最近一批工作（2026-10-08）：**移植超新星（Supernova）本体—— "超新星"链的链顶（本批次最后一件）。**
   口径：老规矩取 2.0：34×36、伤害 **675**、击退 8、使用/动画各 24 帧、
   **红底 + 月后 15 档（紫＝灾厄 Violet）**、价值 **1 铂金 50 金**、弹速 16、使用音 `SoundID.Item15`
