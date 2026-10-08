@@ -84,6 +84,11 @@ Buffs: {
 		DisplayName: 塞壬
 	}
 
+	SiriusBuff: {
+		DisplayName: 天狼星
+		Description: 有点太亮了，但它能帮上你
+	}
+
 	SolarGodSpiritBuff: {
 		DisplayName: 太阳神之灵
 		Description: 太阳神之灵会保护你
@@ -2060,6 +2065,17 @@ Items: {
 			'''
 	}
 
+	Sirius: {
+		DisplayName: 天狼星
+		Tooltip:
+			'''
+			召唤夜空中最明亮的星，照耀你的敌人
+			使用时消耗全部剩余召唤栏
+			必须从快捷栏使用
+			消耗的召唤栏越多，威力越强
+			'''
+	}
+
 	Sponge: {
 		DisplayName: 涡流虹吸石
 		Tooltip:
@@ -2717,6 +2733,9 @@ Projectiles: {
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
+	SiriusBeam.DisplayName: 光束
+	SiriusExplosion.DisplayName: 爆炸
+	SiriusMinion.DisplayName: 天狼星
 	SolarBeam.DisplayName: 光束
 	SolarGod.DisplayName: 太阳神
 	SolarPixie.DisplayName: 太阳之灵

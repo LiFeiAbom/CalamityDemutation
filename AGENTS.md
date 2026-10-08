@@ -350,14 +350,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 ## 8. 当前状态（截至最后一次会话）
 
 - **【新会话第一屏 · 2026-10-08 收尾】——**
-  ① **「太阳神杖 / 天狼星」召唤链（差链尾）**：链底 沙漠羽毛 → 太阳之灵法杖 → 太阳神杖（**这三件已落地，都含配方**）
-     → **链尾 天狼星 `Sirius`（待用户拍板是否移植）**。
-     **更正（2026-10-08）**：链顶并不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`，
-     天狼星才是链尾；逐版数据见「批次 B」末尾。
+  ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：沙漠羽毛 → 太阳之灵法杖 → 太阳神杖 → **链尾 天狼星 `Sirius`**，
+     四件都含配方（逐版侦察、软依赖改写与配方结论见「批次 B」）。
+     **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
   ② **唯一待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
      其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **本链新落地的两把法杖（太阳之灵法杖 12 / 太阳神杖 60）尚未点名开态值，等用户一并处理**。
+     **本链新落地的三件召唤武器（太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160）尚未点名开态值，等用户一并处理**。
   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **161 条全命中**；
     工作区干净、与 `origin/master` 同步。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
@@ -458,7 +457,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **链条（从下往上）**：① **沙漠羽毛 `DesertFeather` ✅（已落地，链底·纯掉落无配方）**
   → ② **太阳之灵法杖 `SunSpiritStaff` ✅（已落地，含配方；用户 2026-10-08 拍板按"旧版回归 + 同名不同物"自持 2.0 版）**
   → ③ **太阳神杖 `SunGodStaff` ✅（已落地，含配方）**——现代版 2.0.3.9 起已删、被 `VengefulSunStaff` 取代。
-  → ④ **天狼星 `Sirius`（链尾·待拍板）**——2.0 里它吃到 ③ 当材料，侦察结论见本批次末尾。
+  → ④ **天狼星 `Sirius` ✅（已落地，含配方）**——链尾，2.0 里它吃到 ③ 当材料；侦察结论见本批次末尾。
   **侦察结论（2026-10-08 逐版核完，别再重查）**：
   整条链**只有沙漠羽毛**是"现代版删了、又没替代"的件。其余：
   太阳之灵法杖在实装 2.2.2 里仍在 ✔（现代版配方是全原版材料）；
@@ -1866,6 +1865,34 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `Projectiles.SolarGod.DisplayName`（zh 太阳神）、`Projectiles.SolarBeam.DisplayName`（zh 光束）。
   验证：编译 **0 警告 0 错误**；资源自检 **161 条全命中**；同名不同扩展名自检无冲突。
   用户 2026-10-08 附注：**数值膨胀之后一并处理**（本链两把法杖的开态值尚未点名）。
+- 最近一批工作（2026-10-08 更晚）：**移植天狼星（Sirius）—— 「太阳神杖 / 天狼星」链的链尾（④），本链真正收官。**
+  口径取 2.0（用户 2026-10-08 指定「按 2.0 流程走」）：贴图 68×70 / 判定 62×62、伤害 **160**、击退 3、
+  使用/动画 **10 帧**、魔力 10、弹速 10、**红底 + 月后 13 档（荧光绿，＝灾厄 `PureGreen`）**、价值 **1 铂金 40 金**、
+  音 `SoundID.Item44`。机制照源：出手**消耗全部剩余召唤栏**（`HoldItem` 每帧算"总栏位 − 自己以外仆从占用"，
+  剩余栏位写进弹幕 `ai[0]`、冷却初值 30 写进 `ai[1]`），星灵每帧 `minionSlots = ai[0]`（吃光栏位），
+  **栏位越多越强**：光束伤害 ×`(ln(栏位)+1)`、穿透数 = 栏位数；索敌半径 **7000 且不查视线**、30 帧一发。
+  新增四件内容：弹幕 `SiriusMinion`（38×48、悬停头顶、重力翻转翻面、鼠标色脉动缩放、登场 50 颗
+  `DustID.PurificationPowder` 光点、源写 `Lighting.AddLight(1, 0.5, 5)` 的夸张蓝光**照抄**）、
+  弹幕 `SiriusBeam`（4×4 **隐身**、`extraUpdates 220`、1000 帧、逐敌 110 帧独立冷却、飞行 3 帧后拖白蓝光点；
+  穿透数由星灵逐发改写）、弹幕 `SiriusExplosion`（源贴图是 `CalamityMod/Projectiles/StarProj` 72×72，
+  本工程**拷成本件同名贴图 `SiriusExplosion.png`**，软依赖下不依赖灾厄资源；先旋转放大 60 帧，
+  在 `OnKill` 里把碰撞箱临时撑到 60×60 打范围伤害再还原）、增益 `SiriusBuff`（模板同前两件）；
+  玩家侧新增 `sirius` 标志与 `siriusSlots`（见下）。
+  **联机改写（重要）**：源把"剩余召唤栏数"存在 **ModItem 的实例字段** `siriusSlots` 上——ModItem 是全类型共享单例，
+  联机两名玩家会互相串数值；按工程约定（第 5 节）挪到 `CalamityDemutationPlayer.siriusSlots`（`HoldItem` 每帧重算，
+  不随 ResetEffects 复位，故**没进** `ResetEffects` 清单），`sirius` 标志则照模板进 `ResetEffects` / `UpdateDead`。
+  **软依赖改写**：源的"命中施加夜凋"走 `CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "Nightwither", 180, BuffID.ShadowFlame)`
+  ——`Nightwither` 在**现代 2.2.2 与经典 1.0.0.17 里都有**（已用 Cecil 逐版核过），故兜底极少触发；
+  清场照旧用等价循环，不引灾厄类型。
+  **API 坑（新）**：本 tML build 里 `ModProjectile.Kill(int)` **已标记过时**（工程基线 0 警告），要写 `OnKill(int timeLeft)`；
+  同理源里的裸值尘 `20` / `267` 要写 `DustID.PurificationPowder` / `DustID.LastPrism`。
+  **配方（照源 2.0，两分支各一条、缺件即退化成单分支）**：太阳神杖 + 流明石×5 + 灾厄魂×2 + 起源之簇×12
+  @ **远古操纵机**（`TileID.LunarCraftingStation`）。**材料类名两版不同**（已逐条核过 `.tmod`）：
+  现代 `Lumenyl` / `ExodiumCluster`，经典 `Lumenite` / `ExodiumClusterOre`，灾厄魂两边都叫 `RuinousSoul`。
+  本地化中英各补 `Items.Sirius`（zh **天狼星**）、`Buffs.SiriusBuff`（zh 天狼星 / 「有点太亮了，但它能帮上你」）、
+  `Projectiles.SiriusMinion|SiriusBeam|SiriusExplosion.DisplayName`。
+  验证：编译 **0 警告 0 错误**；资源自检 **162 条全命中**；同名不同扩展名自检无冲突。
+  用户 2026-10-08 附注：**数值膨胀仍之后一并处理**（本链三件召唤武器的开态值尚未点名）。
 
 ## 9. 古圣金源套（AuricTesla）与其四套下位 —— 对照结论与待办
 

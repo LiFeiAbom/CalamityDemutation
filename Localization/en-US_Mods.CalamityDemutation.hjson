@@ -84,6 +84,11 @@ Buffs: {
 		DisplayName: Siren
 	}
 
+	SiriusBuff: {
+		DisplayName: Sirius
+		Description: A bit too bright, but it helps you
+	}
+
 	SolarGodSpiritBuff: {
 		DisplayName: Solar God Spirit
 		Description: The solar god spirit will protect you
@@ -2059,6 +2064,17 @@ Items: {
 			'''
 	}
 
+	Sirius: {
+		DisplayName: Sirius
+		Tooltip:
+			'''
+			Summons the brightest star in the night sky to shine upon your foes
+			Consumes all of the remaining minion slots on use
+			Must be used from the hotbar
+			Increased power based on the number of minion slots used
+			'''
+	}
+
 	Sponge: {
 		DisplayName: Sponge
 		Tooltip:
@@ -2718,6 +2734,9 @@ Projectiles: {
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
+	SiriusBeam.DisplayName: Beam
+	SiriusExplosion.DisplayName: Explosion
+	SiriusMinion.DisplayName: Sirius
 	SolarBeam.DisplayName: Beam
 	SolarGod.DisplayName: Solar God
 	SolarPixie.DisplayName: Solar Pixie

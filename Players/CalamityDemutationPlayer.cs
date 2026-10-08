@@ -735,6 +735,16 @@ namespace CalamityDemutation.Players
         /// 塞壬娘（SirenLure）仆从在场标记：由 SirenLure 召唤增益每帧置位，受魅惑之饵驱动
         /// </summary>
         public bool sirenLureWaifu = false;
+        /// <summary>
+        /// 天狼星（SiriusMinion）星灵在场标记：由同名召唤增益每帧置位，供星灵弹幕续命（对应源的 sirius）
+        /// </summary>
+        public bool sirius = false;
+        /// <summary>
+        /// 天狼星法杖本次能吃下的召唤栏数：由该武器的 <c>HoldItem</c> 每帧重算（总栏位 − 自己以外仆从占用的栏位），
+        /// 出手时写进弹幕的 <c>ai[0]</c>。**源把这值存在 ModItem 实例字段上，联机会串号**，
+        /// 故按工程约定（第 5 节）挪到 ModPlayer；只在持握时重算，不随 ResetEffects 复位。
+        /// </summary>
+        public int siriusSlots = 0;
         public bool soaring = false;
         /// <summary>
         /// 已装备海绵：大量生存属性、静止回复与溺水免疫，受击时回血并迸发电火花与孢子弹幕
@@ -1052,6 +1062,7 @@ namespace CalamityDemutation.Players
             silvaThrowing = false;
             sCrystal = false;
             sirenLureWaifu = false;
+            sirius = false;
             soaring = false;
             sponge = false;
             statisBlessing = false;
@@ -1247,6 +1258,7 @@ namespace CalamityDemutation.Players
             silvaThrowing = false;
             sCrystal = false;
             sirenLureWaifu = false;
+            sirius = false;
             soaring = false;
             sponge = false;
             statisBlessing = false;
