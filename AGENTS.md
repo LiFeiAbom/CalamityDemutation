@@ -281,11 +281,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 | 武器 | 关态（本批次落的 2.0 源值） | 开态 | 备注 |
 |---|---|---|---|
-| 震爆手雷（ShockGrenade） | 90 | 待点名 | 消耗品投掷武器 |
-| 弹道毒炸弹（BallisticPoisonBomb） | 50 | 待点名 | |
-| 破坏者（TotalityBreakers） | 55 | 待点名 | |
+| 震爆手雷（ShockGrenade） | 90 | 不接入 | 消耗品投掷武器；用户 2026-10-08 冻结 |
+| 弹道毒炸弹（BallisticPoisonBomb） | 50 | 不接入 | 用户 2026-10-08 冻结 |
+| 破坏者（TotalityBreakers） | 55 | 不接入 | 用户 2026-10-08 冻结 |
 | 毁灭之星（StarofDestruction） | 150 | **438** | 用户 2026-10-08 指定 |
-| 封存奇点（SealedSingularity） | 260 | 待点名 | |
+| 封存奇点（SealedSingularity） | 260 | 不接入 | 用户 2026-10-08 冻结 |
 | 半影（Penumbra） | 1008 | **1600** | 用户 2026-10-08 指定；另带 +16% 暴击（走 `ModifyWeaponCrit`，不随开关变） |
 | 超新星（Supernova） | 675 | **2250** | 用户 2026-10-08 指定 |
 
@@ -349,29 +349,28 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【新会话第一屏 · 2026-10-08 收尾】当前有两条并行待办 ——**
-  ① **「太阳神杖 / 天狼星」召唤链（进行中）**：链底 **沙漠羽毛 ✅ 已落地**（纯掉落、无配方）；
-     **下一件＝太阳之灵法杖 `SunSpiritStaff`，做到"配方"这一步要停下来找用户拍板**
-     （用户原话：「从低端那个开始，进行移植，移植到配方时给我说，我来拍板」）；
-     完整侦察结论与三版配方见下面的「批次 B」。
-  ② **「超新星」批次的数值膨胀 3/7**：**剩 4 把的开态待用户点名**——震爆手雷 90 / 弹道毒炸弹 50 /
-     破坏者 55 / 封存奇点 260；另有"非伤害项"候选清单（见「批次 A」末尾）是否一起挂开关，也待点名。
+- **【新会话第一屏 · 2026-10-08 收尾】当前只有一条待办主线 ——**
+  ① **「太阳神杖 / 天狼星」召唤链（进行中）**：链底 **沙漠羽毛 ✅**、中间件 **太阳之灵法杖 ✅ 已落地**
+     （物品 + 弹幕 `SolarPixie` + 增益 `SolarSpirit` + 配方，侦察与配方结论见「批次 B」）；
+     **下一件＝链顶 太阳神杖 `SunGodStaff`**，配方已由用户 2026-10-08 拍板（㈠ 现代 + ㈣ 经典，见「批次 B」末尾）。
+  ② **「超新星」批次的数值膨胀已结**：用户 2026-10-08 拍板**剩下 4 把的开态不再变动**——
+     震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点维持 2.0 源值、**不接入膨胀**；"非伤害项"候选一并搁置。
   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **160 条全命中**；
-    工作区干净、与 `origin/master` 同步（最近提交 **`f1ab284`**）。
+    工作区干净、与 `origin/master` 同步。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
-  **下一步（用户 2026-10-08 定的顺序）＝数值膨胀**：本批次这 7 把武器一起挂 `ConfigSystem.StatInflation`
-  的「关态 → 开态」两档，模板与做法见第 7 节（`BaseDamage` + `ModifyWeaponDamage`）。
-  **进度：3/7 已接入**（用户 2026-10-08 逐把点名的那三把，其余四把的开态待点名）：
+  **数值膨胀＝已结**：本批次 7 把走「关态 → 开态」两档、模板与做法见第 7 节（`BaseDamage` + `ModifyWeaponDamage`）；
+  **进度 3/7 已接入**（用户 2026-10-08 逐把点名的那三把），**其余 4 把用户 2026-10-08 拍板不接入**
+  （维持 2.0 源值，开态栏留空，别再问）：
 
   | 武器 | 关态（已落地，2.0 源值） | 开态 |
   |---|---|---|
-  | 震爆手雷 `ShockGrenade` | 90 | 待点名 |
-  | 弹道毒炸弹 `BallisticPoisonBomb` | 50 | 待点名 |
-  | 破坏者 `TotalityBreakers` | 55 | 待点名 |
+  | 震爆手雷 `ShockGrenade` | 90 | 不接入（用户 2026-10-08 冻结） |
+  | 弹道毒炸弹 `BallisticPoisonBomb` | 50 | 不接入（用户 2026-10-08 冻结） |
+  | 破坏者 `TotalityBreakers` | 55 | 不接入（用户 2026-10-08 冻结） |
   | 毁灭之星 `StarofDestruction` | 150 | **438 ✅** |
-  | 封存奇点 `SealedSingularity` | 260 | 待点名 |
+  | 封存奇点 `SealedSingularity` | 260 | 不接入（用户 2026-10-08 冻结） |
   | 半影 `Penumbra` | 1008 | **1600 ✅** |
   | 超新星 `Supernova` | 675 | **2250 ✅** |
 
@@ -451,11 +450,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
 - 最近一批工作（2026-10-08 更晚）：**按用户点名改 4 把盗贼武器的使用帧（源 2.0 值 → 用户值）。**
 - 最近一批工作（2026-10-08 更晚）：**按用户点名改超新星弹速（16 → 20）。**
-- **【批次 B · 「太阳神杖 / 天狼星」召唤链：由链底往上移植，做到配方环节停下来找用户拍板】**
+- **【批次 B · 「太阳神杖 / 天狼星」召唤链：由链底往上移植】**
   用户口径原话：「从低端那个开始，进行移植，移植到配方时给我说，我来拍板。」
   **链条（从下往上）**：① **沙漠羽毛 `DesertFeather` ✅（已落地，链底·纯掉落无配方）**
-  → ② 太阳之灵法杖 `SunSpiritStaff`（**下一件，这里有配方 → 先找用户拍板**）
-  → ③ 太阳神杖 `SunGodStaff`（链顶，**现代版 2.0.3.9 起已删**，被 `VengefulSunStaff` 取代）。
+  → ② **太阳之灵法杖 `SunSpiritStaff` ✅（已落地，含配方；用户 2026-10-08 拍板按"旧版回归 + 同名不同物"自持 2.0 版）**
+  → ③ 太阳神杖 `SunGodStaff`（**下一件**，链顶，**现代版 2.0.3.9 起已删**，被 `VengefulSunStaff` 取代）。
   **侦察结论（2026-10-08 逐版核完，别再重查）**：
   整条链**只有沙漠羽毛**是"现代版删了、又没替代"的件。其余：
   太阳之灵法杖在实装 2.2.2 里仍在 ✔（现代版配方是全原版材料）；
@@ -463,12 +462,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   "Essence of Sunlight"**，属性一致 = 同一件改类名，所以 1.3 那条不必自备）；
   烬核 `CoreofCinder` 实装已删 ✗，但**本工程已有同名自持件**（余烬核心，配方＝日光精华+灵气 → ×3 @ 秘银砧）；
   三魂（力量/视域/恐惧）与砂岩砖都是原版 ✔。
-  **三档配方备查（等用户选）**：
-  ㈠ **2.0**（推荐，默认老规矩）：太阳神杖 = 太阳之灵法杖 + **日光精华×5** + 三魂×3 @ 秘银砧
-  ——**三味全在实装/原版，一件都不用自备**；太阳之灵法杖自己 = 砂岩砖×20 + **沙漠羽毛×2** @ 铁砧。
-  ㈡ **1.3**：同上（只是把 `EssenceofCinder` 读作现代版 `EssenceofSunlight`）。
-  ㈢ **经典 cal-1.1/1.2**：太阳神杖 = 太阳之灵法杖 + **烬核×5 + 沙漠羽毛×3** @ 秘银砧
-  （多一味羽毛；烬核工程已有现成件）。
+  **四档配方备查（用户 2026-10-08 已拍板：㈠ 现代 + ㈣ 经典，别再问）**：
+  ㈠ **2.0**（**采用·现代分支**）：太阳神杖 = 太阳之灵法杖 + **日光精华×5** + 三魂×3 @ 秘银砧
+  ——**三味全在实装/原版，一件都不用自备**（日光精华在实装 2.2.2 里仍在，软引用）；
+  太阳之灵法杖自己 = 砂岩砖×20 + **沙漠羽毛×2** @ 铁砧（**2.0 与经典三条线逐字相同**，故只注册一条、两分支通用）。
+  ㈡ **1.3**：与㈠同（只是把源里的类名 `EssenceofCinder` 读作现代版 `EssenceofSunlight`）。
+  ㈢ **经典 cal-1.1/1.2**：太阳神杖 = 太阳之灵法杖 + **烬核×5 + 沙漠羽毛×3** @ 秘银砧（多一味羽毛）。
+  ㈣ **经典 cal-1.4.2.101**（**采用·经典分支**）：太阳神杖 = 太阳之灵法杖 + **烬核 `CoreofCinder`×5**（用本模组自持件）
+  + 三魂×3 @ 秘银砧——与 2.0 同构，只是把日光精华换成工程已有的烬核。
+  **落地口径（拍板结果）**：现代分支（`CalamityMod` 在场）取 `EssenceofSunlight`；经典分支
+  （`CalamityModClassicPreTrailer` 在场）取本模组的 `CoreofCinder`；两分支各注册一条，缺件即退化成单分支。
   **面板数据备查**（要落地时直接抄）：
   太阳神杖 2.0 = 72×72 / 伤害 60 / 击退 1.25 / 使用 25 帧 / 魔力 10 / **浅紫 LightPurple** / 48 金；
   经典版换 50×50 / 36 帧 / 12 金（cal-1.2 黄档、cal-1.4.2.101 浅紫档）。
@@ -1782,6 +1785,26 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 验证状态：编译 **0 警告 0 错误**；被删 CWR/CE 类名在工程内残留提及 **0**；音效字段与素材路径存在性检查通过；
   联机复查结论：ModItem 可变状态字段 0 处、鼠标读取全部有守卫、摄像机 0 处、命中回调类生成点无需判据
   （理由见第 5 节）。
+- 最近一批工作（2026-10-08 更晚）：**移植太阳之灵法杖（SunSpiritStaff）—— 「太阳神杖 / 天狼星」链的中间件（②）。**
+  口径取 2.0 并**自持**（本件在实装 2.2.2 里仍在，但已是可叠层强化、22 伤、配方换琥珀/蚁狮颚/棕榈木的重制版；
+  自持与本体同名件互不干扰）：物品 44×48 / 伤害 12 / 魔力 10 / 击退 1.15 / 使用 35 帧 / 蓝档 /
+  **1 金**（源用 `CalamityGlobalItem.Rarity1BuyPrice` = `buyPrice(0, 1, 0, 0)`；经典版写 2 金，按 2.0 取 1 金）/
+  原版音 `SoundID.Item44`；`CanUseItem` 卡「全场只能同时存在一只灵体」。
+  新增三件内容：弹幕 `Content/Projectiles/Summon/SolarPixie.cs`（50×50、占 1 栏、悬停主人头顶上方 60 像素、
+  重力翻转翻面、索敌半径 700、**50 帧一发原版热射线 `ProjectileID.HeatRay`**——生成后把 `DamageType` 改写为
+  `DamageClass.Summon` 并把 `originalDamage` 接过来才吃召唤加成；登场喷 25 颗火花，源写裸值 244 =
+  `DustID.CopperCoin`，**tML 分析器会报"魔法数字"警告，必须写 `DustID.CopperCoin` 才保持 0 警告**）、
+  增益 `Content/Buffs/SummonBuffs/SolarSpirit.cs`（照工程既有召唤增益模板：`buffNoTimeDisplay` + `buffNoSave`，
+  每帧按 `ownedProjectileCounts` 置位玩家侧 `sunSpirit` 标志）、玩家标志 `sunSpirit`
+  （写在 `Players/CalamityDemutationPlayer.cs` 的字段 + `ResetEffects` + `UpdateDead` 三处）。
+  **软依赖改写**：源用灾厄 `CalamityUtils.KillShootProjectiles(true, type, player)` 清场，本工程不引用灾厄类型，
+  照经典版写等价的"先杀掉自己在场的同类再召唤"循环；伤害类型走 `DamageClass.Summon`（原版类型，无灾厄依赖）。
+  **配方（用户 2026-10-08 拍板）**：砂岩砖×20 + 沙漠羽毛×2 @ 铁砧 —— 2.0 与经典 cal-1.1/1.2/1.4.2.101
+  **逐字相同**，且两味都不依赖灾厄，故只注册一条、两分支通用。
+  贴图三张直接取自 2.0（`SunSpiritStaff.png` 44×48 / `SolarPixie.png` 50×50 / `SolarSpirit.png` 32×32 增益图标）。
+  本地化：中英各补 `Items.SunSpiritStaff`（zh 太阳之灵法杖）、`Buffs.SolarSpirit`（zh 太阳之灵）、
+  `Projectiles.SolarPixie.DisplayName`（zh 太阳之灵）。
+  验证：编译 **0 警告 0 错误**；资源自检 **160 条全命中**；同名不同扩展名自检无冲突。
 
 ## 9. 古圣金源套（AuricTesla）与其四套下位 —— 对照结论与待办
 
@@ -2074,7 +2097,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 安装根 `C:\Users\28155\.codex\packages\standalone\`：每个版本各占一个
   `releases\<版本>-x86_64-pc-windows-msvc\` 目录；`current` 是一个**目录联接（Junction）**指向当前版本；
   PATH 上的 `C:\Users\28155\AppData\Local\Programs\OpenAI\Codex\bin\codex.exe` 又是指向 `current\bin` 的链接。
-  **旧版本目录一律保留**（现留 0.147.0 / 0.154.0 / 0.161.0，随时可回滚）。
+  **本机不留旧版本目录**（2026-10-08 清理后只剩 `0.161.0`，无法再直接翻回旧版；要回滚得先按 11.2 重新下载旧包）。
 - 包内布局（`codex-package.json`，`layoutVersion: 1`）：`bin/codex.exe`、`bin/codex-code-mode-host.exe`、
   `codex-path/rg.exe`、`codex-resources/`（`codex-command-runner.exe`、`codex-windows-sandbox-setup.exe`、`voice/`）。
   0.161.0 的 Windows 包解压后约 456 MB。
@@ -2101,8 +2124,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      `[System.IO.Directory]::Delete($path, $false)` 摘链，再 `New-Item -ItemType Junction -Path ... -Target ...`。
      建立/摘除 Junction **不需要管理员权限或开发者模式**（本会话在非管理员下成功）。
   5. 复核：`...\Programs\OpenAI\Codex\bin\codex.exe --version` 应报新版号；再跑 `codex doctor` 看配置/沙箱/端点。
-- **回滚** = 把 `current` 指回旧版本目录（同第 4 步那两条命令，`-Target` 换成
-  `releases\0.154.0-x86_64-pc-windows-msvc`）。
+- **回滚** = 先按第 1 步把旧版本包下载解压进 `releases\`，再把 `current` 指回它（同第 4 步那两条命令，
+  `-Target` 换成对应版本目录）。**本机已不保留旧版**（2026-10-08 清理），不能直接翻回去。
 - **取证口径**（`chatgpt.com` / `developers.openai.com` 都被挡）：版本号看 OpenAI 官方更新端点
   `https://persistent.oaistatic.com/codex-app-prod/windows-store-update.json`、GitHub 官方发布说明、npm 官方源；
   **配置项兼容性看各发行标签自带的 `codex-rs/core/config.schema.json`**（本会话就是拿 0.154 与 0.161 两份逐键比）。

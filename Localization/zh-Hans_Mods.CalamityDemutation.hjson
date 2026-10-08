@@ -84,6 +84,11 @@ Buffs: {
 		DisplayName: 塞壬
 	}
 
+	SolarSpirit: {
+		DisplayName: 太阳之灵
+		Description: 太阳之灵会保护你
+	}
+
 	TarraLifeRegen: {
 		DisplayName: 龙蒿生命再生
 		Description: 快速治疗
@@ -2137,6 +2142,15 @@ Items: {
 			'''
 	}
 
+	SunSpiritStaff: {
+		DisplayName: 太阳之灵法杖
+		Tooltip:
+			'''
+			召唤太阳之灵保护你
+			只能存在一个灵体
+			'''
+	}
+
 	Supernova: {
 		DisplayName: 超新星
 		Tooltip:
@@ -2689,6 +2703,7 @@ Projectiles: {
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
+	SolarPixie.DisplayName: 太阳之灵
 	SpiritFlame.DisplayName: 鬼火
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰

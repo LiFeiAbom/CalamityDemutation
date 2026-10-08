@@ -84,6 +84,11 @@ Buffs: {
 		DisplayName: Siren
 	}
 
+	SolarSpirit: {
+		DisplayName: Solar Spirit
+		Description: The solar spirit will protect you
+	}
+
 	TarraLifeRegen: {
 		DisplayName: Tarra Life Regen
 		Description: Rapid healing
@@ -2136,6 +2141,15 @@ Items: {
 			'''
 	}
 
+	SunSpiritStaff: {
+		DisplayName: Sun Spirit Staff
+		Tooltip:
+			'''
+			Summons a solar spirit to protect you
+			There can only be one spirit
+			'''
+	}
+
 	Supernova: {
 		DisplayName: Supernova
 		Tooltip:
@@ -2690,6 +2704,7 @@ Projectiles: {
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
+	SolarPixie.DisplayName: Solar Pixie
 	SpiritFlame.DisplayName: Spirit Flame
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
