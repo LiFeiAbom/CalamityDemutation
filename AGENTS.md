@@ -349,13 +349,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【新会话第一屏 · 2026-10-08 收尾】当前只有一条待办主线 ——**
-  ① **「太阳神杖 / 天狼星」召唤链（进行中）**：链底 **沙漠羽毛 ✅**、中间件 **太阳之灵法杖 ✅ 已落地**
-     （物品 + 弹幕 `SolarPixie` + 增益 `SolarSpirit` + 配方，侦察与配方结论见「批次 B」）；
-     **下一件＝链顶 太阳神杖 `SunGodStaff`**，配方已由用户 2026-10-08 拍板（㈠ 现代 + ㈣ 经典，见「批次 B」末尾）。
-  ② **「超新星」批次的数值膨胀已结**：用户 2026-10-08 拍板**剩下 4 把的开态不再变动**——
-     震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点维持 2.0 源值、**不接入膨胀**；"非伤害项"候选一并搁置。
-  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **160 条全命中**；
+- **【新会话第一屏 · 2026-10-08 收尾】——**
+  ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：链底 沙漠羽毛 → 中间件 太阳之灵法杖 → 链顶 太阳神杖，
+     三件都含配方（逐版侦察、软依赖改写与配方拍板结果见「批次 B」）。
+  ② **唯一待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
+     「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
+     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
+     **本链新落地的两把法杖（太阳之灵法杖 12 / 太阳神杖 60）尚未点名开态值，等用户一并处理**。
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **161 条全命中**；
     工作区干净、与 `origin/master` 同步。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
@@ -454,7 +455,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   用户口径原话：「从低端那个开始，进行移植，移植到配方时给我说，我来拍板。」
   **链条（从下往上）**：① **沙漠羽毛 `DesertFeather` ✅（已落地，链底·纯掉落无配方）**
   → ② **太阳之灵法杖 `SunSpiritStaff` ✅（已落地，含配方；用户 2026-10-08 拍板按"旧版回归 + 同名不同物"自持 2.0 版）**
-  → ③ 太阳神杖 `SunGodStaff`（**下一件**，链顶，**现代版 2.0.3.9 起已删**，被 `VengefulSunStaff` 取代）。
+  → ③ **太阳神杖 `SunGodStaff` ✅（已落地，含配方）**——链顶，现代版 2.0.3.9 起已删、被 `VengefulSunStaff` 取代。
   **侦察结论（2026-10-08 逐版核完，别再重查）**：
   整条链**只有沙漠羽毛**是"现代版删了、又没替代"的件。其余：
   太阳之灵法杖在实装 2.2.2 里仍在 ✔（现代版配方是全原版材料）；
@@ -1805,6 +1806,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   本地化：中英各补 `Items.SunSpiritStaff`（zh 太阳之灵法杖）、`Buffs.SolarSpirit`（zh 太阳之灵）、
   `Projectiles.SolarPixie.DisplayName`（zh 太阳之灵）。
   验证：编译 **0 警告 0 错误**；资源自检 **160 条全命中**；同名不同扩展名自检无冲突。
+- 最近一批工作（2026-10-08 更晚）：**移植太阳神杖（SunGodStaff）—— 「太阳神杖 / 天狼星」链的链顶（③），本链收官。**
+  口径取 2.0（本件在现代版 2.0.3.9 起已删、被 `VengefulSunStaff` 取代，故按"旧版回归"自持）：
+  物品 72×72 / 伤害 60 / 魔力 10 / 击退 1.25 / 使用 25 帧 / **浅紫档** / **48 金** / 原版音 `SoundID.Item44`；
+  `CanUseItem` 同样卡「全场只能同时存在一只」；`Shoot` 照②的写法做清场循环（不引灾厄类型）。
+  新增三件内容：弹幕 `Content/Projectiles/Summon/SolarGod.cs`（74×90、占 1 栏、悬停主人头顶上方 60 像素、
+  重力翻转翻面、索敌半径 700、**20 帧一发**太阳光束、登场喷 50 颗 `DustID.CopperCoin` 火花、光照 0.5 系数）、
+  弹幕 `Content/Projectiles/Summon/SolarBeam.cs`（4×4、**隐身**——贴图引 `CalamityDemutation/Content/Projectiles/InvisibleProj`、
+  原版激光 AI、穿透 1、`extraUpdates = 220`、200 帧寿命、伤害类型召唤、飞行 9 帧后每帧沿弹道拖 4 颗
+  `DustID.GoldCoin` 金色光点）、增益 `Content/Buffs/SummonBuffs/SolarGodSpiritBuff.cs`（模板同②）；
+  玩家标志 `solarGodSpirit`（写在 `Players/CalamityDemutationPlayer.cs` 的字段 + `ResetEffects` + `UpdateDead` 三处）。
+  **API 坑（新）**：源里 `Projectile.aiStyle = 48` 会被 tML 分析器当成"魔法数字"报警告（工程基线是 0 警告），
+  必须写 `ProjAIStyleID.Ray`；同理源里的裸值尘 `244` / `246` 要写 `DustID.CopperCoin` / `DustID.GoldCoin`。
+  **配方（用户 2026-10-08 拍板，两分支各一条、缺件即退化）**：
+  现代分支（`CalamityMod` 在场）照源 2.0 = 太阳之灵法杖 + **日光精华 `EssenceofSunlight`×5** + 三魂（力量/视域/恐惧）各×3 @ 秘银砧；
+  经典分支（`CalamityModClassicPreTrailer` 在场）照源 cal-1.4.2.101 = 太阳之灵法杖 + **烬核 `CoreofCinder`×5**
+  （用本模组自持件，不借经典版的 `EssenceofCinder`）+ 三魂各×3 @ 秘银砧。
+  贴图三张取自 2.0（`SunGodStaff.png` 72×72 / `SolarGod.png` 74×90 / `SolarGodSpiritBuff.png` 32×32）；
+  本地化中英各补 `Items.SunGodStaff`（zh **太阳神杖**）、`Buffs.SolarGodSpiritBuff`（zh **太阳神之灵**）、
+  `Projectiles.SolarGod.DisplayName`（zh 太阳神）、`Projectiles.SolarBeam.DisplayName`（zh 光束）。
+  验证：编译 **0 警告 0 错误**；资源自检 **161 条全命中**；同名不同扩展名自检无冲突。
+  用户 2026-10-08 附注：**数值膨胀之后一并处理**（本链两把法杖的开态值尚未点名）。
 
 ## 9. 古圣金源套（AuricTesla）与其四套下位 —— 对照结论与待办
 

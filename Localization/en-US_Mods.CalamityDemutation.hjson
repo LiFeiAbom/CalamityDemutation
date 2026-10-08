@@ -84,6 +84,11 @@ Buffs: {
 		DisplayName: Siren
 	}
 
+	SolarGodSpiritBuff: {
+		DisplayName: Solar God Spirit
+		Description: The solar god spirit will protect you
+	}
+
 	SolarSpirit: {
 		DisplayName: Solar Spirit
 		Description: The solar spirit will protect you
@@ -2141,6 +2146,15 @@ Items: {
 			'''
 	}
 
+	SunGodStaff: {
+		DisplayName: Sun God Staff
+		Tooltip:
+			'''
+			Summons a solar god spirit to protect you
+			There can only be one spirit
+			'''
+	}
+
 	SunSpiritStaff: {
 		DisplayName: Sun Spirit Staff
 		Tooltip:
@@ -2704,6 +2718,8 @@ Projectiles: {
 	SilvaOrb.DisplayName: Silva Orb
 	SirenLure.DisplayName: Siren Lure
 	SirenSongFriendly.DisplayName: Song
+	SolarBeam.DisplayName: Beam
+	SolarGod.DisplayName: Solar God
 	SolarPixie.DisplayName: Solar Pixie
 	SpiritFlame.DisplayName: Spirit Flame
 	Spark.DisplayName: Spark

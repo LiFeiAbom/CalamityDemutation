@@ -758,6 +758,10 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool sunSpirit = false;
         /// <summary>
+        /// 太阳神之灵（SolarGod）在场标记：由同名召唤增益每帧置位，供太阳神弹幕续命（对应源的 SPG）
+        /// </summary>
+        public bool solarGodSpirit = false;
+        /// <summary>
         /// 挥舞索引（BaseSwingCO 挥砍系统使用）
         /// </summary>
         public int SwingIndex;
@@ -1054,6 +1058,7 @@ namespace CalamityDemutation.Players
             statisBeltOfCurses = false;
             statisCurse = false;
             sunSpirit = false;
+            solarGodSpirit = false;
             tarraLifeRegen = false;
             tarraMage = false;
             tarraMelee = false;
@@ -1248,6 +1253,7 @@ namespace CalamityDemutation.Players
             statisBeltOfCurses = false;
             statisCurse = false;
             sunSpirit = false;
+            solarGodSpirit = false;
             tarraCooldown = 0;
             tarraDefense = false;
             tarraDefenseTime = 0;

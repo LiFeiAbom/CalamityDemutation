@@ -84,6 +84,11 @@ Buffs: {
 		DisplayName: 塞壬
 	}
 
+	SolarGodSpiritBuff: {
+		DisplayName: 太阳神之灵
+		Description: 太阳神之灵会保护你
+	}
+
 	SolarSpirit: {
 		DisplayName: 太阳之灵
 		Description: 太阳之灵会保护你
@@ -2142,6 +2147,15 @@ Items: {
 			'''
 	}
 
+	SunGodStaff: {
+		DisplayName: 太阳神杖
+		Tooltip:
+			'''
+			召唤太阳神之灵保护你
+			只能存在一个灵体
+			'''
+	}
+
 	SunSpiritStaff: {
 		DisplayName: 太阳之灵法杖
 		Tooltip:
@@ -2703,6 +2717,8 @@ Projectiles: {
 	SilvaOrb.DisplayName: 始源林海光球
 	SirenLure.DisplayName: 塞壬诱惑
 	SirenSongFriendly.DisplayName: 塞壬之歌
+	SolarBeam.DisplayName: 光束
+	SolarGod.DisplayName: 太阳神
 	SolarPixie.DisplayName: 太阳之灵
 	SpiritFlame.DisplayName: 鬼火
 	Spark.DisplayName: 火花
