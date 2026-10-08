@@ -943,6 +943,10 @@ Items: {
 			'''
 	}
 
+	DesertFeather: {
+		DisplayName: 沙漠羽毛
+	}
+
 	DemonshadeBreastplate: {
 		DisplayName: 魔影胸甲
 		Tooltip:

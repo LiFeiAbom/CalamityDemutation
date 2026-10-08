@@ -943,6 +943,10 @@ Items: {
 			'''
 	}
 
+	DesertFeather: {
+		DisplayName: Desert Feather
+	}
+
 	DemonshadeBreastplate: {
 		DisplayName: Demonshade Breastplate
 		Tooltip:

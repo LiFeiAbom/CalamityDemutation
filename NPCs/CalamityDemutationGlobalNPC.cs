@@ -194,6 +194,12 @@ namespace CalamityDemutation.NPCs
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<TrapperBulb>(), 2, 1));
             }
+            // 本工程自有的沙漠材料（供「太阳神杖」链）——掉落者与概率照 2.0 的 CalamityGlobalNPCLoot：
+            // 秃鹫 100% 掉 1~2 片
+            else if (npc.type == NPCID.Vulture)
+            {
+                npcLoot.Add(new CommonDrop(ModContent.ItemType<DesertFeather>(), 1, 1, 2));
+            }
             // ===== 现代版灾厄（CalamityMod）：仅灾厄专属 NPC 的掉落规则（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
