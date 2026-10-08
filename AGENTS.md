@@ -350,8 +350,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 ## 8. 当前状态（截至最后一次会话）
 
 - **【新会话第一屏 · 2026-10-08 收尾】——**
-  ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：链底 沙漠羽毛 → 中间件 太阳之灵法杖 → 链顶 太阳神杖，
-     三件都含配方（逐版侦察、软依赖改写与配方拍板结果见「批次 B」）。
+  ① **「太阳神杖 / 天狼星」召唤链（差链尾）**：链底 沙漠羽毛 → 太阳之灵法杖 → 太阳神杖（**这三件已落地，都含配方**）
+     → **链尾 天狼星 `Sirius`（待用户拍板是否移植）**。
+     **更正（2026-10-08）**：链顶并不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`，
+     天狼星才是链尾；逐版数据见「批次 B」末尾。
   ② **唯一待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
      其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
@@ -455,7 +457,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   用户口径原话：「从低端那个开始，进行移植，移植到配方时给我说，我来拍板。」
   **链条（从下往上）**：① **沙漠羽毛 `DesertFeather` ✅（已落地，链底·纯掉落无配方）**
   → ② **太阳之灵法杖 `SunSpiritStaff` ✅（已落地，含配方；用户 2026-10-08 拍板按"旧版回归 + 同名不同物"自持 2.0 版）**
-  → ③ **太阳神杖 `SunGodStaff` ✅（已落地，含配方）**——链顶，现代版 2.0.3.9 起已删、被 `VengefulSunStaff` 取代。
+  → ③ **太阳神杖 `SunGodStaff` ✅（已落地，含配方）**——现代版 2.0.3.9 起已删、被 `VengefulSunStaff` 取代。
+  → ④ **天狼星 `Sirius`（链尾·待拍板）**——2.0 里它吃到 ③ 当材料，侦察结论见本批次末尾。
   **侦察结论（2026-10-08 逐版核完，别再重查）**：
   整条链**只有沙漠羽毛**是"现代版删了、又没替代"的件。其余：
   太阳之灵法杖在实装 2.2.2 里仍在 ✔（现代版配方是全原版材料）；
@@ -478,6 +481,42 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   经典版换 50×50 / 36 帧 / 12 金（cal-1.2 黄档、cal-1.4.2.101 浅紫档）。
   太阳之灵法杖 2.0 = 44×48 / 伤害 12 / 击退 1.15 / 使用 35 帧 / 魔力 10 / **蓝档** / `Rarity1BuyPrice`。
   沙漠羽毛 = 24×24 / 叠 999 / 卖 20 铜 / 蓝档 / 研究 5（已落地）。
+  **链尾 天狼星 `Sirius` 侦察结论（2026-10-08 逐版核完，别再重查）**：
+  本件在**实装 2.2.2 里仍在**（本地化键 `Sirius` / `SiriusBuff` / `SiriusBeam` / `SiriusQuasar` / `SiriusMinion` 都在），
+  但它的上位材料在后世换成了复仇太阳杖 `VengefulSunStaff`——所以本模组自持的 2.0 版太阳神杖正好能接上它。
+  **2.0（老规矩默认）**：贴图 68×70 / 判定 62×62、伤害 **160**、击退 3、使用 **10** 帧、魔力 10、
+  **基础红档 + 自定义稀有度 `PureGreen`（纯绿）**、价值 **1 铂金 40 金**、音 `SoundID.Item44`；
+  配方 = **太阳神杖** + 流明石 `Lumenyl`×5 + 灾厄魂 `RuinousSoul`×2 + 起源之簇 `ExodiumCluster`×12
+  @ **远古操纵机**（`TileID.LunarCraftingStation`）。
+  **2.0 的机制**（与后世完全不同）：`HoldItem` 里数"除自己以外已占用的召唤栏"，`siriusSlots` = 剩余栏位、
+  `CanUseItem` 要求 ≥1；出手时把 `siriusSlots` 写进 `ai[0]`（`ai[1]` 初值 30），仆从 `SiriusMinion` 每帧
+  `minionSlots = ai[0]`（**吃光剩余栏位**），光束伤害 ×`(ln(ai[0]) + 1)`、**穿透数 = ai[0]**、30 帧一发；
+  索敌/悬停写法与太阳神同套（悬停头顶、重力翻转翻面、鼠标色脉动缩放）。
+  配套四件：`SiriusMinion`（38×48 判定与贴图、入场粉尘 20）、`SiriusBeam`（4×4 **隐身**、1000 帧、粉尘 20）、
+  `SiriusExplosion`（14×14 起手、判定后放大到 60×60、粉尘 267）、`SiriusBuff`（32×32 图标、同"按在场弹幕续增益"模板）。
+  **各版差异**：2.0.3.9 / 2.0.4 / 2.0.7.2 = 伤害 **600**、击退 10、纯绿档、13 档价、上位材料换 **`VengefulSunStaff`**、
+  额外要求 `maxMinions >= 6`，站台仍是远古操纵机；1.4.4-release = 伤害 **90**、使用 **24** 帧、纯绿档、
+  配方材料变成 ×8 / ×4 / ×20 @ **秘银砧**，机制大改成"星爆 `Starburst` 资源条 → 攒满发射穿透类星体 `SiriusQuasar`
+  （挂虚空霜）"，要往 `CalamityPlayer` 写一整套玩家侧字段（本工程得自建）。
+  **配方里的召唤杖只有一根（2026-10-08 逐版核完 + 实装 IL 直读，别再重查）**：
+  | 版本 | 上位召唤杖 | 其余三味 | 站台 |
+  |---|---|---|---|
+  | 1.3 | `SunGodStaff` 太阳神杖 | `Lumenite`×5 + `RuinousSoul`×2 + `ExodiumClusterOre`×12 | 远古操纵机 |
+  | 2.0（默认） | `SunGodStaff` 太阳神杖 | `Lumenyl`×5 + `RuinousSoul`×2 + `ExodiumCluster`×12 | 远古操纵机 |
+  | 2.0.3.9 / 2.0.4 / 2.0.7.2 | `VengefulSunStaff` 复仇太阳杖 | `Lumenyl`×5 + `RuinousSoul`×2 + `ExodiumCluster`×12 | 远古操纵机 |
+  | 1.4.4 / 1.4.4-release | `VengefulSunStaff` 复仇太阳杖 | `Lumenyl`×8 + `RuinousSoul`×4 + `ExodiumCluster`×20 | 秘银砧 |
+  | **实装 2.2.2（IL 直读）** | **`VengefulSunStaff`×1** | **`Lumenyl`×8 + `RuinousSoul`×4 + `ExodiumCluster`×20** | **秘银砧** |
+  整棵太阳杖树只有两支杖：**太阳之灵法杖 →（太阳神杖 / 复仇太阳杖）→ 天狼星**，没有别的召唤杖参与。
+  **实装 2.2.2 的复仇太阳杖**（IL 直读，顺带核的）= 太阳之灵法杖×1 + **月石 `ItemID.MoonStone`×1** + 三魂
+  （`SoulofFright`/`SoulofMight`/`SoulofSight`）各×3 @ 秘银砧（`TileID 134`）；
+  实装 2.2.2 的太阳之灵法杖 = 琥珀×5 + 蚁狮颚×3 + 棕榈木×10 @ 铁砧（与 1.4.4-release 源码一致）。
+  **经典版没有天狼星**：把 `CalamityModClassicPreTrailer` 1.0.0.17 的 `.tmod` 挖开逐类型扫过，
+  `Sirius` **0 命中**（与经典源码目录一致，cal-1.x 压根没这件）；但它的三味材料都在，且类名与源码目录不同：
+  流明石 `Items.AbyssItems.Lumenite`（**不是 `Lumenyl`**）、起源之簇 `Items.Placeables.ExodiumClusterOre`、
+  灾厄魂 `Items.Polterghast.RuinousSoul`。经典版另有自己的 `SunGodStaff` / `SunSpiritStaff`（本工程自持件与之同名共存）。
+  **.tmod 直读的补丁（2026-10-08 实测）**：新版 tML 的 .tmod 头在「20 字节哈希」之后还有**约 260 字节的签名/保留区**
+  （未签名时全 0），所以**不能**按"哈希 16 字节紧接文件表"直读——稳妥做法是在头 4096 字节里 `IndexOf(ModName)` 定位
+  文件表起点（长度前缀在它前一字节），再逐条读 `path/usize/csize`，数据区紧接整张表之后。
 - 最近一批工作（2026-10-08 更晚）：**移植沙漠羽毛（DesertFeather）—— 「太阳神杖 / 天狼星」链的链底。**
   口径取 2.0：24×24 判定（贴图 24×32）、堆叠 999、售出价 **20 铜**、**蓝档**、研究解锁 5、无 tooltip。
   **无配方**——来源是**秃鹫掉落**，照 2.0 的 `CalamityGlobalNPCLoot` 写：**100% 掉 1~2 片**
