@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
     /// 老规矩取灾厄 **2.0**：34×36、伤害 **675**、击退 8、**使用/动画各 19 帧**（2.0 源值 24，
     /// 用户 2026-10-08 指定改为 19）、
     /// **红底 + 月后 15 档（紫，＝灾厄 Violet）**、价值 **1 铂金 50 金**（`Rarity15BuyPrice`）、
-    /// 弹速 16、使用音 <c>SoundID.Item15</c>
+    /// 弹速 **20**（2.0 源值 16，用户 2026-10-08 指定改为 20）、使用音 <c>SoundID.Item15</c>
     /// （2.0.3.9 数值相同、2.0.4 起整件重做成 106×112 的智能炸弹 Holdout——本件都不取）。
     /// </summary>
     /// <remarks>
@@ -53,7 +53,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
         {
             damage.Base = BaseDamage;
         }
-        /// <summary>基础属性：34×36、伤害 675、击退 8、19 帧（用户 2026-10-08 指定，源 24）、月后 15 档、1 铂金 50 金、弹速 16</summary>
+        /// <summary>基础属性：34×36、伤害 675、击退 8、19 帧（用户 2026-10-08 指定，源 24）、月后 15 档、1 铂金 50 金、弹速 20（用户指定，源 16）</summary>
         public override void SetDefaults()
         {
             Item.width = 34;
@@ -70,7 +70,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.rare = ItemRarityID.Red;   // 基础稀有度红色，名称颜色由 postMoonLordRarity 覆盖
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;   // 月后 15：紫（＝灾厄 Violet）
             Item.shoot = ModContent.ProjectileType<SupernovaBomb>();
-            Item.shootSpeed = 16f;
+            Item.shootSpeed = 20f;
             Item.DamageType = CDUtil.GetRogueDamageClass();
         }
         /// <summary>
