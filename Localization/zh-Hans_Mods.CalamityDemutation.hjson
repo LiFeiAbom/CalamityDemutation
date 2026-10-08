@@ -1845,6 +1845,15 @@ Items: {
 		Tooltip: 浸没在液体中时防御提高 5
 	}
 
+	ShockGrenade: {
+		DisplayName: 震爆手雷
+		Tooltip:
+			'''
+			投掷一枚落地后炸出一束闪电的手雷
+			潜行打击时闪电会追踪敌人，并在爆炸处留下一片电气光环
+			'''
+	}
+
 	SigilofCalamitas: {
 		DisplayName: 灾厄符章
 		Tooltip:
@@ -2595,6 +2604,10 @@ Projectiles: {
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
 	SandyWaifu.DisplayName: 沙元素
+	ShockGrenadeBolt.DisplayName: 闪电
+	ShockGrenadeExplosion.DisplayName: 震爆手雷爆炸
+	ShockGrenadeProjectile.DisplayName: 震爆手雷
+	ShockTeslaAura.DisplayName: 电气光环
 	SilvaCrystal.DisplayName: 始源林海水晶
 	SilvaCrystalExplosion.DisplayName: 爆裂
 	SilvaOrb.DisplayName: 始源林海光球

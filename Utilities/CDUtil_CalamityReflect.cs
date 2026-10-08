@@ -449,6 +449,81 @@ namespace CalamityDemutation.Utilities
             calamityGetGlobalProjectileForStealth = getter;
         }
 
+        // ── 潜行打击「就绪」与「标记」桥（震爆手雷等盗贼武器用）──
+
+        /// <summary>是否已探测过现代版 CalamityPlayer.StealthStrikeAvailable()（无论成败只探测一次）</summary>
+        private static bool calamityStealthAvailableProbed;
+        /// <summary>CalamityPlayer.StealthStrikeAvailable() 的方法句柄</summary>
+        private static MethodInfo calamityStealthAvailableMethod;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
+        private static MethodInfo calamityGetModPlayerForStealthAvailable;
+
+        /// <summary>
+        /// 查询玩家此刻是否「潜行打击就绪」（盗贼潜行槽已攒到灾厄的阈值）。
+        /// <para>
+        /// 现代版反射调 <c>CalamityPlayer.StealthStrikeAvailable()</c>——这个方法从 2.0 到已装 2.2.2 都在
+        /// （2.0 的超新星物品自己就在调它）。灾厄另有官方 ModCall <c>CanStealthStrike</c>（2.0.3.9 起，
+        /// 同时接受旧名 <c>StealthStrikeAvailable</c>），但那是 2.0.3.9 之后才有的键，
+        /// 而**反射方法在所有受支持版本里都存在**，故这里走反射、少一层版本判断。
+        /// </para>
+        /// <para>句柄只在首次调用时探测并缓存，失败也记为已探测（未装现代版灾厄时不会每帧扫类型）。</para>
+        /// <para>只装经典版时恒 false：经典版没有潜行打击这套机制（它的盗贼走自定义投掷倍率）。</para>
+        /// </summary>
+        public static bool CanStealthStrike(Player player)
+        {
+            ProbeCalamityStealthAvailableBridge();
+            if (calamityStealthAvailableMethod == null || calamityGetModPlayerForStealthAvailable == null)
+                return false;
+            if (calamityGetModPlayerForStealthAvailable.Invoke(player, null) is ModPlayer calamityPlayer)
+                return calamityStealthAvailableMethod.Invoke(calamityPlayer, null) is bool available && available;
+            return false;
+        }
+
+        /// <summary>
+        /// 一次性探测现代版 <c>CalamityPlayer.StealthStrikeAvailable()</c> 与取 ModPlayer 的方法并缓存；
+        /// 任一步失败都放弃并记为已探测。
+        /// </summary>
+        private static void ProbeCalamityStealthAvailableBridge()
+        {
+            if (calamityStealthAvailableProbed)
+                return;
+            calamityStealthAvailableProbed = true;
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                return;   // 未安装现代版灾厄：直接短路
+            Type calamityPlayerType = calamity.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
+            if (calamityPlayerType == null)
+                return;   // 灾厄改了类名：放弃
+            MethodInfo available = calamityPlayerType.GetMethod("StealthStrikeAvailable",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, null);
+            if (available == null || available.ReturnType != typeof(bool))
+                return;   // 该版本没有这个方法：放弃
+            MethodInfo getter = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)?.MakeGenericMethod(calamityPlayerType);
+            if (getter == null)
+                return;
+            calamityStealthAvailableMethod = available;
+            calamityGetModPlayerForStealthAvailable = getter;
+        }
+
+        /// <summary>
+        /// 把一枚弹幕标记成「盗贼潜行打击」——等价灾厄的 <c>projectile.Calamity().stealthStrike = true</c>，
+        /// 盗贼武器在潜行打击就绪时生成的那一枚要调它。
+        /// <para>
+        /// 复用 <see cref="ProbeCalamityStealthStrikeBridge"/> 已探测好的 <c>CalamityGlobalProjectile.stealthStrike</c>
+        /// 字段句柄与取实例的方法（<see cref="IsStealthStrike"/> 读的就是同一个字段），不再额外扫类型。
+        /// 官方也给了 ModCall <c>SetStealthProjectile</c>，但同理由跨版本考虑走反射。
+        /// </para>
+        /// <para>只装经典版（没有这个字段）时直接短路——潜行打击本就是现代独占。</para>
+        /// </summary>
+        public static void SetStealthStrike(Projectile projectile)
+        {
+            ProbeCalamityStealthStrikeBridge();
+            if (calamityStealthStrikeField == null || calamityGetGlobalProjectileForStealth == null)
+                return;
+            if (calamityGetGlobalProjectileForStealth.Invoke(projectile, null) is GlobalProjectile globalProj)
+                calamityStealthStrikeField.SetValue(globalProj, BoxedTrue);
+        }
+
         // ── 潜行打击消耗档桥（欺诈硬币 / 毁灭徽章用）──
 
         /// <summary>是否已探测过现代版 CalamityPlayer 的潜行打击消耗字段（无论成败只探测一次）</summary>

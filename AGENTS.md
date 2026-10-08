@@ -311,17 +311,60 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-08】「暗物质剑鞘」链（含链下位材料）已全部落地（4/4 + 1 件）——本批次收尾。**
-  链条顺序 = **静默剑鞘 ✅（`99dadc0`）→ 欺诈硬币 ✅ → 毁灭徽章 ✅ → 暗物质剑鞘 ✅ → 蚀日魔镜 ✅（本次）**。
-  **暂无下一件**；若要继续同类工作，按「批量移植」剧本重新开一批（逐版出数据 → 用户拍板 → 一件一件移植）。
-  本批次新固化的可复用桥（都在 `Utilities/CDUtil_CalamityReflect.cs`）：
+- **【接续点 · 2026-10-08】新批次：「超新星」链 —— 第一件「震爆手雷」✅ 已落地，下一件是超新星本体。**
+  链条 = **震爆手雷 ✅（本次）→ 超新星 Supernova（待做）**。为什么这条链的"下位"是震爆手雷：
+  超新星 **2.0 的配方**要 `ShockGrenade`×200 + 半影，而震爆手雷在灾厄 **1.4.4-release 起被删除**
+  （本机实装 2.2.2 的 `.tmod` 文件表里 `ShockGrenade*` 一条都没有，实测 0）；
+  其余下位件（封存奇点 `SealedSingularity` / 毁灭之星 `StarofDestruction` / 破坏者 `TotalityBreakers` /
+  弹道毒炸弹 `BallisticPoisonBomb` / 奇迹物质 `MiracleMatter` / 半影 `Penumbra`）现代版都还在 → 直接引本体。
+  **超新星本体尚未落地**：用户尚未逐条拍板（本体取哪版 / 配方走哪版 / 中文名 / 是否追加基础属性 /
+  是否挂 StatInflation 档 / 经典分支怎么办——经典版灾厄既没有超新星，也没有封存奇点那几件，源配方搬不过去）。
+  **本题的逐版数据（侦察已完成，用户拍板时直接引这份）**：
+  超新星 = 2.0 `34×36 / 675 / 24 帧 / 击退 8 / 红底+灾厄 Violet（月后 15 紫）/ 1 铂金 50 金 / 潜行 ×1.08`；
+  2.0.3.9 = 同 2.0 但配方已是新版；2.0.4 = `106×112 / 5036 / 70 帧 / 击退 18 / Violet / 2 铂金 40 金 / 潜行 0.7`
+  （智能炸弹 + `SupernovaStealthBoom` + 三个自备音 + Glowmask）；
+  1.4.4-release = `106×112 / 5200 / 70 帧 / ExoticRainbow / 潜行 0.8` + `SupernovaHoldout`（右键投掷、按住左键蓄潜行）。
+  配方：2.0 = 封存奇点 + 毁灭之星 + 破坏者 + 弹道毒炸弹 + **震爆手雷×200** + **半影** @ 嘉登熔炉；
+  2.0.3.9 起删掉后两项，其余不动。2.0 的弹幕组 = `SupernovaBomb` → `SupernovaBoom` + 尖刺 3~4 + 追踪能量 6
+  （潜行弹每 8 帧喷追踪能量），全是原版音（`SoundID.Item15` / `Item14`）。
+  本批次第一件新固化的可复用桥（都在 `Utilities/CDUtil_CalamityReflect.cs`）：
+  **潜行打击「就绪」`CDUtil.CanStealthStrike(player)`**（反射 `CalamityPlayer.StealthStrikeAvailable()`，
+  2.0~2.2.2 都在；灾厄另有 ModCall `CanStealthStrike`，2.0.3.9 起才有）
+  与 **潜行打击「标记」`CDUtil.SetStealthStrike(projectile)`**（复用既有 `stealthStrike` 字段句柄写 true）
+  ——盗贼武器"潜行打击就绪时自己生成那一发并标记它"就是这两条。
+  上一批「暗物质剑鞘」链（静默剑鞘 → 欺诈硬币 → 毁灭徽章 → 暗物质剑鞘 → 蚀日魔镜）**已全部收尾**；
+  它留下的可复用桥：
   潜行上限"点数" `GrantRogueStealth` / "百分比" `GrantRogueStealthRatio`；潜行恢复 `AddStealthGen`；
   潜行打击消耗档 `SetStealthStrikeCost`；移动加速旗标 `SetDarkGodSheath` / `SetEclipseMirror`；
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
-  工程手法（本批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
+  工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工作区当前**干净、与 `origin/master` 同步**（2026-10-08 复核：远端 `refs/heads/master` = `4f683e9`，
-  本地同值；`dotnet build` 0 警告 0 错误、资源自检 150 条全命中）。
+  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **153 条全命中**（震爆手雷落地后复核）。
+- 最近一批工作（2026-10-08）：**移植震爆手雷（ShockGrenade）—— "超新星"链的最下位件（本批次第一件）。**
+  用户口径：老规矩（默认取 2.0）、从链条最底层开始、一件一件来。本件取灾厄 **2.0**：
+  14×30、伤害 **90**、击退 1、使用/动画各 18 帧、**黄档**、价值 1 金、消耗品叠 **999**、弹速 12.5
+  （2.0.3.9 起本体抬到 108 / 堆叠 9999 / 每次合成 150，本件刻意保留 2.0 的 90 / 999 / 100）。
+  **配方照 2.0**（四版完全一致、且全是原版材料 → 现代/经典两分支通用，只注册一条）：
+  手榴弹×20 + 火星管道板×5 + 纳米机器人×5 @ 工作台 → 每次合成 100 枚。
+  **落地**：`Content/Items/Weapons/Rogue/ShockGrenade.cs`（**新建了武器侧的盗贼目录**——此前只有 Melee）
+  + `Content/Projectiles/Rogue/` 下四枚：`ShockGrenadeProjectile`（手雷本体：10×10、穿透 1、存活 180 帧、
+  重力 0.1 封顶 16、撞物块时把反弹方向记进 `localAI[0..1]` 再自爆）、`ShockGrenadeBolt`（5~10 道闪电，
+  伤害 = 手雷伤害 ÷ 2，12×26 的 4 帧动画、穿透 3、存活 120 帧、存活不足 55 帧才开始撞墙、贴图按 `ai[0]` 二选一）、
+  `ShockGrenadeExplosion`（半径 100 的圆、320×320 判定框、存活 10 帧、全额伤害、同一敌人只吃一次）、
+  `ShockTeslaAura`（潜行专属光环：伤害 = 手雷伤害 ÷ 4、半径 98、存活 240 帧、218×218 的 3×6 帧动画、每 20 帧可再命中）。
+  **潜行打击口径**：`Shoot` 里问 `CDUtil.CanStealthStrike(player)`，就绪则自己生成那一枚并用
+  `CDUtil.SetStealthStrike` 打标记（对应源的 `player.Calamity().StealthStrikeAvailable()` +
+  `projectile.Calamity().stealthStrike = true`）；**只装经典版时恒不触发**（经典版没有潜行打击这套机制）。
+  **弹幕生成一律加主人端判据**（第 5 节口径；源 2.0 没写，本工程补上——弹幕会随同步包发到其他端）。
+  `CalamityGlobalNPC.ShouldAffectNPC` 与 `CalamityUtils.CircularHitboxCollision` 都按工程既有做法**内联**
+  （前者照 `AnarchyBlade` 的内联版，后者照 `AbaddonCrit` 的写法）。
+  **零新增音频**：爆炸 `SoundID.Item94`、光环 `SoundID.Item93`、闪电 `SoundID.Item93` 全是原版音，
+  `Sounds/` 一个文件都没动（本件物品自身**没有**投掷音——源 2.0 也没写 `Item.UseSound`）。
+  贴图五张（物品 14×30 + 同名 Glow、闪电 12×104 两张、光环 654×1308）全部从 2.0 源线复制进本工程
+  （光环那张源名是灾厄共用的 `Projectiles/Typeless/TeslaAura`，本工程存成 `ShockTeslaAura.png` 以走隐式贴图）。
+  中英本地化各补物品（zh **震爆手雷** / en Shock Grenade）与四条弹幕名。
+  验证：编译 0 警告 0 错误；资源自检 **153 条全命中**；五张隐式/后缀拼接贴图逐条 `Test-Path` 核对、
+  同名不同扩展名自检为空。
 - 最近一批工作（2026-10-08）：**修正加载期禁用 —— `Sounds/Custom/SilvaActivation` 同名双扩展名。**
   症状：进游戏时 `Disabling Mod: CalamityDemutation`，报
   `System.Exception: Multiple extensions for asset Sounds\Custom\SilvaActivation, (.ogg, .wav)`。

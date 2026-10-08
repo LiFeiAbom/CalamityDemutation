@@ -1844,6 +1844,15 @@ Items: {
 		Tooltip: Increased defense by 5 when submerged in liquid
 	}
 
+	ShockGrenade: {
+		DisplayName: Shock Grenade
+		Tooltip:
+			'''
+			Throws a grenade that explodes into a burst of lightning
+			Stealth strikes make the lightning home in on enemies and leave an electrifying aura behind
+			'''
+	}
+
 	SigilofCalamitas: {
 		DisplayName: Sigil of Calamitas
 		Tooltip:
@@ -2596,6 +2605,10 @@ Projectiles: {
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
 	SandyWaifu.DisplayName: Waifu
+	ShockGrenadeBolt.DisplayName: Bolt
+	ShockGrenadeExplosion.DisplayName: Shock Grenade Explosion
+	ShockGrenadeProjectile.DisplayName: Shock Grenade
+	ShockTeslaAura.DisplayName: Electrifying Aura
 	SilvaCrystal.DisplayName: Silva Crystal
 	SilvaCrystalExplosion.DisplayName: Explosion
 	SilvaOrb.DisplayName: Silva Orb
