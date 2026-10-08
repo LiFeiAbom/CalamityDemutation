@@ -349,21 +349,22 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【新会话第一屏 · 2026-10-08 收尾】——**
+- **【新会话第一屏 · 2026-10-08 收工快照】三条线的状态（明天从这里接着干）——**
   ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：沙漠羽毛 → 太阳之灵法杖 → 太阳神杖 → **链尾 天狼星 `Sirius`**，
      四件都含配方（逐版侦察、软依赖改写与配方结论见「批次 B」）。
      **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
-  ② **「归虚之灵」召唤链（进行中）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
+  ② **「归虚之灵」召唤链（进行中，明天的主线）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
      （＝CI 的 `CosmicImmaterializerOld`，CI 官方中文写作「归虚之灵[Legacy]」）。
      链（往回推）：**归虚之灵 ← 元素之斧（2.0.3.9）← 苍华之庭 `PlantationStaff`（2.0.3.9，最低下位）**。
-     **链底 苍华之庭 ✅ 已落地**（含配方：现代分支）；**下一件＝元素之斧（2.0.3.9）**。
-     逐版侦察结论、材料存亡矩阵与配方差见下面的「批次 C」。
+     **链底 苍华之庭 ✅ 已落地**（含**现代 + 经典两条**配方；经典分支按用户拍板丢掉夜眼那一味）；
+     **下一件＝元素之斧 `ElementalAxe`（2.0.3.9）**，落地口径与"要先补哪两个共享 AI"见「批次 C」末尾。
+     最后一件才是**归虚之灵**（数据已逐版侦察完，等元素之斧好了就落地）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
      **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 这四件召唤武器尚未点名开态值，等用户一并处理**。
   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **166 条全命中**；
-    工作区干净、与 `origin/master` 同步。
+    工作区干净、与 `origin/master` 同步（最近提交 **`5702344`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -494,6 +495,29 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   命中挂 `ElementalMix`（现代有 / **经典没有** → 要兜底）。
   配方（2.0.3.9）= 泰拉棱镜 `ItemID.EmpressBlade` + **植灵法杖** + 夜明锭 `ItemID.LunarBar`×5 + 生命合金×5 + 银河奇点×5 @ 远古操纵机。
   **苍华之庭（2.0.3.9）数据**：见下面「最近一批工作」那条。
+  **元素之斧落地口径（2026-10-08 收工时定好，明天照此开工）**：
+  ① **先补两个共享 AI**（本工程尚无）：`ChargingMinionAI`（源在灾厄 `Utilities/GenericAIUtils.cs`，约 130 行，
+     冲锋型仆从的状态机：找目标 / 距离过远强制回主人 / 贴近到 500 内就冲锋 / 冲锋后强制冷却；
+     内部第一步会调 `MinionAntiClump`）与 `MinionAntiClump`（源在灾厄 `Utilities/ProjectileUtils.cs`，
+     同类仆从互相推开）。两个都搬进 `Utilities/CDUtil_Summon.cs`（partial `CDUtil`）。
+     移植时删掉源里的 `isButterfly` / DukeFishron 特判（那是蝴蝶法杖专属，与本件无关），
+     并按工程口径把 `player.Calamity()` 那行无用的 modPlayer 去掉。
+  ② **物品 `ElementalAxe`**：36×36 / 伤害 **57** / 魔力 10 / 使用/动画 **15 帧** / 击退 5 / **紫档** /
+     **1 铂金 10 金**（`Rarity11BuyPrice`）/ 音 `SoundID.Item44` / `autoReuse` / 弹速 10；
+     出手在**鼠标处**（`altFunctionUse != 2` 才生成，照源）、生成后写 `originalDamage = Item.damage`。
+  ③ **仆从 `ElementalAxeMinion`**：52×52 / 占 1 栏 / 逐敌 30 帧独立冷却 / 不撞地形 / 无限穿透；
+     AI 只有两行——`Projectile.rotation += 0.075f;` 加
+     `ChargingMinionAI(1600f, 1800f, 2500f, 400f, 1, 30f, 24f, 12f, new Vector2(0f, -60f), 30f, 16f, true, true)`；
+     `GetAlpha` 彩虹染色（`Main.DiscoRGB`）、`PreDraw` 自绘旋转贴图、**命中挂 `ElementalMix` 60 帧**
+     （现代 2.2.2 有该减益、**经典版没有** → 走 `ApplyCalamityBuffWithFallback` 兜底）；
+     增益 `ElementalAxeBuff` + 玩家标志 `eAxe`（照模板：字段 + `ResetEffects` + `UpdateDead` 三处）。
+  ④ **配方**：现代分支照源 2.0.3.9 = 泰拉棱镜 `ItemID.EmpressBlade` + **本模组苍华之庭** +
+     夜明锭 `ItemID.LunarBar`×5 + 生命合金 `LifeAlloy`×5 + **本模组银河奇点 `GalacticaSingularity`**×5 @ 远古操纵机；
+     **经典分支去掉生命合金那一味**（经典版没有 `LifeAlloy`，沿用用户当日"缺料就直接丢掉"的同一条口径，
+     收工时已向用户说明、未收到反对），其余四味照旧。
+  ⑤ 贴图三张取自 2.0.3.9：`ElementalAxe.png` 58×52 / `ElementalAxeMinion.png` 58×52 / `ElementalAxeBuff.png` 32×32。
+  ⑥ 本地化：`Items.ElementalAxe`（zh **元素之斧**）、`Buffs.ElementalAxeBuff`（zh 元素之斧）、
+     `Projectiles.ElementalAxeMinion.DisplayName`。
 
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
