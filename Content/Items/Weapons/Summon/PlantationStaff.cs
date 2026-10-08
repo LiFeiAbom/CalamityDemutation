@@ -25,7 +25,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// </para>
     /// <para>
     /// 配方（照源 2.0.3.9）：夜眼 `EyeOfNight` + 刃杖 `ItemID.Smolstar` + 生命碎片 `LivingShard`×12 @ 秘银砧。
-    /// **经典分支（`CalamityModClassicPreTrailer`）里没有夜眼**，那一味怎么补等用户拍板，故暂只注册现代分支。
+    /// **经典分支（`CalamityModClassicPreTrailer`）里没有夜眼**，按用户 2026-10-08 拍板**直接去掉那一味**，
+    /// 其余两味（刃杖 + 生命碎片×12）照旧、同站台。
     /// </para>
     /// </remarks>
     internal class PlantationStaff:ModItem
@@ -95,10 +96,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         }
         /// <summary>
         /// 配方（照源 2.0.3.9）：夜眼 `EyeOfNight` + 刃杖 `ItemID.Smolstar` + 生命碎片 `LivingShard`×12 @ 秘银砧。
-        /// 暂只注册现代分支——经典版没有夜眼，那一味待用户拍板后再补。
+        /// 经典分支按用户 2026-10-08 拍板去掉夜眼那一味（经典版没有这件），其余照旧；缺件即退化成单分支。
         /// </summary>
         public override void AddRecipes()
         {
+            // 现代分支：照源 2.0.3.9 三味全写
+            bool modern = false;
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) &&
                 calamity.TryFind<ModItem>("EyeOfNight", out ModItem eyeOfNight) &&
                 calamity.TryFind<ModItem>("LivingShard", out ModItem livingShard))
@@ -109,9 +112,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
                     AddIngredient(livingShard.Type, 12).
                     AddTile(TileID.MythrilAnvil).
                     Register();
-                return;
+                modern = true;
             }
-            Mod.Logger.Warn("苍华之庭：找不到 夜眼 / 生命碎片（当前可能是经典版灾厄），配方未注册。");
+            // 经典分支：去掉夜眼，只留刃杖 + 生命碎片×12（用户 2026-10-08 拍板）
+            bool classic = false;
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classicMod) &&
+                classicMod.TryFind<ModItem>("LivingShard", out ModItem classicShard))
+            {
+                CreateRecipe().
+                    AddIngredient(ItemID.Smolstar).
+                    AddIngredient(classicShard.Type, 12).
+                    AddTile(TileID.MythrilAnvil).
+                    Register();
+                classic = true;
+            }
+            if (!modern && !classic)
+                Mod.Logger.Warn("苍华之庭：两版灾厄都找不到 生命碎片，配方未注册。");
         }
     }
 }

@@ -1957,8 +1957,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ㈡ 源的残影开关 `CalamityConfig.Instance.Afterimages` 换成工程既有的 `ConfigSystem.PerformanceMode`；
   ㈢ 孢子云源里的灾厄 `SmallSmokeParticle` 无对应粒子，只保留同步生成的中毒尘（`DustID.Poisoned`）；
   ㈣ 裸值尘 `40` = `DustID.JunglePlants`（tML 分析器会报魔法数字，必须写常量名）。
-  **配方（现代分支，照源 2.0.3.9 逐字）**：夜眼 `EyeOfNight` + 刃杖 `ItemID.Smolstar` + 生命碎片 `LivingShard`×12 @ 秘银砧；
-  **经典分支待用户拍板**——经典版有生命碎片但没有夜眼，故暂只注册现代分支（缺件时打警告）。
+  **配方（两分支各一条）**：现代分支照源 2.0.3.9 逐字 = 夜眼 `EyeOfNight` + 刃杖 `ItemID.Smolstar` +
+  生命碎片 `LivingShard`×12 @ 秘银砧；**经典分支按用户 2026-10-08 拍板"直接丢掉夜眼那一味"** =
+  刃杖 + 生命碎片×12 @ 秘银砧（经典版没有夜眼；缺件即退化成单分支）。
   验证：编译 **0 警告 0 错误**；资源自检 **166 条全命中**；同名不同扩展名自检无冲突。
   下一件：**元素之斧（2.0.3.9）**，需要先补它的共享 AI `ChargingMinionAI` / `MinionAntiClump`（源在灾厄
   `GenericAIUtils.ChargingMinionAI` / `ProjectileUtils.MinionAntiClump`，本工程尚未移植）。
