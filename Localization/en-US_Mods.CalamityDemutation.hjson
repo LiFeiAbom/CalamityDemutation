@@ -1852,6 +1852,15 @@ Items: {
 			'''
 	}
 
+	SealedSingularity: {
+		DisplayName: Sealed Singularity
+		Tooltip:
+			'''
+			Shatters on impact, summoning a black hole that sucks in nearby enemies
+			Stealth strikes summon a black hole that lasts longer and sucks enemies with stronger force
+			'''
+	}
+
 	ShieldoftheOcean: {
 		DisplayName: Shield of the Ocean
 		Tooltip: Increased defense by 5 when submerged in liquid
@@ -2643,6 +2652,9 @@ Projectiles: {
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
 	SandyWaifu.DisplayName: Waifu
+	SealedSingularityBlackhole.DisplayName: Blackhole
+	SealedSingularityGore.DisplayName: Sealed Singularity Fragment
+	SealedSingularityProj.DisplayName: Sealed Singularity
 	ShockGrenadeBolt.DisplayName: Bolt
 	ShockGrenadeExplosion.DisplayName: Shock Grenade Explosion
 	ShockGrenadeProjectile.DisplayName: Shock Grenade

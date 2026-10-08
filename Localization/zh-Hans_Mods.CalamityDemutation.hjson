@@ -1853,6 +1853,15 @@ Items: {
 			'''
 	}
 
+	SealedSingularity: {
+		DisplayName: 封存奇点
+		Tooltip:
+			'''
+			命中时碎裂，召出一个把附近敌人吸进去的黑洞
+			潜行打击召出的黑洞持续更久、吸力更强
+			'''
+	}
+
 	ShieldoftheOcean: {
 		DisplayName: 海之盾
 		Tooltip: 浸没在液体中时防御提高 5
@@ -2642,6 +2651,9 @@ Projectiles: {
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
 	SandyWaifu.DisplayName: 沙元素
+	SealedSingularityBlackhole.DisplayName: 黑洞
+	SealedSingularityGore.DisplayName: 封存奇点碎片
+	SealedSingularityProj.DisplayName: 封存奇点
 	ShockGrenadeBolt.DisplayName: 闪电
 	ShockGrenadeExplosion.DisplayName: 震爆手雷爆炸
 	ShockGrenadeProjectile.DisplayName: 震爆手雷

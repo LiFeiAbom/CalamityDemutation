@@ -311,10 +311,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 5 件，剩 3 件。**
+- **【接续点 · 2026-10-08】批次：「超新星」下位链（口径＝走 2.0 / 2.0.3.9 那条线）——已完成 6 件，剩 2 件。**
   **链条（从下往上，逐件做）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
-  → ⑤ 毁灭之星 ✅
-  → **⑥ 封存奇点 `SealedSingularity`（下一件）** → ⑦ 半影 `Penumbra` → ⑧ 超新星 `Supernova`。
+  → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅
+  → **⑦ 半影 `Penumbra`（下一件）** → ⑧ 超新星 `Supernova`。
   **用户 2026-10-08 追加口径**：整条链移植完之后，**再统一做数值膨胀（StatInflation）**——
   本批次 6 件武器（震爆手雷 / 弹道毒炸弹 / 破坏者 / 毁灭之星 / 封存奇点 / 半影）与最终的超新星
   都要走「关态 = 本批次落的 2.0 源值 / 开态 = 用户点名值」的老模板（第 7 节），做之前逐把点名。
@@ -382,7 +382,24 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   当前潜行值 `AddRogueStealthValue` / `SetRogueStealthToMax`；盗贼弹幕与潜行打击判定 `IsRogueProjectile` / `IsStealthStrike`。
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
-  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **155 条全命中**（毁灭之星落地后复核）。
+  工程基线：`dotnet build` 0 警告 0 错误、资源自检 **156 条全命中**（封存奇点落地后复核）。
+- 最近一批工作（2026-10-08）：**移植封存奇点（SealedSingularity）—— "超新星"下位链第六件。**
+  口径：老规矩取 2.0：34×34、伤害 **260**、击退 5、使用/动画各 25 帧、
+  **月后 12 档（青绿＝灾厄 Turquoise）**、价值 **1 铂金 20 金**（`Rarity12BuyPrice`）、弹速 14、
+  使用音 `SoundID.Item106`（2.0.3.9 起补了潜行 0.72×、1.4.4-release 整件重做成 Holdout——都不取）。
+  效果：命中/消散碎裂，召出**黑洞**把 500 像素内普通敌怪往中心吸；**潜行打击**那一发伤害 ×0.72，
+  但黑洞**多活 180 帧**（以 `ai[0] = -180` 生成）、吸力 0.25（常规 0.1）、半径翻倍到 1000。
+  **配方照 2.0**：尘暴瓶 `DuststormInABottle` + 暗等离子 `DarkPlasma`×3 @ 远古操纵机
+  ——两味两版灾厄都有、站台原版 → 只注册一条、两分支通用。
+  源里那句 `Item.Calamity().donorItem = true`（灾厄的"捐赠者物品"标记）**刻意没搬**（本工程无此体系）。
+  **落地**：`Content/Items/Weapons/Rogue/SealedSingularity.cs` + `Content/Projectiles/Rogue/` 下三枚：
+  `SealedSingularityProj`（贴图借用物品贴图、前 70 帧转、之后 ×0.96 减速、碎裂时召黑洞 + 3 片碎片）、
+  `SealedSingularityBlackhole`（40×40、**共享静态无敌帧**每 10 帧、7 帧动画、吸怪 + 300 帧后收缩消散）、
+  `SealedSingularityGore`（25×25、重力 0.27、按 `ai[0]` 在 Gore/Gore2/Gore3 三张不同尺寸贴图里选一张）。
+  黑洞的目标筛选照 `AnarchyBlade` 内联 `ShouldAffectNPC`；源额外放行的灾厄"超级木桩" `SuperDummyNPC`
+  软依赖下引不到，**只跳过这一项**（已在代码注释写明）。
+  零新增音频（`SoundID.Item106` / `Shatter` / `Dig`）；五张贴图从 2.0 源线复制；
+  中英本地化补物品（zh **封存奇点**）与三条弹幕名。验证：编译 0 警告 0 错误；资源自检 156 条全命中。
 - 最近一批工作（2026-10-08）：**移植毁灭之星（StarofDestruction）—— "超新星"下位链第五件。**
   口径：老规矩取 2.0：94×94、伤害 **150**、击退 10、使用/动画各 38 帧、**青档（Cyan）**、价值 95 金、
   弹速 5、使用音 `SoundID.Item1`（2.0.3.9 起 40 帧 + 潜行 0.8×、2.0.4 改红档、1.4.4-release 整件重做——都不取）。
