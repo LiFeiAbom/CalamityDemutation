@@ -202,6 +202,8 @@
   加在盗贼路上（`CDUtil.GetRogueDamageClass()`）。
 - **提交信息用消息文件**：正文含中文引号/换行时 `git commit -m $body` 会被 PowerShell 拆坏（报 pathspec 错），
   改成 `[System.IO.File]::WriteAllText($env:TEMP\msg.txt, (... -join "`n"), UTF8(no BOM))` 再 `git commit -F`。
+- **Codex 客户端本体（CLI）的维护见第 11 节**：本机是官方独立安装包（不是 npm 装的），`codex update` 被
+  chatgpt.com 的 403 挡住走不通；手工升级/回滚流程、Junction 的坑、以及升级到 0.161.0 后的已知差异都记在那里。
 
 ## 7. 数值膨胀（StatInflation：武器 35 把 + 盔甲 12 件，2026-10-01 全量接入完毕，2026-10-05 补齐女妖之爪条目）
 
@@ -2061,3 +2063,66 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | `BloodyWormScarf` | 血蠕虫围巾 | **血腥蠕虫围巾** | Bloody Worm Scarf |
 | `BloodyWormTooth` | 血蠕虫牙 | **血腥蠕虫牙** | Bloody Worm Tooth |
 | `CoreOfTheBloodGod` / `BloodPact` / `FleshTotem` | 血神核心 / 血契 / 血肉图腾 | 一致 | Core Of The Blood God / Blood Pact / Flesh Totem |
+## 11. 本机 Codex 客户端（环境维护；不是模组内容）
+
+> 2026-10-08 本会话把终端里的 `codex` 从 **0.154.0 手工升到 0.161.0**（官方 `codex update` 在本机走不通）。
+> 这一节记安装形态、升级/回滚流程、以及升级后的已知差异；下次维护照做即可。
+
+### 11.1 安装形态（先搞清"谁在管版本"）
+
+- 终端里的 `codex` 是**官方独立安装包（standalone）**，**不是 npm 装的**（`npm ls -g` 里只有 `@deepseek-ai/dsh`）。
+- 安装根 `C:\Users\28155\.codex\packages\standalone\`：每个版本各占一个
+  `releases\<版本>-x86_64-pc-windows-msvc\` 目录；`current` 是一个**目录联接（Junction）**指向当前版本；
+  PATH 上的 `C:\Users\28155\AppData\Local\Programs\OpenAI\Codex\bin\codex.exe` 又是指向 `current\bin` 的链接。
+  **旧版本目录一律保留**（现留 0.147.0 / 0.154.0 / 0.161.0，随时可回滚）。
+- 包内布局（`codex-package.json`，`layoutVersion: 1`）：`bin/codex.exe`、`bin/codex-code-mode-host.exe`、
+  `codex-path/rg.exe`、`codex-resources/`（`codex-command-runner.exe`、`codex-windows-sandbox-setup.exe`、`voice/`）。
+  0.161.0 的 Windows 包解压后约 456 MB。
+- **桌面应用是另一条线**（MSIX：`C:\Program Files\WindowsApps\OpenAI.Codex_26.930.6422.0_x64__2p2nqsd0c76g0\`）：
+  Windows 沙箱服务 `CodexSandboxService.OpenAI.Codex`（Auto / Running）由它提供；它另有自己的一份 CLI 副本
+  （`%LOCALAPPDATA%\OpenAI\Codex\bin\<哈希>\codex.exe`，由 `CODEX_CLI_PATH` 指定）。
+  **升级 CLI 不碰这两样**；应用本体走微软商店更新（2026-10-08 商店已有 `26.1002.7124.0`，
+  `codex doctor` 会报一条 `desktop build ... available`）。
+
+### 11.2 `codex update` 在本机必然失败（以及可行的绕道）
+
+- `codex update` 自己不下载，它是转发器，实际跑
+  `powershell -ExecutionPolicy Bypass -c "$env:CODEX_NON_INTERACTIVE=1; irm https://chatgpt.com/codex/install.ps1 | iex"`。
+- **`chatgpt.com` 经本机代理 `127.0.0.1:7897` 一律 403**（换浏览器 UA、换 `curl.exe` 都一样；直连则完全不通）；
+  `developers.openai.com` 同样 403。**这个失败是干净的**：不留半个文件、不动现有安装。
+- 走通的手工流程（照官方包布局复刻，本会话已验证）：
+  1. 取官方独立包（GitHub 走代理可通）：
+     `https://github.com/openai/codex/releases/download/rust-v<版本>/codex-package-x86_64-pc-windows-msvc.tar.gz`
+     （同页另有 `.zst` 与单文件 exe；`.tar.gz` 用 Windows 自带 `tar.exe` 可直接解）。
+  2. 解到暂存目录 → 核对 `codex-package.json` 的 `version` → **先试跑** `bin\codex.exe --version` 报出正确版号。
+  3. `Move-Item` 整个目录进 `releases\<版本>-x86_64-pc-windows-msvc\`。
+  4. 翻转 `current` 联接：**绝对不要用 `Remove-Item`**——PS 5.1 处理 Junction 会抛
+     `NullReferenceException`（本会话实测；所幸它什么都没删）。正确做法是先
+     `[System.IO.Directory]::Delete($path, $false)` 摘链，再 `New-Item -ItemType Junction -Path ... -Target ...`。
+     建立/摘除 Junction **不需要管理员权限或开发者模式**（本会话在非管理员下成功）。
+  5. 复核：`...\Programs\OpenAI\Codex\bin\codex.exe --version` 应报新版号；再跑 `codex doctor` 看配置/沙箱/端点。
+- **回滚** = 把 `current` 指回旧版本目录（同第 4 步那两条命令，`-Target` 换成
+  `releases\0.154.0-x86_64-pc-windows-msvc`）。
+- **取证口径**（`chatgpt.com` / `developers.openai.com` 都被挡）：版本号看 OpenAI 官方更新端点
+  `https://persistent.oaistatic.com/codex-app-prod/windows-store-update.json`、GitHub 官方发布说明、npm 官方源；
+  **配置项兼容性看各发行标签自带的 `codex-rs/core/config.schema.json`**（本会话就是拿 0.154 与 0.161 两份逐键比）。
+
+### 11.3 升级到 0.161.0 后的已知差异（本会话实测 + 官方说明）
+
+- **配置全兼容**：本机 `config.toml` 的键在两份 schema 里逐个比过，**没有任何键被移除**；
+  `[windows] sandbox = "unelevated"` 仍合法（新值域为 `elevated / unelevated / mxc`）。
+  升级后 `codex doctor` 全绿：`model deepseek-flash · deepseek`、auth 判"该 provider 不需要 OpenAI 登录"、
+  `sandbox restricted fs + restricted network`、deepseek 端点可达（探针 401 = 路由存在，只是没带 key）。
+- **新版会警告"忽略 2 个无法识别的配置项"**＝`disable_response_storage` 与 `preferred_auth_method`。
+  二者在 0.154 的 CLI schema 里同样不存在，且 0.161 的 `codex.exe` 里这两个字符串 **0 命中**
+  （对照：`forced_login_method` 19 命中、`cli_auth_credentials_store` 23 命中）——它们是**桌面应用那一层**的键，
+  CLI 从来没认过。**别删**（删了可能改桌面端行为），这条警告是纯噪声。
+- 0.161 起内置目录默认模型是 **GPT-6.1 Sol**——本机不受影响（pin 了 `model = "deepseek-flash"` + 自定义
+  provider + 自带 `models.json`）。但 0.160 起"显式 provider 模型目录被当权威"：不再混入内置模型，
+  刷新失败也不复用陈旧条目。
+- Personality（`friendly` / `pragmatic`）已退役、Daybreak 改为必须显式 `--enable cli_daybreak`——本机都没用到。
+- **升级要重启 Codex 才生效**：当前会话不会中途换二进制（`codex --version` 重启后才会变）。
+- 日常噪声：`~/.codex/tmp/arg0/<名字>` 是**当前会话**的临时目录（创建时间＝codex 进程启动时刻）；
+  在沙箱里跑 `codex` 每次都会刷 `failed to clean up stale arg0 temp dirs` /
+  `could not create PATH aliases: 拒绝访问`，那是沙箱挡了 `~/.codex/tmp` 的写权限——
+  **属正常现象，不用管，更别去删那个目录**（活会话在用）。
