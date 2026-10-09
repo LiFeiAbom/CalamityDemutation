@@ -362,18 +362,20 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **已落地**：链底 苍华之庭 ✅（现代 + 经典两条配方）、元素之斧 ✅（2026-10-09）、
      **古冰晶 `AncientIceChunk` ✅（2026-10-09，含冰灵仆从与冰锥）**、
      **圣化火花 `SanctifiedSpark` ✅（2026-10-09，含哨兵炮台与两枚火弹；＝2.0 的 能量法杖 `EnergyStaff` 改名件）**、
+      **空灵征服者 `EtherealSubjugator` ✅（2026-10-09，含幻影仆从 + 幽焰）**、
      天狼星 ✅（批次 B 链尾，2026-10-08）；
-     **下一件＝用户点名**（还没自持的是：**空灵征服者 / 宇宙灯笼 / 灾厄挽歌**），
+      **下一件＝用户点名**（还没自持的是：**宇宙灯笼 / 灾厄挽歌**——都是饰品/召唤物类，侦察时按件来），
      最后才是链顶**归虚之灵**（它的物品数据与配方选项已侦察完，见下）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128
-     这七件召唤系武器尚未点名开态值，等用户一并处理**。
-  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **168 条全命中**
+     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128 /
+     空灵征服者 200 这八件召唤系武器尚未点名开态值，等用户一并处理**。
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **171 条全命中**
     （元素之斧三张、古冰晶四张贴图是"类同名隐式"引用、脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过；
-    圣化火花那批给自检加了 2 条——`FlameBlast` / `FlameBurst` 显式引共用隐形图）；
-    工作区干净、与 `origin/master` 同步（最近落地提交 = 圣化火花 **`45484fd`**、古冰晶 **`d1a56fa`**）。
+    圣化火花那批给自检加了 2 条——`FlameBlast` / `FlameBurst` 显式引共用隐形图；空灵征服者那批再加 3 条——
+    发光层 `EtherealSubjugatorGlow`、`GhostFire` 的隐形图与灰度圆 `SmallGreyscaleCircle`）；
+    工作区干净、与 `origin/master` 同步（最近落地提交 = 空灵征服者 **`bdb34db`**、圣化火花 **`45484fd`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -555,9 +557,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **口径更新：CI 线全自持（2026-10-09，用户点名）**：CI 八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
   （奇迹物质本机现代版仍在，继续软引用）；源一律取 **2.0 / 2.0.3.9**。已自持：天狼星（批次 B 链尾）、
-  元素之斧、古冰晶、圣化火花；**待自持：空灵征服者 `EtherealSubjugator` / 宇宙灯笼 `Cosmilamp` /
-  灾厄挽歌 `CalamarisLament`**——这三件在装着的现代版里其实都还在，但按用户口径照样自持旧版
-  （1.4.4-release 砍过，用户要回调）。
+  元素之斧、古冰晶、圣化火花、空灵征服者；**待自持：宇宙灯笼 `Cosmilamp` / 灾厄挽歌 `CalamarisLament`**
+  ——这两件在装着的现代版里其实都还在，但按用户口径照样自持旧版（1.4.4-release 砍过，用户要回调）。
 
   **落地记录：古冰晶（2026-10-09，落地提交 `d1a56fa`）—— 批次 C 第三件**
   - 物品 `Content/Items/Weapons/Summon/AncientIceChunk.cs`：38×50 / 伤害 25 / 魔力 10 / 使用·动画 25 帧 /
@@ -619,6 +620,40 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     `Projectiles.ProfanedEnergy.DisplayName`（Profaned Energy）、`FlameBlast.DisplayName`（Flame Blast）、
     `FlameBurst.DisplayName`（Flame Burst）；中文＝**圣化火花 / 亵渎能量 / 烈焰冲击 / 烈焰迸发**。
 
+  **落地记录：空灵征服者（2026-10-09，落地提交 `bdb34db`）—— 批次 C 第五件**
+  - **口径选择**：2.0 是伤害 45 + 挥动姿态 + 幻影**只占半格**栏位；2.0.3.9 是伤害 200 + 射击姿态 + 满 1 格；
+    实装 1.4.4-release 砍到伤害 160、使用帧 24。本工程按「回调 + 链条统一 2.0.3.9」取 **200**，
+    **2.0 那套没采用**（要换等于只改 `SetDefaults` 里的四个数 + 幻影的 `minionSlots`）。
+  - 物品 `Content/Items/Weapons/Summon/EtherealSubjugator.cs`：66×70 / 伤害 200 / 击退 1 / 使用·动画 10 帧 /
+    魔力 10 / `autoReuse` / 月后 **13 档**（`postMoonLordRarity = 13`，＝灾厄 `PureGreen`）/ 1 铂金 30 金
+    （`Rarity13BuyPrice`）/ 音 `SoundID.Item82`；`UseStyle` 里把物品位置按朝向往左上挪 `(-13, -15)`（照源）；
+    **掉在地上的发光层**用工程既有的 `Item.DrawItemGlowmaskSingleFrame`（`Utilities/DrawUtil.cs`）画
+    `EtherealSubjugatorGlow`。
+  - 仆从 `Content/Projectiles/Summon/PhantomGuy.cs`：30×30 / 占 1 栏 / `extraUpdates = 1` / **自身无接触伤害**
+    （`CanDamage()` 恒 false）；照源复用噬魂幽花 Boss 的 `PhantomFuckYou` 图（拷成同名贴图，免写 `Texture` 覆盖）；
+    AI = 登场喷 36 颗幽尘 → 索敌 3000（优先右键标记）→ 贴到离目标 200 像素内 → `ai[1]` 攒到 75 后开一轮
+    **"连喷"**（`shootTimeCounter` 前 60 帧里每 20 帧一发幽焰、共 3 发，带后坐；一轮持续 200 帧）。
+  - 幽焰 `Content/Projectiles/Summon/GhostFire.cs`：16×16 / `extraUpdates = 3` / 穿透 200 / 寿命 600 /
+    逐敌 50 帧；出生 1 秒内减速且不追踪，之后**无视地形**追敌（射程 3000），命中后转"余势衰减"
+    （寿命压到 60、速度 ×0.88），`timeLeft ≤ 20` 时停伤害；贴图隐形，画面全靠 `PreDraw` 用灰度圆点自绘
+    （源用灾厄的 `ExtraTextures/SmallGreyscaleCircle`，本工程原样拷进 **`Assets/ExtraTextures/`**）。
+  - `Utilities/CDUtil_Summon.cs` 新增 `SuperhomeTowardsTarget`（照源三行，内部复用既有的
+    `CalculatePredictiveAimToTarget`）——以后再有"超级追踪"弹幕直接复用。
+  - 增益 `Content/Buffs/SummonBuffs/PhantomBuff.cs`（源类名就叫 `Phantom`，本工程加 Buff 后缀）
+    + 玩家标志 `pGuy`（`Players/CalamityDemutationPlayer.cs` 三处：字段 + `ResetEffects` + `UpdateDead`）。
+  - **无配方**：来源照源挂**噬魂幽花 `Polterghast`**——本体走源里那条"非专家武器池"
+    （`DropHelper.CalamityStyle(1/4, 7 把武器)`，本工程沿用与女妖之爪同一条 1/4 简化口径），
+    宝藏袋 1/3；两处都在 `NPCs/CalamityDemutationGlobalNPC.cs` 与 `Content/Items/CalamityDemutationGlobalItem.cs`
+    的**现代/经典两条分支**各挂一次。
+  - 尘编号用命名常量（**180 = `DustID.DungeonSpirit`**），保住 0 警告基线。
+  - 贴图五张取自 2.0.3.9：`EtherealSubjugator.png` 66×70、`EtherealSubjugatorGlow.png` 66×70、
+    `PhantomGuy.png` 30×30（＝源 `PhantomFuckYou.png`）、`PhantomBuff.png` 32×32、`SmallGreyscaleCircle.png` 72×72。
+  - 本地化：`Items.EtherealSubjugator`（Ethereal Subjugator / Summons a phantom to protect you）、
+    `Buffs.PhantomBuff`（Phantom / The phantom will protect you）、
+    `Projectiles.PhantomGuy.DisplayName`（Phantom）、`Projectiles.GhostFire.DisplayName`（Ghastly Particle）；
+    中文＝**空灵征服者 / 幻影 / 幻影 / 幽焰**。
+
+- 最近一批工作（2026-10-09 最晚）：**移植空灵征服者（EtherealSubjugator）—— 「归虚之灵」链（CI 口径）自持件（含幻影仆从 + 幽焰）。**
 - 最近一批工作（2026-10-09 再晚）：**移植圣化火花（SanctifiedSpark）—— 「归虚之灵」链（CI 口径）自持件；本工程第一件哨兵武器（含哨兵炮台 + 两枚火弹）。**
 - 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（CI 口径）的自持件之一（含冰灵仆从 + 冰锥）。**
 - 最近一批工作（2026-10-09）：**移植元素之斧（ElementalAxe）—— 「归虚之灵」链的中间件（批次 C 第二件）。**
