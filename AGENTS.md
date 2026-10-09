@@ -364,20 +364,22 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **圣化火花 `SanctifiedSpark` ✅（2026-10-09，含哨兵炮台与两枚火弹；＝2.0 的 能量法杖 `EnergyStaff` 改名件）**、
       **空灵征服者 `EtherealSubjugator` ✅（2026-10-09，含幻影仆从 + 幽焰）**、
        **宇宙灯笼 `Cosmilamp` ✅（2026-10-09，含灯笼仆从 + 宇宙光束）**、
+        **灾厄挽歌 `CalamarisLament` ✅（2026-10-09，含小鱿鱼仆从 + 墨汁弹）**、
      天狼星 ✅（批次 B 链尾，2026-10-08）；
-       **下一件＝用户点名**（还没自持的只剩 **灾厄挽歌 `CalamarisLament`**），
-     最后才是链顶**归虚之灵**（它的物品数据与配方选项已侦察完，见下）。
+       **CI 八重配方要用的自持件已经全齐**（七件：天狼星 / 苍华之庭 / 元素之斧 / 古冰晶 / 圣化火花 /
+       空灵征服者 / 宇宙灯笼 / 灾厄挽歌，另加链顶本体），**下一件就是链顶 归虚之灵**
+       （物品数据与配方选项已侦察完，见下；**它还差你拍板**：数值取 2.0/2.0.3.9 的 560 还是 CI 版的 360）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-      **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128 /
-      空灵征服者 200 / 宇宙灯笼 127 这九件召唤系武器尚未点名开态值，等用户一并处理**。
+       **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128 /
+       空灵征服者 200 / 宇宙灯笼 127 / 灾厄挽歌 110 这十件召唤系武器尚未点名开态值，等用户一并处理**。
   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **173 条全命中**
     （元素之斧三张、古冰晶四张贴图是"类同名隐式"引用、脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过；
     圣化火花那批给自检加了 2 条——`FlameBlast` / `FlameBurst` 显式引共用隐形图；空灵征服者那批再加 3 条——
     发光层 `EtherealSubjugatorGlow`、`GhostFire` 的隐形图与灰度圆 `SmallGreyscaleCircle`；宇宙灯笼那批再加 2 条——
-    `CosmilampBeam` 的隐形图与拖尾贴图 `ScarletDevilStreak`）；
-    工作区干净、与 `origin/master` 同步（最近落地提交 = 宇宙灯笼 **`ecaf748`**、空灵征服者 **`bdb34db`**）。
+     `CosmilampBeam` 的隐形图与拖尾贴图 `ScarletDevilStreak`；灾厄挽歌那批全是类同名隐式贴图，自检条数不变）；
+     工作区干净、与 `origin/master` 同步（最近落地提交 = 灾厄挽歌 **`54bb8e7`**、宇宙灯笼 **`ecaf748`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -559,8 +561,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **口径更新：CI 线全自持（2026-10-09，用户点名）**：CI 八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
   （奇迹物质本机现代版仍在，继续软引用）；源一律取 **2.0 / 2.0.3.9**。已自持：天狼星（批次 B 链尾）、
-  元素之斧、古冰晶、圣化火花、空灵征服者、宇宙灯笼；**待自持只剩 灾厄挽歌 `CalamarisLament`**
-  ——它在装着的现代版里其实还在，但按用户口径照样自持旧版（1.4.4-release 砍过，用户要回调）。
+  元素之斧、古冰晶、圣化火花、空灵征服者、宇宙灯笼、**灾厄挽歌（2026-10-09 补齐，至此自持件全齐）**。
 
   **落地记录：古冰晶（2026-10-09，落地提交 `d1a56fa`）—— 批次 C 第三件**
   - 物品 `Content/Items/Weapons/Summon/AncientIceChunk.cs`：38×50 / 伤害 25 / 魔力 10 / 使用·动画 25 帧 /
@@ -688,7 +689,44 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     （Cosmilamp / The cosmilamp will protect you）、`Projectiles.CosmilampMinion.DisplayName`（Cosmilamp）、
     `Projectiles.CosmilampBeam.DisplayName`（Cosmic Beam）；中文＝**宇宙灯笼 / 宇宙灯笼 / 宇宙灯笼 / 宇宙光束**。
 
-- 最近一批工作（2026-10-09 最晚）：**移植宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（CI 口径）自持件（含灯笼仆从 + 宇宙光束）。**
+  **落地记录：灾厄挽歌（2026-10-09，落地提交 `54bb8e7`）—— 批次 C 第七件（自持件收官）**
+  - **口径选择**：2.0 那版**只有物品本体**（仆从/增益/墨汁弹都是 2.0.3.9 才补齐的），
+    1.4.4-release 是伤害 120 / 使用 **24 帧**（更慢）。本工程取 **2.0.3.9 这套完整实现**：伤害 110 / 使用 10 帧。
+  - 物品 `Content/Items/Weapons/Summon/CalamarisLament.cs`：88×108 / 伤害 110 / 使用·动画 10 帧 / 魔力 10 /
+    `autoReuse` / 法杖姿态 / 月后 **13 档** / 1 铂金 30 金 / 音 `SoundID.Item85`；可调参数照源挂在物品类上
+    （`EnemyDistanceDetection = 8000` / `ShootingExtraTargettingSpeed` / `ShootingMinionDistance` /
+    `ShootingFireRate = 30` / `ShootingProjectileSpeed = 20` / `LatchingDistanceRequired = 400` /
+    `LatchingExtraTargettingSpeed` / `LatchingDamageMultiplier = 1.25` / `LatchingIFrames = 30`）。
+  - 仆从 `Content/Projectiles/Summon/CalamarisLamentMinion.cs`：31×31（源注释：取一帧的一半，缠上去更合身）/
+    占 1 栏 / 5 帧动画；三状态机 **待机 → 远程 → 缠斗**：远程态离主人 >320 使劲回贴、每 30 帧喷一枚墨汁弹
+    （散布 ±45°、带后坐与喷墨尘），玩家离目标 ≤400 切**缠斗**（扑上目标碰撞箱、贴上后 ×0.2 减速、伤害 ×1.25，
+    只有这一态有接触伤害）；索敌用 8000（源注释：为了稳定咬住神明吞噬者）。
+  - 墨汁弹 `Content/Projectiles/Summon/CalamarisLamentProjectile.cs`：28×28 / 寿命 240 / 5 帧动画 /
+    逐敌冷却 −1；**只打出生时锁定的那个目标**（`ai[0]` 记目标索引，源注释：多节 Boss 不会把伤害数字刷爆），
+    `CanDamage` 要求与目标碰撞箱相交；残影走工程既有的 `CDUtil.DrawAfterimagesCentered`。
+  - 增益 `Content/Buffs/SummonBuffs/CalamarisLamentBuff.cs` + 玩家标志 `calamarisLament`（三处齐全）。
+  - **无配方**：来源照源挂 **巨型鱿鱼 `ColossalSquid`**（深渊敌怪）1/3，**带"已击败噬魂幽花"门槛**——
+    现代源是 `npcLoot.AddIf(DropHelper.PostPolter(), …)`、经典源是 `ByCondition(new DownedPolterghast(), …)`；
+    本工程为此新增条件类 `PolterghastDownedCondition`（在 `NPCs/CalamityDemutationGlobalNPC.cs` 里实现
+    `IItemDropRuleCondition`，内部查 `BossSystem.Polterghast`），现代与经典两条分支各挂一次。
+  - **两处未移植**：① 源的 `[GFB]` 天顶世界彩蛋（音效 `CalamityMod/Sounds/Item/Inkling` + "Woomy!" 提示行）；
+    ② 源基类里 `PreventTargettingUntilTargetHit = false` 会设灾厄的 `overridesMinionDamagePrevention`
+    （让仆从能打深渊/沉海那类敌怪），本工程不引灾厄类型，故该效果缺失（对原版敌怪无影响）。
+  - 尘编号用命名常量（**109 = `DustID.Asphalt`**，源为裸值），保住 0 警告基线。
+  - 贴图四张取自 2.0.3.9：`CalamarisLament.png` 88×108、`CalamarisLamentMinion.png` 62×330（5 帧）、
+    `CalamarisLamentProjectile.png` 14×140（5 帧）、`CalamarisLamentBuff.png` 32×32。
+  - 本地化：`Items.CalamarisLament`（Calamari's Lament / 五行 tooltip，含深渊那句引文）、
+    `Buffs.CalamarisLamentBuff`（Calamari / Time to transport all of your foes to stupid squid jail!）、
+    `Projectiles.CalamarisLamentMinion.DisplayName`（Calamari）、
+    `Projectiles.CalamarisLamentProjectile.DisplayName`（Calamari Ink）；
+    中文＝**灾厄挽歌 / 小鱿鱼 / 小鱿鱼 / 鱿鱼墨汁**。
+
+  **批次 C 状态（2026-10-09 收束）**：**CI 八重配方要用的自持件已全部落地**——
+  苍华之庭（链底）、元素之斧、古冰晶、圣化火花、空灵征服者、宇宙灯笼、灾厄挽歌、天狼星（批次 B 链尾）；
+  **只剩链顶 归虚之灵**（数据已侦察完；数值口径 560 与 CI 的 360 待用户拍板，配方在四选一里挑）。
+
+- 最近一批工作（2026-10-09 最晚）：**移植灾厄挽歌（CalamarisLament）—— 「归虚之灵」链（CI 口径）最后一件自持件（含小鱿鱼仆从 + 墨汁弹）。**
+- 最近一批工作（2026-10-09 更早）：**移植宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（CI 口径）自持件（含灯笼仆从 + 宇宙光束）。**
 - 最近一批工作（2026-10-09 更早）：**移植空灵征服者（EtherealSubjugator）—— 「归虚之灵」链（CI 口径）自持件（含幻影仆从 + 幽焰）。**
 - 最近一批工作（2026-10-09 再晚）：**移植圣化火花（SanctifiedSpark）—— 「归虚之灵」链（CI 口径）自持件；本工程第一件哨兵武器（含哨兵炮台 + 两枚火弹）。**
 - 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（CI 口径）的自持件之一（含冰灵仆从 + 冰锥）。**
