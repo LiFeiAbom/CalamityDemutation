@@ -2331,6 +2331,15 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - Personality（`friendly` / `pragmatic`）已退役、Daybreak 改为必须显式 `--enable cli_daybreak`——本机都没用到。
 - **升级要重启 Codex 才生效**：当前会话不会中途换二进制（`codex --version` 重启后才会变）。
 - 日常噪声：`~/.codex/tmp/arg0/<名字>` 是**当前会话**的临时目录（创建时间＝codex 进程启动时刻）；
-  在沙箱里跑 `codex` 每次都会刷 `failed to clean up stale arg0 temp dirs` /
+ 在沙箱里跑 `codex` 每次都会刷 `failed to clean up stale arg0 temp dirs` /
   `could not create PATH aliases: 拒绝访问`，那是沙箱挡了 `~/.codex/tmp` 的写权限——
   **属正常现象，不用管，更别去删那个目录**（活会话在用）。
+
+### 11.4 待办：重启后清掉 0.161.0 残留（2026-10-09 用户点名）
+
+升 0.162.0 时这两处因**当时有进程在跑**没能删净，重启 Codex 后一并收掉（合计约 750 MB）：
+
+- `~/.codex/packages/standalone/releases/0.161.0-x86_64-pc-windows-msvc/bin/codex.exe`（被旧会话占用，约 317 MB）；
+- `~/.codex/packages/app-server-daemon/releases/0.161.0-x86_64-pc-windows-msvc/`（后台守护进程的自管安装，约 435 MB）。
+
+删前先确认 `current` 已指向 `0.162.0`，且没有进程还挂在那两份里（`Get-Process | ? Path -like '*0.161.0*'`）。
