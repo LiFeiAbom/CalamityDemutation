@@ -363,19 +363,21 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **古冰晶 `AncientIceChunk` ✅（2026-10-09，含冰灵仆从与冰锥）**、
      **圣化火花 `SanctifiedSpark` ✅（2026-10-09，含哨兵炮台与两枚火弹；＝2.0 的 能量法杖 `EnergyStaff` 改名件）**、
       **空灵征服者 `EtherealSubjugator` ✅（2026-10-09，含幻影仆从 + 幽焰）**、
+       **宇宙灯笼 `Cosmilamp` ✅（2026-10-09，含灯笼仆从 + 宇宙光束）**、
      天狼星 ✅（批次 B 链尾，2026-10-08）；
-      **下一件＝用户点名**（还没自持的是：**宇宙灯笼 / 灾厄挽歌**——都是饰品/召唤物类，侦察时按件来），
+       **下一件＝用户点名**（还没自持的只剩 **灾厄挽歌 `CalamarisLament`**），
      最后才是链顶**归虚之灵**（它的物品数据与配方选项已侦察完，见下）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128 /
-     空灵征服者 200 这八件召唤系武器尚未点名开态值，等用户一并处理**。
-  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **171 条全命中**
+      **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128 /
+      空灵征服者 200 / 宇宙灯笼 127 这九件召唤系武器尚未点名开态值，等用户一并处理**。
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **173 条全命中**
     （元素之斧三张、古冰晶四张贴图是"类同名隐式"引用、脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过；
     圣化火花那批给自检加了 2 条——`FlameBlast` / `FlameBurst` 显式引共用隐形图；空灵征服者那批再加 3 条——
-    发光层 `EtherealSubjugatorGlow`、`GhostFire` 的隐形图与灰度圆 `SmallGreyscaleCircle`）；
-    工作区干净、与 `origin/master` 同步（最近落地提交 = 空灵征服者 **`bdb34db`**、圣化火花 **`45484fd`**）。
+    发光层 `EtherealSubjugatorGlow`、`GhostFire` 的隐形图与灰度圆 `SmallGreyscaleCircle`；宇宙灯笼那批再加 2 条——
+    `CosmilampBeam` 的隐形图与拖尾贴图 `ScarletDevilStreak`）；
+    工作区干净、与 `origin/master` 同步（最近落地提交 = 宇宙灯笼 **`ecaf748`**、空灵征服者 **`bdb34db`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -557,8 +559,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **口径更新：CI 线全自持（2026-10-09，用户点名）**：CI 八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
   （奇迹物质本机现代版仍在，继续软引用）；源一律取 **2.0 / 2.0.3.9**。已自持：天狼星（批次 B 链尾）、
-  元素之斧、古冰晶、圣化火花、空灵征服者；**待自持：宇宙灯笼 `Cosmilamp` / 灾厄挽歌 `CalamarisLament`**
-  ——这两件在装着的现代版里其实都还在，但按用户口径照样自持旧版（1.4.4-release 砍过，用户要回调）。
+  元素之斧、古冰晶、圣化火花、空灵征服者、宇宙灯笼；**待自持只剩 灾厄挽歌 `CalamarisLament`**
+  ——它在装着的现代版里其实还在，但按用户口径照样自持旧版（1.4.4-release 砍过，用户要回调）。
 
   **落地记录：古冰晶（2026-10-09，落地提交 `d1a56fa`）—— 批次 C 第三件**
   - 物品 `Content/Items/Weapons/Summon/AncientIceChunk.cs`：38×50 / 伤害 25 / 魔力 10 / 使用·动画 25 帧 /
@@ -653,7 +655,41 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     `Projectiles.PhantomGuy.DisplayName`（Phantom）、`Projectiles.GhostFire.DisplayName`（Ghastly Particle）；
     中文＝**空灵征服者 / 幻影 / 幻影 / 幽焰**。
 
-- 最近一批工作（2026-10-09 最晚）：**移植空灵征服者（EtherealSubjugator）—— 「归虚之灵」链（CI 口径）自持件（含幻影仆从 + 幽焰）。**
+  **落地记录：宇宙灯笼（2026-10-09，落地提交 `ecaf748`）—— 批次 C 第六件**
+  - **口径选择**：2.0 = 伤害 89、**且还没有光束弹幕**（`CosmilampBeam` 是 2.0.3.9 才加的）；
+    2.0.3.9 = 伤害 127 / 使用 15 帧；1.4.4-release = 95 / 24 帧；经典 cal-1.4.2.101 = 180 / 36 帧。
+    本工程按「回调 + 链条统一 2.0.3.9」取 **127**。
+  - 物品 `Content/Items/Weapons/Summon/Cosmilamp.cs`：42×60 / 伤害 127 / 魔力 10 / 使用·动画 15 帧 /
+    击退 4 / `autoReuse` / 月后 **12 档**（`postMoonLordRarity = 12`，＝灾厄 `Turquoise`）/ 1 铂金 20 金
+    （`Rarity12BuyPrice`）/ 音 `SoundID.Item44`；可调常量照源挂在物品类上
+    （`BeamShootRate = 105` / `MaxTargetingDistance = 1360f` / `BeamHomeSpeed = 17f` / `LanternSummonCost = 2f`）。
+    `CanUseItem` 卡 `maxMinions >= 2`（一盏吃 2 栏）；`Shoot` 先**把场上已有灯笼的 `ai[1]`（计时器）全部归零**
+    重排阵型，再把"已有盏数"写进新灯笼的 `ai[0]`。
+  - 仆从 `Content/Projectiles/Summon/CosmilampMinion.cs`：20×20 / **占 2 栏** / `MaxUpdates = 2` /
+    `ignoreWater = false` / 自身无接触伤害；贴图照源复用 Signus 的 `CosmicLantern`（拷成同名贴图）；
+    阵型悬停：横向按 `HoverOffsetInterpolant` 在主人头顶 -100~100 均分（只有一盏时固定 0.5 居中）、
+    纵向 -80 再叠正弦浮动；开火相位由阵型位置决定，于是多盏是"依次开火"。
+  - 光束 `Content/Projectiles/Summon/CosmilampBeam.cs`：16×16 / `MaxUpdates = 3` / 穿透 3 / 逐敌 45 帧 /
+    寿命 120×3；前 45 帧蓄势减速，之后高速追踪（1360 内），贴到 160 以内改绕圈"切削"（转速随目标体积、上限 π×0.05）。
+    **拖尾**：源用灾厄 `ImpFlameTrail` 着色器 + `ScarletDevilStreak` 贴图，本工程改用自家既有等价件
+    `CalamityDemutation:TrailStreak`（`Effects/FadedUVMapStreak.fx`）+ 同一张 `ExtraTextures/Trails/ScarletDevilStreak`，
+    经 `PrimitiveRenderer` 双趟绘制（与泰拉巨刃小闪电同一套写法）。
+  - 增益 `Content/Buffs/SummonBuffs/CosmilampBuff.cs` + 玩家标志 `cLamp`
+    （`Players/CalamityDemutationPlayer.cs` 三处：字段 + `ResetEffects` + `UpdateDead`）。
+  - **无配方**：来源照源挂 **Signus**——现代：本体走"非专家武器池"
+    （`CalamityStyle(1/4, {宇宙苦无, 宇宙灯笼})`，沿用既有 1/4 简化口径）+ `SignusBag` 1/3；
+    经典：**类名是 `CosmicWraith`**，源为 `CommonDrop(..., 3)` 即 1/3（源上那个
+    "非神明吞噬者哨兵阶段"的自定义条件本工程无法复刻，按纯 1/3 简化）；**经典版没有 Signus 宝袋**，故宝袋那条只挂现代。
+  - **一处源扩展替代**：源写 `Projectile.FinalExtraUpdate()`（灾厄扩展，本机 tML 没有），
+    按工程既有口径改 `Projectile.numUpdates == 0`（第 9 节记过，两者都是"每帧只算一次"）。
+  - 贴图三张取自 2.0.3.9：`Cosmilamp.png` 42×76、`CosmilampMinion.png` 26×176（4 帧，＝源 `CosmicLantern.png`）、
+    `CosmilampBuff.png` 32×32。
+  - 本地化：`Items.Cosmilamp`（Cosmilamp / 两行 tooltip）、`Buffs.CosmilampBuff`
+    （Cosmilamp / The cosmilamp will protect you）、`Projectiles.CosmilampMinion.DisplayName`（Cosmilamp）、
+    `Projectiles.CosmilampBeam.DisplayName`（Cosmic Beam）；中文＝**宇宙灯笼 / 宇宙灯笼 / 宇宙灯笼 / 宇宙光束**。
+
+- 最近一批工作（2026-10-09 最晚）：**移植宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（CI 口径）自持件（含灯笼仆从 + 宇宙光束）。**
+- 最近一批工作（2026-10-09 更早）：**移植空灵征服者（EtherealSubjugator）—— 「归虚之灵」链（CI 口径）自持件（含幻影仆从 + 幽焰）。**
 - 最近一批工作（2026-10-09 再晚）：**移植圣化火花（SanctifiedSpark）—— 「归虚之灵」链（CI 口径）自持件；本工程第一件哨兵武器（含哨兵炮台 + 两枚火弹）。**
 - 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（CI 口径）的自持件之一（含冰灵仆从 + 冰锥）。**
 - 最近一批工作（2026-10-09）：**移植元素之斧（ElementalAxe）—— 「归虚之灵」链的中间件（批次 C 第二件）。**
