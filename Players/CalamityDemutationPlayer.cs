@@ -386,6 +386,11 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool drewsSandyWaifu = false;
         /// <summary>
+        /// 元素之斧（ElementalAxeMinion）仆从在场标记：由同名召唤增益每帧置位，
+        /// 供斧头仆从续命（对应源的 eAxe）
+        /// </summary>
+        public bool eAxe = false;
+        /// <summary>
         /// 已装备蚀日魔镜（EclipseMirror，潜行链条的最后一环）：盗贼 **+11% 伤害 / +11 暴击**（用户点名，
         /// 源为 +6%/+6）、最大潜行值 **+25 点**（源为 +20）、仇恨 **−700**、站定潜行恢复 **+20%**、
         /// 移动潜行**指数加速**（`eclipseMirror` 旗标）、潜行打击**半价**、**盗贼潜行打击必定暴击**，
@@ -983,6 +988,7 @@ namespace CalamityDemutation.Players
             demonshadeRogue = false;
             draconicSurge = false;
             drewsSandyWaifu = false;
+            eAxe = false;
             eclipseMirror = false;
             elementalGauntlet = false;
             elementalQuiver = false;
@@ -1169,6 +1175,7 @@ namespace CalamityDemutation.Players
             draconicSurge = false;
             draconicSurgeCooldown = 0;
             drewsSandyWaifu = false;
+            eAxe = false;
             eclipseMirror = false;
             elementalGauntlet = false;
             elementalQuiver = false;

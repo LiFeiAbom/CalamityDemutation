@@ -24,6 +24,11 @@ Buffs: {
 		DisplayName: Rare Sand Elemental
 	}
 
+	ElementalAxeBuff: {
+		DisplayName: Elemental Axe
+		Description: The elemental axe will protect you
+	}
+
 	Enraged: {
 		DisplayName: Enraged
 		Description: Enemies are enraged
@@ -1158,6 +1163,11 @@ Items: {
 			Evading an attack grants full stealth but has a 90 second cooldown
 			This cooldown is shared with all other dodges and reflects
 			'''
+	}
+
+	ElementalAxe: {
+		DisplayName: Elemental Axe
+		Tooltip: Summons an elemental axe to fight for you
 	}
 
 	ElementalExcalibur: {
@@ -2686,6 +2696,7 @@ Projectiles: {
 	DragonRageHeld.DisplayName: Dragon Rage Held
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
 	EclipseMirrorBurst.DisplayName: Eclipse Mirror Flash
+	ElementalAxeMinion.DisplayName: Elemental Axe
 	ElementBall.DisplayName: Ball
 	EntropicClaymoreHeld.DisplayName: Entropic Claymore Held
 	EntropicClaymoreProj.DisplayName: Entropic Flechette

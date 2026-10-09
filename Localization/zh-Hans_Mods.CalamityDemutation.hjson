@@ -24,6 +24,11 @@ Buffs: {
 		DisplayName: 稀有沙元素
 	}
 
+	ElementalAxeBuff: {
+		DisplayName: 元素之斧
+		Description: 元素之斧会保护你
+	}
+
 	Enraged: {
 		DisplayName: 狂怒
 		Description: 敌怪陷入狂怒
@@ -1158,6 +1163,11 @@ Items: {
 			成功闪避后回满潜行，但有 90 秒冷却
 			该冷却与其它闪避、反射共享
 			'''
+	}
+
+	ElementalAxe: {
+		DisplayName: 元素之斧
+		Tooltip: 召唤一把元素之斧为你而战
 	}
 
 	ElementalExcalibur: {
@@ -2685,6 +2695,7 @@ Projectiles: {
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
 	EclipseMirrorBurst.DisplayName: 蚀日魔镜闪光
+	ElementalAxeMinion.DisplayName: 元素之斧
 	ElementBall.DisplayName: 元素球
 	EntropicClaymoreHeld.DisplayName: 熵之舞（手持）
 	EntropicClaymoreProj.DisplayName: 熵之飞刃
