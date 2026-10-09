@@ -274,6 +274,13 @@ namespace CalamityDemutation.NPCs
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 4));
                     npcLoot.Add(notExpert0);
                 }
+                // 灾厄挽歌（本工程自持）：源里是巨型鱿鱼 ColossalSquid 的 1/3 掉落，但带"已击败噬魂幽花"门槛
+                else if (calamity.TryFind<ModNPC>("ColossalSquid", out ModNPC colossalSquid) && npc.type == colossalSquid.Type)
+                {
+                    LeadingConditionRule postPolter0 = new(new PolterghastDownedCondition());
+                    postPolter0.OnSuccess(new CommonDrop(ModContent.ItemType<CalamarisLament>(), 3));
+                    npcLoot.Add(postPolter0);
+                }
             }
             // ===== 经典版灾厄（CalamityModClassicPreTrailer）：Boss 命名不同，掉落规则保持一致（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -339,6 +346,13 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("CosmicWraith", out ModNPC cosmicWraith) && npc.type == cosmicWraith.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 3));
+                }
+                // 灾厄挽歌（本工程自持）：经典源为 ByCondition(new DownedPolterghast(), 1/3)，本工程用同一门槛
+                else if (classic.TryFind<ModNPC>("ColossalSquid", out ModNPC colossalSquid) && npc.type == colossalSquid.Type)
+                {
+                    LeadingConditionRule postPolter1 = new(new PolterghastDownedCondition());
+                    postPolter1.OnSuccess(new CommonDrop(ModContent.ItemType<CalamarisLament>(), 3));
+                    npcLoot.Add(postPolter1);
                 }
             }
         }
@@ -495,6 +509,20 @@ namespace CalamityDemutation.NPCs
                     Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, 184, 1, false, 0, false, false);
                 }
             }
+        }
+        /// <summary>
+        /// "已击败噬魂幽花 `Polterghast`"的掉落条件——源里两版都用这条门槛
+        /// （现代 `DropHelper.PostPolter()`、经典 `new DownedPolterghast()`），
+        /// 本工程查自己的存档标记 <see cref="Systems.BossSystem.Polterghast"/>。
+        /// </summary>
+        private class PolterghastDownedCondition : IItemDropRuleCondition
+        {
+            /// <summary>噬魂幽花已被击败才允许掉落</summary>
+            public bool CanDrop(DropAttemptInfo info) => Systems.BossSystem.Polterghast;
+            /// <summary>在掉落 UI 里照常展示（条件说明写在下一条）</summary>
+            public bool CanShowItemDropInUI() => true;
+            /// <summary>条件说明文案（无本地化需求，直接给一句中文说明）</summary>
+            public string GetConditionDescription() => "需要已击败噬魂幽花";
         }
     }
 }

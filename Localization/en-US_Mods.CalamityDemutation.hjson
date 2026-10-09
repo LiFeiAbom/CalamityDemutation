@@ -218,6 +218,11 @@ Buffs: {
 		DisplayName: Cosmilamp
 		Description: The cosmilamp will protect you
 	}
+
+	CalamarisLamentBuff: {
+		DisplayName: Calamari
+		Description: Time to transport all of your foes to stupid squid jail!
+	}
 }
 
 Configs: {
@@ -845,6 +850,18 @@ Items: {
 			Increases max mana by 50, all damage by 3%, and reduces mana usage by 5%
 			'''
 		DisplayName: Chaos Stone
+	}
+
+	CalamarisLament: {
+		DisplayName: Calamari's Lament
+		Tooltip:
+			'''
+			Summons a miniature squid that viciously inks enemies
+			At long distance, the squid will fire aggressively homing ink volleys
+			At close range, the squid will latch onto enemies and deal increased damage
+			"In the Abyss, all kinds of resources are scarce.
+			Every species is solitary. There simply is not enough to share."
+			'''
 	}
 
 	CoinofDeceit: {
@@ -2722,6 +2739,8 @@ Projectiles: {
 	BrimstoneHellfireballFriendly2.DisplayName: Brimstone Hellfireball Friendly2
 	BurningMeteor.DisplayName: Burning Meteor
 	CactusHealOrb.DisplayName: Heal
+	CalamarisLamentMinion.DisplayName: Calamari
+	CalamarisLamentProjectile.DisplayName: Calamari Ink
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
 	CloudyWaifu.DisplayName: Cloudy Waifu
 	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion

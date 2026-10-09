@@ -302,6 +302,11 @@ namespace CalamityDemutation.Players
         public bool cadence = false;
         public bool calcium = false;
         /// <summary>
+        /// 灾厄挽歌（CalamarisLamentMinion）小鱿鱼在场标记：由同名召唤增益每帧置位，
+        /// 供小鱿鱼续命（对应源的 CalamarisLament）
+        /// </summary>
+        public bool calamarisLament = false;
+        /// <summary>
         /// 已装备灾厄之戒：+15% 通用伤害，免疫受击期间概率在玩家附近降下站火弹幕
         /// </summary>
         public bool calamityRing = false;
@@ -980,6 +985,7 @@ namespace CalamityDemutation.Players
             bounding = false;
             brimstoneWaifu = false;
             cadence = false;
+            calamarisLament = false;
             calamityRing = false;
             cLamp = false;
             calcium = false;
@@ -1169,6 +1175,7 @@ namespace CalamityDemutation.Players
             bounding = false;
             brimstoneWaifu = false;
             cadence = false;
+            calamarisLament = false;
             calamityRing = false;
             cLamp = false;
             calcium = false;

@@ -218,6 +218,11 @@ Buffs: {
 		DisplayName: 宇宙灯笼
 		Description: 宇宙灯笼会保护你
 	}
+
+	CalamarisLamentBuff: {
+		DisplayName: 小鱿鱼
+		Description: 该把敌人都押进蠢鱿鱼监狱了！
+	}
 }
 
 Configs: {
@@ -845,6 +850,18 @@ Items: {
 			最大法力提高 50，所有伤害提高 3%，法力消耗降低 5%
 			'''
 		DisplayName: 混沌石
+	}
+
+	CalamarisLament: {
+		DisplayName: 灾厄挽歌
+		Tooltip:
+			'''
+			召唤一只小鱿鱼，凶猛地朝敌人喷墨
+			离得远时，小鱿鱼会喷出大量强追踪的墨汁
+			离得近时，小鱿鱼会缠上敌人并造成更高伤害
+			「在深渊里，一切资源都稀缺。
+			每个物种都独来独往——根本没有多余的东西可以分享。」
+			'''
 	}
 
 	CoinofDeceit: {
@@ -2721,6 +2738,8 @@ Projectiles: {
 	BrimstoneHellfireballFriendly2.DisplayName: 硫磺地狱火球 2
 	BurningMeteor.DisplayName: 焚灭流星
 	CactusHealOrb.DisplayName: 治疗
+	CalamarisLamentMinion.DisplayName: 小鱿鱼
+	CalamarisLamentProjectile.DisplayName: 鱿鱼墨汁
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
 	CloudyWaifu.DisplayName: 云元素
 	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
