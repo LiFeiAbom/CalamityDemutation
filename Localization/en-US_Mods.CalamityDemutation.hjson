@@ -1912,6 +1912,11 @@ Items: {
 			'''
 	}
 
+	SanctifiedSpark: {
+		DisplayName: Sanctified Spark
+		Tooltip: Summons a profaned energy turret to fight for you
+	}
+
 	SeaShell: {
 		DisplayName: Sea Shell
 		Tooltip:
@@ -2725,6 +2730,8 @@ Projectiles: {
 	ExoBoom.DisplayName: Exo Explosion
 	ExoComet.DisplayName: Exo Comet
 	FireBall.DisplayName: Fire Ball
+	FlameBlast.DisplayName: Flame Blast
+	FlameBurst.DisplayName: Flame Burst
 	FrostMistFriendly.DisplayName: Mist
 	FungalClump.DisplayName: Fungal Clump
 	FungalHeal.DisplayName: Fungal Heal
@@ -2765,6 +2772,7 @@ Projectiles: {
 	PlantationStaffTentacle.DisplayName: Tentacle
 	PlantationStaffThornball.DisplayName: Thorn Ball
 	PoisonousSeawater.DisplayName: Poisonous Seawater
+	ProfanedEnergy.DisplayName: Profaned Energy
 	RedDevil.DisplayName: Red Devil
 	SandBolt.DisplayName: Bolt
 	SandMark.DisplayName: Mark

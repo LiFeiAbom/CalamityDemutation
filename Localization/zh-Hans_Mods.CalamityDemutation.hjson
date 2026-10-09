@@ -1913,6 +1913,11 @@ Items: {
 			'''
 	}
 
+	SanctifiedSpark: {
+		DisplayName: 圣化火花
+		Tooltip: 召唤一座亵渎能量炮台为你而战
+	}
+
 	SeaShell: {
 		DisplayName: 海螺壳
 		Tooltip:
@@ -2724,6 +2729,8 @@ Projectiles: {
 	ExoBoom.DisplayName: 星流爆炸
 	ExoComet.DisplayName: 终焉彗星
 	FireBall.DisplayName: 火球
+	FlameBlast.DisplayName: 烈焰冲击
+	FlameBurst.DisplayName: 烈焰迸发
 	FrostMistFriendly.DisplayName: 冰雾
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
@@ -2764,6 +2771,7 @@ Projectiles: {
 	PlantationStaffTentacle.DisplayName: 触手
 	PlantationStaffThornball.DisplayName: 荆棘球
 	PoisonousSeawater.DisplayName: 有毒海水
+	ProfanedEnergy.DisplayName: 亵渎能量
 	RedDevil.DisplayName: 红色恶魔
 	SandBolt.DisplayName: 沙弹
 	SandMark.DisplayName: 沙之印记

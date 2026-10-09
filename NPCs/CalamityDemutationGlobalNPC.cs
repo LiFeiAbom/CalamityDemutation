@@ -248,6 +248,11 @@ namespace CalamityDemutation.NPCs
                     // 本工程自持的古冰晶：照源 2.0.3.9 与经典版同一条——冰灵 1/3 概率掉 1 个
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<AncientIceChunk>(), 3));
                 }
+                else if (calamity.TryFind<ModNPC>("ImpiousImmolator", out ModNPC impiousImmolator) && npc.type == impiousImmolator.Type)
+                {
+                    // 本工程自持的圣化火花：照源 2.0.3.9 与经典 1.4.2.101 同一条——不动明王 1/15 掉落
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<SanctifiedSpark>(), 15));
+                }
                 else if (calamity.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
@@ -302,6 +307,11 @@ namespace CalamityDemutation.NPCs
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
                     // 本工程自持的古冰晶：照源 2.0.3.9 与经典版同一条——冰灵 1/3 概率掉 1 个
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<AncientIceChunk>(), 3));
+                }
+                else if (classic.TryFind<ModNPC>("ImpiousImmolator", out ModNPC impiousImmolator) && npc.type == impiousImmolator.Type)
+                {
+                    // 本工程自持的圣化火花：照源 2.0.3.9 与经典 1.4.2.101 同一条——不动明王 1/15 掉落
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<SanctifiedSpark>(), 15));
                 }
                 else if (classic.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
