@@ -397,6 +397,12 @@ namespace CalamityDemutation.Content.Items
                     // 本工程自持的空灵征服者：源里同在噬魂幽花袋的武器池里，按同一条 1/3 简化口径挂回
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 3));
                 }
+                if (calamity.TryFind<ModItem>("SignusBag", out ModItem signusBag) && item.type == signusBag.Type)
+                {
+                    // 宇宙灯笼（本工程自持）：源里 Signus 袋的武器池是 CalamityStyle(1/3, {宇宙灯笼, 宇宙苦无})，
+                    // 沿用既有 1/3 简化口径挂回；经典版没有 Signus 宝袋，故只挂现代这一条。
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 3));
+                }
                 if (calamity.TryFind<ModItem>("LeviathanBag", out ModItem leviathanLureBag) && item.type == leviathanLureBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LureofEnthrallment>(), 3));

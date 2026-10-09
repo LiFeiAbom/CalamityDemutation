@@ -213,6 +213,11 @@ Buffs: {
 		DisplayName: 机械蠕虫
 		Description: 机械蠕虫会保护你
 	}
+
+	CosmilampBuff: {
+		DisplayName: 宇宙灯笼
+		Description: 宇宙灯笼会保护你
+	}
 }
 
 Configs: {
@@ -893,6 +898,15 @@ Items: {
 	CorruptFlask: {
 		DisplayName: 腐化之瓶
 		Tooltip: 身处腐化之地时伤害减免提高 7%，防御 +3
+	}
+
+	Cosmilamp: {
+		DisplayName: 宇宙灯笼
+		Tooltip:
+			'''
+			召唤一盏宇宙灯笼悬于头顶为你而战
+			每盏灯笼占用 2 格召唤栏位
+			'''
 	}
 
 	CrawCarapace: {
@@ -2710,6 +2724,8 @@ Projectiles: {
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
 	CloudyWaifu.DisplayName: 云元素
 	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
+	CosmilampBeam.DisplayName: 宇宙光束
+	CosmilampMinion.DisplayName: 宇宙灯笼
 	DeathLaser.DisplayName: 死亡激光
 	DeathsAscensionProjectile.DisplayName: 升格镰刀
 	DeathsAscensionSwing.DisplayName: 死神巨镰

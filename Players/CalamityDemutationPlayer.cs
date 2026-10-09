@@ -305,6 +305,10 @@ namespace CalamityDemutation.Players
         /// 已装备灾厄之戒：+15% 通用伤害，免疫受击期间概率在玩家附近降下站火弹幕
         /// </summary>
         public bool calamityRing = false;
+        /// <summary>
+        /// 宇宙灯笼（CosmilampMinion）在场标记：由同名召唤增益每帧置位，供灯笼续命（对应源的 cLamp）
+        /// </summary>
+        public bool cLamp = false;
         public bool ceaselessHunger = false;
         /// <summary>
         /// 已装备混沌石：+50 魔力上限、魔力消耗 ×0.95、+3% 通用伤害，红色照明
@@ -977,6 +981,7 @@ namespace CalamityDemutation.Players
             brimstoneWaifu = false;
             cadence = false;
             calamityRing = false;
+            cLamp = false;
             calcium = false;
             ceaselessHunger = false;
             chaosStone = false;
@@ -1165,6 +1170,7 @@ namespace CalamityDemutation.Players
             brimstoneWaifu = false;
             cadence = false;
             calamityRing = false;
+            cLamp = false;
             calcium = false;
             ceaselessHunger = false;
             chaosStone = false;

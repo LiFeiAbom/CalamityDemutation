@@ -213,6 +213,11 @@ Buffs: {
 		DisplayName: Mechworm
 		Description: The mechworm will protect you
 	}
+
+	CosmilampBuff: {
+		DisplayName: Cosmilamp
+		Description: The cosmilamp will protect you
+	}
 }
 
 Configs: {
@@ -893,6 +898,15 @@ Items: {
 	CorruptFlask: {
 		DisplayName: Corrupt Flask
 		Tooltip: 7% increased damage reduction and +3 defense while in the corruption
+	}
+
+	Cosmilamp: {
+		DisplayName: Cosmilamp
+		Tooltip:
+			'''
+			Summons a cosmic lantern above your head to fight for you
+			Each lantern takes up 2 minion slots
+			'''
 	}
 
 	CrawCarapace: {
@@ -2711,6 +2725,8 @@ Projectiles: {
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
 	CloudyWaifu.DisplayName: Cloudy Waifu
 	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion
+	CosmilampBeam.DisplayName: Cosmic Beam
+	CosmilampMinion.DisplayName: Cosmilamp
 	DeathLaser.DisplayName: Death Laser
 	DeathsAscensionProjectile.DisplayName: Ascended Scythe
 	DeathsAscensionSwing.DisplayName: Ascended Greatscythe

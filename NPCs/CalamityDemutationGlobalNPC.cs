@@ -267,6 +267,13 @@ namespace CalamityDemutation.NPCs
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 4));
                     npcLoot.Add(notExpert0);
                 }
+                // 宇宙灯笼（本工程自持）：源里 Signus 的"非专家武器池"是 CalamityStyle(1/4, {宇宙苦无, 宇宙灯笼})，
+                // 沿用与女妖之爪同一条 1/4 简化口径；宝袋那条见 CalamityDemutationGlobalItem。
+                else if (calamity.TryFind<ModNPC>("Signus", out ModNPC signus) && npc.type == signus.Type)
+                {
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 4));
+                    npcLoot.Add(notExpert0);
+                }
             }
             // ===== 经典版灾厄（CalamityModClassicPreTrailer）：Boss 命名不同，掉落规则保持一致（各保留一份） =====
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -326,6 +333,12 @@ namespace CalamityDemutation.NPCs
                     // 本工程自持的空灵征服者：源里它也在噬魂幽花的"非专家武器池"里（沿用同一条 1/4 简化口径）
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 4));
                     npcLoot.Add(notExpert1);
+                }
+                // 宇宙灯笼（本工程自持）：经典版里 Signus 的类名是 CosmicWraith，源是 CommonDrop(..., 3) 即 1/3；
+                // 源上还带一个"非神明吞噬者哨兵阶段"的自定义条件，本工程无法复刻，按纯 1/3 简化。
+                else if (classic.TryFind<ModNPC>("CosmicWraith", out ModNPC cosmicWraith) && npc.type == cosmicWraith.Type)
+                {
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 3));
                 }
             }
         }
