@@ -86,6 +86,13 @@
   （b）类同名隐式贴图（`Content/.../类名.png`）、（c）用 `CalamityDemutationConstant.UI/Masking/ColorBar`
   拼出来的路径，逐个 `Test-Path` 对盘核一遍（别靠脑补目录层级——本次就是凭印象补了 `Melee/` 才翻车）。
   一句话范式：`Test-Path .\Content\Projectiles\Melee\X.png`，X 换成引用里的相对路径（去掉扩展名）。
+  **现成脚本（2026-10-09 新增）**：`powershell -ExecutionPolicy Bypass -File .\Tools\CheckImplicitTextures.ps1`
+  —— 专扫上面第（b）类：对每个继承 `ModItem` / `ModProjectile` / `ModBuff` / `ModNPC` / `ModTile` / `ModDust`
+  且**没写** `override string Texture` 的类，要求同目录存在"同名 .png"，退出码 0 = 全命中（当前 268 个类全过）。
+  **它的必要性**：`dotnet build` 不报、`CheckResources.ps1` 只核显式字符串路径，隐式同名贴图只会在**加载期**炸。
+  实例：2026-10-09 进游戏时 `MissingResourceException: Content/Buffs/SummonBuffs/CosmicEnergyBuff`
+  直接把整个模组禁用——原因就是新增益 `CosmicEnergyBuff` **忘了拷图标**（CI 那边叫 `CosmicEnergyOld.png`），
+  人肉列清单时漏了它；补上图标 + 这个脚本即解决（脚本第一次跑就抓住同类隐患 0 个）。
 - **着色器（大坑）**：`.fx` **不会**被 tModLoader 构建时编译。新增 `.fx` 后必须手动预编译出同名 `.fxc`：
   `FXC\fxc.exe /nologo /T fx_2_0 /Fo 名字.fxc 名字.fx`（会刷一条 X4717 警告，正常），
   再在 `Common/Effects/EffectLoader.cs` 里登记句柄。漏了这步 → 运行期抛 `MissingResourceException`，
@@ -390,7 +397,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
         **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128 /
         空灵征服者 200 / 宇宙灯笼 127 / 灾厄挽歌 110 / 归虚之灵 360
         这十一件召唤系武器尚未点名开态值，等用户一并处理**。
-   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **174 条全命中**
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **174 条全命中**、
+    `Tools/CheckImplicitTextures.ps1` **268 个类全命中**（2026-10-09 新增第三个自检脚本）
     （元素之斧三张、古冰晶四张贴图是"类同名隐式"引用、脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过；
     圣化火花那批给自检加了 2 条——`FlameBlast` / `FlameBurst` 显式引共用隐形图；空灵征服者那批再加 3 条——
     发光层 `EtherealSubjugatorGlow`、`GhostFire` 的隐形图与灰度圆 `SmallGreyscaleCircle`；宇宙灯笼那批再加 2 条——
@@ -779,6 +787,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   空灵征服者 → 宇宙灯笼 → 灾厄挽歌 →（另侧）天狼星 → **链顶 归虚之灵**。
   剩下的只有**数值膨胀口径**（见第一屏③：十一件召唤系武器待点名）与日后想改的细节。
 
+- 最近一批工作（2026-10-09 更晚）：**修「进游戏被禁用」—— 补 CosmicEnergyBuff 图标（类同名隐式贴图缺失），并新增自检脚本 `Tools/CheckImplicitTextures.ps1`。**
 - 最近一批工作（2026-10-09 收官）：**移植归虚之灵（CosmicImmaterializerOld，CI 线含 ExoLore 分支）—— 「归虚之灵」链链顶，批次 C 全部完成。**
 - 最近一批工作（2026-10-09 更早）：**移植灾厄挽歌（CalamarisLament）—— 「归虚之灵」链（CI 口径）自持件（含小鱿鱼仆从 + 墨汁弹）。**
 - 最近一批工作（2026-10-09 更早）：**移植宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（CI 口径）自持件（含灯笼仆从 + 宇宙光束）。**
