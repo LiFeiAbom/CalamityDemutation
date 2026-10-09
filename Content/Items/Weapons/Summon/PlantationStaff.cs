@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -84,13 +85,32 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.UseSound = SoundID.Item76;
         }
         /// <summary>场上已有自己的树灵时不可再召唤（源用 ownedProjectileCounts 卡单只）</summary>
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：58 → 70）。
+        /// </summary>
+        private const float InflatedDamage = 70f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 58。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 召唤件特有一环：<c>Shoot</c> 里写进树灵的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>
+        /// （本件原先靠引擎按 <c>Item.damage</c> 自动写入，加膨胀后必须自己写）。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
         /// <summary>在鼠标处召唤树灵，并给一点点随机初速（源写法：左右键分支里只有左键生效，照抄）</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (player.altFunctionUse != 2)
             {
-                Projectile.NewProjectile(source, Main.MouseWorld, Main.rand.NextVector2Circular(2f, 2f), type, damage, knockback, player.whoAmI);
+                int p = Projectile.NewProjectile(source, Main.MouseWorld, Main.rand.NextVector2Circular(2f, 2f), type, damage, knockback, player.whoAmI);
+                if (Main.projectile.IndexInRange(p))
+                    Main.projectile[p].originalDamage = (int)BaseDamage;
             }
             return false;
         }

@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -54,6 +55,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.shoot = ModContent.ProjectileType<ProfanedEnergy>();
         }
         /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：128 → 231）。
+        /// </summary>
+        private const float InflatedDamage = 231f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 128。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 哨兵同属召唤系：<c>Shoot</c> 里写进炮台的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
+        /// <summary>
         /// 在鼠标处插一座炮台（<c>ai[0] = 16</c> 是"登场后等 16 帧才开火"，照源），
         /// 补写 <c>originalDamage</c>，并刷新哨兵栏位（照源的 <c>player.UpdateMaxTurrets()</c>）。
         /// </summary>
@@ -61,7 +78,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         {
             int p = Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, type, damage, knockback, player.whoAmI, 16f);
             if (Main.projectile.IndexInRange(p))
-                Main.projectile[p].originalDamage = Item.damage;
+                Main.projectile[p].originalDamage = (int)BaseDamage;
             player.UpdateMaxTurrets();
             return false;
         }

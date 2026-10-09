@@ -858,7 +858,7 @@ Items: {
 	}
 
 	CalamarisLament: {
-		DisplayName: 灾厄挽歌
+		DisplayName: 乌贼之哀歌
 		Tooltip:
 			'''
 			召唤一只小鱿鱼，凶猛地朝敌人喷墨
@@ -923,7 +923,7 @@ Items: {
 	}
 
 	CosmicImmaterializerOld: {
-		DisplayName: 归虚之灵
+		DisplayName: 归墟之灵
 		Tooltip:
 			'''
 			召唤一个宇宙之灵为你而战
@@ -1036,6 +1036,7 @@ Items: {
 
 	DesertFeather: {
 		DisplayName: 沙漠羽毛
+		// Tooltip: ""
 	}
 
 	DemonshadeBreastplate: {
@@ -1292,7 +1293,7 @@ Items: {
 	}
 
 	EtherealSubjugator: {
-		DisplayName: 空灵征服者
+		DisplayName: 幽花之主
 		Tooltip: 召唤一个幻影保护你
 	}
 

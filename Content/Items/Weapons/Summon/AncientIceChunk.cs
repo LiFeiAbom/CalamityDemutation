@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -22,7 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// </para>
     /// <para>
     /// 与源的一处刻意差异：源 2.0.3.9 的 `Shoot` **没写** `originalDamage`（上游到 1.4.4-release 才补上），
-    /// 本工程照 1.4.4-release 的写法补 `originalDamage = Item.damage`，免得召唤物伤害二次缩放；
+    /// 本工程照 1.4.4-release 的写法补 `originalDamage = BaseDamage`，免得召唤物伤害二次缩放；
     /// 同批落地的元素之斧也是这么写的。
     /// </para>
     /// </remarks>
@@ -69,12 +70,28 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.useStyle = ItemUseStyleID.Swing;
             Item.UseSound = SoundID.Item30;
         }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：25 → 36）。
+        /// </summary>
+        private const float InflatedDamage = 36f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 25。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 召唤件特有一环：<c>Shoot</c> 里写进仆从的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
         /// <summary>在鼠标处召唤冰灵、带一点点随机初速（照源 2.0.3.9），并补写 originalDamage</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             var minion = Projectile.NewProjectileDirect(source, Main.MouseWorld, Main.rand.NextVector2Circular(1f, 1f), type, damage, knockback, player.whoAmI);
             if (minion is not null && Main.projectile.IndexInRange(minion.whoAmI))
-                minion.originalDamage = Item.damage;
+                minion.originalDamage = (int)BaseDamage;
             return false;
         }
     }

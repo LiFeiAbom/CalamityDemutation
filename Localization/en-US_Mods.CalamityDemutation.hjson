@@ -1036,6 +1036,7 @@ Items: {
 
 	DesertFeather: {
 		DisplayName: Desert Feather
+		Tooltip: ""
 	}
 
 	DemonshadeBreastplate: {

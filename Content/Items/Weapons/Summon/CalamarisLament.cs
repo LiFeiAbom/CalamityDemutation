@@ -1,4 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -73,9 +74,29 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.shootSpeed = 1f;   // 源注释：这个值没用，只是为了让物品表现为法杖
         }
         /// <summary>在鼠标处召唤小鱿鱼（照源）</summary>
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：110 → 158）。
+        /// </summary>
+        private const float InflatedDamage = 158f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 110。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 召唤件特有一环：<c>Shoot</c> 里写进小鱿鱼的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>
+        /// （本件原先靠引擎按 <c>Item.damage</c> 自动写入，加膨胀后必须自己写）。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
+        /// <summary>在鼠标处召唤小鱿鱼（照源），并把面板伤害写进它的 originalDamage</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, Main.MouseWorld, velocity, type, damage, knockback, player.whoAmI);
+            int p = Projectile.NewProjectile(source, Main.MouseWorld, velocity, type, damage, knockback, player.whoAmI);
+            if (Main.projectile.IndexInRange(p))
+                Main.projectile[p].originalDamage = (int)BaseDamage;
             return false;
         }
     }

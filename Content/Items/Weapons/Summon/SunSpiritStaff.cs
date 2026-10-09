@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -48,6 +49,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.DamageType = DamageClass.Summon;
         }
         /// <summary>场上已有自己的太阳之灵时不可再召唤（源用 ownedProjectileCounts 卡单一灵体）</summary>
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：12 → 25）。
+        /// </summary>
+        private const float InflatedDamage = 25f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 12。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 召唤件特有一环：<c>Shoot</c> 里写进仆从的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>，
+        /// 否则会出现「面板涨了、仆从伤害没涨」。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
+        }
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
         /// <summary>
         /// 召唤太阳之灵：先清掉自己在场的同类（源靠 CalamityUtils，这里照经典版写等价循环），
@@ -67,7 +85,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             int idx = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI);
             if (Main.projectile.IndexInRange(idx))
             {
-                Main.projectile[idx].originalDamage = Item.damage;
+                Main.projectile[idx].originalDamage = (int)BaseDamage;
             }
             return false;
         }

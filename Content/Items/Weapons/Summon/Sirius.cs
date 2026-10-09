@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Summon;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -40,7 +41,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 基础属性：照源 2.0（62×62 判定、伤害 160、击退 3、使用 10 帧、魔力 10、弹速 10、月后 13 档、1 铂金 40 金）。
+    /// 基础属性：照源 2.0（62×62 判定、伤害 **275**（源值 160，按用户 2026-10-09 点名上调）、击退 3、
+    /// 使用 10 帧、魔力 10、弹速 10、月后 13 档、1 铂金 40 金）。
         /// </summary>
         public override void SetDefaults()
         {
@@ -51,7 +53,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.UseSound = SoundID.Item44;
             Item.DamageType = DamageClass.Summon;
             Item.mana = 10;
-            Item.damage = 160;
+            Item.damage = 275;
             Item.knockBack = 3f;
             Item.useTime = Item.useAnimation = 10;
             Item.shoot = ModContent.ProjectileType<SiriusMinion>();
@@ -59,6 +61,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.value = Item.buyPrice(1, 40, 0, 0);
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;   // 月后 13：荧光绿（＝灾厄 PureGreen）
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：275 → 600）。
+        /// </summary>
+        private const float InflatedDamage = 600f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 275。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 召唤件特有一环：<c>Shoot</c> 里写进星灵的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>；
+        /// 星灵光束按 ×(ln 消耗栏位数 + 1) 派生，读的是弹幕自身伤害，会自动跟随。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 持在手上时每帧重算一次"还能给天狼星吃的召唤栏"：总栏位减去**自己以外**所有在场仆从占用的栏位。
@@ -99,7 +118,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             int idx = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI, slots, 30f);
             if (Main.projectile.IndexInRange(idx))
             {
-                Main.projectile[idx].originalDamage = Item.damage;
+                Main.projectile[idx].originalDamage = (int)BaseDamage;
             }
             return false;
         }
