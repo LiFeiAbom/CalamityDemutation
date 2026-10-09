@@ -2372,6 +2372,11 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   `Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','.\Tools\FinalizeCodexDaemonUpdate.ps1','-DelaySeconds','20'`
 - 或者**先完全退出 Codex**（或重启电脑），再前台跑
   `powershell -ExecutionPolicy Bypass -File .\Tools\FinalizeCodexDaemonUpdate.ps1` —— 此时不会打断任何会话。
+- ⚠ **本仓 `Tools\*.ps1` 必须存成 UTF-8 带 BOM**（首三字节 `EF BB BF`，既有的 `CheckResources.ps1` 就是）：
+  PS 5.1 会把**无 BOM** 的 UTF-8 脚本按 GBK 解，中文注释足以把整段读成语法错误——
+  2026-10-09 收尾脚本因此**静默不执行、日志一字不写**，白折腾两轮。无 BOM 时用
+  `[System.IO.File]::WriteAllLines($p, (Get-Content -Encoding UTF8 $p), (New-Object System.Text.UTF8Encoding ([bool]::Parse('true'))))`
+  重存即可（顺带把行尾整成 CRLF）。脚本自带 `-DryRun`：只报现状、不动守护进程，改完先跑它自检。
 
 **为什么"等重启自动就好"不成立**：守护进程是脱离启动器的常驻进程（`ParentProcessId` 早已退出，它照旧活着），
 开机/启动 Codex 时它按 `current` 起；`current` 还指 0.161.0 就永远是 0.161.0，而它自更新又走 403 的联网通道。

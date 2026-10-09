@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     把本机 app-server 守护进程从 0.161.0 切到 0.162.0，并清掉 0.161.0 残留。
 
@@ -19,7 +19,9 @@
 [CmdletBinding()]
 param(
     # 开跑前先等这么多秒，留给"拉起它的那一轮会话"把话说完/退出。
-    [int]$DelaySeconds = 0
+    [int]$DelaySeconds = 0,
+    # 只检查环境并打印现状，不动守护进程（用于自检脚本本身能否跑起来）。
+    [switch]$DryRun
 )
 
 $ErrorActionPreference = 'Continue'
@@ -73,6 +75,16 @@ Write-Log '=== finalize: app-server daemon 0.161.0 -> 0.162.0 ==='
 if (-not (Test-Path -LiteralPath $newDir)) {
     Write-Log ("ABORT: 预铺的 0.162.0 包不存在：{0}" -f $newDir)
     exit 2
+}
+
+if ($DryRun) {
+    Write-Log 'DRY RUN：只报现状，不动守护进程。'
+    Write-Log ("  运行中的 appServerVersion = {0}" -f (Get-AppServerVersion))
+    Write-Log ("  releases\0.161.0 存在 = {0}" -f (Test-Path -LiteralPath $oldDir))
+    Write-Log ("  releases\0.162.0 存在 = {0}" -f (Test-Path -LiteralPath $newDir))
+    Write-Log ("  current 指向 = {0}" -f ((Get-Item -LiteralPath $current).Target -join ', '))
+    Write-Log 'DRY RUN 结束（未做任何更改）。'
+    exit 0
 }
 
 if ($DelaySeconds -gt 0) {
