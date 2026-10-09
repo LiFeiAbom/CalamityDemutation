@@ -227,7 +227,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   破灭魔王剑的裸面板 ×4 追加伤害、月炎之锋的月炎陨石雨、庇护之刃命中生成的 `DefenseBlast`、
   彗星陨刃的两处陨石、宙宇波能刃命中召唤的 `LaserFountains`、凤凰之刃的两处日耀爆炸 + 四枚治疗火焰。
   走 `Shoot(...)` 的 `damage` 参数派生的弹幕本来就会跟随，不用动。
-- **两条已查清的机制**（照第 5 节的 IL 口径从 `tModLoader.dll` 读的，别再重复考古）：
+- **三条已查清的机制**（照第 5 节的 IL 口径从 `tModLoader.dll` 读的，别再重复考古）：
   1. `Player.GetWeaponDamage(Item, bool)`（该 build 里第二个参数实名为 `forTooltip`）内部会调
      `CombinedHooks.ModifyWeaponDamage`，所以像崇高誓约之刃那样用
      `player.GetWeaponDamage(player.HeldItem) * 2` 算出来的追加伤害**天然跟随膨胀**，不必改。
@@ -236,6 +236,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   2. `Projectile.minionSlots` 是**每帧实时汇总**的：`Player.Update` 每帧把 `slotsMinions` 归零，
      各仆从在 `Projectile.Update` 里累加自己的 `minionSlots`（判据 `slotsMinions + minionSlots > maxMinions`）。
      所以在仆从 AI 里每帧改写它就能让开关即时生效，**已召唤的仆从不必重召**。
+  3. **`originalDamage` 的引擎口径（2026-10-09 补查）**：`Projectile.ApplyStatsFromSource` 在生成时
+     把 `originalDamage` 设成传入的 damage，**并且当生成源是物品（`EntitySource_ItemUse…`）时改写成
+     `item.damage`**；`Projectile.Update` 里只有 `minion || sentry || ContinuouslyUpdateDamageStats`
+     三种弹幕会**每帧**按 `damage = originalDamage × 玩家该伤害类型总加成` 重算（`ContinuouslyUpdateDamageStats`
+     是 tML 给模组留的开关，默认 false，tML 自己不会为普通弹幕打开）。
+     三条推论，别再凭感觉猜：① 物品/仆从生成时手写 `originalDamage = Item.damage` 是**冗余**的（引擎会做），
+     不写也不会错；② **仆从打出的"子弹"（非 minion/sentry）不会被重算**，所以照灾厄那样把
+     `Projectile.damage`（已经吃过加成的值）传下去**不会二次缩放**；③ 但若子弹自己标了 `minion = true`
+     （如归虚之灵的爆裂），就会被每帧重算 —— 这时想让它打"半额"**必须把 `originalDamage` 也折半**，
+     只把传入的 damage 折半是无效的（CI 的 Lore 分支就漏了这一步，见批次 C 归虚之灵那条）。
 - **开关不只管伤害**：同一开关也可以门控「数量 / 栏位 / 几率 / 回复量」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
   （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）；弑神者胸甲 / 金源胸甲的「受击概率完全免伤」2%→5%
   （`FreeDodge` 里读 `StatInflationEnabled ? 20 : 50`，见 9.3 第 1 条）；弑神保命回复量 100→300
@@ -370,6 +380,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
         用户 2026-10-09 拍板：**走 CI 那条线、直接移植含 ExoLore（传颂之物）的那条分支**，
         即数值取 CI 版（伤害 **360**、`CatalystViolet`＝月后 15 档、带发光层），
         配方取 **CI 八重 @ 嘉登熔炉**，并照工程既有口径**恒处 Lore 模式**。
+        **同日两处后续口径（用户点名）**：① tooltip **去掉 ExoLore 说明行**、回到常规三行；
+        ② 源里"没穿月后召唤套伤害 ×0.66"**不照抄**，伤害与 `originalDamage` 都按全额走。
         **⇒ 这条链到此全部完成**（链底 → 链顶九件：苍华之庭 / 元素之斧 / 古冰晶 / 圣化火花 / 空灵征服者 /
         宇宙灯笼 / 灾厄挽歌 / 天狼星 / 归虚之灵）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
@@ -730,6 +742,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   - **用户拍板（2026-10-09）**：「走 CI 那条线，直接移植含有 ExoLore 那个分支」——即
     **数值/文案照 CI**（伤害 360、`CatalystViolet`＝月后 15 档、带 `CosmicImmaterializerOldGlow` 发光层），
     **配方取 CI 八重**，且**照工程既有口径恒处 Lore 模式**（同第 9 节 ExoBlade / ExoBeam 的处理）。
+  - **同日两处后续修正（用户点名）**：① tooltip 去掉 ExoLore 说明行，中英两份 hjson 都只留 CI 的常规三行；
+    ② 源里"没穿月后召唤套时伤害与 `originalDamage` 都 ×0.66"**不照抄**——物品 `Shoot` 直接按全额生成，
+    连那个私有的 `WearingPostMLSummonerSet` 判定也一并删了（本工程没有灾厄的等价 API）。
+  - **顺带修掉一处上游笔误**：CI 的 Lore 分支给小爆裂传的 `originalDamage` **忘了折半**（非 Lore 分支是
+    `originalDamage / 2`），而本机 tML 会对带 `minion` 标记的弹幕**每帧**按 `originalDamage × 玩家加成` 重算，
+    结果"小爆裂打半额"变成打满额——本工程按意图补回 `/ 2`（引擎口径见第 7 节第三条）。
   - 物品 `Content/Items/Weapons/Summon/CosmicImmaterializerOld.cs`：74×72 / 伤害 360 / 魔力 10 / 使用·动画 10 帧 /
     击退 0 / 月后 15 档 / 1 铂金 50 金 / 音 `SoundID.Item60`；`CanUseItem` 要 `maxMinions >= 10` 且全场限一只；
     `Shoot` **先清掉自己在场的同类召唤物**（源调灾厄 `KillShootProjectiles`，本工程写等价循环），

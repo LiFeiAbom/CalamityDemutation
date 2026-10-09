@@ -45,9 +45,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         /// <summary>逐敌独立冷却（帧，源值 30）</summary>
         public static int LatchingIFrames = 30;
 
-        /// <summary>法杖姿态（照源）</summary>
+        /// <summary>研究解锁一份（源 2.0.3.9 未显式写，取与本工程其它召唤件同口径）、法杖姿态（照源）</summary>
         public override void SetStaticDefaults()
         {
+            Item.ResearchUnlockCount = 1;
             Item.staff[Type] = true;
         }
         /// <summary>基础属性：照源 2.0.3.9（88×108、伤害 110、使用 10 帧、月后 13 档、1 铂金 30 金）</summary>

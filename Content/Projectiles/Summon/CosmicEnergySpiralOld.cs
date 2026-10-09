@@ -21,8 +21,9 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// （<see cref="CosmicBlast"/>，伤害取仆从的 1/2）+ 2 枚 ±140° 斜射大爆裂与 1 枚直射大爆裂
     /// （<see cref="CosmicBlastBig"/>，全额伤害）；非 Lore 分支（5~8 小 + 1 大、冷却 100 帧）不另留一份。
     /// 发色也照 Lore 分支：<see cref="GetAlpha"/> 恒返回**纯白**（非 Lore 分支才是彩虹色）。
-    /// 另一处照源保留的写法：小爆裂生成时 `originalDamage` 传的是**仆从自己的** `originalDamage`（没有折半），
-    /// 上游就是这么写的，本工程未改。
+    /// 一处修正：源 Lore 分支给小爆裂传的 originalDamage 忘了折半（非 Lore 分支是折半的，属上游笔误），
+    /// 而本机 tML 对带 minion 标记的弹幕每帧都会用 originalDamage×玩家伤害加成 重算伤害，
+    /// 会让小爆裂打满额——本工程按意图补回折半 originalDamage / 2。
     /// </remarks>
     internal class CosmicEnergySpiralOld:ModProjectile
     {
@@ -234,7 +235,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                         Vector2 velocity = CDUtil.RandomVelocity(100f, 70f, 100f);
                         int p2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<CosmicBlast>(), Projectile.damage / 2, 2f, Projectile.owner, (float)target, 0f);
                         if (Main.projectile.IndexInRange(p2))
-                            Main.projectile[p2].originalDamage = Projectile.originalDamage;
+                            Main.projectile[p2].originalDamage = Projectile.originalDamage / 2;   // 补回折半（源 Lore 分支漏了，非 Lore 分支是对的）
                     }
                     float speed = 15f;
                     float aimX = fireTargetX - Projectile.Center.X;
@@ -263,7 +264,6 @@ namespace CalamityDemutation.Content.Projectiles.Summon
         /// <summary>Lore 分支的写法：恒为纯白（非 Lore 分支才是随彩虹色变化）</summary>
         public override Color? GetAlpha(Color lightColor)
         {
-            Projectile.netUpdate = true;
             return new Color(255, 255, 255, 255);
         }
         /// <summary>宇宙之灵本身不造成接触伤害（照源：伤害全在爆裂上）</summary>

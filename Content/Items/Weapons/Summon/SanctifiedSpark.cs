@@ -32,6 +32,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         /// <summary>法杖姿态（照源：物品按"持杖"方式绘制与挥动）</summary>
         public override void SetStaticDefaults()
         {
+            Item.ResearchUnlockCount = 1;   // 照源 2.0 的 SacrificeTotal = 1
             Item.staff[Item.type] = true;
         }
         /// <summary>基础属性：照源 2.0.3.9（66×68、伤害 128、击退 5、使用·动画 14 帧、紫档、1 铂金 10 金）</summary>
