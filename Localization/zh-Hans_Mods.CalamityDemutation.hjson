@@ -54,6 +54,11 @@ Buffs: {
 		DisplayName: 元素之心
 	}
 
+	IceClasperBuff: {
+		DisplayName: 冰灵
+		Description: 冰灵会保护你
+	}
+
 	PlantationStaffBuff: {
 		DisplayName: 苍华之庭
 		Description: 小型世纪之花会保护你
@@ -371,6 +376,16 @@ Items: {
 	AncientFossil: {
 		DisplayName: 远古化石
 		Tooltip: 在地下时挖掘速度提高 35%
+	}
+
+	AncientIceChunk: {
+		DisplayName: 古冰晶
+		Tooltip:
+			'''
+			召唤一头冰灵为你而战
+			冰灵会朝远处的敌人发射冰锥
+			当你贴近敌人时，它会带着冰霜之怒猛撞上去
+			'''
 	}
 
 	ArchaicPowder: {
@@ -2725,6 +2740,8 @@ Projectiles: {
 	HellfireExplosionFriendly.DisplayName: 地狱火爆炸
 	HellfireExplosionFriendly2.DisplayName: 地狱火爆炸 2
 	HolyExplosionSupreme.DisplayName: 至圣神圣爆炸
+	IceClasperMinion.DisplayName: 冰灵
+	IceClasperSummonProjectile.DisplayName: 冰锥
 	JudgementBeam.DisplayName: 审判光束
 	LaserFountains.DisplayName: 激光喷泉
 	MechwormBody.DisplayName: 机械蠕虫身体

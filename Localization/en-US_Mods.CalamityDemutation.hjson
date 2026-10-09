@@ -54,6 +54,11 @@ Buffs: {
 		DisplayName: Heart of the Elements
 	}
 
+	IceClasperBuff: {
+		DisplayName: Ice Clasper
+		Description: The ice clasper will protect you
+	}
+
 	PlantationStaffBuff: {
 		DisplayName: Plantation
 		Description: The miniature Plantera will protect you
@@ -371,6 +376,16 @@ Items: {
 	AncientFossil: {
 		DisplayName: Ancient Fossil
 		Tooltip: Increases pick speed by 35% while underground
+	}
+
+	AncientIceChunk: {
+		DisplayName: Ancient Ice Chunk
+		Tooltip:
+			'''
+			Summons an ice clasper to fight for you
+			The clasper fires ice shards at distant enemies
+			While you are close to enemies, it will aggressively bash them with frozen fury
+			'''
 	}
 
 	ArchaicPowder: {
@@ -2726,6 +2741,8 @@ Projectiles: {
 	HellfireExplosionFriendly.DisplayName: Explosion
 	HellfireExplosionFriendly2.DisplayName: Hellfire Explosion Friendly2
 	HolyExplosionSupreme.DisplayName: Supreme Holy Explosion
+	IceClasperMinion.DisplayName: Ice Clasper
+	IceClasperSummonProjectile.DisplayName: Ice Shard
 	JudgementBeam.DisplayName: Judgement Beam
 	LaserFountains.DisplayName: Laser Fountains
 	MechwormBody.DisplayName: Mechworm Body

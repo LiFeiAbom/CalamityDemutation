@@ -11,6 +11,7 @@ using CalamityDemutation.Content.Items.Accessories.Movement;
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Items.Consumables;
 using CalamityDemutation.Content.Items.Weapons.Melee;
+using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
@@ -244,6 +245,8 @@ namespace CalamityDemutation.NPCs
                 else if (calamity.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
+                    // 本工程自持的古冰晶：照源 2.0.3.9 与经典版同一条——冰灵 1/3 概率掉 1 个
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<AncientIceChunk>(), 3));
                 }
                 else if (calamity.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
@@ -297,6 +300,8 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("IceClasper", out ModNPC iceClasper) && npc.type == iceClasper.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<FrostBarrier>(), 10));
+                    // 本工程自持的古冰晶：照源 2.0.3.9 与经典版同一条——冰灵 1/3 概率掉 1 个
+                    npcLoot.Add(new CommonDrop(ModContent.ItemType<AncientIceChunk>(), 3));
                 }
                 else if (classic.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {

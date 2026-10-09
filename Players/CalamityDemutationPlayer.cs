@@ -555,6 +555,11 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool honeyTurboRegen = false;
         /// <summary>
+        /// 古冰晶（IceClasperMinion）冰灵在场标记：由同名召唤增益每帧置位，
+        /// 供冰灵仆从续命（对应源的 IceClasperBool）
+        /// </summary>
+        public bool iceClasperBool = false;
+        /// <summary>
         /// 【（古）链】已装备感染宝石：+2 再生、带减益时 +4 并抬 lifeRegenTime，另给动态防御（对应灾厄 infectedJewel）
         /// </summary>
         public bool infectedJewel = false;
@@ -1024,6 +1029,7 @@ namespace CalamityDemutation.Players
             honeyDew = false;
             honeyDewHalveDebuffs = false;
             honeyTurboRegen = false;
+            iceClasperBool = false;
             infectedJewel = false;
             levianthanAmbergris = false;
             lifeJelly = false;
@@ -1216,6 +1222,7 @@ namespace CalamityDemutation.Players
             honeyDew = false;
             honeyDewHalveDebuffs = false;
             honeyTurboRegen = false;
+            iceClasperBool = false;
             infectedJewel = false;
             levianthanAmbergris = false;
             lifeJelly = false;
