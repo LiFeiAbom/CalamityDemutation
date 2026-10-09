@@ -355,19 +355,22 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
   ② **「归虚之灵」召唤链（进行中，下次的主线）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
      （＝CI 的 `CosmicImmaterializerOld`，CI 官方中文写作「归虚之灵[Legacy]」）。
-     链（往回推）：**归虚之灵 ← 元素之斧（2.0.3.9）← 苍华之庭 `PlantationStaff`（2.0.3.9，最低下位）**。
-     **链底 苍华之庭 ✅ 已落地**（含**现代 + 经典两条**配方；经典分支按用户拍板丢掉夜眼那一味）；
-     **中间件 元素之斧 `ElementalAxe` ✅ 已落地（2026-10-09）**——照「批次 C」末尾那六条口径办完，
-     明细见本节「批次 C」的**落地记录**；
-     **下一件＝链顶 归虚之灵**（数据已逐版侦察完，直接落地即可）。
+     **⚠ 口径更新（用户 2026-10-09）**：CI 那条线**不再软依赖**——**除奇迹物质 `MiracleMatter` 之外，
+     CI 八重配方上要用的件全部自持**（理由：1.4.4-release 把这一大票内容砍了，用户要回调；源一律取 2.0 / 2.0.3.9）。
+     链（往回推）：**归虚之灵 ← 元素之斧 ← 苍华之庭 `PlantationStaff`**；
+     CI 八重配方另需 **天狼星 + 古冰晶 + 圣化火花 + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌**。
+     **已落地**：链底 苍华之庭 ✅（现代 + 经典两条配方）、元素之斧 ✅（2026-10-09）、
+     **古冰晶 `AncientIceChunk` ✅（2026-10-09，含冰灵仆从与冰锥）**、天狼星 ✅（批次 B 链尾，2026-10-08）；
+     **下一件＝用户点名**（还没自持的是：**圣化火花 / 空灵征服者 / 宇宙灯笼 / 灾厄挽歌**），
+     最后才是链顶**归虚之灵**（它的物品数据与配方选项已侦察完，见下）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57
-     这五件召唤武器尚未点名开态值，等用户一并处理**。
+     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25
+     这六件召唤武器尚未点名开态值，等用户一并处理**。
   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **166 条全命中**
-    （元素之斧那三张贴图是"类同名隐式"引用，脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过）；
-    工作区干净、与 `origin/master` 同步（元素之斧落地提交 **`562998d`**）。
+    （元素之斧三张 + 古冰晶四张贴图都是"类同名隐式"引用，脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过）；
+    工作区干净、与 `origin/master` 同步（最近落地提交 = 古冰晶 **`d1a56fa`**、元素之斧 **`562998d`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -547,6 +550,43 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     to fight for you）、`Buffs.ElementalAxeBuff`（Elemental Axe / The elemental axe will protect you）、
     `Projectiles.ElementalAxeMinion.DisplayName`（Elemental Axe）。
 
+  **口径更新：CI 线全自持（2026-10-09，用户点名）**：CI 八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
+  （奇迹物质本机现代版仍在，继续软引用）；源一律取 **2.0 / 2.0.3.9**。已自持：天狼星（批次 B 链尾）、
+  元素之斧、古冰晶；**待自持：圣化火花 `SanctifiedSpark` / 空灵征服者 `EtherealSubjugator` /
+  宇宙灯笼 `Cosmilamp` / 灾厄挽歌 `CalamarisLament`**——这四件在装着的现代版里其实都还在，
+  但按用户口径照样自持旧版（1.4.4-release 砍过，用户要回调）。
+
+  **落地记录：古冰晶（2026-10-09，落地提交 `d1a56fa`）—— 批次 C 第三件**
+  - 物品 `Content/Items/Weapons/Summon/AncientIceChunk.cs`：38×50 / 伤害 25 / 魔力 10 / 使用·动画 25 帧 /
+    击退 2 / 浅红档 / `Item.buyPrice(0,12,0,0)`（＝源 `Rarity4BuyPrice`）/ 音 `SoundID.Item30` / `autoReuse`；
+    6 帧竖直动画贴图（`DrawAnimationVertical(6,6)` + `ItemID.Sets.AnimatesAsSoul`）；`Shoot` 在鼠标处生成。
+  - 仆从 `Content/Projectiles/Summon/IceClasperMinion.cs`：62×62 / 占 1 栏 / 6 帧动画 / `coldDamage`。
+    **源继承灾厄 `BaseMinionProjectile`，本工程把基类那套内联**：逐敌冷却 = `IFrames × MaxUpdates`、
+    `MinionHoming` 索敌（无目标 960 / 有目标 1200、**以主人为圆心**、不查视线）、`AddBuff(…, 2)` + 标志续命、
+    每 5 帧翻一帧动画。两状态机——**跟随**（>400 回主人、>1200 瞬移；玩家离目标 ≤250 换冲撞，
+    否则每 80 帧喷冰锥）与**冲撞**（速度 = 12 + 12/距离系数、夹到 ±25；主人离冰灵 >800 退回跟随）；
+    `CanDamage` 只有冲撞态为真。可调参数照源挂在物品类上（`IFrames` / `MaxDistanceFromOwner` /
+    `DistanceToDash` / `DistanceToStopDash` / `MinVelocity` / `TimeToShoot` / `ProjectileDMGMultiplier`）。
+  - 冰锥 `Content/Projectiles/Summon/IceClasperSummonProjectile.cs`：28×28 / 寿命 300 / 召唤伤害、
+    伤害 ×1.5、命中挂**霜冻 180 帧**；残影走工程既有的 `CDUtil.DrawAfterimagesCentered`。
+  - 增益 `Content/Buffs/SummonBuffs/IceClasperBuff.cs` + 玩家标志 `iceClasperBool`
+    （`Players/CalamityDemutationPlayer.cs` 三处：字段 + `ResetEffects` + `UpdateDead`）。
+  - **无配方**：来源是**冰灵 `IceClasper` 掉落 1/3**（源 2.0.3.9 与经典 1.4.2.101 同一条），
+    挂在本工程 `NPCs/CalamityDemutationGlobalNPC.cs` 的 `ModifyNPCLoot`，**现代与经典两条分支各挂一次**
+    （就在既有的 `FrostBarrier` 那条后面）。
+  - **两处刻意差异**：① 源 2.0.3.9 的 `Shoot` 没写 `originalDamage`（上游 1.4.4-release 才补），本工程照补，
+    免得召唤物伤害二次缩放；② 源基类那句 `overridesMinionDamagePrevention` 按其默认参数算出来就是 false
+    （"不覆盖"），不改变任何行为，故未移植。
+  - 尘编号把源裸值换成命名常量（56 = `DustID.BlueFairy`、172 = `DustID.DungeonWater`），保住 0 警告基线。
+  - 贴图四张取自 2.0.3.9：`AncientIceChunk.png` 38×300（6 帧）/ `IceClasperMinion.png` 62×480（6 帧）/
+    `IceClasperSummonProjectile.png` 22×46 / `IceClasperBuff.png` 32×32。
+  - 本地化照源英文原文：`Items.AncientIceChunk`（Ancient Ice Chunk / 三行 tooltip）、
+    `Buffs.IceClasperBuff`（Ice Clasper / The ice clasper will protect you）、
+    `Projectiles.IceClasperMinion.DisplayName`（Ice Clasper）、
+    `Projectiles.IceClasperSummonProjectile.DisplayName`（Ice Shard）；
+    中文取用户口径 **古冰晶**，仆从/增益写 **冰灵**、弹幕写 **冰锥**。
+
+- 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（CI 口径）的自持件之一（含冰灵仆从 + 冰锥）。**
 - 最近一批工作（2026-10-09）：**移植元素之斧（ElementalAxe）—— 「归虚之灵」链的中间件（批次 C 第二件）。**
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
