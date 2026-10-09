@@ -508,10 +508,17 @@ namespace CalamityDemutation.Players
         public bool godSlayerSummon = false;
         /// <summary>
         /// 弑神者套装·法师向（GodSlayerVisage 的套装标记）：魔法攻击命中敌人时召出弑神者烈焰与治疗烈焰
-        ///（见 CalamityDemutationGlobalProjectile.OnHitNPC，节流预算与召唤侧的弑神幻影共用 godSlayerDmg），
+        ///（见 CalamityDemutationGlobalProjectile.OnHitNPC；发射闸门是 <see cref="godSlayerMageFireCD"/>），
         /// 并在受到伤害时炸出一圈魔法弑神爆炸（见 PostHurt）
         /// </summary>
         public bool godSlayerMage = false;
+        /// <summary>
+        /// 弑神者法师「弑神火」的发射冷却（CI 的 <c>fireCD</c>：命中即置 2，即最快每 2 帧一枚）。
+        /// 跨帧计时器，只在死亡时复位。用户 2026-10-09 指定该套装效果换成 CI 模式后启用，
+        /// 取代经典版「按本次命中伤害折半累加、每帧衰减 2.5」的 godSlayerDmg 预算
+        /// （那个预算现在只归召唤侧的弑神幻影使用）。
+        /// </summary>
+        public int godSlayerMageFireCD = 0;
         /// <summary>
         /// 弑神者套装·盗贼向（GodSlayerMask 的套装标记）：满生命时所有盗贼属性 +10%（伤害 / 暴击 / 弹速，
         /// 见 PostUpdateMiscEffects），单次受到超过 80 点伤害时额外获得 30 帧无敌（见 PostHurt）；
@@ -741,10 +748,16 @@ namespace CalamityDemutation.Players
         public int silvaHitCounter = 0;
         /// <summary>
         /// 始源林海套装·法师向（SilvaMaskedCap 的套装标记）：魔法弹幕命中敌人时有几率引发巨型爆炸
-        /// （见 CalamityDemutationGlobalProjectile.OnHitNPC），无敌窗口结束后魔法武器伤害 +10%
-        /// （见 ModifyHitNPCWithProj）
+        /// （见 CalamityDemutationGlobalProjectile.OnHitNPC，闸门是 <see cref="silvaMageBurstCooldown"/>），
+        /// 免死无敌窗口内魔法武器伤害 +60%（见 PostUpdateMiscEffects；
+        /// 用户 2026-10-09 指定两条都换成 CI 的 <c>SilvaMagicSetLegacy</c> 口径）
         /// </summary>
         public bool silvaMage = false;
+        /// <summary>
+        /// 始源林海法师「法弹巨型爆炸」的冷却（CI 的 <c>SilvaMagicSetLegacyCooldown</c>：触发后置 300 帧）。
+        /// 跨帧计时器，只在死亡时复位。
+        /// </summary>
+        public int silvaMageBurstCooldown = 0;
         public bool silvaMelee = false;
         public bool silvaRanged = false;
         public bool silvaSet = false;
@@ -755,7 +768,7 @@ namespace CalamityDemutation.Players
         public bool silvaSummon = false;
         /// <summary>
         /// 始源林海套装·盗贼向（SilvaMask 的套装标记）：生命 >50% 时盗贼攻速 +10%（见该件的 UpdateArmorSet）、
-        /// 无敌窗口结束后盗贼弹幕伤害 +10%（见 ModifyHitNPCWithProj）、
+        /// 免死无敌窗口内盗贼伤害 +40%（见 PostUpdateMiscEffects；CI 的 SilvaRougeSetLegacy 口径）、
         /// 以及源里那条被 auricSet 门控的隐藏项「生命 >50% 且盗贼暴击 → 伤害 ×1.25」
         ///（见 CalamityDemutationGlobalProjectile.OnHitNPC）；潜行上限 150 由该件的套装方法补给灾厄侧。
         /// </summary>
@@ -1235,6 +1248,7 @@ namespace CalamityDemutation.Players
             godSlayerShrapnelCooldown = 0;
             godSlayerSummon = false;
             godSlayerDmg = 0f;
+            godSlayerMageFireCD = 0;
             godSlayerThrowing = false;
             mWorm = false;
             terratomerePvpBoltHits = 0;
@@ -1298,6 +1312,7 @@ namespace CalamityDemutation.Players
             silvaCountdown = 600;
             silvaHitCounter = 0;
             silvaMage = false;
+            silvaMageBurstCooldown = 0;
             silvaMelee = false;
             silvaRanged = false;
             silvaSet = false;
@@ -3197,6 +3212,23 @@ namespace CalamityDemutation.Players
                 if (heldItem.useTime > 3 && heldItem.CountsAsClass<RangedDamageClass>())
                     Player.GetAttackSpeed<RangedDamageClass>() += 0.1f;
             }
+            // 始源林海盗贼头（SilvaMask）：免死无敌窗口内盗贼伤害 +40%。
+            //（用户 2026-10-09 指定「加伤换成 CI 的模式」——CI 的 SilvaRougeSetLegacy 写在本钩子里、
+            //  走 GetDamage&lt;RogueDamageClass&gt;「伤害加成」，与经典版（也是工程原先的写法）
+            //  「无敌窗口结束后 damageMult += 0.1」在时机、数值、实现位置三处都不同。
+            //  判据取 CI 的 HasBuff(SilvaRevival) 那一半：本工程没有 SilvaRevive 冷却体系，
+            //  「无敌窗口」即 silvaCountdown &gt; 0 &amp;&amp; hasSilvaEffect，与上面 silvaRanged 那行同一口径。）
+            if (silvaThrowing && silvaCountdown > 0 && hasSilvaEffect)
+                Player.GetDamage(CDUtil.GetRogueDamageClass()) += 0.4f;
+            // 始源林海法师头（SilvaMaskedCap）：免死无敌窗口内魔法伤害 +60%。
+            //（用户 2026-10-09 指定「换成 CI 模式」——CI 的 SilvaMagicSetLegacy 同样写在本钩子里、走
+            //  GetDamage&lt;MagicDamageClass&gt;；经典版（也是工程原先的写法）是"窗口结束后 damageMult += 0.1"，
+            //  时机与数值都与 CI 不同。判据与本钩子上面 silvaRanged / silvaThrowing 两行同一口径。）
+            if (silvaMage && silvaCountdown > 0 && hasSilvaEffect)
+                Player.GetDamage<MagicDamageClass>() += 0.6f;
+            // 始源林海法师套装「法弹巨型爆炸」的冷却（CI 的 SilvaMagicSetLegacyCooldown：触发后置 300 帧）
+            if (silvaMageBurstCooldown > 0)
+                silvaMageBurstCooldown--;
             if (godSlayerDamageProtect)
             {
                 if (godSlayerDamageProtectMax < 80)
@@ -3208,6 +3240,9 @@ namespace CalamityDemutation.Players
             }
             if (godSlayerMeleefireCD > 0)
                 godSlayerMeleefireCD--;
+            // 弑神者法师套装「弑神火」的发射冷却（CI 的 fireCD：命中即置 2）
+            if (godSlayerMageFireCD > 0)
+                godSlayerMageFireCD--;
             // 弑神者射手套装的破片弹闸门：与 abaddonCritCooldown 同为跨帧计时器，只在死亡时复位
             if (godSlayerShrapnelCooldown > 0)
                 godSlayerShrapnelCooldown--;
@@ -4940,15 +4975,12 @@ namespace CalamityDemutation.Players
             //  源判据 isSummon = minion || sentry || 白名单，这里用召唤职业作等价判定）
             if (silvaSummon && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<SummonDamageClass>())
                 damageMult += 0.1;
-            // 始源林海法师头（SilvaMaskedCap）：免死无敌窗口结束后，魔法弹幕伤害 +10%
-            //（经典版 CalamityPlayerPreTrailer.cs:6639 原样：silvaCountdown <= 0 && hasSilvaEffect && silvaMage && 魔法职业）
-            if (silvaMage && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<MagicDamageClass>())
-                damageMult += 0.1;
-            // 始源林海盗贼头（SilvaMask）：免死无敌窗口结束后，盗贼弹幕伤害 +10%
-            //（经典版 CalamityPlayerPreTrailer.cs:6635 原样：silvaCountdown <= 0 && hasSilvaEffect && silvaThrowing && 盗贼弹幕；
-            //  盗贼判定换成 CDUtil.IsRogueProjectile，覆盖"现代按 RogueDamageClass / 经典读它自己的 rogue 标记"两条路）
-            if (silvaThrowing && silvaCountdown <= 0 && hasSilvaEffect && CDUtil.IsRogueProjectile(proj))
-                damageMult += 0.1;
+            // 备注：始源林海法师头（SilvaMaskedCap）那条「魔法加伤」已按用户 2026-10-09 的指示改成 CI 模式，
+            // 从本钩子（经典版的 damageMult += 0.1「无敌窗口结束后」）搬到了
+            // PostUpdateMiscEffects（CI 的 GetDamage<MagicDamageClass> += 0.6f「无敌窗口内」）。
+            // 备注：始源林海盗贼头（SilvaMask）那条「盗贼加伤」已按用户 2026-10-09 的指示改成 CI 模式，
+            // 从本钩子（经典版的 damageMult += 0.1「无敌窗口结束后」）搬到了
+            // PostUpdateMiscEffects（CI 的 GetDamage&lt;RogueDamageClass&gt; += 0.4f「无敌窗口内」）。
             // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 CI 模型，
             // 取代原先经典版的 1/max(15, 100-暴击率) 单次骰子：
             // · 总暴击率 >100% 时，按「溢出部分」（总暴击率 − 100）的百分比概率触发（CI 的 randomChance > 1 分支）；
@@ -5009,8 +5041,9 @@ namespace CalamityDemutation.Players
         public override void PostHurt(Player.HurtInfo info)
         {
             // 弑神者法师套装（godSlayerMage）的「受到伤害时释放魔法弑神爆炸」：
-            // 任何一次有效受击都在脚下炸出一枚 GodSlayerBlaze（伤害 = 穿金源 2400 / 否则 1200），
-            // 口径照经典版 CalamityPlayerPreTrailer.cs:8168（PostHurt 里与 godSlayerDamage 互斥的 else-if 分支）。
+            // 任何一次有效受击都在脚下炸出一枚 GodSlayerBlaze，伤害恒为 1200
+            //（经典版 CalamityPlayerPreTrailer.cs:8168 写的是"穿金源 2400 / 否则 1200"，
+            //  用户 2026-10-09 指定换成 CI 口径：CI 的 GodSlayerMagicSet 分支不因金源翻倍，故去掉那个三目）。
             // 本钩子每名玩家 × 每一端都会跑，故生成侧带主人端判据（见工程记忆第 5 节）。
             if (godSlayerMage && info.Damage > 0)
             {
@@ -5018,7 +5051,7 @@ namespace CalamityDemutation.Players
                 if (Player.whoAmI == Main.myPlayer)
                 {
                     Projectile.NewProjectile(Entity.GetSource_FromThis(), Player.Center.X, Player.Center.Y, 0f, 0f,
-                        ModContent.ProjectileType<GodSlayerBlaze>(), auricSet ? 2400 : 1200, 1f, Player.whoAmI);
+                        ModContent.ProjectileType<GodSlayerBlaze>(), 1200, 1f, Player.whoAmI);
                 }
             }
             // 弑神者盗贼头（GodSlayerMask）的「单次受伤超过 80 点 → 额外无敌帧」

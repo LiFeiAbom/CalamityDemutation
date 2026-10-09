@@ -67,7 +67,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             modPlayer.godSlayer = true;         // 弑神者套装效果（弑神者冲刺的开启条件）
             modPlayer.godSlayerMage = true;     // 弑神者（法师向：弑神者烈焰/治疗烈焰 + 受击魔法爆炸）
             modPlayer.silvaSet = true;          // 始源林海套装效果
-            modPlayer.silvaMage = true;         // 始源林海（法师向：法弹巨型爆炸 + 无敌后法伤加成）
+            modPlayer.silvaMage = true;         // 始源林海（法师向：法弹巨型爆炸 + 无敌窗口内法伤加成）
             modPlayer.auricSet = true;          // 本模组的金之特斯拉标记
             player.thorns += 3f;                // 荆棘反伤
             player.lavaMax += 240;              // 岩浆免疫时间延长 4 秒

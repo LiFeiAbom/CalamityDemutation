@@ -124,6 +124,10 @@ namespace CalamityDemutation.Content.Projectiles
         /// 随后在 1200 像素内挑出存活且生命缺口最大的队友，于弹幕位置生成 SilvaOrb / AuricOrb 弹幕
         /// （写入目标玩家索引与治疗量）为其回血。仅当 target.canGhostHeal 为真（该敌人允许吸血）时触发，
         /// 口径对齐经典版灾厄 CalamityGlobalProjectile.cs:346/380。
+        /// 在这两条**经典版**分支之外，另有一条 CI 独有的分支（2026-10-09 用户点名补入）：
+        /// 凡置位 silvaSet（＝ CI 的 AuricSilvaSet）者，任意弹幕命中都会再生成一枚固定 rand(5,11) 点的
+        /// SilvaOrb（搜队友半径 3000、lifeSteal 消耗倍率 2），口径见 CI 的
+        /// CalamityInheritancePlayerOnHit.ProjLifesteal。
         /// 另有一条独立分支：装备魔能谐振仪（manaOverloader）且手持魔法武器时，魔法弹幕命中会按
         /// "伤害 × (0.2 − 已命中次数×0.05) × 当前魔力比例"（单次封顶 10）生成 ManaPolarizerHealOrb。
         /// </summary>
@@ -240,6 +244,37 @@ namespace CalamityDemutation.Content.Projectiles
                     Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
                 }
             }
+            // CI 的 AuricSilvaSet 那条「任意弹幕命中敌人即生成治疗叶球」：
+            // 本工程的 silvaSet 就是 CI 的 AuricSilvaSet（林海五颗头 + 金源五颗头的套装方法都会置位它），
+            // 口径照 CI 的 CalamityInheritancePlayerOnHit.ProjLifesteal——回**固定** rand(5, 11) 点、
+            // 走 SilvaOrb、搜队友半径 3000、生命值消耗倍率 2（SpawnLifeStealProjectile 的第 6 参）。
+            // 用户 2026-10-09 指定把这条 CI 独有的机制补进来：它与上面那条经典版「按伤害比例递减」的吸血
+            // 是**并列**的两条（CI 也把它写成独立一条），两者共用 same 一个 lifeSteal 额度，故总量仍受闸门约束。
+            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet && target.canGhostHeal)
+            {
+                int silvaHealAmount = Main.rand.Next(5, 11);
+                if (Main.LocalPlayer.lifeSteal > 0f)
+                {
+                    Main.LocalPlayer.lifeSteal -= silvaHealAmount * 2f;
+                    float silvaWorstMissing = 0f;
+                    int silvaHealTarget = projectile.owner;
+                    for (int i = 0; i < Main.maxPlayers; i++)
+                    {
+                        if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
+                        {
+                            float manhattan = Math.Abs(Main.player[i].position.X + Main.player[i].width / 2 - projectile.position.X + projectile.width / 2)
+                                + Math.Abs(Main.player[i].position.Y + Main.player[i].height / 2 - projectile.position.Y + projectile.height / 2);
+                            if (manhattan < 3000f && Main.player[i].statLifeMax2 - Main.player[i].statLife > silvaWorstMissing)
+                            {
+                                silvaWorstMissing = Main.player[i].statLifeMax2 - Main.player[i].statLife;
+                                silvaHealTarget = i;
+                            }
+                        }
+                    }
+                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,
+                        ModContent.ProjectileType<SilvaOrb>(), 0, 0f, projectile.owner, (float)silvaHealTarget, (float)silvaHealAmount);
+                }
+            }
             // 龙蒿盗贼套装（tarraThrowing）的「每 25 次盗贼暴击」计数
             //（照经典版 CalamityPlayerPreTrailer.cs:6158：要求暴击 + 弹幕算盗贼弹幕，且冷却归零、未满 25；
             //  判定方式见 CDUtil.IsRogueProjectile——现代版按 RogueDamageClass，经典版读它自己的
@@ -345,111 +380,71 @@ namespace CalamityDemutation.Content.Projectiles
                 }
             }
             // 弑神者法师套装（godSlayerMage）的「魔法攻击命中敌人时释放弑神者烈焰与治疗烈焰」：
-            // 口径照经典版 CalamityGlobalProjectile.cs:659-726。节流预算 godSlayerDmg 与召唤侧的弑神幻影共用——
-            // 每触发一次按"本次命中伤害的一半"累加，随即在它衰减到 0 之前不再触发（每帧 -2.5）。
-            // ① 在 800 像素内挑一个敌人（优先有视线且距离 > 50 的），朝它射一枚 GodSlayerOrb
-            //    （伤害 = 半伤 ×1.5，穿金源 ×2.0，ai[0] = 目标索引）；
-            // ② 若该敌人允许吸血（canGhostHeal），再补一枚 GodSlayerHealOrb 飞向 1200 像素内血亏最多的队友
-            //    （治疗比例 = 0.06，穿金源 0.03，随 numHits 每层再 -0.015）。
+            // 用户 2026-10-09 指定换成 CI 口径（CI 的 ClPlayerClassSpecific.MagicOnHit ＋
+            // CalamityInheritancePlayerOnHit.ProjLifesteal）：
+            // ① 弑神火：闸门换成 CI 的 fireCD（命中即置 2 → 最快每 2 帧一枚），往**随机方向**以
+            //    rand(12, 16) 的初速射一枚 GodSlayerOrb，伤害 =（400 + 手持武器伤害 ÷ 2）× 5；
+            //   CI 不挑目标——那枚光球自己会追 3000 像素内的敌人，本工程的 GodSlayerOrb 同样自寻敌
+            //   （不读 ai[0]），故这里不写目标索引。
+            // ② 治疗烈焰：改为**固定** rand(5, 11) 点（不再按弹幕伤害的比例），走 GodSlayerHealOrb、
+            //    搜队友半径 3000（原 1200）、生命值消耗倍率 2（源 SpawnLifeStealProjectile 的第 6 参）。
+            // 注：经典版那套「按本次命中伤害折半累加、每帧衰减 2.5」的 godSlayerDmg 预算现在只归召唤侧使用；
+            //  CI 写的是裸 <c>HeldItem.damage</c>，本工程照抄（不走 GetWeaponDamage，故不随数值膨胀开关变化）。
             CalamityDemutationPlayer godMage = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
-            if (projectile.CountsAsClass<MagicDamageClass>() && godMage.godSlayerMage && godMage.godSlayerDmg <= 0f)
+            if (projectile.CountsAsClass<MagicDamageClass>() && godMage.godSlayerMage && godMage.godSlayerMageFireCD <= 0)
             {
-                int orbBase = projectile.damage / 2;
-                godMage.godSlayerDmg += orbBase;
-                int[] candidates = new int[Main.maxNPCs];
-                int sightCount = 0;      // 有视线且距离 > 50 的优先目标
-                int fallbackCount = 0;   // 无视线 / 距离 ≤ 50 的兜底目标
-                for (int i = 0; i < Main.maxNPCs; i++)
+                godMage.godSlayerMageFireCD = 2;
+                int fireDamage = 400 + Main.player[projectile.owner].HeldItem.damage / 2;
+                float fireAngle = Main.rand.NextFloat() * MathHelper.TwoPi;
+                Vector2 fireVelocity = new Vector2((float)Math.Cos(fireAngle), (float)Math.Sin(fireAngle))
+                    * Main.rand.NextFloat(12f, 16f);
+                Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center, fireVelocity,
+                    ModContent.ProjectileType<GodSlayerOrb>(), fireDamage * 5, projectile.knockBack, projectile.owner);
+                if (target.canGhostHeal)
                 {
-                    if (!Main.npc[i].CanBeChasedBy(projectile, false))
-                        continue;
-                    float manhattan = Math.Abs(Main.npc[i].position.X + Main.npc[i].width / 2 - projectile.position.X + projectile.width / 2)
-                        + Math.Abs(Main.npc[i].position.Y + Main.npc[i].height / 2 - projectile.position.Y + projectile.height / 2);
-                    if (manhattan < 800f)
+                    int healAmount = Main.rand.Next(5, 11);
+                    if (Main.LocalPlayer.lifeSteal > 0f)
                     {
-                        if (Collision.CanHit(projectile.position, 1, 1, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height) && manhattan > 50f)
+                        Main.LocalPlayer.lifeSteal -= healAmount * 2f;
+                        float worstMissing = 0f;
+                        int healTarget = projectile.owner;
+                        for (int i = 0; i < Main.maxPlayers; i++)
                         {
-                            candidates[sightCount] = i;
-                            sightCount++;
-                        }
-                        else if (sightCount == 0)
-                        {
-                            candidates[fallbackCount] = i;
-                            fallbackCount++;
-                        }
-                    }
-                }
-                // 源在"一个目标都挑不到"时直接 return（放弃余下逻辑）；本工程只跳过这两枚弹幕的生成
-                if (sightCount > 0 || fallbackCount > 0)
-                {
-                    int orbTarget = sightCount > 0 ? candidates[Main.rand.Next(sightCount)] : candidates[Main.rand.Next(fallbackCount)];
-                    // 源固定 20 像素/帧的随机方向初速（GodSlayerOrb 随后自行追踪）
-                    float orbVelX = Main.rand.Next(-100, 101);
-                    float orbVelY = Main.rand.Next(-100, 101);
-                    float orbVelDist = (float)Math.Sqrt(orbVelX * orbVelX + orbVelY * orbVelY);
-                    orbVelDist = 20f / orbVelDist;
-                    orbVelX *= orbVelDist;
-                    orbVelY *= orbVelDist;
-                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, orbVelX, orbVelY,
-                        ModContent.ProjectileType<GodSlayerOrb>(), (int)(orbBase * (godMage.auricSet ? 2.0f : 1.5f)), 0f, projectile.owner, orbTarget, 0f);
-                    if (target.canGhostHeal)
-                    {
-                        float healMult = godMage.auricSet ? 0.03f : 0.06f;
-                        healMult -= (float)projectile.numHits * 0.015f;
-                        float healValue = (float)projectile.damage * healMult;
-                        if (healMult > 0f && (int)healValue > 0 && Main.LocalPlayer.lifeSteal > 0f)
-                        {
-                            Main.LocalPlayer.lifeSteal -= healValue * 1.5f;
-                            float worstMissing = 0f;
-                            int healTarget = projectile.owner;
-                            for (int i = 0; i < Main.maxPlayers; i++)
+                            if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
                             {
-                                if (Main.player[i].active && !Main.player[i].dead && ((!Main.player[projectile.owner].hostile && !Main.player[i].hostile) || Main.player[projectile.owner].team == Main.player[i].team))
+                                float manhattan = Math.Abs(Main.player[i].position.X + Main.player[i].width / 2 - projectile.position.X + projectile.width / 2)
+                                    + Math.Abs(Main.player[i].position.Y + Main.player[i].height / 2 - projectile.position.Y + projectile.height / 2);
+                                if (manhattan < 3000f && Main.player[i].statLifeMax2 - Main.player[i].statLife > worstMissing)
                                 {
-                                    float manhattan = Math.Abs(Main.player[i].position.X + Main.player[i].width / 2 - projectile.position.X + projectile.width / 2)
-                                        + Math.Abs(Main.player[i].position.Y + Main.player[i].height / 2 - projectile.position.Y + projectile.height / 2);
-                                    if (manhattan < 1200f && Main.player[i].statLifeMax2 - Main.player[i].statLife > worstMissing)
-                                    {
-                                        worstMissing = Main.player[i].statLifeMax2 - Main.player[i].statLife;
-                                        healTarget = i;
-                                    }
+                                    worstMissing = Main.player[i].statLifeMax2 - Main.player[i].statLife;
+                                    healTarget = i;
                                 }
                             }
-                            Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,
-                                ModContent.ProjectileType<GodSlayerHealOrb>(), 0, 0f, projectile.owner, healTarget, healValue);
                         }
+                        Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f,
+                            ModContent.ProjectileType<GodSlayerHealOrb>(), 0, 0f, projectile.owner, healTarget, (float)healAmount);
                     }
                 }
             }
-            // 始源林海法师套装（silvaMage）的「魔法弹幕命中敌人时有几率引发巨型爆炸」：
-            // 口径照经典版 CalamityGlobalProjectile.cs:416-438。**注意**：源 tooltip 写「10% 几率」，
-            // 但实现是 `Main.rand.Next(0, 100) >= 97` = **3%**，且只对「穿透为 1 的魔法弹幕」生效——
-            // 本工程照源实现、保留原文案。
-            // 效果：播 SoundID.Zombie103，把本次判定框临时撑到 96×96，喷一圈 ChlorophyteWeapon 尘
-            //（源裸数字 157 已 Cecil 反查），把本次伤害乘 4（穿金源 ×7）后再结算一次 Damage()。
+            // 始源林海法师套装（silvaMage）的「魔法弹幕引发巨型爆炸」：
+            // 用户 2026-10-09 指定换成 CI 的 SilvaMagicSetLegacy 口径（CI 的 ClPlayerClassSpecific.MagicOnHit）：
+            // 触发条件是「弹幕只穿透一名敌人（penetrate == 1）**或**即将消散（timeLeft <= 5）」时 **100%** 触发，
+            // 触发后置 300 帧冷却；效果 = 播 SoundID.Zombie103，并在弹幕位置生成一枚**独立**的 SilvaBurst
+            // （96×96 隐形判定，伤害 = 800 + 0.6 × 本弹幕伤害）。
+            // 与经典版（也是工程原先的写法）的三点不同：① 3% 概率 → 100% + 300 帧冷却；
+            // ② 撑大本弹幕判定框并把本次伤害 ×4（金源 ×7）→ 改为生成独立弹幕；
+            // ③ 判据从"只认 penetrate == 1"放宽到"或即将消散"。
+            // 注：CI 的 ApplyArmorAccDamageBonusesTo 在本工程恒等（没有 Old Fashioned）故省略，与盾冲那处同一口径。
             CalamityDemutationPlayer silvaMagePlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
-            if (projectile.CountsAsClass<MagicDamageClass>() && silvaMagePlayer.silvaMage && projectile.penetrate == 1 && Main.rand.Next(0, 100) >= 97)
+            if (projectile.CountsAsClass<MagicDamageClass>() && silvaMagePlayer.silvaMage
+                && silvaMagePlayer.silvaMageBurstCooldown <= 0
+                && (projectile.penetrate == 1 || projectile.timeLeft <= 5))
             {
-                SoundEngine.PlaySound(SoundID.Zombie103, projectile.position);
-                projectile.position = projectile.Center;
-                projectile.width = projectile.height = 96;
-                projectile.position.X -= projectile.width / 2;
-                projectile.position.Y -= projectile.height / 2;
-                for (int i = 0; i < 3; i++)
-                {
-                    Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.ChlorophyteWeapon, 0f, 0f, 100, new Color(Main.DiscoR, 203, 103), 1.5f);
-                }
-                for (int i = 0; i < 30; i++)
-                {
-                    int blastDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.ChlorophyteWeapon, 0f, 0f, 0, new Color(Main.DiscoR, 203, 103), 2.5f);
-                    Main.dust[blastDust].noGravity = true;
-                    Main.dust[blastDust].velocity *= 3f;
-                    blastDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.ChlorophyteWeapon, 0f, 0f, 100, new Color(Main.DiscoR, 203, 103), 1.5f);
-                    Main.dust[blastDust].velocity *= 2f;
-                    Main.dust[blastDust].noGravity = true;
-                }
-                projectile.damage *= silvaMagePlayer.auricSet ? 7 : 4;
-                projectile.Damage();
+                silvaMagePlayer.silvaMageBurstCooldown = 300;
+                SoundEngine.PlaySound(SoundID.Zombie103, projectile.Center);
+                int silvaBurstDamage = (int)(800.0 + 0.6 * projectile.damage);
+                Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center, Vector2.Zero,
+                    ModContent.ProjectileType<Magic.SilvaBurst>(), silvaBurstDamage, 8f, projectile.owner);
             }
             // 弑神者召唤套装（godSlayerSummon）：召唤物 / 哨兵命中敌人时，若节流预算归零就召出一枚弑神幻影
             //（经典版 CalamityGlobalProjectile.cs:848 起；条件同样只认 minion / sentry，不含鞭类弹幕）。

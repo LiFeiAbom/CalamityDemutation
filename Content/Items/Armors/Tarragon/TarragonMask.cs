@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
     /// <summary>
     /// 龙蒿面具（TarragonMask） - 龙蒿套装的法师向头部部件
     ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 TarragonHeadMagic）。
-    /// 单件：魔法伤害 +10%、魔法暴击 +10%、减伤 +5%、最大法力 +100，
+    /// 单件：魔法伤害 +10%、魔法暴击 +10%、减伤 +5%、最大法力 +100、法力消耗 ×0.85（-15%），
     /// 另有 +240 岩浆免疫时长、液体中自由移动，并免疫诅咒地狱/着火了/诅咒/冷冻。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1. 降低敌怪的生成速率（tarraSet → CalamityDemutationPlayer 里 Player.calmed = !tarraMelee）
@@ -68,6 +68,9 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             player.GetCritChance<MagicDamageClass>() += 10;    // 魔法暴击率 +10%
             player.endurance += 0.05f;                         // 伤害减免 +5%
             player.statManaMax2 += 100;                        // 最大法力 +100
+            player.manaCost *= 0.85f;                          // 法力消耗 ×0.85（-15%）
+                                                               // （现代版 2.0.4 的 TarragonHeadMagic:45 有这一项、经典版没有；
+                                                               //  用户 2026-10-09 指定补齐，与其余三颗法师头的蓝耗减免统一口径）
             player.lavaMax += 240;                             // 岩浆免疫时长 +240 帧（4 秒）
             player.ignoreWater = true;                         // 水中不受移速/跳跃惩罚
             player.buffImmune[BuffID.CursedInferno] = true;    // 免疫诅咒地狱

@@ -428,13 +428,17 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      （**不是遗漏，后续会话别再点名它**）；召唤系这一批到此全部结清。
      另：「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
      其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**。
-  ④ **唯一还挂着的「待拍板」口径题（全在第 9 节 9.3，2026-10-06 记下、用户至今未表态）——**
-     ① 龙蒿面具 / 血魇九头盔**没有蓝耗减免**（另三颗法师头都有）→ 建议照现代版补 `manaCost *= 0.85f` / `*= 0.83f`；
-     ② 林海 / 弑神者 / 金源三套的**法师套装效果**与 CI 机制不同（工程走经典版口径：概率制 vs CI 的冷却制等）；
-     ③ 始源林海盗贼头 `SilvaMask`：潜行上限 150（CI 125）、无敌加伤的档位与时机不同（工程是"无敌结束后 +10%"）；
-     ④ 金源复合盗贼头 `AuricTeslaPlumedHelm`：潜行写法、CI 无岩浆相关项、ArmorSetShadows 表现——三处差异；
-     ⑤ 9.3 第 6 条另留两个复核项：林海近战头现代配方在三源里都没有对照物；现代金源胸甲漏了霜冻屏障。
-     **都不影响编译与进游戏**，纯粹是"要不要向源对齐"的取舍题——新会话想推进就照这份清单逐条问用户。
+  ④ **【2026-10-09 已全部结清 —— 原先那份"待拍板"清单用户已逐条拍板，别再当待办】**：
+     ① 龙蒿面具 / 血魇九头盔缺蓝耗减免 → **已补**（照现代版 2.0.4 补 `manaCost *= 0.85f` / `*= 0.83f`，中英 tooltip 同步）；
+     ② 林海 / 弑神者 / 金源三套的**法师套装效果**（6 处）→ **已全部换成 CI 口径**
+        （逐条见 9.3 那张表末尾的"2026-10-09 全部结清"）；
+     ③ 始源林海盗贼头 `SilvaMask` → 潜行上限**用户点名维持 150**；无敌加伤换成 CI 口径
+        （窗口**内** +40%，从 `ModifyHitNPCWithProj` 搬到 `PostUpdateMiscEffects` 的 `GetDamage(RogueDamageClass)`）；
+     ④ 金源复合盗贼头 `AuricTeslaPlumedHelm` 那三处差异 → **用户点名"不动"**，别再提；
+     ⑤ 9.3 第 6 条的两个复核项 → **已查清**：林海近战头的现代配方 30/8/2 就是 **1.4.4-release 的原值**
+        （旧记录那句"任何源里都没有对应物"是**错的**，无需改动）；现代金源胸甲漏的霜冻屏障**已照 CI 补上**。
+     另两条尾巴也结案：`Devastation` 显示名 → 用户定"**名字不变**"（8 节悬案 3 结案）；
+     欧米茄蓝职业头（三源皆无职业变体）→ **不动**。⇒ **本工程当前没有挂着的口径题。**
   - **进游戏待验证（新会话可以先问用户这一句）**：2026-10-09 曾因漏一张增益图标（`CosmicEnergyBuff`）
     被 tML 在加载期禁用过一次（已修，并新增 `Tools/CheckImplicitTextures.ps1` 兜底）；**用户尚未回报
     "重新启用后能干净进游戏"**，而且当天新落地的召唤系（归墟之灵 3000 档、宇宙灯笼、幽焰、哨兵炮台等）
@@ -2363,7 +2367,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 工程**每套只有一个近战头**；灾厄现代与 CI 每套都有 5 个头（近战/远程/法师/召唤/盗贼）。现代版 Auric
   头还改了名（`PlumedHelm/HoodedFacemask/WireHemmedVisage/SpaceHelmet/RoyalHelm`）。
 - 金源配方：经典分支 1:1；现代分支＝CI 的坯料清单（四件套＋妄想护符），但 AuricBar 数量取 **1.4.4 公开源码**
-  的 10/20/15（CI 与 2.0.4 都是 12/18/15）；且**漏了 CI 现代胸甲要求的霜冻屏障**（工程只放在经典分支）。
+  的 10/20/15（CI 与 2.0.4 都是 12/18/15）；霜冻屏障原先只放在经典分支，**2026-10-09 已照 CI
+  AuricTeslaBodyArmorold 的坯料清单补进现代分支**（详见 9.3 第 6 条）。
 - `ArmorSetShadows`：工程/经典＝`armorEffectDrawShadow`；现代与 CI＝`armorEffectDrawOutlines`。
 - 金源头里原先那两段反射读灾厄 `CalamityPlayer.auricSet` 的代码是**无效残留**（读进局部变量就丢、没写回）——
   **2026-10-06 已正法**：死代码删除，改由 `Utilities/CDUtil_CalamityReflect.cs` 的
@@ -2434,8 +2439,19 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      始源林海罩帽（`SilvaMaskedCap`）/ 金虚万象盔（`AuricTeslaWireHemmedVisage`，复合收尾）
      **五套已补完**（2026-10-06，见第 8 节逐笔）。
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
-6. **【小口径】迁移细节复核项**：林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）在任何源里都没有对应物
-   （CI 同名头只要 6/5/2）；现代金源胸甲漏了霜冻屏障；`Devastation` 那类命名口径见 8 节悬案 3。
+6. **【小口径】迁移细节复核项 —— 2026-10-09 用户点名「进行匹配和对照」，两条都已查清：**
+   ① **林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）有源、不必改**：旧记录说"任何源里都没有对应物"
+      **是错的**——它就是 **`CalamityModPublic-1.4.4-release`** 的 `Items/Armor/Silva/SilvaHeadMagic.cs`
+      （与 `SilvaHeadSummon` 同值）配方，且工程其余林海件的现代分支也全取 1.4.4-release
+      （胸 90/12/4、腿 60/10/3、各头 30/8/2），自洽。2.0.3.9 / 2.0.4 把这批改便宜了（头 6/5/2、胸 12/10/3），
+      2.0 更早一版用的是 Tenebris 而非 PlantyMush；CI 的 `SilvaHeadMelee` 也是 6/5/2。
+      ⇒ **维持现状**（用户 2026-10-09 拍板"进行匹配和对照"后核出的结论：无需改动）。
+   ② **现代金源胸甲漏的霜冻屏障已补齐**：`AuricTeslaBodyArmor.AddRecipes` 的现代分支原先只有四套胸甲
+      （照 1.4.4-release 的结构，而 1.4.4-release **和** 2.0.4 的该配方里都没有霜冻屏障），
+      但 CI 的 `AuricTeslaBodyArmorold` 两条配方**都带 `FrostBarrier`**，而工程的现代分支本就以
+      "CI 的坯料清单 + 1.4.4-release 的 AuricBar 数量"为口径 ⇒ 补上本模组自有的 `FrostBarrier`×1
+      （该件可获取：两个 NPC 各 10% 掉落 + 商店 NPC 出售）。
+   ③ `Devastation` 那类命名口径见 8 节悬案 3（**用户 2026-10-09 定：名字不变**，不再处理）。
 
 7. **【对照】2026-10-06 新建职业头 × CI 逐件对照（用户已拍板，5 处已落地，别再重查）：**
 
@@ -2472,6 +2488,28 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    | 弑神者法师·治疗烈焰 | `healMult = 0.06`（金源 0.03）− numHits×0.015，走 `GodSlayerHealOrb` | 固定 `rand(5, 11)` 点，`GodSlayerHealOrb`，距离 3000 / 冷却倍率 2 | **比例制 vs 固定随机** |
    | 弑神者法师·受击爆炸 | `GodSlayerBlaze` 1200（金源 2400） | `GodSlayerBlaze` 1200（金源不翻倍） | 仅金源档差 2 倍 |
    | `AuricSilvaSet`（CI 独有） | **无对应标记**（金源法师头置 `silvaSet`，走 3% 递减吸血） | 任意弹幕命中即生成 `SilvaOrb` 回血 `rand(5,11)`，距离 3000 / 倍率 2 | CI 多一条"任意命中回血" |
+
+   **⇒ 2026-10-09 全部结清（用户逐条拍板「换成 CI 模式」，6 处都已落地）——** 代码位置如下，别再重查：
+   - 林海法师·法弹巨型爆炸 → `CalamityDemutationGlobalProjectile.OnHitNPC` 改为生成**独立**弹幕
+     `Content/Projectiles/Magic/SilvaBurst.cs`（**本轮新增**：96×96 隐形判定、穿透 -1、局部无敌只结算一次、
+     存活 2 帧；源 = CalamityMod 的 `Projectiles/Magic/SilvaBurst`，它用的也是隐形占位图）；闸门 =
+     `CalamityDemutationPlayer.silvaMageBurstCooldown`（触发后 300 帧）。伤害 = `800 + 0.6 × 触发弹幕伤害`；
+     判据从"只认 `penetrate == 1`"放宽成"`penetrate == 1` **或** `timeLeft <= 5`"，且不再掷概率。
+   - 林海法师·无敌期法伤 → `CalamityDemutationPlayer.PostUpdateMiscEffects` 里
+     `silvaMage && silvaCountdown > 0 && hasSilvaEffect → GetDamage<MagicDamageClass>() += 0.6f`；
+     `ModifyHitNPCWithProj` 里那条经典版 `+0.1`（`silvaCountdown <= 0`）**已删**。
+   - 弑神者法师·弑神火 → 随机方向、初速 `rand(12,16)`、伤害 `(400 + 手持武器 Item.damage ÷ 2) × 5`，
+     闸门 = `godSlayerMageFireCD`（命中置 2）。**CI 写的是裸 `Item.damage`，故这条不随 `StatInflation` 变化**
+     （与"按面板比例派生"的那些不同，属有意照抄源，别再改成 `GetWeaponDamage`）。
+   - 弑神者法师·治疗烈焰 → **固定** `rand(5, 11)`、搜队友半径 **3000**、lifeSteal 消耗 **×2**。
+   - 弑神者法师·受击爆炸 → `GodSlayerBlaze` 伤害**恒 1200**（去掉了"穿金源 2400"的三目）。
+   - `AuricSilvaSet` → OnHitNPC 里**新增一条并列分支**（`silvaSet && target.canGhostHeal` 时任意命中生成
+     固定 `rand(5,11)` 的 `SilvaOrb`，半径 3000 / 倍率 2）。它与经典版那条"按伤害比例递减"的吸血**并存**、
+     共用同一个 `Main.LocalPlayer.lifeSteal` 额度 —— 用户拍板时的口径是"CI 多一条"，故做成**追加**而非替换。
+   **两处与 CI 的已知偏差（有意保留，别再当成漏项）**：
+   ① CI 把「法师火 + 召唤幻影」共用一个 `fireCD`（召唤侧置 3）；本工程只把**法师侧**换成 `godSlayerMageFireCD`，
+      召唤侧仍用经典版的 `godSlayerDmg` 预算（两者现在不再互相阻塞）。
+   ② CI 的 `GodSlayerOrb` 自导距 3000、惯性 25，本工程那颗仍是经典版移植过来的 600 / 20（本轮未动）。
 
    注：CI 的 `CalamityInheritancePlayer.cs:398/400` 那段 `AuricSilvaSet ? 0.05f` 的移速是**死代码**
    （`_ = 1f + …` 赋给了弃元），不生效，不用照搬。

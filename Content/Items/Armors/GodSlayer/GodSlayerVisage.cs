@@ -14,8 +14,11 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
     /// 1. 致命伤保命并回复生命 / 45 秒冷却 / 冷却期 +10% 全伤害
     ///（godSlayer → CalamityDemutationPlayer.PreKill / PostUpdateMiscEffects）
     /// 2. 魔法攻击命中敌人时释放弑神者烈焰与治疗烈焰（godSlayerMage → CalamityDemutationGlobalProjectile.OnHitNPC：
-    ///    GodSlayerOrb + GodSlayerHealOrb，节流预算与召唤侧的弑神幻影共用 godSlayerDmg）
+    ///    GodSlayerOrb + GodSlayerHealOrb，发射闸门 = CalamityDemutationPlayer.godSlayerMageFireCD）
     /// 3. 受到伤害时释放魔法弑神爆炸（godSlayerMage → CalamityDemutationPlayer.PostHurt：GodSlayerBlaze）
+    /// 注：2、3 两条已按用户 2026-10-09 的指示换成 CI 口径
+    ///（弑神火 = 随机方向、(400 + 手持武器伤害÷2)×5、闸门 2 帧；治疗烈焰 = 固定 rand(5,11)、半径 3000、倍率 2；
+    ///  受击爆炸伤害恒为 1200，不再因金源翻倍）。
     /// 冲刺那两行属"让 tooltip 成真"的补充说明：godSlayer 已置位，弑神者冲刺确实可用。
     /// </summary>
     [AutoloadEquip(EquipType.Head)]

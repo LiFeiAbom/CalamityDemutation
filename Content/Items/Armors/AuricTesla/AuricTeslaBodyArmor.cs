@@ -88,7 +88,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版灾厄用金锭×20 + 宇宙砧，经典版灾厄用矿石与魂材 + 德雷顿熔炉，
-        /// 两分支均以四套月后胸甲为坯料，经典版另需一件霜冻屏障（本模组自有的 FrostBarrier）
+        /// 两分支均以四套月后胸甲 + 一件霜冻屏障（本模组自有的 FrostBarrier）为坯料。
+        /// 2026-10-09 复核：现代分支原先只放了四套胸甲、漏掉霜冻屏障——CI 的
+        /// AuricTeslaBodyArmorold 两条配方都带 FrostBarrier，本工程的现代分支本就以
+        /// 「CI 的坯料清单 + 1.4.4-release 的 AuricBar 数量」为口径，故补上这一味。
         /// </summary>
         public override void AddRecipes()
         {
@@ -102,6 +105,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.AddIngredient<BloodflareBodyArmor>();
                     recipe.AddIngredient<SilvaArmor>();
                     recipe.AddIngredient<GodSlayerChestplate>();
+                    recipe.AddIngredient<FrostBarrier>();      // 霜冻屏障×1（CI 现代胸甲的坯料之一）
                     recipe.AddIngredient(auricBar.Type, 20);
                     recipe.AddTile(cosmicAnvil.Type);
                     recipe.Register();

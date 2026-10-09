@@ -16,7 +16,8 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
     /// 1~7. 通用七条（免疫减益 / 治疗叶球 / 移速加速度 +5% / 免死无敌四连）——silvaSet，
     ///      与其余四颗头共用同一套实现（见 SilvaHelm / CalamityDemutationPlayer）
     /// 8. 生命高于 50% 时盗贼武器投掷更快（silvaThrowing → 本类 UpdateArmorSet）
-    /// 9. 无敌窗口结束后盗贼武器伤害 +10%（silvaThrowing → CalamityDemutationPlayer.ModifyHitNPCWithProj）
+    /// 9. 免死无敌窗口内盗贼武器伤害 +40%（silvaThrowing → CalamityDemutationPlayer.PostUpdateMiscEffects；
+    ///    用户 2026-10-09 指定改走 CI 的 SilvaRougeSetLegacy 口径，原先为经典版的「窗口结束后 +10%」）
     /// 10. 潜行上限 150（套装方法里经 <see cref="CDUtil.GrantRogueStealth"/> 补给灾厄侧）
     /// 另有一条**源里的隐藏项**（不在 tooltip 内）：生命 >50% 且盗贼暴击时伤害 ×1.25，
     /// 且被 `auricSet` 门控（见 CalamityDemutationGlobalProjectile.OnHitNPC 的注释）。

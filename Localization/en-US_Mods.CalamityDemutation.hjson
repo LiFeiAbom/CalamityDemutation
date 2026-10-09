@@ -751,6 +751,7 @@ Items: {
 			'''
 			You can move freely through liquids and have temporary immunity to lava
 			10% increased magic damage and critical strike chance and +100 max mana
+			17% reduced mana cost
 			'''
 		SetBonus:
 			'''
@@ -2136,7 +2137,7 @@ Items: {
 			This effect only triggers once per life and if you are reduced to 400 max life the invincibility effect will stop
 			Your max life will return to normal if you die
 			Rogue weapons have a faster throwing rate while you are above 50% life
-			After the silva invulnerability time your rogue weapons will do 10% more damage
+			During the silva invulnerability time your rogue weapons will do 40% more damage
 			Rogue stealth builds while not attacking and not moving, up to a max of 150
 			Rogue stealth only reduces when you attack, it does not reduce while moving
 			The higher your rogue stealth the higher your rogue damage, crit, and movement speed
@@ -2161,8 +2162,8 @@ Items: {
 			If you get reduced to 1 HP again while this effect is active you will lose 100 max life
 			This effect only triggers once per life and if you are reduced to 400 max life the invincibility effect will stop
 			Your max life will return to normal if you die
-			Magic projectiles have a 10% chance to cause a massive explosion on enemy hits
-			After the silva invulnerability time your magic weapons will do 10% more damage
+			Magic projectiles cause a massive explosion when they expire or hit only one enemy
+			During the silva invulnerability time your magic weapons will do 60% more damage
 			'''
 	}
 
@@ -2395,6 +2396,7 @@ Items: {
 			Can move freely through liquids
 			10% increased magic damage and critical strike chance
 			5% increased damage reduction and +100 max mana
+			15% reduced mana cost
 			'''
 		SetBonus:
 			'''

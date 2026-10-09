@@ -7,7 +7,8 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
     /// <summary>
     /// 血魇九头盔（BloodflareHornedMask，英文名 Bloodflare Hydra Hood） - 血炎套装的法师向头部部件
     ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 BloodflareHeadMagic）。
-    /// 单件：岩浆免疫时长 +240、水中自由移动、魔法伤害与魔法暴击各 +10%、最大法力 +100。
+    /// 单件：岩浆免疫时长 +240、水中自由移动、魔法伤害与魔法暴击各 +10%、最大法力 +100、
+    /// 法力消耗 ×0.83（-17%）。
     /// 套装（逐条对应 player.setBonus 的官方描述，实现位置见括号）：
     /// 1. 极大幅提升生命再生（player.crimsonRegen）
     /// 2. 生命低于 50% 的敌怪被击中时有几率掉红心、高于 50% 时掉魔力星（bloodflareSet → CalamityDemutationGlobalNPC）
@@ -67,6 +68,9 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             player.GetDamage<MagicDamageClass>() += 0.1f;   // 魔法伤害 +10%
             player.GetCritChance<MagicDamageClass>() += 10; // 魔法暴击率 +10%
             player.statManaMax2 += 100;                     // 最大法力 +100
+            player.manaCost *= 0.83f;                       // 法力消耗 ×0.83（-17%）
+                                                            // （现代版 2.0.4 的 BloodflareHeadMagic:45 有这一项、经典版没有；
+                                                            //  用户 2026-10-09 指定补齐，与其余三颗法师头的蓝耗减免统一口径）
         }
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
