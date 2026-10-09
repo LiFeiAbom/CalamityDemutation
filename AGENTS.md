@@ -2270,8 +2270,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | `CoreOfTheBloodGod` / `BloodPact` / `FleshTotem` | 血神核心 / 血契 / 血肉图腾 | 一致 | Core Of The Blood God / Blood Pact / Flesh Totem |
 ## 11. 本机 Codex 客户端（环境维护；不是模组内容）
 
-> 2026-10-08 把终端里的 `codex` 从 **0.154.0 手工升到 0.161.0**；**2026-10-09 又手工升到 0.162.0**
-> （官方 `codex update` 在本机走不通，两次走的都是 11.2 那套手工流程）。
+> 2026-10-08 把 `codex` 从 **0.154.0 手工升到 0.161.0**，2026-10-09 又升到 **0.162.0**（官方 `codex update` 在本机走不通）。
 > 这一节记安装形态、升级/回滚流程、以及升级后的已知差异；下次维护照做即可。
 
 ### 11.1 安装形态（先搞清"谁在管版本"）
@@ -2280,11 +2279,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 安装根 `C:\Users\28155\.codex\packages\standalone\`：每个版本各占一个
   `releases\<版本>-x86_64-pc-windows-msvc\` 目录；`current` 是一个**目录联接（Junction）**指向当前版本；
   PATH 上的 `C:\Users\28155\AppData\Local\Programs\OpenAI\Codex\bin\codex.exe` 又是指向 `current\bin` 的链接。
-  **2026-10-09 起本机留着两份**：`0.161.0` 与 `0.162.0`（升级时特意没删旧的），所以回滚只需照 11.2 第 4 步
-  把 `current` 指回 `0.161.0` 那份，不用重新下载。（2026-10-08 那次是清掉旧版的；两份约 456 MB/份。）
+  **本机不留旧版本目录**（2026-10-09 升到 `0.162.0` 后只剩它这一份；旧版目录已清，其中被运行中会话占用的
+  `codex.exe` 会在重启后消失；要回滚得按 11.2 重新下载旧包）。
+  另有一条**独立**的安装树 `~/.codex/packages/app-server-daemon\releases\<版本>\`（后台 app-server 守护进程自管，
+  与上面这条互不影响；2026-10-09 时它是 `0.161.0`，约 435 MB）。
 - 包内布局（`codex-package.json`，`layoutVersion: 1`）：`bin/codex.exe`、`bin/codex-code-mode-host.exe`、
   `codex-path/rg.exe`、`codex-resources/`（`codex-command-runner.exe`、`codex-windows-sandbox-setup.exe`、`voice/`）。
-  0.161.0 的 Windows 包解压后约 456 MB。
+  0.162.0 的 Windows 包解压后约 437 MB。
 - **桌面应用是另一条线**（MSIX：`C:\Program Files\WindowsApps\OpenAI.Codex_26.930.6422.0_x64__2p2nqsd0c76g0\`）：
   Windows 沙箱服务 `CodexSandboxService.OpenAI.Codex`（Auto / Running）由它提供；它另有自己的一份 CLI 副本
   （`%LOCALAPPDATA%\OpenAI\Codex\bin\<哈希>\codex.exe`，由 `CODEX_CLI_PATH` 指定）。
@@ -2329,34 +2330,6 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   刷新失败也不复用陈旧条目。
 - Personality（`friendly` / `pragmatic`）已退役、Daybreak 改为必须显式 `--enable cli_daybreak`——本机都没用到。
 - **升级要重启 Codex 才生效**：当前会话不会中途换二进制（`codex --version` 重启后才会变）。
-
-### 11.4 升级到 0.162.0 后的已知差异（2026-10-09 实测）
-
-- 升级路径与 11.2 那套**逐字相同**：GitHub API 查最新 tag（`rust-v0.162.0`，发布于 2026-10-08T18:55Z）→
-  `codex-package-x86_64-pc-windows-msvc.tar.gz`（**152.4 MB**）→ `tar.exe -xzf` 解到暂存目录 →
-  核对 `codex-package.json`（仍是 `layoutVersion: 1`）与 `bin\codex.exe --version` →
-  `Move-Item` 进 `releases\` → `[System.IO.Directory]::Delete` + `New-Item -ItemType Junction` 翻 `current`。
-  **下载会断**：`curl.exe` 走代理时 `schannel: server closed abruptly`，加 `-C - --retry 8 --retry-delay 3 --retry-all-errors` 续传即可（本次 27 MB 处断，续传后一次成功）。
-- **配置全兼容**：按 11.2 的取证口径抓了两版 `codex-rs/core/config.schema.json`（jsDelivr 取源码树里的那份；
-  二进制包里**不含** schema）逐键比过 —— **移除 0 个、新增 14 个**：
-  `mouse_scroll_speed` / `transcript_mode` / `toggle_pin` / `agents_overview_grouping` / `capabilities` /
-  `external_web_access` / `remote_compaction` / `incremental_tools` / `code_mode_tool_search` /
-  `code_mode_only_strict_3p_tools` / `guardianv2_decisions_comparison` / `multi_agent_v2_dynamic_tools` /
-  `stable_environment_tools` / `ultrafast_mode`（全是与发行说明对得上的新特性开关，本机没用到）。
-  0.161 键数 757 → 0.162 键数 771。
-- **`codex doctor` 基线不变**：`model deepseek-flash · deepseek`、auth 判"该 provider 不需要 OpenAI 登录"、
-  `sandbox restricted fs + restricted network · approval OnRequest`、install/runtime `standalone` 且版本 0.162.0；
-  **仍然只报那两条 `disable_response_storage` / `preferred_auth_method` 噪声**（见 11.3，别删）。
-  沙箱里那条 `desktop update and runtime CDN is unreachable` 的 ✗ 也是老现象（网络受限）。
-- 新增一行 `configured TUI mode`（本机 = `fullscreen`）；`Updates` 段现在是 `cached latest version 0.162.0`、
-  `dismissed version 0.161.0`，动作仍是 `standalone installer`。
-- 对口本机老毛病的 Windows 修复（**值得记**）：`#51511` 恢复 Windows 10 的普通盘符路径访问、
-  `#51512` 让 Windows 沙箱临时目录权限与子进程环境对齐、`#50802` 在 Windows daemon 联接更新被拒时回退 `mklink`。
-  ⚠ 但**沙箱里的 `~/.codex/tmp/arg0` 拒绝访问噪声没消失**（本次试跑仍在刷）——那是沙箱挡写权限，
-  与上面几条不是同一个洞，继续按第 5 节/11.3 的口径当噪声忽略。
-- 对 4、6 两节的直接利好：`#51203` **`apply_patch` 无条件保留原有行尾（CRLF）**，不再需要 opt-in。
-  本仓库工作区是 CRLF，这条能少踩"写完要整回 CRLF"的坑；但仍建议改完自己确认一次。
-
 - 日常噪声：`~/.codex/tmp/arg0/<名字>` 是**当前会话**的临时目录（创建时间＝codex 进程启动时刻）；
   在沙箱里跑 `codex` 每次都会刷 `failed to clean up stale arg0 temp dirs` /
   `could not create PATH aliases: 拒绝访问`，那是沙箱挡了 `~/.codex/tmp` 的写权限——
