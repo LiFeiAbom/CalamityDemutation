@@ -79,6 +79,11 @@ Buffs: {
 		DisplayName: 沙元素
 	}
 
+	SarosPossessionBuff: {
+		DisplayName: 星律之握览
+		Description: 一道辐光光环保护着你
+	}
+
 	ShellBoost: {
 		DisplayName: 甲壳加速
 		Description: 移动速度提升
@@ -207,6 +212,11 @@ Buffs: {
 	AbyssalWish: {
 		DisplayName: 渊洋之愿
 		Description: 你能在水下呼吸，哪怕身处深渊！
+	}
+
+	MagicHatBuff: {
+		DisplayName: 魔法礼帽
+		Description: 我会一直留着你的灵魂当人质，但你找到的东西都得留下！
 	}
 
 	Mechworm: {
@@ -1976,6 +1986,18 @@ Items: {
 		Tooltip: 召唤一座亵渎能量炮台为你而战
 	}
 
+	SarosPossession: {
+		DisplayName: 星律之握览
+		Tooltip:
+			'''
+			完全掌控光之本源
+			召唤一道辐光光环
+			使用时消耗全部剩余召唤栏位
+			必须手持在快捷栏中使用
+			消耗的召唤栏位越多，威力越强
+			'''
+	}
+
 	SeaShell: {
 		DisplayName: 海螺壳
 		Tooltip:
@@ -2431,6 +2453,18 @@ Items: {
 			'''
 	}
 
+	TemporalUmbrella: {
+		DisplayName: 光阴流时伞
+		Tooltip:
+			'''
+			交涉失败，准备动手！
+			召唤一顶魔法礼帽飘在你的头顶上
+			帽子会释放各种物体来攻击你的敌人
+			消耗 5 点召唤栏位
+			只能存在一顶帽子
+			'''
+	}
+
 	Terratomere: {
 		DisplayName: 泰拉巨刃
 		Tooltip:
@@ -2845,6 +2879,9 @@ Projectiles: {
 	SandMark.DisplayName: 沙之印记
 	SandTornado.DisplayName: 沙尘暴
 	SandyWaifu.DisplayName: 沙元素
+	SarosAura.DisplayName: 星律光环
+	SarosMicrosun.DisplayName: 星律微日
+	SarosSunfire.DisplayName: 星律阳炎
 	SealedSingularityBlackhole.DisplayName: 黑洞
 	SealedSingularityGore.DisplayName: 封存奇点碎片
 	SealedSingularityProj.DisplayName: 封存奇点
@@ -2895,6 +2932,14 @@ Projectiles: {
 	BloodBombExplosion.DisplayName: 血液爆炸
 	GodSlayerShrapnelRound.DisplayName: 弑神者破片弹
 	GodSlayerShrapnel.DisplayName: 弑神者破片
+	MagicAxe.DisplayName: 翡翠斧
+	MagicBat.DisplayName: 魔法蝙蝠
+	MagicBird.DisplayName: 魔法鸟
+	MagicBullet.DisplayName: 魔法子弹
+	MagicHammer.DisplayName: 果酱锤
+	MagicHat.DisplayName: 魔法礼帽
+	MagicRifle.DisplayName: 淡紫色步枪
+	MagicUmbrella.DisplayName: 青色雨伞
 	ManaPolarizerHealOrb.DisplayName: 魔能谐振仪治疗球
 	VoidFieldGenerator.DisplayName: 虚空场发生器
 	SilvaBurst.DisplayName: 始源林海爆裂

@@ -682,6 +682,14 @@ namespace CalamityDemutation.Players
         /// 已装备辐射软泥：夜间发出暖黄光并提供生命回复
         /// </summary>
         public bool radiantOoze = false;
+        /// <summary>
+        /// 光阴流时伞（MagicHat）魔法礼帽在场标记：由同名召唤增益每帧置位，供礼帽弹幕续命（对应 CI 的 MagicHatOld）
+        /// </summary>
+        public bool magicHat = false;
+        /// <summary>
+        /// 星律之握览（SarosAura）光环在场标记：由同名召唤增益每帧置位，供光环弹幕续命（对应源的 radiantResolution）
+        /// </summary>
+        public bool radiantResolution = false;
         public bool rampartofDeities = false;
         public bool redDevil = false;
         public bool redDevil2 = false;
@@ -791,6 +799,12 @@ namespace CalamityDemutation.Players
         /// 故按工程约定（第 5 节）挪到 ModPlayer；只在持握时重算，不随 ResetEffects 复位。
         /// </summary>
         public int siriusSlots = 0;
+        /// <summary>
+        /// 星律之握览本次能吃下的召唤栏数：由该武器的 <c>HoldItem</c> 每帧重算（总栏位 − 自己以外仆从占用的栏位），
+        /// 出手时写进光环弹幕的 <c>ai[0]</c>。**源把这值存在 ModItem 实例字段上，联机会串号**，
+        /// 故按工程约定（第 5 节）挪到 ModPlayer；只在持握时重算，不随 ResetEffects 复位。
+        /// </summary>
+        public int sarosSlots = 0;
         public bool soaring = false;
         /// <summary>
         /// 已装备海绵：大量生存属性、静止回复与溺水免疫，受击时回血并迸发电火花与孢子弹幕
@@ -1055,6 +1069,7 @@ namespace CalamityDemutation.Players
             godSlayerSummon = false;
             godSlayerThrowing = false;
             mWorm = false;
+            magicHat = false;
             grandGelatin = false;
             heartoftheElements = false;
             heartoftheElementshideVisual = false;
@@ -1088,6 +1103,7 @@ namespace CalamityDemutation.Players
             profanedRage = false;
             purity = false;
             radiantOoze = false;
+            radiantResolution = false;
             rampartofDeities = false;
             redDevil = false;
             redDevil2 = false;
@@ -1252,6 +1268,7 @@ namespace CalamityDemutation.Players
             godSlayerThrowing = false;
             mWorm = false;
             terratomerePvpBoltHits = 0;
+            magicHat = false;
             grandGelatin = false;
             hasSilvaEffect = false;
             heartoftheElements = false;
@@ -1288,6 +1305,7 @@ namespace CalamityDemutation.Players
             purity = false;
             purityHealSlowdownFrames = 0;   // 跨帧计时器：源只在死亡时清零（见字段注释，不能进 ResetEffects）
             radiantOoze = false;
+            radiantResolution = false;
             rampartofDeities = false;
             redDevil = false;
             redDevil2 = false;

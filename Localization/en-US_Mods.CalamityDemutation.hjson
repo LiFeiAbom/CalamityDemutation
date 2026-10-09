@@ -79,6 +79,11 @@ Buffs: {
 		DisplayName: Sand Elemental
 	}
 
+	SarosPossessionBuff: {
+		DisplayName: Saros Possession
+		Description: A radiant aura protects you
+	}
+
 	ShellBoost: {
 		DisplayName: Shell Speed Boost
 		Description: Speed is boosted
@@ -207,6 +212,11 @@ Buffs: {
 	AbyssalWish: {
 		DisplayName: Abyssal Wish
 		Description: You can breathe underwater, even in the Abyss!
+	}
+
+	MagicHatBuff: {
+		DisplayName: Magic Hat
+		Description: The hat carries your soul, bound by a contract
 	}
 
 	Mechworm: {
@@ -1975,6 +1985,18 @@ Items: {
 		Tooltip: Summons a profaned energy turret to fight for you
 	}
 
+	SarosPossession: {
+		DisplayName: Saros Possession
+		Tooltip:
+			'''
+			Gain absolute control over light itself
+			Summons a radiant aura
+			Consumes all of the remaining minion slots on use
+			Must be used from the hotbar
+			Increased power based on the number of minion slots used
+			'''
+	}
+
 	SeaShell: {
 		DisplayName: Sea Shell
 		Tooltip:
@@ -2430,6 +2452,18 @@ Items: {
 			'''
 	}
 
+	TemporalUmbrella: {
+		DisplayName: Temporal Umbrella
+		Tooltip:
+			'''
+			[c/00BFFF:Surprisingly sturdy, I reckon this could defeat the Mafia in a single blow]
+			Summons a magic hat to hover above your head
+			The hat will release a variety of objects to assault your foes
+			Requires 5 minion slots to use
+			There can only be one
+			'''
+	}
+
 	Terratomere: {
 		DisplayName: Terratomere
 		Tooltip:
@@ -2846,6 +2880,9 @@ Projectiles: {
 	SandMark.DisplayName: Mark
 	SandTornado.DisplayName: Tornado
 	SandyWaifu.DisplayName: Waifu
+	SarosAura.DisplayName: Saros Aura
+	SarosMicrosun.DisplayName: Saros Microsun
+	SarosSunfire.DisplayName: Saros Sunfire
 	SealedSingularityBlackhole.DisplayName: Blackhole
 	SealedSingularityGore.DisplayName: Sealed Singularity Fragment
 	SealedSingularityProj.DisplayName: Sealed Singularity
@@ -2896,6 +2933,14 @@ Projectiles: {
 	BloodBombExplosion.DisplayName: Blood Bomb Explosion
 	GodSlayerShrapnelRound.DisplayName: God Slayer Shrapnel Round
 	GodSlayerShrapnel.DisplayName: God Slayer Shrapnel
+	MagicAxe.DisplayName: Magic Axe
+	MagicBat.DisplayName: Magic Bat
+	MagicBird.DisplayName: Magic Bird
+	MagicBullet.DisplayName: Magic Bullet
+	MagicHammer.DisplayName: Magic Hammer
+	MagicHat.DisplayName: Magic Hat
+	MagicRifle.DisplayName: Magic Rifle
+	MagicUmbrella.DisplayName: Magic Umbrella
 	ManaPolarizerHealOrb.DisplayName: Mana Polarizer Heal Orb
 	VoidFieldGenerator.DisplayName: Void Field Generator
 	SilvaBurst.DisplayName: Silva Burst

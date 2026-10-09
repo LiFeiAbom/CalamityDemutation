@@ -413,7 +413,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 8. 当前状态（截至最后一次会话）
 
-- **【新会话第一屏 · 2026-10-09 收工快照】四条线的状态（新会话从这里接着干）——**
+- **【新会话第一屏 · 2026-10-09 收工快照】六条线 + 明天的优先级（新会话从这里接着干）——**
   ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：沙漠羽毛 → 太阳之灵法杖 → 太阳神杖 → **链尾 天狼星 `Sirius`**，
      四件都含配方（逐版侦察、软依赖改写与配方结论见「批次 B」）。
      **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
@@ -460,6 +460,57 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
         （旧记录那句"任何源里都没有对应物"是**错的**，无需改动）；现代金源胸甲漏的霜冻屏障**已照 CI 补上**。
      另两条尾巴也结案：`Devastation` 显示名 → 用户定"**名字不变**"（8 节悬案 3 结案）；
      欧米茄蓝职业头（三源皆无职业变体）→ **不动**。⇒ **本工程当前没有挂着的口径题。**
+  ⑤ **【新批次 · 进行中】自持件 `SarosPossession`（中文名「星律之握览」）✅ 2026-10-09**——
+     用户点名移植 CI 的召唤武器「光阴流时伞」，照老规矩**从链条下位往上做**。
+     **CI 没有自己的 `SarosPossession`**（CI 只在 `TemporalUmbrellaOld:64` 与 `MountedScannerLegacy:114`
+     两处引用灾厄本体那件），故本工程把它**自持**；**口径取 2.0**（用户 2026-10-09 拍板）：
+     56×56 / 伤害 **171** / 击退 4 / 魔力 10 / 使用·动画 10 帧 / 弹速 10 / 月后 **14 档（蓝）** /
+     **1 铂金 40 金** / 音 `SoundID.DD2_BetsyFlameBreath`。
+     **效果＝与天狼星同一套"吃满栏位"**：`HoldItem` 每帧算"总栏位 − 自己以外仆从占用"→ 写进光环 `ai[0]`，
+     光环每帧把 `minionSlots` 刷成它，并按栏位变强（伤害 ×`log₃(n)+1`、>3 倍走软上限 `(x−3)×0.1+3`；
+     生成率 `130×0.9^n` 帧、下限 7；转速 `n×0.85+3`°/帧）。
+     落点：`Content/Items/Weapons/Summon/SarosPossession.cs`、`Content/Projectiles/Summon/SarosAura.cs`、
+     `SarosSunfire.cs`、`SarosMicrosun.cs`、`Content/Buffs/SummonBuffs/SarosPossessionBuff.cs`
+     （另拷入 4 张贴图；`SarosSunfire` 沿用共用隐形图）；玩家侧新增 `sarosSlots` 与 `radiantResolution`。
+     **配方**：天狼星（本工程自持件）+ 夜魇锭 `CosmiliteBar`×8 + 暗阳碎片 `DarksunFragment`×8 @ 宇宙砧
+     —— 只注册现代分支（本件无经典版）；链条就此闭合：我们的天狼星 → 本件 → 光阴流时伞。
+     **三处与源的有意差异**：① 源把栏位数存在 ModItem 实例字段（联机串号）→ 挪进 ModPlayer；
+     ② 源 2.0 的 `PostDraw` 会把光环贴图叠画一遍（2.0.3.9 起已删）→ 只保留默认绘制；
+     ③ 源用灾厄的 `ProfanedFire` 尘 → 改用原版 `DustID.Torch`。
+     **数值膨胀**：用户 2026-10-09 明确"后续一并处理"，本件与顶层「光阴流时伞」**都暂不挂**。
+     ⇒ 顶层「光阴流时伞」见下一条 ⑥（同日收官）。
+  ⑥ **【同批次 · 收官】顶层「光阴流时伞」`TemporalUmbrella` ✅ 2026-10-09** —— CI 口径自持件。
+     用户拍板：**配方取 CI 的第①条**、**天顶世界的全部内容一律不做**。
+     CI 对应件 `TemporalUmbrellaOld`（CI 官方中文「光阴时流伞[Legacy]」；本工程中文名用**用户点名的「光阴流时伞」**，
+     类名按第 4 节的命名口径去掉 `Old`）。属性：判定 74×72 / **伤害 1000** / 魔力 **99** / 使用·动画 10 帧 /
+     击退 1 / **月后 16 档（品红＝灾厄 HotPink，即"魔影档"）** / **2 铂金 80 金** / 音 `SoundID.Item68` / 弹速 10；
+     在鼠标处召唤一顶**魔法礼帽** `MagicHat`（占 5 栏、1500 像素内索敌、**每 5 帧随机抛出 1 件工具**）。
+     连带落地礼帽的 **7 件工具**（`Content/Projectiles/Summon/Umbrella/`：MagicAxe / MagicBat / MagicBird /
+     MagicBullet / MagicHammer / MagicRifle / MagicUmbrella）、召唤增益 `MagicHatBuff` 与玩家标志 `magicHat`
+     —— 共 **10 个类 + 10 张贴图**，全部按命名口径去掉 CI 的 `Old` 后缀。
+     **配方**：尖刺岩杖 `SpikecragStaff` + **本工程自持的 `SarosPossession`** + 原版雨伞 `ItemID.Umbrella` +
+     原版高顶礼帽 `ItemID.TopHat` + 魔影锭 `ShadowspecBar`×4 @ 嘉登熔炉 `DraedonsForge`；只注册现代分支（无经典版）。
+     CI 的另两条配方（**灾厄精华换购**、**天顶世界专用**）按用户口径**都不做**。
+     **四处与源的有意差异**：① 源里 `Main.zenithWorld ? 150 : …` 的天顶世界分支**整条删除**（用户点名要删）；
+     ② 源里 `CIServerConfig.ShadowspecBuff ? 4000 : 1000` 在本工程没有对应开关，取基础值 **1000**
+     （将来若要挂膨胀，**4000 就是现成的"开态"**）；③ `GlacialState` 已被实装灾厄删除 → 走
+     `ApplyCalamityBuffWithFallback` 退回 `BuffID.Frozen`；④ 源的 `MagicBat` 把伤害类型写成盗贼、
+     `MagicBullet` 的护甲碎裂写了两遍，分别照抄为 `CDUtil.GetRogueDamageClass()` 与只写一遍（类注释有记）。
+     ⇒ **第二条自持链到此闭合**：我们的天狼星 `Sirius` → 星律之握览 `SarosPossession` → 光阴流时伞 `TemporalUmbrella`。
+  - **【明天从这里接着干 · 按优先级】**：
+    ① **进游戏实测（最高优先）**：今天新落的整条链**一次都没进过游戏** —— 星律之握览的辐光光环
+       （吃满栏位、`log₃` 缩放、微缩太阳与日耀圣火的节拍）、光阴流时伞的魔法礼帽（悬顶高度、
+       每 5 帧随机投掷）、7 件工具（追踪/冲刺/残影/命中减益）、`GlacialState→Frozen` 兜底、
+       以及改动过的法师套装效果（法弹巨型爆炸改生成 `SilvaBurst`、无敌期法伤 +60%、弑神火新公式）
+       都要实测；此前的召唤系那 10 件与 `StatInflation` 开关同样还没实测（见下面"进游戏待验证"那条）。
+    ② **数值膨胀**：用户 2026-10-09 明确"后续一并处理"—— 新链两件
+       （`SarosPossession` 关态 **171**、`TemporalUmbrella` 关态 **1000**）**都还没挂 `StatInflation`**；
+       `TemporalUmbrella` 的 **4000**（CI 的 `ShadowspecBuff` 档）是现成的"开态"候选，等用户点名。
+    ③ **不要再问/不要再动**：CI 的另两条配方（灾厄精华换购、天顶世界专用）用户已定**不做**；
+       命名口径里"已知但本轮未动"的四类（第 4 节）也别自作主张改；
+       `Devastation` 显示名、欧米茄蓝职业头、金源盗贼头三处差异都已结案。
+    ④ 仅剩两个**待用户确认的小事**：中文名 `光阴流时伞`（CI 官方是「光阴时流伞」）与
+       `星律之握览`（用户原话，疑似少一个字）——问一句即可，别自行改名。
   - **进游戏待验证（新会话可以先问用户这一句）**：2026-10-09 曾因漏一张增益图标（`CosmicEnergyBuff`）
     被 tML 在加载期禁用过一次（已修，并新增 `Tools/CheckImplicitTextures.ps1` 兜底）；**用户尚未回报
     "重新启用后能干净进游戏"**，而且当天新落地的召唤系（归墟之灵 3000 档、宇宙灯笼、幽焰、哨兵炮台等）
