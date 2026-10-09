@@ -2272,6 +2272,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 > 2026-10-08 把 `codex` 从 **0.154.0 手工升到 0.161.0**，2026-10-09 又升到 **0.162.0**（官方 `codex update` 在本机走不通）。
 > 这一节记安装形态、升级/回滚流程、以及升级后的已知差异；下次维护照做即可。
+> **2026-10-09 收工状态：CLI 与后台 app-server 守护进程都已手工升到 `0.162.0`，`0.161.0` 残留（约 752 MB）
+> 全部清空 —— 见 11.4，**已结**，无需再做。**
 
 ### 11.1 安装形态（先搞清"谁在管版本"）
 
@@ -2282,7 +2284,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **本机不留旧版本目录**（2026-10-09 升到 `0.162.0` 后只剩它这一份；旧版目录已清，其中被运行中会话占用的
   `codex.exe` 会在重启后消失；要回滚得按 11.2 重新下载旧包）。
   另有一条**独立**的安装树 `~/.codex/packages/app-server-daemon\releases\<版本>\`（后台 app-server 守护进程自管，
-  与上面这条互不影响；2026-10-09 时它是 `0.161.0`，约 435 MB）。
+与上面这条互不影响；2026-10-09 已随 11.4 手工切到 `0.162.0`，旧的 `0.161.0` 已删）。
 - 包内布局（`codex-package.json`，`layoutVersion: 1`）：`bin/codex.exe`、`bin/codex-code-mode-host.exe`、
   `codex-path/rg.exe`、`codex-resources/`（`codex-command-runner.exe`、`codex-windows-sandbox-setup.exe`、`voice/`）。
   0.162.0 的 Windows 包解压后约 437 MB。
@@ -2353,22 +2355,27 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **守护进程就是当前会话的后端**（2026-10-09 用 `Get-WmiObject … Win32_Process` 排父子关系坐实：
   会话的 `powershell.exe` / `node_repl.exe` 全挂在守护进程 PID 下）⇒ **停它 = 中断当前会话**。
 
-**状态**：
+**结果：2026-10-09 09:28:48 已全部收掉**（两处 0.161.0 都清了、守护进程已是 0.162.0）：
 
-- ✅ `standalone/releases/0.161.0-x86_64-pc-windows-msvc/`（当时只剩 `bin/codex.exe`，316.8 MB）——**已删除**
+- ✅ `standalone/releases/0.161.0-x86_64-pc-windows-msvc/`（当时只剩 `bin/codex.exe`，316.8 MB）——先删掉
   （已无进程占用；释放约 317 MB）。
-- ✅ 已把 standalone 的 0.162.0 包**原样复制**到
+- ✅ 把 standalone 的 0.162.0 包**原样复制**到
   `app-server-daemon/releases/0.162.0-x86_64-pc-windows-msvc/`：45 个文件、458,507,843 字节，与源逐一相符；
   两棵树结构一致（都是 `variant:"codex"`），`codex-package.json` 版本 0.162.0，
   `bin/codex.exe --version` 报 `codex-cli 0.162.0`。
-- ⏳ `app-server-daemon/releases/0.161.0-x86_64-pc-windows-msvc/`（434.9 MB）——**还活着**：守护进程正跑着它，
-  文件被锁删不掉；`current` 联接仍指 0.161.0，**只有守护进程停止时**才翻得动。
+- ✅ 09:28:48 用下面的脚本完成切换，`…\app-server-daemon\finalize-update.log` 里关键三行：
+  `current -> …\releases\0.162.0-x86_64-pc-windows-msvc` /
+  `"status":"started" … "appServerVersion":"0.162.0"` / `已删除 0.161.0 残留：…` → `DONE.`。
+- **最终态**：`releases\` 下只剩 `0.162.0` 一份，`current` 指向它，守护进程换了新 PID（0.162.0）；
+  两处残留合计释放约 **752 MB**。
+- **副作用实测**：切割那一下**并没有真把会话踢掉**——客户端自己重连上新守护进程（旧 PID 20708 退出、
+  新 PID 20184 接上），会话里的命令照常跑。所以下次做同样的事，不必假设一定会断。
 
-**一锤定音的收尾脚本**：`Tools/FinalizeCodexDaemonUpdate.ps1`
+**收尾脚本（已跑过一次，留着复用 / 回滚参考）**：`Tools/FinalizeCodexDaemonUpdate.ps1`
 （停守护进程 → 把 `current` 翻到 0.162.0 → 重启 → 校验 `appServerVersion`；成功后再删 0.161.0；
 失败自动翻回 0.161.0 重启。全过程写 `~/.codex/packages/app-server-daemon/finalize-update.log`）。
 
-- 在 Codex 会话里跑要用**分离进程**（会话会被中断一次，脚本得能独立跑完）：
+- 在 Codex 会话里跑要用**分离进程**（脚本得能独立跑完；实测会话多半会自己重连）：
   `Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','.\Tools\FinalizeCodexDaemonUpdate.ps1','-DelaySeconds','20'`
 - 或者**先完全退出 Codex**（或重启电脑），再前台跑
   `powershell -ExecutionPolicy Bypass -File .\Tools\FinalizeCodexDaemonUpdate.ps1` —— 此时不会打断任何会话。
@@ -2380,4 +2387,4 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 **为什么"等重启自动就好"不成立**：守护进程是脱离启动器的常驻进程（`ParentProcessId` 早已退出，它照旧活着），
 开机/启动 Codex 时它按 `current` 起；`current` 还指 0.161.0 就永远是 0.161.0，而它自更新又走 403 的联网通道。
-所以**必须**手工翻一次 `current`，之后每次开机才会是 0.162.0。
+所以**必须**手工翻一次 `current`，之后每次开机才会是 0.162.0。（2026-10-09 已照此办完，开机就是 0.162.0 了。）
