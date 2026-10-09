@@ -923,7 +923,7 @@ Items: {
 		Tooltip: 7% increased damage reduction and +3 defense while in the corruption
 	}
 
-	CosmicImmaterializerOld: {
+	CosmicImmaterializer: {
 		DisplayName: Cosmic Immaterializer
 		Tooltip:
 			'''
@@ -2764,7 +2764,7 @@ Projectiles: {
 	CosmicBlast.DisplayName: Cosmic Blast
 	CosmicBlastBig.DisplayName: Cosmic Blast Big
 	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion
-	CosmicEnergySpiralOld.DisplayName: Cosmic Energy Spiral
+	CosmicEnergySpiral.DisplayName: Cosmic Energy Spiral
 	CosmilampBeam.DisplayName: Cosmic Beam
 	CosmilampMinion.DisplayName: Cosmilamp
 	DeathLaser.DisplayName: Death Laser
@@ -2898,4 +2898,5 @@ Projectiles: {
 	GodSlayerShrapnel.DisplayName: God Slayer Shrapnel
 	ManaPolarizerHealOrb.DisplayName: Mana Polarizer Heal Orb
 	VoidFieldGenerator.DisplayName: Void Field Generator
+	SilvaBurst.DisplayName: Silva Burst
 }

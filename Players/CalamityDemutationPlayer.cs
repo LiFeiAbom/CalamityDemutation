@@ -340,7 +340,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool corruptFlask = false;
         /// <summary>
-        /// 归虚之灵（CosmicEnergySpiralOld）宇宙之灵在场标记：由同名召唤增益每帧置位，
+        /// 归虚之灵（CosmicEnergySpiral）宇宙之灵在场标记：由同名召唤增益每帧置位，
         /// 供宇宙之灵续命（对应 CI 源的 cosmicEnergy）
         /// </summary>
         public bool cosmicEnergy = false;

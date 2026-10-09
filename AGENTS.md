@@ -99,6 +99,26 @@
   **整个模组会被 tModLoader 禁用**（不是"贴图不显示"）。同理，删 `.fx` 时记得连 `.fxc` 一起删。
 - **单文件装多类**：CE/CWR 来源的武器常把 物品 + 手持弹幕 + 标记弹幕 写在同一个文件里（CI/本体来源的多为分文件），
   移植时随源风格走。
+- **命名口径（用户 2026-10-09 定，新件/改名一律照此）**：**类名/文件名不许带 CI 式的来源或版本后缀**——
+  已点名禁止的是 `Old`（大小写皆算）这一族；移植时若源里叫 `XxxOld` / `XxxLegacy`，**本工程一律去掉后缀**，
+  源名只写进类注释留档。
+  **已改（2026-10-09）**：`CosmicImmaterializerOld` → **`CosmicImmaterializer`**（归墟之灵，物品）、
+  `CosmicEnergySpiralOld` → **`CosmicEnergySpiral`**（宇宙之灵仆从弹幕）；两件都挂了
+  `[LegacyName("旧名")]` 保存档/旧引用可解析（tML 官方改名兼容属性，CalamityMod 与 CI 自己也在用）。
+  改名时"配套修正"清单（照这次走）：① 类名与文件名一致（含**隐式同名贴图** `类名.png` 与 `类名Glow.png`）；
+  ② 所有 `ModContent.*Type<T>` 与 `Item.shoot` 引用点；③ 本地化键（`Items.X` / `Projectiles.X.DisplayName`，
+  在各自段的字母序位置**原地改键**，不要挪位）；④ 显式贴图字符串（如发光层的 `".../XxxGlow"`）；
+  ⑤ `AGENTS.md`/注释里的旧名（历史段落按惯例可留旧名，但**当前状态**段落要改成新名）；
+  ⑥ 跑 `dotnet build` + 两个自检脚本 —— 改名后 **`CheckImplicitTextures.ps1` 是必跑项**（隐式贴图只会在加载期炸）。
+  **已知但本轮未动（用户点名"只改那几个真 CI 后缀"）**：`HoneyDew2` / `LivingDew2` / `RadiantOoze2` /
+  `AmbrosialAmpoule2` 这四个数字后缀、`Base*CO`（CO = CalamityOverhaul 来源标记）四个基类、
+  `Sounds/Custom/SilvaActivationModern.ogg`（因同名不同扩展名会硬错而被迫区分）、
+  以及源本来就带数字的 `DefenseBlast2` / `BrimstoneHellfireballFriendly2` / `HellfireExplosionFriendly2` /
+  `MechwormBody2` / `EssenceFlame2`。
+  **误报（别再扫出来当问题）**：`OldLordOathsword`（旧日领主誓约剑，名字本身含 Old Lord）、
+  `AncientFossil` / `AncientIceChunk` / `ArkoftheAncients` / `TrueArkoftheAncients`（灾厄正式物品名）、
+  含 "old" 的 `*Cooldown*` 与 `*Holdout*`、以及多片素材的分片序号（`OmegaBlueTentacleSegment1..5`、
+  `SealedSingularityGore2/3`、`PlantationStaffSporeCloud2/3` 等）。
 - **掷出（盗贼）武器必须自己开前缀池，否则没法附魔（2026-10-08 用户点名"盗贼武器没法进行附魔"后查清）**：
   tML 决定物品能否进「任意武器」前缀池（`PrefixCategory.AnyWeapon`）的入口是
   `ItemLoader.WeaponPrefix(item)` → `ModItem.WeaponPrefix()`，而它默认是
@@ -329,7 +349,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 圣化火花 `SanctifiedSpark` | 128 | 231 | 哨兵武器，同样走 originalDamage |
 | 天狼星 `Sirius` | **275**（源 160 → 上调） | 600 | 光束按 ×(ln 栏位+1) 派生，自动跟随 |
 | 幽花之主 `EtherealSubjugator`（原名 空灵征服者） | 200 | 300 | 同上补了显式 originalDamage；中文名按用户点名改 |
-| 归墟之灵 `CosmicImmaterializerOld`（原名 归虚之灵） | **560**（CI 源 360 → 上调） | 3000 | 中文名按用户点名改 |
+| 归墟之灵 `CosmicImmaterializer`（原名 归虚之灵；类名 2026-10-09 由 `...Old` 去掉后缀） | **560**（CI 源 360 → 上调） | 3000 | 中文名按用户点名改 |
 | 太阳神杖 `SunGodStaff` | 60 | **不接入** | 用户 2026-10-09 明确「故意不动」，**不是遗漏，别再问** |
 
 **这批判的两条落地要点（下次加召唤武器的膨胀照办）**：
@@ -410,7 +430,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
        **宇宙灯笼 `Cosmilamp` ✅（2026-10-09，含灯笼仆从 + 宇宙光束）**、
         **灾厄挽歌 `CalamarisLament` ✅（2026-10-09，含小鱿鱼仆从 + 墨汁弹）**、
       天狼星 ✅（批次 B 链尾，2026-10-08）；
-        **链顶 归虚之灵 `CosmicImmaterializerOld` ✅（2026-10-09，含宇宙之灵仆从 + 大小爆裂）**——
+        **链顶 归墟之灵 `CosmicImmaterializer` ✅（2026-10-09，含宇宙之灵仆从 + 大小爆裂；
+        类名同日由 CI 式的 `CosmicImmaterializerOld` 去掉 `Old` 后缀）**——
         用户 2026-10-09 拍板：**走 CI 那条线、直接移植含 ExoLore（传颂之物）的那条分支**，
         即数值取 CI 版（伤害 **360**、`CatalystViolet`＝月后 15 档、带发光层），
         配方取 **CI 八重 @ 嘉登熔炉**，并照工程既有口径**恒处 Lore 模式**。

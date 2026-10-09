@@ -923,7 +923,7 @@ Items: {
 		Tooltip: 身处腐化之地时伤害减免提高 7%，防御 +3
 	}
 
-	CosmicImmaterializerOld: {
+	CosmicImmaterializer: {
 		DisplayName: 归墟之灵
 		Tooltip:
 			'''
@@ -2763,7 +2763,7 @@ Projectiles: {
 	CosmicBlast.DisplayName: 宇宙爆裂
 	CosmicBlastBig.DisplayName: 大型宇宙爆裂
 	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
-	CosmicEnergySpiralOld.DisplayName: 宇宙之灵
+	CosmicEnergySpiral.DisplayName: 宇宙之灵
 	CosmilampBeam.DisplayName: 宇宙光束
 	CosmilampMinion.DisplayName: 宇宙灯笼
 	DeathLaser.DisplayName: 死亡激光
@@ -2897,4 +2897,5 @@ Projectiles: {
 	GodSlayerShrapnel.DisplayName: 弑神者破片
 	ManaPolarizerHealOrb.DisplayName: 魔能谐振仪治疗球
 	VoidFieldGenerator.DisplayName: 虚空场发生器
+	SilvaBurst.DisplayName: 始源林海爆裂
 }

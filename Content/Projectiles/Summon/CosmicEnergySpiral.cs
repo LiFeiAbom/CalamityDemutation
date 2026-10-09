@@ -11,7 +11,9 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 归虚之灵召唤的**宇宙之灵**（照 CI 的 <c>Projectiles/Summon/CosmicEnergySpiralOld.cs</c> 移植）：
+    /// 归虚之灵召唤的**宇宙之灵**（照 CI 的 <c>Projectiles/Summon/CosmicEnergySpiralOld.cs</c> 移植；
+    /// **命名口径（用户 2026-10-09）**：类名去掉 CI 式的 <c>Old</c> 后缀，旧名以
+    /// <see cref="LegacyNameAttribute"/> 保留）：
     /// 78×78 判定、**占 10 格召唤栏**、`extraUpdates = 1`、**自身不造成接触伤害**；
     /// 平时悬在主人身边（跟随距离 1400 / 有目标 1600 / 回程 2400，照源那套翻倍的值），
     /// 登场先冷却 100 帧，之后每 60 帧朝 2400 像素内最近的敌人喷一轮爆裂。
@@ -25,7 +27,8 @@ namespace CalamityDemutation.Content.Projectiles.Summon
     /// 而本机 tML 对带 minion 标记的弹幕每帧都会用 originalDamage×玩家伤害加成 重算伤害，
     /// 会让小爆裂打满额——本工程按意图补回折半 originalDamage / 2。
     /// </remarks>
-    internal class CosmicEnergySpiralOld:ModProjectile
+    [LegacyName("CosmicEnergySpiralOld")]
+    internal class CosmicEnergySpiral:ModProjectile
     {
         /// <summary>登场冷却只设一次的开关（照源的实例字段）</summary>
         private bool justSpawned = true;

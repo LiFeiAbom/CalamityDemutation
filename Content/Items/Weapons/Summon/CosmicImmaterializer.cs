@@ -10,12 +10,14 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 归虚之灵（CI 的 <c>CosmicImmaterializerOld</c>，即「归虚之灵[Legacy]」）——
+    /// 归虚之灵（对应 CI 的 <c>CosmicImmaterializerOld</c>，CI 官方中文写作「归虚之灵[Legacy]」）——
     /// 「归虚之灵」链（CI 口径）的**链顶**，也是这个批次最后一件。
+    /// **命名口径（用户 2026-10-09）**：类名去掉了 CI 式的 <c>Old</c> 后缀（原 `CosmicImmaterializerOld`）；
+    /// 旧名以 <see cref="LegacyNameAttribute"/> 保留，供既有存档与该物品的旧引用继续解析。
     /// 口径照 CI：74×72、伤害 **560**（CI 源值 360，按用户 2026-10-09 点名上调）、魔力 10、
     /// 使用/动画 **10 帧**、击退 0、挥动姿态、
     /// **月后 15 档（紫，＝CI 的 `CatalystViolet`）**、价值 **1 铂金 50 金**、音 `SoundID.Item60`、弹速 10，
-    /// 在鼠标处召唤一团**宇宙之灵**（<see cref="CosmicEnergySpiralOld"/>）。
+    /// 在鼠标处召唤一团**宇宙之灵**（<see cref="CosmicEnergySpiral"/>）。
     /// </summary>
     /// <remarks>
     /// **ExoLore（传颂之物）分支：本工程恒处 Lore 模式**——照第 9 节 ExoBlade / ExoBeam 的既有口径，
@@ -38,7 +40,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 因此不注册经典分支。
     /// </para>
     /// </remarks>
-    internal class CosmicImmaterializerOld:ModItem
+    [LegacyName("CosmicImmaterializerOld")]
+    internal class CosmicImmaterializer:ModItem
     {
         /// <summary>研究解锁一份（照 CI）</summary>
         public override void SetStaticDefaults()
@@ -60,7 +63,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;   // 月后 15：紫（＝CI 的 CatalystViolet）
             Item.UseSound = SoundID.Item60;
-            Item.shoot = ModContent.ProjectileType<CosmicEnergySpiralOld>();
+            Item.shoot = ModContent.ProjectileType<CosmicEnergySpiral>();
             Item.shootSpeed = 10f;
             Item.DamageType = DamageClass.Summon;
         }
@@ -84,7 +87,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         }
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0 && player.maxMinions >= 10;
         /// <summary>掉落在地上的发光层（照源：单帧 glowmask）</summary>
-        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI) => Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Summon/CosmicImmaterializerOldGlow").Value);
+        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI) => Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Summon/CosmicImmaterializerGlow").Value);
         /// <summary>
         /// 出手：先清掉自己在场的同类召唤物（源调灾厄的 CalamityUtils.KillShootProjectiles，本工程写等价循环），
         /// 再在鼠标处生成；伤害与 `originalDamage` **都按全额**（不照抄源里"没穿月后召唤套就 ×0.66"那条，见类注释）。

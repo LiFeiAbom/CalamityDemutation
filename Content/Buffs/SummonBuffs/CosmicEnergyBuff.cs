@@ -20,7 +20,7 @@ namespace CalamityDemutation.Content.Buffs.SummonBuffs
         public override void Update(Player player, ref int buffIndex)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Summon.CosmicEnergySpiralOld>()] > 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Summon.CosmicEnergySpiral>()] > 0)
             {
                 modPlayer.cosmicEnergy = true;
             }
