@@ -353,18 +353,21 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：沙漠羽毛 → 太阳之灵法杖 → 太阳神杖 → **链尾 天狼星 `Sirius`**，
      四件都含配方（逐版侦察、软依赖改写与配方结论见「批次 B」）。
      **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
-  ② **「归虚之灵」召唤链（进行中，明天的主线）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
+  ② **「归虚之灵」召唤链（进行中，下次的主线）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
      （＝CI 的 `CosmicImmaterializerOld`，CI 官方中文写作「归虚之灵[Legacy]」）。
      链（往回推）：**归虚之灵 ← 元素之斧（2.0.3.9）← 苍华之庭 `PlantationStaff`（2.0.3.9，最低下位）**。
      **链底 苍华之庭 ✅ 已落地**（含**现代 + 经典两条**配方；经典分支按用户拍板丢掉夜眼那一味）；
-     **下一件＝元素之斧 `ElementalAxe`（2.0.3.9）**，落地口径与"要先补哪两个共享 AI"见「批次 C」末尾。
-     最后一件才是**归虚之灵**（数据已逐版侦察完，等元素之斧好了就落地）。
+     **中间件 元素之斧 `ElementalAxe` ✅ 已落地（2026-10-09）**——照「批次 C」末尾那六条口径办完，
+     明细见本节「批次 C」的**落地记录**；
+     **下一件＝链顶 归虚之灵**（数据已逐版侦察完，直接落地即可）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 这四件召唤武器尚未点名开态值，等用户一并处理**。
-  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **166 条全命中**；
-    工作区干净、与 `origin/master` 同步（最近提交 **`5702344`**）。
+     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57
+     这五件召唤武器尚未点名开态值，等用户一并处理**。
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **166 条全命中**
+    （元素之斧那三张贴图是"类同名隐式"引用，脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过）；
+    工作区干净、与 `origin/master` 同步（元素之斧落地提交 **`562998d`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -519,6 +522,32 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⑥ 本地化：`Items.ElementalAxe`（zh **元素之斧**）、`Buffs.ElementalAxeBuff`（zh 元素之斧）、
      `Projectiles.ElementalAxeMinion.DisplayName`。
 
+  **落地记录：元素之斧（2026-10-09，落地提交 `562998d`）**
+  - 共享 AI 按口径①搬进 `Utilities/CDUtil_Summon.cs`：`ChargingMinionAI`（参数与源逐字一致，删掉蝴蝶法杖的
+    `isButterfly`/`fishronCheck` 特判，并去掉源里取出来却没被用到的 `CalamityPlayer`）与 `MinionAntiClump`
+    （逐行照搬）。**以后再有冲锋型仆从直接复用这两个，别再搬第二份**（灾厄里一大票召唤物走这套）。
+  - 物品 `Content/Items/Weapons/Summon/ElementalAxe.cs`：36×36 / 伤害 57 / 魔力 10 / 使用·动画 15 帧 /
+    击退 5 / 紫档 / `Item.buyPrice(1,10,0,0)`（＝源 `Rarity11BuyPrice`）/ 音 `SoundID.Item44` / `autoReuse` /
+    弹速 10；`Shoot` 照源在鼠标处生成、并把 `originalDamage` 写回 `Item.damage`。
+  - 仆从 `Content/Projectiles/Summon/ElementalAxeMinion.cs`：52×52 / 占 1 栏 / `localNPCHitCooldown = 30` /
+    不撞地形 / 无限穿透；AI 就是"`rotation += 0.075f`"加
+    "`ChargingMinionAI(1600f, 1800f, 2500f, 400f, 1, 30f, 24f, 12f, new Vector2(0f, -60f), 30f, 16f, true, true)`"；
+    彩虹染色走 `GetAlpha`（`Main.DiscoRGB`）+ 自绘 `PreDraw`。
+  - 命中挂 `ElementalMix` 60 帧，走 `ApplyCalamityBuffWithFallback`；**经典版确实没有该减益**
+    （2026-10-09 复扫经典 1.4.2.101 全树 0 命中，现代 2.0.3.9 有 34 个文件命中）⇒ 退回原版燃烧 `BuffID.OnFire`。
+    参考：经典世系自己那份元素之斧挂的是 BrimstoneFlames + GlacialState + Plague + HolyLight 四件套，
+    本工程按"从简单件兜底"的既有做法只留燃烧。
+  - 增益 `Content/Buffs/SummonBuffs/ElementalAxeBuff.cs` + 玩家标志 `eAxe`
+    （`Players/CalamityDemutationPlayer.cs` 三处：字段 + `ResetEffects` + `UpdateDead`）。
+  - 配方两条：**现代**＝泰拉棱镜 `ItemID.EmpressBlade` + 本模组苍华之庭 + 夜明锭 `ItemID.LunarBar`×5
+    + 生命合金 `LifeAlloy`×5 + 银河奇点 `GalacticaSingularity`×5 @ 远古操纵机 `TileID.LunarCraftingStation`；
+    **经典**＝同上去掉生命合金那一味（用户 2026-10-08 口径）。两分支都软依赖、缺件时打警告并退化成单分支。
+  - 贴图三张取自 2.0.3.9：`ElementalAxe.png` 58×52、`ElementalAxeMinion.png` 58×52、`ElementalAxeBuff.png` 32×32。
+  - 本地化文本照源 2.0.3.9 的英文原文：`Items.ElementalAxe`（Elemental Axe / Summons an elemental axe
+    to fight for you）、`Buffs.ElementalAxeBuff`（Elemental Axe / The elemental axe will protect you）、
+    `Projectiles.ElementalAxeMinion.DisplayName`（Elemental Axe）。
+
+- 最近一批工作（2026-10-09）：**移植元素之斧（ElementalAxe）—— 「归虚之灵」链的中间件（批次 C 第二件）。**
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
 - 最近一批工作（2026-10-08 更晚）：**按用户点名改 4 把盗贼武器的使用帧（源 2.0 值 → 用户值）。**
