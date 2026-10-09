@@ -2288,7 +2288,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 包内布局（`codex-package.json`，`layoutVersion: 1`）：`bin/codex.exe`、`bin/codex-code-mode-host.exe`、
   `codex-path/rg.exe`、`codex-resources/`（`codex-command-runner.exe`、`codex-windows-sandbox-setup.exe`、`voice/`）。
   0.162.0 的 Windows 包解压后约 437 MB。
-- **桌面应用是另一条线**（MSIX：`C:\Program Files\WindowsApps\OpenAI.Codex_26.930.6422.0_x64__2p2nqsd0c76g0\`）：
+- **桌面应用是另一条线**（MSIX：`C:\Program Files\WindowsApps\OpenAI.Codex_26.1002.7124.0_x64__2p2nqsd0c76g0\`，
+  2026-10-09 已由商店从 `26.930.6422.0` 更新过来，旧版本目录已不在）：
   Windows 沙箱服务 `CodexSandboxService.OpenAI.Codex`（Auto / Running）由它提供；它另有自己的一份 CLI 副本
   （`%LOCALAPPDATA%\OpenAI\Codex\bin\<哈希>\codex.exe`，由 `CODEX_CLI_PATH` 指定）。
   **升级 CLI 不碰这两样**；应用本体走微软商店更新（2026-10-08 商店已有 `26.1002.7124.0`，
@@ -2325,8 +2326,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `sandbox restricted fs + restricted network`、deepseek 端点可达（探针 401 = 路由存在，只是没带 key）。
 - **新版会警告"忽略 2 个无法识别的配置项"**＝`disable_response_storage` 与 `preferred_auth_method`。
   二者在 0.154 的 CLI schema 里同样不存在，且 0.161 的 `codex.exe` 里这两个字符串 **0 命中**
-  （对照：`forced_login_method` 19 命中、`cli_auth_credentials_store` 23 命中）——它们是**桌面应用那一层**的键，
-  CLI 从来没认过。**别删**（删了可能改桌面端行为），这条警告是纯噪声。
+  （对照：`forced_login_method` 19 命中、`cli_auth_credentials_store` 23 命中）——**但"属桌面端键"这条推断站不住**：
+  2026-10-09 复核时把桌面端 MSIX（当时 `26.1002.7124.0`，75 个 >1 MB 文件、共 2.1 GB）也扫了一遍，
+  这两个字符串**同样 0 命中**，而 0.162.0 的 `codex.exe` 里 `forced_login_method` 是 21 命中
+  ⇒ 它俩是**旧版遗留的死键**，两层都没人认。**已删**（2026-10-09 用户拍板）：删后守护进程 stderr 干净、
+  启动警告消失；`forced_login_method = "api"` 仍在，认证行为不变。旧稿的"别删"据此作废。
 - 0.161 起内置目录默认模型是 **GPT-6.1 Sol**——本机不受影响（pin 了 `model = "deepseek-flash"` + 自定义
   provider + 自带 `models.json`）。但 0.160 起"显式 provider 模型目录被当权威"：不再混入内置模型，
   刷新失败也不复用陈旧条目。
@@ -2337,7 +2341,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `could not create PATH aliases: 拒绝访问`，那是沙箱挡了 `~/.codex/tmp` 的写权限——
   **属正常现象，不用管，更别去删那个目录**（活会话在用）。
 
-### 11.4 清掉 0.161.0 残留（2026-10-09 收尾；standalone 已清、守护进程待切）
+### 11.4 清掉 0.161.0 残留（2026-10-09 收尾完成；standalone 与守护进程都已切到 0.162.0）
 
 **症状**（用户 2026-10-09 截图 = 启动时 `Warnings 2 of 2`）：`A background Codex service is running v0.161.0,
 older than your Codex CLI v0.162.0. Use /daemon to manage the local background server. Updating may interrupt
@@ -2368,14 +2372,20 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   `"status":"started" … "appServerVersion":"0.162.0"` / `已删除 0.161.0 残留：…` → `DONE.`。
 - **最终态**：`releases\` 下只剩 `0.162.0` 一份，`current` 指向它，守护进程换了新 PID（0.162.0）；
   两处残留合计释放约 **752 MB**。
-- **副作用实测**：切割那一下**并没有真把会话踢掉**——客户端自己重连上新守护进程（旧 PID 20708 退出、
-  新 PID 20184 接上），会话里的命令照常跑。所以下次做同样的事，不必假设一定会断。
+- **副作用实测（两种做法结论相反，别混）**：
+  ① 由**分离脚本**做的那次切割（09:28:48）**没有把会话踢掉**——客户端自己重连上新守护进程
+  （旧 PID 20708 退出、新 PID 20184 接上），会话里的命令照常跑；
+  ② **在会话里直接跑 `codex app-server daemon restart` 会挂死**（2026-10-09 09:34–09:44 实测）：
+  同一会话里出现 23 次该命令、每次都等不回来，最后一条记录停在一次 `write_stdin` 上（约 09:43:48），
+  客户端此后不再写任何东西；用户 09:47:49 重开 Codex 才有新会话（守护进程换成新 PID 21752）。
+  ⇒ **会话内重启自己的后端 = 卡死／掉线**，别图省事；要么用分离进程，要么先退出 Codex 再前台跑。
 
 **收尾脚本（已跑过一次，留着复用 / 回滚参考）**：`Tools/FinalizeCodexDaemonUpdate.ps1`
 （停守护进程 → 把 `current` 翻到 0.162.0 → 重启 → 校验 `appServerVersion`；成功后再删 0.161.0；
 失败自动翻回 0.161.0 重启。全过程写 `~/.codex/packages/app-server-daemon/finalize-update.log`）。
 
-- 在 Codex 会话里跑要用**分离进程**（脚本得能独立跑完；实测会话多半会自己重连）：
+- 在 Codex 会话里跑要用**分离进程**（脚本得能独立跑完；分离脚本那次活下来了，但会话内直接
+  `daemon restart` 会挂死，见上面的实测②）：
   `Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','.\Tools\FinalizeCodexDaemonUpdate.ps1','-DelaySeconds','20'`
 - 或者**先完全退出 Codex**（或重启电脑），再前台跑
   `powershell -ExecutionPolicy Bypass -File .\Tools\FinalizeCodexDaemonUpdate.ps1` —— 此时不会打断任何会话。
