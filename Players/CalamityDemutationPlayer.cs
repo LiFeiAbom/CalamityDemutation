@@ -340,6 +340,11 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool corruptFlask = false;
         /// <summary>
+        /// 归虚之灵（CosmicEnergySpiralOld）宇宙之灵在场标记：由同名召唤增益每帧置位，
+        /// 供宇宙之灵续命（对应 CI 源的 cosmicEnergy）
+        /// </summary>
+        public bool cosmicEnergy = false;
+        /// <summary>
         /// 已装备爬虫甲壳：+5% 减伤与 +25% 荆棘反伤
         /// </summary>
         public bool crawCarapace = false;
@@ -995,6 +1000,7 @@ namespace CalamityDemutation.Players
             coinofDeceit = false;
             coreOfTheBloodGod = false;
             corruptFlask = false;
+            cosmicEnergy = false;
             crawCarapace = false;
             crimsonFlask = false;
             crownJewel = false;
@@ -1185,6 +1191,7 @@ namespace CalamityDemutation.Players
             coinofDeceit = false;
             coreOfTheBloodGod = false;
             corruptFlask = false;
+            cosmicEnergy = false;
             crawCarapace = false;
             crimsonFlask = false;
             crownJewel = false;

@@ -223,6 +223,11 @@ Buffs: {
 		DisplayName: Calamari
 		Description: Time to transport all of your foes to stupid squid jail!
 	}
+
+	CosmicEnergyBuff: {
+		DisplayName: Cosmic Energy
+		Description: The cosmic energy spiral will protect you
+	}
 }
 
 Configs: {
@@ -915,6 +920,17 @@ Items: {
 	CorruptFlask: {
 		DisplayName: Corrupt Flask
 		Tooltip: 7% increased damage reduction and +3 defense while in the corruption
+	}
+
+	CosmicImmaterializerOld: {
+		DisplayName: Cosmic Immaterializer
+		Tooltip:
+			'''
+			Summons a cosmic energy spiral to fight for you
+			The orb will fire swarms of homing energy bolts when enemies are detected by it
+			Requires 10 minion slots, only one energy spiral can be summoned
+			[c/0080CA:Fires more cosmic energy bolts]
+			'''
 	}
 
 	Cosmilamp: {
@@ -2743,7 +2759,10 @@ Projectiles: {
 	CalamarisLamentProjectile.DisplayName: Calamari Ink
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
 	CloudyWaifu.DisplayName: Cloudy Waifu
+	CosmicBlast.DisplayName: Cosmic Blast
+	CosmicBlastBig.DisplayName: Cosmic Blast Big
 	CosmicDashExplosion.DisplayName: Cosmic Dash Explosion
+	CosmicEnergySpiralOld.DisplayName: Cosmic Energy Spiral
 	CosmilampBeam.DisplayName: Cosmic Beam
 	CosmilampMinion.DisplayName: Cosmilamp
 	DeathLaser.DisplayName: Death Laser

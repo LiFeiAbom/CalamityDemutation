@@ -223,6 +223,11 @@ Buffs: {
 		DisplayName: 小鱿鱼
 		Description: 该把敌人都押进蠢鱿鱼监狱了！
 	}
+
+	CosmicEnergyBuff: {
+		DisplayName: 宇宙之灵
+		Description: 宇宙之灵会保护你
+	}
 }
 
 Configs: {
@@ -915,6 +920,17 @@ Items: {
 	CorruptFlask: {
 		DisplayName: 腐化之瓶
 		Tooltip: 身处腐化之地时伤害减免提高 7%，防御 +3
+	}
+
+	CosmicImmaterializerOld: {
+		DisplayName: 归虚之灵
+		Tooltip:
+			'''
+			召唤一个宇宙之灵为你而战
+			宇宙之灵在探测到敌人时会发射大量的跟踪能源箭
+			需要至少10格仆从栏位才能使用并且同时只能存在至多一个宇宙之灵
+			[c/0080CA:星流巨械传颂之物已启用：发射更多的宇宙能量，且其会在发射一段时间后开始追踪]
+			'''
 	}
 
 	Cosmilamp: {
@@ -2742,7 +2758,10 @@ Projectiles: {
 	CalamarisLamentProjectile.DisplayName: 鱿鱼墨汁
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
 	CloudyWaifu.DisplayName: 云元素
+	CosmicBlast.DisplayName: 宇宙爆裂
+	CosmicBlastBig.DisplayName: 大型宇宙爆裂
 	CosmicDashExplosion.DisplayName: 宇宙冲刺爆炸
+	CosmicEnergySpiralOld.DisplayName: 宇宙之灵
 	CosmilampBeam.DisplayName: 宇宙光束
 	CosmilampMinion.DisplayName: 宇宙灯笼
 	DeathLaser.DisplayName: 死亡激光
