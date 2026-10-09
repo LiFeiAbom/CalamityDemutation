@@ -2335,11 +2335,39 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `could not create PATH aliases: 拒绝访问`，那是沙箱挡了 `~/.codex/tmp` 的写权限——
   **属正常现象，不用管，更别去删那个目录**（活会话在用）。
 
-### 11.4 待办：重启后清掉 0.161.0 残留（2026-10-09 用户点名）
+### 11.4 清掉 0.161.0 残留（2026-10-09 收尾；standalone 已清、守护进程待切）
 
-升 0.162.0 时这两处因**当时有进程在跑**没能删净，重启 Codex 后一并收掉（合计约 750 MB）：
+**机制（2026-10-09 摸清，别再考古）**：CLI 把会话跑在一个**共享的本地 app-server 守护进程**里，
+入口是 CLI 的隐藏子命令 `codex app-server daemon …`：
 
-- `~/.codex/packages/standalone/releases/0.161.0-x86_64-pc-windows-msvc/bin/codex.exe`（被旧会话占用，约 317 MB）；
-- `~/.codex/packages/app-server-daemon/releases/0.161.0-x86_64-pc-windows-msvc/`（后台守护进程的自管安装，约 435 MB）。
+- `version` — 打印 `{cliVersion, appServerVersion, managedCodexVersion, socketPath…}`；
+- `start` / `stop` / `restart` / `update`；
+- **`update` 走联网通道**，在本机照样被 chatgpt.com 的 403 挡死（与 11.2 的 `codex update` 同一堵墙），
+  **换不了版本**；`start` 在已运行时只回 `alreadyRunning`，不碰网络；
+- 这几条都要连 `~/.codex/app-server-control/app-server-control.sock`：**沙箱内跑会 `os error 10013`**，得提权；
+- **守护进程就是当前会话的后端**（2026-10-09 用 `Get-WmiObject … Win32_Process` 排父子关系坐实：
+  会话的 `powershell.exe` / `node_repl.exe` 全挂在守护进程 PID 下）⇒ **停它 = 中断当前会话**。
 
-删前先确认 `current` 已指向 `0.162.0`，且没有进程还挂在那两份里（`Get-Process | ? Path -like '*0.161.0*'`）。
+**状态**：
+
+- ✅ `standalone/releases/0.161.0-x86_64-pc-windows-msvc/`（当时只剩 `bin/codex.exe`，316.8 MB）——**已删除**
+  （已无进程占用；释放约 317 MB）。
+- ✅ 已把 standalone 的 0.162.0 包**原样复制**到
+  `app-server-daemon/releases/0.162.0-x86_64-pc-windows-msvc/`：45 个文件、458,507,843 字节，与源逐一相符；
+  两棵树结构一致（都是 `variant:"codex"`），`codex-package.json` 版本 0.162.0，
+  `bin/codex.exe --version` 报 `codex-cli 0.162.0`。
+- ⏳ `app-server-daemon/releases/0.161.0-x86_64-pc-windows-msvc/`（434.9 MB）——**还活着**：守护进程正跑着它，
+  文件被锁删不掉；`current` 联接仍指 0.161.0，**只有守护进程停止时**才翻得动。
+
+**一锤定音的收尾脚本**：`Tools/FinalizeCodexDaemonUpdate.ps1`
+（停守护进程 → 把 `current` 翻到 0.162.0 → 重启 → 校验 `appServerVersion`；成功后再删 0.161.0；
+失败自动翻回 0.161.0 重启。全过程写 `~/.codex/packages/app-server-daemon/finalize-update.log`）。
+
+- 在 Codex 会话里跑要用**分离进程**（会话会被中断一次，脚本得能独立跑完）：
+  `Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','.\Tools\FinalizeCodexDaemonUpdate.ps1','-DelaySeconds','20'`
+- 或者**先完全退出 Codex**（或重启电脑），再前台跑
+  `powershell -ExecutionPolicy Bypass -File .\Tools\FinalizeCodexDaemonUpdate.ps1` —— 此时不会打断任何会话。
+
+**为什么"等重启自动就好"不成立**：守护进程是脱离启动器的常驻进程（`ParentProcessId` 早已退出，它照旧活着），
+开机/启动 Codex 时它按 `current` 起；`current` 还指 0.161.0 就永远是 0.161.0，而它自更新又走 403 的联网通道。
+所以**必须**手工翻一次 `current`，之后每次开机才会是 0.162.0。
