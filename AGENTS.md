@@ -2337,6 +2337,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ### 11.4 清掉 0.161.0 残留（2026-10-09 收尾；standalone 已清、守护进程待切）
 
+**症状**（用户 2026-10-09 截图 = 启动时 `Warnings 2 of 2`）：`A background Codex service is running v0.161.0,
+older than your Codex CLI v0.162.0. Use /daemon to manage the local background server. Updating may interrupt
+active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等价于 `codex app-server daemon`）；
+另一条 `1 of 2`（忽略 `disable_response_storage` / `preferred_auth_method`）是纯噪声，见 11.3。
+
 **机制（2026-10-09 摸清，别再考古）**：CLI 把会话跑在一个**共享的本地 app-server 守护进程**里，
 入口是 CLI 的隐藏子命令 `codex app-server daemon …`：
 
