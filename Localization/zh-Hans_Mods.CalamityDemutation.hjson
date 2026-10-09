@@ -59,6 +59,11 @@ Buffs: {
 		Description: 冰灵会保护你
 	}
 
+	PhantomBuff: {
+		DisplayName: 幻影
+		Description: 幻影会保护你
+	}
+
 	PlantationStaffBuff: {
 		DisplayName: 苍华之庭
 		Description: 小型世纪之花会保护你
@@ -1238,6 +1243,11 @@ Items: {
 			刀光之间群星可见
 			「在熵的累积中，昔日再宏伟的星云也变成了刀中暗淡混沌的尘埃」
 			'''
+	}
+
+	EtherealSubjugator: {
+		DisplayName: 空灵征服者
+		Tooltip: 召唤一个幻影保护你
 	}
 
 	EtherealTalisman: {
@@ -2737,6 +2747,7 @@ Projectiles: {
 	GalacticaComet.DisplayName: 星河彗星
 	Galaxia.DisplayName: 银河之星光球
 	GalaxyBlast.DisplayName: 星系爆弹
+	GhostFire.DisplayName: 幽焰
 	GhostlyBolt.DisplayName: 幽灵魔弹
 	GhostlyMine.DisplayName: 幽灵地雷
 	GodSlayerBlaze.DisplayName: 弑神者烈焰
@@ -2765,6 +2776,7 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PenumbraBomb.DisplayName: 半影炸弹
 	PenumbraSoul.DisplayName: 半影之魂
+	PhantomGuy.DisplayName: 幻影
 	PlantationStaffSeed.DisplayName: 种子
 	PlantationStaffSporeCloud.DisplayName: 孢子云
 	PlantationStaffSummon.DisplayName: 苍华之庭

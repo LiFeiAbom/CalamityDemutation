@@ -634,6 +634,10 @@ namespace CalamityDemutation.Players
         public bool omegaBlueHentai = false;
         public int omegaBlueCooldown = 0;
         public bool ornateShield = false;
+        /// <summary>
+        /// 空灵征服者（PhantomGuy）幻影在场标记：由同名召唤增益每帧置位，供幻影续命（对应源的 pGuy）
+        /// </summary>
+        public bool pGuy = false;
         public bool photosynthesis = false;
         /// <summary>
         /// 苍华之庭（PlantationStaffSummon）树灵在场标记：由同名召唤增益每帧置位，
@@ -1047,6 +1051,7 @@ namespace CalamityDemutation.Players
             omegaBlueSet = false;
             omegaBlueHentai = false;
             ornateShield = false;
+            pGuy = false;
             photosynthesis = false;
             plantationSummon = false;
             psychoticAmulet = false;
@@ -1241,6 +1246,7 @@ namespace CalamityDemutation.Players
             omegaBlueSet = false;
             omegaBlueCooldown = 0;
             ornateShield = false;
+            pGuy = false;
             photosynthesis = false;
             plantationSummon = false;
             psychoticAmulet = false;

@@ -59,6 +59,11 @@ Buffs: {
 		Description: The ice clasper will protect you
 	}
 
+	PhantomBuff: {
+		DisplayName: Phantom
+		Description: The phantom will protect you
+	}
+
 	PlantationStaffBuff: {
 		DisplayName: Plantation
 		Description: The miniature Plantera will protect you
@@ -1238,6 +1243,11 @@ Items: {
 			Constellations can be seen between the flashes of the blade
 			"Amidst the accretion of entropy, even the grandest nebula became dim, chaotic dust within the blade"
 			'''
+	}
+
+	EtherealSubjugator: {
+		DisplayName: Ethereal Subjugator
+		Tooltip: Summons a phantom to protect you
 	}
 
 	EtherealTalisman: {
@@ -2738,6 +2748,7 @@ Projectiles: {
 	GalacticaComet.DisplayName: Galactus Comet
 	Galaxia.DisplayName: Orb
 	GalaxyBlast.DisplayName: Galaxy Blast
+	GhostFire.DisplayName: Ghastly Particle
 	GhostlyBolt.DisplayName: Ghostly Bolt
 	GhostlyMine.DisplayName: Ghostly Mine
 	GodSlayerBlaze.DisplayName: Blaze
@@ -2766,6 +2777,7 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PenumbraBomb.DisplayName: Penumbra Bomb
 	PenumbraSoul.DisplayName: Penumbra Soul
+	PhantomGuy.DisplayName: Phantom
 	PlantationStaffSeed.DisplayName: Seed
 	PlantationStaffSporeCloud.DisplayName: Spore Cloud
 	PlantationStaffSummon.DisplayName: Plantation

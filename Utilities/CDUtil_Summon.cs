@@ -29,6 +29,23 @@ namespace CalamityDemutation.Utilities
             => CalculatePredictiveAimToTarget(startingPosition, target.Center, target.velocity, shootSpeed, iterations);
 
         /// <summary>
+        /// 超级追踪（照灾厄 <c>ProjectileUtils.SuperhomeTowardsTarget</c> 逐行移植）：
+        /// 先按预判瞄准求出"理想速度"，再按惯性插值把当前速度推向它。
+        /// </summary>
+        /// <param name="homingSpeed">追踪速度</param>
+        /// <param name="inertia">转向惯性（越大转得越平缓）</param>
+        /// <param name="predictionStrength">预判强度：1 为正常提前量，0.01 相当于不预判（源里下限也是 0.01）</param>
+        public static Vector2 SuperhomeTowardsTarget(this Projectile projectile, NPC target, float homingSpeed, float inertia, float predictionStrength = 1f)
+        {
+            if (predictionStrength < 0.01f)
+            {
+                predictionStrength = 0.01f;
+            }
+            Vector2 idealVelocity = CalculatePredictiveAimToTarget(projectile.Center, target, homingSpeed / predictionStrength) * predictionStrength;
+            return (projectile.velocity * (inertia - 1f) + idealVelocity) / inertia;
+        }
+
+        /// <summary>
         /// 召唤物索敌：优先取玩家用召唤武器右键标记的目标（可选是否要求视线、是否检查射程），
         /// 否则退回"范围内最近的敌人"（照灾厄 <c>NPCUtils.MinionHoming</c> 移植；
         /// 灾厄的下层 <c>ClosestNPCAt</c> 在本工程里对应既有的 <see cref="FindClosestNPC"/>）。

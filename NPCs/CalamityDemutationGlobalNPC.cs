@@ -263,6 +263,8 @@ namespace CalamityDemutation.NPCs
                 else if (calamity.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BansheeHook>(), 4));
+                    // 本工程自持的空灵征服者：源里它也在噬魂幽花的"非专家武器池"里（沿用同一条 1/4 简化口径）
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 4));
                     npcLoot.Add(notExpert0);
                 }
             }
@@ -321,6 +323,8 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
                 {
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BansheeHook>(), 4));
+                    // 本工程自持的空灵征服者：源里它也在噬魂幽花的"非专家武器池"里（沿用同一条 1/4 简化口径）
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 4));
                     npcLoot.Add(notExpert1);
                 }
             }
