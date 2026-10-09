@@ -360,17 +360,20 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      链（往回推）：**归虚之灵 ← 元素之斧 ← 苍华之庭 `PlantationStaff`**；
      CI 八重配方另需 **天狼星 + 古冰晶 + 圣化火花 + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌**。
      **已落地**：链底 苍华之庭 ✅（现代 + 经典两条配方）、元素之斧 ✅（2026-10-09）、
-     **古冰晶 `AncientIceChunk` ✅（2026-10-09，含冰灵仆从与冰锥）**、天狼星 ✅（批次 B 链尾，2026-10-08）；
-     **下一件＝用户点名**（还没自持的是：**圣化火花 / 空灵征服者 / 宇宙灯笼 / 灾厄挽歌**），
+     **古冰晶 `AncientIceChunk` ✅（2026-10-09，含冰灵仆从与冰锥）**、
+     **圣化火花 `SanctifiedSpark` ✅（2026-10-09，含哨兵炮台与两枚火弹；＝2.0 的 能量法杖 `EnergyStaff` 改名件）**、
+     天狼星 ✅（批次 B 链尾，2026-10-08）；
+     **下一件＝用户点名**（还没自持的是：**空灵征服者 / 宇宙灯笼 / 灾厄挽歌**），
      最后才是链顶**归虚之灵**（它的物品数据与配方选项已侦察完，见下）。
   ③ **待办＝数值膨胀**：用户 2026-10-08 明确「**之后一并处理**」。当前口径：
      「超新星」批次 7 把里 **3 把已接入**（毁灭之星 438 / 半影 1600 / 超新星 2250），
     其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**；
-     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25
-     这六件召唤武器尚未点名开态值，等用户一并处理**。
-  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **166 条全命中**
-    （元素之斧三张 + 古冰晶四张贴图都是"类同名隐式"引用，脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过）；
-    工作区干净、与 `origin/master` 同步（最近落地提交 = 古冰晶 **`d1a56fa`**、元素之斧 **`562998d`**）。
+     **太阳之灵法杖 12 / 太阳神杖 60 / 天狼星 160 / 苍华之庭 58 / 元素之斧 57 / 古冰晶 25 / 圣化火花 128
+     这七件召唤系武器尚未点名开态值，等用户一并处理**。
+  - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **168 条全命中**
+    （元素之斧三张、古冰晶四张贴图是"类同名隐式"引用、脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过；
+    圣化火花那批给自检加了 2 条——`FlameBlast` / `FlameBurst` 显式引共用隐形图）；
+    工作区干净、与 `origin/master` 同步（最近落地提交 = 圣化火花 **`45484fd`**、古冰晶 **`d1a56fa`**）。
 - **【批次 A · 「超新星」下位链 + 超新星本体：8 件全部落地，已收尾】**
   **链条（从下往上）**：① 震爆手雷 ✅ → ② 弹道毒炸弹 ✅ → ③ 破坏者 ✅ → ④ 熵构体 ✅
   → ⑤ 毁灭之星 ✅ → ⑥ 封存奇点 ✅ → ⑦ 半影 ✅ → ⑧ 超新星本体 ✅。
@@ -552,9 +555,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **口径更新：CI 线全自持（2026-10-09，用户点名）**：CI 八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
   （奇迹物质本机现代版仍在，继续软引用）；源一律取 **2.0 / 2.0.3.9**。已自持：天狼星（批次 B 链尾）、
-  元素之斧、古冰晶；**待自持：圣化火花 `SanctifiedSpark` / 空灵征服者 `EtherealSubjugator` /
-  宇宙灯笼 `Cosmilamp` / 灾厄挽歌 `CalamarisLament`**——这四件在装着的现代版里其实都还在，
-  但按用户口径照样自持旧版（1.4.4-release 砍过，用户要回调）。
+  元素之斧、古冰晶、圣化火花；**待自持：空灵征服者 `EtherealSubjugator` / 宇宙灯笼 `Cosmilamp` /
+  灾厄挽歌 `CalamarisLament`**——这三件在装着的现代版里其实都还在，但按用户口径照样自持旧版
+  （1.4.4-release 砍过，用户要回调）。
 
   **落地记录：古冰晶（2026-10-09，落地提交 `d1a56fa`）—— 批次 C 第三件**
   - 物品 `Content/Items/Weapons/Summon/AncientIceChunk.cs`：38×50 / 伤害 25 / 魔力 10 / 使用·动画 25 帧 /
@@ -586,6 +589,37 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     `Projectiles.IceClasperSummonProjectile.DisplayName`（Ice Shard）；
     中文取用户口径 **古冰晶**，仆从/增益写 **冰灵**、弹幕写 **冰锥**。
 
+  **落地记录：圣化火花（2026-10-09，落地提交 `45484fd`）—— 批次 C 第四件**
+  - **身份**：2.0.3.9 的 `SanctifiedSpark` 就是 **2.0 的能量法杖 `EnergyStaff` 改名后的同一件**
+    （源里留着 `[LegacyName("EnergyStaff")]`）——所以 CI 八重配方里的"圣化火花"与 2.0 五重配方里的"能量法杖"
+    是**同一件东西**，不必再自持第二份能量法杖。
+  - 物品 `Content/Items/Weapons/Summon/SanctifiedSpark.cs`：66×68 / 伤害 128 / 魔力 10 / 使用·动画 14 帧 /
+    击退 5 / 紫档 / `Item.buyPrice(1,10,0,0)`（＝源 `Rarity11BuyPrice`）/ 法杖姿态（`Item.staff[type] = true`）、
+    **`Item.sentry = true`（本工程第一件哨兵武器）**；`Shoot` 在鼠标处插炮台并写 `ai[0] = 16`、
+    补 `originalDamage`、调 `player.UpdateMaxTurrets()`。
+  - 哨兵 `Content/Projectiles/Summon/ProfanedEnergy.cs`：60×60、4 帧动画（每 6 帧一翻）、
+    `Projectile.sentry = true` + `timeLeft = SentryLifeTime`、`CanDamage()` 恒 false；
+    主人端每 16 帧在 1000 像素内（曼哈顿距离 + `Collision.CanHit`）索敌，随机甩 `FlameBlast` / `FlameBurst`
+    （25 速度）。**贴图照源复用不动明王 NPC 的图**（源写 `Texture => "CalamityMod/NPCs/NormalNPCs/ImpiousImmolator"`），
+    本工程把它原样拷成同名贴图 `Content/Projectiles/Summon/ProfanedEnergy.png`（62×272 = 4×62×68），
+    于是不用写显式 `Texture` 覆盖，绕开路径坑。
+  - 火弹 `FlameBlast` / `FlameBurst`：6×6 起手、登场撑到 20×20、寿命 180、`SentryShot` 标记；
+    两者只差**吸附半径 300 / 1200**与**追速 25 / 20**、以及拖尾尘编号；
+    贴图都引工程共用隐形图 `CalamityDemutation/Content/Projectiles/InvisibleProj`（源也是隐形图，不新增素材）；
+    命中挂 `HolyFlames` 180 帧，走 `ApplyCalamityBuffWithFallback`，**经典版没有该减益 → 退回原版燃烧**。
+  - **无配方**：来源是**不动明王 `ImpiousImmolator` 掉落 1/15**（源 2.0.3.9 与经典 1.4.2.101 同一条），
+    挂在本工程 `ModifyNPCLoot` 的**现代与经典两条分支**（就在 IceClasper 那条后面）；
+    源里另有一条"天顶世界下 装甲掘墓者头 1/10"的彩蛋，本工程未移植。
+  - 尘编号把源裸值换成命名常量（**244 = `DustID.CopperCoin`**、**246 = `DustID.GoldCoin`**；Calamity 的
+    `CalamityDusts.ProfanedFire` 本身就是 244 这个原版尘的别名），保住 0 警告基线。
+    ⚠ **别想当然**：244/246 的名字与分析器建议一致（与第 9 节太阳神那批记的同一张表），
+    `DustID.GoldFlame` **不是** 246——名字像但值对不上，写它等于换了特效。
+  - 贴图两张取自 2.0.3.9：`SanctifiedSpark.png` 72×88（物品）、`ProfanedEnergy.png` 62×272（哨兵，4 帧）。
+  - 本地化：`Items.SanctifiedSpark`（Sanctified Spark / Summons a profaned energy turret to fight for you）、
+    `Projectiles.ProfanedEnergy.DisplayName`（Profaned Energy）、`FlameBlast.DisplayName`（Flame Blast）、
+    `FlameBurst.DisplayName`（Flame Burst）；中文＝**圣化火花 / 亵渎能量 / 烈焰冲击 / 烈焰迸发**。
+
+- 最近一批工作（2026-10-09 再晚）：**移植圣化火花（SanctifiedSpark）—— 「归虚之灵」链（CI 口径）自持件；本工程第一件哨兵武器（含哨兵炮台 + 两枚火弹）。**
 - 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（CI 口径）的自持件之一（含冰灵仆从 + 冰锥）。**
 - 最近一批工作（2026-10-09）：**移植元素之斧（ElementalAxe）—— 「归虚之灵」链的中间件（批次 C 第二件）。**
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
