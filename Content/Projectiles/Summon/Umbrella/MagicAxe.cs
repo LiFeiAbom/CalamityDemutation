@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
     /// 魔法斧（MagicAxe，按 CI 的 `MagicAxeOld` 移植；类名去掉 `Old` 后缀）——
-    /// 光阴流时伞的礼帽（<see cref="MagicHat"/>）随机抛出的重击工具之一。
+    /// 光阴时流伞的礼帽（<see cref="MagicHat"/>）随机抛出的重击工具之一。
     /// 52×52、穿地形、无限穿透、每名敌人 8 帧局部无敌、存活 180 帧，开场 30 帧只做自旋与防重叠，
     /// 之后在 <see cref="MagicHat.Range"/> 内追敌；贴到 500 像素内会**冲刺**一次
     /// （`ai[0] = 2` 状态，速度 16、额外更新 4 次持续 30 帧）。

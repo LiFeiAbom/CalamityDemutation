@@ -683,7 +683,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool radiantOoze = false;
         /// <summary>
-        /// 光阴流时伞（MagicHat）魔法礼帽在场标记：由同名召唤增益每帧置位，供礼帽弹幕续命（对应 CI 的 MagicHatOld）
+        /// 光阴时流伞（MagicHat）魔法礼帽在场标记：由同名召唤增益每帧置位，供礼帽弹幕续命（对应 CI 的 MagicHatOld）
         /// </summary>
         public bool magicHat = false;
         /// <summary>

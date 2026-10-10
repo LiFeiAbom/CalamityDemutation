@@ -10,10 +10,10 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 归虚之灵（对应 CI 的 <c>CosmicImmaterializerOld</c>，CI 官方中文写作「归虚之灵[Legacy]」）——
+    /// 归虚之灵（对应 CI 的 <c>CosmicImmaterializerOld</c>）——
     /// 「归虚之灵」链（CI 口径）的**链顶**，也是这个批次最后一件。
     /// **命名口径（用户 2026-10-09）**：类名去掉了 CI 式的 <c>Old</c> 后缀（原 `CosmicImmaterializerOld`）；
-    /// 旧名以 <see cref="LegacyNameAttribute"/> 保留，供既有存档与该物品的旧引用继续解析。
+    /// 未保留旧名兼容属性（用户 2026-10-10：不需要 Legacy 旧名）。
     /// 口径照 CI：74×72、伤害 **560**（CI 源值 360，按用户 2026-10-09 点名上调）、魔力 10、
     /// 使用/动画 **10 帧**、击退 0、挥动姿态、
     /// **月后 15 档（紫，＝CI 的 `CatalystViolet`）**、价值 **1 铂金 50 金**、音 `SoundID.Item60`、弹速 10，
@@ -40,7 +40,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 因此不注册经典分支。
     /// </para>
     /// </remarks>
-    [LegacyName("CosmicImmaterializerOld")]
     internal class CosmicImmaterializer:ModItem
     {
         /// <summary>研究解锁一份（照 CI）</summary>

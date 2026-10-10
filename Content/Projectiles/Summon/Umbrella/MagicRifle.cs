@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
     /// 魔法步枪（MagicRifle，按 CI 的 MagicRifleOld 移植；类名去掉 Old 后缀）——
-    /// 光阴流时伞的礼帽随机抛出的远程工具：30×30、占 0 栏、穿地形、无限穿透、**自身无接触伤害**、
+    /// 光阴时流伞的礼帽随机抛出的远程工具：30×30、占 0 栏、穿地形、无限穿透、**自身无接触伤害**、
     /// 存活 180 帧。开场 30 帧只做防重叠与悬浮；之后在 <see cref="MagicHat.Range"/> 内索敌，
     /// 有目标时贴近到 200 像素内并转身瞄准，**每约 90 帧**朝目标射出一枚
     /// <see cref="MagicBullet"/>（速度 6）；无目标时跟随主人（离太远则回位、超过 2000 像素直接瞬移回）。

@@ -1,5 +1,6 @@
 using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -9,8 +10,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
     /// 星律之握览（SarosPossession）—— 自持件，老规矩取灾厄 **2.0**（用户 2026-10-09 点名移植：
-    /// CI 的「光阴流时伞」与 `MountedScannerLegacy` 的配方都吃本体那件 `SarosPossession`，故整件搬进来）。
-    /// 2.0 口径：贴图 56×56、伤害 **171**、击退 4、魔力 10、使用/动画 **10 帧**、弹速 10、
+    /// CI 的「光阴时流伞」与 `MountedScannerLegacy` 的配方都吃本体那件 `SarosPossession`，故整件搬进来）。
+    /// 2.0 口径：贴图 56×56、伤害 **200**（源 171，按用户 2026-10-10 点名上调）、击退 4、魔力 10、
+    /// 使用/动画 **10 帧**、弹速 10、
     /// **红底 + 月后 14 档（蓝，＝灾厄 `DarkBlue`）**、价值 **1 铂金 40 金**、音 `SoundID.DD2_BetsyFlameBreath`；
     /// 在鼠标处召唤一道**辐光光环**（<see cref="SarosAura"/>）。
     /// </summary>
@@ -29,9 +31,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// <para>
     /// 配方（用户 2026-10-09 拍板）：**天狼星（本工程自持件）+ 夜魇锭 `CosmiliteBar`×8 +
     /// 暗阳碎片 `DarksunFragment`×8 @ 宇宙砧 `CosmicAnvil`**——照源 2.0 的配方，只把第一味换成我们自持的天狼星，
-    /// 链条就此闭合：我们的天狼星 → 本件 → 我们的光阴流时伞。本件没有经典版，故只注册现代分支一条。
+    /// 链条就此闭合：我们的天狼星 → 本件 → 我们的光阴时流伞。本件没有经典版，故只注册现代分支一条。
     /// </para>
-    /// <para>数值膨胀：用户 2026-10-09 明确"后续一并处理"，本件暂不挂 `StatInflation`。</para>
+    /// <para>
+    /// 数值膨胀（用户 2026-10-10 点名）：关态 <c>Item.damage</c> = **200**（源 171，点名上调）、开态 **681**。
+    /// 召唤件特有一环——`Shoot` 里写进光环的 `originalDamage` 也必须读 `BaseDamage`；光环按栏位派生的
+    /// 日耀圣火 / 微缩太阳读的是弹幕自身伤害，会自动跟随。
+    /// </para>
     /// </remarks>
     internal class SarosPossession:ModItem
     {
@@ -41,7 +47,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.ResearchUnlockCount = 1;
         }
         /// <summary>
-        /// 基础属性：照源 2.0（56×56、伤害 171、击退 4、魔力 10、使用 10 帧、弹速 10、月后 14 档、1 铂金 40 金）
+        /// 基础属性：照源 2.0（56×56、伤害 200、击退 4、魔力 10、使用 10 帧、弹速 10、月后 14 档、1 铂金 40 金）
         /// </summary>
         public override void SetDefaults()
         {
@@ -52,7 +58,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.UseSound = SoundID.DD2_BetsyFlameBreath;
             Item.DamageType = DamageClass.Summon;
             Item.mana = 10;
-            Item.damage = 171;
+            Item.damage = 200;
             Item.knockBack = 4f;
             Item.useTime = Item.useAnimation = 10;
             Item.shoot = ModContent.ProjectileType<SarosAura>();
@@ -60,6 +66,22 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.value = Item.buyPrice(1, 40, 0, 0);
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
+        }
+        /// <summary>
+        /// 数值膨胀后的面板伤害（用户 2026-10-10 指定：200 → 681）。
+        /// </summary>
+        private const float InflatedDamage = 681f;
+        /// <summary>
+        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 200。
+        /// </summary>
+        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
+        /// <summary>
+        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
+        /// 召唤件特有一环：<c>Shoot</c> 里写进光环的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>。
+        /// </summary>
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 持在手上时每帧重算一次"还能给光环吃的召唤栏"：总栏位减去**自己以外**所有在场仆从占用的栏位
@@ -98,7 +120,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             int idx = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI, slots, 0f);
             if (Main.projectile.IndexInRange(idx))
             {
-                Main.projectile[idx].originalDamage = Item.damage;
+                Main.projectile[idx].originalDamage = (int)BaseDamage;
             }
             return false;
         }

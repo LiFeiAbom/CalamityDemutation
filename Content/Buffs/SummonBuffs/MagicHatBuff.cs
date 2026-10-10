@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Buffs.SummonBuffs
 {
     /// <summary>
-    /// 光阴流时伞召唤增益（MagicHatBuff，按 CI 的 `MagicHatBuffOld` 移植；类名去掉 Old 后缀）——
+    /// 光阴时流伞召唤增益（MagicHatBuff，按 CI 的 `MagicHatBuffOld` 移植；类名去掉 Old 后缀）——
     /// 魔法礼帽（<see cref="Projectiles.Summon.Umbrella.MagicHat"/>）在场时保持此增益。
     /// 增益只负责把玩家侧的 <c>magicHat</c> 标志点亮/熄灭——礼帽弹幕据此续命、消失时随之移除。
     /// </summary>

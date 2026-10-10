@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
     /// 魔法礼帽（MagicHat，按 CI 的 `Projectiles/Summon/Umbrella/MagicHatOld` 移植；类名去掉 `Old` 后缀）——
-    /// 光阴流时伞（<see cref="Content.Items.Weapons.Summon.TemporalUmbrella"/>）召唤的仆从。
+    /// 光阴时流伞（<see cref="Content.Items.Weapons.Summon.TemporalUmbrella"/>）召唤的仆从。
     /// 30×30 判定、**占 5 个召唤栏位**、**自身不造成接触伤害**；平时悬在主人头顶上方 60 像素
     /// （重力翻转时翻面），随鼠标文字色微微脉动缩放，登场先喷 50 粒骨火尘。
     /// </summary>

@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
     /// 青色魔法伞（MagicUmbrella，按 CI 的 MagicUmbrellaOld 移植；类名去掉 Old 后缀）——
-    /// 光阴流时伞的礼帽随机抛出的近战工具：14×14、占 0 栏、穿透 10、穿地形、
+    /// 光阴时流伞的礼帽随机抛出的近战工具：14×14、占 0 栏、穿透 10、穿地形、
     /// 每名敌人 10 帧局部无敌、存活 180 帧、开 10 格残影（模式 1）。
     /// 开场 30 帧只自旋与淡入，之后在 <see cref="MagicHat.Range"/> 内追敌（速度 9）；
     /// 贴到 500 像素内且在冷却结束时发动一次速度 9 的冲刺（`ai[0] = 2`，持续 40 帧）。
