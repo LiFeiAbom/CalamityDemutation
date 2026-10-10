@@ -8,7 +8,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
 {
     /// <summary>
     /// 血神核心（CoreOfTheBloodGod） - 综合型专家饰品
-    /// 提供最大生命、暴击、增伤、减伤、近战攻击速度与吸血光环，并继承血肉图腾的接触伤害减半效果。
+    /// 提供最大生命、暴击、增伤、减伤与吸血光环，并继承血肉图腾的接触伤害减半效果
+    ///（曾于 2026-10-06 追加 +10% 近战攻击速度，已按用户要求于 2026-10-10 删除）。
     /// 由血蠕虫围巾、血契、血肉图腾、血耀核心组合而成。
     /// </summary>
     internal class CoreOfTheBloodGod:ModItem
