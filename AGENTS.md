@@ -504,11 +504,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      `MagicBullet` 的护甲碎裂写了两遍，分别照抄为 `CDUtil.GetRogueDamageClass()` 与只写一遍（类注释有记）。
      ⇒ **第二条自持链到此闭合**：我们的天狼星 `Sirius` → 星律之握览 `SarosPossession` → 光阴时流伞 `TemporalUmbrella`。
   - **【2026-10-10 收工快照 · 下一步】**：
-    ① **进游戏实测（仍是最高优先）**：2026-10-09 新落的整条链（星律之握览的辐光光环、光阴时流伞的
-       魔法礼帽与 7 件工具、以及改动过的法师套装效果——法弹巨型爆炸改生成 `SilvaBurst`、无敌期法伤 +60%、
-       弑神火新公式、`GlacialState→Frozen` 兜底）**仍未进过游戏**；此前的召唤系那 10 件与
-       `StatInflation` 开关同样还没实测（见下面"进游戏待验证"那条）。
-    ② **数值膨胀（2026-10-10 已结清）**：新链两件已按用户点名挂上 `StatInflation` ——
+    ① **进游戏实测 ✅ 已过（2026-10-10 用户回报「没有任何问题」）**：2026-10-09 新落的整条链
+       （星律之握览的辐光光环、光阴时流伞的魔法礼帽与 7 件工具、以及改动过的法师套装效果）连同
+       本批数值膨胀改动**都已在游戏里跑通**，加载/运行均无异常。⇒ 这条不再是待办。
+    ② **数值膨胀（2026-10-10 已结清并实测）**：新链两件已按用户点名挂上 `StatInflation` ——
        `SarosPossession` 关态 **200**（源 171 上调）/ 开态 **681**；`TemporalUmbrella` 关态 **963**
        （CI 源 1000 调整）/ 开态 **4000**（＝CI 的 `ShadowspecBuff` 档）。两件都是召唤件，
        `Shoot` 里的 `originalDamage` 一并改读 `BaseDamage`（其余按栏位/自身伤害派生，自动跟随）。
@@ -520,10 +519,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     ⑤ **不要再问/不要再动**：CI 的另两条配方（灾厄精华换购、天顶世界专用）用户已定**不做**；
        命名口径里"已知但本轮未动"的四类（第 4 节）也别自作主张改；
        `Devastation` 显示名、欧米茄蓝职业头、金源盗贼头三处差异都已结案。
-  - **进游戏待验证（新会话可以先问用户这一句）**：2026-10-09 曾因漏一张增益图标（`CosmicEnergyBuff`）
-    被 tML 在加载期禁用过一次（已修，并新增 `Tools/CheckImplicitTextures.ps1` 兜底）；**用户尚未回报
-    "重新启用后能干净进游戏"**，而且当天新落地的召唤系（归墟之灵 3000 档、宇宙灯笼、幽焰、哨兵炮台等）
-    与数值膨胀开关都**没在游戏里实测过**。
+  - **进游戏实测历史**：2026-10-09 曾因漏一张增益图标（`CosmicEnergyBuff`）被 tML 在加载期禁用过一次
+    （已修，并新增 `Tools/CheckImplicitTextures.ps1` 兜底）；**2026-10-10 用户实测回报「没有任何问题」**——
+    当天新落的「光阴时流伞」链两件、此前的召唤系装备与 `StatInflation` 开关都已进游戏跑通。
+    ⇒ **当前没有挂着的"待实测"项。**
   - **工程基线**：`dotnet build` **0 警告 0 错误**、`Tools/CheckResources.ps1` **176 条全命中**、
     `Tools/CheckImplicitTextures.ps1` **282 个类全命中**（2026-10-09 新增第三个自检脚本）
     （元素之斧三张、古冰晶四张贴图是"类同名隐式"引用、脚本不计数，已按第 4 节的口径手工 `Test-Path` 核过；
