@@ -16,8 +16,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
     /// 按缺失生命给更高一档的再生（3~7 HP/s）、**带减益时**按节拍直接回血（可被惩罚机制拖慢）、
     /// 随减益数上涨的动态防御（20+(N−1)×8）、以及对一批灾厄持续伤害减益的**免疫**。
     /// <para>
-    /// 与源的三处**用户点名偏离**（2026-09-28，源里这三项都没有）：
-    /// ① 基础防御 8 → **12**；② 追加 **12% 伤害减免**；③ 追加**免疫击退**。
+    /// 与源的**用户点名偏离**（2026-09-28，两项源里都没有）：① 基础防御 8 → **12**；② 追加**免疫击退**。
+    /// 同批追加的「**12% 伤害减免**」已按用户 2026-10-12 要求**删除**（本地化同步删行）。
+    /// 另：基础防御靠 <c>Item.defense</c> 由游戏自动显示，本地化不再手写「防御 +12」那一行。
     /// </para>
     /// </summary>
     internal class Purity:ModItem
@@ -28,7 +29,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 7));
             ItemID.Sets.AnimatesAsSoul[Type] = true;
         }
-        /// <summary>物品基础属性：18×44、防御 +12（源为 8，用户点名 +4）、月后稀有度 15（源为 Violet 档）、1 铂 50 金</summary>
+        /// <summary>物品基础属性：18×44、防御 +12（源为 8，用户点名 +4；该值由 <c>Item.defense</c> 自动显示，本地化不写）、月后稀有度 15（源为 Violet 档）、1 铂 50 金</summary>
         public override void SetDefaults()
         {
             Item.width = 18;
@@ -40,14 +41,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>
-        /// 装备时：+100 最大生命、12% 伤害减免、免疫击退，置位 <c>purity</c> 与蜂蜜系三个标记
+        /// 装备时：+100 最大生命、免疫击退，置位 <c>purity</c> 与蜂蜜系三个标记
         /// （继承整条（古）链的回血与减半），并按源加光（光辉软泥（古）/ 甘露安瓿（古）都没装备时才加）。
-        /// 其中伤害减免与免疫击退是用户点名追加的（源无）
+        /// 其中免疫击退是用户点名追加的（源无）；同批追加的 12% 伤害减免已按用户 2026-10-12 要求删除
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.statLifeMax2 += 100;
-            player.endurance += 0.12f;
             player.noKnockback = true;
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.purity = true;

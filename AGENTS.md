@@ -2713,6 +2713,30 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | `BloodyWormScarf` | 血蠕虫围巾 | **血腥蠕虫围巾** | Bloody Worm Scarf |
 | `BloodyWormTooth` | 血蠕虫牙 | **血腥蠕虫牙** | Bloody Worm Tooth |
 | `CoreOfTheBloodGod` / `BloodPact` / `FleshTotem` | 血神核心 / 血契 / 血肉图腾 | 一致 | Core Of The Blood God / Blood Pact / Flesh Totem |
+### 10.6 宝石系三件（王冠宝石 / 感染宝石 / 无暇粹魂晶，2026-10-12 补记）
+
+三件是**互斥**的升级链（源为 else-if 链，优先级：无暇粹魂晶 > 感染宝石 > 王冠宝石）：
+
+| 物品（显示名） | 内部名 | 尺寸/价值/稀有度 | 基础防御 | 效果 |
+|---|---|---|---|---|
+| **王冠宝石** | `CrownJewel`（Defense） | 26×26 / 1 金 / 蓝 | 4 | 生命再生 +1 HP/s；身上带任何减益时提高到 2.5 HP/s，并大幅加快再生回复速度 |
+| **感染宝石** | `InfectedJewel`（Defense） | 26×26 / 48 金 / 黄绿 | 6 | 生命再生 +1 HP/s；带减益时合计 3 HP/s 且加快回复；**这条链第一件用动态防御**（每多一种减益额外 5 点、首个 16 点，每秒回落 1 点） |
+| **无暇粹魂晶** | `Purity`（Defense） | 18×44 / 1 铂 50 金 / 月后（15） | 12 | +100 最大生命；免疫击退；继承甘露安瓿（古）全部效果；低血高再生 3~7 HP/s；动态防御 20+(N−1)×8；带减益按节拍直接回血（拖久了会变慢）；大幅减免持续伤害类减益 |
+
+- 获得途径：王冠宝石 = 史莱姆王掉落（`CalamityDemutationGlobalNPC.ModifyNPCLoot`，源与本工程都**没有配方**）；
+  感染宝石 = 王冠宝石 + `AureusCell`×10 + `Stardust`×25 @ 秘银砧（现代版 `Stardust`→`StarblightSoot`、
+  经典版 `AureusCell`→`AstralJelly`）；无暇粹魂晶 = 甘露安瓿（古）+ 感染宝石 + `AuricBar`×5 +
+  `AscendantSpiritEssence`×4 @ 宇宙砧（经典版换 `AuricOre`×5 + `EndothermicEnergy`×4 @ 嘉登熔炉）。
+- 实现锚点：装备只置标记 `crownJewel` / `infectedJewel` / `purity`（`CalamityDemutationPlayer`，`ResetEffects` 复位），
+  数值在玩家侧结算（`CalamityDemutationPlayer.cs` 约 4224 行起的「宝石系三件」块，落在 `UpdateLifeRegen` 里）；
+  动态防御三件共用 `jewelBonusDefense`（见 §8「随身上减益数上涨」那条）。
+- **本地化不写基础防御行（2026-10-12 用户口径）**：`Item.defense` 由游戏自动显示成「N 防御」行，
+  三件的 tooltip 已删掉手写的「防御 +N」/「+N defense」，本地化与自动行不再重复——**新增饰品时别再手写这一行**。
+- **无暇粹魂晶的 12% 伤害减免已删（2026-10-12 用户要求）**：那是 2026-09-28 用户点名追加的三项之一
+  （①基础防御 8→12 ②追加 12% 伤害减免 ③追加免疫击退，**源 2.0.3.9 里三项都没有**），现只保留 ①③；
+  `Purity.cs` 的 `player.endurance += 0.12f` 与两份本地化的「伤害减免提高 12%」/「12% increased damage reduction」同步删除。
+  ⚠️ 同一批「手写基础属性行」只出现在这三件，工程其余饰品的「防御」字样都是**条件/动态加成**（如「夜晚时防御 +30」），
+  那些是玩家侧结算的额外值、不重复自动行，不要跟着删。
 ## 11. 本机 Codex 客户端（环境维护；不是模组内容）
 
 > 2026-10-08 把 `codex` 从 **0.154.0 手工升到 0.161.0**，2026-10-09 又升到 **0.162.0**（官方 `codex update` 在本机走不通）。

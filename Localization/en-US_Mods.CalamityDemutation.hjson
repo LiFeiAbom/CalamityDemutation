@@ -2743,8 +2743,6 @@ Items: {
 		DisplayName: Purity
 		Tooltip:
 			'''
-			+12 defense
-			12% increased damage reduction
 			Grants immunity to knockback
 			Increases maximum life by 100
 			Inherits all effects of Ambrosial Ampoule (Ancient)
