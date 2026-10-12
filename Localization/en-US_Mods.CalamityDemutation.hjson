@@ -969,7 +969,6 @@ Items: {
 		DisplayName: Crown Jewel
 		Tooltip:
 			'''
-			+4 defense
 			Increases life regeneration by 1 HP/s
 			While afflicted by any debuff, regeneration rises to 2.5 HP/s and builds up far faster
 			'''
@@ -1688,7 +1687,6 @@ Items: {
 		DisplayName: Infected Jewel
 		Tooltip:
 			'''
-			+6 defense
 			Increases life regeneration by 1 HP/s
 			While afflicted by any debuff, regeneration rises to 3 HP/s and builds up far faster
 			Grants 5 extra defense per additional debuff (starting at 16 for the first), decaying by 1 per second

@@ -14,7 +14,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
     /// </summary>
     internal class CrownJewel:ModItem
     {
-        /// <summary>物品基础属性：26×26、防御 +4、稀有度蓝（源为 Rarity1 档，对应 1 金）</summary>
+        /// <summary>物品基础属性：26×26、防御 +4（该值由 <c>Item.defense</c> 自动显示，本地化不写）、稀有度蓝（源为 Rarity1 档，对应 1 金）</summary>
         public override void SetDefaults()
         {
             Item.width = 26;
