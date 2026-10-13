@@ -914,6 +914,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   数值膨胀的「召唤系」批次也在同日结清（见第一屏③与第 7 节表；三件同时改了中文名，见第一屏②末尾）。
   **本链已无待办**；工程层面只剩第一屏④那份"要不要向源对齐"的口径清单。
 
+- 最近一批工作（2026-10-13）：**血神核心（`CoreOfTheBloodGod`）改挂 +6% 近战攻击速度**（用户点名）。
+  改动四处：`CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块加回
+  `Player.GetAttackSpeed<MeleeDamageClass>() += 0.06f;`（沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 本次改挂 +6%）；
+  中英 tooltip 各加一行（zh「近战攻击速度提高 6%」/ en「6% increased melee attack speed」）；
+  物品类注释与 §10.2 表格同步更新。
 - 最近一批工作（2026-10-10）：**按用户要求删除血神核心（`CoreOfTheBloodGod`）的 +10% 近战攻击速度**（即 2026-10-06 追加的那项）。
   改动四处：`CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块删掉
   `Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;`；中英 tooltip 各删一行（zh「近战攻击速度提高 10%」/
@@ -2679,7 +2684,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 | 物品（显示名） | 内部名 | 尺寸/价值/稀有度 | 效果 | 来源 |
 |---|---|---|---|---|
-| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；减伤 +10%；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半（曾于 2026-10-06 追加的近战攻速 +10% 已按用户要求于 **2026-10-10 删除**，本地化同步删行） | 合成（见 10.3） |
+| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；减伤 +10%；**近战攻速 +6%**（2026-10-13 用户点名；沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 本次改挂 +6%）；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半 | 合成（见 10.3） |
 | 血炎晶核 | `BloodflareCore`（Comprehensive） | 26×26 / 45 金 / 专家 | 吸血光环；防御<100 → +15% 通用伤害；生命≤50% → 减伤+15%/通用伤害+10%/暴击+10%；生命≤15% → 减伤+30%/通用伤害+20%/暴击+20% | 掠夺者（Ravager）宝藏袋，需已击败亵渎（`BossSystem.Providence`） |
 | 血腥蠕虫围巾 | `BloodyWormScarf`（JobAcc/Melee，`EquipType.Neck`） | 26×42 / 15 金 / 专家 | 近战伤害 +10%、近战攻速 +10%、减伤 +15% | 合成（见 10.3） |
 | 血契 | `BloodPact`（Defense） | 26×26 / 24 金 / 黄 | 最大生命翻倍；代价是 25% 概率被暴击（受击约 ×2.5） | 掠夺者宝藏袋 |
