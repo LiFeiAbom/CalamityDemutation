@@ -21,8 +21,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 价值 2 铂金 40 金（源 `Rarity15BuyPrice`）；持握偏移 (-10, 0)。
     /// </para>
     /// <para>
-    /// 配方（用户指定）：**现代 = P90（本工程自持件）+ 古圣金源锭 `AuricBar`×5 @ 宇宙砧 `CosmicAnvil`**
-    /// ——源配方那味 `ClockGatlignum`（发条加特林）已随 1.4.4 被灾厄删除，故按用户口径换成 P90；
+    /// 配方（用户指定）：**现代 = P90（本工程自持件）+ 原版链式机枪 + 古圣金源锭 `AuricBar`×5
+    /// @ 宇宙砧 `CosmicAnvil`** ——源配方那味 `ClockGatlignum`（发条加特林）已随 1.4.4 被灾厄删除，
+    /// 故按用户口径换成 P90，并按用户 2026-10-14 追加要求再补一味**原版链式机枪**（`ItemID.ChainGun`）；
     /// **经典 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉**（照经典世系 cal-1.4.2.101，与工程其它件同口径）。
     /// </para>
     /// </summary>
@@ -103,6 +104,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 {
                     Recipe recipe = CreateRecipe();
                     recipe.AddIngredient<P90>();
+                    recipe.AddIngredient(ItemID.ChainGun);      // 原版链式机枪（用户 2026-10-14 追加要求）
                     recipe.AddIngredient(auricBar.Type, 5);
                     recipe.AddTile(cosmicAnvil.Type);
                     recipe.Register();

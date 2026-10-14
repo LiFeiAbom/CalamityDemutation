@@ -3068,7 +3068,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 | CI `ACTMinigun` | 285 | 92×44 | 3 / 3 | 2.5 | 22 | 80% | AlgtPink / CatalystViolet 可切 | 引导 + `noUseGraphic` + CI 自己的链枪音 | — |
 
 - **卡点（已解决）**：2.0 与 CI 的配方都要 `ClockGatlignum`（发条加特林），而它**在 1.4.4 起被灾厄删除**
-  （实装 2.2.2 无此件）。按用户指定换成 **P90 + 金源锭×5 @ 宇宙砧**（`CosmicAnvil`，用户口中的"星宇砧"）。
+  （实装 2.2.2 无此件）。按用户指定换成 **P90 + 原版链式机枪 + 金源锭×5 @ 宇宙砧**
+  （`CosmicAnvil`，用户口中的"星宇砧"；链式机枪是用户 2026-10-14 追加的一味）。
 - **经典分支配方**：照 cal-1.4.2.101 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉。
 - 落地：`Content/Items/Weapons/Ranged/Minigun.cs` + `Minigun.png`；除膨胀外**没有派生点要改**
   （射的是弹药本体，伤害走 `Shoot` 的 `damage` 自动跟随）。
