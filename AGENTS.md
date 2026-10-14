@@ -3011,7 +3011,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 另有 2.0.4 的 478 渐强版）。实装 2.2.2 里**它还在**（喷火器那支），本工程移植的是老枪——与本体**同名不同物**。
 
 **口径（用户 2026-10-14 逐条拍板）**：走 **CI 支线**（`CalamityInheritance-Beta1.12` 的 `DragonsBreathold`）、
-贴图用 **cal-1.4.2.101** 那张 64×28、爆炸弹幕自持一枚与灾厄 `FuckYou` 同款的件、
+爆炸弹幕自持一枚与灾厄 `FuckYou` 同款的件、
 灾厄"贴脸射击"**不做**、数值膨胀 **220 → 478**、中文名就叫「巨龙之息」。
 
 **逐版老枪数据（对比备查）**
@@ -3028,11 +3028,13 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 **已落地三件 + 两处工程级新增**
 
-- `Content/Items/Weapons/Ranged/DragonsBreath.cs`（物品）：64×28、伤害 220、9/18 帧、`reuseDelay 12`、
+- `Content/Items/Weapons/Ranged/DragonsBreath.cs`（物品）：**58×36**（用户 2026-10-14 指定换用 CI
+  「远古巨龙之息」`AncientDragonsBreath` 那张图 `E69B40A4`，原先 cal-1.4.2.101 的 64×28 旧图同日删除；
+  持握偏移随之取该图自带的 `(-15, 10)`）、伤害 220、9/18 帧、`reuseDelay 12`、
   击退 6.5、弹速 12、子弹弹药、66% 省弹、月后稀有度 15 档、价值 2 铂金 40 金；左键两连发
   （8 颗普通 → 8 颗龙息弹，第二发散布 ×0.5 + `Item74` 音效 + 30 颗烟尘）、右键全自动
   （伤害 ×0.9、随机混 4 颗龙息弹、散布 ×1.22、间隔归零）；禁用「Murderous」前缀；
-  持握偏移暂留 CI 的 `(-5, 5)`（CI 配的是 124×72 的图，本件换 64×28，实测不合适再调）。
+  持握偏移 `(-15, 10)`（随新图；看着别扭直接改）。
 - `Content/Projectiles/Ranged/DragonsBreathRound.cs`（龙息弹）：4×4、`extraUpdates 10`、穿透 1、180 帧、
   `DustID.Flare` 拖尾、命中挂 **Dragonfire** 300 帧（走 `ApplyCalamityBuffWithFallback`，缺灾厄退回「着火了！」）
   + 原版「燃烧」`OnFire3` 600 帧、消亡生成爆炸弹幕并标成 Ranged；拖影走 `CDUtil.DrawAfterimagesCentered`。

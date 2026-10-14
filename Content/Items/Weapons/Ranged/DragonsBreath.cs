@@ -13,12 +13,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// <c>YharonBag.cs</c> 里 `DropHelper.WeightStack&lt;DragonsBreath&gt;`；本工程挂在既有犽戎袋钩子上）。
     /// <para>
     /// **口径（用户 2026-10-14 逐条拍板）**：走 **CI 支线**（`CalamityInheritance-Beta1.12` 的 `DragonsBreathold`）、
-    /// 贴图用 **cal-1.4.2.101** 那张 64×28、爆炸弹幕自持一枚与灾厄 <c>FuckYou</c> 同款的件、
+    /// 爆炸弹幕自持一枚与灾厄 <c>FuckYou</c> 同款的件、
     /// 灾厄的"贴脸射击"**不做**、数值膨胀 **220 → 478**、中文名就用「巨龙之息」。
     /// </para>
     /// <para>
     /// 与源（CI）的差别逐条：① 类名 `DragonsBreathold` → **`DragonsBreath`**（工程命名口径：去掉 CI 式 `old` 后缀）；
-    /// ② 贴图 124×78 → **64×28**（用户指定）；③ `Item.Calamity().canFirePointBlankShots`（灾厄贴脸射击）
+    /// ② 贴图 124×78 → **58×36**（用户 2026-10-14 指定换成 **CI「远古巨龙之息」`AncientDragonsBreath`** 那张图，
+    /// 同日已把原先 cal-1.4.2.101 的 64×28 旧图替换掉；持握偏移随之用该图自带的 (-15, 10)）；
+    /// ③ `Item.Calamity().canFirePointBlankShots`（灾厄贴脸射击）
     /// ——本工程没有这套机制，不做；④ 微光与新版灾厄 `DragonsBreath` 互换（CI 的 `CIServerConfig.CustomShimmer`）
     /// ——不移植；⑤ 弹幕与爆炸弹幕改成本工程自持件（`DragonsBreathRound` / `FuckYou`），
     /// CI 自己直接调灾厄那两件。
@@ -70,8 +72,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 64;                          // 贴图宽（像素，取 cal-1.4.2.101 那张）
-            Item.height = 28;                         // 贴图高（像素）
+            Item.width = 58;                          // 贴图宽（像素，取 CI「远古巨龙之息」那张图）
+            Item.height = 36;                         // 贴图高（像素）
             Item.damage = 220;                        // 面板伤害（照 CI；1.3-release/2.0 是 198）
             Item.DamageType = DamageClass.Ranged;     // 射手伤害类型
             Item.useTime = 9;
@@ -97,9 +99,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.NextFloat() > AmmoSaveChance;
         /// <summary>
-        /// 持握偏移：暂留 CI 的 (-5, 5)（CI 那张图是 124×72，本件换成 64×28 的图，实测不合适再调）
+        /// 持握偏移：用这张图（CI「远古巨龙之息」）自带的 (-15, 10)；换图后如看着别扭直接改这里
         /// </summary>
-        public override Vector2? HoldoutOffset() => new Vector2(-5, 5);
+        public override Vector2? HoldoutOffset() => new Vector2(-15, 10);
         /// <summary>
         /// 允许右键（右键 = 全自动模式）
         /// </summary>
