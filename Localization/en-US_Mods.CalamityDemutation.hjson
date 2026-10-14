@@ -2878,6 +2878,14 @@ Items: {
 			Converts wooden arrows into sliding energy bolts
 			'''
 	}
+	FlarewingBow: {
+		DisplayName: Flarewing Bow
+		Tooltip:
+			'''
+			Shoots a spread of 5 arrows
+			Wooden arrows are converted into bouncing obsidian bats
+			'''
+	}
 }
 
 Keybinds: {
@@ -3077,4 +3085,5 @@ Projectiles: {
 	OrangeExoArrow.DisplayName: Orange Exo Arrow
 	TealExoArrow.DisplayName: Teal Exo Arrow
 	LunarBolt.DisplayName: Bolt
+	FlareBat.DisplayName: Flare Bat
 }

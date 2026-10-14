@@ -2877,6 +2877,14 @@ Items: {
 			将木箭转化为滑行能量弹
 			'''
 	}
+	FlarewingBow: {
+		DisplayName: 炎翼弓
+		Tooltip:
+			'''
+			一次洒出 5 支箭
+			木箭会被转化为撞墙反弹的黑曜石蝙蝠
+			'''
+	}
 }
 
 Keybinds: {
@@ -3076,4 +3084,5 @@ Projectiles: {
 	OrangeExoArrow.DisplayName: 橙色星流箭
 	TealExoArrow.DisplayName: 青色星流箭
 	LunarBolt.DisplayName: 能量弹
+	FlareBat.DisplayName: 炎翼蝠
 }

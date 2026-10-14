@@ -336,6 +336,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 速射机枪（Minigun） | 375 | 920 | 用户 2026-10-14 指定（关态也由用户改过：源 2.0 是 275；见 §13） |
 | 天堂之风（HeavenlyGale） | 208 | 720 | 用户 2026-10-14 指定（形态取 CI 的 ExoLore 分支，源 CI 关态是 508；见 §15） |
 | 月光弓（LunarianBow） | 32 | 80 | 用户 2026-10-14 指定（天堂之风链底件；见 §15.4） |
+| 炎翼弓（FlarewingBow） | 17 | 54 | 用户 2026-10-14 指定（天堂之风链；见 §15.6） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3231,8 +3232,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 15.5 待办（下一步按此顺序推进）
 
-1. **批 2**：`FlarewingBow`（炎翼弓）→ `BladedgeGreatbow`（剑刃巨弓，2.2.2 已删）→ `CosmicBolter`（宇宙弩炮，已删）
-   → 其余 T3/T2 武器（`ContinentalGreatbow` / `DarkechoGreatbow` / `Monsoon`）。
+1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 已落地，见 15.6** → `BladedgeGreatbow`（剑刃巨弓，2.2.2 已删）
+   → `CosmicBolter`（宇宙弩炮，已删）→ 其余 T3/T2 武器（`ContinentalGreatbow` / `DarkechoGreatbow` / `Monsoon`）。
 2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
@@ -3242,3 +3243,23 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 5. **未决（等用户拍板）**：① 三件**掉落类**已删材料（`Tenebris` / `HellcasterFragment` / `Phantoplasm`）怎么落地
    （挂回原 Boss 掉落 / 换等价物 / 只保留经典分支）；② 中层那三件"改动大"的要不要自持；
    ③ 工程 `CoreofCinder` 要不要向 2.0 的 `CoreofSunlight` 对齐（34×34 + 发光层 + 卖 40 银）。
+
+### 15.6 已落地：炎翼弓（FlarewingBow）+ 炎翼蝠（FlareBat）✅ 2026-10-14
+
+- 用户拍板：中文名 **炎翼弓**（弹幕 **炎翼蝠**）、**数值膨胀 17 → 54**；
+  面板 / 支数（5 支）/ 蝙蝠机制 / 非木箭处理**全取 2.0**；经典分支照经典版配方注册、数值共用 2.0。
+- 文件：`Content/Items/Weapons/Ranged/FlarewingBow.cs`(+`.png` 40×72)、
+  `Content/Projectiles/Ranged/FlareBat.cs`(+`.png` **24×150，五帧动画**)。
+- 面板（照 2.0）：伤害 17 / 使用·动画 30 帧 / 击退 1.5 / 弹速 16 / 浅红（原版档）/
+  12 金（源 `Rarity4BuyPrice`）/ 音 `Item5`；一次 **5 支**（±2 × π/10 = **±36°**），
+  木箭 → `FlareBat`、非木箭照原样且**伤害不打折**（经典版是木箭 ×1.5 / 非木箭 ×0.66，**不取**），
+  两者都 `noDropItem`，贴墙时整排收回玩家身上。
+- `FlareBat`：24×24 / 穿透 3 / 寿命 300 / 微光 0.25 / 本地命中冷却 10 / 5 帧循环动画；
+  **回旋**（第 30~110 帧朝"最近的**玩家**"拉方向——源写法 `Player.FindClosest`，
+  2.0 / 2.2.2 / 经典**三处都一样**，不是笔误，观感是蝙蝠绕回主人）、
+  **撞墙反弹**（穿透 -1，有余量则速度分量各自取反）、**命中即死**（所以"穿透 3"实际只服务撞墙反弹）。
+- 配方（照源，@**秘银砧**）：地狱之翼弓 + 日光精华×5 + 活火块×50 + 黑曜石×10；
+  现代取 `EssenceofSunlight`、经典取旧名 `EssenceofCinder`（同一件改名的既有口径），**两分支各一条**。
+- **2.2.2 的改法（本件不取，备查）**：2.0.3.9 起改"3 支 / 31 伤 / `CheckWoodenAmmo`"，
+  2.2.2 再加"使用 35 帧、弹速 18、站台改铁砧、蝙蝠穿透 2、命中挂燃烧 III 480 帧 + 伤害减半、
+  穿透剩 1 后追踪敌人（550 / 12 / 20）"。
