@@ -3,6 +3,7 @@ using CalamityDemutation.Content.Buffs.PositiveBuffs;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Weapons.Melee;
+using CalamityDemutation.Content.Items.Weapons.Ranged;
 using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Content.Items.Accessories.Defense;
 using CalamityDemutation.Content.Items.Accessories.Function;
@@ -453,6 +454,9 @@ namespace CalamityDemutation.Content.Items
                     // 焚灭天惩（源版里它与 DragonRage 同属犽戎宝袋那组 8 把武器、走 DropHelper.CalamityStyle 保底抽取；
                     // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典版灾厄的犽戎宝袋都掉了这把）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
+                    // 巨龙之息（射手）：源版（1.3-release/2.0 的 YharonBag.cs 里 DropHelper.WeightStack<DragonsBreath>）
+                    // 同在犽戎袋这组武器里，本工程沿用同一条 1/3 简化口径挂回
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
                 }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -533,6 +537,8 @@ namespace CalamityDemutation.Content.Items
                     // 焚灭天惩（源版里它与 DragonRage 同属犽戎宝袋那组 8 把武器、走 DropHelper.CalamityStyle 保底抽取；
                     // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典版灾厄的犽戎宝袋都掉了这把）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
+                    // 巨龙之息（射手）：同上，经典版灾厄的犽戎袋里也有它
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
                 }
             }
         }

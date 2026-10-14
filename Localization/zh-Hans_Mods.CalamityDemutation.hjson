@@ -1226,6 +1226,20 @@ Items: {
 			'''
 	}
 
+	DragonsBreath: {
+		DisplayName: 巨龙之息
+		Tooltip:
+			'''
+			左键两连发
+			第一发散射 8 颗普通子弹
+			第二发紧密散射 8 颗龙息弹
+			右键全自动射击并随机混装子弹，但伤害降低 10%
+			这把武器的散布没有随机性
+			66% 几率不消耗弹药
+			「现在不再是喷火器了」
+			'''
+	}
+
 	DrewsWings: {
 		DisplayName: Drew之翼
 		Tooltip:
@@ -2885,6 +2899,7 @@ Projectiles: {
 	DestructionStar.DisplayName: 毁灭之星
 	DragonRageFireOrb.DisplayName: 巨龙之怒火球
 	DragonRageHeld.DisplayName: 巨龙之怒（手持）
+	DragonsBreathRound.DisplayName: 龙息弹
 	DrewsSandyWaifu.DisplayName: 稀有沙元素
 	EclipseMirrorBurst.DisplayName: 蚀日魔镜闪光
 	ElementalAxeMinion.DisplayName: 元素之斧
@@ -2904,6 +2919,7 @@ Projectiles: {
 	FlameBlast.DisplayName: 烈焰冲击
 	FlameBurst.DisplayName: 烈焰迸发
 	FrostMistFriendly.DisplayName: 冰雾
+	FuckYou.DisplayName: 爆炸
 	FungalClump.DisplayName: 真菌团块
 	FungalHeal.DisplayName: 真菌治疗
 	GalacticaComet.DisplayName: 星河彗星

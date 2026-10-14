@@ -1226,6 +1226,20 @@ Items: {
 			'''
 	}
 
+	DragonsBreath: {
+		DisplayName: Dragon's Breath
+		Tooltip:
+			'''
+			Left click fires in two-shot bursts
+			The first shot is a spread of 8 normal bullets
+			The second shot is a tight spread of 8 Dragon's Breath rounds
+			Right click fires full auto and mixes the bullets randomly, but does 10% less damage
+			This weapon has no randomness to its spread pattern
+			66% chance to not consume ammo
+			'No longer an awkward flamethrower now'
+			'''
+	}
+
 	DrewsWings: {
 		DisplayName: Drew's Wings
 		Tooltip:
@@ -2886,6 +2900,7 @@ Projectiles: {
 	DestructionStar.DisplayName: Star of Destruction
 	DragonRageFireOrb.DisplayName: Dragon Rage Fire Orb
 	DragonRageHeld.DisplayName: Dragon Rage Held
+	DragonsBreathRound.DisplayName: Dragon's Breath Round
 	DrewsSandyWaifu.DisplayName: Oxy's Waifu
 	EclipseMirrorBurst.DisplayName: Eclipse Mirror Flash
 	ElementalAxeMinion.DisplayName: Elemental Axe
@@ -2905,6 +2920,7 @@ Projectiles: {
 	FlameBlast.DisplayName: Flame Blast
 	FlameBurst.DisplayName: Flame Burst
 	FrostMistFriendly.DisplayName: Mist
+	FuckYou.DisplayName: Explosion
 	FungalClump.DisplayName: Fungal Clump
 	FungalHeal.DisplayName: Fungal Heal
 	GalacticaComet.DisplayName: Galactus Comet
