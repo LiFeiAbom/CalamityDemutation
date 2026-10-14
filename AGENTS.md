@@ -341,6 +341,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 炎翼弓（FlarewingBow） | 17 | 54 | 用户 2026-10-14 指定（天堂之风链；见 §15.6） |
 | 剑刃巨弓（BladedgeGreatbow） | 28 | 60 | 用户 2026-10-14 指定（天堂之风链，2.2.2 已删件；见 §15.7） |
 | 宇宙弩炮（CosmicBolter） | 39 | 94 | 用户 2026-10-14 指定（天堂之风链；见 §15.8） |
+| 大陆巨弓（ContinentalGreatbow） | 34 | 102 | 用户 2026-10-14 指定（天堂之风链；见 §15.9） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3237,8 +3238,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 ### 15.5 待办（下一步按此顺序推进）
 
 1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 见 15.6** → `BladedgeGreatbow`（剑刃巨弓）**✅ 见 15.7**
-   → `CosmicBolter`（宇宙弩炮）**✅ 见 15.8** → 其余 T3/T2 武器
-   （`ContinentalGreatbow` **← 下一件** / `DarkechoGreatbow` / `Monsoon`）。
+   → `CosmicBolter`（宇宙弩炮）**✅ 见 15.8** → `ContinentalGreatbow`（大陆巨弓）**✅ 见 15.9**
+   → 其余 T3/T2 武器（`DarkechoGreatbow` **← 下一件** / `Monsoon`）。
 2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
@@ -3304,3 +3305,20 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   **这是本链第一件吃到"下位自持"红利的武器**：配方里已不再引用灾厄本体的月光弓。
 - **2.2.2 的改法（不取，备查）**：贴图 68×94 + 发光层、伤害 35、木箭走 `CheckWoodenAmmo` 转 `VernalBolt`
   且**伤害/击退 ×1.2**、tooltip 改 "Fires a tight column of three arrows"。
+
+### 15.9 已落地：大陆巨弓（ContinentalGreatbow）✅ 2026-10-14
+
+- **身世要注意**：类名取 2.0 源的 `ContinentalGreatbow`；2.0 / 2.2.2 的类上都挂着
+  `[LegacyName("GreatbowofTurmoil")]`（由「乱世巨弓」改名而来），但**经典版的 `GreatbowofTurmoil`
+  是另一把武器**（显示名 Greatbow of Turmoil、52 伤 / 17 帧 / 每支主箭 1/6 概率随机元素箭、无追加箭），
+  数值与本件不同 ⇒ **只当注释留档，不当作同一件**。（对比：`CosmicBolter`↔`VernalBolter` 是真改名，已按同一件处理。）
+- 用户拍板：中文名 **大陆巨弓**、**数值膨胀 34 → 102**；面板 / 机制（3 支主箭 + 2 支追加元素箭）**全取 2.0**；
+  经典分支按 (a)：用经典版同名材料 `CruptixBar`（推定＝熔渣锭：都 ← 矿×5、30×24、Yellow 档）注册一条、数值共用 2.0。
+- 文件：`Content/Items/Weapons/Ranged/ContinentalGreatbow.cs`(+`.png` 38×68)；**无自带弹幕**
+  （主箭与追加箭都是原版箭）。
+- 面板（照 2.0）：判定 **18×36**（源如此）/ 伤害 34 / 使用·动画 20 帧 / 击退 4 / 弹速 17 / 黄档 / 80 金 / 音 `Item5`。
+- `Shoot`（照 2.0）：3 支主箭（归一化 ×40、±π/10，**木箭 → 火焰箭 `FireArrow`**、全部 `noDropItem`）
+  + 2 支追加箭（`CursedArrow` / `HellfireArrow` / `IchorArrow` 三选一、**伤害 ×0.5**、±0.5 抖动、
+  `usesLocalNPCImmunity` + 本地冷却 10）。
+- 配方（@**秘银砧**）：熔渣锭×10；现代取 `ScoriaBar`、经典取旧名 `CruptixBar`，两分支各一条。
+- **2.2.2 的改法（不取，备查）**：45 伤 / 24 帧、木箭判定 `CheckWoodenAmmo`、追加箭池**去掉诅咒箭**。

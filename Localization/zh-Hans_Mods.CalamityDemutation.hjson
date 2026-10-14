@@ -2901,6 +2901,15 @@ Items: {
 			将木箭转化为滑行能量弹
 			'''
 	}
+	ContinentalGreatbow: {
+		DisplayName: 大陆巨弓
+		Tooltip:
+			'''
+			木箭会被点燃成火焰箭
+			一次射出 3 支箭
+			额外射出 2 支诅咒 / 狱火 / 灵液箭
+			'''
+	}
 }
 
 Keybinds: {

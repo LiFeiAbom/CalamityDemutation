@@ -2902,6 +2902,15 @@ Items: {
 			Converts wooden arrows into sliding energy bolts
 			'''
 	}
+	ContinentalGreatbow: {
+		DisplayName: Continental Greatbow
+		Tooltip:
+			'''
+			Wooden arrows are set alight with fire
+			Fires 3 arrows at once
+			Fires 2 additional cursed, hellfire, or ichor arrows
+			'''
+	}
 }
 
 Keybinds: {
