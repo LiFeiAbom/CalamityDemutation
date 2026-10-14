@@ -2855,6 +2855,28 @@ Items: {
 			大幅减免持续伤害类减益造成的伤害
 			'''
 	}
+	HeavenlyGale: {
+		DisplayName: 天堂之风
+		Tooltip:
+			'''
+			将木箭转化为 7 支随机的星流箭矢
+			绿色的星流箭矢命中后卷起星流风暴
+			蓝色的星流箭矢命中后会追加一串后续箭矢
+			橙色的星流箭矢命中后引发火焰爆炸
+			青色的星流箭矢可无限穿透并无视无敌帧
+			使用的任何非木箭都会造成 1.25 倍伤害
+			66% 的几率不消耗弹药
+			[c/0080CA:绿色与橙色的星流箭矢会追踪敌人]
+			'''
+	}
+	LunarianBow: {
+		DisplayName: 月光弓
+		Tooltip:
+			'''
+			一次射出两支箭
+			将木箭转化为滑行能量弹
+			'''
+	}
 }
 
 Keybinds: {
@@ -3046,4 +3068,12 @@ Projectiles: {
 	ManaPolarizerHealOrb.DisplayName: 魔能谐振仪治疗球
 	VoidFieldGenerator.DisplayName: 虚空场发生器
 	SilvaBurst.DisplayName: 始源林海爆裂
+	BlueExoArrow.DisplayName: 蓝色星流箭
+	BlueExoArrow2.DisplayName: 星流箭
+	ExoMark.DisplayName: 星流印记
+	ExoTornado.DisplayName: 星流风暴
+	GreenExoArrow.DisplayName: 绿色星流箭
+	OrangeExoArrow.DisplayName: 橙色星流箭
+	TealExoArrow.DisplayName: 青色星流箭
+	LunarBolt.DisplayName: 能量弹
 }

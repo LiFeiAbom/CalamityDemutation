@@ -250,6 +250,8 @@
 ## 7. 数值膨胀（StatInflation：武器 37 把 + 盔甲 12 件 + 召唤系 11 件；2026-10-01 全量接入完毕，
 2026-10-05 补齐女妖之爪条目，2026-10-09 召唤系 11 件**全部结清**：10 件接入、太阳神杖按用户指示不接入；
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞）
+2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞；
+2026-10-14 追加 巨龙之息 / 速射机枪 / 天堂之风（射手系，见 §12 / §13 / §15））
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -332,6 +334,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 女妖之爪（BansheeHook） | 220 | 250 | 用户 2026-10-03 指定；关态 220 取自大修重制版（源本体 250），2026-10-05 审计时补登记 |
 | 巨龙之息（DragonsBreath） | 220 | 478 | 用户 2026-10-14 指定（本件走 CI 支线，关态 = CI 的 220；见 §12） |
 | 速射机枪（Minigun） | 375 | 920 | 用户 2026-10-14 指定（关态也由用户改过：源 2.0 是 275；见 §13） |
+| 天堂之风（HeavenlyGale） | 208 | 720 | 用户 2026-10-14 指定（形态取 CI 的 ExoLore 分支，源 CI 关态是 508；见 §15） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3142,3 +3145,98 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 **收尾时的仓库状态**：`master` = `369f651`（与 `origin/master` 同步），工作区干净、无未跟踪文件；
 `dotnet build` 0 警告 0 错误；`CheckResources` 176 条素材引用全命中；`CheckImplicitTextures` 452 个类全命中。
+
+## 15. 天堂之风（Heavenly Gale）与其下位链 —— 2026-10-14 开工（链未完）
+
+**工程口径新增（用户 2026-10-14 定，原文：「优先移植下位，进行配方剥离」）**：
+移植上位件之前，先把它的配方**拆成一份下位件清单**（这一步即"配方剥离"），按「从最低下位往上」逐件自持；
+配方只允许引用**本工程自持件**或**确认仍在实装灾厄（2.2.2）里**的件，理由（用户原话）：「因为 2.2.2 改动极大」。
+**材料类（非武器 / 非饰品）一律走软依赖**：`ModLoader.TryGetMod` + `TryFind<ModItem>` 按名字取，
+缺件不注册（可写警告），照 `Content/Items/Materials/` 下既有三件的写法。
+
+### 15.1 天堂之风本体 ✅ 已落地（2026-10-14）
+
+- **形态取 CI Beta1.12 的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）**（用户点名），照工程既有口径**恒处 Lore 模式**：
+  不搬 CI 的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支、也不搬 `CIConfig.AmmoConversion` 开关。
+- 用户逐条拍板：**伤害 208**（源 CI 508）、**数值膨胀 208 → 720**、**配方取 2.0**（→ 15.5 第 4 条会改成引用自持件）、
+  中文名 **天堂之风**、**带发光层**；类名 / 文件名用 `HeavenlyGale`（不带 CI 式后缀）。
+- 面板：46×98 / 使用·动画 9·18 帧 / 击退 4 / 弹速 12 / 箭类弹药 / 一次 **7 支**（±3 × π/10 排布，只挪箭点不散射速度）/
+  **66% 不消耗弹药** / 月后 15 档（紫）/ 1 铂金 50 金 / 基础稀有度 `ItemRarityID.Red`。
+- 木箭 → 5 元素池 `[Teal, Orange, Orange, Green, Blue]` 均匀随机（**橙 40%、其余各 20%**）；
+  非木箭 → 7 支原箭、伤害 ×1.25、`noDropItem`（Lore 分支没有"青箭 ×0.66"那套惩罚）。
+- 文件：`Content/Items/Weapons/Ranged/HeavenlyGale.cs`（+ `HeavenlyGale.png` / `HeavenlyGaleGlow.png`，取自 CI 的 46×98）；
+  弹幕 7 个在 `Content/Projectiles/Ranged/`：`TealExoArrow` / `OrangeExoArrow` / `GreenExoArrow` / `BlueExoArrow` /
+  `BlueExoArrow2` / `ExoMark` / `ExoTornado`（**只留 Lore 那一套**，同 `CosmicBlast` 的处理）。
+- **四处工程侧适配**：① `DrawBeam` 落成 `Utilities/ProjUtil.cs` 的新扩展
+  `CDUtil.DrawBeam(length, spacer, lightColor, texture, curve)`——四色星流箭的"光束"全靠它
+  （性能模式下只盖印本体一枚，避免这类纯靠光束表现的弹幕整颗消失）；
+  ② 追踪用 `CDUtil.HomeInOnNPC`（**静态、非扩展**方法，必须写成 `CDUtil.HomeInOnNPC(Projectile, …)`）；
+  ③ 橙箭死亡的 `SparkleParticle` 用工程既有 `Particles/GenericSparkle` 顶（同一族粒子，未再补一份）；
+  ④ 源的 `pointBlankShotDuration`（灾厄贴脸射击）一律不写。
+- **补了一处上游缺口**：`ExoTornado` 源（2.0 / CI / 经典三处都一样）只**读**从不**写** `localAI[0]`，
+  于是"前 30 帧有伤害"永不生效——照工程在 `SandTornado` 上的既有处理补上每帧自增。
+- 共用素材：`Content/Projectiles/LaserProj.png`（6×10 白条，本次从 2.0 拷入，四色星流箭 + 后续箭共用）、
+  `Content/Projectiles/TornadoProj.png`（工程已有 60×60）、`Content/Projectiles/InvisibleProj.png`。
+- 本地化：`Items.HeavenlyGale`（Heavenly Gale / 天堂之风；tooltip 7 行 + 1 行 `[c/0080CA:…]` Lore 提示）、
+  7 条 `Projectiles.*.DisplayName`（青色/橙色/绿色/蓝色星流箭、星流箭、星流印记、星流风暴）。
+
+### 15.2 下位链现况（2.0 配方递归展开）
+
+- **T1 直接七味**：`PlanetaryAnnihilation` / `Alluvion` / `AstrealDefeat` / `ClockworkBow` / `Galeforce` /
+  `TheBallista` / `MiracleMatter`（材料）。
+- **T2**：`CosmicBolter`（2.2.2 **改名 `VernalBolter`**）/ `GalacticaSingularity`（2.2.2 **已删**，工程已自持）/
+  `Monsoon` / `SeaPrism` / `ContinentalGreatbow` / `BladedgeGreatbow`（2.2.2 **已删**）/ `DarkechoGreatbow` /
+  `AerialiteBar` / `AuricBar` / `LifeAlloy` / `CoreofCalamity` / `AscendantSpiritEssence`。
+- **T3**：`LunarianBow` / `FlarewingBow` / `ScoriaBar`+`PerennialBar`+`CryonicBar` /
+  `CoreofSunlight`（2.2.2 与经典**都没有**，但等于工程已有的 `CoreofCinder`）/ `CoreofEleum`（2.2.2 删、已自持）/
+  `CoreofChaos`（2.2.2 删、已自持）/ `Tenebris`+`HellcasterFragment`+`Phantoplasm`
+  （三件都是**掉落物**、2.2.2 已删、经典版都在）。
+- **2.2.2 已删 / 改名（本链涉及）**：`GalacticaSingularity`、`CosmicBolter`(→`VernalBolter`)、`BladedgeGreatbow`、
+  `CoreofSunlight`、`CoreofEleum`、`CoreofChaos`、`Tenebris`、`HellcasterFragment`、`Phantoplasm`(→`Necroplasm`)、
+  `EssenceofChaos`(→`EssenceofHavoc`)。
+- **2.2.2 改动极大（抽样实测）**：`Alluvion` 165→96 且配方砍三味、`AstrealDefeat` 把三把巨弓全删、
+  `PlanetaryAnnihilation` 换料换站台、`Monsoon` 删两味、`ClockworkBow` 808→770 且站台改秘银砧、
+  `TheBallista` 灵气 10→5、`CoreofCalamity` 三核心→三精华、`AuricBar` 换犽戎魂片、
+  `AscendantSpiritEssence` 换 `Necroplasm`。
+- **改动小（可考虑直接引用本体）**：`LunarianBow`（32→27）、`ContinentalGreatbow`（34→45、帧 20→24）、
+  `DarkechoGreatbow`（锭 8→12）、`Galeforce`（配方小改）、`SeaPrism` / `LifeAlloy`（**逐字相同**）、
+  三种矿锭（矿数 −1）。
+- **CI 里这 13 把武器一件都没有** ⇒ 武器层只有两个源：**2.0（功能 + 配方）**与**经典版**（经典分支），2.2.2 只当对照。
+
+### 15.3 已自持的材料（本链底层其实已齐）
+
+| 件 | 工程现状 | 备注 |
+|---|---|---|
+| `GalacticaSingularity` 银河奇点 | ✅ 已有 | ← 四种月亮碎片 @远古操纵机；2.2.x 已删故自持 |
+| `CoreofCinder` 余烬核心 | ✅ 已有 | **＝2.0 的 `CoreofSunlight`**（2.0 源里就挂 `[LegacyName("CoreofCinder")]`）：配方 `EssenceofSunlight + 灵气×3 @秘银砧` 与 2.0 逐项一致。注意工程取的是经典外形/数值（16×16、买价 5 金、无发光层），2.0 那件是 34×34 / 卖 40 银 / 带 Glow——口径差异待用户定 |
+| `CoreofEleum` 寒霜核心 | ✅ 已有 | ← `EssenceofEleum` + 灵气×3 @秘银砧（软依赖） |
+| `CoreofChaos` 混沌核心 | ✅ 已有 | ← `EssenceofHavoc` + 灵气×3 @秘银砧（2.0 那件的名字是 `EssenceofChaos`，2.2.2 改名） |
+
+### 15.4 已落地：月光弓（LunarianBow）✅ 链底第一件（2026-10-14）
+
+- 用户拍板：中文名 **月光弓**；**面板 / 木箭判定 / 弹幕 / 分支处理全取 2.0**。
+- 文件：`Content/Items/Weapons/Ranged/LunarianBow.cs`(+`.png` 32×62)、
+  `Content/Projectiles/Ranged/LunarBolt.cs`(+`.png` 10×10)；弹幕中文名 **能量弹**（源 `Bolt`）。
+- 面板（照 2.0）：伤害 32 / 使用·动画 22 帧 / 击退 2 / 弹速字段 8（**实际出手速度在 `Shoot` 里归一化后 ×15**）/
+  浅红稀有度（**原版档，不涉月后档**）/ 12 金 / 音 `Item75`；一次 2 支（±18°），木箭 → `LunarBolt`、
+  非木箭照原样射出且 `noDropItem`；贴墙时两支往回收。
+- 弹幕 `LunarBolt`：10×10、穿透 1、`extraUpdates = 1`、寿命 180、alpha 255→50；两组尾迹尘
+  （`DustID.UnusedWhiteBluePurple` 缩放 1.2 / `DustID.TerraBlade` 缩放 0.7，各 5 颗）；
+  **撞墙不死**、只播一次 `Item10`（借 `ai[0]` 当"只播一次"的开关）。
+- **配方写法（本链后续件照此）**：两条 @恶魔祭坛 ＝（恶魔弓 **或** 肌腱弓）+ 蜂膝弓 + 熔火之怒 + 净化凝胶×10。
+  唯一外部件 `PurifiedGel` 走软依赖；因两版灾厄的同名件内容一致，写成「**有现代用现代、否则退经典**」，
+  避免两版都装时出现四条一模一样的配方（P90 那种"两版各一条"只适用于两版配方确实不同的情况）。
+
+### 15.5 待办（下一步按此顺序推进）
+
+1. **批 2**：`FlarewingBow`（炎翼弓）→ `BladedgeGreatbow`（剑刃巨弓，2.2.2 已删）→ `CosmicBolter`（宇宙弩炮，已删）
+   → 其余 T3/T2 武器（`ContinentalGreatbow` / `DarkechoGreatbow` / `Monsoon`）。
+2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
+   `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
+3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
+   `AstrealDefeat` / `Alluvion`）与材料 `MiracleMatter`。
+4. **批 5**：把天堂之风的配方改成引用自持件；经典分支照 `CosmicImmaterializer` / `Supernova` 的先例处理
+   （`MiracleMatter` 经典版没有 ⇒ 经典配方去掉它）。
+5. **未决（等用户拍板）**：① 三件**掉落类**已删材料（`Tenebris` / `HellcasterFragment` / `Phantoplasm`）怎么落地
+   （挂回原 Boss 掉落 / 换等价物 / 只保留经典分支）；② 中层那三件"改动大"的要不要自持；
+   ③ 工程 `CoreofCinder` 要不要向 2.0 的 `CoreofSunlight` 对齐（34×34 + 发光层 + 卖 40 银）。

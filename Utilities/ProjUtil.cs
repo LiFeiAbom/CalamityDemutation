@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Content.Projectiles;
+using CalamityDemutation.Content.Projectiles;
 using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -536,6 +536,64 @@ namespace CalamityDemutation.Utilities
                 velocity.Y = MathHelper.Clamp(velocity.Y, -15f, 15f);
             }
             return Projectile.NewProjectileDirect(source, spawnPosition, velocity, projType, damage, knockback, owner);
+        }
+        /// <summary>
+        /// 拉一条"由若干贴图盖印叠成"的光束（移植自灾厄 <c>ProjectileUtils.DrawBeam</c>）：
+        /// 沿**反向速度**每隔 <paramref name="spacer"/> 像素盖印一次贴图，共盖
+        /// <c>localAI[0]</c> 次（这正是四色星流箭的 trail 长度计数器），越远越淡、最远点全透明。
+        /// </summary>
+        /// <param name="length">渐隐所用的总长度：透明度按 <c>(length - i) / length</c> 衰减。
+        /// 若 <c>ai[1] == 1</c>（"消散中"），改按当前的 <c>localAI[0]</c> 当总长——这样光束在回收时会整体变淡而不是留下硬边。</param>
+        /// <param name="spacer">相邻两次盖印沿速度方向的间距（像素），越小光束越连续。</param>
+        /// <param name="texture">盖印用的贴图，缺省取弹幕自身贴图。</param>
+        /// <param name="curve">是否按历史旋转角弯曲光束（<c>oldRot</c>）；本工程的四色星流箭不弯，走默认 false。</param>
+        /// <remarks>
+        /// 总是返回 false：调用点写在 <c>PreDraw</c> 里，用它顶掉默认绘制。
+        /// 性能模式（<see cref="ConfigSystem.PerformanceMode"/>）下只盖印本体那一枚，
+        /// 避免"关掉残影 = 这类纯靠光束表现的弹幕整颗消失"。
+        /// </remarks>
+        public static bool DrawBeam(this Projectile projectile, float length, float spacer, Color lightColor, Texture2D texture = null, bool curve = false)
+        {
+            if (texture is null)
+                texture = TextureAssets.Projectile[projectile.type].Value;
+
+            float widthOffset = (texture.Width - projectile.width) * 0.5f + projectile.width * 0.5f;
+            float heightOffset = projectile.height / 2f;
+            Vector2 origin = new Vector2(widthOffset, heightOffset);
+            SpriteEffects spriteEffects = projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            Rectangle roughScreenBounds = new Rectangle((int)Main.screenPosition.X - 500, (int)Main.screenPosition.Y - 500, Main.screenWidth + 1000, Main.screenHeight + 1000);
+            if (!projectile.getRect().Intersects(roughScreenBounds))
+                return false;
+
+            Vector2 drawPos = projectile.position - Main.screenPosition + origin;
+            drawPos.Y += projectile.gfxOffY;
+
+            float maxTrailPoints = length;
+            if (projectile.ai[1] == 1f)
+                maxTrailPoints = (int)projectile.localAI[0];
+
+            int stamps = ConfigSystem.Instance?.PerformanceMode == true ? 1 : (int)projectile.localAI[0];
+            Vector2 cumulativeOffset = Vector2.Zero;
+            for (int i = 1; i <= stamps; i++)
+            {
+                Vector2 velToUseThisIter = projectile.velocity;
+                if (curve)
+                {
+                    float oldVelRatio = i / projectile.localAI[0];
+                    int oldVelIndex = (int)(oldVelRatio * projectile.oldRot.Length);
+                    if (oldVelIndex > 0)
+                    {
+                        float angleChange = projectile.oldRot[oldVelIndex - 1] - projectile.rotation;
+                        velToUseThisIter = projectile.velocity.RotatedBy(angleChange);
+                    }
+                }
+                cumulativeOffset += Vector2.Normalize(velToUseThisIter) * spacer;
+                Color color = projectile.GetAlpha(lightColor);
+                color *= (maxTrailPoints - i) / maxTrailPoints;
+                color.A = 0;
+                Main.spriteBatch.Draw(texture, drawPos - cumulativeOffset, null, color, projectile.rotation + MathHelper.PiOver2, origin, projectile.scale, spriteEffects, 0f);
+            }
+            return false;
         }
     }
 }

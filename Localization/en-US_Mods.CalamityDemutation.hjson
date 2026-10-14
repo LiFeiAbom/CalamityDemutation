@@ -2856,6 +2856,28 @@ Items: {
 			Greatly reduces the damage dealt by damage-over-time debuffs
 			'''
 	}
+	HeavenlyGale: {
+		DisplayName: Heavenly Gale
+		Tooltip:
+			'''
+			Converts wooden arrows into barrages of 7 random exo arrows
+			Green exo arrows erupt into swirling tornadoes
+			Blue exo arrows burst into barrages of following arrows
+			Orange exo arrows explode into flames
+			Teal exo arrows pierce infinitely and ignore immunity frames
+			Any non-wooden arrows used will deal 1.25x damage
+			66% chance to not consume ammo
+			[c/0080CA:Green and orange exo arrows will home in on enemies]
+			'''
+	}
+	LunarianBow: {
+		DisplayName: Lunarian Bow
+		Tooltip:
+			'''
+			Fires two arrows at once
+			Converts wooden arrows into sliding energy bolts
+			'''
+	}
 }
 
 Keybinds: {
@@ -3047,4 +3069,12 @@ Projectiles: {
 	ManaPolarizerHealOrb.DisplayName: Mana Polarizer Heal Orb
 	VoidFieldGenerator.DisplayName: Void Field Generator
 	SilvaBurst.DisplayName: Silva Burst
+	BlueExoArrow.DisplayName: Blue Exo Arrow
+	BlueExoArrow2.DisplayName: Exo Arrow
+	ExoMark.DisplayName: Mark
+	ExoTornado.DisplayName: Tornado
+	GreenExoArrow.DisplayName: Green Exo Arrow
+	OrangeExoArrow.DisplayName: Orange Exo Arrow
+	TealExoArrow.DisplayName: Teal Exo Arrow
+	LunarBolt.DisplayName: Bolt
 }
