@@ -1828,6 +1828,11 @@ Items: {
 		Tooltip: ""
 	}
 
+	Minigun: {
+		DisplayName: Minigun
+		Tooltip: 80% chance to not consume ammo
+	}
+
 	MirageMirror: {
 		DisplayName: Mirage Mirror
 		Tooltip:
@@ -1955,6 +1960,16 @@ Items: {
 			This dash can ram through enemies without taking damage
 			Increases max life by 20 and life regen by 1 HP/s
 			Increases defense by 4 when below 25% life
+			'''
+	}
+
+	P90: {
+		DisplayName: P90
+		Tooltip:
+			'''
+			33% chance to not consume ammo
+			Fires two bullets per shot
+			'It's a bullet hose'
 			'''
 	}
 

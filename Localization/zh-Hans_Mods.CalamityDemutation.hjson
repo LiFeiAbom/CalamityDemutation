@@ -1829,6 +1829,11 @@ Items: {
 		// Tooltip: ""
 	}
 
+	Minigun: {
+		DisplayName: 速射机枪
+		Tooltip: 80% 几率不消耗弹药
+	}
+
 	MirageMirror: {
 		DisplayName: 幻影魔镜
 		Tooltip:
@@ -1956,6 +1961,16 @@ Items: {
 			冲刺撞击敌人时不会受到伤害
 			生命再生 +1 HP/s，最大生命提高 20
 			生命值低于 25% 时防御提高 4
+			'''
+	}
+
+	P90: {
+		DisplayName: P90
+		Tooltip:
+			'''
+			33% 几率不消耗弹药
+			每次开火发射两颗子弹
+			「这是根子弹管」
 			'''
 	}
 
