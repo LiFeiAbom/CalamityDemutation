@@ -2770,17 +2770,22 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 **已落地：天使之靴（`Content/Items/Accessories/Movement/AngelTreads.cs` + `AngelTreads.png` / `AngelTreads_Shoes.png`）**
 
-- **口径（用户 2026-10-14 拍板）：功能取 1.3-release，配方取 2.0 那一批。** 1.3-release 与 2.0 的功能本身
-  是同一套（accRun 7.5 / 移速 +12% / 火箭靴 3 / 冰面·水面·岩浆面行走 / 岩浆免疫 240 帧 / 免「着火！」），
-  所以实质是**不采用 1.4.4 世系（实装 2.2.2）那套加强**：那边岩浆免疫 420 帧（7 秒）、删掉免「着火！」、
-  另加 `lavaRose` 岩浆减伤与显式 `FlightTimeBoost` 字段。
+- **口径（用户 2026-10-14 拍板）：功能取 1.3-release，配方取 2.0 那一批**；同日追加一句
+  **"补充那个 1.4.4 的增强，按照之前的复合原则进行"** → 本件 = **1.3-release 与 1.4.4 两代的并集**：
+  ① 岩浆免疫取 1.4.4 的 **420 帧（7 秒）**（1.3-release/2.0 只有 240）；
+  ② 加 1.4.4 的 `player.lavaRose = true`（岩浆灼烧减伤；本工程 `voidofExtinction` / `theAmalgam` 已有同款用法）；
+  ③ **保留**免「着火！」（1.4.4 那边删了，复合不取削弱项）；
+  ④ +10% 飞行时间：1.3-release 的 `angelTreads` 标记（`flightTimeMult += 0.1`）与 1.4.4 的
+  `AngelTreads.FlightTimeBoost` 是同一个 0.1，**只算一次**，别叠成 20%；
+  ⑤ 纯外观项 `vanityRocketBoots` 与 `UpdateVanity` 也照 1.4.4 取（1.3-release/2.0 没有这两处）。
+  底子：accRun 7.5 / 移速 +12% / 火箭靴 3 / 冰面·水面·岩浆面行走，两代完全一致。
 - 1.3-release 里 `CalamityPlayer.angelTreads` 标记**只用于 +10% 飞行时间**（`flightTimeMult += 0.1`；
   后来 2.0 才给它加上 `harpyWingBoost && (harpyRing || angelTreads)` 的鸟妖之翼联动）→
   本工程记 `CalamityDemutationPlayer.angelTreads`，在 `PostUpdateMiscEffects`（`soaring` 那行旁边）
   把 `wingTimeMax` ×1.1；复位点两处与其它饰品标记同批（`ResetEffects` / `UpdateDead`）。
 - 面板：**36×34**（按 1.3-release 自带贴图取；源里写的 36×32 与自家贴图不符）/ 价值 35 金 / 浅紫 LightPurple。
   贴图取 1.3-release 的**旧图**（2.2.2 那件是 32×36 新图，两者并存时外观可分）。
-  1.3-release / 2.0 都不写 `vanityRocketBoots`（2.0.3.9 之后才补），本件同样不写。
+  `vanityRocketBoots` / `UpdateVanity` 按复合取 1.4.4 那两处（见上一条 ⑤）。
 - 配方（双分支各注册一条，缺件即退化成单分支）：**现代**（`CalamityMod` 在场）照 2.0 =
   泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 @ 秘银砧；**经典**（`CalamityModClassicPreTrailer` 在场）照
   cal-1.4.2.101 = 霜火之靴 + 熔岩涉水靴 + 鸟妖指环 + 余烬精华×5 + 天空合金锭×20 + 三魂 @ 秘银砧。

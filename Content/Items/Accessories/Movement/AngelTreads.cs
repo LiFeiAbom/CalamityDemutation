@@ -6,13 +6,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
 {
     /// <summary>
     /// 天使之靴（Angel Treads） - 移速饰品链的最底一档（本工程链条下位件）。
-    /// 移植口径（用户 2026-10-14 指定）：**功能取灾厄 1.3-release 的 AngelTreads，配方取 2.0 那一批**。
-    /// 功能（1.3-release）：跑速上限 7.5、移速 +12%、火箭靴 3 级、冰面/水面/岩浆面行走、
-    /// 岩浆免疫 240 帧（4 秒）、免疫「着火了！」减益；并按 1.3-release 里 <c>CalamityPlayer.angelTreads</c>
-    /// 的语义额外给 +10% 飞行时间（本工程记在 CalamityDemutationPlayer.angelTreads，
-    /// 在 PostUpdateMiscEffects 里对 wingTimeMax ×1.1，与同处 soaring 的写法一致）。
-    /// **未**采用 1.4.4 世系（= 实装 2.2.2 那件）的加强：那边岩浆免疫 420 帧（7 秒）、删掉了免「着火！」、
-    /// 另加 lavaRose 减伤与显式的 FlightTimeBoost 字段；1.3-release 与 2.0 的功能本身是同一套。
+    /// 移植口径（用户 2026-10-14 指定）：**功能取灾厄 1.3-release 的 AngelTreads，配方取 2.0 那一批**；
+    /// 当天追加：**按工程"复合"原则把 1.4.4 世系（= 实装 2.2.2）的增强也并进来**。
+    /// 功能（1.3-release 底 + 1.4.4 增强的并集）：跑速上限 7.5、移速 +12%、火箭靴 3 级、
+    /// 冰面/水面/岩浆面行走、岩浆免疫 **420 帧（7 秒，取 1.4.4 的值；1.3-release/2.0 只有 240）**、
+    /// 免疫「着火了！」减益（1.4.4 那边删了，按复合并集保留）、<c>lavaRose</c> 岩浆灼烧减伤（1.4.4 新增）；
+    /// 另有 <c>CalamityPlayer.angelTreads</c> 语义的 +10% 飞行时间——1.3-release 用该标记给 0.1、
+    /// 1.4.4 用 <c>AngelTreads.FlightTimeBoost</c> 给同一个值，**两版同义，只算一次**：
+    /// 本工程记在 CalamityDemutationPlayer.angelTreads，在 PostUpdateMiscEffects 里对 wingTimeMax ×1.1。
     /// 面板：尺寸 36x34、价值 35 金（照源 Rarity6BuyPrice）、稀有度浅紫 LightPurple；
     /// 1.3-release 源码里写的 36x32 与它自带贴图 36x34 不符，此处按贴图取。
     /// 贴图取 1.3-release 的旧图（实装 2.2.2 里的同名件是 32x36 的新图，两者并存时外观可分辨）。
@@ -36,20 +37,30 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
         }
         /// <summary>
         /// 装备时：置 angelTreads 标记（用于 +10% 飞行时间），并直接设置跑步/移动/火箭靴/三种行走免疫
-        /// 与岩浆时限、免「着火！」——数值逐条照 1.3-release 的 UpdateAccessory。
-        /// 1.3-release / 2.0 都不写 vanityRocketBoots（那是 2.0.3.9 之后才补的），此处同样不写。
+        /// 与岩浆时限、免「着火！」、岩浆减伤——1.3-release 的 UpdateAccessory 逐条照抄，
+        /// 岩浆时限换成 1.4.4 的 420、另加 1.4.4 的 lavaRose（复合口径）。
+        /// vanityRocketBoots 与 UpdateVanity 照 1.4.4（1.3-release/2.0 没有这两处，纯外观项，按复合一并取）。
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.GetModPlayer<CalamityDemutationPlayer>().angelTreads = true;  // +10% 飞行时间（在 PostUpdateMiscEffects 结算）
             player.accRunSpeed = 7.5f;        // 跑速上限
-            player.rocketBoots = 3;           // 火箭靴等级（给予飞行）
+            player.rocketBoots = player.vanityRocketBoots = 3;  // 火箭靴等级（给予飞行）；vanity 同步照 1.4.4 的写法
             player.moveSpeed += 0.12f;        // 移速 +12%
             player.iceSkate = true;           // 冰面机动性
             player.waterWalk = true;          // 水面行走
             player.fireWalk = true;           // 岩浆面行走
-            player.lavaMax += 240;            // 岩浆免疫 240 帧（4 秒）
+            player.lavaMax += 420;            // 岩浆免疫 420 帧（7 秒；复合进 1.4.4 的值，1.3-release/2.0 是 240）
+            player.lavaRose = true;           // 降低岩浆灼烧伤害（1.4.4 新增，原版字段）
             player.buffImmune[BuffID.OnFire] = true;  // 免疫「着火了！」
+        }
+        /// <summary>
+        /// 时装栏也置火箭靴等级：照 1.4.4 的 <c>UpdateVanity</c>（2.0.3.9 起才有；1.3-release/2.0 没有），
+        /// 纯外观——挂在时装栏时靴子照样渲染火焰
+        /// </summary>
+        public override void UpdateVanity(Player player)
+        {
+            player.vanityRocketBoots = 3;
         }
         /// <summary>
         /// 配方（分版本，两分支各自 TryGetMod + TryFind 串联，缺材料时静默跳过该条）：
