@@ -348,6 +348,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 宇宙弩炮（CosmicBolter） | 39 | 94 | 用户 2026-10-14 指定（天堂之风链；见 §15.8） |
 | 大陆巨弓（ContinentalGreatbow） | 34 | 102 | 用户 2026-10-14 指定（天堂之风链；见 §15.9） |
 | 暗影巨弓（DarkechoGreatbow） | 37 | 120 | 用户 2026-10-14 指定（天堂之风链；见 §15.10） |
+| 季风（Monsoon） | 121 | 336 | 用户 2026-10-14 指定（天堂之风链批 2 末件；见 §15.11） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3245,9 +3246,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 见 15.6** → `BladedgeGreatbow`（剑刃巨弓）**✅ 见 15.7**
    → `CosmicBolter`（宇宙弩炮）**✅ 见 15.8** → `ContinentalGreatbow`（大陆巨弓）**✅ 见 15.9**
-   → `DarkechoGreatbow`（暗影巨弓）**✅ 见 15.10** → `Monsoon`（季风）**← 批 2 末件、下一件**
-   （它的配方要吃到 §3 新补的"暮色碎片 / 流明晶"两对等价物）。
-2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
+   → `DarkechoGreatbow`（暗影巨弓）**✅ 见 15.10** → `Monsoon`（季风）**✅ 见 15.11**
+   —— **批 2 全部完成**（T3/T2 的 7 把武器：月神弓 / 炎翼弓 / 剑刃巨弓 / 宇宙弩炮 / 大陆巨弓 / 暗影巨弓 / 季风）。
+2. **批 3（下一批）**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
    `AstrealDefeat` / `Alluvion`）与材料 `MiracleMatter`。
@@ -3344,3 +3345,31 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   经典 = 每支弹药 **1/3 概率换诅咒箭**且**没有水晶镖**、弹速 16。
 - **顺带**：把四对"版本内等价物（改名对）"补进 §3（暮色碎片 / 死灵质 / 混沌精华 / 狱火碎片 / 流明晶），
   **未决①就此结清**——链上的已删掉落材料一律按版本 TryFind 等价物，不挂 Boss 掉落、不新建物品。
+
+### 15.11 已落地：季风（Monsoon）✅ 2026-10-14（**批 2 收官件**，本链目前最重的一件）
+
+- 用户拍板：中文名 **季风**、**数值膨胀 121 → 336**、面板 / 机制 / **整条弹幕链全取 2.0**；
+  经典分支照经典版配方注册、数值共用 2.0。
+- 文件（1 物品 + **5 枚弹幕** + 6 张贴图）：
+  `Content/Items/Weapons/Ranged/Monsoon.cs`(+`.png` 46×78)；
+  `Content/Projectiles/Ranged/` 下 `MiniSharkron`(54×56) / `TyphoonArrow`(14×32) / `TyphoonBubble`
+  （借用 `Melee/BrinyTyphoonBubble.png` 68×204） / `WaterSpout`(162×264) / `SeasSearingSpout`(162×264)。
+- 面板（照 2.0）：伤害 121 / 使用·动画 20 帧 / 击退 2.5 / 弹速 12 / 箭类弹药 / 音 `Item5` /
+  **月后 13 档（荧光绿）**（源 `customRarity = PureGreen`）/ 价值 **1 铂金 30 金**（源 `Rarity13BuyPrice`）。
+- `Shoot`（照 2.0）：5 支（归一化 ×40、±π/10），木箭**按位次分工**——
+  **第 3 支 → `TyphoonArrow`**、**其余 4 支 → `MiniSharkron`**，伤害 **×1.1**，
+  生成后补 `arrow = true` 与 `extraUpdates += 1`；非木箭照原样且 `noDropItem`。
+- **弹幕链**：`MiniSharkron`（10×10、`aiStyle = ProjAIStyleID.Arrow` + `AIType = 原版 MiniSharkron`、
+  死亡撒血尘 + **三段原版鱼尸 584/585/586**）→ `TyphoonArrow`（14×14、穿透 1、寿命 600）死亡生成
+  → `TyphoonBubble`（30×30、**`timeLeft` 仅 1 帧**、3 帧动画、摇头飞行 / 掉头追玩家两段式、入水即爆）
+  死亡托出 → `WaterSpout`（150×42 起步、**逐段向上续接**共 16 档、静态命中冷却 10）
+  或 `SeasSearingSpout`（同构，本地冷却 30 + 彩虹偏色 + 命中挂**硫磺毒** 240 帧）。
+- **照源保留的一处死分支（新发现）**：`TyphoonBubble` 在 `localAI[1] == 1f` 时才用 `SeasSearingSpout`，
+  但 2.0 全工程**没有任何地方**给泡泡写过 `localAI[1]` ⇒ 实际永远走 `WaterSpout`。
+  本工程照源两个分支都留（`SeasSearingSpout` 的唯一用途就在这儿）。
+- 配方：**现代**（照 2.0，@月台）= 海啸 + **炎翼弓（本工程自持件）** + 猎魂鲨牙×6 + 鲨鱼鳍×2 +
+  深渊细胞×10 + `Lumenyl`×10 + `PlantyMush`×5；**经典**（照 cal-1.4.2.101，@月台、逐字不同、**不含炎翼弓**）
+  = 星璇碎片×15 + 海啸 + 鲨鱼鳍×2 + 深渊细胞×10 + `Lumenite`×10 + `Tenebris`×5。
+  两处"改名对"见 §3（暮色碎片 / 流明晶）。
+- **2.2.2 的改法（不取，备查）**：156 伤、配方砍到 4 味（海啸 + 炎翼弓 + 猎魂鲨牙×6 + 深渊细胞×10）、站台改秘银砧。
+- **批 2 到此全部完成**：7 把武器（月神弓 / 炎翼弓 / 剑刃巨弓 / 宇宙弩炮 / 大陆巨弓 / 暗影巨弓 / 季风）。

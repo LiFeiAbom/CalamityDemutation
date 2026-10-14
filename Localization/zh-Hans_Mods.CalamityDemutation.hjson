@@ -2918,6 +2918,14 @@ Items: {
 			额外射出一枚水晶镖
 			'''
 	}
+	Monsoon: {
+		DisplayName: 季风
+		Tooltip:
+			'''
+			一次洒出 5 支箭
+			木箭会被转化为台风箭与鲨鱼
+			'''
+	}
 }
 
 Keybinds: {
@@ -3119,4 +3127,9 @@ Projectiles: {
 	LunarBolt.DisplayName: 能量弹
 	FlareBat.DisplayName: 炎翼蝠
 	LunarBolt2.DisplayName: 能量弹
+	MiniSharkron.DisplayName: 小鲨鱼龙
+	TyphoonArrow.DisplayName: 台风箭
+	TyphoonBubble.DisplayName: 泡泡
+	WaterSpout.DisplayName: 水柱
+	SeasSearingSpout.DisplayName: 灼海喷流
 }
