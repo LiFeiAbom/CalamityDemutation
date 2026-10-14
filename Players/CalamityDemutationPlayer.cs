@@ -220,6 +220,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool ancientFossil = false;
         /// <summary>
+        /// 已装备天使之靴（Angel Treads）：按灾厄 1.3-release 的 <c>CalamityPlayer.angelTreads</c> 语义
+        /// 给 +10% 飞行时间（在 PostUpdateMiscEffects 里对 wingTimeMax ×1.1）。
+        /// 其余效果（跑速上限 7.5、+12% 移速、火箭靴 3、三种行走免疫、岩浆 4 秒、免「着火！」）
+        /// 由饰品自身的 UpdateAccessory 直接写 Player，不进这里。
+        /// </summary>
+        public bool angelTreads = false;
+        /// <summary>
         /// 已装备远古粉末：身处地下/洞穴/地狱层时获得 +3 防御、+7% 减伤与挖掘提速
         /// </summary>
         public bool archaicPowder = false;
@@ -994,6 +1001,7 @@ namespace CalamityDemutation.Players
             ambrosialAmpoule = false;
             amidiasSpark = false;
             ancientFossil = false;
+            angelTreads = false;
             archaicPowder = false;
             armorCrumbling = false;
             armorShattering = false;
@@ -1179,6 +1187,7 @@ namespace CalamityDemutation.Players
             ambrosialAmpoule = false;
             amidiasSpark = false;
             ancientFossil = false;
+            angelTreads = false;
             archaicPowder = false;
             armorCrumbling = false;
             armorShattering = false;
@@ -3315,6 +3324,7 @@ namespace CalamityDemutation.Players
                 Player.extraFall += 25;
             }
             if (soaring) Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.1);// 解除处于飞行状态的限制
+            if (angelTreads) Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.1);// 天使之靴：+10% 飞行时间（灾厄 1.3-release 的 angelTreads 语义）
             if (profanedRage)
             {
                 Player.GetCritChance<GenericDamageClass>() += 12;

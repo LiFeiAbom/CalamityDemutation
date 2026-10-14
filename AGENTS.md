@@ -211,16 +211,23 @@
   UTF-8 源文件要用 `Get-Content -Encoding UTF8`，否则中文注释会花屏。
 - 联网受限时的绕道：`raw.githubusercontent.com` 不通，改用 jsDelivr
   （`https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path>`）或 GitHub API 均可正常访问。
-- **读「已装 mod」的真实内容（本机权威口径，2026-10-07 起）**：`.tmod` 不是 zip——结构是 `"TMOD"` +
-  tML 版本串（7 位长度前缀字符串） + 16 字节哈希 + **明文文件表** + 逐文件**原始 deflate 流**。
-  文件表 = mod 名（长度前缀字符串）、mod 版本、`int32` 文件数，然后每条 = 路径（长度前缀字符串）+
-  `int32` 未压缩长度 + `int32` 磁盘长度（两者相等即原样存储）；数据区按表顺序紧接其后。用
-  `BinaryReader` 定位表头、`DeflateStream` 逐个解压，就能拿到任意**已装** mod 的 `.dll`，再上 Cecil
-  反查真实类名 / 配方 IL——本次"2.2.2 里 GalacticaSingularity 已被删除"就是这么坐实的。
+- **读「已装 mod」的真实内容（本机权威口径，2026-10-07 起；2026-10-14 校准格式 + 落成脚本）**：
+  `.tmod` 不是 zip。**实测头部布局** = `"TMOD"`(4 字节) + tML 版本串（7 位长度前缀字符串）+
+  **20 字节哈希** + **一段零填充（长度不固定）**，之后才是**明文文件表**：mod 名（7 位前缀串）、
+  mod 版本（同上）、`int32` 文件数，然后每条 = 路径（7 位前缀串）+ `int32` 未压缩长度 + `int32` 磁盘长度
+  （两者相等即原样存储）；数据区按表顺序紧接表尾，逐条**原始 deflate**。
+  **别再按"表紧跟 16 字节哈希"去硬定位**（老记法漏了那段零填充，照它会解析出 mod 名乱码 + 文件数 0）——
+  正确做法是从偏移 35 起逐字节试解析，用「数据区总长 == 文件长度 − 表尾偏移」当硬校验。
+  **现成脚本（2026-10-14 落成）**：`powershell -ExecutionPolicy Bypass -File .\Tools\ReadTmod.ps1 -Tmod <x.tmod> -List [-Match 正则]`；
+  另有 `-Extract 正则 [-OutDir 目录]`（按需解文件，别给 `-Match` 就只解匹配到的那些）、
+  `-Types 正则` / `-DumpType 正则 [-DumpMethods 方法名正则，默认 AddRecipes]`（把 dll 解进内存后上 Cecil
+  反查类名与配方 IL）。⚠️ Cecil 那两条对本机 30 MB 级的灾厄 dll 很慢（分钟级、吃 1 GB 内存），
+  只在真要配方 IL 时用；只想知道"某类还在不在"用 `-List` 看贴图/本地化文件更省事。
   两处缓存**不可当权威**：`ModReader/<mod>/`（提取时的旧版本，可能落后好几版）与
   `ModLocalization/<mod>/`（同理；且里面 `//` 开头的行只表示"这份语言文件没填翻译"，不代表键不存在）。
-  另 `Mods\*.tmod` 的文件名前缀（如 `2026.6`）是**构建该 mod 的 tModLoader 版本**，不是 mod 版本；
-  要确认装的是哪版看 `tModLoader-Logs\client.log` 的 `Selected <ModName> <版本>` 行。
+  另 `Mods\*.tmod` 的**文件名前缀**（如 `2026.6`）是**构建该 mod 的 tModLoader 版本**，不是 mod 版本；
+  mod 自身版本在头部文件表里（脚本第一行就会打出来，本机实测 `CalamityMod 2.2.2`）。
+  路径提醒：`tModLoader-Logs\` 在本机并不存在（别再照老记法去找 `client.log`）。
 - **用户的"批量移植"剧本（2026-10-07 定型，同类任务照办）**：① 先在参考源里**逐版出数据**
   （2.0 / 2.0.3.9 / 2.0.4 / 1.4.4-release 的尺寸·档位·价值·效果·配方·玩家侧实现差异）摆给用户；
   ② 用户**逐条拍板**（取哪版数值、配方走哪版、要不要与本体同名件互斥、中文名、要不要追加基础属性）；
@@ -2744,6 +2751,43 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⚠️ 工程里其余「防御」字样**不是**这个病，别跟着删：除这三件以外，提到防御的都是**条件/动态加成**
   （「夜晚时防御 +30」「浸没时防御 +5」「每多一种减益额外 +8」等，玩家侧结算）或该件根本没设 `Item.defense`。
   唯一一处无数字的模糊提及——代达罗斯纹章「提升生命再生、仆从击退、防御与挖掘速度」——用户 2026-10-12 明确**保留不动**。
+
+### 10.7 天使之靴与「炽天使翼靴」链（2026-10-14 侦察 + 链底落地）
+
+**链条（从下往上）**：天使之靴 `AngelTreads` →（经典旧名无限之靴 `InfinityBoots`）**炽天使翼靴** →
+极乐履带 → 天体履带。**实装口径**：本机装的灾厄 = **2.2.2**，其源码对应
+`D:\Game\Terraria\ModModel\CalamityModPublic-1.4.4-release`（用户 2026-10-14 确认，别再猜）。
+
+**逐版链条形态（2026-10-14 逐版核完，别再重查）**
+
+| 版本 | 链条（下位 → 上位） | 备注 |
+|---|---|---|
+| cal-1.1 / cal-1.2 | 天使之靴 → 无限之靴 → 极乐履带 | 老式夸张值（accRun 9.75 / 18 / 22，移速 +105%~+160%，还与 `wingTimeMax +50` 挂钩）；这代**没有**"炽天使翼靴"这个名字 |
+| cal-1.4.2.101 | 天使之靴 → 无限之靴 → 极乐履带 → 天体履带 | 收敛到 accRun 8；天使之靴配方含 霜火之靴 + 熔岩涉水靴 + 天空合金锭×20 |
+| 1.3-release / 2.0 | 天使之靴 → **炽天使翼靴 `SeraphTracers`** → 极乐履带 → 天体履带 | 2.0 的 `SeraphTracers` 挂着 `[LegacyName("InfinityBoots")]` = 经典无限之靴的后代；天使之靴配方改为 泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 |
+| 2.0.3.9 / 2.0.4 / 2.0.7.2 | 同上一行，但类名改称 `TracersCelestial` / `TracersElysian` / `TracersSeraph` | 显示名"Seraph Tracers"此时已挪到**顶层**那件；中层配方简化成 任意翅膀 + 月锭×5 |
+| 1.4.4 / 1.4.4-release（= 2.2.2） | 天使之靴 → 月行者 `MoonWalkers` → 虚空阔步者 `VoidStriders` → **炽天使翼靴 `SeraphTracers`** | 中间两档换名换配（`MoonWalkers` = `[LegacyName("InfinityBoots","TracersCelestial")]`，`VoidStriders` = `[LegacyName("ElysianTracers","TracersElysian")]`）；顶层 = 虚空阔步者 + 金源锭×5 + 登仙精华×3 @ 宇宙砧 |
+
+**已落地：天使之靴（`Content/Items/Accessories/Movement/AngelTreads.cs` + `AngelTreads.png` / `AngelTreads_Shoes.png`）**
+
+- **口径（用户 2026-10-14 拍板）：功能取 1.3-release，配方取 2.0 那一批。** 1.3-release 与 2.0 的功能本身
+  是同一套（accRun 7.5 / 移速 +12% / 火箭靴 3 / 冰面·水面·岩浆面行走 / 岩浆免疫 240 帧 / 免「着火！」），
+  所以实质是**不采用 1.4.4 世系（实装 2.2.2）那套加强**：那边岩浆免疫 420 帧（7 秒）、删掉免「着火！」、
+  另加 `lavaRose` 岩浆减伤与显式 `FlightTimeBoost` 字段。
+- 1.3-release 里 `CalamityPlayer.angelTreads` 标记**只用于 +10% 飞行时间**（`flightTimeMult += 0.1`；
+  后来 2.0 才给它加上 `harpyWingBoost && (harpyRing || angelTreads)` 的鸟妖之翼联动）→
+  本工程记 `CalamityDemutationPlayer.angelTreads`，在 `PostUpdateMiscEffects`（`soaring` 那行旁边）
+  把 `wingTimeMax` ×1.1；复位点两处与其它饰品标记同批（`ResetEffects` / `UpdateDead`）。
+- 面板：**36×34**（按 1.3-release 自带贴图取；源里写的 36×32 与自家贴图不符）/ 价值 35 金 / 浅紫 LightPurple。
+  贴图取 1.3-release 的**旧图**（2.2.2 那件是 32×36 新图，两者并存时外观可分）。
+  1.3-release / 2.0 都不写 `vanityRocketBoots`（2.0.3.9 之后才补），本件同样不写。
+- 配方（双分支各注册一条，缺件即退化成单分支）：**现代**（`CalamityMod` 在场）照 2.0 =
+  泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 @ 秘银砧；**经典**（`CalamityModClassicPreTrailer` 在场）照
+  cal-1.4.2.101 = 霜火之靴 + 熔岩涉水靴 + 鸟妖指环 + 余烬精华×5 + 天空合金锭×20 + 三魂 @ 秘银砧。
+- ⚠️ 本件在**实装 2.2.2 与经典版里都仍在**（同名不同物）：用户 2026-10-14 明确"这个不用管，移植就好"，
+  与太阳神杖那件同属"自持旧版"口径，**不做互斥**。
+- 本工程现阶段**没有**链条上位的三件（炽天使翼靴 / 极乐履带 / 天体履带）；顶层那件在 2.2.2 里由
+  `SeraphTracers` 占着名字，移植时要先定名（同名并存 or 改名）。
 ## 11. 本机 Codex 客户端（环境维护；不是模组内容）
 
 > 2026-10-08 把 `codex` 从 **0.154.0 手工升到 0.161.0**，2026-10-09 又升到 **0.162.0**（官方 `codex update` 在本机走不通）。

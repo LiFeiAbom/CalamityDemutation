@@ -418,6 +418,20 @@ Items: {
 			'''
 	}
 
+	AngelTreads: {
+		DisplayName: 天使之靴
+		Tooltip:
+			'''
+			极速！
+			跑动加速度提高 36%
+			飞行时间延长
+			冰面机动性提升
+			可在水面与岩浆上行走
+			免疫「着火了！」减益
+			暂时的岩浆免疫
+			'''
+	}
+
 	ArchaicPowder: {
 		DisplayName: 太古粉末
 		Tooltip: 在地下或地狱时挖矿速度提高 50%，伤害减免 7%，防御 +3
