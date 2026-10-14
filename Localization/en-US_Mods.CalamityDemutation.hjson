@@ -2911,6 +2911,14 @@ Items: {
 			Fires 2 additional cursed, hellfire, or ichor arrows
 			'''
 	}
+	DarkechoGreatbow: {
+		DisplayName: Darkecho Greatbow
+		Tooltip:
+			'''
+			Fires two arrows at once
+			Fires an additional crystal dart
+			'''
+	}
 }
 
 Keybinds: {

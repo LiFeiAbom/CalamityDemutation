@@ -2910,6 +2910,14 @@ Items: {
 			额外射出 2 支诅咒 / 狱火 / 灵液箭
 			'''
 	}
+	DarkechoGreatbow: {
+		DisplayName: 暗影巨弓
+		Tooltip:
+			'''
+			一次射出两支箭
+			额外射出一枚水晶镖
+			'''
+	}
 }
 
 Keybinds: {

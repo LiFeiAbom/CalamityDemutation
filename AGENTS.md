@@ -49,6 +49,11 @@
 | 冰核 | 现代 `EssenceofEleum` / 经典·旧版 `CoreofEleum` | 同一个件改名（同日光精华那对 `EssenceofCinder`→`EssenceofSunlight`）；写配方时按版本 TryFind |
 | 永恒锭 | 现代 `PerennialBar` / 经典 `DraedonBar` | 同一个件改名（两者都 ← `PerennialOre`×5，30×24、Lime 档）；2026-10-14 移植 `BladedgeGreatbow` 时查实 |
 | 冰晶锭 | 现代 `CryonicBar` / 经典 `VerstaltiteBar` | 同一个件改名（两者都 ← `CryonicOre`×5，30×24）；2026-10-14 备查（`DarkechoGreatbow` 会用到） |
+| 暮色碎片 | 现代 `PlantyMush` / 经典·旧版 `Tenebris` | 同一个件改名：2.2.2 的 `Tiles/Abyss/PlantyMush.cs` 挂着 `[LegacyName("Tenebris")]`（注释：把旧世界的 Tenebris 转成植生菇）。**掉落材料**——不新建物品、不挂掉落，按版本 TryFind；先例：吸收者（注释里明写 `PlantyMush→Tenebris`）、始源林海罩帽 |
+| 死灵质 | 现代 `Necroplasm` / 经典·旧版 `Phantoplasm` | 同一个件改名：2.0.4+ 叫 `Necroplasm`、**2.0.3.9 叫 `Polterplasm`**、更早与经典叫 `Phantoplasm`；先例：血神核心 / 元素箭袋 / 虚灵护符 / 元素护手 / 融合怪 / 海绵 / 纳米技术 / 诅咒星带 / 魔能谐振仪（后者三个名字一起试） |
+| 混沌精华 | 现代 `EssenceofHavoc` / 经典·旧版 `EssenceofChaos` | 同一个件改名；先例：毁灭徽章、本工程自持的混沌核心 |
+| 狱火碎片 | 现代 `YharonSoulFragment`（犽戎魂片）/ 经典·旧版 `HellcasterFragment` | 同一个件改名：2.2.2 的 `Items/Materials/YharonSoulFragment.cs` 挂 `[LegacyName("HellcasterFragment")]`；本工程将在 `AuricBar` 首次用到 |
+| 流明晶 | 现代 `Lumenyl` / 经典·旧版 `Lumenite` | 同一个件改名；先例：吸收者的注释「经典版深渊材料换名（`Lumenyl`→`Lumenite`、`PlantyMush`→`Tenebris`）」；季风 / 潮涌会用到 |
 | 减益 | `CalamityDemutationPlayer.ApplyCalamityBuff`（指定版本）/ `ApplyCalamityBuffWithFallback`（双版本自动 + 原版兜底） | |
 
 ## 4. 代码与资源约定
@@ -342,6 +347,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 剑刃巨弓（BladedgeGreatbow） | 28 | 60 | 用户 2026-10-14 指定（天堂之风链，2.2.2 已删件；见 §15.7） |
 | 宇宙弩炮（CosmicBolter） | 39 | 94 | 用户 2026-10-14 指定（天堂之风链；见 §15.8） |
 | 大陆巨弓（ContinentalGreatbow） | 34 | 102 | 用户 2026-10-14 指定（天堂之风链；见 §15.9） |
+| 暗影巨弓（DarkechoGreatbow） | 37 | 120 | 用户 2026-10-14 指定（天堂之风链；见 §15.10） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3239,7 +3245,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 见 15.6** → `BladedgeGreatbow`（剑刃巨弓）**✅ 见 15.7**
    → `CosmicBolter`（宇宙弩炮）**✅ 见 15.8** → `ContinentalGreatbow`（大陆巨弓）**✅ 见 15.9**
-   → 其余 T3/T2 武器（`DarkechoGreatbow` **← 下一件** / `Monsoon`）。
+   → `DarkechoGreatbow`（暗影巨弓）**✅ 见 15.10** → `Monsoon`（季风）**← 批 2 末件、下一件**
+   （它的配方要吃到 §3 新补的"暮色碎片 / 流明晶"两对等价物）。
 2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
@@ -3322,3 +3329,18 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   `usesLocalNPCImmunity` + 本地冷却 10）。
 - 配方（@**秘银砧**）：熔渣锭×10；现代取 `ScoriaBar`、经典取旧名 `CruptixBar`，两分支各一条。
 - **2.2.2 的改法（不取，备查）**：45 伤 / 24 帧、木箭判定 `CheckWoodenAmmo`、追加箭池**去掉诅咒箭**。
+
+### 15.10 已落地：暗影巨弓（DarkechoGreatbow）✅ 2026-10-14（批 2 倒数第二件）
+
+- 用户拍板：中文名 **暗影巨弓**、**数值膨胀 37 → 120**；面板 / 机制**全取 2.0**；
+  经典分支用经典版同名材料 `VerstaltiteBar`（＝冰晶锭）注册一条、数值共用 2.0。
+- 文件：`Content/Items/Weapons/Ranged/DarkechoGreatbow.cs`(+`.png` 32×66)；**无自带弹幕**（弹药与原版水晶镖）。
+- 面板（照 2.0）：判定 34×62 / 伤害 37 / 使用·动画 22 帧 / 击退 4 / 弹速 12 / 粉档 / 36 金 / 音 `Item5`。
+- `Shoot`（照 2.0）：2 支弹药（各 ±1.5 抖动、`noDropItem`）+ 1 枚原版 `CrystalDart`
+  （**伤害减半**、生成后把 `penetrate` 改成 3；照源**不**标记不掉落）。
+- 配方（@**秘银砧**）：冰晶锭×8；现代取 `CryonicBar`、经典取旧名 `VerstaltiteBar`，两分支各一条
+  （两版数量都是 8，配方逐字对应）。
+- **2.2.2 / 经典版的另一套（不取，备查）**：2.2.2 = 45 伤 / 33 帧 / 冰晶锭×12；
+  经典 = 每支弹药 **1/3 概率换诅咒箭**且**没有水晶镖**、弹速 16。
+- **顺带**：把四对"版本内等价物（改名对）"补进 §3（暮色碎片 / 死灵质 / 混沌精华 / 狱火碎片 / 流明晶），
+  **未决①就此结清**——链上的已删掉落材料一律按版本 TryFind 等价物，不挂 Boss 掉落、不新建物品。
