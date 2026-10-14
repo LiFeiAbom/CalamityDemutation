@@ -54,6 +54,14 @@
 | 混沌精华 | 现代 `EssenceofHavoc` / 经典·旧版 `EssenceofChaos` | 同一个件改名；先例：毁灭徽章、本工程自持的混沌核心 |
 | 狱火碎片 | 现代 `YharonSoulFragment`（犽戎魂片）/ 经典·旧版 `HellcasterFragment` | 同一个件改名：2.2.2 的 `Items/Materials/YharonSoulFragment.cs` 挂 `[LegacyName("HellcasterFragment")]`；本工程将在 `AuricBar` 首次用到 |
 | 流明晶 | 现代 `Lumenyl` / 经典·旧版 `Lumenite` | 同一个件改名；先例：吸收者的注释「经典版深渊材料换名（`Lumenyl`→`Lumenite`、`PlantyMush`→`Tenebris`）」；季风 / 潮涌会用到 |
+| 化神魂精 | 灾厄 `AscendantSpiritEssence` | 中文名由**用户 2026-10-15 点名确认**；本工程既有件（席尔瓦套 / 弑神者套 / 极乐翼靴 / 纯净 等十余处）早已软引用它 |
+| 奇迹物质 | 灾厄 `MiracleMatter` | 既有件：归虚之灵 / 超新星 / 破灭魔王剑（ExoBlade）——这三处都是"软引用本体件"的现成范例 |
+
+- **材料（非武器 / 非饰品）一律软依赖（用户 2026-10-15 定）**：现代分支直接引用**实装 2.2.2** 的本体件，
+  经典分支取**经典版的名字**，而**本工程已有的件就用我们自己的**（例：银河奇点 / 三个核心）。
+  **只有武器 / 饰品这一层才自持移植。** 由此推出的结论：天堂之风链的**材料层（批 3）零新增物品、零配方**——
+  `MiracleMatter`（奇迹物质）与 `AscendantSpiritEssence`（化神魂精）本身就是软引用的本体件，
+  它们的入料（`AuricBar` / `CoreofCalamity` / `LifeAlloy` / 三个核心 / 幻魂 / 各种矿锭）**我们根本不写配方**。
 | 减益 | `CalamityDemutationPlayer.ApplyCalamityBuff`（指定版本）/ `ApplyCalamityBuffWithFallback`（双版本自动 + 原版兜底） | |
 
 ## 4. 代码与资源约定
@@ -3373,3 +3381,59 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   两处"改名对"见 §3（暮色碎片 / 流明晶）。
 - **2.2.2 的改法（不取，备查）**：156 伤、配方砍到 4 味（海啸 + 炎翼弓 + 猎魂鲨牙×6 + 深渊细胞×10）、站台改秘银砧。
 - **批 2 到此全部完成**：7 把武器（月神弓 / 炎翼弓 / 剑刃巨弓 / 宇宙弩炮 / 大陆巨弓 / 暗影巨弓 / 季风）。
+
+## 16. 2026-10-15 凌晨 会话收尾（天堂之风链：批 2 收官 + 批 3 结清；下次直接从 §16.3 接）
+
+### 16.1 本次做的事（按顺序）
+
+1. **天堂之风本体**（详见 §15.1）：取 CI `HeavenlyGaleOld` 的 ExoLore 分支、**恒处 Lore 模式**；
+   伤害 208 / 膨胀 **720** / 月后 15 档 + 1 铂金 50 金 / 带发光层；新增 7 枚弹幕 + `CDUtil.DrawBeam`。提交 `2f6c54a`。
+2. **批 2：链下位 7 把武器全部落地**（每件都走 编译 0/0 + 两道自检 + §15 记录 + 提交）：
+
+   | 件 | 关态 → 膨胀 | 提交 |
+   |---|---|---|
+   | 月光弓 `LunarianBow`（+能量弹） | 32 → 80 | `a1cae6d` |
+   | 炎翼弓 `FlarewingBow`（+炎翼蝠 `FlareBat`） | 17 → 54 | `fcfffc2` |
+   | 剑刃巨弓 `BladedgeGreatbow` | 28 → 60 | `fc64722` |
+   | 宇宙弩炮 `CosmicBolter`（+能量弹·强） | 39 → 94 | `a624bbf` |
+   | 大陆巨弓 `ContinentalGreatbow` | 34 → 102 | `e7304c4` |
+   | 暗影巨弓 `DarkechoGreatbow` | 37 → 120 | `7ec3a5a` |
+   | **季风 `Monsoon`**（+5 枚弹幕链） | 121 → 336 | `0727d73` |
+
+3. **批 3（中层材料）结清**：按用户口径「材料一律软依赖」⇒ **零新增物品、零配方**（见 §3 那条新口径）。
+   顺手把五对"版本内等价物"补进 §3，并坐实 `化神魂精 = AscendantSpiritEssence`、`奇迹物质 = MiracleMatter`。
+4. **批 4 开工（本次只做了侦察）**：第一件 **弩炮 `TheBallista`** 的逐版数据已出、**等用户拍板**（见 16.3）。
+
+### 16.2 本次坐实的关键事实（别再重查）
+
+- **§3 新补的名字对照**：暮色碎片 `Tenebris`=`PlantyMush`、死灵质 `Phantoplasm`=`Necroplasm`（2.0.3.9 叫 `Polterplasm`）、
+  混沌精华 `EssenceofChaos`=`EssenceofHavoc`、狱火碎片 `HellcasterFragment`=`YharonSoulFragment`、
+  流明晶 `Lumenyl`=`Lumenite`、熔渣锭 `ScoriaBar`=`CruptixBar`（推定：都 ← 矿×5、30×24、Yellow 档）。
+  2.2.2 的 `YharonSoulFragment` / `Tiles/Abyss/PlantyMush` 源码里都挂着 `[LegacyName]`，是铁证。
+- **"改名"而非"删除"**：`CosmicBolter` → `VernalBolter`（本工程**保留旧名** `CosmicBolter`）。
+  **真删**的（本链涉及）：`GalacticaSingularity` / `BladedgeGreatbow` / `CoreofSunlight` / `Tenebris` / `HellcasterFragment` / `Phantoplasm`。
+- **`CoreofSunlight`（2.0）＝工程已有的 `CoreofCinder`**（2.0 那件挂着 `[LegacyName("CoreofCinder")]`，配方逐项一致）。
+- **弩炮（待落地）的机制要点**：2.0 的 `BallistaGreatArrow` 命中会**把目标无敌帧压到 12**（`target.immune[owner] = 12`）
+  并挂**破甲 `ArmorCrunch` 180 帧**；死亡播 `Item14` + 朝两侧各撒 3 枚 `FossilShard`（伤害 ×0.2、击退 ÷5、自带破甲 60）。
+  破甲在工程里的软依赖写法：`CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "ArmorCrunch", N, BuffID.BrokenArmor)`。
+- **季风那处上游死分支**：`TyphoonBubble` 的 `localAI[1] == 1f` 判据全工程无人置位 ⇒ `SeasSearingSpout` 实际永远出不来（照源保留）。
+- 流程仍是老样子：`dotnet build -v q -nologo` 必须 0 警告 0 错误；`CheckResources` / `CheckImplicitTextures` 两道自检；
+  提交用消息文件 + 提权，推送走 `git -c http.proxy=http://127.0.0.1:7897 push origin master`（偶发 SSL 握手失败，直连重试即可）。
+
+### 16.3 下次第一件事（从这里接）
+
+1. **等用户拍板弩炮**（数据已出）：① 中文名（建议「**弩炮**」，弹幕「弩箭」`BallistaGreatArrow` / 「碎片」`FossilShard`）
+   ② 面板取 2.0（99 伤 / 22 帧 / 判定 40×70 / 80 金 / Yellow）③ 机制取 2.0（穿透 2 + 压 12 帧免疫 + 破甲 180 + 死亡迸 6 枚碎片）
+   ④ 经典分支照经典配方（与 2.0 **逐字相同**：骨髓弓 + 远古战斗护甲材料 + 灵气×10 @秘银砧）⑤ **膨胀值**。
+   落地清单：`TheBallista.cs`(+`.png` 40×78) + `BallistaGreatArrow.cs`(+`.png` 18×64) + `FossilShard.cs`(+`.png` 10×12)，无自备音效。
+2. 拍板后按序推进批 4 剩余：**发条弓 `ClockworkBow` → 烈风 `Galeforce` → 行星湮灭 `PlanetaryAnnihilation` →
+   星界击败 `AstrealDefeat` → 潮涌 `Alluvion`**（各自面板 / 配方 / 两版差异见 §15.2 与 2026-10-14 那条"下位武器"汇报）。
+3. **批 5**：把天堂之风的现代配方从"引用本体六把武器"改成**引用自持件**；经典分支去掉经典版没有的 `MiracleMatter`
+   （照 `Supernova` / `CosmicImmaterializer` 的先例）。
+4. **存疑待用户一句话确认**：用户说过「现代版：一个奇迹物质 + 5 个化神魂精」——我按"本体材料一律软引用"执行了；
+   若原意是**某一件**要改成这个配方，那只是改一处的量。
+
+### 16.4 收尾时的仓库状态
+
+本会话最后一次落地提交 = **`0727d73`**（季风）；本次"记忆封装"提交紧随其后，`master` 与 `origin/master` 同步、工作区干净。
+`dotnet build` **0 警告 0 错误**；`CheckResources` **186 条**素材引用全命中；`CheckImplicitTextures` **475 个类**全命中。
