@@ -2893,6 +2893,14 @@ Items: {
 			额外射出 2 片树叶
 			'''
 	}
+	CosmicBolter: {
+		DisplayName: 宇宙弩炮
+		Tooltip:
+			'''
+			一次射出 3 支箭
+			将木箭转化为滑行能量弹
+			'''
+	}
 }
 
 Keybinds: {
@@ -3093,4 +3101,5 @@ Projectiles: {
 	TealExoArrow.DisplayName: 青色星流箭
 	LunarBolt.DisplayName: 能量弹
 	FlareBat.DisplayName: 炎翼蝠
+	LunarBolt2.DisplayName: 能量弹
 }

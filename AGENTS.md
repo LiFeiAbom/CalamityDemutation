@@ -340,6 +340,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 月光弓（LunarianBow） | 32 | 80 | 用户 2026-10-14 指定（天堂之风链底件；见 §15.4） |
 | 炎翼弓（FlarewingBow） | 17 | 54 | 用户 2026-10-14 指定（天堂之风链；见 §15.6） |
 | 剑刃巨弓（BladedgeGreatbow） | 28 | 60 | 用户 2026-10-14 指定（天堂之风链，2.2.2 已删件；见 §15.7） |
+| 宇宙弩炮（CosmicBolter） | 39 | 94 | 用户 2026-10-14 指定（天堂之风链；见 §15.8） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3235,8 +3236,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 15.5 待办（下一步按此顺序推进）
 
-1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 见 15.6** → `BladedgeGreatbow`（剑刃巨弓，2.2.2 已删）**✅ 见 15.7**
-   → `CosmicBolter`（宇宙弩炮，已删，**下一件**）→ 其余 T3/T2 武器（`ContinentalGreatbow` / `DarkechoGreatbow` / `Monsoon`）。
+1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 见 15.6** → `BladedgeGreatbow`（剑刃巨弓）**✅ 见 15.7**
+   → `CosmicBolter`（宇宙弩炮）**✅ 见 15.8** → 其余 T3/T2 武器
+   （`ContinentalGreatbow` **← 下一件** / `DarkechoGreatbow` / `Monsoon`）。
 2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
@@ -3282,3 +3284,23 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - 配方（@**秘银砧**）：永恒锭×12；现代取 `PerennialBar`、经典取旧名 `DraedonBar`（同一件改名，见 §3），两分支各一条。
 - **经典版的另一套（不取，备查）**：经典是"5 发弹药 + 每发 1/5 概率换绿藻箭、**没有叶子**"、伤害 26 / 24 帧 / 弹速 16；
   1.3-release 与 2.0 逐项一致。
+
+### 15.8 已落地：宇宙弩炮（CosmicBolter）✅ 2026-10-14
+
+- **2.2.2 是"改名"不是"删"**：它的 `VernalBolter` 身上挂着 `[LegacyName("CosmicBolter")]`。
+  按工程"改名＝同一件、本工程留旧名"的既有口径，本件**保留 `CosmicBolter` 这个名字**。
+- 用户拍板：中文名 **宇宙弩炮**、**数值膨胀 39 → 94**；面板 / 支数 / 木箭转化**全取 2.0**；
+  经典分支照经典配方注册、数值共用 2.0。
+- 文件：`Content/Items/Weapons/Ranged/CosmicBolter.cs`(+`.png` 34×74)、
+  `Content/Projectiles/Ranged/LunarBolt2.cs`（**贴图复用 `LunarBolt.png`，没有新贴图**——
+  源就是 `Texture => ".../Ranged/LunarBolt"`）。
+- 面板（照 2.0）：判定 **40×76**（源如此，贴图 34×74 比判定小）/ 伤害 39 / 使用·动画 20 帧 /
+  击退 2.75 / 弹速 10 / 黄档 / 80 金 / 音 `Item75`。
+- `Shoot`（照 2.0）：3 支（归一化 ×30、±π/10）；木箭 → `LunarBolt2`，非木箭照原样且 `noDropItem`，贴墙整排收回。
+  `LunarBolt2` 与 `LunarBolt` 同构（10×10 / 穿透 1 / 寿命 180 / 双尘尾迹 / 撞墙不死只响一声），
+  只有自绘色不同：`(168,247,193)`（偏绿）vs `(168,247,239)`。
+- **配方（照 2.0）**：**月光弓（本工程自持件，两分支都用我们的）** + 活体碎片×5 + 神圣锭×5 + 视域之魂×5 @秘银砧；
+  唯一外部件是材料 `LivingShard`，软依赖按版本取名（现代与经典同名同物）。
+  **这是本链第一件吃到"下位自持"红利的武器**：配方里已不再引用灾厄本体的月光弓。
+- **2.2.2 的改法（不取，备查）**：贴图 68×94 + 发光层、伤害 35、木箭走 `CheckWoodenAmmo` 转 `VernalBolt`
+  且**伤害/击退 ×1.2**、tooltip 改 "Fires a tight column of three arrows"。
