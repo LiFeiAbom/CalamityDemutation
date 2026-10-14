@@ -1308,6 +1308,26 @@ Items: {
 			'''
 	}
 
+	ElysianTracers: {
+		DisplayName: 极乐翼靴
+		TreadsName: 极乐履带
+		Tooltip:
+			'''
+			可以飞行并缓降
+			水平速度：10.50
+			加速度倍率：2.75
+			垂直速度优异
+			飞行时间：200
+			跑动加速度提高 36%
+			冰面机动性提升
+			可在水面与岩浆上行走
+			免疫「着火了！」减益
+			免疫岩浆
+			[c/aaaaaa:在物品栏中 Shift+右键 切换翅膀]
+			「疯狂速度！」
+			'''
+	}
+
 	EntropicClaymore: {
 		DisplayName: 熵之舞
 		Tooltip:

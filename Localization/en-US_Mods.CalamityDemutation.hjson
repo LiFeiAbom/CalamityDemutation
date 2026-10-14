@@ -1308,6 +1308,26 @@ Items: {
 			'''
 	}
 
+	ElysianTracers: {
+		DisplayName: Elysian Tracers
+		TreadsName: Elysian Treads
+		Tooltip:
+			'''
+			Allows flight and slow fall
+			Horizontal speed: 10.50
+			Acceleration multiplier: 2.75
+			Great vertical speed
+			Flight time: 200
+			36% increased running acceleration
+			Greater mobility on ice
+			Water and lava walking
+			Immunity to the On Fire! debuff
+			Immunity to lava
+			[c/aaaaaa:Shift-<right> this item in your inventory to toggle wings]
+			'Ludicrous speed!'
+			'''
+	}
+
 	EntropicClaymore: {
 		DisplayName: Entropic Claymore
 		Tooltip:
