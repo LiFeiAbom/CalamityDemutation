@@ -2752,9 +2752,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   （「夜晚时防御 +30」「浸没时防御 +5」「每多一种减益额外 +8」等，玩家侧结算）或该件根本没设 `Item.defense`。
   唯一一处无数字的模糊提及——代达罗斯纹章「提升生命再生、仆从击退、防御与挖掘速度」——用户 2026-10-12 明确**保留不动**。
 
-### 10.7 天使之靴与「炽天使翼靴」链（2026-10-14 侦察 + 链底两级落地：天使之靴 → 无限之靴）
+### 10.7 天使之靴与「炽天使翼靴」链（2026-10-14 侦察 + 链底两级落地：天使之靴 → 天界翼靴）
 
-**链条（从下往上）**：天使之靴 `AngelTreads` →（经典旧名无限之靴 `InfinityBoots`）**炽天使翼靴** →
+**链条（从下往上）**：天使之靴 `AngelTreads` →（经典类名 `InfinityBoots`，本工程移植件中文名「天界翼靴」）**炽天使翼靴** →
 极乐履带 → 天体履带。**实装口径**：本机装的灾厄 = **2.2.2**，其源码对应
 `D:\Game\Terraria\ModModel\CalamityModPublic-1.4.4-release`（用户 2026-10-14 确认，别再猜）。
 
@@ -2762,9 +2762,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 | 版本 | 链条（下位 → 上位） | 备注 |
 |---|---|---|
-| cal-1.1 / cal-1.2 | 天使之靴 → 无限之靴 → 极乐履带 | 老式夸张值（accRun 9.75 / 18 / 22，移速 +105%~+160%，还与 `wingTimeMax +50` 挂钩）；这代**没有**"炽天使翼靴"这个名字 |
-| cal-1.4.2.101 | 天使之靴 → 无限之靴 → 极乐履带 → 天体履带 | 收敛到 accRun 8；天使之靴配方含 霜火之靴 + 熔岩涉水靴 + 天空合金锭×20 |
-| 1.3-release / 2.0 | 天使之靴 → **炽天使翼靴 `SeraphTracers`** → 极乐履带 → 天体履带 | 2.0 的 `SeraphTracers` 挂着 `[LegacyName("InfinityBoots")]` = 经典无限之靴的后代；天使之靴配方改为 泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 |
+| cal-1.1 / cal-1.2 | 天使之靴 → `InfinityBoots` → 极乐履带 | 老式夸张值（accRun 9.75 / 18 / 22，移速 +105%~+160%，还与 `wingTimeMax +50` 挂钩）；这代**没有**"炽天使翼靴"这个名字 |
+| cal-1.4.2.101 | 天使之靴 → `InfinityBoots` → 极乐履带 → 天体履带 | 收敛到 accRun 8；天使之靴配方含 霜火之靴 + 熔岩涉水靴 + 天空合金锭×20 |
+| 1.3-release / 2.0 | 天使之靴 → **炽天使翼靴 `SeraphTracers`** → 极乐履带 → 天体履带 | 2.0 的 `SeraphTracers` 挂着 `[LegacyName("InfinityBoots")]` = 经典 `InfinityBoots` 的后代；天使之靴配方改为 泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 |
 | 2.0.3.9 / 2.0.4 / 2.0.7.2 | 同上一行，但类名改称 `TracersCelestial` / `TracersElysian` / `TracersSeraph` | 显示名"Seraph Tracers"此时已挪到**顶层**那件；中层配方简化成 任意翅膀 + 月锭×5 |
 | 1.4.4 / 1.4.4-release（= 2.2.2） | 天使之靴 → 月行者 `MoonWalkers` → 虚空阔步者 `VoidStriders` → **炽天使翼靴 `SeraphTracers`** | 中间两档换名换配（`MoonWalkers` = `[LegacyName("InfinityBoots","TracersCelestial")]`，`VoidStriders` = `[LegacyName("ElysianTracers","TracersElysian")]`）；顶层 = 虚空阔步者 + 金源锭×5 + 登仙精华×3 @ 宇宙砧 |
 
@@ -2791,13 +2791,15 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   cal-1.4.2.101 = 霜火之靴 + 熔岩涉水靴 + 鸟妖指环 + 余烬精华×5 + 天空合金锭×20 + 三魂 @ 秘银砧。
 - ⚠️ 本件在**实装 2.2.2 与经典版里都仍在**（同名不同物）：用户 2026-10-14 明确"这个不用管，移植就好"，
   与太阳神杖那件同属"自持旧版"口径，**不做互斥**。
-**已落地：无限之靴（`Content/Items/Accessories/Wings/InfinityBoots.cs` + `InfinityBoots.png` /
+**已落地：天界翼靴（`Content/Items/Accessories/Wings/InfinityBoots.cs` + `InfinityBoots.png` /
 `_Shoes.png` / `_Wings.png`，2026-10-14 · 链条第二级）**
 
-- **名字（用户 2026-10-14 指定）：改叫「无限之靴」**。原因：旧世系里这一档的显示名本来就叫
-  Seraph Tracers（1.3-release 源码是 `DisplayName.SetDefault("Seraph Tracers")`，经典版 cal-1.4.2.101
-  本地化也是 `DisplayName: Seraph Tracers`），2.0.3.9 起该名字被顶层借走、2.2.2 归顶层 `SeraphTracers`；
-  故本件回退用类名当显示名，避开与本体顶层同名。
+- **名字（用户 2026-10-14 指定）：中文名「天界翼靴」**（当天先定「无限之靴」，随即改为现名；
+  英文名保持 `Infinity Boots` = 照源类名；靴子模式的 `TreadsName` 同步作「天界履带」）。
+  改名的原因：旧世系里这一档的显示名本来就叫 Seraph Tracers（1.3-release 源码是
+  `DisplayName.SetDefault("Seraph Tracers")`，经典版 cal-1.4.2.101 本地化也是
+  `DisplayName: Seraph Tracers`），2.0.3.9 起该名字被顶层借走、2.2.2 归顶层 `SeraphTracers`；
+  故本件另起中文名，避开与本体顶层同名。
 - **口径（同一天拍板）：功能取 1.3-release、配方取 2.0、再按复合原则并入 1.4.4（MoonWalkers）的增强。**
   复合结果 = 飞行 **160**（1.4.4；1.3/2.0 是 140）/ 水平速度 9 / 加速倍率 **2.6**（2.0 起）/
   跑速上限 **8.5**（取大；1.4.4 是 8）/ 移速 **+16%**（取大；1.4.4 是 +14%）/ **完全免岩浆**
@@ -2805,7 +2807,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **可切换翅膀**。
 - 可切换翅膀照 1.4.4 的 MoonWalkers 实现：用**物品实例**的 `Item.wingSlot` 是否 −1 表示模式
   （随 `SaveData`/`LoadData`/`NetSend`/`NetReceive` 同步——不是 ModItem 字段，符合 §5），
-  Shift+右键切换且不消耗，靴子模式时去掉第一行 tooltip（`Tooltip0`）、名字换成 `TreadsName`（无限履带），
+  Shift+右键切换且不消耗，靴子模式时去掉第一行 tooltip（`Tooltip0`）、名字换成 `TreadsName`（天界履带），
   并给 `rocketBoots = vanityRocketBoots = 4` 与 `angelTreads` 标记（+10% 飞行时间）。
   未移植的两处**灾厄内部视觉通道**（纯外观，类注释里已写明）：`CalamityPlayer.IBoots`/`sTracers`
   的移动拖尾尘埃 229、`CalamityUtils.DrawInventoryDot` 的模式点与双帧贴图（本件用 1.3-release 的单帧旧图）。
@@ -2817,7 +2819,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   经典 = 天使之靴 + 任意翅膀 + 灾厄核心×3 + 生命之锭×5 + 月锭×5 @ 远古操纵机。
 - 面板：48×36 / 1 铂金 / 红；贴图取 1.3-release 旧图（48×36 图 + `0CE9510C` 那双 `_Shoes.png` +
   80×248 翅膀图，这一套从 cal-1.4.2.101 一直用到 2.0.7.2）。
-- 链条现状：**已落 2/4**（天使之靴、无限之靴）；剩 极乐履带/虚空阔步者 与 顶层（天体履带 / 炽天使翼靴），
+- 链条现状：**已落 2/4**（天使之靴、天界翼靴）；剩 极乐履带/虚空阔步者 与 顶层（天体履带 / 炽天使翼靴），
   顶层那件在 2.2.2 里由 `SeraphTracers` 占着名字，移植时要先定名。
 ## 11. 本机 Codex 客户端（环境维护；不是模组内容）
 

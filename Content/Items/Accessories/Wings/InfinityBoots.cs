@@ -14,11 +14,12 @@ using Terraria.ModLoader.IO;
 namespace CalamityDemutation.Content.Items.Accessories.Wings
 {
     /// <summary>
-    /// 无限之靴（Infinity Boots） - 天使之靴的上一档（本工程链条第二级）。
-    /// **名字口径（用户 2026-10-14 指定）**：改叫「无限之靴」——旧世系里这一档的显示名其实就叫
+    /// 天界翼靴（Infinity Boots） - 天使之靴的上一档（本工程链条第二级）。
+    /// **名字口径（用户 2026-10-14 指定）**：中文名取「天界翼靴」（当天先定「无限之靴」，随即改为现名；
+    /// 英文名保持 `Infinity Boots` = 照源类名）——旧世系里这一档的显示名其实就叫
     /// Seraph Tracers（类名 `InfinityBoots`：1.3-release 源码里是 `DisplayName.SetDefault("Seraph Tracers")`，
     /// 经典版 cal-1.4.2.101 的本地化也是 `DisplayName: Seraph Tracers`）；到 2.0.3.9 该名字被顶层那件借走，
-    /// 2.2.2 里归顶层 `SeraphTracers` 所有，故本件回退用类名当显示名，不与本体顶层同名。
+    /// 2.2.2 里归顶层 `SeraphTracers` 所有，故本件另起中文名，不与本体顶层同名。
     /// **移植口径（用户 2026-10-14 指定）：功能取 1.3-release、配方取 2.0 那一批、再按复合原则并入
     /// 1.4.4 世系（= 实装 2.2.2 的 MoonWalkers）的增强。** 逐项对照：
     /// ① 1.3-release 底子 = 飞行 140 / 水平速度 9 / 加速倍率 2.5、跑速上限 8.5、移速 +16%、
@@ -164,7 +165,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             toggleEnabled = reader.ReadBoolean();
         }
         /// <summary>
-        /// 模式不同名字不同：翅膀模式显示「无限之靴」，靴子模式显示「无限履带」
+        /// 模式不同名字不同：翅膀模式显示「天界翼靴」，靴子模式显示「天界履带」
         /// （照 1.4.4 的 MoonWalkers 用本地化键切名字；灾厄那枚物品栏模式指示点未移植）
         /// </summary>
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

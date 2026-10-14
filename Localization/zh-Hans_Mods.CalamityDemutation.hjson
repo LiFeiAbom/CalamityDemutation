@@ -1711,8 +1711,8 @@ Items: {
 	}
 
 	InfinityBoots: {
-		DisplayName: 无限之靴
-		TreadsName: 无限履带
+		DisplayName: 天界翼靴
+		TreadsName: 天界履带
 		Tooltip:
 			'''
 			可以飞行并缓降
