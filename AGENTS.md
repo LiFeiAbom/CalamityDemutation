@@ -47,6 +47,8 @@
 | 价值 | 照源写；同档参考：16 档的 `Nemesis` = 3 铂金 20 金 | |
 | 双版本配方 | `ModLoader.TryGetMod("CalamityMod"/"CalamityModClassicPreTrailer")` 各注册一条 | 材料/站台按各自版本取 |
 | 冰核 | 现代 `EssenceofEleum` / 经典·旧版 `CoreofEleum` | 同一个件改名（同日光精华那对 `EssenceofCinder`→`EssenceofSunlight`）；写配方时按版本 TryFind |
+| 永恒锭 | 现代 `PerennialBar` / 经典 `DraedonBar` | 同一个件改名（两者都 ← `PerennialOre`×5，30×24、Lime 档）；2026-10-14 移植 `BladedgeGreatbow` 时查实 |
+| 冰晶锭 | 现代 `CryonicBar` / 经典 `VerstaltiteBar` | 同一个件改名（两者都 ← `CryonicOre`×5，30×24）；2026-10-14 备查（`DarkechoGreatbow` 会用到） |
 | 减益 | `CalamityDemutationPlayer.ApplyCalamityBuff`（指定版本）/ `ApplyCalamityBuffWithFallback`（双版本自动 + 原版兜底） | |
 
 ## 4. 代码与资源约定
@@ -337,6 +339,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 天堂之风（HeavenlyGale） | 208 | 720 | 用户 2026-10-14 指定（形态取 CI 的 ExoLore 分支，源 CI 关态是 508；见 §15） |
 | 月光弓（LunarianBow） | 32 | 80 | 用户 2026-10-14 指定（天堂之风链底件；见 §15.4） |
 | 炎翼弓（FlarewingBow） | 17 | 54 | 用户 2026-10-14 指定（天堂之风链；见 §15.6） |
+| 剑刃巨弓（BladedgeGreatbow） | 28 | 60 | 用户 2026-10-14 指定（天堂之风链，2.2.2 已删件；见 §15.7） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3232,8 +3235,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 15.5 待办（下一步按此顺序推进）
 
-1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 已落地，见 15.6** → `BladedgeGreatbow`（剑刃巨弓，2.2.2 已删）
-   → `CosmicBolter`（宇宙弩炮，已删）→ 其余 T3/T2 武器（`ContinentalGreatbow` / `DarkechoGreatbow` / `Monsoon`）。
+1. **批 2**：`FlarewingBow`（炎翼弓）**✅ 见 15.6** → `BladedgeGreatbow`（剑刃巨弓，2.2.2 已删）**✅ 见 15.7**
+   → `CosmicBolter`（宇宙弩炮，已删，**下一件**）→ 其余 T3/T2 武器（`ContinentalGreatbow` / `DarkechoGreatbow` / `Monsoon`）。
 2. **批 3**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
@@ -3263,3 +3266,19 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **2.2.2 的改法（本件不取，备查）**：2.0.3.9 起改"3 支 / 31 伤 / `CheckWoodenAmmo`"，
   2.2.2 再加"使用 35 帧、弹速 18、站台改铁砧、蝙蝠穿透 2、命中挂燃烧 III 480 帧 + 伤害减半、
   穿透剩 1 后追踪敌人（550 / 12 / 20）"。
+
+### 15.7 已落地：剑刃巨弓（BladedgeGreatbow）✅ 2026-10-14（2.2.2 已删件）
+
+- 用户拍板：中文名 **剑刃巨弓**（**英文显示名沿用源的 `Bladedge Railbow`**，类名照源是 `BladedgeGreatbow`）、
+  **数值膨胀 28 → 60**；面板 / 叶子 / 分支处理**全取 2.0**；经典分支照经典版配方注册、数值共用 2.0。
+- 文件：`Content/Items/Weapons/Ranged/BladedgeGreatbow.cs`(+`.png` **74×24 横长弓**)；**无自带弹幕**
+  （4 发走弹药本体、2 片走原版 `ProjectileID.Leaf`）。
+- 面板（照 2.0）：伤害 28 / 使用·动画 26 帧 / 击退 3.5 / 弹速 14 / 青柠档 / 60 金 / 音 `Item5` /
+  持握偏移 `(-10, 0)`。
+- `Shoot`（照 2.0）：4 发弹药本体（**每发各自 ±3 速度抖动**、`noDropItem`）+ 2 片树叶
+  （伤害 **减半**、无击退、±π/10 排布、贴墙收回）。
+  **一处等价替换**：源给叶子挂灾厄的 `Calamity().forceRanged` 把它算成射手伤害，
+  本工程没有这套 API，直接写 `Main.projectile[i].DamageType = DamageClass.Ranged`。
+- 配方（@**秘银砧**）：永恒锭×12；现代取 `PerennialBar`、经典取旧名 `DraedonBar`（同一件改名，见 §3），两分支各一条。
+- **经典版的另一套（不取，备查）**：经典是"5 发弹药 + 每发 1/5 概率换绿藻箭、**没有叶子**"、伤害 26 / 24 帧 / 弹速 16；
+  1.3-release 与 2.0 逐项一致。

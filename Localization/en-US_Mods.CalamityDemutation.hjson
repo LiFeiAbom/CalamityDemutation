@@ -2886,6 +2886,14 @@ Items: {
 			Wooden arrows are converted into bouncing obsidian bats
 			'''
 	}
+	BladedgeGreatbow: {
+		DisplayName: Bladedge Railbow
+		Tooltip:
+			'''
+			Fires 4 arrows at once
+			Fires 2 additional leaves
+			'''
+	}
 }
 
 Keybinds: {

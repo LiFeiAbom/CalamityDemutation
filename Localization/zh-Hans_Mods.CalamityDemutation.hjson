@@ -2885,6 +2885,14 @@ Items: {
 			木箭会被转化为撞墙反弹的黑曜石蝙蝠
 			'''
 	}
+	BladedgeGreatbow: {
+		DisplayName: 剑刃巨弓
+		Tooltip:
+			'''
+			一次射出 4 发箭
+			额外射出 2 片树叶
+			'''
+	}
 }
 
 Keybinds: {
