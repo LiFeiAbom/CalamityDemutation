@@ -929,6 +929,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   数值膨胀的「召唤系」批次也在同日结清（见第一屏③与第 7 节表；三件同时改了中文名，见第一屏②末尾）。
   **本链已无待办**；工程层面只剩第一屏④那份"要不要向源对齐"的口径清单。
 
+- 最近一批工作（2026-10-14）：**移植 4 件饰品（天使之靴链）+ 3 件武器（巨龙之息 / 速射机枪 + 配方前件 P90），
+  并修掉两个工具盲区** —— 详见 **§10.7**（天使之靴 → 天界翼靴 → 极乐翼靴 → 炽天使翼靴，链条 4/4 完结）、
+  **§12**（巨龙之息，CI 支线）、**§13**（速射机枪 + P90）、**§14**（本次收尾：口径 / 关键事实 / 未决项 / 仓库状态）。
+  本次固定的口径：物件一律"功能取 1.3-release、配方取 2.0（或用户点名的支线）、再按复合原则并入 1.4.4"；
+  同名不同物照旧不做互斥；"贴脸射击"（`canFirePointBlankShots`）**一律不做**。
 - 最近一批工作（2026-10-13）：**血神核心（`CoreOfTheBloodGod`）改挂 +6% 近战攻击速度**（用户点名）。
   改动四处：`CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块加回
   `Player.GetAttackSpeed<MeleeDamageClass>() += 0.06f;`（沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 本次改挂 +6%）；
@@ -3088,3 +3093,52 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   （现代 `EssenceofEleum` / 经典 `CoreofEleum`——同一个件改名，见 §3 表）。
 - **实装 2.2.2 里的 P90 是重做版**（48×24 新图 + 自定义弹幕 `P90Round`、隔发换弹、军火商出售 35 金），
   与本件**同名不同物**。
+
+## 14. 2026-10-14 会话收尾（重启前封装；下次直接从这里接）
+
+**本次做的事，按顺序**
+
+1. **天使之靴链 4 件全落**（细节见 §10.7）：`AngelTreads`（功能取 1.3-release、配方取 2.0，随后按用户口径
+   复合并入 1.4.4 增强：岩浆 240 → 420 帧 + `lavaRose`，保留免「着火！」）、`InfinityBoots`
+   （中文名先定「无限之靴」，同日改为「**天界翼靴**」）、`ElysianTracers`（**极乐翼靴**）、
+   `SeraphTracers`（**炽天使翼靴**，链条顶层）。四件统一口径 = "1.3-release 功能 + 2.0 配方 + 复合 1.4.4"；
+   后三件带**可切换翅膀**（Shift+右键；靴子模式给火箭靴 + `angelTreads` 标记，名字换成 `TreadsName`）。
+   实现锚点：`CalamityDemutationPlayer.angelTreads`（+10% 飞行时间，PostUpdateMiscEffects）、
+   `seraphTracers`（PostHurt 的"单次受伤 > 200 → 额外 30 帧无敌" + 免金源矿石排斥的反射镜像
+   `CDUtil.MirrorSeraphTracersToCalamity`）。
+2. **巨龙之息**（§12）：CI 支线 + 自持爆炸弹幕 `FuckYou` + 挂犽戎宝藏袋；贴图后按用户要求换成
+   CI「远古巨龙之息」那张 **58×36**（`E69B40A4`，持握偏移随之 `(-15, 10)`）。
+3. **速射机枪 + P90**（§13）：速射机枪取 **2.0**、关态伤害 **375** / 膨胀 **920**、现代配方 =
+   **P90 + 原版链式机枪 + 金源锭×5 @ 宇宙砧**、经典配方照 cal-1.4.2.101；P90 是 CI 支线的自持件
+   （伤害 6 / 2 帧 / 穿甲 20 / 33% 省弹 / 一次两颗 / 48 金 / Lime 档）。
+4. **工具**：新增 `Tools/ReadTmod.ps1`（`.tmod` 直读：文件表 / 解包 / Cecil 反查；头部格式已校准，
+   见 §6），并修掉 `Tools/CheckImplicitTextures.ps1` 的两处**静默漏检**（见 §4：口径 286 → 452 个类）。
+
+**本次坐实的关键事实（别再重查）**
+
+- 实装灾厄 = **2.2.2**，其源码对应 `CalamityModPublic-1.4.4-release`（用户 2026-10-14 确认）。
+- 2.2.2 里**已删除**（本次涉及到的）：履带系旧类名 `InfinityBoots` / `ElysianTracers` / `CelestialTracers` /
+  `TracersCelestial` / `TracersElysian` / `TracersSeraph`（2.2.2 换成了 `MoonWalkers` / `VoidStriders` /
+  `SeraphTracers`）、`ClockGatlignum`、`Phantoplasm`、`CoreofEleum`（改名 `EssenceofEleum`）、`Minigun`。
+- 2.2.2 里**仍在**（本次涉及到的）：`AngelTreads`、`SeraphTracers`、`MoonWalkers`、`VoidStriders`、
+  `DragonsBreath`（喷火器重做版）、`DragonRage`、`P90`（重做版）、`Kingsbane` + `KingsbaneWindUp`、
+  `AuricBar`、`CosmiliteBar`、`AscendantSpiritEssence`、`EssenceofEleum`、`HarpyRing`、`EssenceofSunlight`。
+- **配方组**：实装 2.2.2 只有 `AnyWings`（**没有** `WingsGroup`）；经典版侧是 `WingsGroup`。
+  写法照 `QuiverofNihility`：`RecipeGroup.recipeGroupIDs.ContainsKey(...) ? ... : 兜底`。
+- **每名玩家 × 每一端都跑的钩子**（加判据的地方）：`PostUpdateEquips`、`OnHurt` / `PostHurt`
+  （改 `immuneTime` 也必须带 `whoAmI == Main.myPlayer`）、`UpdateArmorSet`、`PostUpdateMiscEffects`。
+- `.tmod` 头部真实布局 = `TMOD` + tML 版本串 + **20 字节哈希** + **一段零填充（长度不固定）** + 明文文件表
+  （老记法漏了零填充，照旧记法会解析出 0 个文件；已落成脚本，见 §6）。
+
+**未决 / 下次可能要做的**
+
+1. **速射机枪的经典分支没加 P90**：现代分支要 P90 + 链式机枪，经典分支（照 cal-1.4.2.101）只有链式机枪 +
+   宇宙锭 + 幻魂——用户当时未拍板是否对齐，要齐就一行。
+2. 表现类微调（巨龙之息持握偏移 `(-15, 10)`、极乐翼靴 / 速射机枪等的偏移）：用户口径是"有改动我自己修正"，
+   若给新数值直接改对应 `.cs` 即可。
+3. `Tools/CheckImplicitTextures.ps1` 仍留一条近似：文件里只要出现 `override string Texture` 就整文件跳过
+   （不区分是哪个类写的）；要做到逐类精确得按类切代码块。
+4. 后续旧版武器由用户逐件点名（流程照旧：先出逐版对比数据 → 用户拍板 → 落地 → 编译自检 → 记忆 → 提交推送）。
+
+**收尾时的仓库状态**：`master` = `369f651`（与 `origin/master` 同步），工作区干净、无未跟踪文件；
+`dotnet build` 0 警告 0 错误；`CheckResources` 176 条素材引用全命中；`CheckImplicitTextures` 452 个类全命中。
