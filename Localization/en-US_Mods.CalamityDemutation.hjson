@@ -2068,6 +2068,27 @@ Items: {
 			'''
 	}
 
+	SeraphTracers: {
+		DisplayName: Seraph Tracers
+		TreadsName: Seraph Treads
+		Tooltip:
+			'''
+			Allows flight and slow fall
+			Horizontal speed: 12.00
+			Acceleration multiplier: 3.0
+			Excellent vertical speed
+			Flight time: 250
+			50% increased running acceleration
+			Greater mobility on ice
+			Water and lava walking
+			Immunity to the On Fire! debuff
+			Immunity to lava
+			Being hit for over 200 damage will make you immune for an extended period of time
+			[c/aaaaaa:Shift-<right> this item in your inventory to toggle wings]
+			'Taking speed EVEN FURTHER BEYOND!'
+			'''
+	}
+
 	ShieldoftheOcean: {
 		DisplayName: Shield of the Ocean
 		Tooltip: Increased defense by 5 when submerged in liquid

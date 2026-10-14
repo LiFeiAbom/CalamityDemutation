@@ -90,6 +90,65 @@ namespace CalamityDemutation.Utilities
             calamityGetModPlayer = getModPlayer;
         }
 
+        // ── 金源矿石排斥 / 危险砖块免疫桥（炽天使翼靴 SeraphTracers 用）──
+
+        /// <summary>是否已探测过现代版灾厄的 seraphTracers 字段（无论成败只探测一次）</summary>
+        private static bool calamitySeraphProbed;
+        /// <summary>CalamityPlayer.seraphTracers 的字段句柄</summary>
+        private static FieldInfo calamitySeraphTracersField;
+        /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄（seraphTracers 专用）</summary>
+        private static MethodInfo calamityGetModPlayerForSeraph;
+
+        /// <summary>
+        /// 把本模组炽天使翼靴的置位镜像到**现代版灾厄**的 <c>CalamityPlayer.seraphTracers</c>
+        /// （1.4.4-release 的 <c>CalPlayer/CalamityPlayer.cs:952</c>，public 字段）。
+        /// 灾厄同名字段的两处消费点都在 <c>CalamityPlayerMiscEffects</c>：
+        /// ① :917 <c>rejectionImmunity = auricSet || seraphTracers || creativeGodMode || externalAuricRejectionImmunity</c>
+        /// —— 免掉金源矿石的 Auric Rejection（300 伤害 + 大幅击退，还会熔断钩爪）；
+        /// ② :943 <c>if (!seraphTracers)</c> —— 免掉踩到星辉矿的星辉感染、踩到焦炭矿的燃烧等接触效果。
+        /// 这两处都是灾厄自己的逻辑，本工程软依赖调不到，镜像一个字段即可全覆盖；
+        /// 与 auricSet 镜像同理：由调用方判定已穿戴后再调用，不需要置回 false（灾厄每帧自己清零）；
+        /// 调用点必须落在灾厄 ResetEffects 之后、PostUpdateMiscEffects 之前 = 本工程 PostUpdateEquips。
+        /// 经典版灾厄没有该字段，探测会失败并直接短路。
+        /// </summary>
+        public static void MirrorSeraphTracersToCalamity(Player player)
+        {
+            ProbeCalamitySeraphBridge();
+            if (calamitySeraphTracersField == null || calamityGetModPlayerForSeraph == null)
+                return;
+            if (calamityGetModPlayerForSeraph.Invoke(player, null) is ModPlayer calamityPlayer)
+            {
+                calamitySeraphTracersField.SetValue(calamityPlayer, BoxedTrue);
+            }
+        }
+
+        /// <summary>
+        /// 一次性探测现代版灾厄的 <c>CalamityPlayer.seraphTracers</c> 与其取 ModPlayer 的方法并缓存；
+        /// 任一步失败都放弃并记为已探测（不重试）。
+        /// </summary>
+        private static void ProbeCalamitySeraphBridge()
+        {
+            if (calamitySeraphProbed)
+                return;
+            calamitySeraphProbed = true;
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                return;   // 未安装现代版灾厄：直接短路，之后不再探测
+            Type calamityPlayerType = calamity.Code.GetTypes()
+                .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
+            if (calamityPlayerType == null)
+                return;   // 灾厄改了类名：放弃
+            FieldInfo seraphField = calamityPlayerType.GetField("seraphTracers",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (seraphField == null)
+                return;   // 该版本没有 seraphTracers 字段（如经典版）：放弃
+            MethodInfo getModPlayer = typeof(Player).GetMethod("GetModPlayer", Type.EmptyTypes)
+                ?.MakeGenericMethod(calamityPlayerType);
+            if (getModPlayer == null)
+                return;
+            calamitySeraphTracersField = seraphField;
+            calamityGetModPlayerForSeraph = getModPlayer;
+        }
+
         // ── 盗贼潜行桥（魔影面罩 DemonshadeHelmRogue 用）──
 
         /// <summary>是否已探测过经典版的潜行字段（无论成败只探测一次）</summary>

@@ -793,6 +793,14 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool sCrystal = false;
         /// <summary>
+        /// 已装备炽天使翼靴（SeraphTracers）：
+        /// ① 单次受伤 >200 点 → 额外 30 帧无敌（照灾厄 2.0/1.3-release 的 <c>cTracers</c>，结算在 PostHurt）；
+        /// ② 免金源矿石的 Auric Rejection 与危险砖块接触效果（照 1.4.4 的 <c>seraphTracers</c>——
+        ///    经 CDUtil.MirrorSeraphTracersToCalamity 镜像进灾厄侧同名字段，让灾厄自己那些分支生效，
+        ///    调用点见 PostUpdateEquips）。
+        /// </summary>
+        public bool seraphTracers = false;
+        /// <summary>
         /// 塞壬娘（SirenLure）仆从在场标记：由 SirenLure 召唤增益每帧置位，受魅惑之饵驱动
         /// </summary>
         public bool sirenLureWaifu = false;
@@ -1138,6 +1146,7 @@ namespace CalamityDemutation.Players
             silvaSummon = false;
             silvaThrowing = false;
             sCrystal = false;
+            seraphTracers = false;
             sirenLureWaifu = false;
             sirius = false;
             soaring = false;
@@ -1346,6 +1355,7 @@ namespace CalamityDemutation.Players
             silvaSummon = false;
             silvaThrowing = false;
             sCrystal = false;
+            seraphTracers = false;
             sirenLureWaifu = false;
             sirius = false;
             soaring = false;
@@ -3750,6 +3760,12 @@ namespace CalamityDemutation.Players
             // 细节与"为什么不对经典版镜像"见 Utilities/CDUtil_CalamityReflect.cs 的类注释。
             if (auricSet)
                 CDUtil.MirrorAuricSetToCalamity(Player);
+            // 炽天使翼靴镜像：本件的 seraphTracers 同样每帧镜像进现代版灾厄
+            // （灾厄在 ResetEffects 里清零、到 PostUpdateMiscEffects 才读；它的消费点是
+            //  CalamityPlayerMiscEffects.cs:917 的 rejectionImmunity 与 :943 的 `if (!seraphTracers)`
+            //  危险砖块段——即"免金源矿石排斥 + 免星辉/焦炭矿等接触效果"）。
+            if (seraphTracers)
+                CDUtil.MirrorSeraphTracersToCalamity(Player);
             // 魔影面罩（盗贼变体）：把潜行上限抬到 200（内部 2f）并标成"算作盗贼甲"。
             // 现代版走灾厄官方 Mod.Call（AddMaxStealth / SetWearingRogueArmor），经典版走反射——
             // 细节见 Utilities/CDUtil_CalamityReflect.cs。时机同金源镜像：必须晚于灾厄 ResetEffects
@@ -5087,6 +5103,17 @@ namespace CalamityDemutation.Players
             // 源把整段裹在 if (Player.whoAmI == Main.myPlayer) 里（PostHurt 是"每名玩家 × 每一端"都跑的钩子，
             // 见工程记忆第 5 节），本工程照此加判据。
             if (godSlayerThrowing && Player.whoAmI == Main.myPlayer && info.Damage > 80)
+            {
+                Player.immuneTime += 30;
+            }
+            // 炽天使翼靴（天使之靴链顶层）的「单次受伤超过 200 点 → 额外无敌帧」：
+            // 照 2.0 的 CalamityPlayer.cs:6281 —— `if (cTracers && damage > 200) iFramesToAdd += 30;`，
+            // 最终走 Player.GiveIFrames(Player.immuneTime + iFramesToAdd)。
+            // 本工程按等效写法直接加 immuneTime（与上面弑神者盗贼头那条同一写法；
+            // 源另有一条"按弹幕冷却槽加帧"的分支，本工程不细分，统一按无弹幕来源那条处理）。
+            // 源把整段裹在 if (Player.whoAmI == Main.myPlayer) 里；PostHurt 是"每名玩家 × 每一端"
+            // 都跑的钩子（工程记忆第 5 节），故照源加判据。
+            if (seraphTracers && Player.whoAmI == Main.myPlayer && info.Damage > 200)
             {
                 Player.immuneTime += 30;
             }

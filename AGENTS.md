@@ -2839,8 +2839,32 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   经典 = 天界翼靴 + 极乐之翼 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉（照 cal-1.4.2.101）。
 - 未并进来的灾厄内部视觉通道（纯外观）：`IBoots` / `elysianFire` / `eTracers`（2.0 及更早）、
   `tracersDust`（2.0.4）、以及模式指示点。
-- 链条现状：**已落 3/4**（天使之靴 → 天界翼靴 → 极乐翼靴）；只剩顶层（天体履带 / 炽天使翼靴），
-  顶层那件在 2.2.2 里由 `SeraphTracers` 占着名字，移植时要先定名。
+**已落地：炽天使翼靴（`Content/Items/Accessories/Wings/SeraphTracers.cs` + `SeraphTracers.png` /
+`_Wings.png`，2026-10-14 · 链条顶层第四级）**
+
+- **名字（用户 2026-10-14 指定）：中文名「炽天使翼靴」**（= 源显示名；`TreadsName` 作「炽天使履带」）。
+  这个名字在实装 2.2.2 里属于顶层那件，本件与它**同名不同物**——用户既定的"同名并存"口径（同太阳神杖）。
+- **口径同前三件**：功能取 1.3-release（`CelestialTracers`）、配方取 2.0、再复合 1.4.4（`SeraphTracers`）。
+  复合结果 = 飞行 250 / 水平速度 12（取大）/ 倍率 3.0（取大）/ 跑速上限 10（取大）/ 移速 +24%（取大）/
+  完全免岩浆（取强）/ 免「着火！」/ 免坠落伤害 / 垂直速度 1.0 · 0.175 · 1.2 · 3.25 · 0.15（取大）/
+  价值 2 铂金 40 金、稀有度取高到 **20 档**（＝灾厄 `BurnishedAuric`，与工程金源套同档；
+  1.3-release/2.0/2.0.4 是 15 档 Violet）/ 可切换翅膀（1.4.4；靴子模式给火箭靴 2 + `angelTreads` 标记）。
+- **两处"藏起来的"效果都落地了（以后别再重查）**：
+  ① **单次受伤 >200 点 → 额外 30 帧无敌**（1.3-release/2.0 的 `cTracers`；源在
+  `CalamityPlayer.cs:6281` 里 `iFramesToAdd += 30`，最终 `Player.GiveIFrames(Player.immuneTime + 30)`）
+  → 本工程记 `CalamityDemutationPlayer.seraphTracers`，在 **PostHurt** 里 `immuneTime += 30`
+  （带 `whoAmI == Main.myPlayer` 判据）。1.4.4 把这条件删了，复合保留。
+  ② **免金源矿石 Auric Rejection（300 伤害 + 大幅击退）与危险砖块接触效果**（1.4.4 的 `seraphTracers`；
+  消费点 `CalamityPlayerMiscEffects.cs:917` 的 `rejectionImmunity` 与 `:943` 的 `if (!seraphTracers)`）
+  → 本工程走**反射镜像**：`CDUtil.MirrorSeraphTracersToCalamity`（与金源套 auricSet 镜像同一套机制、
+  同一调用点 `PostUpdateEquips`；经典版没有该字段，探测失败自动短路）。
+- **翅膀贴图按用户 2026-10-14 指定换成「德鲁之翼」那张**（本件 `SeraphTracers_Wings.png` 就是
+  `DrewsWings_Wings.png` 的副本，86×248 / `51D323D9`）；物品图仍取旧图（54×42 / `0B0DD705`，
+  1.3-release→2.0.4 同款；1.4.4 起换成 `6F3EBEA5`）。
+- 配方：现代 = 极乐翼靴 + 德鲁之翼 + 金源锭×5 @ 宇宙砧（`AuricBar`/宇宙砧在 2.2.2 里都有，
+  德鲁之翼用本模组自持件）；经典 = 极乐翼靴 + 德鲁之翼 + 暗日碎片×5 + 金源矿石×25 @ 嘉登熔炉
+  （照 cal-1.4.2.101）。
+- 链条现状：**4/4 完结**（天使之靴 → 天界翼靴 → 极乐翼靴 → 炽天使翼靴）。
 ## 11. 本机 Codex 客户端（环境维护；不是模组内容）
 
 > 2026-10-08 把 `codex` 从 **0.154.0 手工升到 0.161.0**，2026-10-09 又升到 **0.162.0**（官方 `codex update` 在本机走不通）。
