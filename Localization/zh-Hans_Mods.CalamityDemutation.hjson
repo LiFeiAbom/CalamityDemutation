@@ -1710,6 +1710,26 @@ Items: {
 			'''
 	}
 
+	InfinityBoots: {
+		DisplayName: 无限之靴
+		TreadsName: 无限履带
+		Tooltip:
+			'''
+			可以飞行并缓降
+			水平速度：9.00
+			加速度倍率：2.6
+			垂直速度良好
+			飞行时间：160
+			跑动加速度提高 24%
+			冰面机动性提升
+			可在水面与岩浆上行走
+			免疫「着火了！」减益
+			免疫岩浆
+			[c/aaaaaa:在物品栏中 Shift+右键 切换翅膀]
+			「疯狂速度！」
+			'''
+	}
+
 	LeadCore: {
 		DisplayName: 铅核
 		Tooltip: 免疫酸雨减益

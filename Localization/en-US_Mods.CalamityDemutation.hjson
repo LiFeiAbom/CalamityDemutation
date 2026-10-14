@@ -1709,6 +1709,26 @@ Items: {
 			'''
 	}
 
+	InfinityBoots: {
+		DisplayName: Infinity Boots
+		TreadsName: Infinity Treads
+		Tooltip:
+			'''
+			Allows flight and slow fall
+			Horizontal speed: 9.00
+			Acceleration multiplier: 2.6
+			Good vertical speed
+			Flight time: 160
+			24% increased running acceleration
+			Greater mobility on ice
+			Water and lava walking
+			Immunity to the On Fire! debuff
+			Immunity to lava
+			[c/aaaaaa:Shift-<right> this item in your inventory to toggle wings]
+			'Ludicrous speed!'
+			'''
+	}
+
 	LeadCore: {
 		DisplayName: Lead Core
 		Tooltip: Grants immunity to the acid rain debuff
