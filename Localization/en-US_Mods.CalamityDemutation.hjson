@@ -2967,6 +2967,14 @@ Items: {
 			All arrows are converted to astreal arrows that emit flames as they travel
 			'''
 	}
+	Alluvion: {
+		DisplayName: Alluvion
+		Tooltip:
+			'''
+			Converts wooden arrows into sharks, torrential and typhoon arrows
+			Fires a torrent of six arrows at once
+			'''
+	}
 }
 
 Keybinds: {
@@ -3181,6 +3189,7 @@ Projectiles: {
 	PlanetaryAnnihilationProj.DisplayName: Ball
 	AstrealArrow.DisplayName: Astreal Arrow
 	AstrealFlame.DisplayName: Astreal Flame
+	TorrentialArrow.DisplayName: Arrow
 }
 
 TextContent: {

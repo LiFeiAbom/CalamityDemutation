@@ -2966,6 +2966,14 @@ Items: {
 			将所有箭矢转化为飞行时喷出火焰的星穹箭
 			'''
 	}
+	Alluvion: {
+		DisplayName: 潮涌
+		Tooltip:
+			'''
+			将木箭转化为鲨鱼、洪流箭与台风箭
+			一次射出一股 6 支箭的洪流
+			'''
+	}
 }
 
 Keybinds: {
@@ -3180,6 +3188,7 @@ Projectiles: {
 	PlanetaryAnnihilationProj.DisplayName: 能量球
 	AstrealArrow.DisplayName: 星穹箭
 	AstrealFlame.DisplayName: 星穹烈焰
+	TorrentialArrow.DisplayName: 洪流箭
 }
 
 TextContent: {
