@@ -3832,3 +3832,116 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 `master` 与 `origin/master` 同步、工作区干净。
 最后一次验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **191 条**素材引用全命中；
 `CheckImplicitTextures` **490 个类**全命中。
+
+## 18. 2026-10-15 法师链「以太流光炮」（Aetherflux Cannon）：逐版侦察 + 纳米净化已落地
+
+### 18.1 用户口径（2026-10-15 定，别再问）
+
+- **链路**：`纳米净化 NanoPurge` → `净化豪饮者 PurgeGuzzler` → `以太流光炮 AetherfluxCannon`，三件都是**法师枪械**
+  （灾厄 `MagicGun` 集合的成员，吃它自己那套陨石套重做的套装加成——那是灾厄侧的系统，本工程不掺和）。
+- **获取结构**：NanoPurge 有配方（**三味材料全是原版**）；**PurgeGuzzler 任何版本都没有配方**——它是
+  **亵神者（Providence）的武器池掉落**（2.0 与 2.2.2 都是"7 把武器各 1/4"抽取 + 宝藏袋权重掉落）；
+  AetherfluxCannon 有配方。
+- **「拆开拼」口径（用户点名）**：这两把枪都拆成「**手持弹幕**」与「**射出去的弹**」两半——
+  **手持弹幕取 2.0.x（灾厄自实现的普通 `ModProjectile`，不必移植手持弹幕基类）**、
+  **弹幕取 2.1 的重做版整套（含判定与粒子表现）**。用户原话："采用 2.0.4 的持握弹幕 + 2.1 的光弹射击"，
+  下位同理（"套取纳米净化武器"）。
+- **中文名**：以太流光炮（用户给）、**纳米净化**（本次定）、**净化豪饮者**（暂定，用户未拍板）。
+
+### 18.2 新增参考源
+
+`D:\Game\Terraria\ModModel\CalamityModPublic-2.1`（用户 2026-10-15 放入本机）——
+**它是"重做后"的第一版**，与实装 2.2.2 只差四处（见 18.4）；**它不是旧形态**，别拿它当"旧版"用。
+
+### 18.3 逐版数据（侦察完成，直接引这份）
+
+**版本梯度（这条链的形态分界，重做发生在 2.0.7.2 与 2.1 之间）**
+
+| 版本 | 形态 |
+|---|---|
+| 2.0 | 旧：手持弹幕自实现；`PhasedGodRay` = 5×5 / 穿透 2 / 局部冷却 12 / **画金色波动光束**（DrawBeam curve）/ **无圣火**；AetherfluxCannon 伤害 247 / 魔力 8；配方含 PurgeGuzzler |
+| 2.0.3.9 / 2.0.4 | 同上，但 `PhasedGodRay` 命中挂圣火 180 帧；AetherfluxCannon 伤害 285 / 魔力 7 |
+| 2.0.7.2 | 手持弹幕改用 `BaseGunHoldoutProjectile`（弹药弹幕的 `SetDefaults` 补 `DamageType = Magic`）；其余同 2.0.4 |
+| **2.1** | **重做**：光弹粒子化（20×20 / 穿透 3 / `localNPCHitCooldown = -1` / 命中回满寿命并 ×0.865 递减 / **一个像素都不画**）；PurgeGuzzler 换成蓄力光柱；NanoPurge 加撞墙智能反弹；**配方不再吃 PurgeGuzzler**；AetherfluxCannon 伤害 **355** |
+| 2.2.2（实装） | 同 2.1 + 见 18.4 四处微调 |
+
+**三件面板**
+
+| 项 | NanoPurge | PurgeGuzzler | AetherfluxCannon |
+|---|---|---|---|
+| 判定 | 62×34 | 58×44（2.1 起 64×48） | 94×54 |
+| 伤害 | 2.0=73 / **2.0.3.9~2.0.7.2=60** / 2.1 起 135 | 2.0~2.0.7.2=120 / **2.1 起 152** | 2.0=247 / 2.0.3.9~2.0.7.2=285 / **2.1=355 / 2.2.2=315** |
+| 魔力 | 2.0=6 / **2.0.3.9 起 8** | 2.0~2.0.7.2=22 / **2.1=50 / 2.2.2=14** | 2.0=8 / **2.0.3.9 起 7** |
+| 使用·动画 | 20 | 24（2.1 起 38 + `channel`） | 36（`channel`） |
+| 击退 / 弹速 | 3 / 16 | 4.5 / 6 | 4 / 24 |
+| 稀有度 | 2.0~2.0.7.2 **原版红档** / 2.1 起 青绿 12 档 | 青绿 12 档（不变） | 2.0~2.0.7.2 **紫 15 档** / 2.1 起 **BurnishedAuric（犽戎后金源档；工程同档＝金源套那 20 档）** |
+| 价值 | 2.0~2.0.7.2 1 铂金 / 2.1 起 1 铂金 50 金 | 1 铂金 50 金 | 2 铂金 40 金 |
+
+- **价值口径**：灾厄 `CalamityGlobalItem` 的价目表 —— Rarity10＝1 铂、11＝1 铂 20 金、12＝1 铂 50 金、
+  13＝1 铂 75 金、14＝2 铂、15＝2 铂 40 金、16＝2 铂 80 金、17＝3 铂 20 金；别名 `RarityRedBuyPrice = Rarity10BuyPrice`、
+  `RarityTurquoiseBuyPrice = Rarity12BuyPrice`、`RarityVioletBuyPrice = Rarity15BuyPrice`（1.4.4-release 与 2.0.7.2 逐项相同）。
+- **贴图**：这条链**只有 PurgeGuzzler 换过图**（2.0/2.0.7.2 ＝ 58×44，2.1 起 ＝ 64×48）；
+  以太流光炮 94×54、纳米净化 62×34、`AetherfluxCannonHoldout.png`（58×768 ＝ 8 帧 × 58×96）、
+  `NanoPurgeHoldout.png`（34×256 ＝ 4 帧 × 34×64）跨 2.0 / 2.0.7.2 / 2.1 / 2.2.2 **四版 MD5 完全相同**。
+- **配方**：NanoPurge 现代 ＝ 激光机枪 + 漩涡碎片×6 + 纳米机器人×100 @远古操纵机（2.0 与经典版是 ×20）；
+  2.1 起改成 幽花锭×7 @秘银砧，2.2.2 是幽花锭×10；AetherfluxCannon ＝ **NanoPurge + PurgeGuzzler** + 金源锭×5 +
+  幽花锭×12 + 神圣晶簇×8 @宇宙砧（**2.1 起删掉 PurgeGuzzler**）。
+- **实装 2.2.2 可用性**（`.tmod` 直读核过）：三件物品 + 两个手持弹幕贴图 + `Sounds/Item/LaserCannon.ogg` 都在。
+
+### 18.4 2.1 → 2.2.2 的四处差异（别再重查）
+
+1. AetherfluxCannon 伤害 **355 → 315**（唯一差异）。
+2. NanoPurge 幽花锭 **×7 → ×10**。
+3. PurgeGuzzler 魔力 **50 → 14**，且 2.2.2 多两处：手持弹幕每次开火 `CheckMana`、
+   以及 `OnConsumeMana` 把"召唤手持弹幕那一次"的耗蓝退还（另把圣火写进 tooltip 的减益集 `ExtraDebuffTooltip_Enemy`）。
+4. `PhasedGodRay` 命中挂**圣火 180 帧**——**2.1 有，2.2.2 删了**（NPC 与 PvP 成对）。
+
+### 18.5 「拆开拼」的技术要点（拼装时唯一要改的地方）
+
+- **两半是解耦的**：手持弹幕只负责 `NewProjectile(类型, 伤害, 击退, ai0, ai1)`，弹幕只读自己的 `ai`。
+- **唯一的耦合点是"螺旋方向"往哪传**：2.0.x 的手持弹幕是"先 `NewProjectileDirect` 拿到弹幕、
+  再补一句 `godRay.localAI[1] = i * 0.5f;`"；**2.1 的 `PhasedGodRay` 读的是 `ai[0]`**
+  （2.0.7.2 起改成把 `i * 0.5f` 当 `ai0` 参数传）。拼装时改这一行即可。
+- **双螺旋是运动学、所有版本都在**：成对生成两道光弹（`i ＝ ±1`）→ 垂直方向错开 18~28 像素 →
+  给**相反的螺旋方向** → 两道一边前进一边交叉缠绕（`WaveTheta 0.09`、`WaveTwistFrames 9` 两版一致）。
+  **2.1 换掉的只是"画法"**（不画贴图、全靠粒子）与判定。
+
+### 18.6 已落地：纳米净化（NanoPurge）✅ 2026-10-15
+
+- 面板**取 2.0.4**：62×34 / 伤害 **60** / 魔力 8 / 使用·动画 20 帧 / 击退 3 / 弹速 16 /
+  **原版红档**（不挂 `postMoonLordRarity`）/ 1 铂金 / `channel` + 不显武器贴图。
+- **配方**（三味全是原版，故单条无条件注册，同"弩炮"那种零软依赖的写法）：
+  激光机枪 `ItemID.LaserMachinegun` + 漩涡碎片 `ItemID.FragmentVortex`×**6** + 纳米机器人 `ItemID.Nanites`×100
+  @远古操纵机 `TileID.LunarCraftingStation`。
+  **注意**：经典版同一件叫 `Purge`、配方是同一套料的 ×20；按工程"配方取所选源版本"的口径只注册 ×6 那条
+  （要两版并存就加一行）。
+- 文件：`Content/Items/Weapons/Magic/NanoPurge.cs`（+`.png` 62×34）、
+  `Content/Projectiles/Magic/NanoPurgeHoldout.cs`（**逐行照搬 2.0.4**，手持弹幕，4 帧动画）、
+  `Content/Projectiles/Magic/NanoPurgeLaser.cs`（**逐行照搬 2.1**，含撞墙智能反弹）。
+- **新补的共用件**：
+  ① `Particles/CustomSpark.cs` —— 移植灾厄 `Particles/CustomSpark.cs`（本工程此前只有 `GenericBloom` /
+  `GenericSparkle` / `SquishyLightParticle` 那一族）；**删掉了源里"天顶世界 + 星期二换 MammothParticle"的彩蛋分支**；
+  `AffectedByLight` 在灾厄那边是基类字段、本工程基类没有，故该类自带一个。
+  ② `Particles/GlowSpark.png`（从 2.1 拷入）。
+  ③ `Utilities/ProjUtil.cs` 新增 `CDUtil.PredictiveAimToTarget(...)`（移植灾厄
+  `ProjectileUtils.CalculatePredictiveAimToTargetMaxUpdates`：迭代法算提前量，并把 `MaxUpdates` 计入飞行时间）。
+- **三处工程侧适配（源 → 本工程）**：① `owner.ClampedMouseWorld()` → 跨端可见的
+  `owner.GetModPlayer<CalamityDemutationPlayer>().GetMouseWorld()`；② 灾厄 `LightDust` → 原版
+  `DustID.FireworksRGB`（一样吃 `dust.color` 赋值）；③ 源的预测瞄准直接读 `owner.HeldItem.shootSpeed`，
+  本工程加了"非正时退回弹幕自身速度"的保护（防止切武器那一瞬间算出 NaN 速度）。
+- **不取的部分**：2.2.2 给这件追加的沙风（`SandsWindBuff`）tooltip 文案——**2.1/2.2.2 的 NanoPurge 与
+  NanoPurgeLaser 代码里都没有任何相关实现**（全 2.1 树里只有另外两把沙漠武器会挂它），属灾厄那边的遗留文案。
+- 本地化：`Items.NanoPurge`（Nano Purge / 纳米净化，tooltip 照 2.1 两行）、
+  `Projectiles.NanoPurgeLaser.DisplayName`（Nano Beam / 纳米光束）。
+
+### 18.7 下一步（从这里接）
+
+1. **净化豪饮者 `PurgeGuzzler` 整件取哪版**（用户未拍板）：① 2.0.4 的简洁版（普通枪、一次三道光、
+   命中挂圣火 + 炸 `FuckYou`——**`FuckYou` 工程已有**）；② 2.1 的蓄力光柱版（要移植
+   `BaseGunHoldoutProjectile` 与 `BaseLaserbeamProjectile` 两个基类 + 4 个灾厄音效 + 粒子族）。
+   **这件套不上"拆开拼"**：2.0.4 的它压根没有手持弹幕，两版是两把不同的武器。
+   另需拍板：它作为**亵神者掉落**怎么给（挂宝藏袋 / 给配方 / 都要）——工程有 `ModifyItemLoot` 挂袋先例
+   （`CommonDrop(item, 3)` 那种简化口径）。
+2. **以太流光炮本体**：手持弹幕取 2.0.4 的 `AetherfluxCannonHoldout`（自实现、8 帧动画、预热 36 帧后
+   每 `useTime/7` 帧左右双管交替）、光弹取 2.1 的 `PhasedGodRay`（照 18.5 改那一行螺旋方向）。
+3. **数值膨胀**：三件的「关态 → 开态」等用户逐把点名（模板见 §7）。

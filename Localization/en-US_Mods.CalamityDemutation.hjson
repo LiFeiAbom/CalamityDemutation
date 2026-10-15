@@ -2990,6 +2990,15 @@ Keybinds: {
 	GodslayerDash.DisplayName: God Slayer Dash
 	OmegaBlue.DisplayName: Omega Blue Set Ability
 	Tarragon.DisplayName: Tarragon Defense Mode
+
+	NanoPurge: {
+		DisplayName: Nano Purge
+		Tooltip:
+			'''
+			Fires a barrage of nano lasers
+			Bounces towards the nearest enemy after hitting a wall
+			'''
+	}
 }
 
 Projectiles: {
@@ -3197,6 +3206,7 @@ Projectiles: {
 	AstrealArrow.DisplayName: Astreal Arrow
 	AstrealFlame.DisplayName: Astreal Flame
 	TorrentialArrow.DisplayName: Arrow
+	NanoPurgeLaser.DisplayName: Nano Beam
 }
 
 TextContent: {

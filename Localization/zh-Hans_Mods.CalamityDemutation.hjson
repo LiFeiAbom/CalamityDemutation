@@ -2989,6 +2989,15 @@ Keybinds: {
 	GodslayerDash.DisplayName: 弑神者冲刺
 	OmegaBlue.DisplayName: 蓝色欧米茄套装技能
 	Tarragon.DisplayName: 龙蒿防御形态
+
+	NanoPurge: {
+		DisplayName: 纳米净化
+		Tooltip:
+			'''
+			连续射出纳米激光
+			命中墙壁后朝最近的敌人反弹
+			'''
+	}
 }
 
 Projectiles: {
@@ -3196,6 +3205,7 @@ Projectiles: {
 	AstrealArrow.DisplayName: 星穹箭
 	AstrealFlame.DisplayName: 星穹烈焰
 	TorrentialArrow.DisplayName: 洪流箭
+	NanoPurgeLaser.DisplayName: 纳米光束
 }
 
 TextContent: {

@@ -595,5 +595,29 @@ namespace CalamityDemutation.Utilities
             }
             return false;
         }
+
+        /// <summary>
+        /// 预测瞄准（移植自灾厄 <c>Utilities/ProjectileUtils.CalculatePredictiveAimToTargetMaxUpdates</c>）：
+        /// 用迭代法估算"以 <paramref name="shootSpeed"/> 飞行的弹幕"该朝哪儿打才能命中目标**未来**的位置，
+        /// 并把弹幕的 <c>MaxUpdates</c>（每帧的额外更新次数）计入飞行时间——不除以它算出来的提前量会明显偏小。
+        /// </summary>
+        /// <param name="startingPosition">弹幕的起点</param>
+        /// <param name="targetPosition">目标的当前位置</param>
+        /// <param name="targetVelocity">目标的当前速度</param>
+        /// <param name="shootSpeed">弹幕速度</param>
+        /// <param name="projMaxUpdates">弹幕的 <c>MaxUpdates</c>（额外更新次数）</param>
+        /// <param name="iterations">迭代次数，越多越准（照源默认 4）</param>
+        public static Vector2 PredictiveAimToTarget(Vector2 startingPosition, Vector2 targetPosition, Vector2 targetVelocity, float shootSpeed, int projMaxUpdates, int iterations = 4)
+        {
+            float previousTimeToReachDestination = 0f;
+            Vector2 currentTargetPosition = targetPosition;
+            for (int i = 0; i < iterations; i++)
+            {
+                float timeToReachDestination = Vector2.Distance(startingPosition, currentTargetPosition) / shootSpeed / projMaxUpdates;
+                currentTargetPosition += targetVelocity * (timeToReachDestination - previousTimeToReachDestination);
+                previousTimeToReachDestination = timeToReachDestination;
+            }
+            return (currentTargetPosition - startingPosition).SafeNormalize(Vector2.UnitY) * shootSpeed;
+        }
     }
 }
