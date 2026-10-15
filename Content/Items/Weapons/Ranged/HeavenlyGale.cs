@@ -14,7 +14,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 本件是"旧版回归"：取 **CI Beta1.12 的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）** 那一版形态。
     /// <para>
     /// **口径（用户 2026-10-14 逐条拍板）**：形态取 **CI（ExoLore 分支）**、基础伤害 **208**、
-    /// 数值膨胀 **208 → 720**、配方取 **2.0**、中文名「天堂之风」、带发光层。
+    /// 数值膨胀 **208 → 720**、中文名「天堂之风」、带发光层。
+    /// **配方（用户 2026-10-15 定稿）**：**武器一律用本工程自持件**、**非武器材料与站台一律软依赖本体**——
+    /// **现代** = 自持六把（弩炮 / 潮涌 / 星穹悲愿 / 发条弓 / 烈风 / 行星湮灭）+ **奇迹物质×1 + 化神魂精×5**
+    /// @嘉登熔炉（照 2.0 的骨架，材料按用户指定改为这两味）；
+    /// **经典** = 照 cal-1.4.2.101 的配方（武器换自持件，七味材料与嘉登熔炉全部软依赖经典版灾厄）。
     /// 照工程既有口径**恒处 Lore 模式**（同第 9 节 ExoBlade / ExoBeam / 归墟之灵的处理）：
     /// 不搬 CI 的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支，也不搬 CI 的
     /// `CIConfig.AmmoConversion` 开关（即"木箭必转星流箭"这一条恒为开）。
@@ -38,6 +42,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const float ArrowSpread = MathHelper.Pi / 10f;
         /// <summary>沿弓身"排箭"的位移长度（照源 40——与弹速无关，只是把七支箭头摆在大弓上）</summary>
         private const float BowSpreadDistance = 40f;
+        /// <summary>现代分支配方里的奇迹物质数量（用户 2026-10-15 指定：1——源 2.0 也是 1）</summary>
+        private const int MiracleMatterCount = 1;
+        /// <summary>现代分支配方里的化神魂精数量（用户 2026-10-15 指定：5）</summary>
+        private const int AscendantSpiritEssenceCount = 5;
+        /// <summary>经典分支配方的七味材料数量（照 cal-1.4.2.101）</summary>
+        private const int ClassicNightmareFuelCount = 5;
+        private const int ClassicEndothermicEnergyCount = 5;
+        private const int ClassicCosmiliteBarCount = 5;
+        private const int ClassicDarksunFragmentCount = 5;
+        private const int ClassicHellcasterFragmentCount = 3;
+        private const int ClassicPhantoplasmCount = 5;
+        private const int ClassicAuricOreCount = 25;
         /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：208 → 720）</summary>
         private const float InflatedDamage = 720f;
         /// <summary>
@@ -131,59 +147,76 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
             => Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Ranged/HeavenlyGaleGlow").Value);
         /// <summary>
-        /// 配方照 **2.0**（用户 2026-10-14 指定）：七件武器 @ 嘉登熔炉；
-        /// 经典分支去掉奇迹物质（经典版没有它，与超新星等件同口径）。
+        /// 配方（用户 2026-10-15 定稿；**武器一律用自持件、非武器材料与站台一律软依赖本体**）：
+        /// <para>
+        /// **现代**（骨架照 2.0）= 自持六把（弩炮 / 潮涌 / 星穹悲愿 / 发条弓 / 烈风 / 行星湮灭）
+        /// + **奇迹物质 `MiracleMatter`×1 + 化神魂精 `AscendantSpiritEssence`×5** @**嘉登熔炉 `DraedonsForge`**
+        /// （材料按用户指定改成这两味；后三者都是灾厄本体件，软依赖）。
+        /// </para>
+        /// <para>
+        /// **经典**（照 cal-1.4.2.101 的配方）= 武器同样换成本工程自持件——该版比现代**多一味炎翼弓、
+        /// 且把烈风换成了 `Phangasm`**（`Phangasm` 本工程没有移植过，这一味只能软依赖经典版本体件）；
+        /// 材料七味（`NightmareFuel`×5 / `EndothermicEnergy`×5 / `CosmiliteBar`×5 / `DarksunFragment`×5 /
+        /// `HellcasterFragment`×3 / `Phantoplasm`×5 / `AuricOre`×25）与嘉登熔炉全部软依赖经典版灾厄。
+        /// </para>
         /// 两分支各自注册一条，缺件写警告、不静默消失。
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) &&
-                calamity.TryFind<ModItem>("PlanetaryAnnihilation", out ModItem planetaryAnnihilation) &&
-                calamity.TryFind<ModItem>("Alluvion", out ModItem alluvion) &&
-                calamity.TryFind<ModItem>("AstrealDefeat", out ModItem astrealDefeat) &&
-                calamity.TryFind<ModItem>("ClockworkBow", out ModItem clockworkBow) &&
-                calamity.TryFind<ModItem>("Galeforce", out ModItem galeforce) &&
-                calamity.TryFind<ModItem>("TheBallista", out ModItem theBallista) &&
                 calamity.TryFind<ModItem>("MiracleMatter", out ModItem miracleMatter) &&
+                calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence) &&
                 calamity.TryFind<ModTile>("DraedonsForge", out ModTile forge))
             {
-                Recipe recipe = CreateRecipe();
-                recipe.AddIngredient(planetaryAnnihilation.Type);
-                recipe.AddIngredient(alluvion.Type);
-                recipe.AddIngredient(astrealDefeat.Type);
-                recipe.AddIngredient(clockworkBow.Type);
-                recipe.AddIngredient(galeforce.Type);
-                recipe.AddIngredient(theBallista.Type);
-                recipe.AddIngredient(miracleMatter.Type);
-                recipe.AddTile(forge.Type);
-                recipe.Register();
+                CreateRecipe().
+                    AddIngredient<PlanetaryAnnihilation>().
+                    AddIngredient<Alluvion>().
+                    AddIngredient<AstrealDefeat>().
+                    AddIngredient<ClockworkBow>().
+                    AddIngredient<Galeforce>().
+                    AddIngredient<TheBallista>().
+                    AddIngredient(miracleMatter.Type, MiracleMatterCount).
+                    AddIngredient(ascendantSpiritEssence.Type, AscendantSpiritEssenceCount).
+                    AddTile(forge.Type).
+                    Register();
             }
             else
             {
-                Mod.Logger.Warn("天堂之风：现代版灾厄里缺件（2.0 配方的七味 / 嘉登熔炉），本条配方未注册。");
+                Mod.Logger.Warn("天堂之风：现代版灾厄里缺件（MiracleMatter / AscendantSpiritEssence / 嘉登熔炉），本条配方未注册。");
             }
+
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic) &&
-                classic.TryFind<ModItem>("PlanetaryAnnihilation", out ModItem classicPlanetaryAnnihilation) &&
-                classic.TryFind<ModItem>("Alluvion", out ModItem classicAlluvion) &&
-                classic.TryFind<ModItem>("AstrealDefeat", out ModItem classicAstrealDefeat) &&
-                classic.TryFind<ModItem>("ClockworkBow", out ModItem classicClockworkBow) &&
-                classic.TryFind<ModItem>("Galeforce", out ModItem classicGaleforce) &&
-                classic.TryFind<ModItem>("TheBallista", out ModItem classicTheBallista) &&
+                classic.TryFind<ModItem>("Phangasm", out ModItem phangasm) &&
+                classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel) &&
+                classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy) &&
+                classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar) &&
+                classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment) &&
+                classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment) &&
+                classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm) &&
+                classic.TryFind<ModItem>("AuricOre", out ModItem auricOre) &&
                 classic.TryFind<ModTile>("DraedonsForge", out ModTile classicForge))
             {
                 Recipe classicRecipe = CreateRecipe();
-                classicRecipe.AddIngredient(classicPlanetaryAnnihilation.Type);
-                classicRecipe.AddIngredient(classicAlluvion.Type);
-                classicRecipe.AddIngredient(classicAstrealDefeat.Type);
-                classicRecipe.AddIngredient(classicClockworkBow.Type);
-                classicRecipe.AddIngredient(classicGaleforce.Type);
-                classicRecipe.AddIngredient(classicTheBallista.Type);
+                classicRecipe.AddIngredient<Alluvion>();
+                classicRecipe.AddIngredient<AstrealDefeat>();
+                classicRecipe.AddIngredient<ClockworkBow>();
+                classicRecipe.AddIngredient<FlarewingBow>();
+                classicRecipe.AddIngredient(phangasm.Type);
+                classicRecipe.AddIngredient<PlanetaryAnnihilation>();
+                classicRecipe.AddIngredient<TheBallista>();
+                classicRecipe.AddIngredient(nightmareFuel.Type, ClassicNightmareFuelCount);
+                classicRecipe.AddIngredient(endothermicEnergy.Type, ClassicEndothermicEnergyCount);
+                classicRecipe.AddIngredient(cosmiliteBar.Type, ClassicCosmiliteBarCount);
+                classicRecipe.AddIngredient(darksunFragment.Type, ClassicDarksunFragmentCount);
+                classicRecipe.AddIngredient(hellcasterFragment.Type, ClassicHellcasterFragmentCount);
+                classicRecipe.AddIngredient(phantoplasm.Type, ClassicPhantoplasmCount);
+                classicRecipe.AddIngredient(auricOre.Type, ClassicAuricOreCount);
                 classicRecipe.AddTile(classicForge.Type);
                 classicRecipe.Register();
             }
             else
             {
-                Mod.Logger.Warn("天堂之风：经典版灾厄里缺件（配方七味去掉奇迹物质 / 嘉登熔炉），本条配方未注册。");
+                Mod.Logger.Warn("天堂之风：经典版灾厄里缺件（Phangasm / 七味材料 / 嘉登熔炉），本条配方未注册。");
             }
         }
     }

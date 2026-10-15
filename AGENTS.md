@@ -3190,8 +3190,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 - **形态取 CI Beta1.12 的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）**（用户点名），照工程既有口径**恒处 Lore 模式**：
   不搬 CI 的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支、也不搬 `CIConfig.AmmoConversion` 开关。
-- 用户逐条拍板：**伤害 208**（源 CI 508）、**数值膨胀 208 → 720**、**配方取 2.0**（→ 15.5 第 4 条会改成引用自持件）、
-  中文名 **天堂之风**、**带发光层**；类名 / 文件名用 `HeavenlyGale`（不带 CI 式后缀）。
+- 用户逐条拍板：**伤害 208**（源 CI 508）、**数值膨胀 208 → 720**、中文名 **天堂之风**、**带发光层**；
+  类名 / 文件名用 `HeavenlyGale`（不带 CI 式后缀）。**配方**：2026-10-14 先照 2.0 落，
+  **2026-10-15 定稿改成"武器全自持 + 材料/站台软依赖"，见 §15.18**。
 - 面板：46×98 / 使用·动画 9·18 帧 / 击退 4 / 弹速 12 / 箭类弹药 / 一次 **7 支**（±3 × π/10 排布，只挪箭点不散射速度）/
   **66% 不消耗弹药** / 月后 15 档（紫）/ 1 铂金 50 金 / 基础稀有度 `ItemRarityID.Red`。
 - 木箭 → 5 元素池 `[Teal, Orange, Orange, Green, Blue]` 均匀随机（**橙 40%、其余各 20%**）；
@@ -3271,8 +3272,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 3. **批 4**：T1 六把武器（`TheBallista` **✅ 见 15.12** / `ClockworkBow` **✅ 见 15.13** /
    `Galeforce` **✅ 见 15.14** / `PlanetaryAnnihilation` **✅ 见 15.15** / `AstrealDefeat` **✅ 见 15.16** /
    `Alluvion` **✅ 见 15.17**）—— **批 4 全部完成**；材料 `MiracleMatter` 走软依赖（§3）。
-4. **批 5**：把天堂之风的配方改成引用自持件；经典分支照 `CosmicImmaterializer` / `Supernova` 的先例处理
-   （`MiracleMatter` 经典版没有 ⇒ 经典配方去掉它）。
+4. **批 5** **✅ 已结清（2026-10-15，见 §15.18）**：武器全自持、材料与站台软依赖；
+   现代 = 自持六把 + `MiracleMatter`×1 + `AscendantSpiritEssence`×5 @嘉登熔炉，
+   经典 = 照 cal-1.4.2.101（武器换自持、`Phangasm` 与七味材料软依赖）。
 5. **未决（等用户拍板）**：① 三件**掉落类**已删材料（`Tenebris` / `HellcasterFragment` / `Phantoplasm`）怎么落地
    （挂回原 Boss 掉落 / 换等价物 / 只保留经典分支）；② 中层那三件"改动大"的要不要自持；
    ③ 工程 `CoreofCinder` 要不要向 2.0 的 `CoreofSunlight` 对齐（34×34 + 发光层 + 卖 40 银）。
@@ -3613,6 +3615,39 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **批 4 到此全部完成**：T1 六把武器 = 弩炮 / 发条弓 / 烈风 / 行星湮灭 / 星穹悲愿 / 潮涌。
   下一批 = **批 5**（把天堂之风的现代配方从"引用本体六把武器"改成引用这六把自持件）。
 
+### 15.18 批 5 结清：天堂之风的配方定稿 + 青色箭口径（2026-10-15）
+
+**① 配方（用户 2026-10-15 定稿，规则："武器一律用自持件、非武器材料与站台一律软依赖本体"）**
+
+- **现代**（骨架照 2.0）= **自持六把**（`TheBallista` / `Alluvion` / `AstrealDefeat` / `ClockworkBow` /
+  `Galeforce` / `PlanetaryAnnihilation`）+ **`MiracleMatter`×1 + `AscendantSpiritEssence`×5** @**`DraedonsForge`**。
+  （源 2.0 只有 `MiracleMatter`×1、七味全是本体武器；用户点名把材料改成"1 奇迹物质 + 5 化神魂精"。）
+- **经典**（照 cal-1.4.2.101 的配方）= 武器同样换自持件，但该版**比现代多一味炎翼弓、且把烈风换成 `Phangasm`**；
+  `Phangasm` 本工程**没有移植过**，这一味**只能软依赖经典版本体件**（若日后想换自持/去掉，改一处）。
+  材料七味 + 站台全部软依赖：`NightmareFuel`×5 / `EndothermicEnergy`×5 / `CosmiliteBar`×5 /
+  `DarksunFragment`×5 / `HellcasterFragment`×3 / `Phantoplasm`×5 / `AuricOre`×25 @`DraedonsForge`。
+- 两分支各自注册一条、缺件写警告（照工程既有写法）；**`MiracleMatter` / `AscendantSpiritEssence` 经典版都没有**，
+  所以经典分支不含它们（与《纯净》等件的既有口径一致）。
+
+**② 青色星流箭：维持"本地命中冷却 0"（用户 2026-10-15 拍板"维持0"）**
+
+- 背景（**CI 上游的一处自相矛盾，别再重查**）：CI 那边**文件名与类名是交叉的**——
+  `Content/Projectiles/ExoLore/ExoArrowTealExoLore.cs` 里声明的类叫 **`ExoArrowTeal`（冷却 0）**，
+  而 `Content/Projectiles/Ranged/ExoArrowTeal.cs` 里声明的类叫 **`ExoArrowTealExoLore`（冷却 10）**；
+  两者**除这一个常量外完全相同**。
+- CI 的 `HeavenlyGaleold.ExoArrowsExoLore` 是**按类名**取的 ⇒ 运行时 Lore 模式实际拿到的是冷却 10 那个；
+  但 CI 自己的 Lore 说明文字（zh-Hans："青色箭矢不再会受到穿透减伤的影响**并无视无敌帧**"）指向冷却 0。
+- **本工程取冷却 0**（＝无视无敌帧，与随件 tooltip「青色星流箭可无限穿透并无视无敌帧」自洽）。
+
+**③ 顺带核实的"天堂之风＝CI 的 ExoLore 版"证据链（用户 2026-10-15 点名确认口径）**
+
+- 箭数 7（`LoreExo` 分支；非 Lore 是 4~5）、箭池 `[青, 橙, 橙, 绿, 蓝]`（橙 40%）、66% 省弹、
+  非木箭 ×1.25 —— 全部照 CI Lore 分支。
+- 绿 / 橙**追踪**、蓝**穿透 5 + 冷却 20** 都只存在于 CI 的 `*ExoLore` 类里（非 Lore 版没有），我们取的正是这些值；
+  弹幕来源：`GreenExoArrow`←`ExoArrowGreenExoLore`、`OrangeExoArrow`←`ExoArrowOrangeExoLore`、
+  `BlueExoArrow`←`ExoArrowBlueExoLore`、`BlueExoArrow2`←`ExoArrowBlue2`（无 Lore 变体）、
+  `ExoMark` / `ExoTornado` 两版同名同物。
+
 ## 16. 2026-10-15 凌晨 会话收尾（天堂之风链：批 2 收官 + 批 3 结清；下次直接从 §16.3 接）
 
 ### 16.1 本次做的事（按顺序）
@@ -3671,9 +3706,10 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    经典分支去掉经典版没有的 `MiracleMatter`，照 `Supernova` / `CosmicImmaterializer` 的先例）
    （各自面板 / 配方 / 两版差异见 §15.2 与 2026-10-14 那条"下位武器"汇报）。
 3. **批 5**：把天堂之风的现代配方从"引用本体六把武器"改成**引用自持件**；经典分支去掉经典版没有的 `MiracleMatter`
-   （照 `Supernova` / `CosmicImmaterializer` 的先例）。
-4. **存疑待用户一句话确认**：用户说过「现代版：一个奇迹物质 + 5 个化神魂精」——我按"本体材料一律软引用"执行了；
-   若原意是**某一件**要改成这个配方，那只是改一处的量。
+   **✅ 已结清（2026-10-15，见 §15.18）**：现代 = 自持六把 + 奇迹物质×1 + 化神魂精×5 @嘉登熔炉；
+   经典 = 照 cal-1.4.2.101 的配方（武器换自持件，`Phangasm` 与七味材料 + 站台全部软依赖）。
+4. **存疑已结清（2026-10-15）**：用户澄清「现代版：一个奇迹物质 + 5 个化神魂精」指的正是**天堂之风的现代配方**
+   （见 §15.18）：非武器材料用 1 奇迹物质 + 5 化神魂精，站台嘉登熔炉，其余武器全用自持件。
 
 ### 16.4 收尾时的仓库状态
 
