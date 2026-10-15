@@ -2949,6 +2949,14 @@ Items: {
 			Fires a spread of low-damage feathers
 			'''
 	}
+	PlanetaryAnnihilation: {
+		DisplayName: Planetary Annihilation
+		Tooltip:
+			'''
+			Fires a storm of 7 arrows from the sky
+			Wooden arrows are converted into homing energy bolts
+			'''
+	}
 }
 
 Keybinds: {
@@ -3160,6 +3168,7 @@ Projectiles: {
 	ClockworkBowHoldout.DisplayName: Clockwork Bow
 	PrecisionBolt.DisplayName: Precision Bolt
 	FeatherLarge.DisplayName: Feather
+	PlanetaryAnnihilationProj.DisplayName: Ball
 }
 
 TextContent: {

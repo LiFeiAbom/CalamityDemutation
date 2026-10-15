@@ -2948,6 +2948,14 @@ Items: {
 			洒出一片伤害很低的羽毛
 			'''
 	}
+	PlanetaryAnnihilation: {
+		DisplayName: 行星湮灭
+		Tooltip:
+			'''
+			从天空中洒下 7 支箭的风暴
+			木箭会被转化为追踪的能量球
+			'''
+	}
 }
 
 Keybinds: {
@@ -3159,6 +3167,7 @@ Projectiles: {
 	ClockworkBowHoldout.DisplayName: 发条弓
 	PrecisionBolt.DisplayName: 精准弩箭
 	FeatherLarge.DisplayName: 羽毛
+	PlanetaryAnnihilationProj.DisplayName: 能量球
 }
 
 TextContent: {

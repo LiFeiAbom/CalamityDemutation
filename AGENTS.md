@@ -269,7 +269,7 @@
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞）
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞；
 2026-10-14 追加 巨龙之息 / 速射机枪 / 天堂之风（射手系，见 §12 / §13 / §15）；
-2026-10-15 追加 弩炮 / 发条弓 / 烈风（天堂之风链批 4 前三件，见 §15.12 ~ §15.14））
+2026-10-15 追加 弩炮 / 发条弓 / 烈风 / 行星湮灭（天堂之风链批 4 前四件，见 §15.12 ~ §15.15））
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -363,6 +363,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 弩炮（TheBallista） | 99 | 279 | 用户 2026-10-15 指定（天堂之风链批 4 首件；见 §15.12） |
 | 发条弓（ClockworkBow） | 808 | 1724 | 用户 2026-10-15 指定（天堂之风链批 4；见 §15.13） |
 | 烈风（Galeforce） | 18 | 54 | 用户 2026-10-15 指定（天堂之风链批 4；见 §15.14） |
+| 行星湮灭（PlanetaryAnnihilation） | 58 | 126 | 用户 2026-10-15 指定（天堂之风链批 4；见 §15.15） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3265,7 +3266,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 2. **批 3（下一批）**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
 3. **批 4**：T1 六把武器（`TheBallista` **✅ 见 15.12** / `ClockworkBow` **✅ 见 15.13** /
-   `Galeforce` **✅ 见 15.14** / `PlanetaryAnnihilation` / `AstrealDefeat` / `Alluvion`）与材料 `MiracleMatter`。
+   `Galeforce` **✅ 见 15.14** / `PlanetaryAnnihilation` **✅ 见 15.15** / `AstrealDefeat` / `Alluvion`）
+   与材料 `MiracleMatter`。
 4. **批 5**：把天堂之风的配方改成引用自持件；经典分支照 `CosmicImmaterializer` / `Supernova` 的先例处理
    （`MiracleMatter` 经典版没有 ⇒ 经典配方去掉它）。
 5. **未决（等用户拍板）**：① 三件**掉落类**已删材料（`Tenebris` / `HellcasterFragment` / `Phantoplasm`）怎么落地
@@ -3494,6 +3496,43 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **188 条**全命中（无新增显式路径）；
   `CheckImplicitTextures` **483 个类**全命中（+2）。
 
+### 15.15 已落地：行星湮灭（PlanetaryAnnihilation）+ 能量球 ✅ 2026-10-15（**批 4 第四件**）
+
+- 用户拍板（2026-10-15）：中文名 **行星湮灭**（弹幕 **能量球**）、**数值膨胀 58 → 126**、
+  面板 / 机制**全取 2.0**；配方两版逐字相同 ⇒ **只注册一条**。
+- 文件（1 物品 + 1 弹幕 + 1 张贴图，**无自备音效**）：
+  `Content/Items/Weapons/Ranged/PlanetaryAnnihilation.cs`(+`.png` 60×100)；
+  `Content/Projectiles/Ranged/PlanetaryAnnihilationProj.cs`（**贴图复用工程共用的
+  `Content/Projectiles/InvisibleProj.png`**，源就写 `Texture => ".../InvisibleProj"`）。
+- 面板（照 2.0）：判定 58×102（贴图 60×100；另有 `HoldoutOffset(-5, 0)`）/ 伤害 58 / 使用·动画 22 帧 /
+  击退 5.5 / 弹速 12 / 箭类弹药 / 使用音 `Item75` / **紫档** / **1 铂金 20 金**（源 `Rarity11BuyPrice`）。
+  2.2.2 是 66 伤、经典版是 75 伤 + 弹速 16（每次出手在 19~34 间随机）——**都不取**。
+- 出手（照 2.0）：从**玩家上方 600 像素**（再上抬 100、横向随机散布 ±200）朝鼠标方向洒下 **7 枚**弹幕，
+  速度带 ±2.4 抖动（源写 `rand.Next(-120,121) * 0.02f`）；木箭 → 能量球（`ai[1]` = 0~6 定色），
+  非木箭 → 照原弹种 ×7 并标记不掉落。出射速度那段照源：`Y 分量先取绝对值并夹到最小 20` 再整体归一化。
+- `PlanetaryAnnihilationProj`（能量球）：判定 8×8、穿透 1、寿命 600、**额外更新 1 帧**、`arrow = true`、
+  贴图隐形；AI 每帧撒 1 颗本色尘（缩放 2.2、无重力、速度清零）+ `CDUtil.HomeInOnNPC(Proj, !tileCollide, 200f, 12f, 20f)`；
+  **消亡＝小爆炸**：`Item14` → 判定框撑到 **40×40**、穿透改 -1、本地无敌 10 帧、伤害 **÷2** 后
+  **当场 `Projectile.Damage()` 结算一发** → 撒 20 + 20 + 10 颗本色尘。
+- **七色尘对照（源写裸值，已翻译成 DustID 名，别再查第二遍）**：`ai[1]` 0~6 =
+  **15 魔镜 `MagicMirror` / 74 绿仙灵 `GreenFairy` / 73 粉仙灵 `PinkFairy` / 162 热射线 `HeatRay` /
+  90 红宝石 `GemRuby` / 173 暗影束 `ShadowbeamStaff` / 57 附魔金 `Enchanted_Gold`**。
+  本工程把源那个"AI 里赋值、`Kill` 里直接用的实例字段"改成**按 `ai[1]` 查同一张静态表**
+  （正常路径完全一致，且字段未赋值时不会退化成尘 0）。
+- **经典版的形态（不取，备查）**：走"**7 个各自独立的 `TerraBall` 弹幕 + 7 张贴图**"的老实现
+  （`TerraBallR/O/Y/G/B/I/V`，纵向速度按 1.3→0.7 递减）；2.0 已把它收敛成一个隐形弹幕 + 七色尘。
+- 配方（照 2.0，@月之站台）：**宇宙弩炮（自持件）+ 代达罗斯风暴弓 + 银河奇点×5（自持件）+ 月亮锭×5**。
+  两版**逐字相同**（经典版只是书写顺序不同）⇒ 单条注册；又因三味全是原版件 / 自持件
+  ⇒ **本条配方零软依赖**（链上第一件）。2.2.2 额外加了生命合金×5——**不取**。
+- 与源的两点差别：① 源的 `Shoot` 前半段（把鼠标方向化成初速那几行）紧接着被后半段**整体覆盖**，
+  是不消耗随机数、无副作用的**死算**，按 §15.13 的同样处理删掉；② 鼠标坐标统一走 `Main.MouseWorld`
+  （源写 `mouseX + screenPosition`，同义；且 `Shoot` 本来就只在主人端跑）；
+  ③ 源用 `Projectile.MaxUpdates`（1.3 口径）算尘埃初速，本工程按 `extraUpdates + 1` 换算。
+- 本地化：`Items.PlanetaryAnnihilation`（Planetary Annihilation / 行星湮灭）、
+  `Projectiles.PlanetaryAnnihilationProj.DisplayName`（Ball / 能量球）。
+- 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **189 条**全命中（+1，隐形贴图路径）；
+  `CheckImplicitTextures` **485 个类**全命中（+2）。
+
 ## 16. 2026-10-15 凌晨 会话收尾（天堂之风链：批 2 收官 + 批 3 结清；下次直接从 §16.3 接）
 
 ### 16.1 本次做的事（按顺序）
@@ -3542,7 +3581,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    配方**现代 + 经典两条并存** / **膨胀 808 → 1724**」。
    ~~烈风 `Galeforce`~~ **✅ 已结清（2026-10-15，见 §15.14）**：用户拍板「中文名 烈风 / 面板与机制全取 2.0 /
    配方单条（两版逐字相同）/ **膨胀 18 → 54**」。
-   **下一步 = 行星湮灭 `PlanetaryAnnihilation` → 星界击败 `AstrealDefeat` → 潮涌 `Alluvion`**
+   ~~行星湮灭 `PlanetaryAnnihilation`~~ **✅ 已结清（2026-10-15，见 §15.15）**：用户拍板「中文名 行星湮灭 /
+   面板与机制全取 2.0 / 配方单条且**零软依赖** / **膨胀 58 → 126**」。
+   **下一步 = 星界击败 `AstrealDefeat` → 潮涌 `Alluvion`**
    （各自面板 / 配方 / 两版差异见 §15.2 与 2026-10-14 那条"下位武器"汇报）。
 3. **批 5**：把天堂之风的现代配方从"引用本体六把武器"改成**引用自持件**；经典分支去掉经典版没有的 `MiracleMatter`
    （照 `Supernova` / `CosmicImmaterializer` 的先例）。
