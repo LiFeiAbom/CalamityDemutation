@@ -67,7 +67,9 @@
 ## 4. 代码与资源约定
 
 - **本地化**：每个语言一份扁平 hjson（`Localization/en-US_Mods.CalamityDemutation.hjson`、`zh-Hans_...`），
-  顶层 `Buffs` / `Items` / `Projectiles` / `Systems` / `TextContent`；物品/弹幕默认分类即 "Items"/"Projectiles"，
+  顶层 `Buffs` / `Items` / `Projectiles` / `Systems` / `TextContent`
+  （`TextContent` 自 2026-10-15 起启用，首用者是发条弓的「咔 / 嗒」：`ClockworkBowTick` / `ClockworkBowTock`）；
+  物品/弹幕默认分类即 "Items"/"Projectiles"，
   新增条目请按字母序插入或追加在段末。改完记得把文件行尾统一成 CRLF（仓库工作区是 CRLF，apply_patch 会写成 LF）。
   **写完任何文件都要顺手做本地化**（用户明确要求）：只要新增/改动的是玩家可见文本——物品、弹幕、增益/减益的
   `DisplayName` 与 `Tooltip`、配置项、界面文案——就必须同步补两个语言文件。配置项的键是
@@ -267,7 +269,7 @@
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞）
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞；
 2026-10-14 追加 巨龙之息 / 速射机枪 / 天堂之风（射手系，见 §12 / §13 / §15）；
-2026-10-15 追加 弩炮（天堂之风链批 4 首件，见 §15.12））
+2026-10-15 追加 弩炮 / 发条弓（天堂之风链批 4 前两件，见 §15.12 / §15.13））
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -359,6 +361,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 暗影巨弓（DarkechoGreatbow） | 37 | 120 | 用户 2026-10-14 指定（天堂之风链；见 §15.10） |
 | 季风（Monsoon） | 121 | 336 | 用户 2026-10-14 指定（天堂之风链批 2 末件；见 §15.11） |
 | 弩炮（TheBallista） | 99 | 279 | 用户 2026-10-15 指定（天堂之风链批 4 首件；见 §15.12） |
+| 发条弓（ClockworkBow） | 808 | 1724 | 用户 2026-10-15 指定（天堂之风链批 4；见 §15.13） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3260,7 +3263,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    —— **批 2 全部完成**（T3/T2 的 7 把武器：月神弓 / 炎翼弓 / 剑刃巨弓 / 宇宙弩炮 / 大陆巨弓 / 暗影巨弓 / 季风）。
 2. **批 3（下一批）**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
-3. **批 4**：T1 六把武器（`TheBallista` **✅ 见 15.12** / `ClockworkBow` / `Galeforce` /
+3. **批 4**：T1 六把武器（`TheBallista` **✅ 见 15.12** / `ClockworkBow` **✅ 见 15.13** / `Galeforce` /
    `PlanetaryAnnihilation` / `AstrealDefeat` / `Alluvion`）与材料 `MiracleMatter`。
 4. **批 5**：把天堂之风的配方改成引用自持件；经典分支照 `CosmicImmaterializer` / `Supernova` 的先例处理
    （`MiracleMatter` 经典版没有 ⇒ 经典配方去掉它）。
@@ -3414,6 +3417,59 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **186 条**全命中；
   `CheckImplicitTextures` **478 个类**全命中（＝本件新增的 3 个类，旧口径 475 + 3）。
 
+### 15.13 已落地：发条弓（ClockworkBow）+ 手持弹幕 + 精准弩箭 ✅ 2026-10-15（**批 4 第二件**）
+
+- 用户拍板（2026-10-15）：中文名 **发条弓**（弹幕 **精准弩箭** `PrecisionBolt`）、**数值膨胀 808 → 1724**、
+  面板 / 机制**全取 2.0**；配方**现代与经典并存**。
+- 文件（1 物品 + 2 弹幕 + 2 张贴图，**无自备音效**）：
+  `Content/Items/Weapons/Ranged/ClockworkBow.cs`(+`.png` 48×96)；
+  `Content/Projectiles/Ranged/ClockworkBowHoldout.cs`（**贴图直接复用物品的 `ClockworkBow.png`**，不另拷）、
+  `PrecisionBolt.cs`(+`.png` 14×70)。
+- 面板（照 2.0）：48×96 / 伤害 808 / 使用 60 帧·动画 30 帧（`channel = true`）/ 击退 4.25 / 弹速 15 /
+  箭类弹药 / `noUseGraphic = true` / 使用音 `Item20` / **红档（原版 `ItemRarityID.Red`，不涉月后档）** /
+  **1 铂金**（源 `Rarity10BuyPrice`；2.2.2 是 770 / 紫档 / 1 铂金 20 金，**不取**）。
+  源的 `UseTimeMultiplier() => 1f` 是空实现，本工程不写。
+- **机制（照 2.0）**：出手只生成 `ClockworkBowHoldout`（`CanUseItem` 挡住重复按下）；
+  手持弹幕悬在手前 35 像素、按"距鼠标 5~25 像素插值"追上鼠标（只主人端算，变了就 `netUpdate`）；
+  按住时每攒满一个装填间隔装一支弩箭（**上限 6**），每次装填把间隔 **×0.95**；装填到位弹
+  **「咔 / 嗒」浮字**（橙 `(255,200,100)` / 青 `(155,255,255)`，按奇偶交替）、半程响 `Item17`、
+  到位响 `Item108`（音量 ×0.3）、**满 6 支改响 `Item23`**；松手时按 **16°** 扇形齐射（响 `Item38`），
+  未装满时"正在装的那支"不射、但扇形角度按它的蓄力进度平滑扩张。
+- **照源保留的两处**：① 齐射前那句"伤害阶梯"（面板 ×(已装填+1)/7）**算完就被 `PickAmmo` 的 out 覆盖**
+  （2.0 与 2.2.2 都是如此）⇒ 实际每支伤害 = 武器面板 + 弹药贡献，**本工程不写那行死赋值**
+  （写了也不影响结果，反而多一处误导）；② 未装满时 `PreDraw` 的排布算式在"刚装好第 1 支、蓄力恰归零"
+  那一帧会出现 0/0 ⇒ NaN 角度，同时该支不透明度为 0（不可见），**无害、照源保留**。
+- **与源的三点差别**：① 源的 `bool uselessFuckYou = OwnerCanShoot;` 是死代码，删（否则破 0 警告基线）；
+  ② 持握判据用工程既有的 `CDUtil.CantUseHoldout()`（与源那四个条件同义，另兜住死亡 / 未激活）；
+  ③ 源的 `CalamityMod:BasicTint` 着色器本工程没有 ⇒ **改用颜色乘法近似**（同色相颜色乘进顶点色、
+  按 `1 - clamp(2×蓄力/间隔)` 淡出），不新增 `.fx` / `.fxc`（用户 2026-10-15 未反对该取舍）。
+- `PrecisionBolt`（精准弩箭）：判定 **72×72**（贴图仅 14×70）、穿透 1、寿命 119、**额外更新 1 帧**
+  （源写 1.3 口径 `MaxUpdates = 2`）、穿墙、不受水阻；**两段式追踪**——2.5°/帧轻追踪 +
+  **每 6 帧一次重整**（四次方权重衰减的转向幅度、左右各试取更接近的一边、响 `Item93`，且**顺手重选目标**）；
+  尾迹 `DustID.LastPrism`（源写裸值 267）染黄；消亡爆 10 颗同类尘 + `Item94`。
+- 配方（用户指定「并存」，两条都注册、都 @远古操纵机、**全是原版件**）：
+  **现代**（照 2.0）= 月亮锭×5 + 齿轮×50；**经典**（照 cal-1.4.2.101）= 齿轮×50 + 月亮锭×15。
+- 本地化：`Items.ClockworkBow`、`Projectiles.ClockworkBowHoldout.DisplayName`（发条弓）、
+  `Projectiles.PrecisionBolt.DisplayName`（精准弩箭），以及**首次启用的 `TextContent` 段**
+  （`ClockworkBowTick` / `ClockworkBowTock` = Tick / Tock = 咔 / 嗒）。
+- 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **188 条**全命中（+2）；
+  `CheckImplicitTextures` **481 个类**全命中（+3）。
+
+**本件顺手坐实的 tML 侧口径（别再重查）**：
+
+1. **`Player.PickAmmo`(7 参重载) 会把「武器面板」算进伤害**——IL 实证：它内部先
+   `GetWeaponDamage(weapon, true)`（**该入口会跑 `ModifyWeaponDamage`**）与 `GetWeaponKnockback(weapon)`，
+   再交给 8 参重载算出 `damage = 弹药伤害 × 加成 + 武器面板`（8 参版把 `StatModifier.Base` 清零、
+   把武器面板塞进 `Flat`）。⇒ **凡"把伤害交给 `PickAmmo` 算"的武器，数值膨胀天然跟随，不必额外接线**，
+   但**按比例派生**的其他伤害仍照 §7 模板改读 `BaseDamage`。
+2. **`Projectile.SafeDirectionTo` 在本机 tML 里不存在**（`Player.SafeDirectionTo` 在）——
+   写弹幕时要么用 `player.SafeDirectionTo(...)`，要么自己算 `target - Projectile.Center`
+   （`AngleBetween` 之类入口内部本来就会归一化）。
+3. **`Dust.NewDustPerfect` 在本机 tML 返回 `Dust` 本体、不是 int 索引**（1.3 口径才是索引）——
+   直接 `Dust d = Dust.NewDustPerfect(pos, type);`，别再套 `Main.dust[...]`。
+4. **扩展方法不能写在嵌套/非静态类里**：灾厄那些 `this Vector2` 扩展（如 `CalamityUtils.AngleBetween`）
+   本工程若就地移植，得写成**普通静态方法**再按 `AngleBetween(a, b)` 调用。
+
 ## 16. 2026-10-15 凌晨 会话收尾（天堂之风链：批 2 收官 + 批 3 结清；下次直接从 §16.3 接）
 
 ### 16.1 本次做的事（按顺序）
@@ -3458,7 +3514,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    经典分支照经典配方 / **膨胀 99 → 279**」，落地情况见 **§15.12**。原数据：面板 2.0（99 伤 / 22 帧 /
    判定 40×70 / 80 金 / Yellow）、机制 2.0（穿透 2 + 压 12 帧免疫 + 破甲 180 + 死亡迸 6 枚碎片）、
    经典配方与 2.0 **逐字相同**（骨髓弓 + 远古战斗护甲材料 + 灵气×10 @秘银砧）。
-2. **下一步按序推进批 4 剩余**：**发条弓 `ClockworkBow` → 烈风 `Galeforce` → 行星湮灭 `PlanetaryAnnihilation` →
+2. ~~发条弓 `ClockworkBow`~~ **✅ 已结清（2026-10-15，见 §15.13）**：用户拍板「中文名 发条弓 / 面板与机制全取 2.0 /
+   配方**现代 + 经典两条并存** / **膨胀 808 → 1724**」。**下一步 = 烈风 `Galeforce` → 行星湮灭 `PlanetaryAnnihilation` →
    星界击败 `AstrealDefeat` → 潮涌 `Alluvion`**（各自面板 / 配方 / 两版差异见 §15.2 与 2026-10-14 那条"下位武器"汇报）。
 3. **批 5**：把天堂之风的现代配方从"引用本体六把武器"改成**引用自持件**；经典分支去掉经典版没有的 `MiracleMatter`
    （照 `Supernova` / `CosmicImmaterializer` 的先例）。

@@ -2933,6 +2933,14 @@ Items: {
 			将木箭转化为弩箭，弩箭会粉碎敌人护甲、并在消亡时迸裂成碎片
 			'''
 	}
+	ClockworkBow: {
+		DisplayName: 发条弓
+		Tooltip:
+			'''
+			按住左键蓄力，最多装填 6 支精准弩箭
+			装填的弩箭越多，每一支的威力越强
+			'''
+	}
 }
 
 Keybinds: {
@@ -3141,4 +3149,11 @@ Projectiles: {
 	SeasSearingSpout.DisplayName: 灼海喷流
 	BallistaGreatArrow.DisplayName: 弩箭
 	FossilShard.DisplayName: 碎片
+	ClockworkBowHoldout.DisplayName: 发条弓
+	PrecisionBolt.DisplayName: 精准弩箭
+}
+
+TextContent: {
+	ClockworkBowTick: 咔
+	ClockworkBowTock: 嗒
 }

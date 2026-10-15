@@ -2934,6 +2934,14 @@ Items: {
 			Converts wooden arrows into great arrows that crush enemy armor and break into shards on death
 			'''
 	}
+	ClockworkBow: {
+		DisplayName: Clockwork Bow
+		Tooltip:
+			'''
+			Hold left click to load up to six precision bolts
+			The more precision bolts are loaded, the harder they hit
+			'''
+	}
 }
 
 Keybinds: {
@@ -3142,4 +3150,11 @@ Projectiles: {
 	SeasSearingSpout.DisplayName: Spout
 	BallistaGreatArrow.DisplayName: Ballista Great Arrow
 	FossilShard.DisplayName: Shard
+	ClockworkBowHoldout.DisplayName: Clockwork Bow
+	PrecisionBolt.DisplayName: Precision Bolt
+}
+
+TextContent: {
+	ClockworkBowTick: Tick
+	ClockworkBowTock: Tock
 }
