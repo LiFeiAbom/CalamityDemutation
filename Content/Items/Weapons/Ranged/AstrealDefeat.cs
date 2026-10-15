@@ -92,6 +92,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             return false;
         }
         /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
+        /// <summary>
         /// 配方（照 2.0，@月之站台）：灵焰 + 暗影焰弓 + **大陆巨弓 + 剑刃巨弓 + 暗影巨弓（三把都是本工程自持件）**
         /// + 银河奇点×5（自持件）+ 月亮锭×5。
         /// 经典 cal-1.4.2.101 是**同一套料**（经典里"大陆巨弓"叫 `GreatbowofTurmoil`）⇒ 只注册一条；

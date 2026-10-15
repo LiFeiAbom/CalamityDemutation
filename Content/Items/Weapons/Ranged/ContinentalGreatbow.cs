@@ -25,8 +25,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 击退 4 / 弹速 17 / 箭类弹药 / 使用音 `Item5` / 黄档 / 80 金。
     /// </para>
     /// <para>
-    /// 一次射出 **3 支主箭**（速度归一化后 ×40、±π/10）：木箭 → **火焰箭 `FireArrow`**（"点燃"），
-    /// 全部标记不掉落；再补 **2 支追加箭**，从 诅咒 / 地狱火 / 灵液 三选一、
+    /// 一次射出 **3 支主箭**（速度归一化后 ×40、±π/10）：**任何弹药一律换成火焰箭 `FireArrow`**
+    /// （弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径），全部标记不掉落；
+    /// 再补 **2 支追加箭**，从 诅咒 / 地狱火 / 灵液 三选一、
     /// **伤害 ×0.5**、±0.5 速度抖动、挂本地命中冷却 10 帧（照源）。
     /// 2.2.2 把伤害提到 45、使用时间拉到 24 帧、追加箭池去掉诅咒箭——**本件按用户口径不取**。
     /// </para>
@@ -84,7 +85,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
-        /// 开火（照 2.0）：3 支主箭（木箭 → 火焰箭、全部不掉落）+ 2 支半伤的元素箭（诅咒/地狱火/灵液三选一）。
+        /// 开火（照 2.0 的结构）：3 支主箭（**任何弹药 → 火焰箭**、全部不掉落；
+        /// 弹药全转化是用户 2026-10-15 对整条链定的新口径）+ 2 支半伤的元素箭（诅咒/地狱火/灵液三选一）。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -101,8 +103,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (!canHit)
                     offset -= velocity;   // 贴墙时把整排箭收回玩家身上（照源）
 
-                int spawnType = type == ProjectileID.WoodenArrowFriendly ? ProjectileID.FireArrow : type;
-                int arrow = Projectile.NewProjectile(source, origin + offset, velocity, spawnType, damage, knockback, player.whoAmI);
+                int arrow = Projectile.NewProjectile(source, origin + offset, velocity, ProjectileID.FireArrow, damage, knockback, player.whoAmI);
                 if (Main.projectile.IndexInRange(arrow))
                     Main.projectile[arrow].noDropItem = true;
             }
@@ -125,6 +126,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（照源，@秘银砧）：熔渣锭×10。唯一外部件是材料**熔渣锭**，走软依赖——
         /// 现代版叫 `ScoriaBar`、经典版是旧名 `CruptixBar`（推定同一件：都 ← 矿×5、30×24、Yellow 档），

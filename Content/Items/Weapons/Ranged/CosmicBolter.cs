@@ -22,8 +22,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 击退 2.75 / 弹速 10 / 箭类弹药 / 使用音 `Item75` / 黄档 / 80 金。
     /// </para>
     /// <para>
-    /// 一次射出 **3 支**（速度归一化后 ×30、±π/10 排布）：木箭 → <see cref="LunarBolt2"/>；
-    /// 非木箭 → 照原弹种射出、伤害不打折、标记不掉落。贴墙时整排收回。
+    /// 一次射出 **3 支**（速度归一化后 ×30、±π/10 排布）：**任何弹药一律换成 <see cref="LunarBolt2"/>**
+    /// （弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径）。贴墙时整排收回。
     /// 2.2.2 额外给木箭 **×1.2 伤害/击退**、并换成 `VernalBolt`——**本件按用户口径不取**。
     /// </para>
     /// </summary>
@@ -75,7 +75,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：速度归一化后 ×<see cref="BowSpreadDistance"/>、±π/10 排布；
-        /// 木箭换成 <see cref="LunarBolt2"/>，非木箭照原样射出并标记不掉落（照 2.0 的 <c>Shoot</c>）
+        /// **任何弹药都换成 <see cref="LunarBolt2"/>**（弹药全转化，用户 2026-10-15 定；
+        /// 源 2.0 是"木箭才转化、非木箭照原样射出并标 <c>noDropItem</c>"，本工程按新口径不取）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -92,19 +93,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (!canHit)
                     offset -= velocity;   // 贴墙时把整排箭收回玩家身上（照源）
 
-                if (type == ProjectileID.WoodenArrowFriendly)
-                {
-                    Projectile.NewProjectile(source, origin + offset, velocity, ModContent.ProjectileType<LunarBolt2>(), damage, knockback, player.whoAmI);
-                }
-                else
-                {
-                    int arrow = Projectile.NewProjectile(source, origin + offset, velocity, type, damage, knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(arrow))
-                        Main.projectile[arrow].noDropItem = true;
-                }
+                Projectile.NewProjectile(source, origin + offset, velocity, ModContent.ProjectileType<LunarBolt2>(), damage, knockback, player.whoAmI);
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（照源，@秘银砧）：**月光弓**（本工程自持件，两分支都用我们的）+
         /// 活体碎片×5 + 神圣锭×5 + 视域之魂×5。

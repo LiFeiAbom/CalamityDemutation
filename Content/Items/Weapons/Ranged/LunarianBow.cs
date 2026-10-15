@@ -20,8 +20,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// <c>CalamityUtils.CheckWoodenAmmo</c>，本件按用户口径**不取**。
     /// </para>
     /// <para>
-    /// 一次射出 **2 支**（±π/10 = 18°）：木箭 → <see cref="LunarBolt"/>；非木箭 → 照原弹种射出、
-    /// 伤害不打折、但标记 <c>noDropItem</c>（不掉落）。贴墙时两支都往回收（照源的 <c>canHit</c> 判据）。
+    /// 一次射出 **2 支**（±π/10 = 18°）：**任何弹药一律换成 <see cref="LunarBolt"/>**
+    /// （弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径）。
+    /// 贴墙时两支都往回收（照源的 <c>canHit</c> 判据）。
     /// </para>
     /// <para>
     /// **数值膨胀**（同一开关）：面板 32 → **80**（用户 2026-10-14 指定）。派生伤害走 <c>Shoot</c> 的
@@ -74,7 +75,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：速度为"归一到 1 再 ×15"，两支夹角 ±18°；
-        /// 木箭换成 <see cref="LunarBolt"/>，非木箭照原弹种射出并标记不掉落（照 2.0 的 <c>Shoot</c>）
+        /// **任何弹药都换成 <see cref="LunarBolt"/>**（弹药全转化，用户 2026-10-15 定；
+        /// 源 2.0 是"木箭才转化、非木箭照原弹种射出并标 <c>noDropItem</c>"，本工程按新口径不取）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -91,19 +93,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (!canHit)
                     offset -= velocity;   // 贴墙时把两支都收回玩家身上（照源）
 
-                if (type == ProjectileID.WoodenArrowFriendly)
-                {
-                    Projectile.NewProjectile(source, origin + offset, velocity, ModContent.ProjectileType<LunarBolt>(), damage, knockback, player.whoAmI);
-                }
-                else
-                {
-                    int arrow = Projectile.NewProjectile(source, origin + offset, velocity, type, damage, knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(arrow))
-                        Main.projectile[arrow].noDropItem = true;
-                }
+                Projectile.NewProjectile(source, origin + offset, velocity, ModContent.ProjectileType<LunarBolt>(), damage, knockback, player.whoAmI);
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）：
+        /// tML 里 <c>HoldoutOffset().X</c> **直接就是贴图原点 X**（模组物品默认 10，**越小越往右**），
+        /// 故取负值表示右移；这里与天堂之风同量。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（照 2.0 的两条，@恶魔祭坛）：（恶魔弓 **或** 肌腱弓）+ 蜂膝弓 + 熔火之怒 + 净化凝胶×10。
         /// 唯一的外部件是**净化凝胶**，按工程口径走软依赖取名——本链两版灾厄的同名件内容一致，

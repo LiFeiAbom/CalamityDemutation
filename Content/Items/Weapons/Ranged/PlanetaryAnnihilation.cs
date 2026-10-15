@@ -26,8 +26,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// </para>
     /// <para>
     /// 出手（照 2.0）：从**玩家上方 600 像素**处（再上抬 100、横向随机散布 ±200）朝鼠标方向洒下
-    /// **7 枚**弹幕，速度带 ±2.4 的随机抖动；木箭 → <see cref="PlanetaryAnnihilationProj"/>（`ai[1]` = 0~6 定颜色），
-    /// 非木箭 → 照原弹种 ×7 并标记不掉落。
+    /// **7 枚**弹幕，速度带 ±2.4 的随机抖动；**任何弹药一律换成 <see cref="PlanetaryAnnihilationProj"/>**
+    /// （`ai[1]` = 0~6 定颜色；弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径）。
     /// **经典版是"7 个各自独立的 `TerraBall` 弹幕 + 7 张贴图"的老实现**，2.0 已把它收敛成一个隐形弹幕
     /// （见弹幕文件），本工程照 2.0。
     /// </para>
@@ -94,8 +94,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
-        /// 从玩家上方洒下 <see cref="ProjectileCount"/> 枚弹幕：木箭换能量球（`ai[1]` 定色），
-        /// 其余照原弹种射出并标记不掉落（照 2.0）
+        /// 从玩家上方洒下 <see cref="ProjectileCount"/> 枚弹幕：**任何弹药都换成能量球**
+        /// （`ai[1]` 定色；弹药全转化，用户 2026-10-15 定）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -125,17 +125,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 float speedX = toMouseX + Main.rand.Next(-VelocityJitter, VelocityJitter + 1) * 0.02f;
                 float speedY = toMouseY + Main.rand.Next(-VelocityJitter, VelocityJitter + 1) * 0.02f;
 
-                if (type == ProjectileID.WoodenArrowFriendly)
-                {
-                    Projectile.NewProjectile(source, spawnPosition.X, spawnPosition.Y, speedX, speedY,
-                        ModContent.ProjectileType<PlanetaryAnnihilationProj>(), damage, knockback, player.whoAmI, 0f, i);
-                }
-                else
-                {
-                    int proj = Projectile.NewProjectile(source, spawnPosition.X, spawnPosition.Y, speedX, speedY, type, damage, knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(proj))
-                        Main.projectile[proj].noDropItem = true;
-                }
+                Projectile.NewProjectile(source, spawnPosition.X, spawnPosition.Y, speedX, speedY,
+                    ModContent.ProjectileType<PlanetaryAnnihilationProj>(), damage, knockback, player.whoAmI, 0f, i);
             }
             return false;
         }

@@ -20,10 +20,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 使用音 `Item5` / **稀有度 PureGreen＝本工程 13 档（荧光绿）** / 价值 **1 铂金 30 金**（源 `Rarity13BuyPrice`）。
     /// </para>
     /// <para>
-    /// 一次射出 **5 支**（速度归一化后 ×40、±π/10 排布），木箭时**按位次分工**：
+    /// 一次射出 **5 支**（速度归一化后 ×40、±π/10 排布），**任何弹药都按位次分工**
+    /// （弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径）：
     /// **第 3 支（p=2）→ <see cref="TyphoonArrow"/>**、**其余 4 支 → <see cref="MiniSharkron"/>**，
     /// 伤害 **×1.1**，生成后补 <c>arrow = true</c> 与 <c>extraUpdates += 1</c>；
-    /// 非木箭 → 照原弹种射出、标记不掉落。贴墙时整排收回。
+    /// 贴墙时整排收回。源 2.0 对非木箭是"照原弹种射出并标记不掉落"——**按新口径不取**。
     /// 2.2.2 把伤害提到 156 并把配方砍到 4 味——**本件按用户口径不取**。
     /// </para>
     /// </summary>
@@ -83,8 +84,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
-        /// 一次射出 <see cref="ArrowsPerShot"/> 支：木箭按位次分工（1 支台风箭 + 4 支小鲨鱼龙，伤害 ×1.1），
-        /// 其余照原弹种射出并标记不掉落（照 2.0 的 <c>Shoot</c>）
+        /// 一次射出 <see cref="ArrowsPerShot"/> 支：**任何弹药都按位次分工**
+        /// （1 支台风箭 + 4 支小鲨鱼龙，伤害 ×1.1；弹药全转化，用户 2026-10-15 定）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -101,28 +102,24 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (!canHit)
                     offset -= velocity;   // 贴墙时把整排箭收回玩家身上（照源）
 
-                if (type == ProjectileID.WoodenArrowFriendly)
+                int convertedType = p == TyphoonArrowIndex
+                    ? ModContent.ProjectileType<TyphoonArrow>()
+                    : ModContent.ProjectileType<MiniSharkron>();
+                int proj = Projectile.NewProjectile(source, origin.X + offset.X, origin.Y + offset.Y, velocity.X, velocity.Y,
+                    convertedType, (int)(damage * ConvertedDamageMult), knockback, player.whoAmI);
+                if (Main.projectile.IndexInRange(proj))
                 {
-                    int convertedType = p == TyphoonArrowIndex
-                        ? ModContent.ProjectileType<TyphoonArrow>()
-                        : ModContent.ProjectileType<MiniSharkron>();
-                    int proj = Projectile.NewProjectile(source, origin.X + offset.X, origin.Y + offset.Y, velocity.X, velocity.Y,
-                        convertedType, (int)(damage * ConvertedDamageMult), knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(proj))
-                    {
-                        Main.projectile[proj].arrow = true;         // 让这两类也算"箭"（照源）
-                        Main.projectile[proj].extraUpdates += 1;    // 再快一档（照源）
-                    }
-                }
-                else
-                {
-                    int proj = Projectile.NewProjectile(source, origin.X + offset.X, origin.Y + offset.Y, velocity.X, velocity.Y, type, damage, knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(proj))
-                        Main.projectile[proj].noDropItem = true;
+                    Main.projectile[proj].arrow = true;         // 让这两类也算"箭"（照源）
+                    Main.projectile[proj].extraUpdates += 1;    // 再快一档（照源）
                 }
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（分版本，缺件写警告不静默）：
         /// **现代**（照 2.0）= 海啸 + **炎翼弓（本工程自持件）** + 猎魂鲨牙×6 + 鲨鱼鳍×2 +

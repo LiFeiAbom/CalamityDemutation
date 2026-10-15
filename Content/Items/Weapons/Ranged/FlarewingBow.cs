@@ -22,8 +22,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 蝙蝠改成"命中挂燃烧、穿透一次后追踪"，**本件按用户口径都不取**。
     /// </para>
     /// <para>
-    /// 一次射出 **5 支**（±2 × π/10 = **±36°**）：木箭 → <see cref="FlareBat"/>；非木箭 → 照原弹种射出、
-    /// 伤害**不打折**（经典版是 ×0.66、木箭 ×1.5，本件不取）；两者都 `noDropItem`。
+    /// 一次射出 **5 支**（±2 × π/10 = **±36°**）：**任何弹药一律换成 <see cref="FlareBat"/>**
+    /// （弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径）。
     /// 贴墙时整排收回玩家身上（照源的 <c>canHit</c> 判据）。
     /// </para>
     /// </summary>
@@ -76,7 +76,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：沿弓身做 ±2 × π/10（±36°）排布、只挪箭点不散射速度；
-        /// 木箭换成 <see cref="FlareBat"/>，非木箭照原弹种射出、伤害不打折，两者都标记不掉落（照 2.0 的 <c>Shoot</c>）
+        /// **任何弹药都换成 <see cref="FlareBat"/>**（弹药全转化，用户 2026-10-15 定；
+        /// 源 2.0 是"木箭才转化、非木箭照原弹种射出"，本工程按新口径不取）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -94,13 +95,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (!canHit)
                     offset -= bowOffset;   // 贴墙时把整排箭收回玩家身上（照源）
 
-                int spawnType = type == ProjectileID.WoodenArrowFriendly ? ModContent.ProjectileType<FlareBat>() : type;
-                int arrow = Projectile.NewProjectile(source, origin + offset, velocity, spawnType, damage, knockback, player.whoAmI);
-                if (Main.projectile.IndexInRange(arrow))
-                    Main.projectile[arrow].noDropItem = true;
+                Projectile.NewProjectile(source, origin + offset, velocity, ModContent.ProjectileType<FlareBat>(), damage, knockback, player.whoAmI);
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（照源，@秘银砧）：地狱之翼弓 + 日光精华×5 + 活火块×50 + 黑曜石×10。
         /// 唯一外部件是**日光精华**，走软依赖：现代版叫 `EssenceofSunlight`、经典版是旧名 `EssenceofCinder`

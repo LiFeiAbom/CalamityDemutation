@@ -84,6 +84,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             return true;
         }
         /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
+        /// <summary>
         /// 配方（照源，@天磨坊）：**空中锭 `AerialiteBar`×8** + 日耀板×3。
         /// 两版配方**逐字相同** ⇒ 只注册一条，走"有现代用现代、否则退经典"（同月光弓的写法），
         /// 避免两版灾厄都装时多出一条重复配方。

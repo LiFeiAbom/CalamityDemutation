@@ -2876,7 +2876,7 @@ Items: {
 		Tooltip:
 			'''
 			Fires two arrows at once
-			Converts wooden arrows into sliding energy bolts
+			Converts any ammo into sliding energy bolts
 			'''
 	}
 
@@ -2885,7 +2885,7 @@ Items: {
 		Tooltip:
 			'''
 			Shoots a spread of 5 arrows
-			Wooden arrows are converted into bouncing obsidian bats
+			Any ammo is converted into bouncing obsidian bats
 			'''
 	}
 
@@ -2903,7 +2903,7 @@ Items: {
 		Tooltip:
 			'''
 			Fires three arrows at once
-			Converts wooden arrows into sliding energy bolts
+			Converts any ammo into sliding energy bolts
 			'''
 	}
 
@@ -2911,7 +2911,7 @@ Items: {
 		DisplayName: Continental Greatbow
 		Tooltip:
 			'''
-			Wooden arrows are set alight with fire
+			Any ammo is set alight with fire
 			Fires 3 arrows at once
 			Fires 2 additional cursed, hellfire, or ichor arrows
 			'''
@@ -2931,13 +2931,13 @@ Items: {
 		Tooltip:
 			'''
 			Fires a spread of 5 arrows
-			Wooden arrows are converted into typhoon arrows and sharks
+			Any ammo is converted into typhoon arrows and sharks
 			'''
 	}
 
 	TheBallista: {
 		DisplayName: The Ballista
-		Tooltip: Converts wooden arrows into great arrows that crush enemy armor and break into shards on death
+		Tooltip: Converts any ammo into great arrows that crush enemy armor and break into shards on death
 	}
 
 	ClockworkBow: {
@@ -2959,7 +2959,7 @@ Items: {
 		Tooltip:
 			'''
 			Fires a storm of 7 arrows from the sky
-			Wooden arrows are converted into homing energy bolts
+			Any ammo is converted into homing energy bolts
 			'''
 	}
 
@@ -2978,7 +2978,7 @@ Items: {
 		DisplayName: Alluvion
 		Tooltip:
 			'''
-			Converts wooden arrows into sharks, torrential and typhoon arrows
+			Converts any ammo into sharks, torrential and typhoon arrows
 			Fires a torrent of six arrows at once
 			'''
 	}

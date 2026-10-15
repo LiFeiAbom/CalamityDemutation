@@ -21,8 +21,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 箭类弹药 / 使用音 `Item5` / 黄档（原版档，不涉月后档）/ 80 金。
     /// </para>
     /// <para>
-    /// 木箭 → <see cref="BallistaGreatArrow"/>；**非木箭照原弹种射出**。这一处与链上其他弓不同：
-    /// 源既不归一化出手速度、也不打 `noDropItem`、更没有贴墙收箭——**照源保留**。
+    /// **任何弹药一律换成 <see cref="BallistaGreatArrow"/>**（弹药全转化，用户 2026-10-15 对天堂之风
+    /// **及其整条下位链**统一的口径）。源既不归一化出手速度、也不打 `noDropItem`、更没有贴墙收箭——**照源保留**。
     /// </para>
     /// </summary>
     internal class TheBallista : ModItem
@@ -64,17 +64,19 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
-        /// 木箭换成 <see cref="BallistaGreatArrow"/>、非木箭照原弹种射出（照 2.0 的 <c>Shoot</c>）
+        /// **任何弹药都换成 <see cref="BallistaGreatArrow"/>**（弹药全转化，用户 2026-10-15 定；
+        /// 源 2.0 是"木箭才转化、非木箭照原弹种射出"，本工程按新口径不取）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if (type == ProjectileID.WoodenArrowFriendly)
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<BallistaGreatArrow>(), damage, knockback, player.whoAmI);
-            else
-                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
-
+            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<BallistaGreatArrow>(), damage, knockback, player.whoAmI);
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（照源，@秘银砧）：骨髓弓 + 远古战斗护甲材料 + 灵气×10。
         /// 2.0 与经典版**逐字相同、且三味全是原版件** ⇒ 不分公司版本、只注册一条

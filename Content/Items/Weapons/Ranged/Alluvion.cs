@@ -23,10 +23,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 2.2.2 砍到 78 伤、经典版是 90 伤 / 使用 9 帧·动画 18 帧 / 弹速 17——**都不取**。
     /// </para>
     /// <para>
-    /// 出手（照 2.0）：一次 **6 支**（速度归一化后 ×35、±π/10 排布、贴墙时整排收回），
-    /// 木箭**按位次分工**——第 1/6 支 → <see cref="TyphoonArrow"/>、第 2/5 支 → <see cref="MiniSharkron"/>、
-    /// 第 3/4 支 → <see cref="TorrentialArrow"/>，生成后补 <c>arrow = true</c> 与 <c>extraUpdates += 1</c>；
-    /// 非木箭照原弹种射出并标记不掉落。
+    /// 出手（照 2.0 的结构）：一次 **6 支**（速度归一化后 ×35、±π/10 排布、贴墙时整排收回），
+    /// **任何弹药都按位次分工**（弹药全转化，用户 2026-10-15 对天堂之风**及其整条下位链**统一的口径）——
+    /// 第 1/6 支 → <see cref="TyphoonArrow"/>、第 2/5 支 → <see cref="MiniSharkron"/>、
+    /// 第 3/4 支 → <see cref="TorrentialArrow"/>，生成后补 <c>arrow = true</c> 与 <c>extraUpdates += 1</c>。
     /// **2.2.2 给转化出来的箭额外乘了 ×2.3 伤害——按用户口径不取**；
     /// 经典版则是"10 支、逐支掷骰（1/12 洪流箭、1/25 原版鲨鱼、1/100 台风箭）"的另一套写法，也不取。
     /// </para>
@@ -85,8 +85,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
-        /// 一次射出 <see cref="ArrowsPerShot"/> 支，木箭按位次分工（2 台风箭 + 2 小鲨鱼龙 + 2 洪流箭），
-        /// 其余照原弹种射出并标记不掉落（照 2.0）
+        /// 一次射出 <see cref="ArrowsPerShot"/> 支，**任何弹药都按位次分工**
+        /// （2 台风箭 + 2 小鲨鱼龙 + 2 洪流箭；弹药全转化，用户 2026-10-15 定）
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -103,31 +103,27 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (!canHit)
                     offset -= velocity;   // 贴墙时把整排箭收回玩家身上（照源）
 
-                if (type == ProjectileID.WoodenArrowFriendly)
+                int convertedType = i switch
                 {
-                    int convertedType = i switch
-                    {
-                        0 or 5 => ModContent.ProjectileType<TyphoonArrow>(),
-                        1 or 4 => ModContent.ProjectileType<MiniSharkron>(),
-                        _ => ModContent.ProjectileType<TorrentialArrow>(),
-                    };
-                    int proj = Projectile.NewProjectile(source, origin.X + offset.X, origin.Y + offset.Y, velocity.X, velocity.Y,
-                        convertedType, damage, knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(proj))
-                    {
-                        Main.projectile[proj].arrow = true;         // 让这几类也算"箭"（照源）
-                        Main.projectile[proj].extraUpdates += 1;    // 再快一档（照源）
-                    }
-                }
-                else
+                    0 or 5 => ModContent.ProjectileType<TyphoonArrow>(),
+                    1 or 4 => ModContent.ProjectileType<MiniSharkron>(),
+                    _ => ModContent.ProjectileType<TorrentialArrow>(),
+                };
+                int proj = Projectile.NewProjectile(source, origin.X + offset.X, origin.Y + offset.Y, velocity.X, velocity.Y,
+                    convertedType, damage, knockback, player.whoAmI);
+                if (Main.projectile.IndexInRange(proj))
                 {
-                    int proj = Projectile.NewProjectile(source, origin.X + offset.X, origin.Y + offset.Y, velocity.X, velocity.Y, type, damage, knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(proj))
-                        Main.projectile[proj].noDropItem = true;
+                    Main.projectile[proj].arrow = true;         // 让这几类也算"箭"（照源）
+                    Main.projectile[proj].extraUpdates += 1;    // 再快一档（照源）
                 }
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 对整条链指定的"贴图整体右移"口径）；
+        /// <c>HoldoutOffset().X</c> 直接是贴图原点 X（模组默认 10，越小越往右），故取负值。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（分版本，缺件写警告不静默）：
         /// **现代**（照 2.0，@**宇宙砧 `CosmicAnvil`**）= **季风（自持件）** + 海棱晶 `SeaPrism`×20 +
