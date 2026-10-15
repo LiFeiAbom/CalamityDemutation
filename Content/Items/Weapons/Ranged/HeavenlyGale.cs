@@ -13,8 +13,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 天堂之风（Heavenly Gale） - 射手弓。**灾厄 2.0.3.9 起被重做**成"蓄力星流水晶弓"（现行 2.2.2 就是重做版），
     /// 本件是"旧版回归"：取 **CI Beta1.12 的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）** 那一版形态。
     /// <para>
-    /// **口径（用户 2026-10-14 逐条拍板）**：形态取 **CI（ExoLore 分支）**、基础伤害 **208**、
-    /// 数值膨胀 **208 → 720**、中文名「天堂之风」、带发光层。
+    /// **口径（用户 2026-10-14 逐条拍板）**：形态取 **CI（ExoLore 分支）**、基础伤害 **256**
+    /// （2026-10-14 定的 208 已由用户于 2026-10-15 改成 256；源 CI 是 508）、
+    /// 数值膨胀 **256 → 720**、中文名「天堂之风」、带发光层。
     /// **配方（用户 2026-10-15 定稿）**：**武器一律用本工程自持件**、**非武器材料与站台一律软依赖本体**——
     /// **现代** = 自持六把（弩炮 / 潮涌 / 星穹悲愿 / 发条弓 / 烈风 / 行星湮灭）+ **奇迹物质×1 + 化神魂精×5**
     /// @嘉登熔炉（照 2.0 的骨架，材料按用户指定改为这两味）；
@@ -54,14 +55,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int ClassicHellcasterFragmentCount = 3;
         private const int ClassicPhantoplasmCount = 5;
         private const int ClassicAuricOreCount = 25;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：208 → 720）</summary>
+        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：208 → 720；关态 2026-10-15 改成 256，膨胀值不变）</summary>
         private const float InflatedDamage = 720f;
         /// <summary>
         /// 木箭要变成的星流箭池（照 CI 的 `ExoArrowsExoLore`）：**橙色故意出现两次**，
         /// 于是五等分的实际概率是青 20% / 橙 40% / 绿 20% / 蓝 20%
         /// </summary>
         private static int[] ExoArrows;
-        /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 208</summary>
+        /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 256</summary>
         private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份；顺带把星流箭池填好（照源的写法，在静态初始化里取弹幕类型）</summary>
         public override void SetStaticDefaults()
@@ -77,14 +78,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             };
         }
         /// <summary>
-        /// 基础属性：46×98 / 伤害 208（用户指定，源 CI 是 508）/ 使用·动画 9·18 帧 / 击退 4 / 弹速 12 /
+        /// 基础属性：46×98 / 伤害 256（用户指定，源 CI 是 508）/ 使用·动画 9·18 帧 / 击退 4 / 弹速 12 /
         /// 箭类弹药 / 使用音 `Item5` / 月后稀有度 15 档 / 1 铂金 50 金
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 46;                          // 贴图宽（像素）
             Item.height = 98;                         // 贴图高（像素）
-            Item.damage = 208;                        // 面板伤害（用户 2026-10-14 指定；源 CI 是 508）
+            Item.damage = 256;                        // 面板伤害（用户 2026-10-15 由 208 改成 256；源 CI 是 508）
             Item.DamageType = DamageClass.Ranged;
             Item.useTime = 9;
             Item.useAnimation = 18;
