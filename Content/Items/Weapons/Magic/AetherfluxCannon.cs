@@ -14,9 +14,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// （灾厄那边 2.0.4 起已改用 `GetWeaponDamage` 取伤害，故数值膨胀天然跟随，不必像纳米净化那样改一行）、
     /// **光弹 `PhasedGodRay` 取 2.1 的重做版整套**（粒子化、20×20 判定、无视无敌帧、命中回满寿命并递减）。
     /// <para>
-    /// **配方（用户 2026-10-15 定）**：**用本工程自持的 <see cref="NanoPurge"/> 当材料**，
-    /// 其余入料（净化豪饮者 + 金源锭 + 幽花锭 + 神圣晶簇 + 宇宙砧）**一律软依赖本体件**
-    /// ——**本件不自持净化豪饮者**（本体现代版有它，且它是亵神者的掉落）。
+    /// **配方（用户 2026-10-15 定稿，分两次收紧）**：**本工程自持的 <see cref="NanoPurge"/>** +
+    /// 金源锭×5 + 幽花锭×12 + 神圣晶簇×8 @**宇宙砧**；材料与站台**一律软依赖本体件**。
+    /// **净化豪饮者那一味已按用户 2026-10-15 的指示删掉**（原话"直接删掉这个净化豪饮者这个配方，
+    /// 没有啥子用"）——于是这条配方与现代版灾厄**自己那条一模一样**（本体 2.1 起也把 `PurgeGuzzler`
+    /// 从配方里删了）；净化豪饮者在本工程里**既不进配方、也不自持**，只作为本体自己的亵神者掉落存在。
     /// </para>
     /// <para>
     /// 面板：94×54 / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
@@ -98,8 +100,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             return false;
         }
         /// <summary>
-        /// 配方（用户 2026-10-15 定，@**宇宙砧**）：**本工程的纳米净化** + **本体的净化豪饮者** +
-        /// 金源锭×5 + 幽花锭×12 + 神圣晶簇×8。
+        /// 配方（用户 2026-10-15 定稿，@**宇宙砧**）：**本工程的纳米净化** + 金源锭×5 + 幽花锭×12 +
+        /// 神圣晶簇×8（**净化豪饮者已按用户指示删掉**）。
         /// 除本工程自持的纳米净化外**全部软依赖现代版灾厄**（缺任一件就整条不注册并写警告）；
         /// 本件**没有经典版**（经典版灾厄连 `T1000` / 宇宙砧 / 幽花锭 都没有），故只注册这一条。
         /// </summary>
@@ -110,18 +112,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
                 Mod.Logger.Warn("以太流光炮：没找到现代版灾厄（CalamityMod），本条配方未注册。");
                 return;
             }
-            if (!calamity.TryFind<ModItem>("PurgeGuzzler", out ModItem purgeGuzzler) ||
-                !calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) ||
+            if (!calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) ||
                 !calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar) ||
                 !calamity.TryFind<ModItem>("DivineGeode", out ModItem divineGeode) ||
                 !calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
             {
-                Mod.Logger.Warn("以太流光炮：现代版灾厄里缺 PurgeGuzzler / AuricBar / UelibloomBar / DivineGeode / CosmicAnvil 其中一件，本条配方未注册。");
+                Mod.Logger.Warn("以太流光炮：现代版灾厄里缺 AuricBar / UelibloomBar / DivineGeode / CosmicAnvil 其中一件，本条配方未注册。");
                 return;
             }
             CreateRecipe().
                 AddIngredient<NanoPurge>().
-                AddIngredient(purgeGuzzler.Type).
                 AddIngredient(auricBar.Type, AuricBarCount).
                 AddIngredient(uelibloomBar.Type, UelibloomBarCount).
                 AddIngredient(divineGeode.Type, DivineGeodeCount).
