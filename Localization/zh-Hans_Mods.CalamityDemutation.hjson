@@ -2926,6 +2926,13 @@ Items: {
 			木箭会被转化为台风箭与鲨鱼
 			'''
 	}
+	TheBallista: {
+		DisplayName: 弩炮
+		Tooltip:
+			'''
+			将木箭转化为弩箭，弩箭会粉碎敌人护甲、并在消亡时迸裂成碎片
+			'''
+	}
 }
 
 Keybinds: {
@@ -3132,4 +3139,6 @@ Projectiles: {
 	TyphoonBubble.DisplayName: 泡泡
 	WaterSpout.DisplayName: 水柱
 	SeasSearingSpout.DisplayName: 灼海喷流
+	BallistaGreatArrow.DisplayName: 弩箭
+	FossilShard.DisplayName: 碎片
 }

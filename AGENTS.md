@@ -266,7 +266,8 @@
 2026-10-05 补齐女妖之爪条目，2026-10-09 召唤系 11 件**全部结清**：10 件接入、太阳神杖按用户指示不接入；
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞）
 2026-10-10 追加「光阴时流伞」链 2 件：星律之握览 + 光阴时流伞；
-2026-10-14 追加 巨龙之息 / 速射机枪 / 天堂之风（射手系，见 §12 / §13 / §15））
+2026-10-14 追加 巨龙之息 / 速射机枪 / 天堂之风（射手系，见 §12 / §13 / §15）；
+2026-10-15 追加 弩炮（天堂之风链批 4 首件，见 §15.12））
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -357,6 +358,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 大陆巨弓（ContinentalGreatbow） | 34 | 102 | 用户 2026-10-14 指定（天堂之风链；见 §15.9） |
 | 暗影巨弓（DarkechoGreatbow） | 37 | 120 | 用户 2026-10-14 指定（天堂之风链；见 §15.10） |
 | 季风（Monsoon） | 121 | 336 | 用户 2026-10-14 指定（天堂之风链批 2 末件；见 §15.11） |
+| 弩炮（TheBallista） | 99 | 279 | 用户 2026-10-15 指定（天堂之风链批 4 首件；见 §15.12） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3258,8 +3260,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    —— **批 2 全部完成**（T3/T2 的 7 把武器：月神弓 / 炎翼弓 / 剑刃巨弓 / 宇宙弩炮 / 大陆巨弓 / 暗影巨弓 / 季风）。
 2. **批 3（下一批）**：T2 的中层材料（`SeaPrism` / 三种矿锭 / `LifeAlloy` / `CoreofCalamity` / `AuricBar` /
    `AscendantSpiritEssence`）—— 前几味 2.2.2 几乎没改，**是否自持待用户拍板**。
-3. **批 4**：T1 六把武器（`TheBallista` / `ClockworkBow` / `Galeforce` / `PlanetaryAnnihilation` /
-   `AstrealDefeat` / `Alluvion`）与材料 `MiracleMatter`。
+3. **批 4**：T1 六把武器（`TheBallista` **✅ 见 15.12** / `ClockworkBow` / `Galeforce` /
+   `PlanetaryAnnihilation` / `AstrealDefeat` / `Alluvion`）与材料 `MiracleMatter`。
 4. **批 5**：把天堂之风的配方改成引用自持件；经典分支照 `CosmicImmaterializer` / `Supernova` 的先例处理
    （`MiracleMatter` 经典版没有 ⇒ 经典配方去掉它）。
 5. **未决（等用户拍板）**：① 三件**掉落类**已删材料（`Tenebris` / `HellcasterFragment` / `Phantoplasm`）怎么落地
@@ -3382,6 +3384,36 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **2.2.2 的改法（不取，备查）**：156 伤、配方砍到 4 味（海啸 + 炎翼弓 + 猎魂鲨牙×6 + 深渊细胞×10）、站台改秘银砧。
 - **批 2 到此全部完成**：7 把武器（月神弓 / 炎翼弓 / 剑刃巨弓 / 宇宙弩炮 / 大陆巨弓 / 暗影巨弓 / 季风）。
 
+### 15.12 已落地：弩炮（TheBallista）✅ 2026-10-15（**批 4 首件**）
+
+- 用户拍板（2026-10-15）：中文名 **弩炮**（弹幕 **弩箭** `BallistaGreatArrow` / **碎片** `FossilShard`）、
+  **数值膨胀 99 → 279**、面板 / 机制**全取 2.0**；经典分支照经典配方、数值共用 2.0。
+- 文件（1 物品 + 2 弹幕 + 3 张贴图，**无自备音效**）：
+  `Content/Items/Weapons/Ranged/TheBallista.cs`(+`.png` 40×78)；
+  `Content/Projectiles/Ranged/BallistaGreatArrow.cs`(+`.png` 18×64)、`FossilShard.cs`(+`.png` 10×12)。
+- 面板（照 2.0）：判定 40×70（贴图 40×78）/ 伤害 99 / 使用·动画 22 帧 / 击退 8 / 弹速 20 / 箭类弹药 /
+  使用音 `Item5` / **黄档（原版档，不涉月后档）** / 80 金。经典版的 145 伤 / 20 帧**不取**。
+- `Shoot`（照 2.0）：木箭 → `BallistaGreatArrow`，**非木箭照原弹种射出**。
+  **本件与链上其他弓的三处差异（源就这么多，照源保留）**：源既不归一化出手速度、也不给非木箭打
+  `noDropItem`、更没有"贴墙收箭"；`Item.shoot` 直填 `BallistaGreatArrow` 而不是原版木箭。
+- `BallistaGreatArrow`（弩箭）：判定 10×10、**穿透 2**、`arrow = true`、`aiStyle = ProjAIStyleID.Arrow`
+  （`AIType` = 原版木箭）、10 帧残影（`CDUtil.DrawAfterimagesCentered` 模式 1、抽稀 2）；
+  命中：**把目标无敌帧压到 12** + **破甲 180 帧**；撞墙：砸瓦片尘 + 一声 `Dig` 后消亡；
+  消亡：一声 `Item14`，主人端朝**两侧各 3 枚** `FossilShard`（伤害 ×0.2、击退 ÷5）。
+- `FossilShard`（碎片）：判定 10×10（贴图 10×12）、穿透 1、寿命 120 帧、同样走原版箭 AI；
+  AI 只有三件事——**压住上扬**（`velocity.Y <= 0` 时按 0.1 起步）、**每帧 ×1.05 加速下坠**、
+  自旋跟 Y 速度；命中破甲 60 帧；消亡撒 3 颗 `DustID.Sand` 尘（源写裸值 32）。
+- **经典版的四处差异（一律不取，备查）**：`Shoot` 无条件把**任何**弹药都换成弩箭、弩箭穿透 3、
+  破甲 360 帧、碎片伤害 ×0.75 且击退不打折。
+- 破甲走 §16.2 的既有软依赖口径：
+  `CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "ArmorCrunch", N, BuffID.BrokenArmor)`。
+- 配方：**只在 2.0 与经典版逐字相同**（骨髓弓 + 远古战斗护甲材料 + 灵气 `Ectoplasm`×10 @秘银砧）、
+  且三味**全是原版件** ⇒ **不分公司版本、只注册一条**——这是它与链上其他件"两版各一条"的唯一差别。
+- 本地化：`Items.TheBallista`（The Ballista / 弩炮）、`Projectiles.BallistaGreatArrow.DisplayName`（弩箭）、
+  `Projectiles.FossilShard.DisplayName`（碎片）。
+- 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **186 条**全命中；
+  `CheckImplicitTextures` **478 个类**全命中（＝本件新增的 3 个类，旧口径 475 + 3）。
+
 ## 16. 2026-10-15 凌晨 会话收尾（天堂之风链：批 2 收官 + 批 3 结清；下次直接从 §16.3 接）
 
 ### 16.1 本次做的事（按顺序）
@@ -3422,11 +3454,11 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 16.3 下次第一件事（从这里接）
 
-1. **等用户拍板弩炮**（数据已出）：① 中文名（建议「**弩炮**」，弹幕「弩箭」`BallistaGreatArrow` / 「碎片」`FossilShard`）
-   ② 面板取 2.0（99 伤 / 22 帧 / 判定 40×70 / 80 金 / Yellow）③ 机制取 2.0（穿透 2 + 压 12 帧免疫 + 破甲 180 + 死亡迸 6 枚碎片）
-   ④ 经典分支照经典配方（与 2.0 **逐字相同**：骨髓弓 + 远古战斗护甲材料 + 灵气×10 @秘银砧）⑤ **膨胀值**。
-   落地清单：`TheBallista.cs`(+`.png` 40×78) + `BallistaGreatArrow.cs`(+`.png` 18×64) + `FossilShard.cs`(+`.png` 10×12)，无自备音效。
-2. 拍板后按序推进批 4 剩余：**发条弓 `ClockworkBow` → 烈风 `Galeforce` → 行星湮灭 `PlanetaryAnnihilation` →
+1. ~~**等用户拍板弩炮**~~ **✅ 已结清（2026-10-15）**：用户拍板「中文名 **弩炮** / 面板与机制全取 2.0 /
+   经典分支照经典配方 / **膨胀 99 → 279**」，落地情况见 **§15.12**。原数据：面板 2.0（99 伤 / 22 帧 /
+   判定 40×70 / 80 金 / Yellow）、机制 2.0（穿透 2 + 压 12 帧免疫 + 破甲 180 + 死亡迸 6 枚碎片）、
+   经典配方与 2.0 **逐字相同**（骨髓弓 + 远古战斗护甲材料 + 灵气×10 @秘银砧）。
+2. **下一步按序推进批 4 剩余**：**发条弓 `ClockworkBow` → 烈风 `Galeforce` → 行星湮灭 `PlanetaryAnnihilation` →
    星界击败 `AstrealDefeat` → 潮涌 `Alluvion`**（各自面板 / 配方 / 两版差异见 §15.2 与 2026-10-14 那条"下位武器"汇报）。
 3. **批 5**：把天堂之风的现代配方从"引用本体六把武器"改成**引用自持件**；经典分支去掉经典版没有的 `MiracleMatter`
    （照 `Supernova` / `CosmicImmaterializer` 的先例）。

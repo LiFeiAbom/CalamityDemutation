@@ -2927,6 +2927,13 @@ Items: {
 			Wooden arrows are converted into typhoon arrows and sharks
 			'''
 	}
+	TheBallista: {
+		DisplayName: The Ballista
+		Tooltip:
+			'''
+			Converts wooden arrows into great arrows that crush enemy armor and break into shards on death
+			'''
+	}
 }
 
 Keybinds: {
@@ -3133,4 +3140,6 @@ Projectiles: {
 	TyphoonBubble.DisplayName: Bubble
 	WaterSpout.DisplayName: Spout
 	SeasSearingSpout.DisplayName: Spout
+	BallistaGreatArrow.DisplayName: Ballista Great Arrow
+	FossilShard.DisplayName: Shard
 }
