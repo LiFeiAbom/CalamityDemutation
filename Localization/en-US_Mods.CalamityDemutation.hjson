@@ -2856,20 +2856,21 @@ Items: {
 			Greatly reduces the damage dealt by damage-over-time debuffs
 			'''
 	}
+
 	HeavenlyGale: {
 		DisplayName: Heavenly Gale
 		Tooltip:
 			'''
-			Converts wooden arrows into barrages of 7 random exo arrows
+			Converts any ammo into barrages of 7 random exo arrows
 			Green exo arrows erupt into swirling tornadoes
 			Blue exo arrows burst into barrages of following arrows
 			Orange exo arrows explode into flames
 			Teal exo arrows pierce infinitely and ignore immunity frames
-			Any non-wooden arrows used will deal 1.25x damage
 			66% chance to not consume ammo
 			[c/0080CA:Green and orange exo arrows will home in on enemies]
 			'''
 	}
+
 	LunarianBow: {
 		DisplayName: Lunarian Bow
 		Tooltip:
@@ -2878,6 +2879,7 @@ Items: {
 			Converts wooden arrows into sliding energy bolts
 			'''
 	}
+
 	FlarewingBow: {
 		DisplayName: Flarewing Bow
 		Tooltip:
@@ -2886,6 +2888,7 @@ Items: {
 			Wooden arrows are converted into bouncing obsidian bats
 			'''
 	}
+
 	BladedgeGreatbow: {
 		DisplayName: Bladedge Railbow
 		Tooltip:
@@ -2894,6 +2897,7 @@ Items: {
 			Fires 2 additional leaves
 			'''
 	}
+
 	CosmicBolter: {
 		DisplayName: Cosmic Bolter
 		Tooltip:
@@ -2902,6 +2906,7 @@ Items: {
 			Converts wooden arrows into sliding energy bolts
 			'''
 	}
+
 	ContinentalGreatbow: {
 		DisplayName: Continental Greatbow
 		Tooltip:
@@ -2911,6 +2916,7 @@ Items: {
 			Fires 2 additional cursed, hellfire, or ichor arrows
 			'''
 	}
+
 	DarkechoGreatbow: {
 		DisplayName: Darkecho Greatbow
 		Tooltip:
@@ -2919,6 +2925,7 @@ Items: {
 			Fires an additional crystal dart
 			'''
 	}
+
 	Monsoon: {
 		DisplayName: Monsoon
 		Tooltip:
@@ -2927,13 +2934,12 @@ Items: {
 			Wooden arrows are converted into typhoon arrows and sharks
 			'''
 	}
+
 	TheBallista: {
 		DisplayName: The Ballista
-		Tooltip:
-			'''
-			Converts wooden arrows into great arrows that crush enemy armor and break into shards on death
-			'''
+		Tooltip: Converts wooden arrows into great arrows that crush enemy armor and break into shards on death
 	}
+
 	ClockworkBow: {
 		DisplayName: Clockwork Bow
 		Tooltip:
@@ -2942,13 +2948,12 @@ Items: {
 			The more precision bolts are loaded, the harder they hit
 			'''
 	}
+
 	Galeforce: {
 		DisplayName: Galeforce
-		Tooltip:
-			'''
-			Fires a spread of low-damage feathers
-			'''
+		Tooltip: Fires a spread of low-damage feathers
 	}
+
 	PlanetaryAnnihilation: {
 		DisplayName: Planetary Annihilation
 		Tooltip:
@@ -2957,6 +2962,7 @@ Items: {
 			Wooden arrows are converted into homing energy bolts
 			'''
 	}
+
 	AstrealDefeat: {
 		DisplayName: Astreal Defeat
 		Tooltip:
@@ -2967,6 +2973,7 @@ Items: {
 			All arrows are converted to astreal arrows that emit flames as they travel
 			'''
 	}
+
 	Alluvion: {
 		DisplayName: Alluvion
 		Tooltip:

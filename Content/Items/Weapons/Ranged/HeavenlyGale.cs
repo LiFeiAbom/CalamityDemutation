@@ -28,13 +28,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 面板（照 CI 的 Lore 分支）：46×98 / 使用·动画 9·18 帧 / 击退 4 / 弹速 12 / 箭类弹药 /
     /// 一次射出 **7 支**（源非 Lore 分支是 5 支）/ 66% 不消耗弹药 / 月后稀有度 15 档 / 1 铂金 50 金。
     /// 七支的取型照源的 5 元素数组（橙出现两次）：青 20% / 橙 40% / 绿 20% / 蓝 20%；
-    /// 其中**绿、橙两色会追踪敌人**（见各自弹幕）。用非木箭则不打折扣地射出 7 支原箭、伤害 ×1.25 且不掉落。
+    /// 其中**绿、橙两色会追踪敌人**（见各自弹幕）。
+    /// **弹药全转化（用户 2026-10-15 实测后指定）**：背包里放的是哪种箭都一样，一律被换成星流箭池里的一种
+    /// （照 CI 把 `CIConfig.AmmoConversion` 打开那一支；源默认是"木箭才转、非木箭照射并 ×1.25"，**本工程不取**）。
+    /// **持握偏移（用户 2026-10-15 实测后指定）**：整张图要往右挪，见 <see cref="HoldoutOffset"/>。
     /// </para>
     /// </summary>
     internal class HeavenlyGale : ModItem
     {
-        /// <summary>非木箭的伤害倍率（照源 <c>NormalArrowDamageMult</c>）</summary>
-        private const float NormalArrowDamageMult = 1.25f;
         /// <summary>省弹率（照源：<c>rand(0,100) &lt; 66</c> 即不消耗，也就是 66%）</summary>
         private const int AmmoSavePercent = 66;
         /// <summary>一次射出的箭数（照 CI 的 Lore 分支：7；非 Lore 分支是 5）</summary>
@@ -111,7 +112,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：以玩家中心为源、沿弓身做 ±3 × (π/10) 的扇形排布
         /// （位移只挪出箭点、不散射速度）；贴墙时改把整排箭收回到玩家身上（照源的 <c>againstWall</c>）。
-        /// 木箭 → 随机星流箭（伤害照传入口径，Lore 分支没有惩罚）；非木箭 → 7 支原箭、伤害 ×1.25 且不掉落。
+        /// **不管用的是哪种箭，一律换成 <see cref="ExoArrows"/> 池里随机的一种**（弹药全转化，用户 2026-10-15 指定）。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -130,20 +131,18 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
                 if (againstWall)
                     offset -= bowOffset;
 
-                if (type == ProjectileID.WoodenArrowFriendly)
-                {
-                    int arrowType = Main.rand.Next(ExoArrows);
-                    Projectile.NewProjectile(source, origin + offset, velocity, arrowType, damage, knockback, player.whoAmI);
-                }
-                else
-                {
-                    int arrow = Projectile.NewProjectile(source, origin + offset, velocity, type, (int)(damage * NormalArrowDamageMult), knockback, player.whoAmI);
-                    if (Main.projectile.IndexInRange(arrow))
-                        Main.projectile[arrow].noDropItem = true;   // 转化出来的原箭不掉落（照源）
-                }
+                int arrowType = Main.rand.Next(ExoArrows);
+                Projectile.NewProjectile(source, origin + offset, velocity, arrowType, damage, knockback, player.whoAmI);
             }
             return false;
         }
+        /// <summary>
+        /// 持握偏移（用户 2026-10-15 实测反馈"整张贴图错位、要往右移"）：
+        /// tML 里 <c>HoldoutOffset().X</c> **直接就是贴图原点 X**（不是增量；模组物品的默认值是 **10**），
+        /// 原点越小、贴图越往右（＝越朝弓的前方）。这里取 **-10**，即相对默认右移 20 像素。
+        /// 若日后觉得还不够或过头，**改这一个数就行**。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>地上那件的发光层（照 CI 的同名 Glow 贴图）</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
             => Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Ranged/HeavenlyGaleGlow").Value);
