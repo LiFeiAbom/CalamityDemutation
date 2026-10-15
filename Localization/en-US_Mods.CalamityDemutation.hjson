@@ -2991,6 +2991,11 @@ Keybinds: {
 	OmegaBlue.DisplayName: Omega Blue Set Ability
 	Tarragon.DisplayName: Tarragon Defense Mode
 
+	AetherfluxCannon: {
+		DisplayName: Aetherflux Cannon
+		Tooltip: Fires a focused photon helix that phases through everything
+	}
+
 	NanoPurge: {
 		DisplayName: Nano Purge
 		Tooltip:
@@ -3207,6 +3212,8 @@ Projectiles: {
 	AstrealFlame.DisplayName: Astreal Flame
 	TorrentialArrow.DisplayName: Arrow
 	NanoPurgeLaser.DisplayName: Nano Beam
+	PhasedGodRay.DisplayName: Phased God Ray
+	AetherfluxCannonHoldout.DisplayName: Aetherflux Cannon
 }
 
 TextContent: {

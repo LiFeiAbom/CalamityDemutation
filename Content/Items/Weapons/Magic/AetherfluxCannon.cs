@@ -1,0 +1,116 @@
+using CalamityDemutation.Content.Projectiles.Magic;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.ModLoader;
+namespace CalamityDemutation.Content.Items.Weapons.Magic
+{
+    /// <summary>
+    /// 以太流光炮（Aetherflux Cannon） - 法师枪械，**这条链的顶层**（链：纳米净化 → 【本体·净化豪饮者】 → 本件）。
+    /// <para>
+    /// **口径（用户 2026-10-15 定）**：本件走"**拆开拼**"——**手持弹幕取 2.0.4 的自实现版**
+    /// （灾厄那边 2.0.4 起已改用 `GetWeaponDamage` 取伤害，故数值膨胀天然跟随，不必像纳米净化那样改一行）、
+    /// **光弹 `PhasedGodRay` 取 2.1 的重做版整套**（粒子化、20×20 判定、无视无敌帧、命中回满寿命并递减）。
+    /// <para>
+    /// **配方（用户 2026-10-15 定）**：**用本工程自持的 <see cref="NanoPurge"/> 当材料**，
+    /// 其余入料（净化豪饮者 + 金源锭 + 幽花锭 + 神圣晶簇 + 宇宙砧）**一律软依赖本体件**
+    /// ——**本件不自持净化豪饮者**（本体现代版有它，且它是亵神者的掉落）。
+    /// </para>
+    /// <para>
+    /// 面板（照 2.0.4）：94×54 / 伤害 **285** / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
+    /// **月后 15 档（紫，＝灾厄 `Violet`；基础稀有度 `Red`、名称色由 `postMoonLordRarity` 覆盖）** /
+    /// 价值 **2 铂金 40 金**（源 `Rarity15BuyPrice`）/ `channel` + 不显武器贴图。
+    /// 2.1 把这件改成了 355 伤害 + `BurnishedAuric`（犽戎后金源档）、2.2.2 是 315 —— 本工程**都不取**。
+    /// </para>
+    /// <para>
+    /// 出手（照 2.0.4）：按玩家朝向归一化后生成手持弹幕（真正的瞄准由手持弹幕每帧朝鼠标修正）。
+    /// 同一时刻只允许存在一具手持弹幕。**数值膨胀待用户点名**（模板见 §7）。
+    /// </para>
+    /// </summary>
+    internal class AetherfluxCannon : ModItem
+    {
+        /// <summary>使用·动画帧数（照 2.0.4；手持弹幕的预热与出手间隔都以它为准）</summary>
+        public const int UseTime = 36;
+        /// <summary>主体色（照 2.1/2.2.2 的 `mainColor`，光弹与手持喷尘共用）</summary>
+        public static Color mainColor = Color.Goldenrod;
+        /// <summary>点缀色（照 2.1/2.2.2 的 `accentColor`）</summary>
+        public static Color accentColor = Color.LightGreen;
+        /// <summary>配方里的金源锭数量（照源）</summary>
+        private const int AuricBarCount = 5;
+        /// <summary>配方里的幽花锭数量（照源）</summary>
+        private const int UelibloomBarCount = 12;
+        /// <summary>配方里的神圣晶簇数量（照源）</summary>
+        private const int DivineGeodeCount = 8;
+        /// <summary>研究解锁一份</summary>
+        public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
+        /// <summary>
+        /// 基础属性：94×54 / 伤害 285 / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
+        /// 月后 15 档 / 2 铂金 40 金（全照 2.0.4）
+        /// </summary>
+        public override void SetDefaults()
+        {
+            Item.width = 94;                          // 贴图宽（像素）
+            Item.height = 54;                         // 贴图高（像素）
+            Item.damage = 285;                        // 面板伤害（照 2.0.4；2.1 是 355、2.2.2 是 315）
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 7;
+            Item.useTime = Item.useAnimation = UseTime;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;                      // 出手动画本体不造成伤害
+            Item.noUseGraphic = true;                 // 贴图由手持弹幕负责画
+            Item.channel = true;                      // 按住持续开火
+            Item.knockBack = 4f;
+            Item.rare = ItemRarityID.Red;             // 基础稀有度红色，名称颜色由 postMoonLordRarity 覆盖
+            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;   // 月后 15：紫（＝灾厄 Violet）
+            Item.value = Item.buyPrice(2, 40, 0, 0);  // 价值 2 铂金 40 金（源 Rarity15BuyPrice）
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<AetherfluxCannonHoldout>();
+            Item.shootSpeed = 24f;
+        }
+        /// <summary>同一时刻只允许存在一具手持弹幕（照源）</summary>
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
+        /// <summary>
+        /// 出手：把速度按玩家朝向归一化后生成手持弹幕（照 2.0.4）。
+        /// 2.0.7.2 起这里改成"从玩家旋转中心朝鼠标方向生成"，差别只在手持弹幕的第一帧朝向，
+        /// 之后两者都由手持弹幕每帧朝鼠标修正，故按所选手持弹幕的源写法保留 2.0.4 这一版。
+        /// </summary>
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            Vector2 shootDirection = velocity.SafeNormalize(Vector2.UnitX * player.direction);
+            Projectile.NewProjectile(source, position, shootDirection, type, damage, knockback, player.whoAmI);
+            return false;
+        }
+        /// <summary>
+        /// 配方（用户 2026-10-15 定，@**宇宙砧**）：**本工程的纳米净化** + **本体的净化豪饮者** +
+        /// 金源锭×5 + 幽花锭×12 + 神圣晶簇×8。
+        /// 除本工程自持的纳米净化外**全部软依赖现代版灾厄**（缺任一件就整条不注册并写警告）；
+        /// 本件**没有经典版**（经典版灾厄连 `T1000` / 宇宙砧 / 幽花锭 都没有），故只注册这一条。
+        /// </summary>
+        public override void AddRecipes()
+        {
+            if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+            {
+                Mod.Logger.Warn("以太流光炮：没找到现代版灾厄（CalamityMod），本条配方未注册。");
+                return;
+            }
+            if (!calamity.TryFind<ModItem>("PurgeGuzzler", out ModItem purgeGuzzler) ||
+                !calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) ||
+                !calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar) ||
+                !calamity.TryFind<ModItem>("DivineGeode", out ModItem divineGeode) ||
+                !calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
+            {
+                Mod.Logger.Warn("以太流光炮：现代版灾厄里缺 PurgeGuzzler / AuricBar / UelibloomBar / DivineGeode / CosmicAnvil 其中一件，本条配方未注册。");
+                return;
+            }
+            CreateRecipe().
+                AddIngredient<NanoPurge>().
+                AddIngredient(purgeGuzzler.Type).
+                AddIngredient(auricBar.Type, AuricBarCount).
+                AddIngredient(uelibloomBar.Type, UelibloomBarCount).
+                AddIngredient(divineGeode.Type, DivineGeodeCount).
+                AddTile(cosmicAnvil.Type).
+                Register();
+        }
+    }
+}

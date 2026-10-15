@@ -3946,16 +3946,49 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 18.7 下一步（从这里接）
 
-1. **净化豪饮者 `PurgeGuzzler`**：用户 2026-10-15 说过一句「**其他的配方直接软依赖就好**」——
-   **本工程的解读（待用户确认）**：这件**不自持**，以太流光炮的配方直接软依赖本体件
-   （现代 2.2.2 有它、经典版也有它）；即这条链只自持 **纳米净化 + 以太流光炮** 两件。
-   若用户的本意是要自持这一件，则按老规矩二选一：① 2.0.4 的简洁版（普通枪、一次三道光、
-   命中挂圣火 + 炸 `FuckYou`——**`FuckYou` 工程已有**）；② 2.1 的蓄力光柱版（要移植
-   `BaseGunHoldoutProjectile` 与 `BaseLaserbeamProjectile` 两个基类 + 4 个灾厄音效 + 粒子族）。
-   注意**这件套不上"拆开拼"**：2.0.4 的它压根没有手持弹幕，两版是两把不同的武器。
-   另：若自持，还要拍板它作为**亵神者掉落**怎么给（挂宝藏袋 / 给配方 / 都要）——工程有
-   `ModifyItemLoot` 挂袋先例（`CommonDrop(item, 3)` 那种简化口径）。
-2. **以太流光炮本体**：手持弹幕取 2.0.4 的 `AetherfluxCannonHoldout`（自实现、8 帧动画、预热 36 帧后
-   每 `useTime/7` 帧左右双管交替）、光弹取 2.1 的 `PhasedGodRay`（照 18.5 改那一行螺旋方向）。
-3. **数值膨胀**：纳米净化**已接入（135 → 275）**；净化豪饮者 与 以太流光炮 两件的
-   「关态 → 开态」仍等用户逐把点名（模板见 §7）。
+1. **净化豪饮者 `PurgeGuzzler` ☑ 已定：不自持**（用户 2026-10-15「以太流光炮直接使用纳米净化当材料就行」
+   与「其他的配方直接软依赖就好」）。⇒ 以太流光炮的配方**用本工程自持的纳米净化当材料**，
+   **净化豪饮者与其余入料一律软依赖本体**；**这条链只自持两件：纳米净化 + 以太流光炮**。
+   （备查，别再重查：2.0.4 的它＝普通枪、一次三道光、命中挂圣火并炸 `FuckYou`；2.1 的它＝蓄力光柱版，
+   若日后要自持得移植 `BaseGunHoldoutProjectile` 与 `BaseLaserbeamProjectile` 两个基类
+   + 4 个灾厄音效 + 粒子族。）
+2. **以太流光炮本体 ✅ 已落地**，见 §18.8。
+3. **数值膨胀**：纳米净化**已接入（135 → 275）**；**以太流光炮的「关态 → 开态」仍等用户点名**
+   （关态现为 285，模板见 §7）。
+
+### 18.8 已落地：以太流光炮（AetherfluxCannon）✅ 2026-10-15
+
+- **配方口径（用户 2026-10-15 定稿）**：**用本工程自持的纳米净化当材料**，其余入料
+  （**本体的净化豪饮者** + 金源锭×5 + 幽花锭×12 + 神圣晶簇×8 @**宇宙砧**）**一律软依赖现代版灾厄**；
+  **净化豪饮者不自持**。五件里缺任一件就整条不注册并写 `Mod.Logger.Warn`。
+  本件**没有经典分支**（经典版灾厄连 `T1000` / 宇宙砧 / 幽花锭 都没有）。
+- 面板**取 2.0.4**：94×54 / 伤害 **285** / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
+  **月后 15 档（紫＝灾厄 `Violet`；基础稀有度 `Red`）** / **2 铂金 40 金** / `channel` + 不显武器贴图。
+  （2.1 的 355 + `BurnishedAuric`、2.2.2 的 315 **都不取**。）**数值膨胀待用户点名**。
+- 文件：`Content/Items/Weapons/Magic/AetherfluxCannon.cs`（+`.png` 94×54）、
+  `Content/Projectiles/Magic/AetherfluxCannonHoldout.cs`（**逐行照搬 2.0.4**，8 帧动画）、
+  `Content/Projectiles/Magic/PhasedGodRay.cs`（**逐行照搬 2.1**）。
+- **拼装那一行**（§18.5 说的唯一耦合点）：手持弹幕改成把螺旋方向**当 `ai0` 传给 `NewProjectileDirect`**
+  （`..., Projectile.owner, i * 0.5f, 0f)`）——因为本工程的光弹是 2.1 版、读的是 `ai[0]`。
+  **`AetherfluxCannon` 类上另挂了 `public static Color mainColor/accentColor`**（照 2.1 的写法，
+  光弹与枪口尘共用这两个色）。
+- **新补的共用件**：① `Particles/VelChangingSpark.cs`（变速度火花，相位神光消散时用；与 `CustomSpark`
+  同族，多一个"速度从起点插值到终点"的 `EndVelocity/LerpRate`）；② `Particles/SemiCircularSmearVerticalBlank.png`
+  （从 2.1 拷入，出场火花用）；③ `Sounds/Custom/MeldShoot.ogg` + 登记 `CalamityDemutationSounds.MeldShoot`
+  （相位神光命中音）。
+- **三处工程侧适配**：① `CantUseHoldout()` —— **工程早有 `CDUtil.CantUseHoldout()`**
+  （`Utilities/CDUtil_Laser.cs`，判据逐项相同），直接用（本次一度又加了一份，被 CS0111 挡下——
+  以后先在 `Utilities/` 里 grep 一遍再加扩展方法）；② 灾厄 `LightDust` → `DustID.FireworksRGB`
+  + `mainColor/accentColor` 插值取色；③ 圣火走 `ApplyCalamityBuffWithFallback`（缺灾厄退回原版燃烧）。
+- **源里两处小瑕疵的工程处置**：① 手持弹幕的枪口尘源写裸值 `133`（对不出 DustID 常量名——
+  `DustID` 的字段是 metadata 里的字面量、Cecil 延迟读取拿不到值），按 2.1 的做法换成命名常量 + 配色；
+  ② 2.0.4 的 `PreDraw` 写成了常量比较 `FramesPerFireRateIncrease > 0f`（恒真、等于不抑制首帧贴图），
+  按 2.0 的原意取 `DeployedFrames > 0f`。
+- **值得一提**：2.0.4 的手持弹幕**源里已经是** `Owner.GetWeaponDamage(weaponItem)`（只有 2.0 是手写
+  `GetTotalDamage<MagicDamageClass>()`），所以本件挂 `ModifyWeaponDamage` 后数值膨胀天然跟随，
+  **不需要**像纳米净化那样改伤害那一行。
+- 本地化：`Items.AetherfluxCannon`（Aetherflux Cannon / 以太流光炮）、
+  `Projectiles.PhasedGodRay.DisplayName`（Phased God Ray / 相位神光）、
+  `Projectiles.AetherfluxCannonHoldout.DisplayName`（Aetherflux Cannon / 以太流光炮；
+  照 `ClockworkBowHoldout` 的先例，手持弹幕也登记名字）。
+- 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **204 条**全命中；`CheckImplicitTextures` **496 个类**全命中。

@@ -2990,6 +2990,11 @@ Keybinds: {
 	OmegaBlue.DisplayName: 蓝色欧米茄套装技能
 	Tarragon.DisplayName: 龙蒿防御形态
 
+	AetherfluxCannon: {
+		DisplayName: 以太流光炮
+		Tooltip: 发射一道可穿透一切的聚焦光子螺旋
+	}
+
 	NanoPurge: {
 		DisplayName: 纳米净化
 		Tooltip:
@@ -3206,6 +3211,8 @@ Projectiles: {
 	AstrealFlame.DisplayName: 星穹烈焰
 	TorrentialArrow.DisplayName: 洪流箭
 	NanoPurgeLaser.DisplayName: 纳米光束
+	PhasedGodRay.DisplayName: 相位神光
+	AetherfluxCannonHoldout.DisplayName: 以太流光炮
 }
 
 TextContent: {

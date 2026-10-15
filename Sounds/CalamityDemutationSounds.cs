@@ -48,5 +48,8 @@ namespace CalamityDemutation.Sounds
         /// 与上面那条**不是同一段音频**（经典 4.8 秒 / 现代 2.4 秒），故用不同文件名共存——
         /// 同名不同扩展名会让 tML 在加载期抛 Multiple extensions for asset 并禁用整个模组</summary>
         public static readonly SoundStyle SilvaActivationModern = new("CalamityDemutation/Sounds/Custom/SilvaActivationModern");
+        /// <summary>相位神光命中（MeldShoot）：以太流光炮的光弹每次命中时播放
+        /// （灾厄原名 Sounds/Item/MeldShoot；音量与音高在调用点给，照源 0.4 / 0.5~0.65）</summary>
+        public static readonly SoundStyle MeldShoot = new("CalamityDemutation/Sounds/Custom/MeldShoot");
     }
 }
