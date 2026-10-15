@@ -2982,14 +2982,6 @@ Items: {
 			Fires a torrent of six arrows at once
 			'''
 	}
-}
-
-Keybinds: {
-	Demonshade.DisplayName: Demon Shade Enrage
-	Elysian.DisplayName: Elysian Aegis Stance
-	GodslayerDash.DisplayName: God Slayer Dash
-	OmegaBlue.DisplayName: Omega Blue Set Ability
-	Tarragon.DisplayName: Tarragon Defense Mode
 
 	AetherfluxCannon: {
 		DisplayName: Aetherflux Cannon
@@ -3004,6 +2996,14 @@ Keybinds: {
 			Bounces towards the nearest enemy after hitting a wall
 			'''
 	}
+}
+
+Keybinds: {
+	Demonshade.DisplayName: Demon Shade Enrage
+	Elysian.DisplayName: Elysian Aegis Stance
+	GodslayerDash.DisplayName: God Slayer Dash
+	OmegaBlue.DisplayName: Omega Blue Set Ability
+	Tarragon.DisplayName: Tarragon Defense Mode
 }
 
 Projectiles: {
@@ -3212,6 +3212,7 @@ Projectiles: {
 	AstrealFlame.DisplayName: Astreal Flame
 	TorrentialArrow.DisplayName: Arrow
 	NanoPurgeLaser.DisplayName: Nano Beam
+	NanoPurgeHoldout.DisplayName: Nano Purge
 	PhasedGodRay.DisplayName: Phased God Ray
 	AetherfluxCannonHoldout.DisplayName: Aetherflux Cannon
 }

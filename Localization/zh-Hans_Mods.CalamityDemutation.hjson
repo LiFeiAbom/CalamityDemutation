@@ -2981,14 +2981,6 @@ Items: {
 			一次射出一股 6 支箭的洪流
 			'''
 	}
-}
-
-Keybinds: {
-	Demonshade.DisplayName: 恶魔阴影狂怒
-	Elysian.DisplayName: 极乐之庇护守护状态
-	GodslayerDash.DisplayName: 弑神者冲刺
-	OmegaBlue.DisplayName: 蓝色欧米茄套装技能
-	Tarragon.DisplayName: 龙蒿防御形态
 
 	AetherfluxCannon: {
 		DisplayName: 以太流光炮
@@ -3003,6 +2995,14 @@ Keybinds: {
 			命中墙壁后朝最近的敌人反弹
 			'''
 	}
+}
+
+Keybinds: {
+	Demonshade.DisplayName: 恶魔阴影狂怒
+	Elysian.DisplayName: 极乐之庇护守护状态
+	GodslayerDash.DisplayName: 弑神者冲刺
+	OmegaBlue.DisplayName: 蓝色欧米茄套装技能
+	Tarragon.DisplayName: 龙蒿防御形态
 }
 
 Projectiles: {
@@ -3211,6 +3211,7 @@ Projectiles: {
 	AstrealFlame.DisplayName: 星穹烈焰
 	TorrentialArrow.DisplayName: 洪流箭
 	NanoPurgeLaser.DisplayName: 纳米光束
+	NanoPurgeHoldout.DisplayName: 纳米净化
 	PhasedGodRay.DisplayName: 相位神光
 	AetherfluxCannonHoldout.DisplayName: 以太流光炮
 }

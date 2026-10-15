@@ -67,10 +67,17 @@
 ## 4. 代码与资源约定
 
 - **本地化**：每个语言一份扁平 hjson（`Localization/en-US_Mods.CalamityDemutation.hjson`、`zh-Hans_...`），
-  顶层 `Buffs` / `Items` / `Projectiles` / `Systems` / `TextContent`
+  顶层 `Buffs` / `Items` / `Keybinds` / `Projectiles` / `Systems` / `TextContent`
   （`TextContent` 自 2026-10-15 起启用，首用者是发条弓的「咔 / 嗒」：`ClockworkBowTick` / `ClockworkBowTock`）；
   物品/弹幕默认分类即 "Items"/"Projectiles"，
   新增条目请按字母序插入或追加在段末。改完记得把文件行尾统一成 CRLF（仓库工作区是 CRLF，apply_patch 会写成 LF）。
+  **⚠️ 段落顺序的坑（2026-10-15 连踩两次，别再踩）**：`Items` 与 `Projectiles` **中间还夹着一个 `Keybinds` 段**
+  （里面只有 Demonshade / Elysian / GodslayerDash / OmegaBlue / Tarragon 这五个套装技能名），
+  所以"锚在 `Projectiles:` 前面追加物品条目"**会落进 Keybinds 段**；此时 `dotnet build` 的自动补键会在
+  `Items` 段尾补一条 **`Tooltip: ""` 的空占位**（zh-Hans 补的是 `//` 注释占位），
+  结果**物品没有 tooltip、中文名也丢了**——而编译仍是 0/0、两道自检照样全过，光看构建看不出任何问题。
+  自查一行：`Select-String -Path .\Localization\*.hjson -Pattern '^(Buffs|Items|Keybinds|Projectiles|Systems|TextContent):'`，
+  确认自己那几行落在正确的段里；**看到 `Tooltip: ""` 就是"我插错段了"的信号**。
   **写完任何文件都要顺手做本地化**（用户明确要求）：只要新增/改动的是玩家可见文本——物品、弹幕、增益/减益的
   `DisplayName` 与 `Tooltip`、配置项、界面文案——就必须同步补两个语言文件。配置项的键是
   `Configs.<配置类名>.<选项名>.Label` / `.Tooltip`（例：`Configs.ConfigSystem.StatInflation`）。
@@ -271,7 +278,7 @@
 2026-10-14 追加 巨龙之息 / 速射机枪 / 天堂之风（射手系，见 §12 / §13 / §15）；
 2026-10-15 追加 弩炮 / 发条弓 / 烈风 / 行星湮灭 / 星穹悲愿 / 潮涌（天堂之风链批 4 六把 T1 **全齐**，
 见 §15.12 ~ §15.17）；
-2026-10-15 追加 纳米净化（法师链「以太流光炮」链底，见 §18.6））
+2026-10-15 追加 纳米净化 + 以太流光炮（法师链「以太流光炮」，见 §18.6 / §18.8））
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -369,6 +376,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 星穹悲愿（AstrealDefeat） | 153 | 336 | 用户 2026-10-15 指定（天堂之风链批 4；见 §15.16） |
 | 潮涌（Alluvion） | 165 | 470 | 用户 2026-10-15 指定（天堂之风链批 4 收尾件；见 §15.17） |
 | 纳米净化（NanoPurge） | **135** | **275** | 用户 2026-10-15 指定（法师链「以太流光炮」链底；关态取 2.1 的面板值、件本身走「拆开拼」，见 §18） |
+| 以太流光炮（AetherfluxCannon） | **370** | **910** | 用户 2026-10-15 指定（法师链顶层；关态 285 → 370 也是用户点名，「拆开拼」见 §18.8） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -3953,8 +3961,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    若日后要自持得移植 `BaseGunHoldoutProjectile` 与 `BaseLaserbeamProjectile` 两个基类
    + 4 个灾厄音效 + 粒子族。）
 2. **以太流光炮本体 ✅ 已落地**，见 §18.8。
-3. **数值膨胀**：纳米净化**已接入（135 → 275）**；**以太流光炮的「关态 → 开态」仍等用户点名**
-   （关态现为 285，模板见 §7）。
+3. **数值膨胀 ✅ 两件都已接入**：纳米净化 **135 → 275**、以太流光炮 **370 → 910**
+   （均为用户 2026-10-15 指定）。⇒ **这条法师链到此收尾**（提交后只剩进游戏实测）。
 
 ### 18.8 已落地：以太流光炮（AetherfluxCannon）✅ 2026-10-15
 
@@ -3962,9 +3970,13 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   （**本体的净化豪饮者** + 金源锭×5 + 幽花锭×12 + 神圣晶簇×8 @**宇宙砧**）**一律软依赖现代版灾厄**；
   **净化豪饮者不自持**。五件里缺任一件就整条不注册并写 `Mod.Logger.Warn`。
   本件**没有经典分支**（经典版灾厄连 `T1000` / 宇宙砧 / 幽花锭 都没有）。
-- 面板**取 2.0.4**：94×54 / 伤害 **285** / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
-  **月后 15 档（紫＝灾厄 `Violet`；基础稀有度 `Red`）** / **2 铂金 40 金** / `channel` + 不显武器贴图。
-  （2.1 的 355 + `BurnishedAuric`、2.2.2 的 315 **都不取**。）**数值膨胀待用户点名**。
+- 面板：94×54 / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
+  **月后 15 档（紫＝灾厄 `Violet`；基础稀有度 `Red`）** / **2 铂金 40 金** / `channel` + 不显武器贴图
+  ——**除伤害外全部照 2.0.4**。**伤害由用户 2026-10-15 点名为 370**（2.0.4 原值 285；
+  2.1 是 355 + `BurnishedAuric`、2.2.2 是 315，**都不取**）。
+- **数值膨胀**：**370 → 910**（用户 2026-10-15 指定）。本件的伤害由手持弹幕每帧用
+  `Owner.GetWeaponDamage(weaponItem)` 取（2.0.4 源里就是这一句），挂上 `ModifyWeaponDamage` 之后
+  手持弹幕与它派生的双螺旋光弹**整条自动跟随**，无需改任何派生点。
 - 文件：`Content/Items/Weapons/Magic/AetherfluxCannon.cs`（+`.png` 94×54）、
   `Content/Projectiles/Magic/AetherfluxCannonHoldout.cs`（**逐行照搬 2.0.4**，8 帧动画）、
   `Content/Projectiles/Magic/PhasedGodRay.cs`（**逐行照搬 2.1**）。
@@ -3987,8 +3999,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **值得一提**：2.0.4 的手持弹幕**源里已经是** `Owner.GetWeaponDamage(weaponItem)`（只有 2.0 是手写
   `GetTotalDamage<MagicDamageClass>()`），所以本件挂 `ModifyWeaponDamage` 后数值膨胀天然跟随，
   **不需要**像纳米净化那样改伤害那一行。
-- 本地化：`Items.AetherfluxCannon`（Aetherflux Cannon / 以太流光炮）、
-  `Projectiles.PhasedGodRay.DisplayName`（Phased God Ray / 相位神光）、
-  `Projectiles.AetherfluxCannonHoldout.DisplayName`（Aetherflux Cannon / 以太流光炮；
-  照 `ClockworkBowHoldout` 的先例，手持弹幕也登记名字）。
+- 本地化（**本轮修过一次位置**，坑见 §4「段落顺序的坑」）：`Items.NanoPurge` / `Items.AetherfluxCannon`、
+  `Projectiles.NanoPurgeLaser`（Nano Beam / 纳米光束）、`Projectiles.NanoPurgeHoldout`（Nano Purge / 纳米净化）、
+  `Projectiles.PhasedGodRay`（Phased God Ray / 相位神光）、`Projectiles.AetherfluxCannonHoldout`
+  （Aetherflux Cannon / 以太流光炮；照 `ClockworkBowHoldout` 的先例，手持弹幕也登记名字）。
+  两件物品的条目原先误插进 `Keybinds` 段、`Items` 段里被 `dotnet build` 补成空 tooltip，2026-10-15 已挪正。
 - 验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **204 条**全命中；`CheckImplicitTextures` **496 个类**全命中。
