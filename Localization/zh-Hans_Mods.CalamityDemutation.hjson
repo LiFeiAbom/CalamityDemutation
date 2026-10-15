@@ -2956,6 +2956,16 @@ Items: {
 			木箭会被转化为追踪的能量球
 			'''
 	}
+	AstrealDefeat: {
+		DisplayName: 星穹悲愿
+		Tooltip:
+			'''
+			暴君之王母亲所持的空灵之弓
+			她一生都极力反对暴力
+			却把这张弓留在身边，只为在浩劫降临时护住家人
+			将所有箭矢转化为飞行时喷出火焰的星穹箭
+			'''
+	}
 }
 
 Keybinds: {
@@ -3168,6 +3178,8 @@ Projectiles: {
 	PrecisionBolt.DisplayName: 精准弩箭
 	FeatherLarge.DisplayName: 羽毛
 	PlanetaryAnnihilationProj.DisplayName: 能量球
+	AstrealArrow.DisplayName: 星穹箭
+	AstrealFlame.DisplayName: 星穹烈焰
 }
 
 TextContent: {

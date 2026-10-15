@@ -2957,6 +2957,16 @@ Items: {
 			Wooden arrows are converted into homing energy bolts
 			'''
 	}
+	AstrealDefeat: {
+		DisplayName: Astreal Defeat
+		Tooltip:
+			'''
+			Ethereal bow of the tyrant king's mother
+			The mother strongly discouraged acts of violence throughout her life
+			Though she kept this bow close, to protect her family in times of great disaster
+			All arrows are converted to astreal arrows that emit flames as they travel
+			'''
+	}
 }
 
 Keybinds: {
@@ -3169,6 +3179,8 @@ Projectiles: {
 	PrecisionBolt.DisplayName: Precision Bolt
 	FeatherLarge.DisplayName: Feather
 	PlanetaryAnnihilationProj.DisplayName: Ball
+	AstrealArrow.DisplayName: Astreal Arrow
+	AstrealFlame.DisplayName: Astreal Flame
 }
 
 TextContent: {
