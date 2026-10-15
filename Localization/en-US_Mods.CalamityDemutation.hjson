@@ -2942,6 +2942,13 @@ Items: {
 			The more precision bolts are loaded, the harder they hit
 			'''
 	}
+	Galeforce: {
+		DisplayName: Galeforce
+		Tooltip:
+			'''
+			Fires a spread of low-damage feathers
+			'''
+	}
 }
 
 Keybinds: {
@@ -3152,6 +3159,7 @@ Projectiles: {
 	FossilShard.DisplayName: Shard
 	ClockworkBowHoldout.DisplayName: Clockwork Bow
 	PrecisionBolt.DisplayName: Precision Bolt
+	FeatherLarge.DisplayName: Feather
 }
 
 TextContent: {

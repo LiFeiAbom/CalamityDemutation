@@ -2941,6 +2941,13 @@ Items: {
 			装填的弩箭越多，每一支的威力越强
 			'''
 	}
+	Galeforce: {
+		DisplayName: 烈风
+		Tooltip:
+			'''
+			洒出一片伤害很低的羽毛
+			'''
+	}
 }
 
 Keybinds: {
@@ -3151,6 +3158,7 @@ Projectiles: {
 	FossilShard.DisplayName: 碎片
 	ClockworkBowHoldout.DisplayName: 发条弓
 	PrecisionBolt.DisplayName: 精准弩箭
+	FeatherLarge.DisplayName: 羽毛
 }
 
 TextContent: {
