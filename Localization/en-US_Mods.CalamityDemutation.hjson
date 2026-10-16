@@ -935,7 +935,7 @@ Items: {
 			Boosts your max HP by 10%
 			10% increased damage reduction
 			Increases all damage and critical strike chance by 12%
-			6% increased melee attack speed
+			12% increased melee attack speed
 			When below 100 defense you gain 15% increased damage
 			Halves enemy contact damage
 			When you take contact damage this effect has a 20 second cooldown
@@ -2619,20 +2619,6 @@ Items: {
 	TheBurningSky: {
 		DisplayName: The Burning Sky
 		Tooltip: Rains ten meteors from the sky as you swing
-	}
-
-	TheCommunity: {
-		DisplayName: The Community
-		Tooltip:
-			'''
-			Legendary Accessory
-			The heart of the Terraria community
-			Starts off with weak buffs to all of your stats
-			The stat buffs become more powerful as you progress
-			Reduces the DoT effects of harmful debuffs inflicted on you
-			Boosts your maximum flight time by 15%
-			"Thank you to all of my supporters that made this mod a reality"
-			'''
 	}
 
 	TheEnforcer: {

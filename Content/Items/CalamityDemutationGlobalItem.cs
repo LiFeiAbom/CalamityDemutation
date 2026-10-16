@@ -442,7 +442,6 @@ namespace CalamityDemutation.Content.Items
                 if (calamity.TryFind<ModItem>("LeviathanBag", out ModItem leviathanBag) && item.type == leviathanBag.Type)
                 {
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<LeviathanAmbergris>(), 1));
-                    itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<TheCommunity>(), 100));
                 }
                 if(item.type == ItemID.GolemBossBag)
                 {

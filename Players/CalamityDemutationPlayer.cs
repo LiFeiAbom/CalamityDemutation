@@ -57,17 +57,6 @@ namespace CalamityDemutation.Players
         /// 单次地狱火齐射的弹幕数量（4 发），与 FireAngleSpread 配合铺开扇形
         /// </summary>
         public const int FireProjectiles = 4;
-        // 各属性成长端点：初始值（击败石巨人时）→ 满配值（18 档全清）
-        // 归一心元石的成长端点：初始档照搬 1.4.4 版同名饰品，满配档按用户 2026-09-27 点名
-        private const float InitDamage = 0.025f, MaxDamage = 0.20f;         // 通用增伤
-        private const float InitCrit = 1f, MaxCrit = 10f;                   // 暴击（百分点：1 = +1%）
-        private const float InitMeleeSpeed = 0.025f, MaxMeleeSpeed = 0.20f; // 近战攻速
-        private const float InitEndurance = 0.0125f, MaxEndurance = 0.10f;  // 伤害减免
-        private const float InitMoveSpeed = 0.025f, MaxMoveSpeed = 0.10f;   // 移速
-        private const float InitLifePct = 0.02f, MaxLifePct = 0.10f;        // 最大生命（百分比）
-        private const int InitLifeRegen = 1, MaxLifeRegen = 3;              // 回血
-        private const int InitDefense = 2, MaxDefense = 10;                 // 防御
-        private const float InitKnockback = 0.05f, MaxKnockback = 0.2f;     // 召唤击退
         /// <summary>
         /// 【（古）链】无暇粹魂晶对持续伤害减益的抵消量（近似值，理由见 UpdateBadLifeRegen 里的长注释）。
         /// 单列成常量就是为了方便拍板调整——源里各减益的扣量其实不同，4~50 不等
@@ -103,46 +92,17 @@ namespace CalamityDemutation.Players
         /// </summary>
         private static readonly Dictionary<(string mod, string buff), int> buffTypeCache = new();
         /// <summary>
-        /// The Community 进度 Boss 清单（石巨人 → 至尊灾厄，18 档），与庇护之刃 LegendaryBosses 同序。
-        /// 仅用于统计"已击败几档"来驱动各属性的线性成长；召唤栏/飞行等一次性加成另行按 Boss 判定。
+        /// "伪减益"黑名单缓存：懒加载一次后复用。
+        /// 这些 buff 虽被标为 debuff（Main.debuff=true），实为增益/特殊状态，不应被缩短/净化
+        ///（现用于龙蒿盗贼头的减益计数与席尔瓦套的减益净化，见各自调用点）。
         /// </summary>
-        private static readonly Func<bool>[] CommunityBosses =
-        [
-            () => NPC.downedGolemBoss,                               // 石巨人 Golem
-            () => BossSystem.Plaguebringer,        // 瘟疫使者歌莉娅 Plaguebringer Goliath
-            () => BossSystem.Ravager,              // 毁灭魔像（掠夺者）Ravager
-            () => NPC.downedAncientCultist,                          // 拜月教邪教徒 Lunatic Cultist
-            () => BossSystem.AstrumDeus,           // 星神游龙 Astrum Deus
-            () => NPC.downedMoonlord,                                // 月球领主 Moon Lord
-            () => BossSystem.Guardians,            // 亵渎守卫 Profaned Guardians
-            () => BossSystem.Dragonfolly,          // 丛林龙 Dragonfolly
-            () => BossSystem.Providence,           // 亵渎天神 Providence
-            () => BossSystem.CeaselessVoid || ClassicSentinelsDowned, // 无尽虚空 Ceaseless Void
-            () => BossSystem.StormWeaver || ClassicSentinelsDowned,   // 风暴编织者 Storm Weaver
-            () => BossSystem.Signus || ClassicSentinelsDowned,        // 西格纳斯 Signus
-            () => BossSystem.Polterghast,          // 噬魂幽花 Polterghast
-            () => BossSystem.OldDuke,              // 硫海遗爵（老公爵）Old Duke
-            () => BossSystem.DevourerOfGods,       // 噬神者 Devourer of Gods
-            () => BossSystem.Yharon,               // 犽戎 Yharon
-            () => BossSystem.ExoMechs,             // 星流巨械 Exo Mechs
-            () => BossSystem.SupremeCalamitas,     // 至尊灾厄 Supreme Calamitas
-        ];
-        /// <summary>
-        /// The Community 的 Debuff 缩减黑名单缓存：懒加载一次后复用。
-        /// 这些 buff 虽被标为 debuff（Main.debuff=true），实为增益/特殊状态，不应被缩短持续时间。
-        /// </summary>
-        private static HashSet<int> communityDebuffBlacklist;
+        private static HashSet<int> pseudoDebuffBlacklist;
         /// <summary>
         /// 本模组认作"Boss 战进行中"的额外 NPC 类型（灾厄未置 boss 标记的史莱姆神分身），
         /// 由 AnyBossNPCS 首次调用时按名字软依赖解析并缓存
         /// </summary>
         private static HashSet<int> extraBossTypes;
         // ── 属性 ──
-        /// <summary>
-        /// 经典版三使者是否全部倒下（经典版无单个使者标记，只有 Sentinel1/2/3）。
-        /// </summary>
-        private static bool ClassicSentinelsDowned =>
-            BossSystem.Sentinel1 && BossSystem.Sentinel2 && BossSystem.Sentinel3;
         // ── 实例字段 ──
         /// <summary>
         /// 【（古）链】已装备甘露安瓿（古）：按「缺失生命比例」给再生 + 置位蜂蜜系三标记（对应灾厄 aAmpoule）。
@@ -939,12 +899,6 @@ namespace CalamityDemutation.Players
         /// 利维坦龙涎香、真菌团块等多个高级饰品的"全都要"终极形态
         /// </summary>
         public bool theAmalgam = false;
-        public bool theCommunity = false;
-        /// <summary>
-        /// The Community 的 Debuff 时间缩减计时器（帧）：每 60 帧（1 秒）触发一轮缩减，
-        /// 同时处理治疗冷却（药水病）/魔力病/一般 Debuff。仅在装备期间递增。
-        /// </summary>
-        private int communityDebuffTickCounter = 0;   // Debuff 缩减统一计时
         /// <summary>
         /// 已装备最初暗影焰（召唤饰品）：召唤物命中敌人时施加 5 秒暗影焰
         /// </summary>
@@ -1161,7 +1115,6 @@ namespace CalamityDemutation.Players
             tarraThrowing = false;
             theAmalgam = false;
             theAbsorber = false;
-            theCommunity = false;
             theFirstShadowflame = false;
             titanScale = false;
             triumph = false;
@@ -1379,7 +1332,6 @@ namespace CalamityDemutation.Players
             tarraThrowingCritTimer = 0;
             theAmalgam = false;
             theAbsorber = false;
-            theCommunity = false;
             theFirstShadowflame = false;
             titanScale = false;
             triumph = false;
@@ -1566,16 +1518,16 @@ namespace CalamityDemutation.Players
                     Player.GetDamage<GenericDamageClass>() += 0.1f;
                 }
             }
-            // 血神核心：+10% 最大生命、+12% 暴击率与伤害、+10% 减伤，+6% 近战攻击速度，
+            // 血神核心：+10% 最大生命、+12% 暴击率与伤害、+10% 减伤，+12% 近战攻击速度，
             // 防御不足 100 时再 +15% 伤害，并每帧生成一个灵魂虹吸弹幕形成吸血光环
-            // （近战攻速沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 按用户要求改挂 +6%）
+            // （近战攻速沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% → 2026-10-17 按用户要求提至 +12%）
             if (coreOfTheBloodGod)
             {
                 Player.statLifeMax2 += Player.statLifeMax2 / 10;
                 Player.GetCritChance<GenericDamageClass>() += 12;
                 Player.GetDamage<GenericDamageClass>() += 0.12f;
                 Player.endurance += 0.1f;
-                Player.GetAttackSpeed<MeleeDamageClass>() += 0.06f;
+                Player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
                 if (Player.statDefense < 100)
                 {
                     Player.GetDamage<GenericDamageClass>() += 0.15f;
@@ -2786,61 +2738,6 @@ namespace CalamityDemutation.Players
                 {
                 }
             }
-            if (theCommunity)
-            {
-                int defeated = CommunityBossCount();
-                if (defeated > 0)
-                {
-                    // 进度系数：击败 1 档（石巨人）= 0（初始值），全清 18 档 = 1（满配值）
-                    float t = (defeated - 1) / 17f;
-                    float damage = InitDamage + (MaxDamage - InitDamage) * t;
-                    float crit = InitCrit + (MaxCrit - InitCrit) * t;
-                    float meleeSpeed = InitMeleeSpeed + (MaxMeleeSpeed - InitMeleeSpeed) * t;
-                    float endurance = InitEndurance + (MaxEndurance - InitEndurance) * t;
-                    float moveSpeed = InitMoveSpeed + (MaxMoveSpeed - InitMoveSpeed) * t;
-                    float lifePct = InitLifePct + (MaxLifePct - InitLifePct) * t;
-                    int lifeRegen = (int)(InitLifeRegen + (MaxLifeRegen - InitLifeRegen) * t);
-                    int defense = (int)(InitDefense + (MaxDefense - InitDefense) * t);
-                    float knockback = InitKnockback + (MaxKnockback - InitKnockback) * t;
-                    Player.GetDamage<GenericDamageClass>() += damage;
-                    Player.GetCritChance<GenericDamageClass>() += crit;
-                    Player.GetAttackSpeed<MeleeDamageClass>() += meleeSpeed;
-                    Player.endurance += endurance;
-                    Player.moveSpeed += moveSpeed;
-                    Player.statLifeMax2 += (int)(Player.statLifeMax2 * lifePct);
-                    Player.lifeRegen += lifeRegen;
-                    Player.statDefense += defense;
-                    Player.GetKnockback<SummonDamageClass>().Base += knockback;
-                    // 最大飞行时间恒 ×1.15（与经典版源一致）
-                    if (Player.wingTimeMax > 0)
-                    {
-                        Player.wingTimeMax = (int)(Player.wingTimeMax * 1.15);
-                    }
-                }
-                // Debuff 时间缩减：始终生效，不使用 Boss 等级解锁。
-                // 每 1 秒触发一轮：治疗冷却（药水病）缩减 2%；魔力病缩减 20%；一般 Debuff 缩减 10%。
-                if (++communityDebuffTickCounter >= 60)
-                {
-                    communityDebuffTickCounter = 0;
-                    // 治疗冷却（药水病）
-                    int idx = Player.FindBuffIndex(BuffID.PotionSickness);
-                    if (idx >= 0)
-                        Player.buffTime[idx] = (int)(Player.buffTime[idx] * 0.98f);
-                    // 魔力病
-                    idx = Player.FindBuffIndex(BuffID.ManaSickness);
-                    if (idx >= 0)
-                        Player.buffTime[idx] = (int)(Player.buffTime[idx] * 0.8f);
-                    // 一般 Debuff（黑名单除外）
-                    for (int i = 0; i < Player.buffTime.Length; i++)
-                    {
-                        int buffType = Player.buffType[i];
-                        if (buffType > 0 && Player.buffTime[i] > 0 && Main.debuff[buffType] && !IsBuffInCommunityBlacklist(buffType))
-                        {
-                            Player.buffTime[i] = (int)(Player.buffTime[i] * 0.9f);
-                        }
-                    }
-                }
-            }
             if (deificAmulet)
             {
                 Player.panic = true;
@@ -3045,7 +2942,7 @@ namespace CalamityDemutation.Players
                 for (int i = 0; i < Player.buffTime.Length; i++)
                 {
                     int buffType = Player.buffType[i];
-                    if (buffType > 0 && Player.buffTime[i] > 0 && Main.debuff[buffType] && !IsBuffInCommunityBlacklist(buffType))
+                    if (buffType > 0 && Player.buffTime[i] > 0 && Main.debuff[buffType] && !IsPseudoDebuff(buffType))
                     {
                         Player.GetDamage(rogue) += 0.1f;                  // 现代版：直接加到盗贼伤害类
                         CDUtil.AddClassicThrowingStats(Player, 0.1f, 0);  // 经典版：加到它的自定义投掷倍率
@@ -3189,7 +3086,7 @@ namespace CalamityDemutation.Players
                 for (int i = 0; i < Player.buffTime.Length; i++)
                 {
                     int buffType = Player.buffType[i];
-                    if (buffType > 0 && Player.buffTime[i] > 0 && Main.debuff[buffType] && !IsBuffInCommunityBlacklist(buffType))
+                    if (buffType > 0 && Player.buffTime[i] > 0 && Main.debuff[buffType] && !IsPseudoDebuff(buffType))
                     {
                         Player.buffImmune[buffType] = true;
                     }
@@ -6026,17 +5923,6 @@ namespace CalamityDemutation.Players
             return false;
         }
         /// <summary>
-        /// 统计 CommunityBosses 中已击败的 Boss 数量。
-        /// </summary>
-        private static int CommunityBossCount()
-        {
-            int count = 0;
-            foreach (Func<bool> downed in CommunityBosses)
-                if (downed())
-                    count++;
-            return count;
-        }
-        /// <summary>
         /// 解析"模组名 + buff 名"为 buff type，结果缓存在 buffTypeCache 中。
         /// 模组或技能不存在时静默返回 0（上层据此跳过施加），不抛异常。
         /// </summary>
@@ -6061,15 +5947,16 @@ namespace CalamityDemutation.Players
                 player.buffImmune[type] = true;
         }
         /// <summary>
-        /// 判断指定 buff 是否在 The Community 的 Debuff 缩减黑名单内。
+        /// 判断指定 buff 是否为"伪减益"（Main.debuff 为真、实为增益或特殊状态）——
+        /// 这类 buff 不该被当作减益去计数/净化/缩短（龙蒿盗贼头、席尔瓦套两处调用）。
         /// 覆盖本模组 Enraged，以及灾厄现代版/经典版的肾上腺素（AdrenalineMode）、怒气（RageMode）、
         /// Enraged。对应 buff 不存在时 GetBuffType 返回 0（无害，循环中 buffType&gt;0 不会命中）。
         /// </summary>
-        private static bool IsBuffInCommunityBlacklist(int buffType)
+        private static bool IsPseudoDebuff(int buffType)
         {
-            if (communityDebuffBlacklist == null)
+            if (pseudoDebuffBlacklist == null)
             {
-                communityDebuffBlacklist =
+                pseudoDebuffBlacklist =
                 [
                     ModContent.BuffType<Enraged>(),                                  // 本模组 Enraged
                     GetBuffType("CalamityMod", "AdrenalineMode"),                   // 灾厄现代版 肾上腺素
@@ -6080,7 +5967,7 @@ namespace CalamityDemutation.Players
                     GetBuffType("CalamityModClassicPreTrailer", "Enraged"),         // 灾厄经典版 Enraged
                 ];
             }
-            return communityDebuffBlacklist.Contains(buffType);
+            return pseudoDebuffBlacklist.Contains(buffType);
         }
     }
 }
