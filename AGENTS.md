@@ -979,6 +979,22 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   数值膨胀的「召唤系」批次也在同日结清（见第一屏③与第 7 节表；三件同时改了中文名，见第一屏②末尾）。
   **本链已无待办**；工程层面只剩第一屏④那份"要不要向源对齐"的口径清单。
 
+- 最近一批工作（2026-10-17）：**删除饰品「归一心元石」（`TheCommunity`）全部内容 + 血神核心近战攻速 +6% → +12%**
+  （用户两条点名，落地提交 **`cbbaef0`**）。
+  **① 归一心元石删除面（6 处）**：物品类 `Content/Items/Accessories/Comprehensive/TheCommunity.cs` + 同名贴图；
+  利维坦宝袋的 1/100 掉落挂载（`Content/Items/CalamityDemutationGlobalItem.cs`，`LeviathanAmbergris` 那条保留）；
+  玩家侧全部实现——`theCommunity` 标志、`communityDebuffTickCounter`、18 档 `CommunityBosses` 清单、
+  `CommunityBossCount()`、`Init*/Max*` 九组成长端点常量、`PostUpdateMiscEffects` 里那整套结算块、
+  两处复位（`ResetEffects` / `OnEnterWorld`）、`CommunityBosses` 独占的 `ClassicSentinelsDowned`；中英本地化条目。
+  **② 它留下的共用件已改中性名（别再往回改）**：本件当年独占的"伪减益黑名单"helper 其实被**龙蒿盗贼头**（减益计数）
+  与**席尔瓦套**（减益净化）共用，故保留并改名 —— `IsBuffInCommunityBlacklist` → **`IsPseudoDebuff`**、
+  `communityDebuffBlacklist` → **`pseudoDebuffBlacklist`**（两处调用点同步改名）。
+  **③ 本件此前从未写进本文件**（§1~§21 里没有它的条目，属历史遗漏）⇒ 要回溯内容只能走 git：
+  `git show cbbaef0^:Content/Items/Accessories/Comprehensive/TheCommunity.cs`（取贴图用同法 + `--binary`）。
+  **④ 血神核心**：`PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块里
+  `Player.GetAttackSpeed<MeleeDamageClass>()` **0.06f → 0.12f**；中英 tooltip 各改一行、类注释同步
+  （沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% → **2026-10-17 提至 +12%**）。
+  **验证**：`dotnet build` 0 警告 0 错误；`CheckResources` 207 条全命中；`CheckImplicitTextures` **498 个类**全命中（从 499 降 1）。
 - 最近一批工作（2026-10-14）：**移植 4 件饰品（天使之靴链）+ 3 件武器（巨龙之息 / 速射机枪 + 配方前件 P90），
   并修掉两个工具盲区** —— 详见 **§10.7**（天使之靴 → 天界翼靴 → 极乐翼靴 → 炽天使翼靴，链条 4/4 完结）、
   **§12**（巨龙之息，CI 支线）、**§13**（速射机枪 + P90）、**§14**（本次收尾：口径 / 关键事实 / 未决项 / 仓库状态）。
@@ -2764,7 +2780,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 | 物品（显示名） | 内部名 | 尺寸/价值/稀有度 | 效果 | 来源 |
 |---|---|---|---|---|
-| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；减伤 +10%；**近战攻速 +6%**（2026-10-13 用户点名；沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 本次改挂 +6%）；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半 | 合成（见 10.3） |
+| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；减伤 +10%；**近战攻速 +12%**（2026-10-17 用户点名提至 +12%；沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% → 2026-10-17 +12%）；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半 | 合成（见 10.3） |
 | 血炎晶核 | `BloodflareCore`（Comprehensive） | 26×26 / 45 金 / 专家 | 吸血光环；防御<100 → +15% 通用伤害；生命≤50% → 减伤+15%/通用伤害+10%/暴击+10%；生命≤15% → 减伤+30%/通用伤害+20%/暴击+20% | 掠夺者（Ravager）宝藏袋，需已击败亵渎（`BossSystem.Providence`） |
 | 血腥蠕虫围巾 | `BloodyWormScarf`（JobAcc/Melee，`EquipType.Neck`） | 26×42 / 15 金 / 专家 | 近战伤害 +10%、近战攻速 +10%、减伤 +15% | 合成（见 10.3） |
 | 血契 | `BloodPact`（Defense） | 26×26 / 24 金 / 黄 | 最大生命翻倍；代价是 25% 概率被暴击（受击约 ×2.5） | 掠夺者宝藏袋 |
