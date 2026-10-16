@@ -4145,7 +4145,7 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 
 | 文件 | 内容 |
 |---|---|
-| `Content\Items\Weapons\Magic\SHPC.cs` | 物品本体：**98×34**（用户提供的贴图，见下）、面板 117、魔力 20、`useTime = useAnimation = 7`、击退 3.25、弹速 20、`AltFunctionUse`、`ItemsThatAllowRepeatedRightClick`、`postMoonLordRarity = 17`、价值 36 金、**无配方**；**两种招式各 5 发**（`ShotsPerUse = 5`，＝源版 T2 常态化），右键另按 `PhaseOrbCooldown = 60` 附带一颗追踪相位球（＝源版 T1 常态化） |
+| `Content\Items\Weapons\Magic\SHPC.cs` | 物品本体：**98×34**（用户提供的贴图，见下）、面板 117、魔力 20、`useTime = useAnimation = 7`、击退 3.25、**弹速 30**（用户 2026-10-16 指定，源值 20）、`AltFunctionUse`、`ItemsThatAllowRepeatedRightClick`、`postMoonLordRarity = 17`、价值 36 金、**无配方**；**两种招式各 5 发**（`ShotsPerUse = 5`，＝源版 T2 常态化），右键另按 `PhaseOrbCooldown = 60` 附带一颗追踪相位球（＝源版 T1 常态化） |
 | `Players\CalamityDemutationPlayer.SHPC.cs` | SHPC 的玩家侧状态 partial：只有 `shpcPhaseOrbCooldown`（帧）；递减写在 `CalamityDemutationPlayer.ResetEffects` 末尾（§5 口径：武器状态一律不进 ModItem 字段） |
 | `Content\Projectiles\Magic\SHPCPlasma.cs` | 等离子球（源 2.0 `SHPB`）：4 帧、淡入、0.8↔1.2 缩放脉动、速度 ×0.985、**250 像素内有可追敌时启动 120 帧倒计时自爆**；死亡播 `Item105` 并在主人端生成爆炸。**`ai[2] == 1` 时每帧走 `CDUtil.HomeInOnNPC(proj, true, 1800, 24, 20)`**（＝源 CI 那颗额外球的参数；源把它写在死代码里，本工程改用源没碰过的 `ai[2]` 槽位，不影响 `ai[0]/ai[1]` 的随机相位） |
 | `Content\Projectiles\Magic\SHPCExplosion.cs` | 爆炸（源 2.0 `SHPExplosion`）：500×500、穿透 -1、60 帧、每目标 10 帧本地无敌、喷 246/73/187 三色尘（本体隐形，走共用 `InvisibleProj`） |
@@ -4159,8 +4159,10 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 
 **两处踩到的坑（照做即可）**：① `CalamityDemutationGlobalNPC.cs` 要补 `using CalamityDemutation.Content.Items.Weapons.Magic;`
 （否则 `SHPC` 找不到）；② `SHPCLaser.cs` 要补 `using CalamityDemutation.Utilities;`（`DrawBeam` 是那边的扩展方法）。
-③ 用户给的贴图是 **98×34**（不是 2.0 的 124×52），故 `Item.width/height` 与 `HoldoutOffset` 都按**经典世系口径**取 `(-25, 0)`，
-**不能照抄 2.0 的 `(-35, -10)`**；换贴图时记得同步这三处。
+③ 用户给的贴图是 **98×34**（不是 2.0 的 124×52），故 `Item.width/height` 按该图取，`HoldoutOffset` 先按**经典世系口径** `(-25, 0)`；
+随后用户 2026-10-16 又要求"贴图整体向右移动 10 个点"，按本工程既有口径（**`HoldoutOffset().X` 就是贴图原点 X、越小越往右**，
+见弩炮 / 暗回声巨弓 / 天堂之风三件）改成 **`(-35, 0)`**——**别照抄 2.0 的 `(-35, -10)`**（那个 Y 是配 124×52 大枪身的）。
+换贴图时记得同步这三处。
 
 ### 20.2 CI 三阶线的取舍（用户 2026-10-16 拍板，已落地）
 
@@ -4182,4 +4184,6 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 
 物品本体与 T1/T2 常态化先后各验过一轮：`dotnet build -v q -nologo` = **0 警告 0 错误**；
 `CheckResources` **207 条**显式引用全命中；`CheckImplicitTextures` **500 个类**全命中（含本件 4 个新类）。
+随后的小改也都 0/0：**`72467b6`** 修掉等离子球"贴脸自爆倒计时缺初值"（源是实例字段 `explosionTimer = 120`，
+我改用 `localAI[1]` 时漏了初值 ⇒ 敌人一进 250 像素就立刻爆炸）；**弹速 20 → 30、持枪偏移 `(-25, 0)` → `(-35, 0)`**。
 另：根目录的 `Devil's_Devastation.png`（破灭魔王剑那张副本）已于同日按用户指示删除；其同名贴图改动仍在工作区未提交。

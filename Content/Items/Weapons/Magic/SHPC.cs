@@ -15,7 +15,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// <para>
     /// **口径（用户 2026-10-16 逐条拍板）**：
     /// ① 面板基础伤害 **117**；② 出手模板取本体 **2.0 / 2.0.3.9** 那条线
-    /// （`useTime = useAnimation = 7`、击退 3.25、弹速 20、**左键等离子球、右键能量束，按键照原版不交换**）；
+    /// （`useTime = useAnimation = 7`、击退 3.25、**弹速 30**、**左键等离子球、右键能量束，按键照原版不交换**）；
     /// **贴图用用户提供的 98×34 老版图**（源文件 `SHPC_(1.1.7.701).png`，即经典世系那张），
     /// 故 `Item.width/height` 与持枪偏移按该图取（照经典版口径），与 2.0 的 124×52 不同；
     /// ③ 稀有度走月后自定义 **17 档（传奇）**；④ 价值 **36 金**；⑤ 名字中英同为 `SHPC`；
@@ -122,13 +122,19 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             Item.UseSound = SoundID.Item92;           // 默认音效＝等离子球（照 2.0；能量束在 CanUseItem 里换成 LaserCannon）
             Item.autoReuse = true;                    // 自动连发
             Item.shoot = ModContent.ProjectileType<SHPCPlasma>();   // 左键弹幕：等离子球
-            Item.shootSpeed = 20f;                    // 弹速（照 2.0）
+            Item.shootSpeed = 30f;                    // 弹速 30（用户 2026-10-16 指定；本体 2.0 原值 20）
             Item.rare = ItemRarityID.Red;             // 基础稀有度：红（名称色由 postMoonLordRarity 覆盖）
             Item.value = Item.buyPrice(0, 36, 0, 0);  // 价值 36 金（用户 2026-10-16 指定）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 17;   // 月后自定义稀有度 17 档（传奇）
         }
-        /// <summary>枪口位置：照经典世系同图的口径 <c>(-25, 0)</c>（98×34 的小枪身，2.0 的 <c>(-35, -10)</c> 是配 124×52 大枪身的）</summary>
-        public override Vector2? HoldoutOffset() => new Vector2(-25, 0);
+        /// <summary>
+        /// 持握偏移（用户 2026-10-16 指定"贴图整体向右移动 10 个点"）：
+        /// tML 里 <c>HoldoutOffset().X</c> **直接就是贴图原点 X**（不是增量；模组物品的默认值是 **10**），
+        /// **原点越小、贴图越往右**（与弩炮 / 暗回声巨弓 / 天堂之风 三件同一口径）。
+        /// 本件源口径为经典世系的 <c>(-25, 0)</c>（配 98×34 的小枪身），右移 10 点后取 <c>-35</c>。
+        /// 若日后觉得还不够或过头，**改这一个数就行**。
+        /// </summary>
+        public override Vector2? HoldoutOffset() => new Vector2(-35, 0);
         /// <summary>右键可用（右键是独立的能量束招式）</summary>
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>
