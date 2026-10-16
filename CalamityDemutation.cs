@@ -109,7 +109,6 @@ namespace CalamityDemutation
             {
                 int reported = reader.ReadInt32();
                 bool acc = reader.ReadBoolean();
-                bool wing = reader.ReadBoolean();
                 if (Main.netMode == NetmodeID.Server)
                 {
                     // 服务端以发送者 whoAmI 为准：包内自报的玩家索引不可信（客户端可伪造）
@@ -117,13 +116,11 @@ namespace CalamityDemutation
                         return;
                     Players.CalamityDemutationPlayer serverPlayer = Main.player[whoAmI].GetModPlayer<Players.CalamityDemutationPlayer>();
                     serverPlayer.extraAccessoryML = acc;
-                    serverPlayer.extraWingSlot = wing;
                     // 代播给其余客户端：ModPlayer 没有可用的整包同步钩子，故由服务端把本消息转发一遍
                     ModPacket packet = GetPacket();
                     packet.Write((byte)Players.CalamityDemutationPlayer.MsgPermanentUnlock);
                     packet.Write(whoAmI);
                     packet.Write(acc);
-                    packet.Write(wing);
                     packet.Send(-1, whoAmI);
                 }
                 else if (reported >= 0 && reported < Main.player.Length && Main.player[reported].active)
@@ -131,7 +128,6 @@ namespace CalamityDemutation
                     // 客户端收到服务端代播：把标志写到对应玩家的 ModPlayer 副本，其他玩家的栏位才能正确显示
                     Players.CalamityDemutationPlayer localCopy = Main.player[reported].GetModPlayer<Players.CalamityDemutationPlayer>();
                     localCopy.extraAccessoryML = acc;
-                    localCopy.extraWingSlot = wing;
                 }
             }
             // 盾牌冲刺的开始/结束广播：让其他客户端也能看到别人冲刺时的拖尾尘

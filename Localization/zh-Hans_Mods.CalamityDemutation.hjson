@@ -1846,15 +1846,6 @@ Items: {
 			'''
 	}
 
-	MoonPact: {
-		DisplayName: 拜月契约
-		Tooltip:
-			'''
-			获得一个额外的翅膀栏
-			食用后会产生不可逆转的后果
-			'''
-	}
-
 	MurkyPaste: {
 		DisplayName: 污浊糊
 		Tooltip: 从丛林的黏滑生物身上刮下的稠物

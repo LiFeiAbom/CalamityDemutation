@@ -1538,6 +1538,16 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   逐个试名。
   中英本地化各补 `Items.ManaPolarizer`（en `Mana Polarizer` / zh **魔能谐振仪**）与
   `Projectiles.ManaPolarizerHealOrb.DisplayName`。验证：编译 0 警告 0 错误，资源自检 149 条全命中。
+- 最近一批工作（2026-10-16）：**按用户点名删掉「拜月契约（MoonPact）+ 专用翅膀栏」整套**。
+  删除对象：`Content\Items\Consumables\MoonPact.cs`（一个文件里含 `MoonPact : ModItem` 与 `MoonPactSlot : ModAccessorySlot`）
+  及其贴图 `MoonPact.png`（36×252 的 6 帧纵向动画条，贴图借自 Fargo's Souls 的 `MutantsPact`）——
+  **本工程自研件、非移植件**，故无来源合规问题；它开的是"只收翅膀类物品"的专用饰品栏，物品唯一效果就是开这个栏。
+  连带清理（照 2026-10-06「删件+撤效果」同一流程）：① `CalamityDemutationGlobalNPC.ModifyNPCLoot` 里
+  肉山（`NPCID.WallofFlesh`）那条 100% 掉落整块删除；② `CalamityDemutationPlayer` 的 `extraWingSlot` 字段与文档、
+  类注释「2 个永久解锁标志」改成 1 个、`SaveData`/`LoadData`/`CopyClientState`/`SendClientChanges` 里对应的键与判据一并撤掉；
+  ③ `CalamityDemutation.cs` 的 `MsgPermanentUnlock` 包体收窄（去掉那个 wing 布尔，只留洋葱的 acc）；
+  ④ 两份 hjson 各删一条 `Items.MoonPact`。**永久解锁标志据此从 2 个回到 1 个（只剩天界洋葱 `extraAccessoryML`）**。
+  验证：编译 0 警告 0 错误，两道自检全命中。
 - 最近一批工作（2026-10-06）：**移植虚无箭袋（Quiver of Nihility，现代版灾厄 2.0.4 独有件）**，
   并按用户点名把基础属性修正为「远程伤害 +12%、远程暴击率 +12%」（源只有远程暴击 +5）。
   ① 新增 `Content/Items/Accessories/JobAcc/Ranged/QuiverofNihility.cs`（+同名 `.png` / `_Back.png`，均取 2.0.4）：

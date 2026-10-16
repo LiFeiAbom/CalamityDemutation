@@ -1845,15 +1845,6 @@ Items: {
 			'''
 	}
 
-	MoonPact: {
-		DisplayName: Moon Pact
-		Tooltip:
-			'''
-			Grants an additional slot for wings
-			Consuming it does something that cannot be reversed
-			'''
-	}
-
 	MurkyPaste: {
 		DisplayName: Murky Paste
 		Tooltip: A thick sludge scraped off the slimy creatures of the jungle

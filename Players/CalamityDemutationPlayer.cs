@@ -43,7 +43,7 @@ namespace CalamityDemutation.Players
     /// 本模组的玩家数据类（ModPlayer）
     /// 通过布尔字段记录各饰品是否已装备，并实现装备效果的数值结算、
     /// 命中 debuff、PvP 命中 debuff、闪避等逻辑。
-    /// 另含 2 个**永久解锁标志**——天界洋葱（extraAccessoryML）/ 拜月契约（extraWingSlot），
+    /// 另含 1 个**永久解锁标志**——天界洋葱（extraAccessoryML），
     /// 由 SaveData / LoadData 持久化、CopyClientState / SendClientChanges 负责联机同步。
     /// </summary>
     internal partial class CalamityDemutationPlayer : ModPlayer
@@ -442,10 +442,6 @@ namespace CalamityDemutation.Players
         /// 天界洋葱已使用（永久开启一个额外饰品栏）
         /// </summary>
         public bool extraAccessoryML = false;
-        /// <summary>
-        /// 拜月契约已使用（永久开启一个专用翅膀饰品栏）
-        /// </summary>
-        public bool extraWingSlot = false;
         /// <summary>
         /// 已装备风暴之眼（召唤饰品）：置位后维持云娘仆从存在并允许其存活
         /// </summary>
@@ -5860,48 +5856,44 @@ namespace CalamityDemutation.Players
             return true;
         }
         /// <summary>
-        /// 永久解锁标志的持久化，共 2 项：extraAccessoryML 天界洋葱 / extraWingSlot 拜月契约；
+        /// 永久解锁标志的持久化，共 1 项：extraAccessoryML 天界洋葱；
         /// 其余字段每帧由装备重新计算，无需保存
         /// </summary>
         public override void SaveData(TagCompound tag)
         {
             tag["extraAccessoryML"] = extraAccessoryML;
-            tag["extraWingSlot"] = extraWingSlot;
         }
         /// <summary>
         /// tModLoader 的 LoadData 钩子：读档时恢复永久解锁标志。
-        /// 与 SaveData 严格对应，读取同样 2 个键。
+        /// 与 SaveData 严格对应，读取同样 1 个键。
         /// </summary>
         public override void LoadData(TagCompound tag)
         {
             extraAccessoryML = tag.GetBool("extraAccessoryML");
-            extraWingSlot = tag.GetBool("extraWingSlot");
         }
         /// <summary>
-        /// 联机时把本地玩家的 2 个永久解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
-        /// 只同步这 2 个标志；其余字段每帧由装备重算，无需跨端传输。
+        /// 联机时把本地玩家的永久解锁标志复制到基准副本，供 SendClientChanges 检测差异用。
+        /// 只同步这个标志；其余字段每帧由装备重算，无需跨端传输。
         /// </summary>
         public override void CopyClientState(ModPlayer targetCopy)
         {
             CalamityDemutationPlayer copy = (CalamityDemutationPlayer)targetCopy;
             copy.extraAccessoryML = extraAccessoryML;
-            copy.extraWingSlot = extraWingSlot;
         }
         /// <summary>
-        /// 客户端状态变更上报：当本地任一永久解锁标志相对基准副本变化（例如非主机端吃了洋葱，
+        /// 客户端状态变更上报：当本地永久解锁标志相对基准副本变化（例如非主机端吃了洋葱，
         /// 服务器本身不知道）时，向服务器发一条带新标志的消息，由主类 HandlePacket
         /// 更新服务器上的玩家副本并广播 SyncPlayer 给所有端。
         /// </summary>
         public override void SendClientChanges(ModPlayer clientPlayer)
         {
             CalamityDemutationPlayer old = (CalamityDemutationPlayer)clientPlayer;
-            if (old.extraAccessoryML != extraAccessoryML || old.extraWingSlot != extraWingSlot)
+            if (old.extraAccessoryML != extraAccessoryML)
             {
                 ModPacket packet = Mod.GetPacket();
                 packet.Write((byte)MsgPermanentUnlock);
                 packet.Write(Player.whoAmI);
                 packet.Write(extraAccessoryML);
-                packet.Write(extraWingSlot);
                 packet.Send();
             }
         }

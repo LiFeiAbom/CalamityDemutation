@@ -173,10 +173,6 @@ namespace CalamityDemutation.NPCs
             {
                 npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialOnion>(), 1));
             }
-            else if (npc.type == NPCID.WallofFlesh)
-            {
-                npcLoot.Add(new CommonDrop(ModContent.ItemType<MoonPact>(), 1));
-            }
             // 被附身铠甲属于原版怪，其掉落随原版链注册
             else if (npc.type == NPCID.PossessedArmor)
             {
