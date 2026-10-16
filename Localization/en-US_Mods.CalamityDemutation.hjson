@@ -2123,8 +2123,8 @@ Items: {
 		Tooltip:
 			'''
 			Legendary Weapon
-			Left click to fire plasma orbs that linger before erupting into massive explosions
-			Right click to fire powerful energy beams
+			Left click to fire 5 plasma orbs that linger before erupting into massive explosions
+			Right click to fire 5 powerful energy beams and periodically launch a homing phase orb
 			Scales through progression gaining additive damage boosts after defeating certain bosses
 			'''
 	}

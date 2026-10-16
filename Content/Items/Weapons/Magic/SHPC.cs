@@ -1,4 +1,5 @@
 using System;
+using CalamityDemutation.Players;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Sounds;
 using CalamityDemutation.Systems;
@@ -23,9 +24,17 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// </para>
     /// <para>
     /// **两种出手方式**（照 2.0：同一把枪左右键各一套，各自的间隔/蓝耗/音效互不影响）：
-    /// 左键＝**等离子球** 3 发扇形、球伤害 ×1.1、魔力 20、间隔 7 × 7.14 ≈ 50 帧（球本身见 <see cref="SHPCPlasma"/>，
+    /// 左键＝**等离子球** 5 发扇形、球伤害 ×1.1、魔力 20、间隔 7 × 7.14 ≈ 50 帧（球本身见 <see cref="SHPCPlasma"/>，
     /// 会停滞并引发大范围爆炸）；
-    /// 右键＝**能量束** 3 道、击退 ×0.5、魔力 ×0.3（＝6）、间隔 7 帧（见 <see cref="SHPCLaser"/>）。
+    /// 右键＝**能量束** 5 道、击退 ×0.5、魔力 ×0.3（＝6）、间隔 7 帧（见 <see cref="SHPCLaser"/>）。
+    /// </para>
+    /// <para>
+    /// **CI 三阶升级线的取舍（用户 2026-10-16 定）**：**T3 不移植**；
+    /// **T1 / T2 常态化**（不做微光湖强化道具、不做葡萄汁解锁，效果直接常驻，实测后再定去留）：
+    /// ① T2 → 两种招式一律 **5 发**（＝源版 `Tier2 ? 5 : 3` 的满档）；
+    /// ② T1 → 能量束**每 60 帧**额外附带一颗**会追踪**的相位球（＝源版 `fireCD = 60` 的节奏）。
+    /// 源里 T1 那条**实际是空转**（额外球不判 Tier、追踪判定又是死代码），本工程按"本该有的样子"写对，
+    /// 追踪开关走弹幕的 `ai[2] = 1`（见 <see cref="SHPCPlasma"/>），冷却放玩家侧（见 <c>CalamityDemutationPlayer.SHPC.cs</c>）。
     /// </para>
     /// <para>
     /// **增幅**：照 <see cref="DefenseBlade"/> 的传奇进度表——石巨人 → 至尊灾厄共 18 档**加算**，
@@ -42,8 +51,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         private const int BeamUseTime = 7;
         /// <summary>左键（等离子球）的慢速倍率：照 2.0 的 `7.14`（7 × 7.14 ≈ 50 帧一发）</summary>
         private const float PlasmaSlowFactor = 7.14f;
-        /// <summary>每次出手打出的弹幕数量（照 2.0：两种招式各 3 发）</summary>
-        private const int ShotsPerUse = 3;
+        /// <summary>
+        /// 每次出手打出的弹幕数量：**5 发**（照 2.0 的 3 发，再按用户 2026-10-16 的口径把源版 CI 的 **T2 常态化**：两种招式都 +2）
+        /// </summary>
+        private const int ShotsPerUse = 5;
+        /// <summary>右键能量束附带的那颗追踪相位球的冷却（帧）：照源 CI 的 <c>fireCD = 60</c></summary>
+        private const int PhaseOrbCooldown = 60;
         /// <summary>
         /// 传奇武器增伤进度表：石巨人 → 至尊灾厄（主线 18 档）——**与 <see cref="DefenseBlade"/> 同一张表**。
         /// 每项为 (是否已击败, 当前固定增伤, 数值膨胀开关开启时的旧版固定增伤)：
@@ -138,8 +151,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
                 mult *= 0.3f;
         }
         /// <summary>
-        /// 出手（照 2.0，按键照原版不交换）：右键＝能量束 3 道、击退 ×0.5；
-        /// 左键＝等离子球 3 发扇形、球伤害 ×1.1。两处都返回 false（自己生成弹幕）。
+        /// 出手（照 2.0，按键照原版不交换）：右键＝能量束 5 道、击退 ×0.5（另每 60 帧附带一颗追踪相位球）；
+        /// 左键＝等离子球 5 发扇形、球伤害 ×1.1。两处都返回 false（自己生成弹幕）。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -151,6 +164,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
                     float speedX = velocity.X + Main.rand.Next(-20, 21) * 0.05f;
                     float speedY = velocity.Y + Main.rand.Next(-20, 21) * 0.05f;
                     Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<SHPCLaser>(), damage, knockback * 0.5f, player.whoAmI, 0f, 0f);
+                }
+                // T1 常态化：能量束每 60 帧额外补一颗"追踪相位球"（伤害与击退同本次射击的裸值，照源）
+                CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
+                if (modPlayer.shpcPhaseOrbCooldown <= 0)
+                {
+                    Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<SHPCPlasma>(), damage, knockback, player.whoAmI, 0f, 0f, 1f);
+                    modPlayer.shpcPhaseOrbCooldown = PhaseOrbCooldown;
                 }
                 return false;
             }

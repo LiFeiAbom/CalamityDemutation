@@ -1176,6 +1176,9 @@ namespace CalamityDemutation.Players
             wifeinaBottlewithBoobs = false;
             yharimsInsignia = false;
             yharimPower = false;
+            // SHPC：右键能量束附带的那颗追踪相位球的冷却（字段定义见 CalamityDemutationPlayer.SHPC.cs）
+            if (shpcPhaseOrbCooldown > 0)
+                shpcPhaseOrbCooldown--;
             UpdateMouseWorldSync();
         }
         /// <summary>

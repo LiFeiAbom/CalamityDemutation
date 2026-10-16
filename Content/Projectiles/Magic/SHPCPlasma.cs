@@ -1,4 +1,5 @@
 using System;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -16,6 +17,12 @@ namespace CalamityDemutation.Content.Projectiles.Magic
     /// **被追踪距离（250 像素）内出现可追敌时**启动 120 帧倒计时，倒计时走完自行引爆（照源，用于"贴脸命中即爆"的手感）。
     /// 死亡时播原版 <c>Item105</c> 并在主人端生成 <see cref="SHPCExplosion"/>，伤害与击退照抄本弹幕。
     /// </para>
+    /// <para>
+    /// **追踪分支（SHPC 右键每 60 帧附带的那颗"相位球"）**：由 <c>ai[2] == 1</c> 打开，每帧调
+    /// <see cref="CDUtil.HomeInOnNPC"/>（参数照源 CI：范围 1800 / 追踪速度 24 / 惯性 20）。
+    /// 源里这颗球的追踪判定是**死代码**（同一段 AI 开头把 <c>ai[0]</c> 覆盖成随机数了），本工程改用
+    /// <c>ai[2]</c> 这个源没碰过的槽位，不影响 <c>ai[0]/ai[1]</c> 原有的随机相位。
+    /// </para>
     /// </summary>
     internal class SHPCPlasma : ModProjectile
     {
@@ -25,6 +32,12 @@ namespace CalamityDemutation.Content.Projectiles.Magic
         private const float NearEnemyCheckDistance = 250f;
         /// <summary>4 帧动画（照源）</summary>
         public override void SetStaticDefaults() => Main.projFrames[Type] = 4;
+        /// <summary>追踪范围：照源 CI 那颗额外球的 <c>HomeInOnNPC(proj, true, 1800f, 24f, 20f)</c></summary>
+        private const float HomingRange = 1800f;
+        /// <summary>追踪速度（照源 24）</summary>
+        private const float HomingVelocity = 24f;
+        /// <summary>追踪惯性（照源 20，越大转向越柔和）</summary>
+        private const float HomingInertia = 20f;
         /// <summary>判定 24×24、穿透 1、寿命 300 帧、法师伤害、出场全透明（照源）</summary>
         public override void SetDefaults()
         {
@@ -92,6 +105,9 @@ namespace CalamityDemutation.Content.Projectiles.Magic
                 if (Projectile.localAI[1] <= 0f)
                     Projectile.Kill();
             }
+            // ai[2] == 1：追踪型相位球（SHPC 右键周期附带的那颗），每帧朝最近的敌人转向
+            if (Projectile.ai[2] == 1f)
+                CDUtil.HomeInOnNPC(Projectile, true, HomingRange, HomingVelocity, HomingInertia);
         }
         /// <summary>彩虹色（照源：R 255 / G 随 Disco 走动 / B 155）</summary>
         public override Color? GetAlpha(Color lightColor) => new Color(255, Main.DiscoG, 155, Projectile.alpha);
