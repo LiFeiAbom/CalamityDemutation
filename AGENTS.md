@@ -2929,6 +2929,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 > 这一节记安装形态、升级/回滚流程、以及升级后的已知差异；下次维护照做即可。
 > **2026-10-09 收工状态：CLI 与后台 app-server 守护进程都已手工升到 `0.162.0`，`0.161.0` 残留（约 752 MB）
 > 全部清空 —— 见 11.4，**已结**，无需再做。**
+> **补记：2026-10-10 又升到 `0.162.1`（当时没往这一节里写）；2026-10-16 升到 `0.163.0`，口径见 11.5。**
 
 ### 11.1 安装形态（先搞清"谁在管版本"）
 
@@ -3053,6 +3054,43 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 **为什么"等重启自动就好"不成立**：守护进程是脱离启动器的常驻进程（`ParentProcessId` 早已退出，它照旧活着），
 开机/启动 Codex 时它按 `current` 起；`current` 还指 0.161.0 就永远是 0.161.0，而它自更新又走 403 的联网通道。
 所以**必须**手工翻一次 `current`，之后每次开机才会是 0.162.0。（2026-10-09 已照此办完，开机就是 0.162.0 了。）
+
+### 11.5 升到 0.163.0（2026-10-16：0.162.1 → 0.163.0，standalone 与守护进程同步）
+
+- **上游**：`rust-v0.163.0`（GitHub `openai/codex`，2026-10-15T21:30Z 发布）。取证与下载一律提权 + 显式走本机代理
+  `127.0.0.1:7897`（沙箱注入的 `HTTP(S)_PROXY=127.0.0.1:9` 是死端口；提权后环境里代理变量为空，得自己带
+  `curl.exe -x` / `Invoke-RestMethod -Proxy`）。版本号的三个口径（GitHub releases API、npm 官方源、
+  `persistent.oaistatic.com/codex-app-prod/windows-store-update.json`）这次只用了第一个。
+- **补记 0.162.1（10-10 做过、本节原来缺）**：守护进程日志里有 10-10 09:25:39 的 `Switch succeeded: appServerVersion = 0.162.1`
+  与 `Removed old release: …0.162.0…`，当时用的是一份放在桌面暂存目录的 `finalize-daemon.ps1`（已随目录删掉）。
+- **本次落地七步**（比 11.2 多了一条完整性校验，其余同）：
+  ① `curl.exe -x http://127.0.0.1:7897 -L -o … codex-package-x86_64-pc-windows-msvc.tar.gz`（162,230,206 字节）；
+  ② 取官方 `codex-package_SHA256SUMS` 核 SHA256（本次 `901028b285614a9974f431f9d9f6534b3e5ed8d62eba4ba64f4762c00f040522` 一致）；
+  ③ `tar.exe -xzf` 解到 `%TEMP%\codex-update-0.163.0\extract`（45 个文件）；
+  ④ 核对 `codex-package.json` 的 `version` 并试跑 `bin\codex.exe --version`；
+  ⑤ 原样复制进 standalone 与 app-server-daemon 两棵树的 `releases\0.163.0-x86_64-pc-windows-msvc\`（两棵树的包同为 `variant:"codex"`，同一份就能用）；
+  ⑥ 翻 standalone 的 `current`（`[System.IO.Directory]::Delete($cur,$false)` + `New-Item -ItemType Junction`）；
+  ⑦ 守护进程交给 11.5 下面那个脚本。
+  ⚠️ **核 SHA256 时别用 `-match '…\.tar\.gz$'` 去筛 `SHA256SUMS` 的行**：`codex-app-server-package-x86_64-pc-windows-msvc.tar.gz`
+  那行同样匹配，`$sums[0]` 会取到它，于是明明一致却报"不一致"的假警报（本次踩过，重新精确匹配后确认一致）。
+- **`Tools\FinalizeCodexDaemonUpdate.ps1` 已改成通用脚本（本次重写）**：参数 `-NewVersion`（默认 `0.163.0`）、
+  `-DelaySeconds`、`-DryRun`、`-KeepOld`；**旧版目录不再写死**，由切换前的 `current` 联接自动解析（`Get-CurrentTarget`），
+  切换成功后删旧版、失败则翻回旧版重启。用法：先预铺包 → 跑 `-DryRun` 自检 → 再用分离进程正跑。
+  ⚠️ 仍是 **UTF-8 带 BOM + CRLF**（改完必须按 11.4 那条 `WriteAllLines` 重存；PS 5.1 对无 BOM 的中文脚本会静默不执行）。
+- **本机配置零改动**：把 0.162.1 与 0.163.0 两份 `codex-rs/core/config.schema.json`（从 jsDelivr 取，
+  `cdn.jsdelivr.net/gh/openai/codex@rust-v<版本>/…`）逐键比过——顶层属性 102 → 103，**只多一个
+  `include_environment_context_time`，没有任何键被移除**，`config.toml` 照用。
+- **本次实况**：standalone `current` → 0.163.0（PATH 上的 `codex --version` = `codex-cli 0.163.0`）；
+  守护进程 09:07:19 切完，`appServerVersion = 0.163.0`（新 PID 42344），`releases\0.162.1` 已删；
+  **standalone 树里的 `releases\0.162.1` 暂留作回滚位**（要删得先退出 Codex，运行中的会话会锁住其中的 `codex.exe`）。
+  分离进程做切割这次依旧没踢掉会话（客户端自己重连上新守护进程）。
+- **0.163.0 里值得上手的新东西**：`/config` 可跨分类搜索配置、能即时生效并标出哪些要重启；`/keymap` 配 leader key
+  （默认 `Ctrl+X`，快捷键提示会一直显示到你选中/取消，语音静音挪到 `F9`）；`/daemon` 里能直接重启后台服务
+  （先提示可能打断的工作，之后自动重连）；响应中发消息立即"转向"（打断会连带停掉 Code Mode 单元与其嵌套工具调用）；
+  `/side` 回到既有旁路会话；Windows 上 `Ctrl+V` / `Shift+Insert` 现在也粘贴文本（不再只认图片）；
+  只读工具并行执行；Daybreak 对符合条件的账号默认开启。另有两条迁移提示（改用标准 shell 执行器、不再内置打过补丁的
+  `zsh`；用旧 shell 标志的配置会收到迁移提示）与 Linux/macOS 包 strip 符号——本机 Windows 包都不受影响。
+  桌面 MSIX 应用仍是微软商店那条线，本次未动。
 
 ## 12. 巨龙之息（Dragon's Breath）—— CI 支线移植（2026-10-14）
 

@@ -1,27 +1,37 @@
 ﻿<#
 .SYNOPSIS
-    把本机 app-server 守护进程从 0.161.0 切到 0.162.0，并清掉 0.161.0 残留。
+    把本机 app-server 守护进程切到指定版本（默认 0.163.0），并清掉旧版残留。
 
 .DESCRIPTION
     守护进程（codex.exe -- app-server 模式）运行时会锁住自己的安装目录，
     `Remove-Item` 删不掉、`codex app-server daemon update` 又走联网通道（本机 403）。
     所以只能手工切：
-      停守护进程 -> 把 current 联接翻到已预铺的 0.162.0 包 -> 重启守护进程 ->
-      确认 appServerVersion 已是 0.162.0 后，删掉 releases\0.161.0-…；
-    任一步失败就翻回 0.161.0 并重启（自动回滚）。
+      停守护进程 -> 把 current 联接翻到已预铺的 <NewVersion> 包 -> 重启守护进程 ->
+      确认 appServerVersion 已是 <NewVersion> 后，删掉切换前的旧版目录；
+    任一步失败就翻回旧版目录并重启（自动回滚）。
+    旧版目录由切换前的 current 联接自动解析，不用手工填。
 
 .NOTES
     守护进程就是当前 Codex 会话的后端：停它会中断正在进行的会话。
     从 Codex 会话里拉起本脚本时，请用分离进程（Start-Process），
     这样调用方退出后脚本还能跑完。全过程写入
     ~/.codex/packages/app-server-daemon/finalize-update.log。
+
+    升级流程（照 AGENTS.md 第 11 节）：
+      a) 先把目标版本的包铺到 releases\<NewVersion>-x86_64-pc-windows-msvc\（standalone 那份原样复制即可）；
+      b) 跑 -DryRun 自检；
+      c) 用分离进程跑正式流程。
 #>
 [CmdletBinding()]
 param(
+    # 目标版本；包必须已经预铺在 releases\<NewVersion>-x86_64-pc-windows-msvc\。
+    [string]$NewVersion = '0.163.0',
     # 开跑前先等这么多秒，留给"拉起它的那一轮会话"把话说完/退出。
     [int]$DelaySeconds = 0,
     # 只检查环境并打印现状，不动守护进程（用于自检脚本本身能否跑起来）。
-    [switch]$DryRun
+    [switch]$DryRun,
+    # 切换成功后保留旧版本目录（默认删除）。
+    [switch]$KeepOld
 )
 
 $ErrorActionPreference = 'Continue'
@@ -29,8 +39,7 @@ $ErrorActionPreference = 'Continue'
 $daemonRoot = Join-Path $env:USERPROFILE '.codex\packages\app-server-daemon'
 $releases   = Join-Path $daemonRoot 'releases'
 $current    = Join-Path $daemonRoot 'current'
-$oldDir     = Join-Path $releases '0.161.0-x86_64-pc-windows-msvc'
-$newDir     = Join-Path $releases '0.162.0-x86_64-pc-windows-msvc'
+$newDir     = Join-Path $releases ($NewVersion + '-x86_64-pc-windows-msvc')
 $logPath    = Join-Path $daemonRoot 'finalize-update.log'
 $codexCli   = Join-Path $env:LOCALAPPDATA 'Programs\OpenAI\Codex\bin\codex.exe'
 
@@ -59,6 +68,13 @@ function Get-DaemonProcesses {
         Where-Object { $_.Path -like '*app-server-daemon*' })
 }
 
+function Get-CurrentTarget {
+    # Junction 的 Target 在 PS 5.1 里可能是数组，统一取第一个。
+    $t = (Get-Item -LiteralPath $current).Target
+    if ($t -is [array]) { $t = $t[0] }
+    return $t
+}
+
 function Set-CurrentLink([string]$Target) {
     # Junction 不能用 Remove-Item（PS 5.1 会抛 NullReferenceException）——
     # 用 .NET 的 Directory.Delete(path, recursive:false) 只摘联接、不碰目标。
@@ -69,20 +85,28 @@ function Set-CurrentLink([string]$Target) {
     Write-Log ("  current -> {0}" -f ((Get-Item -LiteralPath $current).Target -join ', '))
 }
 
+# 旧版目录 = 切换前 current 指向的那一份（用于删除与回滚）。
+$oldDir = Get-CurrentTarget
+
 Add-Content -LiteralPath $logPath -Value '' -Encoding UTF8
-Write-Log '=== finalize: app-server daemon 0.161.0 -> 0.162.0 ==='
+Write-Log ('=== finalize: app-server daemon {0} -> {1} ===' -f (Split-Path $oldDir -Leaf), $NewVersion)
 
 if (-not (Test-Path -LiteralPath $newDir)) {
-    Write-Log ("ABORT: 预铺的 0.162.0 包不存在：{0}" -f $newDir)
+    Write-Log ("ABORT: 预铺的 {0} 包不存在：{1}" -f $NewVersion, $newDir)
+    exit 2
+}
+
+if ($oldDir -eq $newDir) {
+    Write-Log ("ABORT: current 已经指向 {0}，无需切换。" -f $NewVersion)
     exit 2
 }
 
 if ($DryRun) {
     Write-Log 'DRY RUN：只报现状，不动守护进程。'
     Write-Log ("  运行中的 appServerVersion = {0}" -f (Get-AppServerVersion))
-    Write-Log ("  releases\0.161.0 存在 = {0}" -f (Test-Path -LiteralPath $oldDir))
-    Write-Log ("  releases\0.162.0 存在 = {0}" -f (Test-Path -LiteralPath $newDir))
-    Write-Log ("  current 指向 = {0}" -f ((Get-Item -LiteralPath $current).Target -join ', '))
+    Write-Log ("  旧版目录存在 = {0}（{1}）" -f (Test-Path -LiteralPath $oldDir), $oldDir)
+    Write-Log ("  新版目录存在 = {0}（{1}）" -f (Test-Path -LiteralPath $newDir), $newDir)
+    Write-Log ("  current 指向 = {0}" -f (Get-CurrentTarget))
     Write-Log 'DRY RUN 结束（未做任何更改）。'
     exit 0
 }
@@ -111,17 +135,19 @@ for ($i = 0; $i -lt 20; $i++) {
     if ($ver) { break }
 }
 
-if ($ver -eq '0.162.0') {
-    Write-Log '切换成功：appServerVersion = 0.162.0'
-    if (Test-Path -LiteralPath $oldDir) {
+if ($ver -eq $NewVersion) {
+    Write-Log ('切换成功：appServerVersion = {0}' -f $NewVersion)
+    if ($KeepOld) {
+        Write-Log ('-KeepOld 指定保留，未删除旧版目录：{0}' -f $oldDir)
+    } elseif (Test-Path -LiteralPath $oldDir) {
         Remove-Item -LiteralPath $oldDir -Recurse -Force
-        Write-Log ('已删除 0.161.0 残留：{0}' -f $oldDir)
+        Write-Log ('已删除旧版残留：{0}' -f $oldDir)
     } else {
-        Write-Log '0.161.0 目录已不在（无需删除）。'
+        Write-Log '旧版目录已不在（无需删除）。'
     }
     Write-Log 'DONE.'
 } else {
-    Write-Log ('切换失败（appServerVersion = {0}），回滚到 0.161.0…' -f $ver)
+    Write-Log ('切换失败（appServerVersion = {0}），回滚到 {1}…' -f $ver, (Split-Path $oldDir -Leaf))
     Invoke-DaemonCmd 'stop' | Out-Null
     Start-Sleep -Seconds 3
     if (Test-Path -LiteralPath $oldDir) {
@@ -129,6 +155,6 @@ if ($ver -eq '0.162.0') {
         Invoke-DaemonCmd 'start' | Out-Null
         Write-Log 'ROLLED BACK.'
     } else {
-        Write-Log '无法回滚：0.161.0 目录已不存在，请手工处理。'
+        Write-Log ('无法回滚：{0} 目录已不存在，请手工处理。' -f $oldDir)
     }
 }
