@@ -3225,6 +3225,9 @@ Projectiles: {
 	NanoPurgeHoldout.DisplayName: 纳米净化
 	PhasedGodRay.DisplayName: 相位神光
 	AetherfluxCannonHoldout.DisplayName: 以太流光炮
+	SHPCExplosion.DisplayName: SHPC 爆炸
+	SHPCLaser.DisplayName: SHPC 能量束
+	SHPCPlasma.DisplayName: SHPC 等离子球
 }
 
 TextContent: {

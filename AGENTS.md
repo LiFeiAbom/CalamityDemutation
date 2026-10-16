@@ -4155,13 +4155,14 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 | `Sounds\Item\LaserCannon.ogg` + 登记 | 拷自本体 2.0；登记为 `CalamityDemutationSounds.LaserCannon`（右键能量束的使用音） |
 | `NPCs\CalamityDemutationGlobalNPC.OnKill` | 三王各 `Main.rand.NextBool(100)`、**`Item.NewItem` 直接生成**（避开 `ModifyNPCLoot` 在大师模式进袋）；双子按"**两只都被击杀**"判一次（另一只还活着就不 roll）；带 `Main.netMode != NetmodeID.MultiplayerClient` 守卫 |
 | `Content\Items\CalamityDemutationGlobalItem.GetLegendaryWeaponColor` | 新增 SHPC → `Color(65, 105, 225)`（＝CI 的 `SHPCAqua` #4169E1） |
-| `Localization\{en-US,zh-Hans}_Mods.CalamityDemutation.hjson` | 新增 `Items.SHPC`：`DisplayName: SHPC` + 4 行 tooltip（传奇武器 / 左键球 / 右键束 / 随流程成长）。**插在 `Items` 段内 `SeraphTracers` 与 `ShieldoftheOcean` 之间**（字母序），改完已整回 CRLF、无 BOM |
+| `Localization\{en-US,zh-Hans}_Mods.CalamityDemutation.hjson` | 新增 `Items.SHPC`：`DisplayName: SHPC` + 4 行 tooltip（传奇武器 / 左键球 / 右键束 / 随流程成长）。**插在 `Items` 段内 `SeraphTracers` 与 `ShieldoftheOcean` 之间**（字母序），改完已整回 CRLF、无 BOM。另：`dotnet build` 会**自动往 `Projectiles` 段尾补三条弹幕显示名**（并把缩写拆成 `S H P C`），已改成规范名 `SHPC Plasma / SHPC Laser / SHPC Explosion`（zh-Hans 对应「SHPC 等离子球 / SHPC 能量束 / SHPC 爆炸」，自动补的那三条在 zh-Hans 里是 `//` 注释占位，需手填） |
 
 **两处踩到的坑（照做即可）**：① `CalamityDemutationGlobalNPC.cs` 要补 `using CalamityDemutation.Content.Items.Weapons.Magic;`
 （否则 `SHPC` 找不到）；② `SHPCLaser.cs` 要补 `using CalamityDemutation.Utilities;`（`DrawBeam` 是那边的扩展方法）。
-③ 用户给的贴图是 **98×34**（不是 2.0 的 124×52），故 `Item.width/height` 按该图取，`HoldoutOffset` 先按**经典世系口径** `(-25, 0)`；
-随后用户 2026-10-16 又要求"贴图整体向右移动 10 个点"，按本工程既有口径（**`HoldoutOffset().X` 就是贴图原点 X、越小越往右**，
-见弩炮 / 暗回声巨弓 / 天堂之风三件）改成 **`(-35, 0)`**——**别照抄 2.0 的 `(-35, -10)`**（那个 Y 是配 124×52 大枪身的）。
+③ 用户给的贴图是 **98×34**（不是 2.0 的 124×52），故 `Item.width/height` 按该图取；
+`HoldoutOffset` 源口径是经典世系的 `(-25, 0)`，**末次由用户 2026-10-16 点名定为 `(-15, 0)`**
+（期间先要"贴图整体右移 10 点"、给过 -35，随即改口定 -15 ⇒ **本件以用户点名为准**，
+别再照"越小越往右"那套外推；**也别照抄 2.0 的 `(-35, -10)`**，那个 Y 是配 124×52 大枪身的）。
 换贴图时记得同步这三处。
 
 ### 20.2 CI 三阶线的取舍（用户 2026-10-16 拍板，已落地）
@@ -4185,5 +4186,6 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 物品本体与 T1/T2 常态化先后各验过一轮：`dotnet build -v q -nologo` = **0 警告 0 错误**；
 `CheckResources` **207 条**显式引用全命中；`CheckImplicitTextures` **500 个类**全命中（含本件 4 个新类）。
 随后的小改也都 0/0：**`72467b6`** 修掉等离子球"贴脸自爆倒计时缺初值"（源是实例字段 `explosionTimer = 120`，
-我改用 `localAI[1]` 时漏了初值 ⇒ 敌人一进 250 像素就立刻爆炸）；**弹速 20 → 30、持枪偏移 `(-25, 0)` → `(-35, 0)`**。
+我改用 `localAI[1]` 时漏了初值 ⇒ 敌人一进 250 像素就立刻爆炸）；**弹速 20 → 30**（`caa734c`）、
+**持枪偏移 `(-25, 0)` → `(-15, 0)`**（用户随后改口）+ 三条弹幕显示名的中英补齐（见 §20.1）。
 另：根目录的 `Devil's_Devastation.png`（破灭魔王剑那张副本）已于同日按用户指示删除；其同名贴图改动仍在工作区未提交。

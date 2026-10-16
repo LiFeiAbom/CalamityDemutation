@@ -3226,6 +3226,9 @@ Projectiles: {
 	NanoPurgeHoldout.DisplayName: Nano Purge
 	PhasedGodRay.DisplayName: Phased God Ray
 	AetherfluxCannonHoldout.DisplayName: Aetherflux Cannon
+	SHPCExplosion.DisplayName: SHPC Explosion
+	SHPCLaser.DisplayName: SHPC Laser
+	SHPCPlasma.DisplayName: SHPC Plasma
 }
 
 TextContent: {

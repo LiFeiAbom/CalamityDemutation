@@ -128,13 +128,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 17;   // 月后自定义稀有度 17 档（传奇）
         }
         /// <summary>
-        /// 持握偏移（用户 2026-10-16 指定"贴图整体向右移动 10 个点"）：
-        /// tML 里 <c>HoldoutOffset().X</c> **直接就是贴图原点 X**（不是增量；模组物品的默认值是 **10**），
-        /// **原点越小、贴图越往右**（与弩炮 / 暗回声巨弓 / 天堂之风 三件同一口径）。
-        /// 本件源口径为经典世系的 <c>(-25, 0)</c>（配 98×34 的小枪身），右移 10 点后取 <c>-35</c>。
+        /// 持握偏移：<c>HoldoutOffset().X</c> 直接就是贴图原点 X（不是增量；模组物品的默认值是 **10**）。
+        /// 本件源口径为经典世系的 <c>(-25, 0)</c>（配 98×34 的小枪身，2.0 的 <c>(-35, -10)</c> 是配 124×52 大枪身），
+        /// 末次调整由用户 2026-10-16 点名取 **-15**（先要"右移 10 点"、给过 -35，随即改口定 -15——以用户点名为准）。
         /// 若日后觉得还不够或过头，**改这一个数就行**。
         /// </summary>
-        public override Vector2? HoldoutOffset() => new Vector2(-35, 0);
+        public override Vector2? HoldoutOffset() => new Vector2(-15, 0);
         /// <summary>右键可用（右键是独立的能量束招式）</summary>
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>
