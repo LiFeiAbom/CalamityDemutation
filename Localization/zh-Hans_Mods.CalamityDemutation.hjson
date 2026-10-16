@@ -2119,6 +2119,17 @@ Items: {
 			'''
 	}
 
+	SHPC: {
+		DisplayName: SHPC
+		Tooltip:
+			'''
+			传奇武器
+			左键发射会停留、随后引发巨大爆炸的等离子球
+			右键发射强大的能量束
+			随流程成长，击败特定 Boss 后可获得额外伤害加成
+			'''
+	}
+
 	ShieldoftheOcean: {
 		DisplayName: 海之盾
 		Tooltip: 浸没在液体中时防御提高 5

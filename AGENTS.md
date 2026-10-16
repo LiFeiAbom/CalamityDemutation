@@ -279,6 +279,7 @@
 2026-10-15 追加 弩炮 / 发条弓 / 烈风 / 行星湮灭 / 星穹悲愿 / 潮涌（天堂之风链批 4 六把 T1 **全齐**，
 见 §15.12 ~ §15.17）；
 2026-10-15 追加 纳米净化 + 以太流光炮（法师链「以太流光炮」，见 §18.6 / §18.8））
+2026-10-16 追加 SHPC（传奇法师枪械，见 §20：面板 117 为**单一基准**、不设膨胀面板，膨胀开关只作用于传奇增量列）
 
 用户逐把点名「关态 → 开态」的数值，武器侧统一按下面的模板落地。**新会话若要继续，直接照此模板加即可。**
 
@@ -4119,3 +4120,65 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 `CheckResources` **204 条**素材引用全命中；`CheckImplicitTextures` **496 个类**全命中。
 ⚠️ 工作区里另有**用户自己的**两笔未提交内容（本会话全程未触碰，别当成自己的改动去提交或清理）：
 `Content/Items/Weapons/Melee/DevilsDevastation.png`（已修改）与根目录未跟踪的 `Devil's_Devastation.png`。
+
+## 20. SHPC —— 传奇法师枪械（2026-10-16 落地）
+
+**三支不同的"SHPC"（先分清再谈移植）**：
+
+| 来源 | 类 | 形态 |
+|---|---|---|
+| 本体 1.3~2.0.4 | `Items\Weapons\Magic\SHPC` | 老式"等离子球 + 能量束"，**合成件**（等离子驱动核心×1 + 可疑碎片×4 + 任意秘银锭×10 @秘银砧） |
+| 本体 1.4.4-release（＝实装 2.2.2）/ 2.1 | `SHPC : LegendaryItem` | 大重做：**魂当弹药 + 右键真空吸魂**（`SHPB/SHPV/SHPS/SHPExplosion` + 三段真空音效），仍是**合成件**（上面三味 + 三王魂各 5） |
+| CI `CalamityInheritance-Beta1.12` | `Content\Items\Weapons\Legendary\DestroyerLegendary`（显示名 `SHPC[Legendary]`） | 老式手感 + **传奇成长与 T1/T2/T3**，**掉落件** |
+
+**用户口径（2026-10-16 逐条拍板，已全部落地）**：面板 **117**；出手模板取本体 **2.0 / 2.0.3.9** 线；
+稀有度走月后自定义 **17 档（传奇）**；价值 **36 金**；名字中英同为 `SHPC`；音效照 2.0；
+**去掉合成配方**，改为**机械三王（双子魔眼 / 毁灭者 / 机械统帅）各自 1% 直接击杀掉落、不走宝藏袋**；
+增幅照 `DefenseBlade` 那套传奇加算表；**左右键与源版一致、不交换**（用户中途改口，已按"不交换"落地）。
+
+**掉落事实（与用户口径的出入，存档备查）**：CI 只挂在 `NPCID.TheDestroyer` 且**没写概率（＝必掉）**，
+源码注释「三个机械boss都会掉，有意为之的」与代码不符；本体**任何版本都没有"1% × 三王直接掉"**——
+1.3~2.2.2 全是合成件，classic `cal-1.4.2.101` 是**毁灭者宝藏袋 1%**（复仇模式），
+classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件的掉落规则是**新口径**，不是照抄某一版。
+
+### 20.1 落地清单
+
+| 文件 | 内容 |
+|---|---|
+| `Content\Items\Weapons\Magic\SHPC.cs` | 物品本体：**98×34**（用户提供的贴图，见下）、面板 117、魔力 20、`useTime = useAnimation = 7`、击退 3.25、弹速 20、`AltFunctionUse`、`ItemsThatAllowRepeatedRightClick`、`postMoonLordRarity = 17`、价值 36 金、**无配方** |
+| `Content\Projectiles\Magic\SHPCPlasma.cs` | 等离子球（源 2.0 `SHPB`）：4 帧、淡入、0.8↔1.2 缩放脉动、速度 ×0.985、**250 像素内有可追敌时启动 120 帧倒计时自爆**；死亡播 `Item105` 并在主人端生成爆炸 |
+| `Content\Projectiles\Magic\SHPCExplosion.cs` | 爆炸（源 2.0 `SHPExplosion`）：500×500、穿透 -1、60 帧、每目标 10 帧本地无敌、喷 246/73/187 三色尘（本体隐形，走共用 `InvisibleProj`） |
+| `Content\Projectiles\Magic\SHPCLaser.cs` | 能量束（源 2.0 `SHPL`）：5×5、`extraUpdates = 3`、`DrawBeam(100, 3)` 拉光束条（走共用 `LaserProj`）、消散撒三色尘 |
+| `Content\Projectiles\Magic\SHPCPlasma.png` | 拷自本体 2.0 `Projectiles/Magic/SHPB.png`（50×192，4 帧） |
+| `Content\Items\Weapons\Magic\SHPC.png` | **用户提供的 98×34 老版图**（源文件 `SHPC_(1.1.7.701).png`，即经典世系那张；原件已并入本路径并删除） |
+| `Sounds\Item\LaserCannon.ogg` + 登记 | 拷自本体 2.0；登记为 `CalamityDemutationSounds.LaserCannon`（右键能量束的使用音） |
+| `NPCs\CalamityDemutationGlobalNPC.OnKill` | 三王各 `Main.rand.NextBool(100)`、**`Item.NewItem` 直接生成**（避开 `ModifyNPCLoot` 在大师模式进袋）；双子按"**两只都被击杀**"判一次（另一只还活着就不 roll）；带 `Main.netMode != NetmodeID.MultiplayerClient` 守卫 |
+| `Content\Items\CalamityDemutationGlobalItem.GetLegendaryWeaponColor` | 新增 SHPC → `Color(65, 105, 225)`（＝CI 的 `SHPCAqua` #4169E1） |
+| `Localization\{en-US,zh-Hans}_Mods.CalamityDemutation.hjson` | 新增 `Items.SHPC`：`DisplayName: SHPC` + 4 行 tooltip（传奇武器 / 左键球 / 右键束 / 随流程成长）。**插在 `Items` 段内 `SeraphTracers` 与 `ShieldoftheOcean` 之间**（字母序），改完已整回 CRLF、无 BOM |
+
+**两处踩到的坑（照做即可）**：① `CalamityDemutationGlobalNPC.cs` 要补 `using CalamityDemutation.Content.Items.Weapons.Magic;`
+（否则 `SHPC` 找不到）；② `SHPCLaser.cs` 要补 `using CalamityDemutation.Utilities;`（`DrawBeam` 是那边的扩展方法）。
+③ 用户给的贴图是 **98×34**（不是 2.0 的 124×52），故 `Item.width/height` 与 `HoldoutOffset` 都按**经典世系口径**取 `(-25, 0)`，
+**不能照抄 2.0 的 `(-35, -10)`**；换贴图时记得同步这三处。
+
+### 20.2 未决：T1/T2/T3（等用户点选，先别动手）
+
+CI 的三阶升级线（原文与实况都查清了，见下），用户看过内容后尚未点选要哪几条：
+
+- **T1 微光湖强化**：把 SHPC 丢进微光湖 → 得到独立消耗品「SHPC[Legendary]强化物品」，使用后置 `Tier1` 并**返还一把 SHPC**（只能一次）。
+  效果原文「发射能量束时会发射一颗准许追踪的相位激光球」。⚠️ **CI 里这条是空转**：那颗额外球的发射**不判 Tier**
+  （只要 `fireCD == 0` 就发、60 帧冷却），且它的追踪判定 `if (ai[0] == 1f) HomeInOnNPC(...)` 是**死代码**
+  （同一段 AI 开头已把 `ai[0]` 覆盖成随机数）。要搬就得我们自己写对（补门控 + 真追踪）。
+- **T2 葡萄汁**：月总在场（`MoonLordHead` 3200 像素内）时喝原版 `ItemID.GrapeJuice` 且背包有 SHPC → 两种招式 3 → **5 发**。
+  **这条在 CI 里真生效**，且零外部依赖，最好搬。
+- **T3 魔力上限**：已吃过灾厄的**彗星碎片 `CometShard`（`cShard`）**与**永恒核心 `EtherealCore`（`eCore`）**后，
+  使用灾厄的**死灵质信标 `NecroplasmicBeacon`** → 效果原文「武器不再消耗任何魔力」，**实况只把右键蓝耗改成 `×0.01`**（左键照旧 20）。
+  依赖灾厄玩家标记（软依赖下要么反射、要么自记消费），成本最高。
+
+CI 三个标记**是存档的**（`CILegendaryTask.LegendarySaveData` 的 `DestroyerTier1/2/3`）；将来落地要放我们自己的 ModPlayer（§5 老规矩）。
+
+### 20.3 验证与状态（2026-10-16）
+
+`dotnet build -v q -nologo` = **0 警告 0 错误**；`CheckResources` **207 条**显式引用全命中；
+`CheckImplicitTextures` **500 个类**全命中（含本件 4 个新类）。
+另：根目录的 `Devil's_Devastation.png`（破灭魔王剑那张副本）已于同日按用户指示删除；其同名贴图改动仍在工作区未提交。

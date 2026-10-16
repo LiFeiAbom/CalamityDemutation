@@ -28,6 +28,8 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle CrystylCharge = new("CalamityDemutation/Sounds/Item/CrystylCharge");
         /// <summary>特斯拉炮开火（TeslaCannonFire）：棱镜魔力阵生成时播放（灾厄原为 TeslaCannon.FireSound）</summary>
         public static readonly SoundStyle TeslaCannonFire = new("CalamityDemutation/Sounds/Item/TeslaCannonFire");
+        /// <summary>激光炮开火（LaserCannon）：SHPC 右键能量束的使用音（音效文件取自灾厄 2.0 的 Sounds/Item/LaserCannon）</summary>
+        public static readonly SoundStyle LaserCannon = new("CalamityDemutation/Sounds/Item/LaserCannon");
         /// <summary>永世之刃冲刺撞击（ExobladeDashImpact）：元素王者激光命中时播放（灾厄原为 PrismaticRay.HitSound）</summary>
         public static readonly SoundStyle ExobladeDashImpact = new("CalamityDemutation/Sounds/Item/ExobladeDashImpact") { Volume = 0.8f };
         /// <summary>泰拉巨刃挥砍（TerratomereSwing）：TerratomereHoldout 挥砍到发射点时播放（灾厄原为 Terratomere.SwingSound）</summary>

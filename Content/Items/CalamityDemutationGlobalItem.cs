@@ -3,6 +3,7 @@ using CalamityDemutation.Content.Buffs.PositiveBuffs;
 using CalamityDemutation.Content.Items.Accessories.Attack;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Weapons.Melee;
+using CalamityDemutation.Content.Items.Weapons.Magic;
 using CalamityDemutation.Content.Items.Weapons.Ranged;
 using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Content.Items.Accessories.Defense;
@@ -864,6 +865,9 @@ namespace CalamityDemutation.Content.Items
         {
             if (itemType == ModContent.ItemType<DefenseBlade>())
                 return new Color(255, Main.DiscoG, 53);
+            // SHPC：CI 那边这件传奇用的 SHPCAqua #4169E1（用户 2026-10-16 选定沿用）
+            if (itemType == ModContent.ItemType<SHPC>())
+                return new Color(65, 105, 225);
             return default;
         }
         /// <summary>

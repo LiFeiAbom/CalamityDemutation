@@ -2118,6 +2118,17 @@ Items: {
 			'''
 	}
 
+	SHPC: {
+		DisplayName: SHPC
+		Tooltip:
+			'''
+			Legendary Weapon
+			Left click to fire plasma orbs that linger before erupting into massive explosions
+			Right click to fire powerful energy beams
+			Scales through progression gaining additive damage boosts after defeating certain bosses
+			'''
+	}
+
 	ShieldoftheOcean: {
 		DisplayName: Shield of the Ocean
 		Tooltip: Increased defense by 5 when submerged in liquid

@@ -11,6 +11,7 @@ using CalamityDemutation.Content.Items.Accessories.Movement;
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Items.Consumables;
 using CalamityDemutation.Content.Items.Weapons.Melee;
+using CalamityDemutation.Content.Items.Weapons.Magic;
 using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
@@ -430,6 +431,21 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public override void OnKill(NPC npc)
         {
+            // ===== SHPC：机械三王各 1% 的直接击杀掉落（用户 2026-10-16 定）=====
+            // 口径：**不走宝藏袋**（大师/专家也走世界掉落），故挂在这里用 Item.NewItem 直接生成，
+            // 而不是 ModifyNPCLoot（那条路在大师模式下进袋）。
+            // 双子魔眼按"两只都被击杀"判一次：任一先死时不判，等另一只也倒下才 roll（与源版"只判毁灭者"不同，用户点名三王都要掉）。
+            if (npc.type == NPCID.Retinazer || npc.type == NPCID.Spazmatism || npc.type == NPCID.TheDestroyer || npc.type == NPCID.SkeletronPrime)
+            {
+                bool isFinalTwin = true;
+                if (npc.type == NPCID.Retinazer && NPC.AnyNPCs(NPCID.Spazmatism))
+                    isFinalTwin = false;
+                if (npc.type == NPCID.Spazmatism && NPC.AnyNPCs(NPCID.Retinazer))
+                    isFinalTwin = false;
+                // 客户端不生成（敌怪死亡由服务端结算并同步掉落物），避免联机下刷出"幽灵掉落"
+                if (isFinalTwin && Main.netMode != NetmodeID.MultiplayerClient && Main.rand.NextBool(100))
+                    Item.NewItem(npc.GetSource_FromThis(), (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<SHPC>(), 1, false, 0, false, false);
+            }
             if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].GetModPlayer<CalamityDemutationPlayer>().tarraSet)
             {
                 if (!npc.SpawnedFromStatue && (npc.damage > 5 || npc.boss) && npc.lifeMax > 100 && Main.rand.NextBool(5))
