@@ -353,7 +353,7 @@ namespace CalamityDemutation.Content.Items
                     14 => new Color(43, 96, 222),      // 14：蓝
                     15 => new Color(108, 45, 199),     // 15：紫
                     16 => new Color(255, 0, 255),      // 16：品红
-                    17 => GetLegendaryWeaponColor(item.type), // 17：传奇武器（按具体武器给专属色）
+                    17 => GetLegendaryWeaponColor(item.type), // 17：传奇武器（本模组的传奇件共用同一名称色）
                     18 => new Color(Main.DiscoR, 100, 255), // 18：闪烁紫
                     19 => new Color(0, 0, 255),        // 19：纯蓝
                     20 => new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB), // 20：彩虹闪烁
@@ -859,15 +859,13 @@ namespace CalamityDemutation.Content.Items
         }
         // ── 私有工具 ──
         /// <summary>
-        /// 17 级传奇武器名称颜色：按具体武器返回其专属颜色（本模组自有的传奇武器）。
+        /// 17 级传奇武器的名称颜色：本模组的传奇件**共用同一色**（R 固定 255、G 随彩虹走、B 53）。
+        /// 用户 2026-10-16 定：SHPC 与庇护之刃维持同一稀有度色（SHPC 原先登记的 CI `SHPCAqua` #4169E1 已作废）。
         /// </summary>
         private static Color GetLegendaryWeaponColor(int itemType)
         {
-            if (itemType == ModContent.ItemType<DefenseBlade>())
+            if (itemType == ModContent.ItemType<DefenseBlade>() || itemType == ModContent.ItemType<SHPC>())
                 return new Color(255, Main.DiscoG, 53);
-            // SHPC：CI 那边这件传奇用的 SHPCAqua #4169E1（用户 2026-10-16 选定沿用）
-            if (itemType == ModContent.ItemType<SHPC>())
-                return new Color(65, 105, 225);
             return default;
         }
         /// <summary>
