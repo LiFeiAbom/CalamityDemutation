@@ -48,6 +48,9 @@ namespace CalamityDemutation.Content.Projectiles.Magic
             Projectile.penetrate = 1;
             Projectile.timeLeft = 300;
             Projectile.DamageType = DamageClass.Magic;
+            // 邻近有可追敌时的引爆倒计时**初值**：源用类的实例字段 `explosionTimer = 120`，
+            // 本工程改用 localAI[1]（弹幕实例字段），必须在这里给初值——否则默认 0，敌人一进 250 像素就立刻爆炸。
+            Projectile.localAI[1] = NearEnemyExplosionDelay;
         }
         /// <summary>淡入、帧循环、缩放脉动、减速停滞、邻敌倒计时（照源，一行不动）</summary>
         public override void AI()
