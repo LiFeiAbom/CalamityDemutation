@@ -4240,8 +4240,9 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
    **`1.png`（工程根目录，26×30，2× 颗粒＝美术格 13×15）**，口径是：**底座＝烈火手套原本的灰阶（一色不改）、火焰＝甲虫系紫（用提饱和那档，
    低饱和本色像灰烟已否决）、不加镶嵌、也不加任何多余底座**（我最初为镶石加的"袖口"被用户点名删掉："烈火手套没有那个玩意儿"）。
    落地清单照例：贴图进 `Content/`（按物品类名改名）+ 物品类 + 中英本地化 + 构建与两道自检 + 提交；可选加一层 Glow 发光层。
-   参考素材（**未跟踪**，都在工程根目录）：`Fire_Gauntlet.webp`（wiki 的 2× 图，真身 13×15）、`BeetleEnchant.png`（Fargo's Souls 甲虫魔石，真身 15×17）；
-   构图脚本留在 `%TEMP%\compose_*.py`（可重出全部草案）。
+  ⚠️ **封装时 `1.png` 与 `BeetleEnchant.png` 已不在工作区**（用户自行移走/删除；只剩 `Fire_Gauntlet.webp` 还在工程根目录）。
+  好在 **`1.png` 可完全复现**：口径＝把 `Fire_Gauntlet.webp` 缩半取 13×15 真身 → 火焰按"**提饱和甲虫紫**"那套映射、
+  其余（钢件）**原色不动** → `resize(NEAREST)` ×2 出 **26×30**；构图脚本仍在 `%TEMP%\compose_*.py`（可重出全部草案）。需要恢复随时说。
 2. **SHPC 待进游戏实测**：① T1/T2 常态化（5 发 + 每 60 帧追踪球）是否保留——用户说过"实测后再定去留"；
    ② 弹速 30 / 持枪偏移 -15 的手感与观感；③ 17 档传奇的紫色名称条对不对味。
    可调点都是单行常量：`ShotsPerUse` / `PhaseOrbCooldown`（SHPC.cs）、`HomingRange/Velocity/Inertia`（SHPCPlasma.cs）。
@@ -4255,4 +4256,4 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 最后一次验证：`dotnet build` **0 警告 0 错误**；`CheckResources` **207 条**素材引用全命中；`CheckImplicitTextures` **499 个类**全命中
 （删掉 `MoonPact.cs` 里那个物品类后从 500 降到 499）。
 ⚠️ 工作区里另有**用户自己的**内容（本会话未触碰）：`Content/Items/Weapons/Melee/DevilsDevastation.png`（已修改，未提交）
-与三张未跟踪图片 `1.png` / `BeetleEnchant.png` / `Fire_Gauntlet.webp`（都是新手套那件事的素材，见 §21.3）。
+与未跟踪图片 `Fire_Gauntlet.webp`（新手套那件事的素材，见 §21.3；原先还有的 `1.png` / `BeetleEnchant.png` 随后被用户移走）。
