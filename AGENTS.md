@@ -43,7 +43,7 @@
 | 魔影锭 | 灾厄 `ShadowspecBar` | |
 | 嘉登熔炉 | `DraedonsForge`（两版都有） | 经典版常用站台 |
 | 宇宙砧 | `CosmicAnvil`（现代版） | |
-| 月后稀有度 | `Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = N` | 12~22 档；12 青绿 / 13 荧光绿 / 14 蓝(=CI DeepBlue) / 15 紫(=CE AbyssalBlue) / **16 品红(=灾厄 HotPink，即"魔影档")** / 17 传奇 / 18 闪烁紫 / 19 纯蓝 / 20 彩虹 / 21 暗红 / 22 橙；基础稀有度统一填 `ItemRarityID.Red` |
+| 月后稀有度 | `Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = N` | 12~22 档；12 青绿 / 13 荧光绿 / 14 蓝(=CI DeepBlue) / 15 紫(=CE AbyssalBlue) / **16 品红(=灾厄 HotPink，即"魔影档")** / 17 传奇 / 18 闪烁紫 / 19 纯蓝 / 20 彩虹 / 21 暗红 / 22 橙；基础稀有度统一填 `ItemRarityID.Red`。**整表色值照经典版 `cal-1.4.2.101` 的 `CalamityGlobalItem.ModifyTooltips` switch**（12/13/14/15/16/18~22 逐个对得上），**其中 17 档是"传奇武器、按件取色"**（色表见 §20.1） |
 | 价值 | 照源写；同档参考：16 档的 `Nemesis` = 3 铂金 20 金 | |
 | 双版本配方 | `ModLoader.TryGetMod("CalamityMod"/"CalamityModClassicPreTrailer")` 各注册一条 | 材料/站台按各自版本取 |
 | 冰核 | 现代 `EssenceofEleum` / 经典·旧版 `CoreofEleum` | 同一个件改名（同日光精华那对 `EssenceofCinder`→`EssenceofSunlight`）；写配方时按版本 TryFind |
@@ -4154,7 +4154,7 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 | `Content\Items\Weapons\Magic\SHPC.png` | **用户提供的 98×34 老版图**（源文件 `SHPC_(1.1.7.701).png`，即经典世系那张；原件已并入本路径并删除） |
 | `Sounds\Item\LaserCannon.ogg` + 登记 | 拷自本体 2.0；登记为 `CalamityDemutationSounds.LaserCannon`（右键能量束的使用音） |
 | `NPCs\CalamityDemutationGlobalNPC.OnKill` | 三王各 `Main.rand.NextBool(100)`、**`Item.NewItem` 直接生成**（避开 `ModifyNPCLoot` 在大师模式进袋）；双子按"**两只都被击杀**"判一次（另一只还活着就不 roll）；带 `Main.netMode != NetmodeID.MultiplayerClient` 守卫 |
-| `Content\Items\CalamityDemutationGlobalItem.GetLegendaryWeaponColor` | SHPC 与 `DefenseBlade` **共用同一传奇名称色** `Color(255, Main.DiscoG, 53)`（用户 2026-10-16 修正稀有度：原先给 SHPC 登记的 CI `SHPCAqua` #4169E1 已作废）。两件的基础稀有度都走 §3 口径（`postMoonLordRarity != 0` 时 GlobalItem 统一改写成红档），所以"同一稀有度"的可见部分就是这条名称色 |
+| `Content\Items\CalamityDemutationGlobalItem.GetLegendaryWeaponColor` | 17 档传奇**按件取色**，色值照 `cal-1.4.2.101` 的 `case 17: //Legendary Weapons`：`DefenseBlade`（源 `AegisBlade`）`(255, DiscoG, 53)`、**`SHPC` `(255, DiscoG, 155)`**（＝它弹幕一直用的那个"SHPC 色"）。两件同属 17 档、基础稀有度由 GlobalItem 统一改写成红档 ⇒ 用户 2026-10-16 说的"同一稀有度"＝**同档**，**颜色各按源表**（复核 1.4.2 后确认；原先给 SHPC 登记的 CI `SHPCAqua` #4169E1 作废）。源表另几件（Malachite / YharimsCrystal / BrinyBaron / CosmicDischarge / BlossomFlux / Vesuvius）已记在方法注释里备查 |
 | `Localization\{en-US,zh-Hans}_Mods.CalamityDemutation.hjson` | 新增 `Items.SHPC`：`DisplayName: SHPC` + 4 行 tooltip（传奇武器 / 左键球 / 右键束 / 随流程成长）。**插在 `Items` 段内 `SeraphTracers` 与 `ShieldoftheOcean` 之间**（字母序），改完已整回 CRLF、无 BOM。另：`dotnet build` 会**自动往 `Projectiles` 段尾补三条弹幕显示名**（并把缩写拆成 `S H P C`），已改成规范名 `SHPC Plasma / SHPC Laser / SHPC Explosion`（zh-Hans 对应「SHPC 等离子球 / SHPC 能量束 / SHPC 爆炸」，自动补的那三条在 zh-Hans 里是 `//` 注释占位，需手填） |
 
 **两处踩到的坑（照做即可）**：① `CalamityDemutationGlobalNPC.cs` 要补 `using CalamityDemutation.Content.Items.Weapons.Magic;`
@@ -4188,5 +4188,6 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 随后的小改也都 0/0：**`72467b6`** 修掉等离子球"贴脸自爆倒计时缺初值"（源是实例字段 `explosionTimer = 120`，
 我改用 `localAI[1]` 时漏了初值 ⇒ 敌人一进 250 像素就立刻爆炸）；**弹速 20 → 30**（`caa734c`）、
 **持枪偏移 `(-25, 0)` → `(-15, 0)`**（用户随后改口）+ 三条弹幕显示名的中英补齐（见 §20.1）。
-末次一条：用户 2026-10-16 要求"修正稀有度、和庇护之刃维持一个稀有度"⇒ 两件传奇件改为**共用同一名称色**（见 §20.1 的 GlobalItem 行）。
+末次一条：用户 2026-10-16 要求"修正稀有度、和庇护之刃维持一个稀有度"，随后点名**以 1.4.2 那套为准**复核 ⇒
+两件同属 **17 档传奇**，名称色按 `cal-1.4.2.101` 的 `case 17` **按件取色**（庇护之刃 `(255, DiscoG, 53)`、SHPC `(255, DiscoG, 155)`，见 §20.1）。
 另：根目录的 `Devil's_Devastation.png`（破灭魔王剑那张副本）已于同日按用户指示删除；其同名贴图改动仍在工作区未提交。

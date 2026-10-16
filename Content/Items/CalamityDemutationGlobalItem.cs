@@ -353,7 +353,7 @@ namespace CalamityDemutation.Content.Items
                     14 => new Color(43, 96, 222),      // 14：蓝
                     15 => new Color(108, 45, 199),     // 15：紫
                     16 => new Color(255, 0, 255),      // 16：品红
-                    17 => GetLegendaryWeaponColor(item.type), // 17：传奇武器（本模组的传奇件共用同一名称色）
+                    17 => GetLegendaryWeaponColor(item.type), // 17：传奇武器（按件取色，色表照 cal-1.4.2.101 的 case 17）
                     18 => new Color(Main.DiscoR, 100, 255), // 18：闪烁紫
                     19 => new Color(0, 0, 255),        // 19：纯蓝
                     20 => new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB), // 20：彩虹闪烁
@@ -859,13 +859,21 @@ namespace CalamityDemutation.Content.Items
         }
         // ── 私有工具 ──
         /// <summary>
-        /// 17 级传奇武器的名称颜色：本模组的传奇件**共用同一色**（R 固定 255、G 随彩虹走、B 53）。
-        /// 用户 2026-10-16 定：SHPC 与庇护之刃维持同一稀有度色（SHPC 原先登记的 CI `SHPCAqua` #4169E1 已作废）。
+        /// 17 级传奇武器的名称颜色：**按件取色**，色值照经典版 `cal-1.4.2.101` 的
+        /// `CalamityGlobalItem.ModifyTooltips` 里 <c>case 17: //Legendary Weapons</c> 那一段
+        /// （本工程 12~22 档稀有度整表就是从那一版移植的；用户 2026-10-16 复核后确认"同一档 ≠ 同一色"）。
+        /// 源表里的另几件（日后移植时照抄）：Malachite `(DiscoR, 203, 103)`、YharimsCrystal `(255, DiscoG, 53)`、
+        /// BrinyBaron `(53, DiscoG, 255)`、CosmicDischarge `(150, DiscoG, 255)`、
+        /// BlossomFlux `(DiscoR, 203, 103)`、Vesuvius `(255, DiscoG, 0)`。
         /// </summary>
         private static Color GetLegendaryWeaponColor(int itemType)
         {
-            if (itemType == ModContent.ItemType<DefenseBlade>() || itemType == ModContent.ItemType<SHPC>())
+            // 庇护之刃：源里的 AegisBlade 那一行
+            if (itemType == ModContent.ItemType<DefenseBlade>())
                 return new Color(255, Main.DiscoG, 53);
+            // SHPC：源里单独给它列的一行（255, DiscoG, 155）——与它的弹幕一直用的"SHPC 色"同源
+            if (itemType == ModContent.ItemType<SHPC>())
+                return new Color(255, Main.DiscoG, 155);
             return default;
         }
         /// <summary>
