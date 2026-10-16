@@ -3082,8 +3082,19 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   `include_environment_context_time`，没有任何键被移除**，`config.toml` 照用。
 - **本次实况**：standalone `current` → 0.163.0（PATH 上的 `codex --version` = `codex-cli 0.163.0`）；
   守护进程 09:07:19 切完，`appServerVersion = 0.163.0`（新 PID 42344），`releases\0.162.1` 已删；
-  **standalone 树里的 `releases\0.162.1` 暂留作回滚位**（要删得先退出 Codex，运行中的会话会锁住其中的 `codex.exe`）。
+  **standalone 树里的 `releases\0.162.1` 当时暂留作回滚位**——2026-10-16 已连同下面那批残留一起删掉
+  （旧说法"要删得先退出 Codex、运行中的会话会锁住其中的 `codex.exe`"实测证伪，见下条）。
   分离进程做切割这次依旧没踢掉会话（客户端自己重连上新守护进程）。
+- **收尾清理（2026-10-16，用户点名"清掉升级残留"）**：删三处，共释放 **1035.4 MB** ——
+  ① `%TEMP%\codex-update-0.163.0\`（599.3 MB：tarball 154.7 MB + 解出的包 436 MB + 两份 schema json + SHA256SUMS）；
+  ② `…\.codex\packages\standalone\releases\0.162.1-x86_64-pc-windows-msvc\`（436.1 MB，被顶掉的旧版本）；
+  ③ `%TEMP%\codexmsg.txt` / `%TEMP%\cd-msg.txt`（两次 `git commit -F` 用过的消息文件，内容已在 git log 里）。
+  现 `standalone\releases\` **只剩 0.163.0**（`current` 联接与 `codex --version` 复核均无变化），
+  `app-server-daemon\releases\` 也只剩 0.163.0；**要回滚 0.162.1 得按 11.2 第 1 步重新下载**。
+  ⚠️ 更正：`releases\0.162.1\bin\codex.exe` **并没有被运行中的会话锁住**（`FileShare.None` 独占读能过、没有进程从其路径起进程），
+  当初"删不掉"是**沙箱对 `~\.codex` 的写拒绝**冒充了文件锁——提权即可删，不必退出 Codex。
+  本次未动：`app-server-daemon\finalize-update.log`（审计）、`Tools\FinalizeCodexDaemonUpdate.ps1`（复用）、
+  `~\.codex\tmp\arg0*` 与 `app-server-control`（活会话在用）、`%LOCALAPPDATA%\OpenAI\Codex\`（桌面端自管的 cua_node 运行时）。
 - **0.163.0 里值得上手的新东西**：`/config` 可跨分类搜索配置、能即时生效并标出哪些要重启；`/keymap` 配 leader key
   （默认 `Ctrl+X`，快捷键提示会一直显示到你选中/取消，语音静音挪到 `F9`）；`/daemon` 里能直接重启后台服务
   （先提示可能打断的工作，之后自动重连）；响应中发消息立即"转向"（打断会连带停掉 Code Mode 单元与其嵌套工具调用）；
