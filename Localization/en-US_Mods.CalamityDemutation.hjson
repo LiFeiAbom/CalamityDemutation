@@ -2993,6 +2993,20 @@ Items: {
 			Bounces towards the nearest enemy after hitting a wall
 			'''
 	}
+
+	DanceofLight: {
+		DisplayName: Dance of Light
+		Tooltip:
+			'''
+			Annihilate your enemies... with a barrage of light blades
+			[c/FFD9FF:And in a flash of light, nothing remains]
+			'''
+	}
+
+	WrathoftheAncients: {
+		DisplayName: Wrath of the Ancients
+		Tooltip: Summons an energy pulse at the cursor that periodically releases homing spirits
+	}
 }
 
 Keybinds: {
@@ -3216,6 +3230,10 @@ Projectiles: {
 	SHPCLaser.DisplayName: SHPC Laser
 	SHPCPlasma.DisplayName: SHPC Plasma
 	PhoenixFlame.DisplayName: Phoenix Flame
+	GranitePulse.DisplayName: Pulse
+	GraniteEnergy.DisplayName: Granite Energy
+	WhiteFlame.DisplayName: White Flame
+	WhiteFlameAlt.DisplayName: White Flame Fragment
 }
 
 TextContent: {

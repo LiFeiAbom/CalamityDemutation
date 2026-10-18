@@ -3,8 +3,8 @@
 > 本文件是给后续会话/协作者的项目记忆：工程口径、已确立的换算表、踩过的坑、当前状态。
 > 内容按"能直接照做"的标准写；改动工程时请同步更新它。
 
-**2026-10-18 会话交接**：本会话移植 CI 的星火凤凰雨（`PhoenixFlameBarrage`，见 §22）；
-提交后 `master` 与远端同步。
+**2026-10-18 会话交接**：本会话移植 CI 的星火凤凰雨（`PhoenixFlameBarrage`，见 §22），
+并落地「光之舞」整条下位链（§23：2.0 配方 + CI 白焰雨机制 + 现代版物品贴图）；提交后 `master` 与远端同步。
 
 ## 1. 工程是什么
 
@@ -386,6 +386,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 纳米净化（NanoPurge） | **135** | **275** | 用户 2026-10-15 指定（法师链「以太流光炮」链底；关态取 2.1 的面板值、件本身走「拆开拼」，见 §18） |
 | 以太流光炮（AetherfluxCannon） | **370** | **910** | 用户 2026-10-15 指定（法师链顶层；关态 285 → 370 也是用户点名，「拆开拼」见 §18.8） |
 | 星火凤凰雨（PhoenixFlameBarrage） | **290** | **458** | 用户 2026-10-18 指定（见 §22） |
+| 光之舞（DanceofLight） | **700** | **2700（暂定）** | 用户 2026-10-18 指定走 CI 版本；2700 取 CI 的 `ShadowspecBuff` 分支，暂映射到膨胀开关（见 §23） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -4318,3 +4319,60 @@ CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植�
 TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`CheckImplicitTextures` **500 个类**全命中。
 
 **实测（2026-10-18）**：用户进游戏实测通过，无问题（CI 贴图版、膨胀 458、15 档稀有度）。
+
+## 23. 光之舞（Dance of Light）—— 2.0 配方 + CI 机制 + 现代贴图（2026-10-18）
+
+**用户口径（2026-10-18）**：本体机制取 **CI `DanceofLightLegacy`（白焰雨）**，
+配方取 **灾厄 2.0**，物品贴图取 **现代版 `TheDanceofLight.png`**。
+
+**下位链（已全部剥离）**：
+
+```text
+光之舞
+├─ 天界破晓 Sky Fracture       [原版]
+├─ 月耀书 LunarFlareBook       [原版月总掉落池]
+├─ 远古之怒 WrathoftheAncients [自持·2.0 版]
+│  └─ 死灵法师 / 装甲死灵法师 1/25 普通、1/15 专家
+│     （2.0 不含巨型诅咒骷髅；经典 1.4.2.101 才包含且专家 1/20）
+└─ 魔影锭 ShadowspecBar ×5    [软依赖]
+   @ 嘉登熔炉 DraedonsForge    [软依赖]
+```
+
+- 2.0 / 2.0.3.9 的魔影锭都是 `AuricBar + ExoPrism + Ashes of Annihilation @ DraedonsForge`，一次产 1；
+  2.0 / 2.0.3.9 的嘉登熔炉都是 `CosmicAnvilItem + HardmodeForge + TinkerersWorkshop + LunarCraftingStation +
+  AuricBar×15 + ExoPrism×12 + AscendantSpiritEssence×25`（2.2.2 只把化神魂精改成 ×15）。
+- 材料层按工程口径不迁移；`ShadowspecBar` / `DraedonsForge` 在现代与经典分支各 `TryFind` 一次。
+- CI / 经典白焰雨配方**没有天界破晓**；2.0 重做版才有。本次按用户指定采用 2.0 配方，因此多这一味原版件。
+
+**本体（`Content/Items/Weapons/Magic/DanceofLight.cs`）**：
+40×42（现代贴图判定）/ 伤害 **700** / 魔力 9 / 使用·动画 15 帧 / 击退 4 / 弹速 30 /
+月后 **16 档**（CI `DonatorPink`，品红）/ **2 铂金 80 金**（CI `RarityPriceDonatorPink`）/
+`Item105` / `HoldoutOffset` 零偏移。出手照 CI：4~6 枚白焰从玩家上方不同高度朝鼠标坠落。
+数值膨胀暂按 CI 的 `ShadowspecBuff` 分支取 **700 → 2700**（待用户实测后再定）。
+
+**弹幕（全部自持）**：
+
+- `WhiteFlame`：12×12、隐形贴图、`extraUpdates 2`、不撞图格、120 帧、钻石尘；
+  10 帧后在 700 像素内追踪（16 / 20），消亡分裂 **2** 枚 `WhiteFlameAlt`；命中圣火 360 帧。
+- `WhiteFlameAlt`：6×6、穿透 3、局部无敌 1 帧、120 帧、钻石尘；
+  CI 源 `homeTimer` 初值 100、条件 >60 恒真，等效于**从第一帧起 1800 像素全局追踪**（16 / 5）。
+- 圣火一律走 `ApplyCalamityBuffWithFallback`，经典版缺 `HolyFlames` 时退回原版燃烧。
+
+**远古之怒（`Content/Items/Weapons/Magic/WrathoftheAncients.cs`）**：
+28×30 判定（贴图 38×44）/ 伤害 47 / 魔力 20 / 38·38 帧 / 击退 6 / 弹速 9 / 黄档 / 80 金；
+无配方，掉落见上。`GranitePulse` 为 40×46、6 帧、1200 帧、本体无伤害，每 50 帧放 4 对
+`GraniteEnergy`（12×12、前 30 帧不可命中、后 60 帧 600 像素追踪）。
+`CalamityGlobalProjectile.ExpandHitboxBy / HomeInOnNPC` 分别换成本工程的
+`Projectile.ExpandHitboxBy` 与 `CDUtil.HomeInOnNPC`。
+
+**配方（现代 / 经典各一条）**：`SkyFracture + LunarFlareBook + 远古之怒 + ShadowspecBar×5 @ DraedonsForge`。
+宿主已有 `WrathoftheAncients` 时优先用宿主件（现代 2.0/2.0.3.9/2.0.4 与经典都有），
+现代 2.2.2 没有则回退到本工程自持件。
+
+**本地化**：`Items.DanceofLight`（Dance of Light / 光之舞）、`Items.WrathoftheAncients`（远古之怒）、
+`Projectiles.GranitePulse` / `GraniteEnergy` / `WhiteFlame` / `WhiteFlameAlt`。
+
+**验证（2026-10-18）**：`dotnet build .\CalamityDemutation.csproj -t:Compile` **0 警告 0 错误**；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **506 个类**全命中。
+
+**待办**：进游戏实测火雨密度、白焰追踪与分裂、远古之怒脉冲手感，以及膨胀 2700 是否保留。

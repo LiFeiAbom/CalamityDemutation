@@ -123,6 +123,11 @@ namespace CalamityDemutation.NPCs
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<OldLordOathsword>(), 25, 20));
             }
+            // 远古之怒（2.0 下位件）：只由死灵法师 / 装甲死灵法师掉落，1/25 普通、1/15 专家
+            else if (npc.type == NPCID.Necromancer || npc.type == NPCID.NecromancerArmored)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<WrathoftheAncients>(), 25, 15));
+            }
             else if (npc.type == NPCID.BlueJellyfish)
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<ManaJelly>(), 7, 5));

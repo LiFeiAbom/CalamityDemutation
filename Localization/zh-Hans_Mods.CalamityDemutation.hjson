@@ -2992,6 +2992,20 @@ Items: {
 			命中墙壁后朝最近的敌人反弹
 			'''
 	}
+
+	DanceofLight: {
+		DisplayName: 光之舞
+		Tooltip:
+			'''
+			湮灭你的敌人……以光刃弹雨
+			[c/FFD9FF:炫目闪光过后，一切荡然无存]
+			'''
+	}
+
+	WrathoftheAncients: {
+		DisplayName: 远古之怒
+		Tooltip: 在鼠标位置召唤能量脉冲，周期性释放追踪灵体
+	}
 }
 
 Keybinds: {
@@ -3215,6 +3229,10 @@ Projectiles: {
 	SHPCLaser.DisplayName: SHPC 能量束
 	SHPCPlasma.DisplayName: SHPC 等离子球
 	PhoenixFlame.DisplayName: 凤凰火焰
+	GranitePulse.DisplayName: 花岗岩脉冲
+	GraniteEnergy.DisplayName: 花岗岩能量
+	WhiteFlame.DisplayName: 白色火焰
+	WhiteFlameAlt.DisplayName: 白色火焰残片
 }
 
 TextContent: {
