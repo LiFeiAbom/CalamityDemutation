@@ -4317,4 +4317,4 @@ CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植�
 （普通 `dotnet build` 的 C# 编译同样通过，但沙箱禁止写 `Mods\CalamityDemutation.tmod`，
 TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`CheckImplicitTextures` **500 个类**全命中。
 
-**待办**：进游戏实测手感（持握原点 15,15、火雨密度、帧动画）。
+**实测（2026-10-18）**：用户进游戏实测通过，无问题（CI 贴图版、膨胀 458、15 档稀有度）。
