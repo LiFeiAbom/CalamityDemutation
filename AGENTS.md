@@ -3,6 +3,9 @@
 > 本文件是给后续会话/协作者的项目记忆：工程口径、已确立的换算表、踩过的坑、当前状态。
 > 内容按"能直接照做"的标准写；改动工程时请同步更新它。
 
+**2026-10-18 会话交接**：本会话没有改动本工程。当前 `HEAD = 2bd483c`，`master` 与远端同步；
+`Content/Items/Weapons/Melee/DevilsDevastation.png` 仍是上一轮遗留的未提交修改，本次未触碰。
+
 ## 1. 工程是什么
 
 灾厄扩展 mod（tModLoader 1.4.4 / net8.0，显示名 `CalamityDemutation`，作者 LF），主题是"灾厄旧版内容回归"。
