@@ -41,7 +41,7 @@ Buffs: {
 
 	GodSlayerCooldown: {
 		DisplayName: 弑神者冷却
-		Description: 所有伤害提高 10%；弑神者效果正在充能
+		Description: 所有伤害提高；弑神者效果正在充能
 	}
 
 	HellfireExplosion: {
@@ -3019,6 +3019,7 @@ Items: {
 			酒醉等级 +1
 			-4 HP/s
 			血月期间：刷怪率 ×10、最大刷怪量 ×10
+			血液燃烧！
 			'''
 	}
 

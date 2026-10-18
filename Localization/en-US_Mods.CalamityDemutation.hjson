@@ -41,7 +41,7 @@ Buffs: {
 
 	GodSlayerCooldown: {
 		DisplayName: God Slayer Cooldown
-		Description: 10% increase to all damage; godslayer effect is recharging
+		Description: Increases all damage; godslayer effect is recharging
 	}
 
 	HellfireExplosion: {
@@ -3020,6 +3020,7 @@ Items: {
 			Alcohol poison level +1
 			-4 HP/s
 			During a Blood Moon: 10x spawn rate and max spawns
+			Blood burns!
 			'''
 	}
 
