@@ -234,6 +234,11 @@ Buffs: {
 		Description: Time to transport all of your foes to stupid squid jail!
 	}
 
+	BloodyMaryBuff: {
+		DisplayName: Bloody Mary
+		Description: +15% all damage, +15% melee attack speed, +15% movement speed, -5 defense, -4 HP/s; during a Blood Moon, spawn rate and max spawns are 10x
+	}
+
 	CosmicEnergyBuff: {
 		DisplayName: Cosmic Energy
 		Description: The cosmic energy spiral will protect you
@@ -935,7 +940,6 @@ Items: {
 			Boosts your max HP by 10%
 			10% increased damage reduction
 			Increases all damage and critical strike chance by 12%
-			12% increased melee attack speed
 			When below 100 defense you gain 15% increased damage
 			Halves enemy contact damage
 			When you take contact damage this effect has a 20 second cooldown
@@ -3000,6 +3004,20 @@ Items: {
 			'''
 			Annihilate your enemies... with a barrage of light blades
 			[c/FFD9FF:And in a flash of light, nothing remains]
+			'''
+	}
+
+	BloodyMary: {
+		DisplayName: Bloody Mary
+		Tooltip:
+			'''
+			+15% all damage
+			+15% melee attack speed
+			+15% movement speed
+			-5 defense
+			Alcohol poison level +1
+			-4 HP/s
+			During a Blood Moon: 10x spawn rate and max spawns
 			'''
 	}
 

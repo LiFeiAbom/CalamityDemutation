@@ -97,6 +97,22 @@ namespace CalamityDemutation.NPCs
             }
         }
         /// <summary>
+        /// 血腥玛丽：血月期间把该玩家的刷怪率与最大刷怪量都放大 10 倍
+        /// （spawnRate 越小刷得越快，故除以 10 并保证不低于 1）。
+        /// </summary>
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+        {
+            if (Main.bloodMoon && player.GetModPlayer<CalamityDemutationPlayer>().bloodyMary)
+            {
+                spawnRate /= 10;
+                if (spawnRate < 1)
+                {
+                    spawnRate = 1;
+                }
+                maxSpawns *= 10;
+            }
+        }
+        /// <summary>
         /// 向灾厄各 Boss 的掉落池注入本模组饰品掉落
         /// </summary>
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)

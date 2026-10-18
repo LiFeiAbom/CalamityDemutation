@@ -1,0 +1,52 @@
+using CalamityDemutation.Content.Buffs.Alcohol;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+namespace CalamityDemutation.Content.Items.Potions.Alcohol
+{
+    /// <summary>
+    /// 血腥玛丽（Bloody Mary）—— 酒类药水门类首件。
+    /// <para>
+    /// 配方照灾厄 2.1：瓶装水×10 + 血月召唤物×1 @ 酒桶，一次产 10 瓶；
+    /// 物品形态（20×32、蓝档、6 分钟、饮用音/动画）也取 2.1，
+    /// 价值按用户 2026-10-18 指定取 2.0.4 的 2 金 60 银。
+    /// </para>
+    /// <para>
+    /// 效果为用户 2026-10-18 修正后的数值：+15% 通用伤害、+15% 近战攻速、
+    /// +15% 移速、-5 防御、酒醉等级 +1、-4 HP/s；血月时刷怪率与最大刷怪量 ×10。
+    /// </para>
+    /// </summary>
+    internal class BloodyMary : ModItem
+    {
+        /// <summary>2.0.4 口径的研究解锁数</summary>
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 5;
+            ItemID.Sets.DrinkParticleColors[Type] = new Color[3]
+            {
+                new Color(204, 90, 73),
+                new Color(168, 37, 37),
+                new Color(120, 28, 28)
+            };
+        }
+        /// <summary>
+        /// 2.1 的食物/饮品默认值：20×32、堆叠上限、蓝档、饮用音、6 分钟增益；
+        /// 随后把价值覆盖为 2.0.4 的 2 金 60 银。
+        /// </summary>
+        public override void SetDefaults()
+        {
+            Item.DefaultToFood(20, 32, ModContent.BuffType<BloodyMaryBuff>(), 6 * 60 * 60, true);
+            Item.value = Item.buyPrice(0, 2, 60, 0);
+        }
+        /// <summary>2.1 配方：瓶装水×10 + 血月召唤物×1 @ 酒桶，产 10</summary>
+        public override void AddRecipes()
+        {
+            CreateRecipe(10)
+                .AddIngredient(ItemID.Bottle, 10)
+                .AddIngredient(ItemID.BloodMoonStarter)
+                .AddTile(TileID.Kegs)
+                .Register();
+        }
+    }
+}

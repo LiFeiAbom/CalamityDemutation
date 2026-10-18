@@ -302,6 +302,10 @@ namespace CalamityDemutation.Players
         /// 血神核心已装备（综合增益 + 生命虹吸光环 + 减伤）
         /// </summary>
         public bool coreOfTheBloodGod = false;
+        /// <summary>血腥玛丽增益在场：由 BloodyMaryBuff 每帧置位，ResetEffects 清零</summary>
+        public bool bloodyMary = false;
+        /// <summary>当前酒醉等级：本工程暂由血腥玛丽提供 +1，每帧在 ResetEffects 归零后重新累计</summary>
+        public int alcoholPoisonLevel = 0;
         /// <summary>
         /// 已装备腐化烧瓶：身处腐化之地时获得 +3 防御与 +7% 减伤
         /// </summary>
@@ -992,6 +996,8 @@ namespace CalamityDemutation.Players
             cloudWaifu = false;
             coinofDeceit = false;
             coreOfTheBloodGod = false;
+            bloodyMary = false;
+            alcoholPoisonLevel = 0;
             corruptFlask = false;
             cosmicEnergy = false;
             crawCarapace = false;
@@ -1274,6 +1280,8 @@ namespace CalamityDemutation.Players
             profanedRage = false;
             purity = false;
             purityHealSlowdownFrames = 0;   // 跨帧计时器：源只在死亡时清零（见字段注释，不能进 ResetEffects）
+            bloodyMary = false;
+            alcoholPoisonLevel = 0;
             radiantOoze = false;
             radiantResolution = false;
             rampartofDeities = false;
@@ -1518,16 +1526,16 @@ namespace CalamityDemutation.Players
                     Player.GetDamage<GenericDamageClass>() += 0.1f;
                 }
             }
-            // 血神核心：+10% 最大生命、+12% 暴击率与伤害、+10% 减伤，+12% 近战攻击速度，
+            // 血神核心：+10% 最大生命、+12% 暴击率与伤害、+10% 减伤，
             // 防御不足 100 时再 +15% 伤害，并每帧生成一个灵魂虹吸弹幕形成吸血光环
-            // （近战攻速沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% → 2026-10-17 按用户要求提至 +12%）
+            // （近战攻速沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% →
+            //  2026-10-17 提至 +12% → 2026-10-18 按用户要求删除）
             if (coreOfTheBloodGod)
             {
                 Player.statLifeMax2 += Player.statLifeMax2 / 10;
                 Player.GetCritChance<GenericDamageClass>() += 12;
                 Player.GetDamage<GenericDamageClass>() += 0.12f;
                 Player.endurance += 0.1f;
-                Player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
                 if (Player.statDefense < 100)
                 {
                     Player.GetDamage<GenericDamageClass>() += 0.15f;
@@ -1539,6 +1547,15 @@ namespace CalamityDemutation.Players
                     Main.projectile[drain].usesLocalNPCImmunity = true;
                     Main.projectile[drain].localNPCHitCooldown = 5;
                 }
+            }
+            // 血腥玛丽（用户 2026-10-18 修正）：+15% 通用伤害 / +15% 近战攻速 / +15% 移速 / -5 防御；
+            // 血月刷怪在 CalamityDemutationGlobalNPC.EditSpawnRate 处理，-4 HP/s 在 UpdateLifeRegen 处理。
+            if (bloodyMary)
+            {
+                Player.GetDamage<GenericDamageClass>() += 0.15f;
+                Player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
+                Player.moveSpeed += 0.15f;
+                Player.statDefense -= 5;
             }
             // 代达罗斯纹章：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
             if (daedalusEmblem)
@@ -4005,6 +4022,11 @@ namespace CalamityDemutation.Players
             if (manaOverloader && Player.statMana > (int)(Player.statManaMax2 * 0.5))
             {
                 Player.lifeRegen -= 4;
+            }
+            // 血腥玛丽：-4 HP/s（tML 的 lifeRegen 每 2 点 = 1 HP/s，故写 -8）
+            if (bloodyMary)
+            {
+                Player.lifeRegen -= 8;
             }
             // 欧米茄蓝胸甲：禁止一切正面生命再生（同上，放在本钩子末尾以覆盖本方法内先加上的各项）
             OmegaBlueNoLifeRegen();
