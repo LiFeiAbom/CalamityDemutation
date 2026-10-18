@@ -4284,10 +4284,11 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 **来源与命名**：CI Beta1.12 的 `Content/Items/Weapons/Magic/DragonStaff.cs` +
 `Content/Projectiles/Magic/DragonStaffProj.cs`；CI 本地化键 `DragonStaff` 的中文名是「星火凤凰雨[Legacy]」、
 英文 `Phoenix Flame Barrage Legacy`。按命名口径去掉 `[Legacy]`，本工程类名 `PhoenixFlameBarrage` /
-弹幕 `PhoenixFlame`。用户提供的物品贴图是 `Content/Items/Weapons/Magic/Phoenix_Flame_Barrage.png`
-（106×140，现代版同名物品贴图，MD5 与 2.0 源相同），类里用显式 `Texture` 指向该带下划线文件名。
+弹幕 `PhoenixFlame`。物品贴图改用 CI 的 `DragonStaff.png`（70×70，按类名存为
+`PhoenixFlameBarrage.png`，走隐式同名贴图）；原先那张 106×140 的现代版
+`Phoenix_Flame_Barrage.png` 已按用户 2026-10-18 指示删除。
 
-**面板（照 CI）**：106×140 判定（按用户贴图；CI 原图 70×70 / 判定 72×70）、伤害 290、魔力 20、
+**面板（照 CI）**：72×70 判定（贴合 CI 的 70×70 贴图）、伤害 290、魔力 20、
 使用 15 / 动画 30 帧、击退 3.5、弹速 30、`Item.staff`、`Item20` 音、自动复用、
 月后 **15 档（紫名，与焚灭天惩同级；用户 2026-10-18 指定）** / 2 铂金（CI `RarityPriceDeepBlue`）。
 CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植。
@@ -4307,7 +4308,7 @@ CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植�
 
 **数值膨胀**：用户 2026-10-18 指定 **290 → 458**；伤害走 `Shoot` 的 `damage` 参数，自动跟随。
 
-**文件**：`Content/Items/Weapons/Magic/PhoenixFlameBarrage.cs` + `Phoenix_Flame_Barrage.png`；
+**文件**：`Content/Items/Weapons/Magic/PhoenixFlameBarrage.cs` + `PhoenixFlameBarrage.png`（CI 的 `DragonStaff.png`）；
 `Content/Projectiles/Magic/PhoenixFlame.cs` + `PhoenixFlame.png`（20×120，取自 CI 的
 `DragonStaffProj.png`，与灾厄 `HolyFlame.png` 同一张）；`CalamityDemutationGlobalItem.ModifyItemLoot`
 两处犽戎袋；两份本地化 `Items.PhoenixFlameBarrage` + `Projectiles.PhoenixFlame.DisplayName`。

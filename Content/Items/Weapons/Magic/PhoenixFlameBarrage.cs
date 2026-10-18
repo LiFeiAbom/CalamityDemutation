@@ -13,8 +13,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// <c>Content/Items/Weapons/Magic/DragonStaff.cs</c>（CI 里显示名为
     /// "Phoenix Flame Barrage Legacy"，本工程按命名口径去掉 Legacy 后缀）。
     /// <para>
-    /// 物品贴图使用用户提供的 <c>Phoenix_Flame_Barrage.png</c>（106×140，现代版同名物品贴图），
-    /// 因此判定框按该图取 106×140；其余数值与出手逻辑全部照 CI 源：
+    /// 物品贴图使用 CI 的 <c>DragonStaff.png</c>（70×70，本工程按类名存为
+    /// <c>PhoenixFlameBarrage.png</c>），判定框照 CI 源取 72×70；其余数值与出手逻辑也全部照 CI：
     /// 伤害 290、魔力 20、使用 15 / 动画 30 帧、击退 3.5、弹速 30，
     /// 月后 15 档（紫名，与焚灭天惩同级；CI 源为 <c>DeepBlue</c> 14 档）与 2 铂金价值。
     /// </para>
@@ -29,8 +29,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// </summary>
     internal class PhoenixFlameBarrage : ModItem
     {
-        /// <summary>物品贴图显式指向用户提供的带下划线文件名（类名仍按工程口径用 PascalCase）</summary>
-        public override string Texture => "CalamityDemutation/Content/Items/Weapons/Magic/Phoenix_Flame_Barrage";
         /// <summary>数值膨胀后的面板伤害（用户 2026-10-18 指定：290 → 458）</summary>
         private const float InflatedDamage = 458f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 CI 源值 290</summary>
@@ -41,11 +39,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             Item.staff[Type] = true;
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>基础属性：除贴图判定框与稀有度映射外，全部照 CI 的 <c>DragonStaff</c></summary>
+        /// <summary>基础属性：除稀有度映射外，全部照 CI 的 <c>DragonStaff</c></summary>
         public override void SetDefaults()
         {
-            Item.width = 106;
-            Item.height = 140;
+            Item.width = 72;
+            Item.height = 70;
             Item.damage = 290;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 20;
