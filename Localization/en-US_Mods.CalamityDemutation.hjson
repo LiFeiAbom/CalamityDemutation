@@ -236,7 +236,7 @@ Buffs: {
 
 	BloodyMaryBuff: {
 		DisplayName: Bloody Mary
-		Description: +15% all damage, +15% melee attack speed, +15% movement speed, -5 defense, -4 HP/s; during a Blood Moon, spawn rate and max spawns are 10x
+		Description: +15% all damage, +5% critical strike chance, +15% melee attack speed, +15% movement speed, -5 defense, -4 HP/s; during a Blood Moon, spawn rate and max spawns are 10x
 	}
 
 	CosmicEnergyBuff: {
@@ -3012,6 +3012,7 @@ Items: {
 		Tooltip:
 			'''
 			+15% all damage
+			+5% critical strike chance
 			+15% melee attack speed
 			+15% movement speed
 			-5 defense

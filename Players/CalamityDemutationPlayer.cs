@@ -1548,11 +1548,13 @@ namespace CalamityDemutation.Players
                     Main.projectile[drain].localNPCHitCooldown = 5;
                 }
             }
-            // 血腥玛丽（用户 2026-10-18 修正）：+15% 通用伤害 / +15% 近战攻速 / +15% 移速 / -5 防御；
+            // 血腥玛丽（用户 2026-10-18 修正、2026-10-19 追加暴击）：+15% 通用伤害 / +5% 暴击 /
+            // +15% 近战攻速 / +15% 移速 / -5 防御；
             // 血月刷怪在 CalamityDemutationGlobalNPC.EditSpawnRate 处理，-4 HP/s 在 UpdateLifeRegen 处理。
             if (bloodyMary)
             {
                 Player.GetDamage<GenericDamageClass>() += 0.15f;
+                Player.GetCritChance<GenericDamageClass>() += 5;
                 Player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
                 Player.moveSpeed += 0.15f;
                 Player.statDefense -= 5;

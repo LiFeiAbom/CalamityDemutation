@@ -4430,7 +4430,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 
 **效果（用户 2026-10-18 修正，已全部落地）**：
 
-- 通用伤害 **+15%**、近战攻击速度 **+15%**、移动速度 **+15%**、防御 **-5**；
+- 通用伤害 **+15%**、通用暴击 **+5%**、近战攻击速度 **+15%**、移动速度 **+15%**、防御 **-5**；
 - 酒醉等级 **+1**（本工程用 `CalamityDemutationPlayer.alcoholPoisonLevel` 记录，暂无额外阈值惩罚）；
 - 生命回复 **-4 HP/s**（写在 `UpdateLifeRegen`：`Player.lifeRegen -= 8`，因为 2 点 lifeRegen = 1 HP/s）；
 - 血月期间刷怪率 **×10**、最大刷怪量 **×10**（写在 `CalamityDemutationGlobalNPC.EditSpawnRate`）。
