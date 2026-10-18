@@ -1548,8 +1548,8 @@ namespace CalamityDemutation.Players
                     Main.projectile[drain].localNPCHitCooldown = 5;
                 }
             }
-            // 血腥玛丽（用户 2026-10-18 修正、2026-10-19 追加暴击）：+15% 通用伤害 / +5% 暴击 /
-            // +15% 近战攻速 / +15% 移速 / -5 防御；
+            // 血腥玛丽（用户 2026-10-18 修正、2026-10-19 追加暴击与代价）：+15% 通用伤害 / +5% 暴击 /
+            // +15% 近战攻速 / +15% 移速 / -4 防御 / -4% 伤害减免；
             // 血月刷怪在 CalamityDemutationGlobalNPC.EditSpawnRate 处理，-4 HP/s 在 UpdateLifeRegen 处理。
             if (bloodyMary)
             {
@@ -1557,7 +1557,8 @@ namespace CalamityDemutation.Players
                 Player.GetCritChance<GenericDamageClass>() += 5;
                 Player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
                 Player.moveSpeed += 0.15f;
-                Player.statDefense -= 5;
+                Player.statDefense -= 4;
+                Player.endurance -= 0.04f;
             }
             // 代达罗斯纹章：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
             if (daedalusEmblem)
