@@ -3,8 +3,8 @@
 > 本文件是给后续会话/协作者的项目记忆：工程口径、已确立的换算表、踩过的坑、当前状态。
 > 内容按"能直接照做"的标准写；改动工程时请同步更新它。
 
-**2026-10-18 会话交接**：本会话没有改动本工程。当前 `HEAD = 2bd483c`，`master` 与远端同步；
-`Content/Items/Weapons/Melee/DevilsDevastation.png` 仍是上一轮遗留的未提交修改，本次未触碰。
+**2026-10-18 会话交接**：本会话移植 CI 的星火凤凰雨（`PhoenixFlameBarrage`，见 §22）；
+提交后 `master` 与远端同步。
 
 ## 1. 工程是什么
 
@@ -385,6 +385,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 潮涌（Alluvion） | 165 | 470 | 用户 2026-10-15 指定（天堂之风链批 4 收尾件；见 §15.17） |
 | 纳米净化（NanoPurge） | **135** | **275** | 用户 2026-10-15 指定（法师链「以太流光炮」链底；关态取 2.1 的面板值、件本身走「拆开拼」，见 §18） |
 | 以太流光炮（AetherfluxCannon） | **370** | **910** | 用户 2026-10-15 指定（法师链顶层；关态 285 → 370 也是用户点名，「拆开拼」见 §18.8） |
+| 星火凤凰雨（PhoenixFlameBarrage） | **290** | **1450（暂定）** | CI 源值 290；按「犽戎后 ×5」暂定，待用户点名（见 §22） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -4277,3 +4278,43 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 （删掉 `MoonPact.cs` 里那个物品类后从 500 降到 499）。
 ⚠️ 工作区里另有**用户自己的**内容（本会话未触碰）：`Content/Items/Weapons/Melee/DevilsDevastation.png`（已修改，未提交）。
 新手套那件事的三张素材（`1.png` / `BeetleEnchant.png` / `Fire_Gauntlet.webp`）**已全部被用户移出工作区**，见 §21.3。
+
+## 22. 星火凤凰雨（Phoenix Flame Barrage）—— CI 支线移植（2026-10-18）
+
+**来源与命名**：CI Beta1.12 的 `Content/Items/Weapons/Magic/DragonStaff.cs` +
+`Content/Projectiles/Magic/DragonStaffProj.cs`；CI 本地化键 `DragonStaff` 的中文名是「星火凤凰雨[Legacy]」、
+英文 `Phoenix Flame Barrage Legacy`。按命名口径去掉 `[Legacy]`，本工程类名 `PhoenixFlameBarrage` /
+弹幕 `PhoenixFlame`。用户提供的物品贴图是 `Content/Items/Weapons/Magic/Phoenix_Flame_Barrage.png`
+（106×140，现代版同名物品贴图，MD5 与 2.0 源相同），类里用显式 `Texture` 指向该带下划线文件名。
+
+**面板（照 CI）**：106×140 判定（按用户贴图；CI 原图 70×70 / 判定 72×70）、伤害 290、魔力 20、
+使用 15 / 动画 30 帧、击退 3.5、弹速 30、`Item.staff`、`Item20` 音、自动复用、
+月后 14 档（CI `DeepBlue`，蓝名）/ 2 铂金（CI `RarityPriceDeepBlue`）。CI 的 `SpecialRarityColor` 分支不移植。
+
+**机制（照 CI 的 DragonStaff）**：`Shoot` 每次从玩家上方 600 像素起、逐枚再抬 100 像素生成 30~32 枚火焰
+（每 1/3 概率 +1，最多 32），每枚重新朝鼠标归一化并加 ±0.6 扰动；弹幕 20×20 / 穿透 1 / `extraUpdates 3` /
+不撞图格 / 不受水影响 / 600 帧；出场 `alpha 255`、每帧 -3 淡入（源没有 alpha 归零自毁）；
+命中挂圣火 300 帧（走 `ApplyCalamityBuffWithFallback`，经典版退回原版燃烧）；
+消亡播 `Item14` 并喷 20 颗金币尘 + 35 颗铂金币尘。
+
+- 两处工程处置：① 源 `FramesChanger(Projectile, 4, 3)` 只轮播 3 帧，与 4 帧图集不符，本工程按 4 帧循环；
+  ② 圣火不硬引用灾厄类型。
+
+**获取**：CI 源里它没有配方，放在 `YharonEssence` 的随机武器池；本工程未移植 YharonEssence，
+按本体同名旧件 `PhoenixFlameBarrage` 的犽戎袋口径，在现代 / 经典两个 `YharonBag` 各挂
+`CommonDrop(..., 3)`（1/3）。
+
+**数值膨胀**：用户尚未点名开态值，暂按 §7 的「犽戎后 ×5」取 **290 → 1450（暂定）**；
+伤害走 `Shoot` 的 `damage` 参数，自动跟随。若用户给出新值，只改
+`PhoenixFlameBarrage.InflatedDamage`。
+
+**文件**：`Content/Items/Weapons/Magic/PhoenixFlameBarrage.cs` + `Phoenix_Flame_Barrage.png`；
+`Content/Projectiles/Magic/PhoenixFlame.cs` + `PhoenixFlame.png`（20×120，取自 CI 的
+`DragonStaffProj.png`，与灾厄 `HolyFlame.png` 同一张）；`CalamityDemutationGlobalItem.ModifyItemLoot`
+两处犽戎袋；两份本地化 `Items.PhoenixFlameBarrage` + `Projectiles.PhoenixFlame.DisplayName`。
+
+**验证（2026-10-18）**：`dotnet build .\CalamityDemutation.csproj -t:Compile` **0 警告 0 错误**
+（普通 `dotnet build` 的 C# 编译同样通过，但沙箱禁止写 `Mods\CalamityDemutation.tmod`，
+TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`CheckImplicitTextures` **500 个类**全命中。
+
+**待办**：进游戏实测手感（持握原点 15,15、火雨密度、帧动画）；确认 1450 是否保留。

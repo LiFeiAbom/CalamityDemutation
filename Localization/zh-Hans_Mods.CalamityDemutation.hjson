@@ -2767,6 +2767,15 @@ Items: {
 		Tooltip: 近战击杀敌人时炸出一团日耀爆炸，并留下两枚恢复之火
 	}
 
+	PhoenixFlameBarrage: {
+		DisplayName: 星火凤凰雨
+		Tooltip:
+			'''
+			召唤火幕从天而降
+			“圣火洗礼”
+			'''
+	}
+
 	PhotosynthesisPotion: {
 		DisplayName: 光合作用药水
 		Tooltip:
@@ -3205,6 +3214,7 @@ Projectiles: {
 	SHPCExplosion.DisplayName: SHPC 爆炸
 	SHPCLaser.DisplayName: SHPC 能量束
 	SHPCPlasma.DisplayName: SHPC 等离子球
+	PhoenixFlame.DisplayName: 凤凰火焰
 }
 
 TextContent: {

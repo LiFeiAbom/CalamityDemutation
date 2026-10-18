@@ -2768,6 +2768,15 @@ Items: {
 		Tooltip: Melee kills explode and leave behind two healing flames
 	}
 
+	PhoenixFlameBarrage: {
+		DisplayName: Phoenix Flame Barrage
+		Tooltip:
+			'''
+			Casts a barrage of fire from the sky
+			"Baptism by holy fire"
+			'''
+	}
+
 	PhotosynthesisPotion: {
 		DisplayName: Photosynthesis Potion
 		Tooltip:
@@ -3206,6 +3215,7 @@ Projectiles: {
 	SHPCExplosion.DisplayName: SHPC Explosion
 	SHPCLaser.DisplayName: SHPC Laser
 	SHPCPlasma.DisplayName: SHPC Plasma
+	PhoenixFlame.DisplayName: Phoenix Flame
 }
 
 TextContent: {

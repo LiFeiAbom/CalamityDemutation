@@ -457,6 +457,9 @@ namespace CalamityDemutation.Content.Items
                     // 巨龙之息（射手）：源版（1.3-release/2.0 的 YharonBag.cs 里 DropHelper.WeightStack<DragonsBreath>）
                     // 同在犽戎袋这组武器里，本工程沿用同一条 1/3 简化口径挂回
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
+                    // 星火凤凰雨（CI 的 DragonStaff）：CI 源把它放在 YharonEssence 的随机武器池里；
+                    // 本工程未移植 YharonEssence，故按本体同名旧件（PhoenixFlameBarrage）的犽戎袋口径挂 1/3
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
                 }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -539,6 +542,8 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
                     // 巨龙之息（射手）：同上，经典版灾厄的犽戎袋里也有它
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
+                    // 星火凤凰雨（CI 的 DragonStaff）：同上，挂进经典版犽戎袋
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
                 }
             }
         }
