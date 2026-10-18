@@ -236,7 +236,7 @@ Buffs: {
 
 	BloodyMaryBuff: {
 		DisplayName: Bloody Mary
-		Description: +15% all damage, +5% critical strike chance, +15% melee attack speed, +15% movement speed, -4 defense, -4% damage reduction, -4 HP/s; during a Blood Moon, spawn rate and max spawns are 10x
+		Description: Increases all damage and critical strike chance, melee attack speed, and movement speed; reduces defense and damage reduction; increases alcohol poison level and drains life; increases spawn rate and max spawns during a Blood Moon
 	}
 
 	CosmicEnergyBuff: {
@@ -3011,15 +3011,15 @@ Items: {
 		DisplayName: Bloody Mary
 		Tooltip:
 			'''
-			+15% all damage
-			+5% critical strike chance
-			+15% melee attack speed
-			+15% movement speed
-			-4 defense
-			-4% damage reduction
-			Alcohol poison level +1
-			-4 HP/s
-			During a Blood Moon: 10x spawn rate and max spawns
+			Increases all damage
+			Increases critical strike chance
+			Increases melee attack speed
+			Increases movement speed
+			Reduces defense
+			Reduces damage reduction
+			Increases alcohol poison level
+			Drains life over time
+			Increases spawn rate and max spawns during a Blood Moon
 			Blood burns!
 			'''
 	}
