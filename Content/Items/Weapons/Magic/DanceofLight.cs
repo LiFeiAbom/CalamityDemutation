@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 光之舞（Dance of Light）—— 机制移植自 CI Beta1.12 的
     /// <c>DanceofLightLegacy</c>，物品贴图使用现代版 <c>TheDanceofLight.png</c>（40×42）。
     /// <para>
-    /// 面板取 CI：伤害 700、魔力 9、使用/动画 15 帧、击退 4、弹速 30、
+    /// 面板取 CI（伤害按用户 2026-10-18 点名改为 200）：魔力 9、使用/动画 15 帧、击退 4、弹速 30、
     /// 月后 16 档（CI 的 <c>DonatorPink</c>）/ 2 铂金 80 金（CI 的 <c>RarityPriceDonatorPink</c>）、
     /// <c>Item105</c> 使用音。判定框按现代贴图取 40×42，持握偏移用现代版的零偏移。
     /// </para>
@@ -24,27 +24,26 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 没有（如实装 2.2.2）时用本工程自持件。
     /// </para>
     /// <para>
-    /// **数值膨胀**：CI 的 <c>ShadowspecBuff</c> 分支为 2700；本工程没有该配置，
-    /// 暂把它映射到通用膨胀开关（关 700 / 开 2700），待用户实测后再定。
+    /// **数值膨胀**：用户 2026-10-18 指定 **基础 200 / 膨胀 700**。
     /// </para>
     /// </summary>
     internal class DanceofLight : ModItem
     {
-        /// <summary>膨胀态面板（CI 的 ShadowspecBuff 分支值）</summary>
-        private const float InflatedDamage = 2700f;
-        /// <summary>当前生效的面板基础伤害：开则 2700，否则维持 CI 源值 700</summary>
+        /// <summary>膨胀态面板（用户 2026-10-18 指定）</summary>
+        private const float InflatedDamage = 700f;
+        /// <summary>当前生效的面板基础伤害：开则 700，否则维持用户指定的基础值 200</summary>
         private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>基础属性取 CI；判定框按现代版 40×42 贴图</summary>
+        /// <summary>基础属性取 CI（伤害按用户点名 200）；判定框按现代版 40×42 贴图</summary>
         public override void SetDefaults()
         {
             Item.width = 40;
             Item.height = 42;
-            Item.damage = 700;
+            Item.damage = 200;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 9;
             Item.useTime = 15;
