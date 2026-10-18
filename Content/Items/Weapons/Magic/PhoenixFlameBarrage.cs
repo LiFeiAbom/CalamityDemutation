@@ -16,23 +16,23 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 物品贴图使用用户提供的 <c>Phoenix_Flame_Barrage.png</c>（106×140，现代版同名物品贴图），
     /// 因此判定框按该图取 106×140；其余数值与出手逻辑全部照 CI 源：
     /// 伤害 290、魔力 20、使用 15 / 动画 30 帧、击退 3.5、弹速 30，
-    /// 月后 14 档（CI 的 <c>DeepBlue</c>，蓝名）与 2 铂金价值（CI 的 <c>RarityPriceDeepBlue</c>）。
+    /// 月后 15 档（紫名，与焚灭天惩同级；CI 源为 <c>DeepBlue</c> 14 档）与 2 铂金价值。
     /// </para>
     /// <para>
     /// 出手：从玩家上方召唤 30~32 枚 <see cref="PhoenixFlame"/>，各自从不同高度与横向偏移
     /// 朝鼠标方向坠落，形成"火幕从天而降"；每枚弹幕命中挂 CI 的圣火 300 帧。
     /// </para>
     /// <para>
-    /// **数值膨胀**：用户尚未点名本件的开态数值，暂按工程既有的"犽戎后 ×5"档取
-    /// <b>290 → 1450（暂定）</b>；伤害由 <c>Shoot</c> 的 <c>damage</c> 参数派生，整条自动跟随。
+    /// **数值膨胀**：用户 2026-10-18 点名为 <b>290 → 458</b>；
+    /// 伤害由 <c>Shoot</c> 的 <c>damage</c> 参数派生，整条自动跟随。
     /// </para>
     /// </summary>
     internal class PhoenixFlameBarrage : ModItem
     {
         /// <summary>物品贴图显式指向用户提供的带下划线文件名（类名仍按工程口径用 PascalCase）</summary>
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Magic/Phoenix_Flame_Barrage";
-        /// <summary>数值膨胀后的面板伤害（暂定：CI 源值 290 × 犽戎后 5 倍 = 1450）</summary>
-        private const float InflatedDamage = 1450f;
+        /// <summary>数值膨胀后的面板伤害（用户 2026-10-18 指定：290 → 458）</summary>
+        private const float InflatedDamage = 458f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 CI 源值 290</summary>
         private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>登记为法杖、研究解锁一份（照 CI 源）</summary>
@@ -60,7 +60,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             Item.shootSpeed = 30f;
             Item.rare = ItemRarityID.Red;
             Item.value = Item.buyPrice(2, 0, 0, 0);
-            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
+            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>法杖持握原点（照 CI 的 15,15；tML 的坐标从贴图左下角起算）</summary>
         public override Vector2? HoldoutOrigin() => new Vector2(15, 15);

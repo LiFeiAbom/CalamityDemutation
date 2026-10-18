@@ -385,7 +385,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 潮涌（Alluvion） | 165 | 470 | 用户 2026-10-15 指定（天堂之风链批 4 收尾件；见 §15.17） |
 | 纳米净化（NanoPurge） | **135** | **275** | 用户 2026-10-15 指定（法师链「以太流光炮」链底；关态取 2.1 的面板值、件本身走「拆开拼」，见 §18） |
 | 以太流光炮（AetherfluxCannon） | **370** | **910** | 用户 2026-10-15 指定（法师链顶层；关态 285 → 370 也是用户点名，「拆开拼」见 §18.8） |
-| 星火凤凰雨（PhoenixFlameBarrage） | **290** | **1450（暂定）** | CI 源值 290；按「犽戎后 ×5」暂定，待用户点名（见 §22） |
+| 星火凤凰雨（PhoenixFlameBarrage） | **290** | **458** | 用户 2026-10-18 指定（见 §22） |
 
 **「超新星」批次的 7 把盗贼武器（2026-10-08 起逐把点名，与上表同一开关、同一模板）**：
 
@@ -4289,7 +4289,8 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 
 **面板（照 CI）**：106×140 判定（按用户贴图；CI 原图 70×70 / 判定 72×70）、伤害 290、魔力 20、
 使用 15 / 动画 30 帧、击退 3.5、弹速 30、`Item.staff`、`Item20` 音、自动复用、
-月后 14 档（CI `DeepBlue`，蓝名）/ 2 铂金（CI `RarityPriceDeepBlue`）。CI 的 `SpecialRarityColor` 分支不移植。
+月后 **15 档（紫名，与焚灭天惩同级；用户 2026-10-18 指定）** / 2 铂金（CI `RarityPriceDeepBlue`）。
+CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植。
 
 **机制（照 CI 的 DragonStaff）**：`Shoot` 每次从玩家上方 600 像素起、逐枚再抬 100 像素生成 30~32 枚火焰
 （每 1/3 概率 +1，最多 32），每枚重新朝鼠标归一化并加 ±0.6 扰动；弹幕 20×20 / 穿透 1 / `extraUpdates 3` /
@@ -4304,9 +4305,7 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 按本体同名旧件 `PhoenixFlameBarrage` 的犽戎袋口径，在现代 / 经典两个 `YharonBag` 各挂
 `CommonDrop(..., 3)`（1/3）。
 
-**数值膨胀**：用户尚未点名开态值，暂按 §7 的「犽戎后 ×5」取 **290 → 1450（暂定）**；
-伤害走 `Shoot` 的 `damage` 参数，自动跟随。若用户给出新值，只改
-`PhoenixFlameBarrage.InflatedDamage`。
+**数值膨胀**：用户 2026-10-18 指定 **290 → 458**；伤害走 `Shoot` 的 `damage` 参数，自动跟随。
 
 **文件**：`Content/Items/Weapons/Magic/PhoenixFlameBarrage.cs` + `Phoenix_Flame_Barrage.png`；
 `Content/Projectiles/Magic/PhoenixFlame.cs` + `PhoenixFlame.png`（20×120，取自 CI 的
@@ -4317,4 +4316,4 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 （普通 `dotnet build` 的 C# 编译同样通过，但沙箱禁止写 `Mods\CalamityDemutation.tmod`，
 TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`CheckImplicitTextures` **500 个类**全命中。
 
-**待办**：进游戏实测手感（持握原点 15,15、火雨密度、帧动画）；确认 1450 是否保留。
+**待办**：进游戏实测手感（持握原点 15,15、火雨密度、帧动画）。
