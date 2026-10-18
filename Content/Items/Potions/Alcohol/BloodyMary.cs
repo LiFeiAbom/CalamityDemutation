@@ -8,8 +8,9 @@ namespace CalamityDemutation.Content.Items.Potions.Alcohol
     /// <summary>
     /// 血腥玛丽（Bloody Mary）—— 酒类药水门类首件。
     /// <para>
-    /// 配方按用户 2026-10-19 修改为工程药剂口径的双配方：
-    /// 瓶装水×1 + 血泪（血月召唤物）×1，或瓶装水×1 + 血珠×50，均 @ 炼药桌，各产 1 瓶；
+    /// 配方按用户 2026-10-19 修改为双配方：
+    /// 瓶装水×1 + 麦芽酒×1 + 血泪（血月召唤物）×1，或瓶装水×1 + 血珠×50，
+    /// 均 @ 酒桶 Kegs，各产 1 瓶；
     /// 物品形态（20×32、蓝档、6 分钟、饮用音/动画）也取 2.1，
     /// 价值按用户 2026-10-18 指定取 2.0.4 的 2 金 60 银。
     /// </para>
@@ -41,15 +42,16 @@ namespace CalamityDemutation.Content.Items.Potions.Alcohol
             Item.value = Item.buyPrice(0, 2, 60, 0);
         }
         /// <summary>
-        /// 双配方（各产 1）：瓶装水 + 血泪；瓶装水 + 血珠×50。
-        /// 血珠按现代 / 经典灾厄分别软依赖，站台按工程其它药剂统一用炼药桌。
+        /// 双配方（各产 1）：瓶装水 + 麦芽酒 + 血泪；瓶装水 + 血珠×50。
+        /// 血珠按现代 / 经典灾厄分别软依赖；血腥玛丽是酒，站台用酒桶。
         /// </summary>
         public override void AddRecipes()
         {
             CreateRecipe()
                 .AddIngredient(ItemID.BottledWater)
+                .AddIngredient(ItemID.Ale)
                 .AddIngredient(ItemID.BloodMoonStarter)
-                .AddTile(TileID.AlchemyTable)
+                .AddTile(TileID.Kegs)
                 .Register();
 
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity)
@@ -58,7 +60,7 @@ namespace CalamityDemutation.Content.Items.Potions.Alcohol
                 CreateRecipe()
                     .AddIngredient(ItemID.BottledWater)
                     .AddIngredient(modernBloodOrb.Type, 50)
-                    .AddTile(TileID.AlchemyTable)
+                    .AddTile(TileID.Kegs)
                     .Register();
             }
 
@@ -68,7 +70,7 @@ namespace CalamityDemutation.Content.Items.Potions.Alcohol
                 CreateRecipe()
                     .AddIngredient(ItemID.BottledWater)
                     .AddIngredient(classicBloodOrb.Type, 50)
-                    .AddTile(TileID.AlchemyTable)
+                    .AddTile(TileID.Kegs)
                     .Register();
             }
         }

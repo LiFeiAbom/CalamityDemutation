@@ -4421,8 +4421,8 @@ TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`Check
 研究解锁 5；配方已于 2026-10-19 按用户要求改为双配方（见 §26）：
 
 ```text
-瓶装水 BottledWater ×1 + 血泪 BloodMoonStarter ×1 @ 炼药桌 AlchemyTable → 血腥玛丽 ×1
-瓶装水 BottledWater ×1 + 血珠 BloodOrb ×50 @ 炼药桌 AlchemyTable → 血腥玛丽 ×1
+瓶装水 BottledWater ×1 + 麦芽酒 Ale ×1 + 血泪 BloodMoonStarter ×1 @ 酒桶 Kegs → 血腥玛丽 ×1
+瓶装水 BottledWater ×1 + 血珠 BloodOrb ×50 @ 酒桶 Kegs → 血腥玛丽 ×1
 ```
 
 **增益**：`Content/Buffs/Alcohol/BloodyMaryBuff.cs` + `BloodyMaryBuff.png`（32×32，2.1 图）；
@@ -4446,14 +4446,14 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 
 ## 26. 血腥玛丽配方改为双配方（2026-10-19）
 
-**用户口径**：改成工程其它药剂的双配方写法，各产 1：
+**用户口径（2026-10-19 二次修正）**：改回酒桶，并给血泪配方加麦芽酒；各产 1：
 
 ```text
-瓶装水 ×1 + 血泪 BloodMoonStarter ×1 @ 炼药桌
-瓶装水 ×1 + 血珠 BloodOrb ×50 @ 炼药桌
+瓶装水 ×1 + 麦芽酒 Ale ×1 + 血泪 BloodMoonStarter ×1 @ 酒桶
+瓶装水 ×1 + 血珠 BloodOrb ×50 @ 酒桶
 ```
 
-- 血泪那条无条件注册（原版物品）。
+- 血泪 / 麦芽酒那条无条件注册（都是原版物品）。
 - 血珠那条分别在现代 `CalamityMod` / 经典 `CalamityModClassicPreTrailer` 里 `TryFind`，两条各注册一次。
 - 不再使用 2.1 的「瓶装水×10 + 血月召唤物 @ 酒桶，产 10」。
 - 物品价值仍为 2 金 60 银；面板、增益效果与 6 分钟持续时间均不变。
