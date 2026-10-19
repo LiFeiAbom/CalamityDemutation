@@ -239,6 +239,16 @@ Buffs: {
 		Description: Increases all damage, critical strike chance, melee attack speed, and movement speed; reduces defense, damage reduction, and life regeneration; increases alcohol poison level; increases spawn rate and max spawns during a Blood Moon
 	}
 
+	MoscowMuleBuff: {
+		DisplayName: Moscow Mule
+		Description: Increases all damage, critical strike chance, and knockback; reduces life regeneration; increases alcohol poison level
+	}
+
+	TequilaSunriseBuff: {
+		DisplayName: Tequila Sunrise
+		Description: Increases all damage, critical strike chance, damage reduction, and knockback; during the day, further increases damage, critical strike chance, defense, damage reduction, and knockback; greatly reduces life regeneration; increases alcohol poison level
+	}
+
 	CosmicEnergyBuff: {
 		DisplayName: Cosmic Energy
 		Description: The cosmic energy spiral will protect you
@@ -3016,6 +3026,28 @@ Items: {
 			Increases alcohol poison level
 			Increases spawn rate and max spawns during a Blood Moon
 			Blood burns!
+			'''
+	}
+
+	MoscowMule: {
+		DisplayName: Moscow Mule
+		Tooltip:
+			'''
+			Increases all damage, critical strike chance, and knockback
+			Reduces life regeneration
+			Increases alcohol poison level
+			I once heard the copper mug can be toxic and I told 'em, "listen, dummy, I'm already poisoning myself!"
+			'''
+	}
+
+	TequilaSunrise: {
+		DisplayName: Tequila Sunrise
+		Tooltip:
+			'''
+			Increases all damage, critical strike chance, damage reduction, and knockback
+			During the day, further increases damage, critical strike chance, defense, damage reduction, and knockback
+			Greatly reduces life regeneration; increases alcohol poison level
+			The greatest daytime drink I've ever had.
 			'''
 	}
 

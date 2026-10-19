@@ -4,6 +4,7 @@ using CalamityDemutation.Content.Buffs.SummonBuffs;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
+using CalamityDemutation.Content.Items.Potions.Alcohol;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Content.Projectiles.Ranged;
@@ -304,7 +305,11 @@ namespace CalamityDemutation.Players
         public bool coreOfTheBloodGod = false;
         /// <summary>血腥玛丽增益在场：由 BloodyMaryBuff 每帧置位，ResetEffects 清零</summary>
         public bool bloodyMary = false;
-        /// <summary>当前酒醉等级：本工程暂由血腥玛丽提供 +1，每帧在 ResetEffects 归零后重新累计</summary>
+        /// <summary>莫斯科骡子增益在场：由 MoscowMuleBuff 每帧置位，ResetEffects 清零</summary>
+        public bool moscowMule = false;
+        /// <summary>龙舌兰日出增益在场：由 TequilaSunriseBuff 每帧置位，ResetEffects 清零</summary>
+        public bool tequilaSunrise = false;
+        /// <summary>当前酒醉等级：本工程暂由血腥玛丽 / 莫斯科骡子 / 龙舌兰日出各提供 +1，每帧在 ResetEffects 归零后重新累计</summary>
         public int alcoholPoisonLevel = 0;
         /// <summary>
         /// 已装备腐化烧瓶：身处腐化之地时获得 +3 防御与 +7% 减伤
@@ -997,6 +1002,8 @@ namespace CalamityDemutation.Players
             coinofDeceit = false;
             coreOfTheBloodGod = false;
             bloodyMary = false;
+            moscowMule = false;
+            tequilaSunrise = false;
             alcoholPoisonLevel = 0;
             corruptFlask = false;
             cosmicEnergy = false;
@@ -1281,6 +1288,8 @@ namespace CalamityDemutation.Players
             purity = false;
             purityHealSlowdownFrames = 0;   // 跨帧计时器：源只在死亡时清零（见字段注释，不能进 ResetEffects）
             bloodyMary = false;
+            moscowMule = false;
+            tequilaSunrise = false;
             alcoholPoisonLevel = 0;
             radiantOoze = false;
             radiantResolution = false;
@@ -1559,6 +1568,29 @@ namespace CalamityDemutation.Players
                 Player.moveSpeed += 0.15f;
                 Player.statDefense -= 4;
                 Player.endurance -= 0.04f;
+            }
+            // 莫斯科骡子（2.0.3.9+）：+9% 通用伤害 / +3% 通用暴击；
+            // 击退在 ModifyWeaponKnockback、-2 HP/s 在 UpdateLifeRegen 处理。
+            if (moscowMule)
+            {
+                Player.GetDamage<GenericDamageClass>() += MoscowMule.DamageBoost;
+                Player.GetCritChance<GenericDamageClass>() += MoscowMule.CritBoost;
+            }
+            // 龙舌兰日出（1.4.2 面板 + 用户 2026-10-19 修正）：通用 +3% 伤害 / +2% 暴击 / +3% 减伤；
+            // 白天再叠加 1.4.2 原版的 +7% 伤害 / +3% 暴击 / +15 防御 / +7% 减伤。
+            // 击退在 ModifyWeaponKnockback（通用 +3%，白天再 +7%）、-5 HP/s 在 UpdateLifeRegen 处理。
+            if (tequilaSunrise)
+            {
+                Player.GetDamage<GenericDamageClass>() += TequilaSunrise.GeneralDamageBoost;
+                Player.GetCritChance<GenericDamageClass>() += TequilaSunrise.GeneralCritBoost;
+                Player.endurance += TequilaSunrise.GeneralDamageReduction;
+                if (Main.dayTime)
+                {
+                    Player.GetDamage<GenericDamageClass>() += TequilaSunrise.DayDamageBoost;
+                    Player.GetCritChance<GenericDamageClass>() += TequilaSunrise.DayCritBoost;
+                    Player.statDefense += TequilaSunrise.DayDefenseBoost;
+                    Player.endurance += TequilaSunrise.DayDamageReduction;
+                }
             }
             // 代达罗斯纹章：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
             if (daedalusEmblem)
@@ -3644,6 +3676,16 @@ namespace CalamityDemutation.Players
         }
         public override void ModifyWeaponKnockback(Item item, ref StatModifier knockback)
         {
+            // 莫斯科骡子：+50% 武器击退（2.0.3.9 的 item.knockBack * 0.5f 在 StatModifier 里等价于加法乘数 +0.5）
+            if (moscowMule)
+                knockback += MoscowMule.KnockbackBoost;
+            // 龙舌兰日出：通用 +3% 武器击退；白天再叠加 1.4.2 原版的 +7%
+            if (tequilaSunrise)
+            {
+                knockback += TequilaSunrise.GeneralKnockbackBoost;
+                if (Main.dayTime)
+                    knockback += TequilaSunrise.DayKnockbackBoost;
+            }
             if (auricBoost)
             {
                 knockback *= 1f + (1f - modStealth) * 0.5f;
@@ -4030,6 +4072,16 @@ namespace CalamityDemutation.Players
             if (bloodyMary)
             {
                 Player.lifeRegen -= 8;
+            }
+            // 莫斯科骡子：-2 HP/s（2.0.3.9+ 把 totalNegativeLifeRegen 写成 4，本工程同样按 lifeRegen 点数减 4）
+            if (moscowMule)
+            {
+                Player.lifeRegen -= 4;
+            }
+            // 龙舌兰日出：-5 HP/s（tML 每 2 点 lifeRegen = 1 HP/s，故减 10）
+            if (tequilaSunrise)
+            {
+                Player.lifeRegen -= 10;
             }
             // 欧米茄蓝胸甲：禁止一切正面生命再生（同上，放在本钩子末尾以覆盖本方法内先加上的各项）
             OmegaBlueNoLifeRegen();

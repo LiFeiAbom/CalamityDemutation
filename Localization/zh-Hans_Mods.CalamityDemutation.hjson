@@ -239,6 +239,16 @@ Buffs: {
 		Description: 提高所有伤害，暴击率，近战攻击速度和移动速度；降低防御，伤害减免和生命再生；提高酒醉等级；血月期间提高刷怪率与最大刷怪量
 	}
 
+	MoscowMuleBuff: {
+		DisplayName: 莫斯科骡子
+		Description: 提高所有伤害，暴击率和击退；降低生命再生；提高酒醉等级
+	}
+
+	TequilaSunriseBuff: {
+		DisplayName: 龙舌兰日出
+		Description: 提高所有伤害，暴击率，伤害减免和击退；白天额外提高伤害，暴击率，防御，伤害减免和击退；大幅降低生命再生；提高酒醉等级
+	}
+
 	CosmicEnergyBuff: {
 		DisplayName: 宇宙之灵
 		Description: 宇宙之灵会保护你
@@ -3015,6 +3025,28 @@ Items: {
 			提高酒醉等级
 			血月期间提高刷怪率与最大刷怪量
 			血液燃烧！
+			'''
+	}
+
+	MoscowMule: {
+		DisplayName: 莫斯科骡子
+		Tooltip:
+			'''
+			提高所有伤害，暴击率和击退
+			降低生命再生
+			提高酒醉等级
+			听说铜杯可能有毒？得了吧，我早就在毒自己了。
+			'''
+	}
+
+	TequilaSunrise: {
+		DisplayName: 龙舌兰日出
+		Tooltip:
+			'''
+			提高所有伤害，暴击率，伤害减免和击退
+			白天额外提高伤害，暴击率，防御，伤害减免和击退
+			大幅降低生命再生；提高酒醉等级
+			我喝过最棒的白天饮品。
 			'''
 	}
 

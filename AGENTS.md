@@ -7,6 +7,9 @@
 落地「光之舞」整条下位链（§23：2.0 配方 + CI 白焰雨机制 + 现代版物品贴图），
 并新增「酒」门类首件血腥玛丽（§25）；提交后 `master` 与远端同步。
 
+**2026-10-19 追加**：酒类第二件莫斯科骡子落地（§27）——2.0 系列效果、2.0.7.2 熔渣线双配方；
+同时血腥玛丽配方按 §26 改为双配方。酒类第三件龙舌兰日出见 §28。
+
 ## 1. 工程是什么
 
 灾厄扩展 mod（tModLoader 1.4.4 / net8.0，显示名 `CalamityDemutation`，作者 LF），主题是"灾厄旧版内容回归"。
@@ -4470,3 +4473,76 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 随后按用户要求把血腥玛丽物品与增益描述改成**定性描述**，不再出现具体百分比/数值；
 具体数值仍以代码实现为准（+15% 伤害/近战攻速/移速、+5% 暴击、-4 防御、-4% 减伤、-4 HP/s、血月刷怪 ×10）。
 用户 2026-10-19 进一步定稿为“相关增益/代价各合并一句、特殊机制单列、风味最后”的写法，见 §4。
+
+## 27. 酒类第二件：莫斯科骡子（2.0 效果 + 2.0.7.2 双配方，2026-10-19）
+
+**用户口径（2026-10-19）**：效果移植 **2.0 系列**；配方先取 2.1，后改为 **2.0.7.2 双配方**。
+
+**来源**：
+
+- 物品壳取 `CalamityModPublic-2.0.4/Items/Potions/Alcohol/MoscowMule.cs`（32×32 图，`DefaultToFood` 32×34、堆叠 9999、黄档、8 分钟、价值 5 金 30 银、研究 5）。
+- 效果取 `2.0.3.9+` 的 `CalamityPlayerMiscEffects` / `CalamityPlayerLifeRegen` / `CalamityPlayer.ModifyWeaponKnockback`：
+  通用伤害 **+9%**、通用暴击 **+3%**、武器击退 **+50%**、生命再生 **−2 HP/s**、酒醉 **+1**。
+- 配方取 `2.0.7.2`（各产 1）：
+  `ItemID.Ale`（麦芽酒）×1 + 熔渣线材料×3 @ 酒桶；
+  `ItemID.BottledWater`（瓶装水）×1 + `BloodOrb`（血珠）×5 + 熔渣线材料×1 @ 炼药桌。
+  第二条 `DisableDecraft()`，与源一致。
+
+**落地文件**：
+
+- `Content/Items/Potions/Alcohol/MoscowMule.cs` + `MoscowMule.png`（2.0.4，32×32）。
+- `Content/Buffs/Alcohol/MoscowMuleBuff.cs` + `MoscowMuleBuff.png`（2.0.4，32×32）；debuff / 可存档 / PvP / 护士不能移除 / 持久化。
+- `Players/CalamityDemutationPlayer.cs`：新增 `moscowMule` 标记；`PostUpdateMiscEffects` 加伤害/暴击；`ModifyWeaponKnockback` 加 `0.5f` 加法乘数；`UpdateLifeRegen` 减 4 点（= −2 HP/s）。
+
+**配方软依赖（2026-10-19 用户确认）**：
+
+- 现代 `CalamityMod` 用 `ScoriaOre`（熔渣矿）。
+- 经典 `CalamityModClassicPreTrailer` 没有 `ScoriaOre`，用 `CruptixBar`（Chaotic Bar）作为对应材料；
+  若两者都没有，再回退 `ChaoticOre`。
+- 经典版是**用锭代替矿**：`CruptixBar` 由 5 个 `ChaoticOre` 在精金熔炉烧成 1 个，
+  所以经典版这两条配方的材料成本明显高于现代版。
+- 现代 `ScoriaOre` 的 `[LegacyName]` 是 `ChaoticOre`；现代 `ScoriaBar` 的 `[LegacyName]` 才是 `CruptixBar`。
+  别把“熔渣矿”直接映射成 `CruptixBar`——本次是按用户点名用锭。
+
+**本地化**：`Items.MoscowMule` / `Buffs.MoscowMuleBuff`，中英均用定性描述，不写百分比；
+风味句保留铜杯自嘲梗。具体数值以代码为准。
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **510 个类**全命中。
+血腥玛丽配方未改动。
+
+## 28. 酒类第三件：龙舌兰日出（1.4.2 面板 + 修正通用加成，2026-10-19）
+
+**用户口径（2026-10-19）**：面板走经典 1.4.2；通用加成改为
+**+3% 伤害、+2% 暴击、+3% 伤害减免、+3% 击退**（昼夜均生效），白天再叠加 1.4.2 原有加成；
+配方选择 2.0.7.2 双配方。
+
+**物品面板（1.4.2）**：28×18、堆叠 30、浅红档、5 分钟、价值 20 金、研究解锁 5；
+物品贴图取经典版 18×22，增益图标 32×32。
+
+**效果**：
+
+- 通用：+3% 通用伤害、+2% 通用暴击、+3% 伤害减免（`Player.endurance`）、+3% 武器击退。
+- 白天额外：+7% 通用伤害、+3% 通用暴击、+15 防御、+7% 伤害减免、+7% 武器击退。
+- 白天合计：+10% 伤害、+5% 暴击、+10% 伤害减免、+15 防御、+10% 击退。
+- 代价：生命再生 **−5 HP/s**（`Player.lifeRegen -= 10`）；酒醉 +1。
+- 夜间只保留通用 3%/2%/3%/3%，白天加成关闭。
+
+**配方（2.0.7.2，各产 1）**：
+
+- 麦芽酒 + 熔渣线材料×3 @ 酒桶。
+- 瓶装水 + 血珠×5 + 熔渣线材料×1 @ 炼药桌；第二条 `DisableDecraft()`。
+- 现代用 `ScoriaOre`；经典用 `CruptixBar`；都缺时回退 `ChaoticOre`（与 §27 同口径）。
+
+**落地文件**：
+
+- `Content/Items/Potions/Alcohol/TequilaSunrise.cs` + `TequilaSunrise.png`（经典 18×22）。
+- `Content/Buffs/Alcohol/TequilaSunriseBuff.cs` + `TequilaSunriseBuff.png`（经典 32×32）。
+- `Players/CalamityDemutationPlayer.cs`：新增 `tequilaSunrise` 标记；`PostUpdateMiscEffects` 结算昼夜伤害/暴击/减伤/防御；`ModifyWeaponKnockback` 通用 +3%、白天再 +7%；`UpdateLifeRegen` 减 10 点。
+
+**本地化**：`Items.TequilaSunrise` / `Buffs.TequilaSunriseBuff`，中英均用定性描述；
+风味句“我喝过最棒的白天饮品。”/“The greatest daytime drink I've ever had.”
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **512 个类**全命中。
+血腥玛丽配方未改动。
