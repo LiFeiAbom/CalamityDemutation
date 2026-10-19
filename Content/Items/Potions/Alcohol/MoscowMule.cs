@@ -54,7 +54,6 @@ namespace CalamityDemutation.Content.Items.Potions.Alcohol
             {
                 if (!ModLoader.TryGetMod(modName, out Mod calamity))
                     continue;
-
                 ModItem scoriaMaterial = null;
                 if (calamity.TryFind<ModItem>("ScoriaOre", out ModItem scoriaOre))
                     scoriaMaterial = scoriaOre;
@@ -62,16 +61,13 @@ namespace CalamityDemutation.Content.Items.Potions.Alcohol
                     scoriaMaterial = cruptixBar;
                 else if (calamity.TryFind<ModItem>("ChaoticOre", out ModItem chaoticOre))
                     scoriaMaterial = chaoticOre;
-
                 if (scoriaMaterial == null)
                     continue;
-
                 CreateRecipe()
                     .AddIngredient(ItemID.Ale)
                     .AddIngredient(scoriaMaterial.Type, 3)
                     .AddTile(TileID.Kegs)
                     .Register();
-
                 if (calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb))
                 {
                     CreateRecipe()
