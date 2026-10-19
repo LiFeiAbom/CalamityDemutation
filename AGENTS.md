@@ -8,7 +8,18 @@
 并新增「酒」门类首件血腥玛丽（§25）；提交后 `master` 与远端同步。
 
 **2026-10-19 追加**：酒类第二件莫斯科骡子落地（§27）——2.0 系列效果、2.0.7.2 熔渣线双配方；
-同时血腥玛丽配方按 §26 改为双配方。酒类第三件龙舌兰日出见 §28。
+同时血腥玛丽配方按 §26 改为双配方。酒类第三件龙舌兰日出见 §28；酒醉等级反射尝试/回退见 §29；
+2.0 独立酒精中毒见 §30。
+
+**2026-10-19 酒类批次移交**：
+
+- 酒类三件已完成：血腥玛丽（§25–26）、莫斯科骡子（§27）、龙舌兰日出（§28）。
+- 酒醉等级为本工程本地 `alcoholPoisonLevel`：三个酒 buff 各 +1，原版 `BuffID.Tipsy` 再 +1；
+  不读取灾厄其它酒。
+- 2.0 独立酒精中毒已落地（§30）：`>3` 触发自己的 `AlcoholPoisoning` buff、清零正再生、
+  追加 `3 × 等级` 负再生、死亡文案；buff 位于 `Content/Buffs/NegativeBuffs/`。
+- 反射写入灾厄 `alcoholPoisonLevel` 的方案已尝试并回退，字段名/时序/原因保留在 §29，后续自写中毒可参考。
+- 用户 2026-10-19 已实测通过；构建、资源与隐式贴图自检通过。酒类批次无遗留待办。
 
 ## 1. 工程是什么
 
@@ -4444,7 +4455,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **效果（用户 2026-10-18 修正，已全部落地）**：
 
 - 通用伤害 **+15%**、通用暴击 **+5%**、近战攻击速度 **+15%**、移动速度 **+15%**、防御 **-4**、伤害减免 **-4%**；
-- 酒醉等级 **+1**（本工程用 `CalamityDemutationPlayer.alcoholPoisonLevel` 记录，暂无额外阈值惩罚）；
+- 酒醉等级 **+1**（参与 §30 的 2.0 独立酒精中毒累计）；
 - 生命回复 **-4 HP/s**（写在 `UpdateLifeRegen`：`Player.lifeRegen -= 8`，因为 2 点 lifeRegen = 1 HP/s）；
 - 血月期间刷怪率 **×10**、最大刷怪量 **×10**（写在 `CalamityDemutationGlobalNPC.EditSpawnRate`）。
 
@@ -4549,3 +4560,61 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **209 条**全命中；`CheckImplicitTextures` **512 个类**全命中。
 血腥玛丽配方未改动。
+
+## 29. 酒醉等级反射尝试（2026-10-19，已回退）
+
+**尝试方案（记忆保留，代码已移除）**：按炽天使翼靴的反射模式，把本工程酒的等级写入灾厄
+`alcoholPoisonLevel`，让灾厄自己的 `>3` 阈值、`AlcoholPoisoning`、生命再生惩罚、死亡文案和
+护士清理统一生效，不新增灾厄字段、不移植独立 buff。
+
+**当时查到的字段/时序**（后续自写中毒可参考）：
+
+- 现代：`CalamityPlayer.alcoholPoisonLevel`（`public int`）。
+- 经典：`CalamityPlayerPreTrailer.alcoholPoisonLevel`（`public int`）。
+- 时序：灾厄 `ResetEffects` 清零 → 酒 buff `Update` 加 1 → 经典 `PostUpdateMiscEffects` /
+  现代 `UpdateLifeRegen` 再叠加灾厄自己的酒并判定 `>3`。
+- 两版字段都存在时两边都写；缺字段/改名/类型变化时 fail-open。
+- 灾厄原版阈值是 `>3`：本工程三瓶酒各 +1，三瓶全喝 = 3 级不触发；再叠灾厄酒 / Tipsy 到 4 级才触发。
+- 现代中毒效果：`AlcoholPoisoning` buff、生命再生清零、`3 × 等级` DoT、死亡文案、护士清理；
+  经典只有 `>3` 的生命再生惩罚。
+
+**回退原因（用户 2026-10-19）**：先保留工程自持的酒醉等级，后续再单独设计本模组的酒精中毒；
+当前不依赖灾厄的阈值和 buff。反射桥代码已从 `CDUtil_CalamityReflect.cs` 移除。
+
+**当前状态**：反射桥仍移除；`alcoholPoisonLevel` 继续作为本工程本地累计，
+由 §30 的 2.0 独立酒精中毒机制消费。
+
+## 30. 2.0 独立酒精中毒机制（2026-10-19）
+
+**用户口径**：移植 2.0 版酒精中毒；不读取灾厄其它酒，只累计本工程三瓶酒与原版 `Tipsy`。
+
+**等级**：`CalamityDemutationPlayer.alcoholPoisonLevel`，每帧 `ResetEffects` 清零；
+三个酒 buff 的 `Update` 各 +1，原版 `BuffID.Tipsy`（Ale / Sake）在 `UpdateLifeRegen` 再 +1。
+用 `Player.HasBuff(BuffID.Tipsy)` 判定，避免把灾厄自己置真的 `Player.tipsy` 间接算进来。
+三瓶本家酒 = 3 级，不触发；三瓶 + 原版 Tipsy = 4 级，触发。
+
+**阈值与效果（照 2.0）**：
+
+- `alcoholPoisonLevel > 3` 时：
+  - `Player.nebulaLevelLife = 0`
+  - 本地玩家挂本模组 `AlcoholPoisoning` buff 2 帧
+  - 正 `lifeRegen` 归零，`lifeRegenTime = 0`
+  - `Player.lifeRegen -= 3 * alcoholPoisonLevel`（即 1.5 × 等级 HP/s）
+- buff：debuff、不存档、不显示时间、护士不能移除；`Update` 只置位
+  `CalamityDemutationPlayer.alcoholPoisoning`。
+- 死亡文案：`TextContent.AlcoholPoisoningDeath1/2`，在 `PreKill` 中按
+  `damage == 10 && hitDirection == 0 && SourceOtherIndex == 8` 替换。
+- 2.0 没有护士清理过量酒精的 `PostNurseHeal`，本实现同样不做。
+
+**文件**：
+
+- `Content/Buffs/NegativeBuffs/AlcoholPoisoning.cs` + `AlcoholPoisoning.png`（2.0 图，32×32）。
+- `Players/CalamityDemutationPlayer.cs`：`alcoholPoisoning` 标记、`UpdateLifeRegen` 阈值段、`PreKill` 文案。
+- 中英本地化：`Buffs.AlcoholPoisoning` 与 `TextContent.AlcoholPoisoningDeath1/2`。
+
+**注意**：本机制不读取灾厄的 `alcoholPoisonLevel`，也不把本工程 buff 注册进灾厄的
+`CalamityBuffSets.AlcoholStrength`；灾厄自己的酒和中毒仍按灾厄原逻辑独立运行。
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **513 个类**全命中。
+用户已实测通过 4 级阈值、2 帧 buff 与死亡文案；护士行为按 2.0 为“不能移除中毒 buff”。

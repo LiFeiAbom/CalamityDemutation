@@ -1,4 +1,9 @@
 Buffs: {
+	AlcoholPoisoning: {
+		DisplayName: Alcohol Poisoning
+		Description: You drank too much and you are now dying
+	}
+
 	Afflicted: {
 		DisplayName: Afflicted
 		Description: Empowered by otherworldly spirits
@@ -3287,4 +3292,6 @@ Projectiles: {
 TextContent: {
 	ClockworkBowTick: Tick
 	ClockworkBowTock: Tock
+	AlcoholPoisoningDeath1: "{0} downed too many shots."
+	AlcoholPoisoningDeath2: "{0}'s liver failed."
 }

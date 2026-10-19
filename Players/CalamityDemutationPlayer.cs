@@ -309,8 +309,10 @@ namespace CalamityDemutation.Players
         public bool moscowMule = false;
         /// <summary>龙舌兰日出增益在场：由 TequilaSunriseBuff 每帧置位，ResetEffects 清零</summary>
         public bool tequilaSunrise = false;
-        /// <summary>当前酒醉等级：本工程暂由血腥玛丽 / 莫斯科骡子 / 龙舌兰日出各提供 +1，每帧在 ResetEffects 归零后重新累计</summary>
+        /// <summary>本工程酒类自持的酒醉等级：三个酒 buff 各 +1、原版 Tipsy +1；>3 触发 2.0 版酒精中毒</summary>
         public int alcoholPoisonLevel = 0;
+        /// <summary>本工程自己的酒精中毒标记：由 AlcoholPoisoning buff 每帧置位，供死亡文案判定</summary>
+        public bool alcoholPoisoning = false;
         /// <summary>
         /// 已装备腐化烧瓶：身处腐化之地时获得 +3 防御与 +7% 减伤
         /// </summary>
@@ -1005,6 +1007,7 @@ namespace CalamityDemutation.Players
             moscowMule = false;
             tequilaSunrise = false;
             alcoholPoisonLevel = 0;
+            alcoholPoisoning = false;
             corruptFlask = false;
             cosmicEnergy = false;
             crawCarapace = false;
@@ -1291,6 +1294,7 @@ namespace CalamityDemutation.Players
             moscowMule = false;
             tequilaSunrise = false;
             alcoholPoisonLevel = 0;
+            alcoholPoisoning = false;
             radiantOoze = false;
             radiantResolution = false;
             rampartofDeities = false;
@@ -4083,6 +4087,20 @@ namespace CalamityDemutation.Players
             {
                 Player.lifeRegen -= 10;
             }
+            // 2.0 版酒精中毒：本工程三瓶酒各 +1，原版 Tipsy 再 +1；不读取灾厄其它酒。
+            // 阈值 >3；触发后清零正再生与再生时间，并按等级追加 3 × 等级 的负再生。
+            if (Player.HasBuff(BuffID.Tipsy))
+                alcoholPoisonLevel++;
+            if (alcoholPoisonLevel > 3)
+            {
+                Player.nebulaLevelLife = 0;
+                if (Player.whoAmI == Main.myPlayer)
+                    Player.AddBuff(ModContent.BuffType<AlcoholPoisoning>(), 2, false);
+                if (Player.lifeRegen > 0)
+                    Player.lifeRegen = 0;
+                Player.lifeRegenTime = 0;
+                Player.lifeRegen -= 3 * alcoholPoisonLevel;
+            }
             // 欧米茄蓝胸甲：禁止一切正面生命再生（同上，放在本钩子末尾以覆盖本方法内先加上的各项）
             OmegaBlueNoLifeRegen();
         }
@@ -5826,6 +5844,13 @@ namespace CalamityDemutation.Players
             if (hellfireExplosion)
             {
                 damageSource = PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was slain in hell."));
+            }
+            if (alcoholPoisoning && damage == 10.0 && hitDirection == 0 && damageSource.SourceOtherIndex == 8)
+            {
+                string key = Main.rand.NextBool()
+                    ? "Mods.CalamityDemutation.TextContent.AlcoholPoisoningDeath1"
+                    : "Mods.CalamityDemutation.TextContent.AlcoholPoisoningDeath2";
+                damageSource = PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Language.GetTextValue(key, Player.name)));
             }
             return true;
         }

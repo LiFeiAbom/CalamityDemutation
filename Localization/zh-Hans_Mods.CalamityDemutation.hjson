@@ -1,4 +1,9 @@
 Buffs: {
+	AlcoholPoisoning: {
+		DisplayName: 酒精中毒
+		Description: 你喝得太多了，正在走向死亡
+	}
+
 	Afflicted: {
 		DisplayName: 侵蚀
 		Description: 受异界魂灵强化
@@ -3286,4 +3291,6 @@ Projectiles: {
 TextContent: {
 	ClockworkBowTick: 咔
 	ClockworkBowTock: 嗒
+	AlcoholPoisoningDeath1: "{0} 喝下了太多杯。"
+	AlcoholPoisoningDeath2: "{0} 的肝脏罢工了。"
 }
