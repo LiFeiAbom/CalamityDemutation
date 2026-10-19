@@ -309,7 +309,15 @@ namespace CalamityDemutation.Players
         public bool moscowMule = false;
         /// <summary>龙舌兰日出增益在场：由 TequilaSunriseBuff 每帧置位，ResetEffects 清零</summary>
         public bool tequilaSunrise = false;
-        /// <summary>本工程酒类自持的酒醉等级：三个酒 buff 各 +1、原版 Tipsy +1；>3 触发 2.0 版酒精中毒</summary>
+        /// <summary>朗姆酒增益在场：由 RumBuff 每帧置位，ResetEffects 清零</summary>
+        public bool rum = false;
+        /// <summary>加勒比朗姆酒增益在场：由 CaribbeanRumBuff 每帧置位，ResetEffects 清零</summary>
+        public bool caribbeanRum = false;
+        /// <summary>摩闪酒增益在场：由 MoonshineBuff 每帧置位，ResetEffects 清零</summary>
+        public bool moonshine = false;
+        /// <summary>伏特加增益在场：由 VodkaBuff 每帧置位，ResetEffects 清零</summary>
+        public bool vodka = false;
+        /// <summary>本工程酒类自持的酒醉等级：各酒 buff 各 +1、原版 Tipsy +1；>3 触发 2.0 版酒精中毒</summary>
         public int alcoholPoisonLevel = 0;
         /// <summary>本工程自己的酒精中毒标记：由 AlcoholPoisoning buff 每帧置位，供死亡文案判定</summary>
         public bool alcoholPoisoning = false;
@@ -1006,6 +1014,10 @@ namespace CalamityDemutation.Players
             bloodyMary = false;
             moscowMule = false;
             tequilaSunrise = false;
+            rum = false;
+            caribbeanRum = false;
+            moonshine = false;
+            vodka = false;
             alcoholPoisonLevel = 0;
             alcoholPoisoning = false;
             corruptFlask = false;
@@ -1293,6 +1305,10 @@ namespace CalamityDemutation.Players
             bloodyMary = false;
             moscowMule = false;
             tequilaSunrise = false;
+            rum = false;
+            caribbeanRum = false;
+            moonshine = false;
+            vodka = false;
             alcoholPoisonLevel = 0;
             alcoholPoisoning = false;
             radiantOoze = false;
@@ -1595,6 +1611,24 @@ namespace CalamityDemutation.Players
                     Player.statDefense += TequilaSunrise.DayDefenseBoost;
                     Player.endurance += TequilaSunrise.DayDamageReduction;
                 }
+            }
+            // 朗姆酒（2.0.4）：+10% 移速；再生在 UpdateLifeRegen，-8 防御在 PostUpdateMiscEffects 末尾。
+            if (rum)
+                Player.moveSpeed += 0.10f;
+            // 加勒比朗姆酒（2.0.4）：+10% 移速；浮空与 -10% 防御在 PostUpdateMiscEffects 末尾。
+            if (caribbeanRum)
+                Player.moveSpeed += 0.10f;
+            // 摩闪酒（2.0.4）：+10 防御 / +3% 伤害减免；再生惩罚在 UpdateLifeRegen。
+            if (moonshine)
+            {
+                Player.statDefense += 10;
+                Player.endurance += 0.03f;
+            }
+            // 伏特加（2.0.4）：+6% 伤害 / +2% 暴击；防御与再生在别处结算。
+            if (vodka)
+            {
+                Player.GetDamage<GenericDamageClass>() += 0.06f;
+                Player.GetCritChance<GenericDamageClass>() += 2;
             }
             // 代达罗斯纹章：远程增伤/暴击/回血/击退/挖速（不耗弹见 CanConsumeAmmo）
             if (daedalusEmblem)
@@ -3612,6 +3646,20 @@ namespace CalamityDemutation.Players
                     Player.statDefense += 10;
                 }
             }
+            // 朗姆酒：-8 防御（用户 2026-10-19 从 2.0.4 的 -5% 改为固定值）
+            if (rum)
+                Player.statDefense -= 8;
+            // 加勒比朗姆酒：-10% 当前防御 + 浮空
+            if (caribbeanRum)
+            {
+                if (Player.statDefense > 0)
+                    Player.statDefense -= (int)(Player.statDefense * 0.10f);
+                if (!Player.slowFall && !Player.mount.Active)
+                    Player.velocity.Y *= 1.01f;
+            }
+            // 伏特加：-5 防御（用户 2026-10-19 从 -5% 改为固定值）
+            if (vodka)
+                Player.statDefense -= 5;
         }
         // ── 还原灾厄内容削弱 ──
         /// <summary>
@@ -4087,7 +4135,19 @@ namespace CalamityDemutation.Players
             {
                 Player.lifeRegen -= 10;
             }
-            // 2.0 版酒精中毒：本工程三瓶酒各 +1，原版 Tipsy 再 +1；不读取灾厄其它酒。
+            // 朗姆酒：+1 HP/s（2 点 lifeRegen）
+            if (rum)
+                Player.lifeRegen += 2;
+            // 加勒比朗姆酒：+1 HP/s（2 点 lifeRegen）
+            if (caribbeanRum)
+                Player.lifeRegen += 2;
+            // 摩闪酒：-0.5 HP/s（1 点 lifeRegen）
+            if (moonshine)
+                Player.lifeRegen -= 1;
+            // 伏特加：-0.5 HP/s（1 点 lifeRegen）
+            if (vodka)
+                Player.lifeRegen -= 1;
+            // 2.0 版酒精中毒：本工程各酒 buff 各 +1，原版 Tipsy 再 +1；不读取灾厄其它酒。
             // 阈值 >3；触发后清零正再生与再生时间，并按等级追加 3 × 等级 的负再生。
             if (Player.HasBuff(BuffID.Tipsy))
                 alcoholPoisonLevel++;

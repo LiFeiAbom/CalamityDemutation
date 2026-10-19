@@ -13,13 +13,15 @@
 
 **2026-10-19 酒类批次移交**：
 
-- 酒类三件已完成：血腥玛丽（§25–26）、莫斯科骡子（§27）、龙舌兰日出（§28）。
-- 酒醉等级为本工程本地 `alcoholPoisonLevel`：三个酒 buff 各 +1，原版 `BuffID.Tipsy` 再 +1；
+- 酒类七件：血腥玛丽（§25–26）、莫斯科骡子（§27）、龙舌兰日出（§28）、朗姆酒（§31）、
+  加勒比朗姆酒（§32）、摩闪酒（§33）、伏特加（§34）。
+- 酒醉等级为本工程本地 `alcoholPoisonLevel`：各酒 buff 各 +1，原版 `BuffID.Tipsy` 再 +1；
   不读取灾厄其它酒。
 - 2.0 独立酒精中毒已落地（§30）：`>3` 触发自己的 `AlcoholPoisoning` buff、清零正再生、
   追加 `3 × 等级` 负再生、死亡文案；buff 位于 `Content/Buffs/NegativeBuffs/`。
 - 反射写入灾厄 `alcoholPoisonLevel` 的方案已尝试并回退，字段名/时序/原因保留在 §29，后续自写中毒可参考。
-- 用户 2026-10-19 已实测通过；构建、资源与隐式贴图自检通过。酒类批次无遗留待办。
+- 用户 2026-10-19 已实测通过酒类七件与 2.0 酒精中毒；构建、资源与隐式贴图自检通过。
+  酒类批次无遗留待办。
 
 ## 1. 工程是什么
 
@@ -4586,12 +4588,12 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 
 ## 30. 2.0 独立酒精中毒机制（2026-10-19）
 
-**用户口径**：移植 2.0 版酒精中毒；不读取灾厄其它酒，只累计本工程三瓶酒与原版 `Tipsy`。
+**用户口径**：移植 2.0 版酒精中毒；不读取灾厄其它酒，只累计本工程酒 buff 与原版 `Tipsy`。
 
 **等级**：`CalamityDemutationPlayer.alcoholPoisonLevel`，每帧 `ResetEffects` 清零；
-三个酒 buff 的 `Update` 各 +1，原版 `BuffID.Tipsy`（Ale / Sake）在 `UpdateLifeRegen` 再 +1。
+各酒 buff 的 `Update` 各 +1，原版 `BuffID.Tipsy`（Ale / Sake）在 `UpdateLifeRegen` 再 +1。
 用 `Player.HasBuff(BuffID.Tipsy)` 判定，避免把灾厄自己置真的 `Player.tipsy` 间接算进来。
-三瓶本家酒 = 3 级，不触发；三瓶 + 原版 Tipsy = 4 级，触发。
+当前七件本家酒全喝 = 7 级，直接触发；任意四件 = 4 级触发；任意三件 + 原版 Tipsy 也会到 4 级。
 
 **阈值与效果（照 2.0）**：
 
@@ -4618,3 +4620,127 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **209 条**全命中；`CheckImplicitTextures` **513 个类**全命中。
 用户已实测通过 4 级阈值、2 帧 buff 与死亡文案；护士行为按 2.0 为“不能移除中毒 buff”。
+
+## 31. 酒类第四件：朗姆酒（2026-10-19）
+
+**用户口径**：面板/再生/移速取 2.0.4；防御改为固定 −8；配方自定义。
+
+**物品面板（2.0.4）**：28×18、堆叠 9999、浅红档、8 分钟、价值 1 金 30 银、研究解锁 5；
+贴图取 2.0.4 `Rum.png`（20×26），增益图标 `RumBuff.png`（32×32）。
+
+**效果（2.0.4）**：
+
+- 生命再生 **+1 HP/s**（`UpdateLifeRegen`：`Player.lifeRegen += 2`）。
+- 移动速度 **+10%**（`PostUpdateMiscEffects`：`Player.moveSpeed += 0.10f`）。
+- 防御 **−8（固定值）**（`PostUpdateMiscEffects` 末尾：`statDefense -= 8`）。
+- 酒醉 **+1**（RumBuff.Update 累加本地 `alcoholPoisonLevel`）。
+
+**文件**：
+
+- `Content/Items/Potions/Alcohol/Rum.cs` + `Rum.png`。
+- `Content/Buffs/Alcohol/RumBuff.cs` + `RumBuff.png`。
+- `Players/CalamityDemutationPlayer.cs`：`rum` 标记、移速/防御/再生结算。
+- 中英本地化：`Items.Rum` / `Buffs.RumBuff`。
+
+**配方**：瓶装水×1 + 飞翔之魂×1 + 羽毛×1 + 蜘蛛牙×1 @ 酒桶 → 1。
+都是原版材料，现代/经典通用。
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **515 个类**全命中。
+
+## 32. 酒类第五件：加勒比朗姆酒（2026-10-19）
+
+**来源判断**：当前 2.2.1 的 DLL / 本地化里仍能看到 `CaribbeanRum`、`CaribbeanRumBuff` 与
+`CaribbeanRumEffect`，但源码包最新可读的是 2.1；本工程取 **2.0.4 面板/效果 + 2.0.7.2 配方**，
+和现有酒类口径一致。
+
+**物品面板（2.0.4）**：28×18、堆叠 9999、黄绿档（Lime）、8 分钟、价值 5 金 30 银、研究解锁 5；
+贴图取 2.0.4 `CaribbeanRum.png`（14×32），增益图标 `CaribbeanRumBuff.png`（32×32）。
+
+**效果（2.0.4）**：
+
+- 生命再生 **+1 HP/s**（`Player.lifeRegen += 2`）。
+- 移动速度 **+10%**。
+- 当前防御 **−10%**（`statDefense -= (int)(statDefense * 0.10f)`，只对正防御生效）。
+- 浮空：非 slowFall、非坐骑时 `Player.velocity.Y *= 1.01f`。
+- 酒醉 **+1**。
+
+**配方（2.0.7.2，各产 1）**：
+
+- 麦芽酒 + `LivingShard` @ 酒桶。
+- 瓶装水 + 血珠×5 + `LivingShard` @ 炼药桌；第二条 `DisableDecraft()`。
+- `LivingShard` / `BloodOrb` 按现代 / 经典灾厄分别 `TryFind`，两版都能注册。
+
+**文件**：
+
+- `Content/Items/Potions/Alcohol/CaribbeanRum.cs` + `CaribbeanRum.png`。
+- `Content/Buffs/Alcohol/CaribbeanRumBuff.cs` + `CaribbeanRumBuff.png`。
+- `Players/CalamityDemutationPlayer.cs`：`caribbeanRum` 标记、移速/防御/浮空/再生结算。
+- 中英本地化：`Items.CaribbeanRum` / `Buffs.CaribbeanRumBuff`。
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **517 个类**全命中。
+用户 2026-10-19 已实测通过浮空、-10% 防御和双配方。
+
+## 33. 酒类第六件：摩闪酒（2026-10-19）
+
+**来源**：取 2.0.4 面板/效果 + 2.0.7.2 双配方。
+
+**物品面板（2.0.4）**：28×18、堆叠 9999、黄档、8 分钟、价值 1 金 30 银、研究解锁 5；
+贴图取 2.0.4 `Moonshine.png`（24×28），增益图标 `MoonshineBuff.png`（32×32）。
+
+**效果（2.0.4）**：
+
+- 防御 **+10**。
+- 伤害减免 **+3%**（`Player.endurance += 0.03f`）。
+- 生命再生 **−0.5 HP/s**（`Player.lifeRegen -= 1`）。
+- 酒醉 **+1**。
+
+**配方（2.0.7.2，各产 1）**：
+
+- 麦芽酒 + 熔渣线材料×3 @ 酒桶。
+- 瓶装水 + 血珠×5 + 熔渣线材料×1 @ 炼药桌；第二条 `DisableDecraft()`。
+- 现代用 `ScoriaOre`；经典用 `CruptixBar`；都缺时回退 `ChaoticOre`（与 §27/§28 同口径）。
+
+**文件**：
+
+- `Content/Items/Potions/Alcohol/Moonshine.cs` + `Moonshine.png`。
+- `Content/Buffs/Alcohol/MoonshineBuff.cs` + `MoonshineBuff.png`。
+- `Players/CalamityDemutationPlayer.cs`：`moonshine` 标记、防御/减伤/再生结算。
+- 中英本地化：`Items.Moonshine` / `Buffs.MoonshineBuff`。
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **519 个类**全命中。
+用户 2026-10-19 已实测通过双配方与数值。
+
+## 34. 酒类第七件：伏特加（2026-10-19）
+
+**来源**：取 2.0.4 面板/效果 + 2.0.7.2 双配方。
+
+**物品面板（2.0.4）**：28×18、堆叠 9999、浅紫档、8 分钟、价值 1 金 30 银、研究解锁 5；
+贴图取 2.0.4 `Vodka.png`（14×36），增益图标 `VodkaBuff.png`（32×32）。
+
+**效果（2.0.4）**：
+
+- 伤害 **+6%**。
+- 暴击 **+2%**。
+- 防御 **−5（固定值）**。
+- 生命再生 **−0.5 HP/s**（`Player.lifeRegen -= 1`）。
+- 酒醉 **+1**。
+
+**配方（2.0.7.2，各产 1）**：
+
+- 麦芽酒 + `HallowedOre`×3 @ 酒桶。
+- 瓶装水 + 血珠×5 + `HallowedOre`×1 @ 炼药桌；第二条 `DisableDecraft()`。
+- 现代有 `HallowedOre`；经典没有该矿，用原版 `HallowedBar`×1 等价兜底。
+
+**文件**：
+
+- `Content/Items/Potions/Alcohol/Vodka.cs` + `Vodka.png`。
+- `Content/Buffs/Alcohol/VodkaBuff.cs` + `VodkaBuff.png`。
+- `Players/CalamityDemutationPlayer.cs`：`vodka` 标记、伤害/暴击/防御/再生结算。
+- 中英本地化：`Items.Vodka` / `Buffs.VodkaBuff`。
+
+**验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **521 个类**全命中。
+用户 2026-10-19 已实测通过数值与经典版 HallowedBar 配方。

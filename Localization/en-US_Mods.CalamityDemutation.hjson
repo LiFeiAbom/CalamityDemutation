@@ -244,9 +244,29 @@ Buffs: {
 		Description: Increases all damage, critical strike chance, melee attack speed, and movement speed; reduces defense, damage reduction, and life regeneration; increases alcohol poison level; increases spawn rate and max spawns during a Blood Moon
 	}
 
+	CaribbeanRumBuff: {
+		DisplayName: Caribbean Rum
+		Description: Increases life regeneration and movement speed; makes you floaty and reduces defense
+	}
+
 	MoscowMuleBuff: {
 		DisplayName: Moscow Mule
 		Description: Increases all damage, critical strike chance, and knockback; reduces life regeneration; increases alcohol poison level
+	}
+
+	MoonshineBuff: {
+		DisplayName: Moonshine
+		Description: Increases defense and damage reduction; reduces life regeneration
+	}
+
+	VodkaBuff: {
+		DisplayName: Vodka
+		Description: Increases damage and critical strike chance; reduces defense and life regeneration
+	}
+
+	RumBuff: {
+		DisplayName: Rum
+		Description: Increases life regeneration and movement speed; reduces defense
 	}
 
 	TequilaSunriseBuff: {
@@ -3034,6 +3054,16 @@ Items: {
 			'''
 	}
 
+	CaribbeanRum: {
+		DisplayName: Caribbean Rum
+		Tooltip:
+			'''
+			Increases life regeneration and movement speed
+			Makes you floaty and reduces defense
+			Why is the rum gone?
+			'''
+	}
+
 	MoscowMule: {
 		DisplayName: Moscow Mule
 		Tooltip:
@@ -3042,6 +3072,36 @@ Items: {
 			Reduces life regeneration
 			Increases alcohol poison level
 			I once heard the copper mug can be toxic and I told 'em, "listen, dummy, I'm already poisoning myself!"
+			'''
+	}
+
+	Moonshine: {
+		DisplayName: Moonshine
+		Tooltip:
+			'''
+			Increases defense and damage reduction
+			Reduces life regeneration
+			This stuff is pretty strong, but I'm sure you can handle it.
+			'''
+	}
+
+	Vodka: {
+		DisplayName: Vodka
+		Tooltip:
+			'''
+			Increases damage and critical strike chance
+			Reduces defense and life regeneration
+			The number one alcohol for creating great mixed drinks.
+			'''
+	}
+
+	Rum: {
+		DisplayName: Rum
+		Tooltip:
+			'''
+			Increases life regeneration and movement speed
+			Reduces defense
+			Sweet and potent, just how I like it.
 			'''
 	}
 

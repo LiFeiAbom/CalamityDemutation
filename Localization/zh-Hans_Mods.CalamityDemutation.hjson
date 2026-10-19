@@ -244,9 +244,29 @@ Buffs: {
 		Description: 提高所有伤害，暴击率，近战攻击速度和移动速度；降低防御，伤害减免和生命再生；提高酒醉等级；血月期间提高刷怪率与最大刷怪量
 	}
 
+	CaribbeanRumBuff: {
+		DisplayName: 加勒比朗姆酒
+		Description: 提高生命再生和移动速度；使你漂浮并降低防御
+	}
+
 	MoscowMuleBuff: {
 		DisplayName: 莫斯科骡子
 		Description: 提高所有伤害，暴击率和击退；降低生命再生；提高酒醉等级
+	}
+
+	MoonshineBuff: {
+		DisplayName: 摩闪酒
+		Description: 提高防御和伤害减免；降低生命再生
+	}
+
+	VodkaBuff: {
+		DisplayName: 伏特加
+		Description: 提高伤害和暴击率；降低防御和生命再生
+	}
+
+	RumBuff: {
+		DisplayName: 朗姆酒
+		Description: 提高生命再生和移动速度；降低防御
 	}
 
 	TequilaSunriseBuff: {
@@ -3033,6 +3053,16 @@ Items: {
 			'''
 	}
 
+	CaribbeanRum: {
+		DisplayName: 加勒比朗姆酒
+		Tooltip:
+			'''
+			提高生命再生和移动速度
+			使你漂浮并降低防御
+			朗姆酒怎么没了？
+			'''
+	}
+
 	MoscowMule: {
 		DisplayName: 莫斯科骡子
 		Tooltip:
@@ -3041,6 +3071,36 @@ Items: {
 			降低生命再生
 			提高酒醉等级
 			听说铜杯可能有毒？得了吧，我早就在毒自己了。
+			'''
+	}
+
+	Moonshine: {
+		DisplayName: 摩闪酒
+		Tooltip:
+			'''
+			提高防御和伤害减免
+			降低生命再生
+			这玩意儿挺烈，不过我肯定你扛得住。
+			'''
+	}
+
+	Vodka: {
+		DisplayName: 伏特加
+		Tooltip:
+			'''
+			提高伤害和暴击率
+			降低防御和生命再生
+			调配鸡尾酒的头号酒精。
+			'''
+	}
+
+	Rum: {
+		DisplayName: 朗姆酒
+		Tooltip:
+			'''
+			提高生命再生和移动速度
+			降低防御
+			香甜浓烈，正合我意。
 			'''
 	}
 
