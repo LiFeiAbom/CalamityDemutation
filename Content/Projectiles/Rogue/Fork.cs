@@ -1,3 +1,4 @@
+using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -30,6 +31,19 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
                 Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, DustID.Blood, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             Projectile.spriteDirection = Projectile.direction = (Projectile.velocity.X > 0).ToDirectionInt();
             Projectile.rotation = Projectile.velocity.ToRotation() + (Projectile.spriteDirection == 1 ? 0f : MathHelper.Pi);
+        }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Main.player[Projectile.owner].AddBuff(BuffID.WellFed, 180);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "BurningBlood", 180);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "BurningBlood", 180);
+        }
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Main.player[Projectile.owner].AddBuff(BuffID.WellFed, 180);
+            target.AddBuff(BuffID.Bleeding, 300);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "BurningBlood", 180);
+            CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "BurningBlood", 180);
         }
         public override bool PreDraw(ref Color lightColor)
         {

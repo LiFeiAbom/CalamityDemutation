@@ -53,5 +53,7 @@ namespace CalamityDemutation.Sounds
         /// <summary>相位神光命中（MeldShoot）：以太流光炮的光弹每次命中时播放
         /// （灾厄原名 Sounds/Item/MeldShoot；音量与音高在调用点给，照源 0.4 / 0.5~0.65）</summary>
         public static readonly SoundStyle MeldShoot = new("CalamityDemutation/Sounds/Custom/MeldShoot");
+        /// <summary>炙热平底锅金锅与潜行锅命中时的砸锅声（灾厄 2.0 SearedPanSmash）。</summary>
+        public static readonly SoundStyle SearedPanSmash = new("CalamityDemutation/Sounds/Item/SearedPanSmash");
     }
 }

@@ -3121,8 +3121,22 @@ Items: {
 		Tooltip:
 			'''
 			Fires random utensils in bursts of three
+			Grants Well Fed on enemy hits
 			Stealth strikes replace any utensil with a powerful butcher knife
 			Space chickens, that is all.
+			'''
+	}
+
+	SearedPan: {
+		DisplayName: Seared Pan
+		Tooltip:
+			'''
+			Fires a frying pan at high velocity
+			Enemy hits summon fireballs that circle the target
+			Landing three consecutive hits launches a golden pan
+			Golden pans make all fireballs aggressively home in on their target
+			Stealth strikes burst into golden sparks and summon additional fireballs on hit
+			Damage is rather consistent.
 			'''
 	}
 
@@ -3361,6 +3375,9 @@ Projectiles: {
 	CarvingFork.DisplayName: Carving Fork
 	Fork.DisplayName: Fork
 	Knife.DisplayName: Knife
+	PanSpark.DisplayName: Spark
+	SearedPanFireball.DisplayName: Flame
+	SearedPanProjectile.DisplayName: Pan
 }
 
 TextContent: {

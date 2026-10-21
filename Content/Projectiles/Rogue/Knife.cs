@@ -31,6 +31,14 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
             Projectile.spriteDirection = Projectile.direction = (Projectile.velocity.X > 0).ToDirectionInt();
             Projectile.rotation = Projectile.velocity.ToRotation() + (Projectile.spriteDirection == 1 ? 0f : MathHelper.Pi);
         }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Main.player[Projectile.owner].AddBuff(BuffID.WellFed, 180);
+        }
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Main.player[Projectile.owner].AddBuff(BuffID.WellFed, 180);
+        }
         public override bool PreDraw(ref Color lightColor)
         {
             CDUtil.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);

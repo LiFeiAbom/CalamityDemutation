@@ -3120,8 +3120,22 @@ Items: {
 		Tooltip:
 			'''
 			以三连发形式随机投掷餐具
+			命中敌人时获得吃饱
 			潜行打击会以强力屠刀替代餐具
 			太空鸡，仅此而已。
+			'''
+	}
+
+	SearedPan: {
+		DisplayName: 炙热平底锅
+		Tooltip:
+			'''
+			以高速投掷平底锅
+			命中敌人会召唤环绕目标的火球
+			连续命中三次会投出金色平底锅
+			金锅会令所有火球猛烈追踪目标
+			潜行打击会爆出金色火花，并额外召唤火球
+			伤害相当稳定。
 			'''
 	}
 
@@ -3360,6 +3374,9 @@ Projectiles: {
 	CarvingFork.DisplayName: 分肉叉
 	Fork.DisplayName: 餐叉
 	Knife.DisplayName: 餐刀
+	PanSpark.DisplayName: 火花
+	SearedPanFireball.DisplayName: 火焰
+	SearedPanProjectile.DisplayName: 平底锅
 }
 
 TextContent: {

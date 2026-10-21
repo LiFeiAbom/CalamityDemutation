@@ -1434,6 +1434,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void PostUpdateMiscEffects()
         {
+            UpdateSearedPanCounter();
             // 血肉图腾冷却倒计时
             if (fleshTotemCooldown > 0)
                 fleshTotemCooldown--;

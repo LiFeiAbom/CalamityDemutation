@@ -4761,7 +4761,8 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 - 潜行打击替换为 `ButcherKnife`，伤害 ×2、弹速 ×1.4，并标记盗贼潜行弹幕。
 - 2.0 物品源码里的 `counter` 在随机分支中从未参与判定；本实现不保留这个无效全局状态。
 - 现代 tML 需显式写 `Item.useLimitPerAnimation = 3`，否则 2.0 的三连发会退化成单发。
-- 旧 tooltip 的“命中给予吃饱”没有对应源码实现，2.1 也已删掉这行，本实现不伪造该效果。
+- 2.0 的餐具命中会给玩家 180 帧“吃饱”；`Fork` 还额外挂 `BurningBlood` 180 帧，
+  PvP 时为 `Bleeding` 300 帧 + `BurningBlood`。2.0.4 已删掉这些命中效果，不能拿它当 2.0 口径。
 
 **四个弹幕**：
 
@@ -4786,5 +4787,47 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 完整打包本轮被宿主的 workspace 写入边界拦在 `Mods/CalamityDemutation.tmod`（拒绝访问），
 不是 C# 编译错误；取得 `Mods` 写权限或由 tML 编辑器正常构建后再做进游戏实测。
 
-**下一步**：用户拍板 `Seared Pan` 用 2.0 六味配方后，移植本体、`SearedPanProjectile`、
-`NiceCock` 火焰球、`PanSpark` 金色火花与砸锅音效。
+上位件已于同日落地，见 §36。
+
+## 36. 炙热平底锅（Seared Pan，2.0，2026-10-21）
+
+**用户口径**：整件取 **2.0**；配方已在 §35 之后明确使用 2.0 六味版。
+
+**物品面板（2.0）**：60×36、伤害 2222、击退 10、使用/动画 25 帧、`reuseDelay = 1`、
+弹速 15、月后 15 档（紫）、价值 1 金 50 银、研究解锁 1；盗贼伤害、自动连发、无近战判定。
+
+**配方（2.0，单条现代分支）**：本模组 `UtensilPoker` + `AuricBar`×5 + 培根×4 +
+生命水晶×1 + 魔力水晶×1 + 骨头×92 @ 宇宙砧。经典灾厄没有 `SearedPan` 本体，故不补经典分支。
+
+**三态机制**：
+
+- 普通锅命中挂 `BurningBlood` 180 帧；若玩家有盗贼潜行上限，则召唤 3 枚伤害 ×0.1 的环绕火球。
+- 普通锅连续有效命中三次、每次间隔不超过 40 帧，下一发转成金锅；测试假人和灾厄超级假人不计连段。
+- 金锅额外多一级 `extraUpdates`，命中时令玩家现有全部火球追踪目标；砸墙未命中则清除这些火球。
+- 潜行锅同样多一级 `extraUpdates`，命中产生 4 枚金色火花（伤害 ×0.2）和 5 枚额外火球（伤害 ×0.1）；
+  新火球 61 帧后自行追踪，既有火球立即追踪。PvP 另挂出血 300 帧。
+- 只要玩家失去盗贼潜行上限，现有火球会自行消失，与源一致。
+
+**联机与状态修正**：
+
+- 连段计数、40 帧窗口和切换武器清空逻辑放在本工程 `ModPlayer`，不写进全类型共享的 `ModItem`。
+- 源火球的 `homing` / `Timer` 是 `ModProjectile` 字段；本实现改为每弹幕 `localAI`，
+  并纳入 `SendExtraAI` / `ReceiveExtraAI`，避免多枚火球共享状态。
+- 源 `NiceCock` 类名按工程命名口径改为中性名 `SearedPanFireball`，贴图内容不变。
+
+**文件**：
+
+- `Content/Items/Weapons/Rogue/SearedPan.cs` + `SearedPan.png`（60×36）。
+- `Content/Projectiles/Rogue/SearedPanProjectile.cs` + 同名贴图（66×12）。
+- `Content/Projectiles/Rogue/SearedPanFireball.cs` + 同名贴图（44×350，5 帧；源文件 `NiceCock.png`）。
+- `Content/Projectiles/Rogue/PanSpark.cs` + 同名贴图（28×42，3 帧）。
+- `Players/CalamityDemutationPlayer.SearedPan.cs`：逐玩家连段与 40 帧窗口。
+- `Sounds/Item/SearedPanSmash.ogg`；静态入口为 `CalamityDemutationSounds.SearedPanSmash`。
+- 中英本地化：`Items.SearedPan`、`Projectiles.SearedPanProjectile/Fireball`、`Projectiles.PanSpark`。
+
+**验证（2026-10-21）**：`dotnet build -t:Compile` **0 警告 0 错误**；
+`CheckResources` **210 条**全命中；`CheckImplicitTextures` **530 个类**全命中。
+完整打包仍受宿主 workspace 写入边界限制，需由 tML 编辑器正常构建后进游戏实测：
+重点测三连随机餐具、潜行屠刀、普通火球、三连金锅、潜行额外火球/火花、砸锅音效与六味配方。
+
+**当前状态**：`Seared Pan` 整条链的代码、资源与本地化已自持完成，只差完整打包和进游戏验收。
