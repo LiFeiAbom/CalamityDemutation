@@ -1,4 +1,3 @@
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -12,7 +11,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// <para>
     /// **口径（用户 2026-10-14 逐条拍板）**：实现取 **2.0**（与 1.3-release 逐项一致）、
     /// 贴图用**现代那张**（92×44 / `1A2E97E6`，1.3-release / 2.0 / CI 三处同款）、
-    /// 伤害**改用 375**（源 275）、数值膨胀 **375 → 920**、中文名「速射机枪」、
     /// 灾厄"贴脸射击"**不做**。
     /// </para>
     /// <para>
@@ -33,10 +31,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const float AmmoSaveChance = 0.8f;
         /// <summary>单发弹丸的速度抖动幅度（照源：±15 × 0.05 = ±0.75）</summary>
         private const float SpreadJitter = 0.05f;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：375 → 920）</summary>
-        private const float InflatedDamage = 920f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 375</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
 
         /// <summary>
         /// 研究解锁一份
@@ -69,10 +64,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后稀有度 15（紫）
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（射的是弹药本体），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 持握偏移：照 2.0 的 (-10, 0)
         /// </summary>

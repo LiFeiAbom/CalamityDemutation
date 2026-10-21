@@ -1,6 +1,5 @@
 using System;
 using CalamityDemutation.Content.Projectiles.Magic;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -24,15 +23,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 没有（如实装 2.2.2）时用本工程自持件。
     /// </para>
     /// <para>
-    /// **数值膨胀**：用户 2026-10-18 指定 **基础 200 / 膨胀 700**。
     /// </para>
     /// </summary>
     internal class DanceofLight : ModItem
     {
         /// <summary>膨胀态面板（用户 2026-10-18 指定）</summary>
-        private const float InflatedDamage = 700f;
         /// <summary>当前生效的面板基础伤害：开则 700，否则维持用户指定的基础值 200</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults()
         {
@@ -61,11 +57,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         }
         /// <summary>持握偏移照现代版（零偏移）</summary>
         public override Vector2? HoldoutOffset() => Vector2.Zero;
-        /// <summary>数值膨胀：面板基础伤害改读 <see cref="BaseDamage"/>，弹幕走 Shoot 的 damage 参数自动跟随</summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
         /// <summary>
         /// 出手照 CI：4~6 枚白焰从玩家上方不同高度朝鼠标坠落；
         /// 每枚弹幕命中挂圣火，消亡后再分裂 2 枚全局追踪火焰。

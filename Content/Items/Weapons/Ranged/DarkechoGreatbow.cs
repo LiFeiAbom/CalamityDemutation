@@ -1,4 +1,3 @@
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -9,7 +8,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// <summary>
     /// 暗影巨弓（Darkecho Greatbow） - 射手弓，天堂之风链上 `AstrealDefeat` 的三把巨弓之一。
     /// <para>
-    /// **口径（用户 2026-10-14 拍板）**：中文名 **暗影巨弓**、**数值膨胀 37 → 120**、
     /// 面板 / 机制**全取 2.0**；经典分支用经典版同名材料 `VerstaltiteBar`（＝冰晶锭）注册一条、数值共用 2.0。
     /// 源 tooltip：<c>Fires two arrows at once</c> / <c>Fires an additional crystal dart</c>。
     /// </para>
@@ -34,10 +32,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int CrystalDartPenetrate = 3;
         /// <summary>配方里的锭数（照源 8；2.2.2 是 12）</summary>
         private const int BarCount = 8;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：37 → 120）</summary>
-        private const float InflatedDamage = 120f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 37</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -64,10 +59,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（2 支弹药用全额、水晶镖用其一半），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 开火（照 2.0）：2 支弹药（各 ±1.5 抖动、不掉落）+ 1 枚半伤水晶镖（穿透改成 3）。
         /// </summary>

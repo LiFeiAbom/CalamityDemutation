@@ -320,17 +320,6 @@ Configs: {
 				'''
 		}
 
-		StatInflation: {
-			Label: Stat Inflation
-			Tooltip:
-				'''
-				Raises this mod's weapon and armor values to the numbers specified for each item.
-				32 weapons and 12 armor pieces read this single switch: when on, each restores its specified values; when off, values stay as they are.
-				Independent from the two "revert nerfs" options above; they can be toggled separately.
-				Default: Off.
-				'''
-		}
-
 		EnableSwordLight: {
 			Label: Enable Sword Light
 			Tooltip:
@@ -507,14 +496,6 @@ Items: {
 			25% increased movement speed
 			Attacks have a 2% chance to do no damage to you
 			Increases all damage and critical strike chance by 22%
-			You will freeze enemies near you when you are struck
-			'''
-		TooltipInflated:
-			'''
-			+400 max life and +400 max mana
-			25% increased movement speed
-			Attacks have a 5% chance to do no damage to you
-			Increases all damage and critical strike chance by 30%
 			You will freeze enemies near you when you are struck
 			'''
 	}
@@ -719,12 +700,6 @@ Items: {
 		Tooltip:
 			'''
 			+40 max life
-			You regenerate life quickly and gain +30 defense while in lava
-			Increases all damage and critical strike chance by 14%
-			'''
-		TooltipInflated:
-			'''
-			+100 max life and +100 max mana
 			You regenerate life quickly and gain +30 defense while in lava
 			Increases all damage and critical strike chance by 14%
 			'''
@@ -1112,13 +1087,6 @@ Items: {
 			Increased max life by 300 and mana by 300
 			Standing still lets you absorb the shadows and boost your life regen
 			'''
-		TooltipInflated:
-			'''
-			Increases all damage by 40% and critical strike chance by 20%
-			Enemies take ungodly damage when they touch you
-			Increased max life by 1000 and mana by 1000
-			Standing still lets you absorb the shadows and boost your life regen
-			'''
 	}
 
 	DemonshadeGreaves: {
@@ -1133,7 +1101,6 @@ Items: {
 	DemonshadeHelm: {
 		DisplayName: Demonshade Helm
 		Tooltip: 50% increased melee damage, 25% increased melee crit chance and 30% increased melee speed
-		TooltipInflated: 50% increased melee damage, 50% increased melee crit chance and 30% increased melee speed
 		SetBonus:
 			'''
 
@@ -1154,12 +1121,6 @@ Items: {
 			+300 max mana
 			Mana costs are halved
 			'''
-		TooltipInflated:
-			'''
-			50% increased magic damage and 50% increased magic crit chance
-			+300 max mana
-			Mana costs are halved
-			'''
 		SetBonus:
 			'''
 
@@ -1175,7 +1136,6 @@ Items: {
 	DemonshadeHelmRanged: {
 		DisplayName: Demonshade Plumed Helm
 		Tooltip: 50% increased ranged damage, 25% increased ranged crit chance and a 50% chance to not consume ammo
-		TooltipInflated: 50% increased ranged damage, 50% increased ranged crit chance and a 50% chance to not consume ammo
 		SetBonus:
 			'''
 
@@ -1191,7 +1151,6 @@ Items: {
 	DemonshadeHelmRogue: {
 		DisplayName: Demonshade Helm Rogue
 		Tooltip: 50% increased rogue damage and 25% increased rogue crit chance
-		TooltipInflated: 50% increased rogue damage and 50% increased rogue crit chance
 		SetBonus:
 			'''
 
@@ -1212,12 +1171,6 @@ Items: {
 			70% increased summon damage
 			+10 max minions and +1 max sentries
 			30% increased whip attack speed and whip range
-			'''
-		TooltipInflated:
-			'''
-			80% increased summon damage
-			+10 max minions and +5 max sentries
-			45% increased whip attack speed and whip range
 			'''
 		SetBonus:
 			'''
@@ -1553,13 +1506,6 @@ Items: {
 			15% increased movement speed
 			Increases all damage and critical strike chance by 15%
 			Attacks have a 2% chance to do no damage to you
-			'''
-		TooltipInflated:
-			'''
-			+250 max life and +150 max mana
-			15% increased movement speed
-			Increases all damage and critical strike chance by 15%
-			Attacks have a 5% chance to do no damage to you
 			'''
 	}
 
@@ -1944,12 +1890,6 @@ Items: {
 			Your attacks inflict Crush Depth
 			No positive life regeneration
 			'''
-		TooltipInflated:
-			'''
-			Increases all damage by 18% and critical strike chance by 16%
-			Increases melee attack speed by 18%
-			Your attacks inflict Crush Depth
-			'''
 		DisplayName: Omega Blue Chestplate
 	}
 
@@ -2199,12 +2139,6 @@ Items: {
 		Tooltip:
 			'''
 			+80 max life
-			20% increased movement speed
-			Increases all damage and critical strike chance by 18%
-			'''
-		TooltipInflated:
-			'''
-			+300 max life and +200 max mana
 			20% increased movement speed
 			Increases all damage and critical strike chance by 18%
 			'''
@@ -2467,12 +2401,6 @@ Items: {
 			+1 HP/s life regen and +40 max life
 			"Breastplate of the exiler"
 			'''
-		TooltipInflated:
-			'''
-			Increases all damage and critical strike chance by 10%
-			+150 max life, +100 max mana, and +6 life regen
-			"Breastplate of the exiler"
-			'''
 	}
 
 	TarragonHelm: {
@@ -2666,11 +2594,6 @@ Items: {
 			'''
 			Releases a burst of homing essence flames at the cursor when swung
 			Each flame deals 25% of the weapon's damage
-			'''
-		TooltipInflated:
-			'''
-			Releases a barrage of ten homing essence flames at the cursor when swung
-			Each flame deals 75% of the weapon's damage
 			'''
 	}
 

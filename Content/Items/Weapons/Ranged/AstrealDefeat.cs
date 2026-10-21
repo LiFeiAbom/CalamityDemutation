@@ -1,6 +1,5 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -14,7 +13,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// <para>
     /// **口径（用户 2026-10-15 拍板）**：中文名 **星穹悲愿**（弹幕 **星穹箭** <see cref="AstrealArrow"/> /
     /// **星穹烈焰** <see cref="AstrealFlame"/>；官方中文没翻这件，名字由本工程定）、
-    /// **数值膨胀 153 → 336**、面板 / 机制**全取 2.0**；配方两版等价且全自持 ⇒ 只注册一条。
     /// 源 tooltip 4 行（3 行背景 + 1 行机制）：<c>Ethereal bow of the tyrant king's mother</c> /
     /// <c>The mother strongly discouraged acts of violence throughout her life</c> /
     /// <c>Though she kept this bow close, to protect her family in times of great disaster</c> /
@@ -41,10 +39,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// <summary>配方里的银河奇点 / 月亮锭数量（照源各 5）</summary>
         private const int GalacticaSingularityCount = 5;
         private const int LunarBarCount = 5;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：153 → 336）</summary>
-        private const float InflatedDamage = 336f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 153</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -71,10 +66,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药（但射出去的永远是星穹箭）
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 星穹箭由 <c>Shoot</c> 的 <c>damage</c> 参数派生、烈焰再由箭的伤害 ×0.5 派生，都会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一律换成 <see cref="AstrealArrow"/>（速度封顶 <see cref="MaxArrowSpeed"/>），
         /// 并随机给一个 0~3 的 <c>ai[0]</c>（照 2.0）

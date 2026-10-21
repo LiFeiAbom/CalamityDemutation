@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CalamityDemutation.Players;
+﻿using CalamityDemutation.Players;
 using CalamityDemutation.Utilities;
 using Terraria;
 using Terraria.ID;
@@ -13,7 +12,6 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
     /// 远程武器 25% 概率不消耗弹药，近战/弹幕命中时对敌施加灾厄 debuff
     /// （现代版 HadopelagicPressure，经典版 CrushDepth），
     /// 并禁止一切正面生命再生（见 UpdateBadLifeRegen，对应源里的 No positive life regen；
-    /// 数值膨胀开关开启时这条限制失效）。
     /// </summary>
     [AutoloadEquip(EquipType.Body)]
     internal class OmegaBlueChestplate : ModItem
@@ -40,12 +38,6 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
             player.GetAttackSpeed<MeleeDamageClass>() += 0.18f;    // 近战攻速 +18%
             player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueChestplate = true;
         }
-        /// <summary>
-        /// 数值膨胀开启时把 tooltip 正文换成膨胀文案（本地化键 Items.OmegaBlueChestplate.TooltipInflated）：
-        /// 膨胀下 CalamityDemutationPlayer.OmegaBlueNoLifeRegen 开头直接返回，
-        /// 「无法获得正面生命再生」这条限制已失效，故膨胀文案整条去掉该行，避免 tooltip 与实现不符。
-        /// </summary>
-        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版与经典版灾厄材料不同，分别注册，均在原版月球工作台合成。
         /// 现代版用 ReaperTooth(5) + DepthCells(25) + RuinousSoul(3)；

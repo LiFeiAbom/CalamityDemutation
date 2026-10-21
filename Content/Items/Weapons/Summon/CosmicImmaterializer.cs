@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Summon;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -68,22 +67,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         }
         /// <summary>要 10 格召唤栏，且全场只能同时存在一只宇宙之灵（照源）</summary>
         /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：560 → 3000）。
-        /// </summary>
-        private const float InflatedDamage = 3000f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 560。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
-        /// 召唤件特有一环：<c>Shoot</c> 里写进宇宙之灵的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>；
         /// 大小爆裂读的是弹幕自身伤害，会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0 && player.maxMinions >= 10;
         /// <summary>掉落在地上的发光层（照源：单帧 glowmask）</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI) => Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Summon/CosmicImmaterializerGlow").Value);
@@ -102,9 +87,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
                 }
             }
 
-            int p2 = Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, type, damage, knockback, player.whoAmI, 0f, 0f);
-            if (Main.projectile.IndexInRange(p2))
-                Main.projectile[p2].originalDamage = (int)BaseDamage;
+            Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, type, damage, knockback, player.whoAmI, 0f, 0f);
             return false;
         }
         /// <summary>

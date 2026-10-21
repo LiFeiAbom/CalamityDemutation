@@ -1,7 +1,6 @@
 using CalamityDemutation.Content.Items;
 using CalamityDemutation.Content.Projectiles.Rogue;
 using CalamityDemutation.Players;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -17,8 +16,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
     /// </summary>
     internal class SearedPan : ModItem
     {
-        private const float InflatedDamage = 10000f;
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
@@ -42,10 +39,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.shoot = ModContent.ProjectileType<SearedPanProjectile>();
             Item.shootSpeed = 15f;
             Item.DamageType = CDUtil.GetRogueDamageClass();
-        }
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
         }
         public override bool WeaponPrefix() => true;
         public override bool RangedPrefix() => false;

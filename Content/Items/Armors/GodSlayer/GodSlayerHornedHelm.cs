@@ -56,8 +56,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             modPlayer.godSlayer = true;
             modPlayer.godSlayerSummon = true;
             player.GetDamage<SummonDamageClass>() += 0.65f;  // 召唤伤害 +65%（经典版 UpdateArmorSet 原样）
-            // SetBonus 里的 {0} = 冲刺键显示名，{1} = 保命回复量（随数值膨胀开关切换，见 PreKill）
-            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, ConfigSystem.StatInflationEnabled ? 300 : 100);
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, 100);
         }
         /// <summary>
         /// 单件装备加成：仆从上限（经典版 UpdateEquip 原样），外加用户指定的三条召唤头统一属性

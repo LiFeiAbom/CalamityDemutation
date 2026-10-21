@@ -1,6 +1,5 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Summon;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -53,22 +52,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.shootSpeed = 10f;
         }
         /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：135 → 400）。
-        /// </summary>
-        private const float InflatedDamage = 400f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 135。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
-        /// 召唤件特有一环：<c>Shoot</c> 里写进仆从的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>。
-        /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
-        /// <summary>
         /// 在鼠标处召唤斧头（照源：左右键分支里只有左键生效），
         /// 并把面板伤害写进仆从的 <c>originalDamage</c>（召唤物伤害按它回溯计算）。
         /// </summary>
@@ -79,9 +62,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
                 position = Main.MouseWorld;
                 velocity.X = 0;
                 velocity.Y = 0;
-                int p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
-                if (Main.projectile.IndexInRange(p))
-                    Main.projectile[p].originalDamage = (int)BaseDamage;
+                Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
             }
             return false;
         }

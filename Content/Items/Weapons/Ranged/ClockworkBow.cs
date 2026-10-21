@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 发条弓（Clockwork Bow） - 射手弓，天堂之风链**批 4 第二件**（T1 六把武器之一），
     /// ＝灾厄 2.0 的 <c>Items/Weapons/Ranged/ClockworkBow.cs</c>。
     /// <para>
-    /// **口径（用户 2026-10-15 拍板）**：中文名 **发条弓**、**数值膨胀 808 → 1724**、
     /// 面板 / 机制**全取 2.0**；配方**现代与经典两条并存**（见下）。弹幕 **精准弩箭** <see cref="PrecisionBolt"/>。
     /// 源 tooltip：<c>Hold left click to load up to six precision bolts</c> /
     /// <c>The more precision bolts are loaded, the harder they hit</c>。
@@ -38,10 +36,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int ModernLunarBarCount = 5;
         /// <summary>经典分支配方里的月亮锭数量（照 cal-1.4.2.101）</summary>
         private const int ClassicLunarBarCount = 15;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：808 → 1724）</summary>
-        private const float InflatedDamage = 1724f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 808</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -70,11 +65,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走手持弹幕里的 <c>Player.PickAmmo</c>，而它的入参来自
         /// <c>GetWeaponDamage(武器)</c>（内部会调 <c>ModifyWeaponDamage</c>），故会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>场上已有手持弹幕时不许再按（照源；这条同时挡住了"蓄力期间重复出手"）</summary>
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<ClockworkBowHoldout>()] <= 0;
         /// <summary>出手只生成手持弹幕，真正射箭由它按蓄力进度负责（照源）</summary>

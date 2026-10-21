@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Magic;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 以太流光炮（Aetherflux Cannon） - 法师枪械，**这条链的顶层**（链：纳米净化 → 【本体·净化豪饮者】 → 本件）。
     /// <para>
     /// **口径（用户 2026-10-15 定）**：本件走"**拆开拼**"——**手持弹幕取 2.0.4 的自实现版**
-    /// （灾厄那边 2.0.4 起已改用 `GetWeaponDamage` 取伤害，故数值膨胀天然跟随，不必像纳米净化那样改一行）、
     /// **光弹 `PhasedGodRay` 取 2.1 的重做版整套**（粒子化、20×20 判定、无视无敌帧、命中回满寿命并递减）。
     /// <para>
     /// **配方（用户 2026-10-15 定稿，分两次收紧）**：**本工程自持的 <see cref="NanoPurge"/>** +
@@ -34,7 +32,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 同一时刻只允许存在一具手持弹幕。
     /// </para>
     /// <para>
-    /// **数值膨胀**（同一开关）：面板 **370 → 910**（用户 2026-10-15 指定）。
     /// 本件的伤害由手持弹幕每帧用 `Owner.GetWeaponDamage(weaponItem)` 取（2.0.4 源里就是这一句，
     /// 不是手写职业加成），所以挂上 <c>ModifyWeaponDamage</c> 之后，手持弹幕与它派生的双螺旋光弹
     /// **整条自动跟随**，无需再改任何派生点。
@@ -54,10 +51,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         private const int UelibloomBarCount = 12;
         /// <summary>配方里的神圣晶簇数量（照源）</summary>
         private const int DivineGeodeCount = 8;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：370 → 910）</summary>
-        private const float InflatedDamage = 910f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 370</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -84,8 +78,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             Item.shoot = ModContent.ProjectileType<AetherfluxCannonHoldout>();
             Item.shootSpeed = 24f;
         }
-        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读开关，不必重载）</summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>同一时刻只允许存在一具手持弹幕（照源）</summary>
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
         /// <summary>

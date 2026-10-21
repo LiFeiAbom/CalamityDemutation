@@ -398,7 +398,6 @@ namespace CalamityDemutation.Players
         private void ShieldSlamDashHits()
         {
             ShieldSlamProfile profile = GetShieldSlamProfile(shieldSlamDash);
-            // 基础伤害为 0 直接跳过（对齐灾厄：它在 OnHitEffects 之后会因 BaseDamage <= 0 放弃本次结算）
             if (profile.Damage <= 0)
                 return;
             Rectangle hitArea = new Rectangle((int)(Player.position.X + Player.velocity.X * 0.5f - 4f), (int)(Player.position.Y + Player.velocity.Y * 0.5f - 4f), Player.width + 8, Player.height + 8);

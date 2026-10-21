@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -12,7 +11,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// ＝灾厄 2.0 的 <c>Items/Weapons/Ranged/Galeforce.cs</c>。
     /// <para>
     /// **口径（用户 2026-10-15 拍板）**：中文名 **烈风**（弹幕 **羽毛** <see cref="FeatherLarge"/>）、
-    /// **数值膨胀 18 → 54**、面板 / 机制**全取 2.0**；配方两版**逐字相同**故只注册一条。
     /// 源 tooltip：<c>Fires a spread of low-damage feathers</c>。
     /// </para>
     /// <para>
@@ -37,10 +35,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int AerialiteBarCount = 8;
         /// <summary>配方里的日耀板数量（照源 3，两版相同）</summary>
         private const int SunplateBlockCount = 3;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：18 → 54）</summary>
-        private const float InflatedDamage = 54f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 18</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -67,10 +62,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 羽毛伤害由 <c>Shoot</c> 的 <c>damage</c> 参数 ÷4 派生，会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 洒三根羽毛（±8°、伤害 ÷4、击退 0），**然后照常射出原版箭**——照源返回 <c>true</c>
         /// </summary>

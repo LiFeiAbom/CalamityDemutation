@@ -10,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
     /// 星云核心（NebulousCore） - 专家饰品
     /// 提供 +20% 通用伤害与 +20% 暴击，周期性生成星云之星攻击敌人，
     /// 并在濒死时有概率触发回血而免于死亡。
-    /// 星云之星的弹幕伤害基准 300，并乘玩家当前的通用伤害加成（不参与数值膨胀）。
     /// </summary>
     internal class NebulousCore : ModItem
     {
@@ -120,7 +119,6 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                 }
             }
         }
-        /// <summary>星云之星的弹幕伤害基准（用户 2026-10-01 修正：由固定 1500 改为 300，不参与数值膨胀）</summary>
         private const int StarDamage = 300;
     }
 }

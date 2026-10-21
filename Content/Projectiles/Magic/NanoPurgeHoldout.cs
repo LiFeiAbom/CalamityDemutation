@@ -66,7 +66,6 @@ namespace CalamityDemutation.Content.Projectiles.Magic
 
             // 每帧按当前法师加成重算伤害（这样"魔力病"之类的减益也会生效，照源）
             // 【工程侧必要改动】源写的是 `GetTotalDamage<MagicDamageClass>().ApplyTo(weaponItem.damage)`——
-            // 它读原始 `Item.damage`，会**绕过**本工程 §7 的数值膨胀钩子（`ModifyWeaponDamage`）。
             // 改用引擎入口 `GetWeaponDamage`：内部同样乘本职业伤害加成（语义等价，2.0.7.2 起灾厄自己也改成了这一句），
             // 但会先跑一遍物品钩子，于是"面板 135 → 膨胀 275"能带动这具手持弹幕与它派生的激光。
             Item weaponItem = Owner.ActiveItem();

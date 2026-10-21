@@ -61,8 +61,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.godSlayer = true;
             modPlayer.godSlayerThrowing = true;
-            // SetBonus 里的 {0} = 冲刺键显示名，{1} = 保命回复量（随数值膨胀开关切换，见 PreKill）
-            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, ConfigSystem.StatInflationEnabled ? 300 : 100);
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, 100);
             CDUtil.GrantRogueStealth(player, 1.4f);              // 潜行上限 140（源 rogueStealthMax = 1.4f；内部值 1f = 显示 100 点）
             CDUtil.GrantRogueStealthRatio(player, 1f / 7f);      // 再按当前上限 +1/7（CI 的 GodSlayerHeadRogueold 写法；
                                                                  // 单戴此头时 140 → 160，用户 2026-10-06 点名补上）

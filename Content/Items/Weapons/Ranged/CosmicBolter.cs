@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 宇宙弩炮（Cosmic Bolter） - 射手弓，天堂之风链上 `PlanetaryAnnihilation` 的入料，
     /// 也是本链第一个"配方吃到自持红利"的件（入料之一是已自持的 <see cref="LunarianBow"/>）。
     /// <para>
-    /// **口径（用户 2026-10-14 拍板）**：中文名 **宇宙弩炮**、**数值膨胀 39 → 94**、
     /// 面板 / 支数 / 木箭转化**全取 2.0**；**保留旧名 `CosmicBolter`**
     /// （2.2.2 把它**改名**成 `VernalBolter`——那件身上挂着 <c>[LegacyName("CosmicBolter")]</c>，
     /// 按工程"改名＝同一件、本工程留旧名"的既有口径处理）；经典分支照经典配方注册、数值共用 2.0。
@@ -39,10 +37,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int LivingShardCount = 5;
         private const int HallowedBarCount = 5;
         private const int SoulOfSightCount = 5;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：39 → 94）</summary>
-        private const float InflatedDamage = 94f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 39</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -69,10 +64,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（3 支箭都由它派生），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：速度归一化后 ×<see cref="BowSpreadDistance"/>、±π/10 排布；
         /// **任何弹药都换成 <see cref="LunarBolt2"/>**（弹药全转化，用户 2026-10-15 定；

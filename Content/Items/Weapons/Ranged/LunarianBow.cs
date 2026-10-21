@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -25,7 +24,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 贴墙时两支都往回收（照源的 <c>canHit</c> 判据）。
     /// </para>
     /// <para>
-    /// **数值膨胀**（同一开关）：面板 32 → **80**（用户 2026-10-14 指定）。派生伤害走 <c>Shoot</c> 的
     /// <c>damage</c> 参数（两支箭都由它派生），因此自动跟随，无需额外处理。
     /// </para>
     /// </summary>
@@ -39,10 +37,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const float ShotSpeed = 15f;
         /// <summary>配方里的净化凝胶数量（照源）</summary>
         private const int PurifiedGelCount = 10;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：32 → 80）</summary>
-        private const float InflatedDamage = 80f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 32</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -69,10 +64,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（两支箭的伤害都由它派生），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：速度为"归一到 1 再 ×15"，两支夹角 ±18°；
         /// **任何弹药都换成 <see cref="LunarBolt"/>**（弹药全转化，用户 2026-10-15 定；

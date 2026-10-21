@@ -1,4 +1,3 @@
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,7 +9,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 剑刃巨弓（源的英文显示名是 **Bladedge Railbow**，类名 <c>BladedgeGreatbow</c>） - 射手弓，
     /// 天堂之风链上 `AstrealDefeat` 的入料之一；**灾厄 2.2.2 已删**，属"旧版回归"重点件。
     /// <para>
-    /// **口径（用户 2026-10-14 拍板）**：中文名 **剑刃巨弓**、数值膨胀 **28 → 60**、
     /// 面板 / 叶子 / 分支处理**全取 2.0**；经典分支照经典版配方注册、数值共用 2.0
     /// （经典那套"5 发 + 1/5 概率绿藻箭 + 无叶子"**不取**）。
     /// 源 tooltip：<c>Fires 4 arrows at once</c> / <c>Fires 2 additional leaves</c>。
@@ -40,10 +38,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const float LeafSpreadDistance = 10f;
         /// <summary>配方里的锭数（照源 12）</summary>
         private const int BarCount = 12;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：28 → 60）</summary>
-        private const float InflatedDamage = 60f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 28</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -72,10 +67,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// <summary>持握偏移：照源的 `(-10, 0)`</summary>
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（4 发弹药用全额、2 片叶子用其一半），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 开火（照 2.0）：4 发弹药本体各带 ±3 速度抖动、标记不掉落；再补 2 片树叶（伤害减半、±π/10、贴墙收回）。
         /// </summary>

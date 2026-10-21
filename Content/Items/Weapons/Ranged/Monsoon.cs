@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 季风（Monsoon） - 射手弓，天堂之风链上 `Alluvion` 的入料，**批 2 的末件**；
     /// 本链目前最重的一件：自己带一整条 5 枚弹幕的链。
     /// <para>
-    /// **口径（用户 2026-10-14 拍板）**：中文名 **季风**、**数值膨胀 121 → 336**、
     /// 面板 / 机制 / 弹幕链**全取 2.0**；经典分支照经典版配方注册、数值共用 2.0。
     /// 源 tooltip：<c>Fires a spread of 5 arrows</c> / <c>Wooden arrows are converted into typhoon arrows and sharks</c>。
     /// </para>
@@ -48,10 +46,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int TenebrisCount = 5;
         /// <summary>经典分支配方里的星璇碎片数量（照经典版）</summary>
         private const int VortexFragmentCount = 15;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：121 → 336）</summary>
-        private const float InflatedDamage = 336f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 121</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -79,10 +74,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（5 支全由它派生），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：**任何弹药都按位次分工**
         /// （1 支台风箭 + 4 支小鲨鱼龙，伤害 ×1.1；弹药全转化，用户 2026-10-15 定）

@@ -1,5 +1,4 @@
 ﻿using CalamityDemutation.Content.Projectiles.Melee;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using System;
@@ -17,7 +16,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         internal const float ShootSpeed = 3f;
         /// <summary>
-        /// 物品基础属性：伤害 150（源值；数值膨胀开关开启时面板回调到 200）、
         /// 使用时间 20 帧、击退 7.5、黄色稀有度；
         /// 主弹幕为崇高誓言之刃弹幕（ExaltedOathBladeProj），弹速取常量 ShootSpeed=3，
         /// 每次挥砍发射一次。
@@ -41,22 +39,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = ShootSpeed;
         }
         /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：崇高誓约之刃 150 → 200）。
-        /// </summary>
-        private const float InflatedDamage = 200f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 150。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
         /// 3 发半伤害弹幕走传进来的 <c>damage / 2</c>；命中追加的 2 倍伤害走
         /// <c>Player.GetWeaponDamage</c>——该方法内部会调 <c>CombinedHooks.ModifyWeaponDamage</c>，同样自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
         /// <summary>
         /// 射击逻辑：以正前方为基准，左右各偏 8° 散射共 3 发半伤害的誓言之刃弹幕
         /// </summary>

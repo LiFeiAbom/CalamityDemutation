@@ -60,8 +60,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.godSlayer = true;
             modPlayer.godSlayerMage = true;
-            // SetBonus 里的 {0} = 冲刺键显示名，{1} = 保命回复量（随数值膨胀开关切换，见 PreKill）
-            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, ConfigSystem.StatInflationEnabled ? 300 : 100);
+            player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, 100);
         }
         /// <summary>
         /// 单件装备加成：魔法三连（伤害 / 暴击 / 法力），经典版 UpdateEquip 原样

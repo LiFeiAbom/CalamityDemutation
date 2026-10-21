@@ -1,6 +1,5 @@
 using CalamityDemutation.Content.Projectiles.Summon;
 using CalamityDemutation.Players;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -34,8 +33,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 链条就此闭合：我们的天狼星 → 本件 → 我们的光阴时流伞。本件没有经典版，故只注册现代分支一条。
     /// </para>
     /// <para>
-    /// 数值膨胀（用户 2026-10-10 点名）：关态 <c>Item.damage</c> = **200**（源 171，点名上调）、开态 **681**。
-    /// 召唤件特有一环——`Shoot` 里写进光环的 `originalDamage` 也必须读 `BaseDamage`；光环按栏位派生的
     /// 日耀圣火 / 微缩太阳读的是弹幕自身伤害，会自动跟随。
     /// </para>
     /// </remarks>
@@ -66,22 +63,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.value = Item.buyPrice(1, 40, 0, 0);
             Item.rare = ItemRarityID.Red;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
-        }
-        /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-10 指定：200 → 681）。
-        /// </summary>
-        private const float InflatedDamage = 681f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 200。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
-        /// 召唤件特有一环：<c>Shoot</c> 里写进光环的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>。
-        /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
         }
         /// <summary>
         /// 持在手上时每帧重算一次"还能给光环吃的召唤栏"：总栏位减去**自己以外**所有在场仆从占用的栏位
@@ -120,7 +101,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             int idx = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI, slots, 0f);
             if (Main.projectile.IndexInRange(idx))
             {
-                Main.projectile[idx].originalDamage = (int)BaseDamage;
             }
             return false;
         }

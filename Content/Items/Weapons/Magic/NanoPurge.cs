@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Magic;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -23,7 +22,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 稀有度与价值仍取所选源版本（2.0.4 的红档 / 1 铂金）。
     /// </para>
     /// <para>
-    /// **数值膨胀**（同一开关）：面板 135 → **275**（用户 2026-10-15 指定）。
     /// 本件的伤害是"手持弹幕每帧重算"的（见 <see cref="NanoPurgeHoldout"/>），
     /// 故手持弹幕那处必须走引擎入口 `GetWeaponDamage` 才能吃到这里挂的 `ModifyWeaponDamage`
     /// （详见 §7「最容易漏的一环」与手持弹幕里的注释）。
@@ -41,10 +39,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         private const int VortexFragmentCount = 6;
         /// <summary>配方里的纳米机器人数量（照源）</summary>
         private const int NanitesCount = 100;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：135 → 275）</summary>
-        private const float InflatedDamage = 275f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 135</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -70,8 +65,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
             Item.shoot = ModContent.ProjectileType<NanoPurgeHoldout>();
             Item.shootSpeed = 16f;
         }
-        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读开关，不必重载）</summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>同一时刻只允许存在一具手持弹幕（照源）</summary>
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
         /// <summary>

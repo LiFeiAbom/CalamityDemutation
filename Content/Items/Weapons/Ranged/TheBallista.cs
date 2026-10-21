@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 弩炮（The Ballista） - 射手弓，天堂之风链**批 4 的第一件**（T1 六把武器之一），
     /// ＝灾厄 2.0 的 <c>Items/Weapons/Ranged/TheBallista.cs</c>（逐行照搬）。
     /// <para>
-    /// **口径（用户 2026-10-15 拍板）**：中文名 **弩炮**、**数值膨胀 99 → 279**、
     /// 面板 / 机制**全取 2.0**；经典分支照经典配方——那份配方**与 2.0 逐字相同、且三味料全是原版件**，
     /// 故只注册一条、数值共用 2.0（经典版的 145 伤 / 20 帧 **不取**）。
     /// 源 tooltip：<c>Converts wooden arrows into greatarrows that crush enemy armor and break into shards on death</c>。
@@ -29,10 +27,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     {
         /// <summary>配方里的灵气数量（照源 10）</summary>
         private const int EctoplasmCount = 10;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：99 → 279）</summary>
-        private const float InflatedDamage = 279f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 99</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -59,10 +54,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（弩箭、以及弩箭迸出的碎片都由它派生），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// **任何弹药都换成 <see cref="BallistaGreatArrow"/>**（弹药全转化，用户 2026-10-15 定；
         /// 源 2.0 是"木箭才转化、非木箭照原弹种射出"，本工程按新口径不取）

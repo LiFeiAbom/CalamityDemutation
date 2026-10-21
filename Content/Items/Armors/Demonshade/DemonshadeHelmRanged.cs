@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
@@ -102,15 +101,11 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Ranged;  // 置位职业标记：本件为远程变体
             player.GetDamage<RangedDamageClass>() += 0.5f;   // 远程伤害 +50%
-            player.GetCritChance<RangedDamageClass>() += ConfigSystem.StatInflationEnabled ? LegacyCritChance : 25; // 远程暴击率：常态 +25% / 膨胀 +50%
+            player.GetCritChance<RangedDamageClass>() += 25; // 远程暴击率：常态 +25% / 膨胀 +50%
         }
-        /// <summary>数值膨胀开关开启时恢复的旧版远程暴击率（2026-09-27「50 → 25」那次削弱的原值）</summary>
-        private const int LegacyCritChance = 50;
         /// <summary>
-        /// 数值膨胀开启时把 tooltip 正文换成膨胀文案（本地化键 Items.DemonshadeHelmRanged.TooltipInflated），
         /// 远程暴击率由 25% 显示为 50%。
         /// </summary>
-        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料与近战头盔一致（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。

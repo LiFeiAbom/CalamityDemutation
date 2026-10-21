@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CalamityDemutation.Players;
+﻿using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
 using CalamityDemutation.Utilities;
@@ -112,16 +111,12 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Melee;  // 置位职业标记：本件为近战变体
             player.GetDamage<MeleeDamageClass>() += 0.5f;       // 近战伤害 +50%
-            player.GetCritChance<MeleeDamageClass>() += ConfigSystem.StatInflationEnabled ? LegacyCritChance : 25;  // 近战暴击率：常态 +25% / 膨胀 +50%
+            player.GetCritChance<MeleeDamageClass>() += 25;  // 近战暴击率：常态 +25% / 膨胀 +50%
             player.GetAttackSpeed<MeleeDamageClass>() += 0.30f; // 近战攻速 +30%
         }
-        /// <summary>数值膨胀开关开启时恢复的旧版近战暴击率（2026-09-27「50 → 25」那次削弱的原值）</summary>
-        private const int LegacyCritChance = 50;
         /// <summary>
-        /// 数值膨胀开启时把 tooltip 正文换成膨胀文案（本地化键 Items.DemonshadeHelm.TooltipInflated），
         /// 近战暴击率由 25% 显示为 50%。
         /// </summary>
-        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
         /// 材料相同（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
@@ -120,18 +119,14 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         {
             DamageClass rogue = CDUtil.GetRogueDamageClass();  // 现代版 = CalamityMod/RogueDamageClass；拿不到才退到 tML 的 Throwing
             player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = rogue;  // 置位职业标记：本件为盗贼变体
-            int critAdd = ConfigSystem.StatInflationEnabled ? LegacyCritChance : 25;  // 盗贼暴击率：常态 +25% / 膨胀 +50%（与近战头一致）
+            int critAdd = 25;  // 盗贼暴击率：常态 +25% / 膨胀 +50%（与近战头一致）
             player.GetDamage(rogue) += 0.5f;        // 盗贼伤害 +50%（与近战头一致）
             player.GetCritChance(rogue) += critAdd; // 同上
             CDUtil.AddClassicThrowingStats(player, 0.5f, critAdd);  // 经典版没有盗贼 DamageClass，改走它的自定义投掷字段（反射）
         }
-        /// <summary>数值膨胀开关开启时恢复的旧版盗贼暴击率（沿用近战头 2026-09-27「50 → 25」那次的旧值）</summary>
-        private const int LegacyCritChance = 50;
         /// <summary>
-        /// 数值膨胀开启时把 tooltip 正文换成膨胀文案（本地化键 Items.DemonshadeHelmRogue.TooltipInflated），
         /// 盗贼暴击率由 25% 显示为 50%。
         /// </summary>
-        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：与其余魔影头一致（ShadowspecBar×40 @ 德雷顿熔炉）；
         /// CWR 源写的是 ×12，本工程按既有四颗魔影头的统一口径取 ×40。

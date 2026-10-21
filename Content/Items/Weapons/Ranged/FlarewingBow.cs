@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,7 +10,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 炎翼弓（Flarewing Bow） - 射手弓，天堂之风链上**月光弓的下一件**（`CosmicBolter` 的入料之一，
     /// 也是 `Monsoon` 的入料）。
     /// <para>
-    /// **口径（用户 2026-10-14 拍板）**：中文名 **炎翼弓**、数值膨胀 **17 → 54**，
     /// 面板 / 支数（5 支）/ 蝙蝠机制 / 非木箭处理**全取 2.0**；经典分支照经典版配方注册、数值共用 2.0。
     /// 源 tooltip：<c>Shoots a spread of 5 arrows</c> / <c>Wooden arrows are converted into bouncing obsidian bats</c>。
     /// </para>
@@ -40,10 +38,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// <summary>配方里的活火块 / 黑曜石数量（照源）</summary>
         private const int LivingFireBlockCount = 50;
         private const int ObsidianCount = 10;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：17 → 54）</summary>
-        private const float InflatedDamage = 54f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 17</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -70,10 +65,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（5 支箭都由它派生），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 一次射出 <see cref="ArrowsPerShot"/> 支：沿弓身做 ±2 × π/10（±36°）排布、只挪箭点不散射速度；
         /// **任何弹药都换成 <see cref="FlareBat"/>**（弹药全转化，用户 2026-10-15 定；

@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Summon.Umbrella;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -23,12 +22,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// ② **天顶世界的全部内容都删掉** —— 故源里的 `Main.zenithWorld ? 150 : …` 伤害分支、
     /// 天顶世界专用配方、以及 `Item.rare` 之外的捐赠品稀有度都按普通世界处理。
     /// 源里另一个 `CIServerConfig.ShadowspecBuff ? 4000 : 1000` 分支（CI 自己的服务器配置）本工程没有对应开关，
-    /// 改为挂在 `StatInflation` 上。
     /// </para>
     /// <para>
-    /// 数值膨胀（用户 2026-10-10 点名）：关态 <c>Item.damage</c> = **963**（CI 源 1000，点名调整）、
     /// 开态 **4000**（＝CI 那个 `ShadowspecBuff` 档）。召唤件特有一环——`Shoot` 里写进礼帽的
-    /// `originalDamage` 也必须读 `BaseDamage`（本件原先靠引擎按 `Item.damage` 自动写入，加膨胀后改自己写）；
     /// 礼帽抛出的七件工具按 `Projectile.damage` 派生，会自动跟随。
     /// </para>
     /// <para>
@@ -68,22 +64,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;
         }
         /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-10 指定：963 → 4000，即 CI 的 ShadowspecBuff 档）。
-        /// </summary>
-        private const float InflatedDamage = 4000f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 963。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
-        /// 召唤件特有一环：<c>Shoot</c> 里写进礼帽的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>。
-        /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
-        /// <summary>
         /// 召唤条件（照 CI）：自己名下的礼帽只能存在一顶，且至少要有 5 个召唤栏位。
         /// </summary>
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0 && player.maxMinions >= 5;
@@ -105,7 +85,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             int idx = Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, type, damage, knockback, player.whoAmI);
             if (Main.projectile.IndexInRange(idx))
             {
-                Main.projectile[idx].originalDamage = (int)BaseDamage;
             }
             return false;
         }

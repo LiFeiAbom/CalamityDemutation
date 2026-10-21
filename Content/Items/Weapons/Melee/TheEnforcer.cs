@@ -1,9 +1,7 @@
 using CalamityDemutation.Content.Projectiles.Melee;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -25,12 +23,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 使用时间与挥舞动画源为 17 帧，用户 2026-10-05 指定改为 14 帧（两项一起）。
     /// </para>
     /// <para>
-    /// 数值膨胀（用户 2026-10-03 点名，同一开关三项联动）：面板 890 → **2200**
-    /// （<see cref="InflatedDamage"/>），每次挥砍的火种 6 → **10**，单枚火焰伤害 25% → **75%**
-    /// （三项都在运行时读 <c>ConfigSystem.StatInflationEnabled</c>，游戏内切换即时生效，不必重召/重进）；
-    /// 膨胀开启时 tooltip 正文换成 <c>Items.TheEnforcer.TooltipInflated</c>，见 <see cref="ModifyTooltips"/>。
-    /// </para>
-    /// <para>
     /// 配方双版本各一条（两版灾厄都软依赖，缺料即不注册）：
     /// 现代版＝宇宙锭×12 @ 宇宙铁砧；经典版＝宇宙锭×15 @ 嘉登熔炉。
     /// </para>
@@ -39,23 +31,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         /// <summary>常态每次挥砍在鼠标处释放的火焰枚数（源的 OnHit 一次性撒 5 枚，这里按用户「大量火焰」的口径取 6）</summary>
         private const int BaseFlamesPerBarrage = 6;
-        /// <summary>数值膨胀开启时每次挥砍释放的火焰枚数（用户 2026-10-03 指定：6 → 10）</summary>
-        private const int InflatedFlamesPerBarrage = 10;
         /// <summary>常态单枚火焰的伤害占面板基础伤害的比例（源为 25%）</summary>
         private const float BaseFlameDamageRatio = 0.25f;
-        /// <summary>数值膨胀开启时单枚火焰的伤害占比（用户 2026-10-03 指定：25% → 75%）</summary>
-        private const float InflatedFlameDamageRatio = 0.75f;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-03 指定：暴政 890 → 2200）</summary>
-        private const float InflatedDamage = 2200f;
-        /// <summary>当前生效的火焰枚数（运行时读配置，游戏内切换即时生效）</summary>
-        private static int FlamesPerBarrage => ConfigSystem.StatInflationEnabled ? InflatedFlamesPerBarrage : BaseFlamesPerBarrage;
-        /// <summary>当前生效的单枚火焰伤害占比（运行时读配置）</summary>
-        private static float FlameDamageRatio => ConfigSystem.StatInflationEnabled ? InflatedFlameDamageRatio : BaseFlameDamageRatio;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 890。
-        /// 按面板比例派生的火焰伤害也读这里，避免出现「面板涨了、火焰没涨」。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>火焰迸发时的初始径向速度下限</summary>
         private const float MinFlameSpeed = 2.5f;
         /// <summary>火焰迸发时的初始径向速度上限</summary>
@@ -89,21 +66,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 9f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
         }
-        /// <summary>数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）</summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
-        /// <summary>
-        /// 数值膨胀开启时把说明正文整段换成 <c>Items.TheEnforcer.TooltipInflated</c>
-        /// （本地化键写的是膨胀口径：十枚火焰、每枚 75%），关掉则维持原正文的 25%。
-        /// </summary>
-        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 发射逻辑（替代源的 OnHit 撒火）：每次挥砍直接在<strong>鼠标处</strong>炸开一圈火焰——
         /// 火种沿圆周均匀分布（角度加一点随机抖动）、生成点离准心 12~52 像素、初速沿径向外扩
         /// （2.5~6 像素/帧）并额外叠一点「朝准心方向」的偏置速度，看起来既像在准心处爆开、又整体朝瞄准方向推出去。
-        /// 火焰伤害取面板的 25%（数值膨胀开启时改成 75%），走 <c>GetTotalDamage</c> 预乘玩家加成后一次性算进生成包。
+        /// 火焰伤害取面板的 25%，走 <c>GetTotalDamage</c> 预乘玩家加成后一次性算进生成包。
         /// 音效把源的 Item73 从「命中时」前移到「出火时」，同时补一圈暗影束尘（<c>DustID.ShadowbeamStaff</c>，即源里写的 173 号尘）。
         /// 返回 false：不让原版按 <c>Item.shoot</c> 再补一发单弹。
         /// </summary>
@@ -113,11 +80,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Vector2 playerCenter = player.RotatedRelativePoint(player.MountedCenter, true);
             Vector2 aimDirection = (mouseWorld - playerCenter).SafeNormalize(Vector2.UnitX * player.direction);
             SoundEngine.PlaySound(SoundID.Item73, mouseWorld);
-            int flameDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(FlameDamageRatio * BaseDamage);
+            int flameDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(BaseFlameDamageRatio * Item.damage);
             int flameType = ModContent.ProjectileType<EssenceFlame2>();
-            for (int i = 0; i < FlamesPerBarrage; i++)
+            for (int i = 0; i < BaseFlamesPerBarrage; i++)
             {
-                float angle = MathHelper.TwoPi * i / FlamesPerBarrage + Main.rand.NextFloat(-0.35f, 0.35f);
+                float angle = MathHelper.TwoPi * i / BaseFlamesPerBarrage + Main.rand.NextFloat(-0.35f, 0.35f);
                 Vector2 burstDirection = angle.ToRotationVector2();
                 Vector2 spawnPosition = mouseWorld + burstDirection * Main.rand.NextFloat(12f, 52f);
                 Vector2 flameVelocity = burstDirection * Main.rand.NextFloat(MinFlameSpeed, MaxFlameSpeed) + aimDirection * 1.25f;

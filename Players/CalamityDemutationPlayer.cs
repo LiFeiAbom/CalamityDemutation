@@ -4172,14 +4172,10 @@ namespace CalamityDemutation.Players
         /// 现代版 CalamityPlayerLifeRegen 的 noLifeRegen 段）。
         /// 同时挂在 UpdateLifeRegen 与 UpdateBadLifeRegen 两处，因为本工程观察到
         /// UpdateBadLifeRegen 只在生命回复为负时被调用，而本条要在回复为正时也生效。
-        /// <b>数值膨胀开关开启时本限制失效</b>（用户 2026-10-01 指定），故开头直接返回。
         /// </summary>
         private void OmegaBlueNoLifeRegen()
         {
             if (!omegaBlueChestplate)
-                return;
-            // 数值膨胀开启时解禁：欧米茄蓝胸甲不再禁止正面生命再生（用户 2026-10-01 指定）
-            if (ConfigSystem.StatInflationEnabled)
                 return;
             if (Player.lifeRegen > 0)
             {
@@ -4760,7 +4756,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// tModLoader 的 FreeDodge 钩子：完全闪避伤害（不受常规闪避冷却影响）。
         /// 聚合大脑 1/10、大杂烩（The Amalgam）1/8 概率完全免伤；
-        /// 弑神者胸甲 / 金源胸甲（godSlayerReflect）5% 概率完全免伤（数值膨胀关闭时为源值 2%）。
+        /// 弑神者胸甲 / 金源胸甲（godSlayerReflect）2% 概率完全免伤。
         /// </summary>
         public override bool FreeDodge(Player.HurtInfo info)
         {
@@ -4780,10 +4776,9 @@ namespace CalamityDemutation.Players
                 return true;
             }
             // 弑神者胸甲 / 金源胸甲的完全免伤（对应 CI 的 GodSlayerReflect 置 freeDodgeFromShieldAbsorption 再被 FreeDodge 吃掉）：
-            // 数值膨胀开启 5%（与 tooltip 的膨胀文案一致），关闭取源值 2%（经典版与 CI 都是 1/50）。
             // 注意：这里返回 true 时原版只把本次伤害归零（见 Player.Hurt 的 FreeDodge 分支），不会代补无敌帧，所以要自己给。
             // 原先这段判定写在 ModifyHurt 里、只设 Player.immune 标记，伤害照吃，属于空操作——中英 tooltip 的"5% 完全无效"当时并没有实现。
-            if (godSlayerReflect && Main.rand.NextBool(ConfigSystem.StatInflationEnabled ? 20 : 50))
+            if (godSlayerReflect && Main.rand.NextBool(50))
             {
                 Player.immune = true;
                 Player.immuneTime = 15;
@@ -5853,9 +5848,7 @@ namespace CalamityDemutation.Players
                         Main.dust[num].scale *= 1f + (float)Main.rand.Next(40) * 0.01f;
                     }
                 }
-                // 保命回复量同样受数值膨胀开关门控：关态取 CI 源值 100，开态 300（用户 2026-10-05 定）。
-                // 文案侧由两个弑神者头盔的 SetBonus 用 {1} 占位同步（GodSlayerHelm / GodSlayerHelmet）。
-                int heal = draconicSurge ? Player.statLifeMax2 : (ConfigSystem.StatInflationEnabled ? 300 : 100);
+                int heal = draconicSurge ? Player.statLifeMax2 : 100;
                 Player.statLife += heal;
                 Player.HealEffect(heal);
                 if (Player.statLife > Player.statLifeMax2)

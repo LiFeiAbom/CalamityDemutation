@@ -5,7 +5,7 @@ namespace CalamityDemutation.Systems
 {
     /// <summary>
     /// 模组配置类，提供客户端侧的配置选项。
-    /// 当前配置项：性能模式、还原原版削弱、还原灾厄内容削弱、数值膨胀、挥砍刀光、武器自适应光照。
+    /// 当前配置项：性能模式、还原原版削弱、还原灾厄内容削弱、挥砍刀光、武器自适应光照。
     /// </summary>
     internal class ConfigSystem : ModConfig
     {
@@ -38,21 +38,6 @@ namespace CalamityDemutation.Systems
         [BackgroundColor(211, 211, 211, 192)]
         [DefaultValue(false)]
         public bool RevertCalamityContentNerfs { get; set; }
-        /// <summary>
-        /// 数值膨胀开关：启用后，本模组把**已接入的武器与盔甲**回调到用户逐一点名的"膨胀档"数值——
-        /// 武器 32 把按 AGENTS.md 第 7 节的清单（逐把点名的关态→开态），盔甲 12 件按 `310c3cf`（2026-09-27 第三轮削弱）前回滚。
-        /// 消费方有两处：武器在自己的代码里读 <see cref="StatInflationEnabled"/> 决定面板回调多少；
-        /// 盔甲在各自的 `UpdateEquip` 里按同一开关补差值（防御因为 `Item.defense` 运行期改不了，走 `statDefense` 差值）。
-        /// 本项没有 `ReloadRequired`，游戏内切换即时生效。
-        /// </summary>
-        [BackgroundColor(211, 211, 211, 192)]
-        [DefaultValue(false)]
-        public bool StatInflation { get; set; }
-        /// <summary>
-        /// 数值膨胀是否启用的静态便捷入口：武器侧统一读这一处，省掉每处判空
-        /// （配置尚未载入时按"未启用"处理）。
-        /// </summary>
-        public static bool StatInflationEnabled => Instance?.StatInflation ?? false;
         /// <summary>
         /// 是否启用挥砍刀光（BaseSwingCO 弧光渲染开关）
         /// </summary>

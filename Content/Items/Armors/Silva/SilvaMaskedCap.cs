@@ -17,7 +17,6 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
     /// 6. 魔法弹幕只穿透一名敌人或即将消散时引发巨型爆炸（silvaMage → CalamityDemutationGlobalProjectile.OnHitNPC
     ///    生成独立的 SilvaBurst；300 帧冷却见 CalamityDemutationPlayer.silvaMageBurstCooldown）
     /// 7. 免死无敌窗口内魔法武器伤害 +60%（silvaMage → CalamityDemutationPlayer.PostUpdateMiscEffects）
-    /// 注：6、7 两条已按用户 2026-10-09 的指示换成 CI 的 SilvaMagicSetLegacy 口径
     ///（原经典版为「3% 概率引爆 + 撑大本弹幕判定框并把本次伤害 ×4」与「窗口结束后 +10%」）。
     /// 与近战/射手/召唤头的差别（经典版原样）：法师头不置 silvaMelee / silvaRanged / silvaSummon，
     /// 故套装文本相应只保留通用项 + 两条法师专属项。

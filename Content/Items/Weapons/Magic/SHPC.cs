@@ -1,8 +1,8 @@
 using System;
 using CalamityDemutation.Players;
+using CalamityDemutation.Systems;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Sounds;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -38,8 +38,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// </para>
     /// <para>
     /// **增幅**：照 <see cref="DefenseBlade"/> 的传奇进度表——石巨人 → 至尊灾厄共 18 档**加算**，
-    /// 常态满配 6.00×、数值膨胀开关开启时改用旧版增量满配 9.10×。
-    /// 面板 117 是**单一基准**（用户只点了这一个数），故本件不设"膨胀面板"双值，膨胀开关只作用于增量列。
     /// </para>
     /// </summary>
     internal class SHPC : ModItem
@@ -59,34 +57,33 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         private const int PhaseOrbCooldown = 60;
         /// <summary>
         /// 传奇武器增伤进度表：石巨人 → 至尊灾厄（主线 18 档）——**与 <see cref="DefenseBlade"/> 同一张表**。
-        /// 每项为 (是否已击败, 当前固定增伤, 数值膨胀开关开启时的旧版固定增伤)：
-        /// 当前口径加算累加合计 +5.00（满配 6.00×），旧版口径合计 +8.10（满配 9.10×）。
+        /// 每项为 (是否已击败, 固定增伤)；加算累加合计 +5.00（满配 6.00×）。
         /// 前中期增量小、终局增量大：反映难度递增，同时弥补伤害基数变大后固定增量的相对收益下降。
         /// </summary>
-        private static readonly (Func<bool> Downed, float Increment, float LegacyIncrement)[] LegendaryBosses =
+        private static readonly (Func<bool> Downed, float Increment)[] LegendaryBosses =
         [
             // —— 石巨人 → 月球领主 ——
-            (() => NPC.downedGolemBoss, 0.06f, 0.10f),                          // 石巨人 Golem
-            (() => BossSystem.Plaguebringer, 0.09f, 0.15f),                     // 瘟疫使者歌莉娅 Plaguebringer Goliath
-            (() => BossSystem.Ravager, 0.09f, 0.15f),                           // 毁灭魔像（掠夺者）Ravager
-            (() => NPC.downedAncientCultist, 0.06f, 0.10f),                     // 拜月教邪教徒 Lunatic Cultist
-            (() => BossSystem.AstrumDeus, 0.12f, 0.20f),                        // 星神游龙 Astrum Deus
-            (() => NPC.downedMoonlord, 0.12f, 0.20f),                           // 月球领主 Moon Lord
+            (() => NPC.downedGolemBoss, 0.06f),                          // 石巨人 Golem
+            (() => BossSystem.Plaguebringer, 0.09f),                     // 瘟疫使者歌莉娅 Plaguebringer Goliath
+            (() => BossSystem.Ravager, 0.09f),                           // 毁灭魔像（掠夺者）Ravager
+            (() => NPC.downedAncientCultist, 0.06f),                     // 拜月教邪教徒 Lunatic Cultist
+            (() => BossSystem.AstrumDeus, 0.12f),                        // 星神游龙 Astrum Deus
+            (() => NPC.downedMoonlord, 0.12f),                           // 月球领主 Moon Lord
             // —— 月后 · 亵渎前 ——
-            (() => BossSystem.Guardians, 0.12f, 0.20f),                         // 亵渎守卫 Profaned Guardians
-            (() => BossSystem.Dragonfolly, 0.12f, 0.20f),                       // 丛林龙 Dragonfolly
+            (() => BossSystem.Guardians, 0.12f),                         // 亵渎守卫 Profaned Guardians
+            (() => BossSystem.Dragonfolly, 0.12f),                       // 丛林龙 Dragonfolly
             // —— 亵渎 → 噬神 ——
-            (() => BossSystem.Providence, 0.25f, 0.40f),                        // 亵渎天神 Providence
-            (() => BossSystem.CeaselessVoid || ClassicSentinelsDowned, 0.12f, 0.20f), // 无尽虚空 Ceaseless Void
-            (() => BossSystem.StormWeaver || ClassicSentinelsDowned, 0.12f, 0.20f),   // 风暴编织者 Storm Weaver
-            (() => BossSystem.Signus || ClassicSentinelsDowned, 0.12f, 0.20f),        // 西格纳斯 Signus
-            (() => BossSystem.Polterghast, 0.31f, 0.50f),                       // 噬魂幽花 Polterghast
-            (() => BossSystem.OldDuke, 0.31f, 0.50f),                           // 老公爵 Old Duke
-            (() => BossSystem.DevourerOfGods, 0.49f, 0.80f),                    // 噬神者 Devourer of Gods
+            (() => BossSystem.Providence, 0.25f),                        // 亵渎天神 Providence
+            (() => BossSystem.CeaselessVoid || ClassicSentinelsDowned, 0.12f), // 无尽虚空 Ceaseless Void
+            (() => BossSystem.StormWeaver || ClassicSentinelsDowned, 0.12f),   // 风暴编织者 Storm Weaver
+            (() => BossSystem.Signus || ClassicSentinelsDowned, 0.12f),        // 西格纳斯 Signus
+            (() => BossSystem.Polterghast, 0.31f),                       // 噬魂幽花 Polterghast
+            (() => BossSystem.OldDuke, 0.31f),                           // 老公爵 Old Duke
+            (() => BossSystem.DevourerOfGods, 0.49f),                    // 噬神者 Devourer of Gods
             // —— 终局 ——
-            (() => BossSystem.Yharon, 1.26f, 2.00f),                            // 犽戎 Yharon
-            (() => BossSystem.ExoMechs, 0.62f, 1.00f),                          // 星流巨械 Exo Mechs
-            (() => BossSystem.SupremeCalamitas, 0.62f, 1.00f),                  // 至尊灾厄 Supreme Calamitas
+            (() => BossSystem.Yharon, 1.26f),                            // 犽戎 Yharon
+            (() => BossSystem.ExoMechs, 0.62f),                          // 星流巨械 Exo Mechs
+            (() => BossSystem.SupremeCalamitas, 0.62f),                  // 至尊灾厄 Supreme Calamitas
         ];
         // ── 属性 ──
         /// <summary>
@@ -193,16 +190,15 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         // ── 公开方法 ──
         /// <summary>
         /// 按 <see cref="LegendaryBosses"/> 进度表加算累加，返回传奇武器伤害倍率（口径与 <see cref="DefenseBlade"/> 完全一致）：
-        /// 常态基础 1.00×、满配 6.00×（合计 +5.00）；数值膨胀开关开启时改用旧版增量，满配 9.10×（合计 +8.10）。
+        /// 常态基础 1.00×、满配 6.00×（合计 +5.00）。
         /// </summary>
         public static float LegendaryDamage()
         {
             float damageBuff = 1f;
-            bool legacy = ConfigSystem.StatInflationEnabled;
-            foreach (var (downed, increment, legacyIncrement) in LegendaryBosses)
+            foreach (var (downed, increment) in LegendaryBosses)
             {
                 if (downed())
-                    damageBuff += legacy ? legacyIncrement : increment;
+                    damageBuff += increment;
             }
             return damageBuff;
         }

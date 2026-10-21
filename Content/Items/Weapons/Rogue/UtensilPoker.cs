@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Rogue;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -15,8 +14,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
     /// </summary>
     internal class UtensilPoker : ModItem
     {
-        private const float InflatedDamage = 1331f;
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
@@ -41,10 +38,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.shoot = ModContent.ProjectileType<Fork>();
             Item.shootSpeed = 12f;
             Item.DamageType = CDUtil.GetRogueDamageClass();
-        }
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
         }
         public override bool WeaponPrefix() => true;
         public override bool RangedPrefix() => false;

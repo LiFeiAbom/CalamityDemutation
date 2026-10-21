@@ -1,7 +1,6 @@
 using CalamityDemutation.Content.Items;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -19,7 +18,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// 于是既有真近战挥砍、又照常洒流星；挥砍表现按本工程惯例在 <c>MeleeEffects</c> 里调 <c>CDUtil.BetterSwing</c>。
     /// </para>
     /// <para>
-    /// 每次使用朝鼠标上方洒下火流星（源为 6 颗，本工程按用户口径改成 10；数值膨胀开关开启时 15 颗），
+    /// 每次使用朝鼠标上方洒下火流星（源为 6 颗，本工程按用户口径改成 10 颗），
     /// 命中挂 300 帧龙焰。
     /// 与源的其它差异：① 不写 <c>RangedPrefix</c>/<c>MeleePrefix</c>（源把前缀伪装成远程，本工程不许）；
     /// ② 价值仍参照**经典版**（1 铂 80 金），源是 Violet + RarityVioletBuyPrice；
@@ -32,12 +31,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     {
         /// <summary>常态每次使用洒下的流星数量（源为 6，本工程按用户口径改成 10）</summary>
         private const int BaseProjectilesPerBarrage = 10;
-        /// <summary>数值膨胀开关开启时洒下的流星数量（用户 2026-10-01 指定：10 → 15）</summary>
-        private const int InflatedProjectilesPerBarrage = 15;
-        /// <summary>本次使用实际洒下的流星数量（运行时读配置，游戏内切换即时生效）</summary>
-        private static int ProjectilesPerBarrage => ConfigSystem.StatInflationEnabled ? InflatedProjectilesPerBarrage : BaseProjectilesPerBarrage;
         /// <summary>
-        /// 物品基础属性：102×146、伤害 244（源值；数值膨胀开关开启时面板回调到 388）、
+        /// 物品基础属性：102×146、伤害 244、
         /// 14 帧使用与挥舞、击退 2.5、红名、1 铂 80 金、月后稀有度 15（鸿蒙方舟同档）。
         /// 挥舞式（Swing + useTurn、不设 noMelee）——与源的法杖式持握不同，见类注释
         /// </summary>
@@ -61,22 +56,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;
         }
         /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-01 指定：焚灭天惩 244 → 388）。
-        /// </summary>
-        private const float InflatedDamage = 388f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的源值 244。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
-        /// 火流星走传进来的 <c>damage</c>；同一开关还把每次洒下的流星数量从 10 抬到 15（见 <see cref="ProjectilesPerBarrage"/>）。
-        /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
-        /// <summary>
         /// 挥砍表现：先用 BetterSwing 修正挥舞位置（本工程近战挥舞武器的必备写法），
         /// 再约 1/3 概率沿命中框洒铜币色尘（照抄经典版 <c>MeleeEffects</c> 里的 244 号尘）
         /// </summary>
@@ -89,7 +68,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
         }
         /// <summary>
-        /// 使用：补一发低音爆（SoundID.Item70），然后洒下火流星（常态 10 颗 / 数值膨胀 15 颗）——
         /// 每颗用 <c>CDUtil.ProjectileRain</c> 从鼠标上方随机高度（850~1100 像素）砸落、落点横向 ±290 像素抖动，
         /// 速度取本次发射速度的 0.7~1.4 倍随机。返回 false 表示不走默认的单发发射。
         /// </summary>
@@ -97,7 +75,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             SoundEngine.PlaySound(SoundID.Item70, player.Center);
             float speed = velocity.Length();
-            for (int i = 0; i < ProjectilesPerBarrage; ++i)
+            for (int i = 0; i < BaseProjectilesPerBarrage; ++i)
             {
                 float randomSpeed = speed * Main.rand.NextFloat(0.7f, 1.4f);
                 CDUtil.ProjectileRain(source, Main.MouseWorld, 290f, 130f, 850f, 1100f, randomSpeed, type, damage, knockback, player.whoAmI);

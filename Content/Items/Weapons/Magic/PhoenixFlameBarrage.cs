@@ -1,6 +1,5 @@
 using System;
 using CalamityDemutation.Content.Projectiles.Magic;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -23,16 +22,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
     /// 朝鼠标方向坠落，形成"火幕从天而降"；每枚弹幕命中挂 CI 的圣火 300 帧。
     /// </para>
     /// <para>
-    /// **数值膨胀**：用户 2026-10-18 点名为 <b>290 → 458</b>；
     /// 伤害由 <c>Shoot</c> 的 <c>damage</c> 参数派生，整条自动跟随。
     /// </para>
     /// </summary>
     internal class PhoenixFlameBarrage : ModItem
     {
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-18 指定：290 → 458）</summary>
-        private const float InflatedDamage = 458f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 CI 源值 290</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>登记为法杖、研究解锁一份（照 CI 源）</summary>
         public override void SetStaticDefaults()
         {
@@ -62,11 +57,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         }
         /// <summary>法杖持握原点（照 CI 的 15,15；tML 的坐标从贴图左下角起算）</summary>
         public override Vector2? HoldoutOrigin() => new Vector2(15, 15);
-        /// <summary>数值膨胀：面板基础伤害改读 <see cref="BaseDamage"/>，游戏内切换即时生效</summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
         /// <summary>
         /// 出手（逐行照 CI 的 <c>DragonStaff.Shoot</c>）：先算鼠标方向，再按 30~32 枚的数量
         /// 从玩家上方 600 像素起、逐枚再抬高 100 像素生成火雨；每枚都重新朝鼠标归一化，

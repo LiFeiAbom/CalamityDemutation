@@ -1,7 +1,6 @@
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -61,15 +60,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         {
             Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>(Texture + "Glow").Value);
         }
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-03 指定：220 → 250）。</summary>
-        private const float InflatedDamage = 250f;
         /// <summary>当前生效的面板基础伤害：开关开则用膨胀值 250，否则维持 Item.damage 的源值 220。</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>
         /// 面板伤害改走运行时回调（不要写进 SetDefaults，否则游戏内切开关不生效）。
         /// 派生伤害都取自 Projectile.damage / GetWeaponDamage(手持)，天然跟随本面板值。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 同一时间只允许一把爪子在场（本体与重制版一致）
         /// </summary>

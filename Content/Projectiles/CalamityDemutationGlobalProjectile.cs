@@ -389,7 +389,6 @@ namespace CalamityDemutation.Content.Projectiles
             // ② 治疗烈焰：改为**固定** rand(5, 11) 点（不再按弹幕伤害的比例），走 GodSlayerHealOrb、
             //    搜队友半径 3000（原 1200）、生命值消耗倍率 2（源 SpawnLifeStealProjectile 的第 6 参）。
             // 注：经典版那套「按本次命中伤害折半累加、每帧衰减 2.5」的 godSlayerDmg 预算现在只归召唤侧使用；
-            //  CI 写的是裸 <c>HeldItem.damage</c>，本工程照抄（不走 GetWeaponDamage，故不随数值膨胀开关变化）。
             CalamityDemutationPlayer godMage = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
             if (projectile.CountsAsClass<MagicDamageClass>() && godMage.godSlayerMage && godMage.godSlayerMageFireCD <= 0)
             {

@@ -1,4 +1,3 @@
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -15,7 +14,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 与本件不是同一数值，故只在注释里留档、不当作同一件。
     /// </para>
     /// <para>
-    /// **口径（用户 2026-10-14 拍板）**：中文名 **大陆巨弓**、**数值膨胀 34 → 102**、
     /// 面板 / 机制**全取 2.0**；经典分支照 (a) —— 用经典版同名材料 `CruptixBar`（推定＝熔渣锭）
     /// 注册一条、数值共用 2.0。源 tooltip：<c>Wooden arrows are set alight with fire</c> /
     /// <c>Fires 3 arrows at once</c> / <c>Fires 2 additional cursed, hellfire, or ichor arrows</c>。
@@ -50,10 +48,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int ExtraArrowHitCooldown = 10;
         /// <summary>配方里的锭数（照源 10）</summary>
         private const int BarCount = 10;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：34 → 102）</summary>
-        private const float InflatedDamage = 102f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 34</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -80,10 +75,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;              // 吃箭类弹药
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（3 支主箭用全额、2 支追加箭用其一半），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 开火（照 2.0 的结构）：3 支主箭（**任何弹药 → 火焰箭**、全部不掉落；
         /// 弹药全转化是用户 2026-10-15 对整条链定的新口径）+ 2 支半伤的元素箭（诅咒/地狱火/灵液三选一）。

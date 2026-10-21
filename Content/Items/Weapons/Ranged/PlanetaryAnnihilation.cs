@@ -1,6 +1,5 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -14,7 +13,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// ＝灾厄 2.0 的 <c>Items/Weapons/Ranged/PlanetaryAnnihilation.cs</c>。
     /// <para>
     /// **口径（用户 2026-10-15 拍板）**：中文名 **行星湮灭**（弹幕 **能量球**
-    /// <see cref="PlanetaryAnnihilationProj"/>）、**数值膨胀 58 → 126**、面板 / 机制**全取 2.0**；
     /// 配方两版**逐字相同**故只注册一条。
     /// 源 tooltip：<c>Fires a storm of 7 arrows from the sky</c> /
     /// <c>Wooden arrows are converted into homing energy bolts</c>。
@@ -56,10 +54,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int GalacticaSingularityCount = 5;
         /// <summary>配方里的月亮锭数量（照源 5）</summary>
         private const int LunarBarCount = 5;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-15 指定：58 → 126）</summary>
-        private const float InflatedDamage = 126f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 58</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
         /// <summary>研究解锁一份</summary>
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
         /// <summary>
@@ -88,11 +83,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// <summary>贴图在手上时往左挪 5 像素（照源）</summary>
         public override Vector2? HoldoutOffset() => new Vector2(-5, 0);
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 洒下的 7 枚弹幕都由 <c>Shoot</c> 的 <c>damage</c> 参数派生，会自动跟随
         /// （弹幕消亡时的那发"爆炸"伤害是它自己 ÷2 得来的，同样跟随）。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 从玩家上方洒下 <see cref="ProjectileCount"/> 枚弹幕：**任何弹药都换成能量球**
         /// （`ai[1]` 定色；弹药全转化，用户 2026-10-15 定）

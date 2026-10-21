@@ -1,6 +1,5 @@
 using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Projectiles.Summon;
-using CalamityDemutation.Systems;
 using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -63,22 +62,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;   // 月后 13：荧光绿（＝灾厄 PureGreen）
         }
         /// <summary>
-        /// 数值膨胀后的面板伤害（用户 2026-10-09 指定：275 → 600）。
-        /// </summary>
-        private const float InflatedDamage = 600f;
-        /// <summary>
-        /// 当前生效的面板基础伤害：膨胀开关开启时用 <see cref="InflatedDamage"/>，否则维持 <c>Item.damage</c> 的 275。
-        /// </summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
-        /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>（运行时读配置，游戏内切换即时生效）。
-        /// 召唤件特有一环：<c>Shoot</c> 里写进星灵的 <c>originalDamage</c> 也必须读 <see cref="BaseDamage"/>；
         /// 星灵光束按 ×(ln 消耗栏位数 + 1) 派生，读的是弹幕自身伤害，会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
-        {
-            damage.Base = BaseDamage;
-        }
         /// <summary>
         /// 持在手上时每帧重算一次"还能给天狼星吃的召唤栏"：总栏位减去**自己以外**所有在场仆从占用的栏位。
         /// 照源写法（源存在 ModItem 字段上，本工程改存 ModPlayer 以适配联机）。
@@ -118,7 +103,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             int idx = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI, slots, 30f);
             if (Main.projectile.IndexInRange(idx))
             {
-                Main.projectile[idx].originalDamage = (int)BaseDamage;
             }
             return false;
         }

@@ -22,7 +22,6 @@ namespace CalamityDemutation.Content.Projectiles.Magic
     /// 判定 58×94、穿透 -1、不撞地形、不显伤害（`CanDamage` 恒假，贴图只是表现）。
     /// 伤害每帧取 <c>Owner.GetWeaponDamage(weaponItem)</c>——**2.0.4 源里就已经是这个引擎入口**
     /// （2.0 那版才是手写的 `GetTotalDamage&lt;MagicDamageClass&gt;().ApplyTo(item.damage)`），
-    /// 所以 §7 的数值膨胀钩子天然生效、无需额外改动。
     /// </para>
     /// <para>
     /// **三处工程侧适配**：① `Owner.CantUseHoldout()` 是灾厄的扩展方法，本工程**已有同义实现**

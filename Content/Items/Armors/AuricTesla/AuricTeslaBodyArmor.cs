@@ -6,7 +6,6 @@ using CalamityDemutation.Content.Items.Armors.Tarragon;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Utilities;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -62,30 +61,14 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             //（工程原先把中间那行漏了）。≤80 的伤害在 FreeDodge 里被完全闪避，保护上限触发后重置为 20 并逐帧回升；
             // 与近战头的 godSlayerDamage（≤80 → 1）分工：那条属经典版整套路径，这条属 CI 的单件路径。
             modPlayer.godSlayerDamageProtect = true;
-            bool legacy = ConfigSystem.StatInflationEnabled;
-            player.statLifeMax2 += legacy ? LegacyStatLifeMax2 : 100;   // 最大生命：常态 +100 / 膨胀 +400（削弱前旧值）
-            if (legacy)
-            {
-                player.statManaMax2 += LegacyStatManaMax2;              // 最大魔力 +400（削弱时整条删除，膨胀时恢复）
-            }
+            player.statLifeMax2 += 100;   // 最大生命：常态 +100 / 膨胀 +400（削弱前旧值）
             player.moveSpeed += 0.25f;            // 移动速度 +25%
-            player.GetCritChance<GenericDamageClass>() += legacy ? LegacyCritChance : 22;   // 通用暴击率：常态 +22% / 膨胀 +30%
-            player.GetDamage<GenericDamageClass>() += legacy ? LegacyDamageBonus : 0.22f;    // 通用伤害：常态 +22% / 膨胀 +30%
+            player.GetCritChance<GenericDamageClass>() += 22;   // 通用暴击率：常态 +22% / 膨胀 +30%
+            player.GetDamage<GenericDamageClass>() += 0.22f;    // 通用伤害：常态 +22% / 膨胀 +30%
         }
-        /// <summary>数值膨胀开关开启时恢复的旧版生命上限（2026-09-27「400 → 100」那次削弱的原值）</summary>
-        private const int LegacyStatLifeMax2 = 400;
-        /// <summary>数值膨胀开关开启时恢复的旧版魔力上限（2026-09-27 削弱时整条删除的原值）</summary>
-        private const int LegacyStatManaMax2 = 400;
-        /// <summary>数值膨胀开关开启时恢复的旧版通用暴击率（2026-09-27「30 → 22」那次削弱的原值）</summary>
-        private const int LegacyCritChance = 30;
-        /// <summary>数值膨胀开关开启时恢复的旧版通用伤害（2026-09-27「30% → 22%」那次削弱的原值）</summary>
-        private const float LegacyDamageBonus = 0.30f;
         /// <summary>
-        /// 说明文字：数值膨胀开启时换成 TooltipInflated（最大生命 +400、最大魔力 +400、
         /// 伤害与暴击 30%、5% 完全免伤），关闭时用 Tooltip 的源值（+100、22%、2%）。
-        /// 本件防御不随膨胀变化，故不传 defenseBonus。
         /// </summary>
-        public override void ModifyTooltips(List<TooltipLine> tooltips) => tooltips.ApplyInflatedTooltip(this);
         /// <summary>
         /// 注册配方：现代版灾厄用金锭×20 + 宇宙砧，经典版灾厄用矿石与魂材 + 德雷顿熔炉，
         /// 两分支均以四套月后胸甲 + 一件霜冻屏障（本模组自有的 FrostBarrier）为坯料。

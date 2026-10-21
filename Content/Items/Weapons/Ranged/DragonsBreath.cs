@@ -1,5 +1,4 @@
 using CalamityDemutation.Content.Projectiles.Ranged;
-using CalamityDemutation.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -14,7 +13,6 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// <para>
     /// **口径（用户 2026-10-14 逐条拍板）**：走 **CI 支线**（`CalamityInheritance-Beta1.12` 的 `DragonsBreathold`）、
     /// 爆炸弹幕自持一枚与灾厄 <c>FuckYou</c> 同款的件、
-    /// 灾厄的"贴脸射击"**不做**、数值膨胀 **220 → 478**、中文名就用「巨龙之息」。
     /// </para>
     /// <para>
     /// 与源（CI）的差别逐条：① 类名 `DragonsBreathold` → **`DragonsBreath`**（工程命名口径：去掉 CI 式 `old` 后缀）；
@@ -53,10 +51,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const float FullAutoSpreadFactor = 1.22f;
         /// <summary>不打散弹的固定省弹率（照源：66% 不消耗弹药）</summary>
         private const float AmmoSaveChance = 0.66f;
-        /// <summary>数值膨胀后的面板伤害（用户 2026-10-14 指定：220 → 478）</summary>
-        private const float InflatedDamage = 478f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的源值 220</summary>
-        private float BaseDamage => ConfigSystem.StatInflationEnabled ? InflatedDamage : Item.damage;
 
         /// <summary>
         /// 研究解锁一份；并允许右键重复触发（右键全自动需要每次点击都重新施放）——照 CI
@@ -90,10 +85,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后稀有度 15（紫）
         }
         /// <summary>
-        /// 数值膨胀：把面板基础伤害换成 <see cref="BaseDamage"/>。
         /// 本件所有派生伤害都从 <c>Shoot</c> 的 <c>damage</c> 参数往下传（8 颗弹丸各自吃满面板），会自动跟随。
         /// </summary>
-        public override void ModifyWeaponDamage(Player player, ref StatModifier damage) => damage.Base = BaseDamage;
         /// <summary>
         /// 66% 不消耗弹药（照源：<c>Main.rand.NextFloat() &gt; 0.66f</c> 时才消耗）
         /// </summary>
