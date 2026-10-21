@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 泰拉巨刃的小闪电（移植自大修 TerratomereBolts）：挥砍途中射出的追踪闪电，
+    /// 泰拉巨刃的小闪电（移植自重制版 TerratomereBolts）：挥砍途中射出的追踪闪电，
     /// 飞行中缓慢加速、追踪 1600 像素内敌人，首次命中后在目标周围生成 3 道大刀光（TerratomereBigSlashs）。
     /// 拖尾用 TrailStreak 着色器 + ScarletDevilStreak 贴图。
     /// </summary>

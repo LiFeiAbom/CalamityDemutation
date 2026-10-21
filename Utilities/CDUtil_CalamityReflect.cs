@@ -8,8 +8,8 @@ namespace CalamityDemutation.Utilities
     /// <summary>
     /// 通用工具类（灾厄反射桥部分）：用反射读写灾厄侧 ModPlayer 的字段。
     /// <para>
-    /// 目前只有一件事——把本模组金源套的 <c>auricSet</c> 镜像到**现代版灾厄**的
-    /// <c>CalamityPlayer.auricSet</c>（1.4.4-release 的 <c>CalPlayer/CalamityPlayer.cs:1299</c>，
+    /// 目前只有一件事——把本模组金源套的 <c>auricSet</c> 镜像到**现代灾厄**的
+    /// <c>CalamityPlayer.auricSet</c>（现代灾厄的 <c>现代灾厄玩家类</c>，
     /// 是个 public 字段；2.0.4 版本字段同名）。这样玩家戴本模组的金源套时灾厄侧也会"认账"，
     /// 于是它自己那几条 auricSet 分支生效：
     /// ① 金源矿石不再触发 Auric Rejection（<c>CalamityPlayerMiscEffects.cs:917</c>——触发时是 300 伤害 + 大幅击退）；
@@ -17,9 +17,9 @@ namespace CalamityDemutation.Utilities
     /// **现代版的 auricSet 没有任何数值加成**，所以镜像过去不产生平衡副作用。
     /// </para>
     /// <para>
-    /// 为什么**不**对经典版（CalamityModClassicPreTrailer）做同样的镜像：经典版的 auricSet 除了外观，
+    /// 为什么**不**对经典灾厄做同样的镜像：经典版的 auricSet 除了外观，
     /// 还在 <c>PostUpdateRunSpeeds</c> 里无条件给 <c>+10% 跑速/加速度</c>
-    /// （<c>CalamityPlayerPreTrailer.cs:5477/5492</c>），而本工程自己也实现了一份金源套 +10% 跑速——
+    /// （<c>经典灾厄玩家类</c>），而本工程自己也实现了一份金源套 +10% 跑速——
     /// 两边都算就变成双份。故只镜像现代版；经典版其余 auricSet 分支都还要求它自己的 *Set 标记，
     /// 我们不会去置位，本就不会触发。
     /// </para>
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Utilities
         private static readonly object BoxedTrue = true;
 
         /// <summary>
-        /// 把本模组金源套的置位镜像到现代版灾厄的 CalamityPlayer.auricSet。
+        /// 把本模组金源套的置位镜像到现代灾厄的 CalamityPlayer.auricSet。
         /// 由调用方判断玩家确实穿着本模组金源套（auricSet 为真）后再调用；
         /// 不需要"置回 false"——灾厄每帧自己清零，我们只在需要时写 true。
         /// </summary>
@@ -72,7 +72,7 @@ namespace CalamityDemutation.Utilities
                 return;
             calamityAuricProbed = true;
             if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
-                return;   // 未安装现代版灾厄：直接短路，之后不再探测
+                return;   // 未安装现代灾厄：直接短路，之后不再探测
             Type calamityPlayerType = calamity.Code.GetTypes()
                 .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
             if (calamityPlayerType == null)
@@ -92,7 +92,7 @@ namespace CalamityDemutation.Utilities
 
         // ── 金源矿石排斥 / 危险砖块免疫桥（炽天使翼靴 SeraphTracers 用）──
 
-        /// <summary>是否已探测过现代版灾厄的 seraphTracers 字段（无论成败只探测一次）</summary>
+        /// <summary>是否已探测过现代灾厄的 seraphTracers 字段（无论成败只探测一次）</summary>
         private static bool calamitySeraphProbed;
         /// <summary>CalamityPlayer.seraphTracers 的字段句柄</summary>
         private static FieldInfo calamitySeraphTracersField;
@@ -100,8 +100,8 @@ namespace CalamityDemutation.Utilities
         private static MethodInfo calamityGetModPlayerForSeraph;
 
         /// <summary>
-        /// 把本模组炽天使翼靴的置位镜像到**现代版灾厄**的 <c>CalamityPlayer.seraphTracers</c>
-        /// （1.4.4-release 的 <c>CalPlayer/CalamityPlayer.cs:952</c>，public 字段）。
+        /// 把本模组炽天使翼靴的置位镜像到**现代灾厄**的 <c>CalamityPlayer.seraphTracers</c>
+        /// （现代灾厄的 <c>现代灾厄玩家类</c>，public 字段）。
         /// 灾厄同名字段的两处消费点都在 <c>CalamityPlayerMiscEffects</c>：
         /// ① :917 <c>rejectionImmunity = auricSet || seraphTracers || creativeGodMode || externalAuricRejectionImmunity</c>
         /// —— 免掉金源矿石的 Auric Rejection（300 伤害 + 大幅击退，还会熔断钩爪）；
@@ -109,7 +109,7 @@ namespace CalamityDemutation.Utilities
         /// 这两处都是灾厄自己的逻辑，本工程软依赖调不到，镜像一个字段即可全覆盖；
         /// 与 auricSet 镜像同理：由调用方判定已穿戴后再调用，不需要置回 false（灾厄每帧自己清零）；
         /// 调用点必须落在灾厄 ResetEffects 之后、PostUpdateMiscEffects 之前 = 本工程 PostUpdateEquips。
-        /// 经典版灾厄没有该字段，探测会失败并直接短路。
+        /// 经典灾厄没有该字段，探测会失败并直接短路。
         /// </summary>
         public static void MirrorSeraphTracersToCalamity(Player player)
         {
@@ -123,7 +123,7 @@ namespace CalamityDemutation.Utilities
         }
 
         /// <summary>
-        /// 一次性探测现代版灾厄的 <c>CalamityPlayer.seraphTracers</c> 与其取 ModPlayer 的方法并缓存；
+        /// 一次性探测现代灾厄的 <c>CalamityPlayer.seraphTracers</c> 与其取 ModPlayer 的方法并缓存；
         /// 任一步失败都放弃并记为已探测（不重试）。
         /// </summary>
         private static void ProbeCalamitySeraphBridge()
@@ -132,7 +132,7 @@ namespace CalamityDemutation.Utilities
                 return;
             calamitySeraphProbed = true;
             if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
-                return;   // 未安装现代版灾厄：直接短路，之后不再探测
+                return;   // 未安装现代灾厄：直接短路，之后不再探测
             Type calamityPlayerType = calamity.Code.GetTypes()
                 .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
             if (calamityPlayerType == null)
@@ -153,9 +153,9 @@ namespace CalamityDemutation.Utilities
 
         /// <summary>是否已探测过经典版的潜行字段（无论成败只探测一次）</summary>
         private static bool classicStealthProbed;
-        /// <summary>CalamityPlayerPreTrailer.rogueStealthMax 的字段句柄</summary>
+        /// <summary>经典灾厄玩家类.rogueStealthMax 的字段句柄</summary>
         private static FieldInfo classicRogueStealthMaxField;
-        /// <summary>Player.GetModPlayer&lt;CalamityPlayerPreTrailer&gt;() 的方法句柄</summary>
+        /// <summary>Player.GetModPlayer&lt;经典灾厄玩家类&gt;() 的方法句柄</summary>
         private static MethodInfo classicGetModPlayerForStealth;
 
         /// <summary>
@@ -163,8 +163,8 @@ namespace CalamityDemutation.Utilities
         /// 并把他标成「算作盗贼甲」。**必须每帧调用**——灾厄在 ResetEffects 里把上限清零，
         /// 到它 PostUpdateMiscEffects 才积攒潜行；调用点同样是本工程的 PostUpdateEquips。
         /// <para>
-        /// 两条路：现代版灾厄走**官方 Mod.Call**（<c>AddMaxStealth</c> + <c>SetWearingRogueArmor</c>——
-        /// 这两个键在 2.0.4 与 1.4.4-release 的 ModCalls 里都有；现代版的闸门是独立的 wearingRogueArmor 布尔，
+        /// 两条路：现代灾厄走**官方 Mod.Call**（<c>AddMaxStealth</c> + <c>SetWearingRogueArmor</c>——
+        /// 这两个键在 2.0.4 与 现代灾厄的 ModCalls 里都有；现代版的闸门是独立的 wearingRogueArmor 布尔，
         /// 所以两个调用缺一不可）；经典版没有对应 Call（它的 Call 只有 zone/boss 查询）→ 反射写 rogueStealthMax，
         /// 经典版没有 wearingRogueArmor 字段，它的闸门就是「上限 > 0」，故只写上限即可。
         /// </para>
@@ -184,7 +184,7 @@ namespace CalamityDemutation.Utilities
         }
 
         /// <summary>
-        /// 经典版的潜行回退：反射把 <c>CalamityPlayerPreTrailer.rogueStealthMax</c> 加上给定值。
+        /// 经典版的潜行回退：反射把 <c>经典灾厄玩家类.rogueStealthMax</c> 加上给定值。
         /// 句柄只在首次调用时探测并缓存（失败也记为已探测，之后直接短路）。
         /// </summary>
         private static void GrantClassicRogueStealth(Player player, float maxStealth)
@@ -201,7 +201,7 @@ namespace CalamityDemutation.Utilities
         }
 
         /// <summary>
-        /// 一次性探测经典版的 <c>CalamityPlayerPreTrailer.rogueStealthMax</c> 与其取 ModPlayer 的方法并缓存。
+        /// 一次性探测经典版的 <c>经典灾厄玩家类.rogueStealthMax</c> 与其取 ModPlayer 的方法并缓存。
         /// </summary>
         private static void ProbeClassicStealthBridge()
         {
@@ -243,9 +243,9 @@ namespace CalamityDemutation.Utilities
         }
 
         /// <summary>
-        /// 按**当前潜行上限的比例**再追加一档（CI 的弑神者盗贼头写法：<c>rogueStealthMax += 当前上限 / 7</c>，
+        /// 按**当前潜行上限的比例**再追加一档（旧版支线的弑神者盗贼头写法：<c>rogueStealthMax += 当前上限 / 7</c>，
         /// 即 ratio = 1/7）。必须在 <see cref="GrantRogueStealth"/> 之后调用——它读的是"加上基础档之后"的实时上限，
-        /// 所以会连带把玩家其它盗贼装备给的上限一起按比例放大，与 CI 的行为一致。
+        /// 所以会连带把玩家其它盗贼装备给的上限一起按比例放大，与旧版支线的行为一致。
         /// </summary>
         public static void GrantRogueStealthRatio(Player player, float ratio)
         {
@@ -258,7 +258,7 @@ namespace CalamityDemutation.Utilities
 
         /// <summary>是否已探测过盗贼伤害相关的句柄（无论成败只探测一次）</summary>
         private static bool rogueStatProbed;
-        /// <summary>现代版灾厄的真·盗贼伤害类（CalamityMod/RogueDamageClass）；拿不到时回退 tML 的 Throwing</summary>
+        /// <summary>现代灾厄的真·盗贼伤害类（CalamityMod/RogueDamageClass）；拿不到时回退 tML 的 Throwing</summary>
         private static DamageClass cachedRogueDamageClass;
         /// <summary>经典版 CalamityCustomThrowingDamagePlayer.throwingDamage 的字段句柄</summary>
         private static FieldInfo classicThrowingDamageField;
@@ -270,14 +270,14 @@ namespace CalamityDemutation.Utilities
         private static MethodInfo classicGetThrowingModPlayer;
 
         /// <summary>
-        /// 取「盗贼」伤害类。**现代版灾厄的盗贼类是真正的 <c>DamageClass</c>**
-        ///（<c>CalamityMod/RogueDamageClass</c>，1.4.4-release 与 2.0.4 同名），而 <c>DamageClass</c> 在 tML 里是
+        /// 取「盗贼」伤害类。**现代灾厄的盗贼类是真正的 <c>DamageClass</c>**
+        ///（<c>CalamityMod/RogueDamageClass</c>，现代灾厄与 2.0.4 同名），而 <c>DamageClass</c> 在 tML 里是
         /// <c>ModType</c>，所以能直接按「模组名 + 内容名」取到，**不需要反射**；取不到时（例如只装了经典版）
         /// 才回退 tML 的 <see cref="DamageClass.Throwing"/>。
         /// <para>
         /// 关于「用 Throwing 可不可以」：灾厄的 <c>RogueDamageClass</c> 对 tML 的 Throwing 是**完全继承**
         ///（<c>DamageClasses/RogueDamageClasses.cs</c> 的 <c>GetModifierInheritance → StatInheritanceData.Full</c>），
-        /// 所以给 Throwing 加的加成**确实**会作用到盗贼武器——CWR 那颗头就是图省事这么写的。
+        /// 所以给 Throwing 加的加成**确实**会作用到盗贼武器——重制版那颗头就是图省事这么写的。
         /// 但方向性只成立一半：继承是「子类吃父类」，反过来不成立，
         /// 于是 <c>DamageType = Throwing</c> 的弹幕**拿不到玩家"盗贼专属"的加成**（只吃投掷/通用桶）。
         /// 本工程要让红魔三叉戟按盗贼结算，所以优先用真·盗贼类，只在确实拿不到时才退到 Throwing。
@@ -366,7 +366,7 @@ namespace CalamityDemutation.Utilities
         private static bool classicThrowingDamageProbed;
 
         /// <summary>
-        /// 盗贼**弹速**加成：现代版走灾厄官方 ModCall（<c>AddRogueVelocity</c>，2.0.4 与 1.4.4-release 都有）；
+        /// 盗贼**弹速**加成：现代版走灾厄官方 ModCall（<c>AddRogueVelocity</c>，2.0.4 与 现代灾厄都有）；
         /// 经典版没有对应 Call → 反射给 <c>CalamityCustomThrowingDamagePlayer.throwingVelocity</c> 加算
         /// （基准 1f，每帧复位，所以同样必须每帧调用）。
         /// 目前只有弑神者盗贼头的「满血时盗贼全属性 +10%」用得到这条。
@@ -457,12 +457,12 @@ namespace CalamityDemutation.Utilities
         /// 判断这枚弹幕是不是「盗贼潜行打击」打出来的，并给出它已经命中过几次
         /// （<paramref name="hitCount"/>；拿不到计数字段时给 0）。纳米技术用它决定要不要砸下纳米闪光。
         /// <para>
-        /// 现代版灾厄把这两个状态放在 <c>CalamityMod.Projectiles.CalamityGlobalProjectile</c> 上
+        /// 现代灾厄把这两个状态放在 <c>CalamityMod.Projectiles.CalamityGlobalProjectile</c> 上
         /// （<c>stealthStrike</c> / <c>stealthStrikeHitCount</c>，2.2.2 实测字段名与类型一致），
         /// 本工程是软依赖，只能反射读——句柄在首次调用时探测并缓存，失败也记为已探测。
         /// </para>
         /// <para>
-        /// 经典版灾厄没有潜行打击这套东西（它的盗贼走自定义投掷倍率，全局弹幕上没有 stealthStrike），
+        /// 经典灾厄没有潜行打击这套东西（它的盗贼走自定义投掷倍率，全局弹幕上没有 stealthStrike），
         /// 所以本方法对经典版恒为 false —— 纳米技术的潜行打击部分是现代版独占的。
         /// </para>
         /// </summary>
@@ -525,7 +525,7 @@ namespace CalamityDemutation.Utilities
         /// 同时接受旧名 <c>StealthStrikeAvailable</c>），但那是 2.0.3.9 之后才有的键，
         /// 而**反射方法在所有受支持版本里都存在**，故这里走反射、少一层版本判断。
         /// </para>
-        /// <para>句柄只在首次调用时探测并缓存，失败也记为已探测（未装现代版灾厄时不会每帧扫类型）。</para>
+        /// <para>句柄只在首次调用时探测并缓存，失败也记为已探测（未装现代灾厄时不会每帧扫类型）。</para>
         /// <para>只装经典版时恒 false：经典版没有潜行打击这套机制（它的盗贼走自定义投掷倍率）。</para>
         /// </summary>
         public static bool CanStealthStrike(Player player)
@@ -548,7 +548,7 @@ namespace CalamityDemutation.Utilities
                 return;
             calamityStealthAvailableProbed = true;
             if (!ModLoader.TryGetMod("CalamityMod", out Mod calamity))
-                return;   // 未安装现代版灾厄：直接短路
+                return;   // 未安装现代灾厄：直接短路
             Type calamityPlayerType = calamity.Code.GetTypes()
                 .FirstOrDefault(t => t.Name == "CalamityPlayer" && t.IsSubclassOf(typeof(ModPlayer)));
             if (calamityPlayerType == null)
@@ -608,7 +608,7 @@ namespace CalamityDemutation.Utilities
         ///（2.0.3.9+ 还短暂有过 85% 档，已被删除，这里不涉及）。
         /// </para>
         /// <para>
-        /// 经典版灾厄没有潜行打击这套机制（它的盗贼走自定义投掷倍率），本方法直接短路。
+        /// 经典灾厄没有潜行打击这套机制（它的盗贼走自定义投掷倍率），本方法直接短路。
         /// </para>
         /// </summary>
         public static void SetStealthStrikeCost(Player player, float costRatio)
@@ -669,7 +669,7 @@ namespace CalamityDemutation.Utilities
         /// 置位灾厄 <c>CalamityPlayer.darkGodSheath</c>：让盗贼在**移动时**的潜行恢复来一点加速
         ///（灾厄 <c>UpdateStealthGenStats</c> 里的 <c>darkGodSheath → stealthAcceleration += 0.01f</c>）。
         /// 与其它潜行字段同理：灾厄在 ResetEffects 里每帧复位、之后才读取，故必须每帧调用且挂在 PostUpdateEquips。
-        /// 经典版灾厄没有这套字段，会直接短路（暗物质剑鞘的"移动加速"是现代独占）。
+        /// 经典灾厄没有这套字段，会直接短路（暗物质剑鞘的"移动加速"是现代独占）。
         /// </summary>
         public static void SetDarkGodSheath(Player player) => SetCalamityStealthFlag(player, isEclipseMirror: false);
 
@@ -680,7 +680,7 @@ namespace CalamityDemutation.Utilities
         /// <para>
         /// 注意：1.4.4 世系里这个字段**只**管上面两条——闪避是由物品自己在
         /// <c>DodgeEffects</c> 里注册的，所以置位它**不会**让灾厄自己去闪避，不会与本工程自写的闪避打架
-        ///（已按 1.4.4-release 源码逐处核对：eclipseMirror 的引用只有潜行加速 / 深渊压制 / 墨炸弹联动三处）。
+        ///（已按 现代灾厄源码逐处核对：eclipseMirror 的引用只有潜行加速 / 深渊压制 / 墨炸弹联动三处）。
         /// </para>
         /// </summary>
         public static void SetEclipseMirror(Player player) => SetCalamityStealthFlag(player, isEclipseMirror: true);
@@ -737,7 +737,7 @@ namespace CalamityDemutation.Utilities
         /// 所以必须每帧调用且调用点要晚于它的 ResetEffects——本工程挂在 <c>PostUpdateEquips</c>）。
         /// <para>
         /// 灾厄的 Mod.Call 列表里**没有**潜行恢复这一项（只有 AddMaxStealth / AddRogueVelocity / 各类潜行查询），
-        /// 故这里走反射；经典版灾厄**根本没有这两个字段**（它的盗贼是旧的自定义投掷倍率 + modStealth），
+        /// 故这里走反射；经典灾厄**根本没有这两个字段**（它的盗贼是旧的自定义投掷倍率 + modStealth），
         /// 所以本方法对经典版直接短路——潜行恢复加成是现代版独占的，与纳米技术的潜行打击同理。
         /// </para>
         /// <para>
@@ -799,11 +799,11 @@ namespace CalamityDemutation.Utilities
         private static FieldInfo calamityStealthValueField;
         /// <summary>Player.GetModPlayer&lt;CalamityPlayer&gt;() 的方法句柄</summary>
         private static MethodInfo calamityGetModPlayerForStealthValue;
-        /// <summary>是否已探测过经典版 CalamityPlayerPreTrailer.rogueStealth（无论成败只探测一次）</summary>
+        /// <summary>是否已探测过经典版 经典灾厄玩家类.rogueStealth（无论成败只探测一次）</summary>
         private static bool classicStealthValueProbed;
-        /// <summary>CalamityPlayerPreTrailer.rogueStealth 的字段句柄</summary>
+        /// <summary>经典灾厄玩家类.rogueStealth 的字段句柄</summary>
         private static FieldInfo classicStealthValueField;
-        /// <summary>Player.GetModPlayer&lt;CalamityPlayerPreTrailer&gt;() 的方法句柄</summary>
+        /// <summary>Player.GetModPlayer&lt;经典灾厄玩家类&gt;() 的方法句柄</summary>
         private static MethodInfo classicGetModPlayerForStealthValue;
 
         /// <summary>
@@ -812,7 +812,7 @@ namespace CalamityDemutation.Utilities
         /// <para>
         /// 灾厄的 Mod.Call 只提供读取（<c>GetStealth</c> / <c>GetCurrentStealth</c>），**没有写入项**，
         /// 所以两版都走反射：现代版写 <c>CalamityPlayer.rogueStealth</c>，经典版写
-        /// <c>CalamityPlayerPreTrailer.rogueStealth</c>（两版同名字段，都已实测存在）。
+        /// <c>经典灾厄玩家类.rogueStealth</c>（两版同名字段，都已实测存在）。
         /// 与 <see cref="GrantRogueStealth"/> 一样，两边在位就两边都加（工程既有的双版本惯例）。
         /// </para>
         /// </summary>
@@ -858,7 +858,7 @@ namespace CalamityDemutation.Utilities
 
         /// <summary>
         /// 一次性探测两版 CalamityPlayer 的 <c>rogueStealth</c> 字段与取 ModPlayer 的方法并缓存
-        /// （现代版 <c>CalamityPlayer</c> / 经典版 <c>CalamityPlayerPreTrailer</c>，两版同名字段，都已实测存在）。
+        /// （现代版 <c>CalamityPlayer</c> / 经典版 <c>经典灾厄玩家类</c>，两版同名字段，都已实测存在）。
         /// </summary>
         private static void ProbeStealthValueBridge()
         {

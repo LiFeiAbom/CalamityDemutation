@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 混乱之刃的光束弹幕（移植自灾厄大修 0.4.0.1.3 的 <c>AnarchyBeam</c>）。
+    /// 混乱之刃的光束弹幕（移植自重制版的 <c>AnarchyBeam</c>）。
     /// 贴图直接复用灾厄的 <c>BrimlashProj</c>（本工程存为 AnarchyBeam.png）；
     /// 飞行中一边减速一边变大，速度低于 3 时自毁；消亡时朝四周甩出 13 颗硫磺爆炸。
     /// </summary>

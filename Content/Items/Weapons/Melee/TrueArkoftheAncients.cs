@@ -192,7 +192,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：远古方舟 + 灾厄核心 + 断裂英雄剑，秘银砧 ──
+            // ── 现代灾厄：远古方舟 + 灾厄核心 + 断裂英雄剑，秘银砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("CoreofCalamity", out ModItem coreofCalamity))
@@ -205,7 +205,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：额外需要生命碎片 ×3 ──
+            // ── 经典灾厄：额外需要生命碎片 ×3 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("CoreofCalamity", out ModItem classicCoreofCalamity)

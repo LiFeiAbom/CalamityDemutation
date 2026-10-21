@@ -7,10 +7,10 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 环境能量（BiomeOrb） - 环境之刃发射的普通弹幕，移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
+    /// 环境能量（BiomeOrb） - 环境之刃发射的普通弹幕，移植自灾厄经典灾厄同名弹幕并按本工程口径重制。
     /// <para>
     /// 颜色与命中 debuff 依据玩家所在生物群系动态变化。相对经典版的重制点：借用原版光束 AI 模板（aiStyle=Beam）、
-    /// 把粉尘类型与颜色提成字段并补上 2 格残影绘制，另外兼容现代版灾厄的"星陨之地"配色。
+    /// 把粉尘类型与颜色提成字段并补上 2 格残影绘制，另外兼容现代灾厄的"星陨之地"配色。
     /// </para>
     /// </summary>
     internal class BiomeOrb:ModProjectile
@@ -43,7 +43,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>
         /// AI：每帧读取主人所在生物群系，刷新粉尘类型与渲染颜色并生成对应粉尘；
-        /// 若装有现代版灾厄，额外用反射读取 CalamityPlayer.ZoneAstral 以支持"星陨之地"配色
+        /// 若装有现代灾厄，额外用反射读取 CalamityPlayer.ZoneAstral 以支持"星陨之地"配色
         /// （对 CalamityPlayer 无编译期引用，只能反射）
         /// </summary>
         public override void AI()

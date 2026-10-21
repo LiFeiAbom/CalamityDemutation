@@ -5,11 +5,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Players
 {
     /// <summary>
-    /// 跨端鼠标世界坐标（移植自 CalamityEntropy 自研的 mouseWorld 体系，用于替代只在本地有效的
+    /// 跨端鼠标世界坐标（移植自 附属模组自研的 mouseWorld 体系，用于替代只在本地有效的
     /// <c>Main.MouseWorld</c>）：手持弹幕在别的客户端上跑时读 Main.MouseWorld 只会拿到那个客户端自己的
     /// 鼠标位置，朝向会错乱，所以需要一套跨端可读的坐标。
     /// <para>
-    /// 做法与 CE 一致：本地玩家每帧把自己的鼠标坐标写进 <see cref="mouseWorldDelta"/>
+    /// 做法与 附属模组一致：本地玩家每帧把自己的鼠标坐标写进 <see cref="mouseWorldDelta"/>
     /// （只存相对 <c>Player.MountedCenter</c> 的偏移，这是网络同步的最小载荷），联机时按
     /// 「间隔 2 帧 + 位移超过 5 像素」节流发一条短包；服务端收到后代播给其余客户端，
     /// 各端把偏移写进对应玩家的 ModPlayer 副本——于是每个端都能用**自己**当前的 MountedCenter
@@ -27,9 +27,9 @@ namespace CalamityDemutation.Players
         /// 载荷 = 玩家索引（byte）+ 相对 MountedCenter 的偏移（两个 short）。
         /// </summary>
         public const byte MsgSyncMouseWorld = 5;
-        /// <summary>鼠标位移超过这个距离才值得发包（像素，CE 原阈值）</summary>
+        /// <summary>鼠标位移超过这个距离才值得发包（像素，附属模组原阈值）</summary>
         private const float MouseSyncDistanceThreshold = 5f;
-        /// <summary>两次发包之间至少间隔的帧数（CE 原节流值）</summary>
+        /// <summary>两次发包之间至少间隔的帧数（附属模组原节流值）</summary>
         private const int MouseSyncInterval = 2;
         /// <summary>本帧是否有武器/弹幕要读鼠标坐标：由读取方置位，每帧在 UpdateMouseWorldSync 末尾复位</summary>
         public bool MouseWorldListener;
@@ -49,7 +49,7 @@ namespace CalamityDemutation.Players
             set => mouseWorldDelta = value - Player.MountedCenter;
         }
         /// <summary>
-        /// 取该玩家各端可见的鼠标世界坐标（等价 CE 的 <c>CEUtils.MouseWorld</c>）：调用即置位本帧监听标记，
+        /// 取该玩家各端可见的鼠标世界坐标（等价 附属模组的 <c>鼠标世界坐标工具</c>）：调用即置位本帧监听标记，
         /// 本地玩家据此在 <see cref="UpdateMouseWorldSync"/> 里决定要不要把坐标同步出去。
         /// </summary>
         public Vector2 GetMouseWorld()

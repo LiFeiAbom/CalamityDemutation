@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Buffs.NegativeBuffs
 {
     /// <summary>
-    /// 地狱火爆炸 debuff（移植自 CWR 的 HellfireExplosion）：注册为减益，并每帧在宿主实体上喷出火苗粒子。
+    /// 地狱火爆炸 debuff（移植自重制版的 HellfireExplosion）：注册为减益，并每帧在宿主实体上喷出火苗粒子。
     /// 玩家侧：置位玩家标记，持续掉血在 CalamityDemutationPlayer.UpdateBadLifeRegen 结算，死因文案在 PreKill 替换；
     /// NPC 侧：置位 GlobalNPC 标记，持续灼烧在 CalamityDemutationGlobalNPC.UpdateLifeRegen 结算。
     /// 该 debuff 由 DragonRageHeld 等弹幕命中时 AddBuff 施加。
@@ -44,7 +44,7 @@ namespace CalamityDemutation.Content.Buffs.NegativeBuffs
             npc.GetGlobalNPC<CalamityDemutationGlobalNPC>().hellfireExplosion = true;
         }
         /// <summary>
-        /// 在实体中心周围随机偏移处喷出一枚 FlameParticle 火苗（写法与 CWR 原版一致）。
+        /// 在实体中心周围随机偏移处喷出一枚 FlameParticle 火苗（写法与重制版原版一致）。
         /// 粒子继承实体 80% 的水平速度、初速向上 10，经 ±0.005 弧度随机偏转后，
         /// 按 50% 概率落在低速档（0.4~0.65）或高速档（0.8~1）上，形成随机摇曳的燃烧感。
         /// </summary>

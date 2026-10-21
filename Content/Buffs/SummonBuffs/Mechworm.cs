@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Buffs.SummonBuffs
 {
     /// <summary>
     /// 机械蠕虫召唤增益：弑神者召唤头（GodSlayerHornedHelm）召唤的 MechwormHead 在场时保持此增益
-    ///（按经典版灾厄 Buffs/Mechworm.cs 移植）。
+    ///（按经典灾厄 Buffs/Mechworm.cs 移植）。
     /// </summary>
     internal class Mechworm:ModBuff
     {

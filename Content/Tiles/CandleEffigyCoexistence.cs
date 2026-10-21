@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Tiles
 {
     /// <summary>
-    /// 蜡烛/塑像增益共存（挂"还原灾厄内容削弱"开关，仅现代版灾厄生效）。
+    /// 蜡烛/塑像增益共存（挂"还原灾厄内容削弱"开关，仅现代灾厄生效）。
     /// <para>
     /// 灾厄把向导出售的 4 根蜡烛（恢复 ResilientCandle / 失重 WeightlessCandle / 活力 VigorousCandle /
     /// 恶念 SpitefulCandle）与 2 座塑像（腐化 CorruptionEffigy / 血腥 CrimsonEffigy）做成"右键开启、同类互斥"：
@@ -21,8 +21,8 @@ namespace CalamityDemutation.Content.Tiles
     /// 音效无需重放——灾厄自己的 RightClick 已经播过了。
     /// </para>
     /// <para>
-    /// 经典版灾厄没有这套机制（那边蜡烛/塑像是 NearbyEffects 靠近就给 20 帧，没有右键、没有互斥），
-    /// 因此只按现代版灾厄的方块类名 + 增益类名查找，经典版一个字节都不动。
+    /// 经典灾厄没有这套机制（那边蜡烛/塑像是 NearbyEffects 靠近就给 20 帧，没有右键、没有互斥），
+    /// 因此只按现代灾厄的方块类名 + 增益类名查找，经典版一个字节都不动。
     /// </para>
     /// </summary>
     internal class CandleEffigyCoexistence:GlobalTile
@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Tiles
         private static readonly string[] buffNames = ["PurpleCandleBuff", "BlueCandleBuff", "PinkCandleBuff", "YellowCandleBuff", "CorruptionEffigyBuff", "CrimsonEffigyBuff"];
         /// <summary>6 个增益类型缓存：-1 未初始化，0 表示灾厄未安装或未找到</summary>
         private static readonly int[] buffTypes = [-1, -1, -1, -1, -1, -1];
-        /// <summary>功能是否生效：开关打开且加载的是现代版灾厄</summary>
+        /// <summary>功能是否生效：开关打开且加载的是现代灾厄</summary>
         private static bool Active => ConfigSystem.Instance?.RevertCalamityContentNerfs == true && ModLoader.HasMod("CalamityMod");
         /// <summary>懒加载 6 个增益类型（首次调用时按类名 TryFind 一次，之后复用）</summary>
         private static void EnsureBuffTypes()

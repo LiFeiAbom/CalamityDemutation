@@ -23,7 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.width = 118;
             Item.height = 118;
-            Item.damage = 166;                        // 现代版灾厄 2.0.x 的源值（2026-10-01 按用户点名从 230 改为 166）；
+            Item.damage = 166;                        // 现代灾厄 2.0.x 的源值（2026-10-01 按用户点名从 230 改为 166）；
                                                       // 沿革：膨胀期 520 → 2026-09-26 回落到经典版源值 450 → 2026-09-27 削弱到 230 → 本日定为现代版源值 166
             Item.useAnimation = 14;
             Item.useTime = 14;

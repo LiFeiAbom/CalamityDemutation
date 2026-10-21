@@ -8,12 +8,12 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 星流射线（ExoBeam）—— 星流之刃挥砍时射出的青色光束（照搬 CI 的 <c>Exobeamold</c>，即改版前旧 Exobeam 的复刻）。
+    /// 星流射线（ExoBeam）—— 星流之刃挥砍时射出的青色光束（照搬 旧版支线的 <c>Exobeamold</c>，即改版前旧 Exobeam 的复刻）。
     /// 前 90 帧直飞、随后 60 帧进入第二段，然后掉头追踪"最近的玩家"
     /// （<c>Player.FindClosest</c> 返回的是玩家索引而不是 NPC，原码如此，不是笔误）；
     /// 距目标 30 像素内自爆，自爆时判定框撑到 192×192 再补一次伤害判定，播放爆裂音并迸发大量青色尘土。
     /// 命中敌人会挂上整套星云系减益（<see cref="CDUtil.ExoDebuffs"/>），并随机三选一撒出一颗彗星（<see cref="ExoComet"/>）。
-    /// 本体是 CI 的 <c>Exobeamold</c>，命中效果取自 CI 的 <c>ExobeamoldExoLore</c>（本工程恒处 Lore 模式，故不留两份几乎相同的类）。
+    /// 本体是 旧版支线的 <c>Exobeamold</c>，命中效果取自 旧版支线的 <c>ExobeamoldExoLore</c>（本工程恒处 Lore 模式，故不留两份几乎相同的类）。
     /// </summary>
     internal class ExoBeam : ModProjectile
     {
@@ -149,7 +149,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         // ── 私有工具 ──
         /// <summary>
-        /// 命中特效（取自 CI 的 <c>ExobeamoldExoLore</c>）：在命中位置随机三选一撒出一颗彗星（伤害 = 本次光束伤害 ×0.5）。
+        /// 命中特效（取自 旧版支线的 <c>ExobeamoldExoLore</c>）：在命中位置随机三选一撒出一颗彗星（伤害 = 本次光束伤害 ×0.5）。
         /// 0 = 目标两侧齐射（<see cref="CDUtil.ProjectileBarrage"/>，横向 1000~1400、纵向 80~1400）；
         /// 1 = 目标下方升起、2 = 目标上方雨落（后两者走 <see cref="CDUtil.ProjectileRain"/>：横向 ±400、纵向 800~1500；
         /// ProjectileRain 内部按 <c>y = 目标.Y - 随机量</c> 取生成点，故负值那一组的生成点在目标下方，会朝上飞）。

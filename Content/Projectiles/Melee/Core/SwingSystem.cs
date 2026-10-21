@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee.Core
 {
     /// <summary>
-    /// 挥砍刀光纹理系统（按需加载版，替代 CWR 的 ILoader 反射注册）。
+    /// 挥砍刀光纹理系统（按需加载版，替代 重制版的 ILoader 反射注册）。
     /// 每个弹幕类型在首次访问时，用其自定义纹理路径（为空则用默认刀光/颜色条）懒加载并缓存。
     /// </summary>
     internal static class SwingSystem

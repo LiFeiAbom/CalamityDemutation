@@ -42,11 +42,11 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
             player.GetModPlayer<CalamityDemutationPlayer>().statisBeltOfCurses = true;
         }
         /// <summary>
-        /// 配方：以凝滞诅咒为核心材料，兼容灾厄现代版与经典版（两版材料名/合成站不同），分别注册配方
+        /// 配方：以凝滞诅咒为核心材料，兼容现代灾厄版与经典版（两版材料名/合成站不同），分别注册配方
         /// </summary>
         public override void AddRecipes()
         {
-            // 兼容灾厄现代版与经典版：两者材料名/合成站不同，需分别注册配方
+            // 兼容现代灾厄版与经典版：两者材料名/合成站不同，需分别注册配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("Necroplasm", out ModItem necroplasm1) && calamity.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel1) && calamity.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy1) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil1))

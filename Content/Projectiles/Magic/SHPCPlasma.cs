@@ -19,7 +19,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
     /// </para>
     /// <para>
     /// **追踪分支（SHPC 右键每 60 帧附带的那颗"相位球"）**：由 <c>ai[2] == 1</c> 打开，每帧调
-    /// <see cref="CDUtil.HomeInOnNPC"/>（参数照源 CI：范围 1800 / 追踪速度 24 / 惯性 20）。
+    /// <see cref="CDUtil.HomeInOnNPC"/>（参数照源 旧版支线：范围 1800 / 追踪速度 24 / 惯性 20）。
     /// 源里这颗球的追踪判定是**死代码**（同一段 AI 开头把 <c>ai[0]</c> 覆盖成随机数了），本工程改用
     /// <c>ai[2]</c> 这个源没碰过的槽位，不影响 <c>ai[0]/ai[1]</c> 原有的随机相位。
     /// </para>
@@ -32,7 +32,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
         private const float NearEnemyCheckDistance = 250f;
         /// <summary>4 帧动画（照源）</summary>
         public override void SetStaticDefaults() => Main.projFrames[Type] = 4;
-        /// <summary>追踪范围：照源 CI 那颗额外球的 <c>HomeInOnNPC(proj, true, 1800f, 24f, 20f)</c></summary>
+        /// <summary>追踪范围：照源 旧版支线那颗额外球的 <c>HomeInOnNPC(proj, true, 1800f, 24f, 20f)</c></summary>
         private const float HomingRange = 1800f;
         /// <summary>追踪速度（照源 24）</summary>
         private const float HomingVelocity = 24f;

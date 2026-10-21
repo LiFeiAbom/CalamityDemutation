@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CalamityDemutation.Systems.Graphic
 {
     /// <summary>
-    /// 屏幕扭曲绘制接口（移植自 CWR 的 IDrawWarp）：
+    /// 屏幕扭曲绘制接口（移植自重制版的 IDrawWarp）：
     /// 实现该接口的弹幕会被 EffectsSystem 收集，参与屏幕扭曲管线。
     /// </summary>
     internal interface IDrawWarp

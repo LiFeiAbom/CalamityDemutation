@@ -14,7 +14,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
     /// <summary>
     /// 金宇星界盔（AuricTeslaSpaceHelmet，英文名 Auric Tesla Space Helmet） - 古圣金源套装的召唤向头部部件：
     /// 一身**复合**承载龙蒿 / 血炎 / 弑神者 / 始源林海四套的**召唤**效果
-    ///（按经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；CI 对应件 AuricTeslaHeadSummon
+    ///（按经典灾厄同名件 1:1 移植；旧版支线对应件 AuricTeslaHeadSummon
     /// 的防御、单件 +7 仆从、套装 +120% 召唤伤害、叶棱晶基础伤害 3000 与配方材料均一致，仅实现细节有别）。
     /// 与近战头（AuricTeslaHelm）/ 射手头（AuricTeslaHoodedFacemask）对称：置位四套的 *Summon 标记，
     /// 按经典版原样**不置** godSlayerDamage（单次 ≤80 → 1，近战头专属）也**不加** aggro（两者都只有近战头有）。
@@ -26,10 +26,10 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
     [AutoloadEquip(EquipType.Head)]
     internal class AuricTeslaSpaceHelmet:ModItem
     {
-        /// <summary>远古叶棱晶（SilvaCrystal）的基础伤害：经典版/CI 均为 3000（高于林海头的 1500）</summary>
+        /// <summary>远古叶棱晶（SilvaCrystal）的基础伤害：经典版/旧版支线均为 3000（高于林海头的 1500）</summary>
         private const int CrystalBaseDamage = 3000;
         /// <summary>
-        /// 物品基础属性：18x18、防御 12（比近战头的 54、射手头的 40 都低，经典版与 CI 同值，
+        /// 物品基础属性：18x18、防御 12（比近战头的 54、射手头的 40 都低，经典版与旧版支线同值，
         /// 源码同行另留 //132 注释，系开发期遗留数字）、价值 1 铂金 80 金、月后稀有度 20（彩虹闪烁名）
         /// </summary>
         public override void SetDefaults()
@@ -82,7 +82,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             player.ignoreWater = true;          // 水下不减速
             player.crimsonRegen = true;         // 血腥再生（原版猩红装备的那套）
             player.GetDamage<SummonDamageClass>() += 1.2f;   // 召唤伤害 +120%（经典版 UpdateArmorSet 原样）
-            player.maxMinions += 1;                          // 仆从上限 +1（CI 的 AuricTeslaHeadSummon 套装项，用户 2026-10-06 点名补上）
+            player.maxMinions += 1;                          // 仆从上限 +1（旧版支线的 AuricTeslaHeadSummon 套装项，用户 2026-10-06 点名补上）
             if (player.lavaWet)
             {
                 player.statDefense += 30;       // 泡在岩浆里额外 +30 防御
@@ -117,19 +117,19 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.auricBoost = true;
-            player.maxMinions += 7;                           // 仆从上限 +7（经典版/CI 原样）
+            player.maxMinions += 7;                           // 仆从上限 +7（经典版/旧版支线原样）
             player.GetDamage<SummonDamageClass>() += 0.12f;   // 召唤伤害 +12%（工程召唤头统一口径）
             player.whipRangeMultiplier += 0.12f;              // 鞭子攻击范围 +12%（同上）
             player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.12f;  // 鞭子攻击速度 +12%（同上）
         }
         /// <summary>
         /// 配方：由龙蒿角盔 + 血炎狂龙盔 + 始源林海头盔 + 弑神者角盔（四件下位**召唤**头）升阶。
-        /// 现代版灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与另两颗金源头同）；
+        /// 现代灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与另两颗金源头同）；
         /// 经典版用一长串后期材料、德雷顿熔炉——两分支的坯料清单与既有近战/射手头逐字一致，只把下位头换成召唤件。
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：四件下位召唤头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
+            // ── 现代灾厄：四件下位召唤头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -145,7 +145,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
+            // ── 经典灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)

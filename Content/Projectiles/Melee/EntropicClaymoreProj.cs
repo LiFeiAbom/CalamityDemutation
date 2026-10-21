@@ -8,24 +8,24 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 熵之飞刃（行为完全移植自灾厄大修 **0.4.0.3.5** 的 <c>EntropicClaymoreProj</c>）
+    /// 熵之飞刃（行为完全移植自重制版的 <c>EntropicClaymoreProj</c>）
     /// —— 熵之舞挥砍途中射出的高速飞刃，命中后自身伤害递减 15（同一枚越打越弱）、
     /// 对蠕虫体节伤害额外 ×0.6（避免高速弹幕把长条蠕虫一路洞穿）。
     /// 额外更新 10（每帧 11 次更新，故实际速度约为 velocity 的 11 倍，见 tML 对 <c>extraUpdates</c> 的说明）。
     /// <para>
     /// ⚠️ **刻意偏离源码的两处**（其余逻辑逐行照抄）：
-    /// ① 大修这里用 1×1 全透明占位贴图，本体不可见、外观全靠粒子尾迹；用户 2026-09-24 点名要给飞刃
+    /// ① 重制版这里用 1×1 全透明占位贴图，本体不可见、外观全靠粒子尾迹；用户 2026-09-24 点名要给飞刃
     /// 加上可见贴图，故改用本工程早先移植灾厄 2.0.3.9 时的**大号熵之飞刃贴图（76×18）**
     /// （与灾厄 `EntropicFlechetteLarge.png` 字节一致），并在 <see cref="AI"/> 开头按速度摆正刀身。
     /// 源码另有中号 48×10 / 小号 38×6 两张，未采用。
-    /// ② 淡绿丝线粒子的颜色乘了 0.25 —— 源码的满亮度加法混合会饱和成刺眼白线（大修本体同样如此），
+    /// ② 淡绿丝线粒子的颜色乘了 0.25 —— 源码的满亮度加法混合会饱和成刺眼白线（重制版本体同样如此），
     /// 用户 2026-09-24 点名要求压暗，详见 <see cref="AI"/> 内注释。
     /// </para>
     /// </summary>
     internal class EntropicClaymoreProj : ModProjectile
     {
         /// <summary>
-        /// 蠕虫体节判定集合：大修 <c>CWRLoad.WormBodys</c> 那份硬编码表的等价物，
+        /// 蠕虫体节判定集合：重制版 <c>重制版的蠕虫体数据</c> 那份硬编码表的等价物，
         /// 原版两项 + 按类名软依赖解析灾厄的 15 项（解析不到就丢弃，不报错）
         /// </summary>
         private static readonly HashSet<int> WormBodyTypes = [];
@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// 未加载灾厄时为 false，此时退回"realLife / 蠕虫 AI"的语义近似判定
         /// </summary>
         private static bool calamityWormBodiesResolved;
-        /// <summary>大修 WormBodys 里的灾厄蠕虫体节类名（原版两项在 <see cref="SetStaticDefaults"/> 里直接写 ID）</summary>
+        /// <summary>重制版 WormBodys 里的灾厄蠕虫体节类名（原版两项在 <see cref="SetStaticDefaults"/> 里直接写 ID）</summary>
         private static readonly string[] CalamityWormBodyNames =
         [
             "AquaticScourgeBody", "StormWeaverBody", "ArmoredDiggerBody", "DesertScourgeBody", "DesertNuisanceBody",
@@ -100,7 +100,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             if (Projectile.timeLeft % 3 == 0 && Time > 12f && targetDist < 1400f)
             {
                 // 刻意偏离源码：源码这里给的是满亮度 Color.LightGreen，而该粒子贴图 alpha 全为 255、
-                // 内部还要叠画两层，加法混合下单颗粒子就能把 R/B 顶到 255（大修本体同样是刺眼白线）。
+                // 内部还要叠画两层，加法混合下单颗粒子就能把 R/B 顶到 255（重制版本体同样是刺眼白线）。
                 // 乘 0.25 后每层贡献按系数的平方衰减（rgb 与 alpha 各乘一次、混合再按 alpha 计入），
                 // 落地成一条淡绿丝线；嫌亮/暗只改这一个系数即可。
                 DRKLoader.AddParticle(new DRK_LineFormPlayer(Projectile.Center, -Projectile.velocity * 0.05f, false, 6, 0.9f, Color.LightGreen * 0.25f, Owner));

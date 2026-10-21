@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 血液爆炸光球（BloodBomb） - 血炎射手套装的「远程武器有几率射出」效果
-    /// （移植自经典版灾厄 Projectiles/Typeless/BloodBomb.cs，由 CalamityDemutationGlobalItem.Shoot 追加生成，
+    /// （移植自经典灾厄 Projectiles/Typeless/BloodBomb.cs，由 CalamityDemutationGlobalItem.Shoot 追加生成，
     /// 伤害 = 本次射击伤害 ×1.6，穿上金源套（auricSet）时 ×2.2）。
     /// 飞行途中撒血尘，命中或超时后在原地生成 BloodBombExplosion。
     /// </summary>

@@ -34,14 +34,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             modPlayer.deificAmulet = true;
         }
         /// <summary>
-        /// 配方：五件原版饰品 + 陨石锭，现代版（CalamityMod）与经典版（CalamityModClassicPreTrailer）
+        /// 配方：五件原版饰品 + 陨石锭，现代灾厄与经典灾厄
         /// 的灾厄材料不同，故分两分支注册，均在秘银砧合成
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：灾厄材料用 StarblightSoot
+                // 现代灾厄：灾厄材料用 StarblightSoot
                 if (calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot))
                 {
                     Recipe recipe = CreateRecipe();
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：对应材料为 Stardust
+                // 经典灾厄：对应材料为 Stardust
                 if(classic.TryFind<ModItem>("Stardust", out ModItem stardust))
                 {
                     Recipe recipeClassic = CreateRecipe();

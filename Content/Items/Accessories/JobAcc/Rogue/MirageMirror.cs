@@ -19,7 +19,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// <para>
     /// **允许与灾厄本体的同名件同时佩戴**（用户明确要求，两件的潜行恢复会叠加，是有意为之），故本件不做
     /// <c>CanEquipAccessory</c> 互斥。潜行恢复那两个字段是灾厄 <c>CalamityPlayer</c> 的字段、Mod.Call 里没有
-    /// 对应项，故走 CDUtil 的反射桥；经典版灾厄没有这两个字段，潜行恢复加成只对现代版生效。
+    /// 对应项，故走 CDUtil 的反射桥；经典灾厄没有这两个字段，潜行恢复加成只对现代版生效。
     /// </para>
     /// </summary>
     internal class MirageMirror : ModItem

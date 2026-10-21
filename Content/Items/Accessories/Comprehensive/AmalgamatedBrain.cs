@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// </summary>
         public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<TheAmalgam>();
         /// <summary>
-        /// 配方：腐化脑 + 混乱大脑在秘银砧合成（兼容现代版与经典版灾厄，材料判定不区分灾厄版本）
+        /// 配方：腐化脑 + 混乱大脑在秘银砧合成（兼容现代版与经典灾厄，材料判定不区分灾厄版本）
         /// </summary>
         public override void AddRecipes()
         {

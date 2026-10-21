@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 弑神者光球（GodSlayerOrb） - 弑神者法师头（GodSlayerVisage）套装「魔法攻击命中敌人时
-    /// 释放弑神者烈焰与治疗烈焰」的追踪球（按经典版灾厄 Projectiles/Typeless/GodSlayerOrb.cs 1:1 移植）。
+    /// 释放弑神者烈焰与治疗烈焰」的追踪球（按经典灾厄 Projectiles/Typeless/GodSlayerOrb.cs 1:1 移植）。
     /// 4×4、穿透 1、穿地形、存活 200 帧、额外 1 次更新；每帧在自身位置喷一粒 ShadowbeamStaff 尘
     /// （源裸数字 173 已 Cecil 反查，速度清零所以尘堆在原地），并以 12 像素/帧的上限追踪
     /// 600 像素内最近的、有视线的可追击敌人（速度按 20:1 插值逼近目标方向）；命中附加 200 帧弑神者地狱火。

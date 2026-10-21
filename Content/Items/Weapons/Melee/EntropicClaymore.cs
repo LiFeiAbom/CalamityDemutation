@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 熵之舞（Entropic Claymore）—— 月球工作台档近战（物品与挥砍行为整体移植自灾厄大修 **0.4.0.3.5** 的
+    /// 熵之舞（Entropic Claymore）—— 月球工作台档近战（物品与挥砍行为整体移植自重制版的
     /// <c>EntropicClaymoreEcType</c> / <c>EntropicClaymoreHeld</c>）。
     /// 每次挥砍把玩家锁进一个 28 帧的挥砍体（<see cref="EntropicClaymoreHeld"/>），
     /// 挥砍途中每 20×攻速 帧朝准心射出一枚熵之飞刃（<see cref="EntropicClaymoreProj"/>，伤害同手持体），

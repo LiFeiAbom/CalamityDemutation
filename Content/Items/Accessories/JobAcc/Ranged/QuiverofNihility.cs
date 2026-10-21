@@ -26,7 +26,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
     /// ③ 配方照 2.0.4：任意箭袋 + 银河奇点 ×5 + 暗黑等离子 ×3 @ 远古操纵机，现代版 / 经典版各一条。
     ///    **银河奇点按本工程既有口径分版本取**（同 <c>CeaselessHungerPotion</c> / <c>ArkoftheElements</c> 的写法）：
     ///    现代版用本模组自写的 <see cref="GalacticaSingularity"/>（灾厄 2.2.x 已把自己的银河奇点删掉），
-    ///    经典版取经典版灾厄的；经典版灾厄没有 <c>AnyQuiver</c> 配方组，故退回本模组自建的
+    ///    经典版取经典灾厄的；经典灾厄没有 <c>AnyQuiver</c> 配方组，故退回本模组自建的
     ///    <c>CalamityDemutation:AnyQuiver</c> 组（内容与灾厄一致：魔法箭袋 / 熔火箭袋 / 潜猎者箭袋）；
     /// ④ 源的 <c>donorItem</c> 标记属灾厄的"捐助者物品"体系，本工程没有对应机制，不保留。
     /// </para>
@@ -81,8 +81,8 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
         /// 配方：照 2.0.4 的「任意箭袋 + 银河奇点 ×5 + 暗黑等离子 ×3 @ 远古操纵机」，现代 / 经典版各一条。
         /// <para>
         /// **银河奇点按本工程既有口径取用**（同 <c>CeaselessHungerPotion</c> / <c>ArkoftheElements</c>）：
-        /// 现代版灾厄 2.2.x 已把自己那件银河奇点整个删除，故现代分支直接用**本模组自写的**
-        /// <see cref="GalacticaSingularity"/>（四种月亮碎片 @ 远古操纵机，同源同口径）；经典版灾厄两样
+        /// 现代灾厄 2.2.x 已把自己那件银河奇点整个删除，故现代分支直接用**本模组自写的**
+        /// <see cref="GalacticaSingularity"/>（四种月亮碎片 @ 远古操纵机，同源同口径）；经典灾厄两样
         /// 材料都还在，继续取经典版自己的。
         /// </para>
         /// <para>
@@ -94,7 +94,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：银河奇点用本模组自写件补位；暗黑等离子仍是灾厄材料（两版都还在）
+            // 现代灾厄：银河奇点用本模组自写件补位；暗黑等离子仍是灾厄材料（两版都还在）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasmaModern))
@@ -107,7 +107,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
                 }
             }
 
-            // 经典版灾厄：银河奇点 / 暗黑等离子都还在，照 2.0.4 源配方；它没有 AnyQuiver 配方组，用本模组自建的同内容组
+            // 经典灾厄：银河奇点 / 暗黑等离子都还在，照 2.0.4 源配方；它没有 AnyQuiver 配方组，用本模组自建的同内容组
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasmaClassic) &&
@@ -125,7 +125,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Ranged
         /// <summary>
         /// 注册一条虚无箭袋配方（两个版本分支共用）：
         /// 「<paramref name="quiverGroup"/> 任意箭袋 + 银河奇点 ×5 + 暗黑等离子 ×3 @ 远古操纵机」。
-        /// 现代版灾厄自带 <c>AnyQuiver</c> 配方组（照源直接用）；经典版没有，故传本模组自建的
+        /// 现代灾厄自带 <c>AnyQuiver</c> 配方组（照源直接用）；经典版没有，故传本模组自建的
         /// <c>CalamityDemutation:AnyQuiver</c>（两组的有效物品一致：魔法箭袋 / 熔火箭袋 / 潜猎者箭袋）。
         /// 配方组在本模组的 ModSystem 里登记，而 tML 的加载顺序是「所有模组的 AddRecipeGroups → 所有
         /// 模组的 AddRecipes」（<c>Recipe.SetupRecipeGroups</c> 早于 <c>RecipeLoader.AddRecipes</c>），

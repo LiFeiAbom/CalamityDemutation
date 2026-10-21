@@ -53,7 +53,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
         /// 枯萎凝胶 ×140 + 纯净凝胶 ×140 + 死灵质 ×140 + 夜明锭 ×15 + 起源之簇 ×15，在远古操纵机处合成。
         /// 按本工程口径分现代版 / 经典版各注册一条，材料名按各自版本取：
         /// 枯萎凝胶现代版叫 BlightedGel、经典版仍叫旧名 EbonianGel；
-        /// 死灵质现代版叫 Necroplasm（1.4.4-release / 2.0.4+），2.0.3.9 叫 Polterplasm、更早/经典版叫 Phantoplasm；
+        /// 死灵质现代版叫 Necroplasm（现代灾厄 / 2.0.4+），2.0.3.9 叫 Polterplasm、更早/经典版叫 Phantoplasm；
         /// 起源之簇现代版叫 ExodiumCluster、经典版叫 ExodiumClusterOre；
         /// 夜明锭（LunarBar）与远古操纵机（LunarCraftingStation）是原版物品/站台，两版通用。
         /// </summary>

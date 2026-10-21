@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 远古叶棱晶（SilvaCrystal） - 始源林海召唤头（SilvaHelmet）套装召唤的漂浮棱晶
-    ///（按经典版灾厄 Projectiles/Summon/SilvaCrystal.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/SilvaCrystal.cs 1:1 移植）。
     /// 钉在主人头顶上方 60 像素（重力翻转时镜到下方），锁定 1500 像素内可追击的敌人后，
     /// 每 25 帧朝目标随机方向射出 3 枚 <see cref="SilvaCrystalExplosion"/>（伤害继承自身）；
     /// 本体不造成接触伤害（<see cref="CanDamage"/> 返回 false），也不占仆从栏。

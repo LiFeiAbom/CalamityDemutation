@@ -9,18 +9,18 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 归虚之灵（对应 CI 的 <c>CosmicImmaterializerOld</c>）——
-    /// 「归虚之灵」链（CI 口径）的**链顶**，也是这个批次最后一件。
-    /// **命名口径（用户 2026-10-09）**：类名去掉了 CI 式的 <c>Old</c> 后缀（原 `CosmicImmaterializerOld`）；
+    /// 归虚之灵（对应 旧版支线的 <c>CosmicImmaterializerOld</c>）——
+    /// 「归虚之灵」链（旧版支线口径）的**链顶**，也是这个批次最后一件。
+    /// **命名口径（用户 2026-10-09）**：类名去掉了 旧版支线式的 <c>Old</c> 后缀（原 `CosmicImmaterializerOld`）；
     /// 未保留旧名兼容属性（用户 2026-10-10：不需要 Legacy 旧名）。
-    /// 口径照 CI：74×72、伤害 **560**（CI 源值 360，按用户 2026-10-09 点名上调）、魔力 10、
+    /// 口径照旧版支线：74×72、伤害 **560**（旧版支线源值 360，按用户 2026-10-09 点名上调）、魔力 10、
     /// 使用/动画 **10 帧**、击退 0、挥动姿态、
-    /// **月后 15 档（紫，＝CI 的 `CatalystViolet`）**、价值 **1 铂金 50 金**、音 `SoundID.Item60`、弹速 10，
+    /// **月后 15 档（紫，＝旧版支线的 `CatalystViolet`）**、价值 **1 铂金 50 金**、音 `SoundID.Item60`、弹速 10，
     /// 在鼠标处召唤一团**宇宙之灵**（<see cref="CosmicEnergySpiral"/>）。
     /// </summary>
     /// <remarks>
     /// **ExoLore（传颂之物）分支：本工程恒处 Lore 模式**——照第 9 节 ExoBlade / ExoBeam 的既有口径，
-    /// 不搬 CI 的 Lore 判定与专属类，直接把 Lore 那一条分支的行为当默认：仆从**恒发射 12~18 枚小爆裂 +
+    /// 不搬 旧版支线的 Lore 判定与专属类，直接把 Lore 那一条分支的行为当默认：仆从**恒发射 12~18 枚小爆裂 +
     /// 2 枚斜射大爆裂 + 1 枚直射大爆裂**（非 Lore 分支是 5~8 小 + 1 大），冷却 60 帧（非 Lore 是 100 帧），
     /// 仆从本体也按 Lore 分支的写法染成**纯白**（非 Lore 分支才是彩虹色）。
     /// <para>
@@ -28,25 +28,25 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 掉在地上的发光层走工程既有的 `Item.DrawItemGlowmaskSingleFrame`。
     /// </para>
     /// <para>
-    /// **两处按用户 2026-10-09 的口径做的改动**：① tooltip 去掉 CI 的 ExoLore 说明行、回到常规三行；
+    /// **两处按用户 2026-10-09 的口径做的改动**：① tooltip 去掉 旧版支线的 ExoLore 说明行、回到常规三行；
     /// ② 源里"**没穿月后召唤套时伤害 ×0.66**"这条**不照抄**——本工程的伤害与 `originalDamage` 都按全额走
     /// （灾厄查的是 `CalamityPlayer.WearingPostMLSummonerSet`，本工程没有等价 API，索性不做这条惩罚）。
     /// </para>
     /// <para>
-    /// **配方（CI 那条八重 @ 嘉登熔炉）**：天狼星 + 古冰晶 + 元素之斧 + 圣化火花 + 空灵征服者 + 宇宙灯笼 +
+    /// **配方（旧版支线那条八重 @ 嘉登熔炉）**：天狼星 + 古冰晶 + 元素之斧 + 圣化火花 + 空灵征服者 + 宇宙灯笼 +
     /// 灾厄挽歌 + 奇迹物质 `MiracleMatter`——**前七味全是本工程自持件**，只软引用奇迹物质与嘉登熔炉。
-    /// CI 另有一条把奇迹物质换成"古代奇迹物质"的变体，本工程没有那件，故只注册这一条；经典版没有奇迹物质，
+    /// 旧版支线另有一条把奇迹物质换成"古代奇迹物质"的变体，本工程没有那件，故只注册这一条；经典版没有奇迹物质，
     /// 因此不注册经典分支。
     /// </para>
     /// </remarks>
     internal class CosmicImmaterializer:ModItem
     {
-        /// <summary>研究解锁一份（照 CI）</summary>
+        /// <summary>研究解锁一份（照旧版支线）</summary>
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>基础属性：照 CI（74×72、伤害 360、使用 10 帧、月后 15 档、1 铂金 50 金）</summary>
+        /// <summary>基础属性：照旧版支线（74×72、伤害 360、使用 10 帧、月后 15 档、1 铂金 50 金）</summary>
         public override void SetDefaults()
         {
             Item.width = 74;
@@ -59,7 +59,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             Item.knockBack = 0f;
             Item.value = Item.buyPrice(1, 50, 0, 0);
             Item.rare = ItemRarityID.Red;
-            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;   // 月后 15：紫（＝CI 的 CatalystViolet）
+            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;   // 月后 15：紫（＝旧版支线的 CatalystViolet）
             Item.UseSound = SoundID.Item60;
             Item.shoot = ModContent.ProjectileType<CosmicEnergySpiral>();
             Item.shootSpeed = 10f;
@@ -91,8 +91,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
             return false;
         }
         /// <summary>
-        /// 配方：CI 那条八重 @ 嘉登熔炉（七味自持件 + 软引用的奇迹物质）。
-        /// CI 的"古代奇迹物质"变体与本工程的软依赖口径无关，未移植；经典版没有奇迹物质，故不注册经典分支。
+        /// 配方：旧版支线那条八重 @ 嘉登熔炉（七味自持件 + 软引用的奇迹物质）。
+        /// 旧版支线的"古代奇迹物质"变体与本工程的软依赖口径无关，未移植；经典版没有奇迹物质，故不注册经典分支。
         /// </summary>
         public override void AddRecipes()
         {

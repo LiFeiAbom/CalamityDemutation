@@ -16,12 +16,12 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 在鼠标处召唤一把会冲锋的彩虹元素斧（<see cref="ElementalAxeMinion"/>）。
     /// </summary>
     /// <remarks>
-    /// 为什么要自持：本件在现代版里**已被删除**（连它自己的弹幕一起），只剩经典世系还有同名件，
+    /// 为什么要自持：本件在现代版里**已被删除**（连它自己的弹幕一起），只剩经典灾厄还有同名件，
     /// 所以按"旧版回归"的口径自持一份 2.0.3.9 版，供归虚之灵当材料。
     /// <para>
     /// 配方（照源 2.0.3.9）：泰拉棱镜 `ItemID.EmpressBlade` + 苍华之庭 + 夜明锭 `ItemID.LunarBar`×5
     /// + 生命合金 `LifeAlloy`×5 + 银河奇点 `GalacticaSingularity`×5 @ 远古操纵机。
-    /// **经典分支（`CalamityModClassicPreTrailer`）里没有生命合金**，按用户 2026-10-08 的口径
+    /// **经典分支（`经典灾厄`）里没有生命合金**，按用户 2026-10-08 的口径
     /// **直接去掉那一味**，其余四味照旧、同站台。
     /// </para>
     /// </remarks>

@@ -46,7 +46,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：药剂瓶 + YharonSoulFragment + 太阳花/月光草/火焰花
+                // 现代灾厄：药剂瓶 + YharonSoulFragment + 太阳花/月光草/火焰花
                 if(calamity.TryFind<ModItem>("YharonSoulFragment", out ModItem yharonSoulFragment1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×50 + YharonSoulFragment
+                // 现代灾厄：药剂瓶 + 血珠×50 + YharonSoulFragment
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1) && calamity.TryFind<ModItem>("YharonSoulFragment", out ModItem yharonSoulFragment2))
                 {
                     Recipe recipe = CreateRecipe();
@@ -71,7 +71,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：药剂瓶 + HellcasterFragment + 太阳花/月光草/火焰花
+                // 经典灾厄：药剂瓶 + HellcasterFragment + 太阳花/月光草/火焰花
                 if(classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -83,7 +83,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×50 + HellcasterFragment
+                // 经典灾厄：药剂瓶 + 血珠×50 + HellcasterFragment
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("HellcasterFragment", out ModItem hellcasterFragment2))
                 {
                     Recipe recipe = CreateRecipe();

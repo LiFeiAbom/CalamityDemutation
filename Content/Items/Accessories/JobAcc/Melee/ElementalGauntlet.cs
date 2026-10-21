@@ -32,11 +32,11 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
             modPlayer.elementalGauntlet = true;
         }
         /// <summary>
-        /// 配方：兼容灾厄现代版与经典版，两版灾厄材料名与合成站不同，需分别注册配方
+        /// 配方：兼容现代灾厄版与经典版，两版灾厄材料名与合成站不同，需分别注册配方
         /// </summary>
         public override void AddRecipes()
         {
-            // 兼容灾厄现代版与经典版：两者材料名不同，需分别注册配方
+            // 兼容现代灾厄版与经典版：两者材料名不同，需分别注册配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("Necroplasm", out ModItem necroplasm1) && calamity.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel1) && calamity.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy1) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil1))

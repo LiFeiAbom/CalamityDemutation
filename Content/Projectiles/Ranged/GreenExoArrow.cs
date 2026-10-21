@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 绿色星流箭（GreenExoArrow） - 天堂之风把木箭转化出的四色星流箭之一，＝CI 的
+    /// 绿色星流箭（GreenExoArrow） - 天堂之风把木箭转化出的四色星流箭之一，＝旧版支线的
     /// <c>Content/Projectiles/ExoLore/ExoArrowGreenExoLore</c>（本工程常驻 Lore 模式，故不留非 Lore 版）。
     /// <para>
     /// 定位是"落点卷起星流风暴"：判定 5×5、穿透 1、额外更新 3 帧、寿命 300 帧；

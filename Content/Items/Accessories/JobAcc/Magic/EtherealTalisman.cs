@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
             modPlayer.etherealTalisman = true;
         }
         /// <summary>
-        /// 配方：兼容灾厄现代版与经典版，两版灾厄材料与合成站不同，需分别注册配方
+        /// 配方：兼容现代灾厄版与经典版，两版灾厄材料与合成站不同，需分别注册配方
         /// </summary>
         public override void AddRecipes()
         {

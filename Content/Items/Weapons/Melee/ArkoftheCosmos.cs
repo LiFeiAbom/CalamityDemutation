@@ -219,7 +219,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     }
                 }
             }
-            // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
+            // 经典灾厄：ModPlayer 类名是 经典灾厄玩家类（ZoneAstral 与 GravityNormalizerBuff 同名同义）
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 var calamityPlayerType = classic.Code.GetTypes()
@@ -380,7 +380,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     }
                 }
             }
-            // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
+            // 经典灾厄：ModPlayer 类名是 经典灾厄玩家类（ZoneAstral 与 GravityNormalizerBuff 同名同义）
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 var calamityPlayerType = classic.Code.GetTypes()
@@ -424,7 +424,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：银河 + 元素方舟 + AuricBar ×5，宇宙砧 ──
+            // ── 现代灾厄：银河 + 元素方舟 + AuricBar ×5，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -437,7 +437,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：改用一堆后期暗黑材料，且在德雷顿熔炉合成 ──
+            // ── 经典灾厄：改用一堆后期暗黑材料，且在德雷顿熔炉合成 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)

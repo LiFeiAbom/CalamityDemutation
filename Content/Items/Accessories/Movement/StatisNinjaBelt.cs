@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
         /// </summary>
         public override void AddRecipes()
         {
-            // 兼容灾厄现代版与经典版：净化凝胶同名，分别注册避免重复
+            // 兼容现代灾厄版与经典版：净化凝胶同名，分别注册避免重复
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("PurifiedGel", out ModItem purifiedGel1))

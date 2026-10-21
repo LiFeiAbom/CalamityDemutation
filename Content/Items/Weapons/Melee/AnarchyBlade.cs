@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 混乱之刃（Anarchy Blade）—— 秘银砧档近战（行为移植自灾厄大修 0.4.0.1.3 的 <c>AnarchyBladeEcType</c>）。
+    /// 混乱之刃（Anarchy Blade）—— 秘银砧档近战（行为移植自重制版的 <c>AnarchyBladeEcType</c>）。
     /// 左键：每 3 次挥砍射出一道硫磺光束（<see cref="AnarchyBeam"/>）；受伤越重伤害越高（生命差 ×0.1 加算到基础伤害）。
     /// 右键：挥砍体积放大到 1.2 倍，命中时原地炸出硫磺爆炸并附加硫磺火；
     /// 自身血量低于一半时，每次右键命中还有 1/5 概率直接抹杀非 Boss 敌人（场上有任何 Boss 时不触发）。
@@ -66,7 +66,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 左键每满 3 次挥砍才真正发射一次光束（并补一声 Item20 音效）；右键不发射。
-        /// 计数存在 <see cref="CalamityDemutationPlayer.anarchyBladeShootCount"/> 上——大修源码里是 ModItem 实例字段，
+        /// 计数存在 <see cref="CalamityDemutationPlayer.anarchyBladeShootCount"/> 上——重制版源码里是 ModItem 实例字段，
         /// 联机时两名玩家会共用一个节奏。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -88,13 +88,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             if (Main.rand.NextBool(3))
                 Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, AnarchyBeam.BrimstoneDustType);
         }
-        /// <summary>损失的生命值 ×0.1 直接加算到基础伤害（大修原设定）</summary>
+        /// <summary>损失的生命值 ×0.1 直接加算到基础伤害（重制版原设定）</summary>
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
             int lifeAmount = player.statLifeMax2 - player.statLife;
             damage.Base += lifeAmount * 0.1f;
         }
-        /// <summary>暴击伤害减半（大修原设定）</summary>
+        /// <summary>暴击伤害减半（重制版原设定）</summary>
         public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers) => modifiers.CritDamage *= 0.5f;
         /// <summary>
         /// PvP 近似：本武器在 PvE 侧把暴击伤害减半（<c>CritDamage *= 0.5f</c>）。玩家受伤不吃暴击伤害倍率

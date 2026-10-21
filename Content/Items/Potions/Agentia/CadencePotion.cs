@@ -30,13 +30,13 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             Item.value = Item.buyPrice(0, 2, 0, 0);           // 价值 2 金
         }
         /// <summary>
-        /// 合成表：五瓶原版生活类药水，或灾厄血珠×40，均兼容现代版与经典版灾厄（炼金台合成）
+        /// 合成表：五瓶原版生活类药水，或灾厄血珠×40，均兼容现代版与经典灾厄（炼金台合成）
         /// </summary>
         public override void AddRecipes()
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：爱意 + 心灵感应 + 生命之力 + 再生 + 平静 五瓶药水
+                // 现代灾厄：爱意 + 心灵感应 + 生命之力 + 再生 + 平静 五瓶药水
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient(ItemID.LovePotion);
                 recipe.AddIngredient(ItemID.HeartreachPotion);
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                 recipe.AddIngredient(ItemID.CalmingPotion);
                 recipe.AddTile(TileID.AlchemyTable);
                 recipe.Register();
-                // 现代版灾厄：药剂瓶 + 血珠×40
+                // 现代灾厄：药剂瓶 + 血珠×40
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     recipe = CreateRecipe();
@@ -57,7 +57,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：同为上述五瓶原版药水
+                // 经典灾厄：同为上述五瓶原版药水
                 Recipe recipeClassic = CreateRecipe();
                 recipeClassic.AddIngredient(ItemID.LovePotion);
                 recipeClassic.AddIngredient(ItemID.HeartreachPotion);
@@ -66,7 +66,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                 recipeClassic.AddIngredient(ItemID.CalmingPotion);
                 recipeClassic.AddTile(TileID.AlchemyTable);
                 recipeClassic.Register();
-                // 经典版灾厄：药剂瓶 + 血珠×40
+                // 经典灾厄：药剂瓶 + 血珠×40
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     recipeClassic = CreateRecipe();

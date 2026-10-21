@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Buffs.SummonBuffs
 {
     /// <summary>
     /// 归虚之灵召唤增益（源里类名叫 <c>CosmicEnergyOld</c>，本工程收成 <c>CosmicEnergyBuff</c>）——
-    /// 宇宙之灵在场时保持此增益（按 CI 的 Buffs/Summon/CosmicEnergyOld.cs 移植）。
+    /// 宇宙之灵在场时保持此增益（按旧版支线的 Buffs/Summon/CosmicEnergyOld.cs 移植）。
     /// 增益只负责把玩家侧的 <c>cosmicEnergy</c> 标志点亮/熄灭——宇宙之灵据此续命、消失时随之移除。
     /// </summary>
     internal class CosmicEnergyBuff:ModBuff

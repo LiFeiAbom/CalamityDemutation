@@ -8,11 +8,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 彗星陨刃（Comet Quasher）—— 秘银砧档近战（行为移植自灾厄大修 0.4.0.1.3 的 <c>CometQuasherEcType</c>）。
+    /// 彗星陨刃（Comet Quasher）—— 秘银砧档近战（行为移植自重制版的 <c>CometQuasherEcType</c>）。
     /// 挥舞时朝准心甩出一颗陨石；近战命中敌人时从目标上方 500~600 像素处再砸下一颗陨石。
-    /// 暴击伤害减半（<c>CritDamage *= 0.5</c>），这是大修原样保留的手感设定。
+    /// 暴击伤害减半（<c>CritDamage *= 0.5</c>），这是重制版原样保留的手感设定。
     /// 配方：陨石锭×25 + 灵质×5 @ 秘银砧（全原版材料）。
-    /// 弹幕用的是灾厄本体 <c>CometQuasherMeteor</c>，走软依赖（经典版灾厄没有这个弹幕，纯经典环境下本武器不会发射东西）。
+    /// 弹幕用的是灾厄本体 <c>CometQuasherMeteor</c>，走软依赖（经典灾厄没有这个弹幕，纯经典环境下本武器不会发射东西）。
     /// </summary>
     internal class CometQuasher : ModItem
     {
@@ -54,7 +54,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Projectile.NewProjectile(source, position, velocity, meteor, (int)(Item.damage * 0.5f), Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
             return false;
         }
-        /// <summary>暴击伤害减半（大修原设定）</summary>
+        /// <summary>暴击伤害减半（重制版原设定）</summary>
         public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers) => modifiers.CritDamage *= 0.5f;
         /// <summary>
         /// PvP 近似：与 <see cref="AnarchyBlade"/> 同款——PvE 侧暴击伤害减半，玩家侧无暴击信息，
@@ -87,7 +87,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Vector2 vr = offsetVr.SafeNormalize(Vector2.Zero) * -17;
             Projectile.NewProjectile(new EntitySource_Parent(player), spanPos, vr, meteor, (int)Item.damage, Item.knockBack, player.whoAmI, 0f, 0.5f + (float)Main.rand.NextDouble() * 0.3f);
         }
-        /// <summary>挥舞表现：先用 BetterSwing 修正巨剑挥舞位置，约 1/3 概率洒落火星尘（<c>DustID.Torch</c>，大修源码里写的是数字 6）</summary>
+        /// <summary>挥舞表现：先用 BetterSwing 修正巨剑挥舞位置，约 1/3 概率洒落火星尘（<c>DustID.Torch</c>，重制版源码里写的是数字 6）</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
             CDUtil.BetterSwing(player);
@@ -95,7 +95,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.Torch);
         }
         /// <summary>
-        /// 等价于大修的 <c>CWRUtils.GetRandomVevtor(startAngle, targetAngle, length)</c>：
+        /// 等价于重制版的 <c>相关随机向量工具(startAngle, targetAngle, length)</c>：
         /// 在 [startAngle, targetAngle] 度之间取随机角度，返回该角度上的单位向量乘以 length。
         /// </summary>
         private static Vector2 GetRandomVector(float startAngle, float targetAngle, float length)

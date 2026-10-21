@@ -8,11 +8,11 @@ namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
     /// 真·环境能量（TrueBiomeOrb） - 真·环境之刃发射的自动追踪弹幕，
-    /// 移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
+    /// 移植自灾厄经典灾厄同名弹幕并按本工程口径重制。
     /// <para>
     /// 颜色与命中 debuff 依据玩家所在生物群系动态变化，命中 debuff 一律 360 帧（6 秒，比环境能量的 90 帧更长）；
     /// 相对经典版的重制点：借用原版光束 AI 模板、把粉尘类型与颜色提成字段、补上 4 格残影绘制与 400 像素内的短程追踪，
-    /// 另外兼容现代版灾厄的"星陨之地"配色。
+    /// 另外兼容现代灾厄的"星陨之地"配色。
     /// </para>
     /// </summary>
     internal class TrueBiomeOrb : ModProjectile
@@ -45,7 +45,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>
         /// AI：每帧读取主人所在生物群系，刷新粉尘类型与渲染颜色并生成粉尘；
-        /// 支持现代版灾厄"星陨之地"配色；最后朝 400 像素内最近敌人追踪
+        /// 支持现代灾厄"星陨之地"配色；最后朝 400 像素内最近敌人追踪
         /// </summary>
         public override void AI()
         {

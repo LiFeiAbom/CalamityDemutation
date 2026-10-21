@@ -10,10 +10,10 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 银河弹（Galaxia） - 银河 / 鸿蒙方舟发射的追踪弹幕，移植自灾厄经典版（CalamityModClassicPreTrailer 1.4.2.101）的同名弹幕。
+    /// 银河弹（Galaxia） - 银河 / 鸿蒙方舟发射的追踪弹幕，移植自灾厄经典版（经典灾厄 1.4.2.101）的同名弹幕。
     /// <para>
     /// 携带旋转彩虹残影，命中敌人/玩家时依据主人所处的生物群系、月相事件（血月 / 霜月 / 南瓜月）、
-    /// 四柱环境触发对应 buff 与二次弹幕；另用反射读取现代版灾厄的 <c>CalamityPlayer.ZoneAstral</c>，补上"星陨之地"一套效果。
+    /// 四柱环境触发对应 buff 与二次弹幕；另用反射读取现代灾厄的 <c>CalamityPlayer.ZoneAstral</c>，补上"星陨之地"一套效果。
     /// </para>
     /// <para>
     /// 两处调用方给的 ai[1] 不同：银河不传（=0），鸿蒙方舟传 <c>Main.rand.Next(3)</c>（0~2），
@@ -310,7 +310,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.projectile[proj].penetrate = 1;
                 Main.projectile[proj].DamageType = DamageClass.Melee;
             }
-            // 现代版灾厄的"星陨之地"判定：本工程对 CalamityPlayer 无编译期引用，故全程走反射
+            // 现代灾厄的"星陨之地"判定：本工程对 CalamityPlayer 无编译期引用，故全程走反射
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()
@@ -544,7 +544,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 Main.projectile[proj].penetrate = 1;
                 Main.projectile[proj].DamageType = DamageClass.Melee;
             }
-            // 现代版灾厄的"星陨之地"判定：本工程对 CalamityPlayer 无编译期引用，故全程走反射
+            // 现代灾厄的"星陨之地"判定：本工程对 CalamityPlayer 无编译期引用，故全程走反射
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()

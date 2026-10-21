@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int CogCount = 50;
         /// <summary>现代分支配方里的月亮锭数量（照 2.0）</summary>
         private const int ModernLunarBarCount = 5;
-        /// <summary>经典分支配方里的月亮锭数量（照 cal-1.4.2.101）</summary>
+        /// <summary>经典分支配方里的月亮锭数量（照 经典灾厄）</summary>
         private const int ClassicLunarBarCount = 15;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 808</summary>
         /// <summary>研究解锁一份</summary>
@@ -80,7 +80,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// <summary>
         /// 配方（用户 2026-10-15 指定「并存」，两条都注册、都 @远古操纵机、全是原版件）：
         /// **现代**（照 2.0）= 月亮锭×5 + 齿轮×50；
-        /// **经典**（照 cal-1.4.2.101）= 齿轮×50 + 月亮锭×15。
+        /// **经典**（照 经典灾厄）= 齿轮×50 + 月亮锭×15。
         /// </summary>
         public override void AddRecipes()
         {

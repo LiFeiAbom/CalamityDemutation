@@ -7,16 +7,16 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 圣化火花（Sanctified Spark）—— 「归虚之灵」链（CI 口径）的自持件之一。
+    /// 圣化火花（Sanctified Spark）—— 「归虚之灵」链（旧版支线口径）的自持件之一。
     /// 老规矩取灾厄 **2.0.3.9**（它在 2.0 里叫**能量法杖 `EnergyStaff`**，后来改名成本件，
     /// 源里就标着 `[LegacyName("EnergyStaff")]`）：66×68、伤害 **128**、魔力 10、使用/动画 **14 帧**、
     /// 击退 5、**紫档**、价值 **1 铂金 10 金**（`Rarity11BuyPrice`）、`autoReuse`、法杖姿态；
     /// 它是**哨兵**武器（`Item.sentry`）——在鼠标处插一座亵渎能量炮台（<see cref="ProfanedEnergy"/>）。
     /// </summary>
     /// <remarks>
-    /// 为什么要自持：1.4.4-release 把它大改过（伤害 128→100、**魔力 10→100**、使用帧 14→30，
+    /// 为什么要自持：现代灾厄把它大改过（伤害 128→100、**魔力 10→100**、使用帧 14→30，
     /// 哨兵本体 `ProfanedEnergy` 更是从 159 行整段重写成 222 行的新写法），
-    /// 按用户 2026-10-09「1.4.4-release 大砍、需要回调」的口径自持 2.0.3.9 版。
+    /// 按用户 2026-10-09「现代灾厄大砍、需要回调」的口径自持 2.0.3.9 版。
     /// <para>
     /// **无配方**——来源是**不动明王 `ImpiousImmolator` 掉落 1/15**（照源 2.0.3.9 与经典 1.4.2.101 的同一条，
     /// 现代与经典两条分支各挂一次，见 `NPCs/CalamityDemutationGlobalNPC.cs`）；

@@ -75,8 +75,8 @@ namespace CalamityDemutation.Utilities
             }
         }
         /// <summary>
-        /// 按权重逐通道混合多个颜色（对应 CWR 的 CWRUtils.RecombinationColor）：
-        /// 本工程移植 CWR 弹幕时用它复现"本体色 + 描边色"的叠加配色。
+        /// 按权重逐通道混合多个颜色（对应 重制版的 相关颜色混合工具）：
+        /// 本工程移植 重制版弹幕时用它复现"本体色 + 描边色"的叠加配色。
         /// </summary>
         public static Color RecombinationColor(params (Color color, float weight)[] colorWeightPairs)
         {
@@ -141,7 +141,7 @@ namespace CalamityDemutation.Utilities
             return Color.Lerp(currentColor, nextColor, increment * colors.Length % 1f);
         }
         /// <summary>
-        /// 多段颜色插值（移植自灾厄大修的 MultiStepColorLerp）：把 [0,1] 的 percent 均分给 colors.Length - 1 段，
+        /// 多段颜色插值（移植自重制版的 MultiStepColorLerp）：把 [0,1] 的 percent 均分给 colors.Length - 1 段，
         /// 在相邻两色之间逐段插值。与 <see cref="MulticolorLerp"/> 的"循环取色"不同——本方法是首尾不循环的单向扫过，
         /// 故两者并存、不可互相替代。
         /// </summary>

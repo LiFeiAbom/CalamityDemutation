@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：药剂瓶 + PearlShard×3（炼金台）
+                // 现代灾厄：药剂瓶 + PearlShard×3（炼金台）
                 if(calamity.TryFind<ModItem>("PearlShard", out ModItem pearlShard1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -46,7 +46,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×30
+                // 现代灾厄：药剂瓶 + 血珠×30
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：药剂瓶 + StormlionMandible + VictoryShard×3（此处为药剂瓶合成，非炼金台）
+                // 经典灾厄：药剂瓶 + StormlionMandible + VictoryShard×3（此处为药剂瓶合成，非炼金台）
                 if(classic.TryFind<ModItem>("StormlionMandible", out ModItem stormlionMandible1) && classic.TryFind<ModItem>("VictoryShard", out ModItem victoryShard1))
                 {
                     Recipe recipeClassic = CreateRecipe();
@@ -68,7 +68,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.Bottles);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×30（炼金台）
+                // 经典灾厄：药剂瓶 + 血珠×30（炼金台）
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipeClassic = CreateRecipe();

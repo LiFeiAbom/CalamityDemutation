@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 泰拉巨刃的大光束剑气（移植自大修 TerratomereBeams）：收招时放出的一道宽大剑气，
+    /// 泰拉巨刃的大光束剑气（移植自重制版 TerratomereBeams）：收招时放出的一道宽大剑气，
     /// 由手持挥砍体传入 ControlPoints 弧光采样点，用 ExobladeSlash 着色器沿这些点画剑气。
     /// </summary>
     internal class TerratomereBeams : ModProjectile
@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-            // 源为 CWRUtils.GetPlayerInstance(owner)（非法或已死亡的玩家返回 null，不跟随其速度）
+            // 源为 相关玩家工具(owner)（非法或已死亡的玩家返回 null，不跟随其速度）
             if (owner.Alives())
                 Projectile.position += owner.velocity;
             Projectile.Opacity = Utils.GetLerpValue(Projectile.localAI[0], 26f, Projectile.timeLeft, clamped: true);   // localAI[0] 无人写入恒为 0：等于按剩余寿命 0→26 帧淡入再淡出

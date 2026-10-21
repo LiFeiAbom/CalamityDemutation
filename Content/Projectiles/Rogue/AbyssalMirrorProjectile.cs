@@ -12,10 +12,10 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
     /// 穿透 -1、撞墙、忽略水、存活 50 帧，最后 25 帧每帧淡出 10 点。
     /// <para>
     /// 伤害类型按源码的 <c>forceClassless</c> 语义设成 **Generic**（伤害在闪避那一刻已经按盗贼伤害算过，
-    /// 再吃一次职业加成就是双份；CI 与 1.4.4 世系同样把它设成 Generic）。
+    /// 再吃一次职业加成就是双份；旧版支线与 1.4.4 世系同样把它设成 Generic）。
     /// </para>
     /// <para>
-    /// 命中给目标挂富营养化（Eutrophication，120 帧）——这件减益**只有现代版灾厄有**，
+    /// 命中给目标挂富营养化（Eutrophication，120 帧）——这件减益**只有现代灾厄有**，
     /// 经典版按工程既有惯例用它的深海重压（CrushDepth，120 帧）近似替代（两个都装时两条都会挂，
     /// 与 omega 蓝胸甲的 HadopelagicPressure/CrushDepth 处理同款）。多模组下靠判据兜底，不会报错。
     /// </para>
@@ -52,7 +52,7 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
                 Projectile.alpha += 10;
         }
         /// <summary>
-        /// 命中非友方目标：现代版挂富营养化 120 帧；经典版灾厄没有这件减益，用它的深海重压 120 帧替代
+        /// 命中非友方目标：现代版挂富营养化 120 帧；经典灾厄没有这件减益，用它的深海重压 120 帧替代
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

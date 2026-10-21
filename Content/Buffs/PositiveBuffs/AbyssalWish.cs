@@ -4,7 +4,7 @@ namespace CalamityDemutation.Content.Buffs.PositiveBuffs
 {
     /// <summary>
     /// 渊洋之愿增益（Abyssal Wish）：由渊洋秘药（AbyssalElixir）赋予的祝福类增益。
-    /// 移植自灾厄现代版 Buffs/StatBuffs/AmidiasBlessing.cs —— 三个参照版本（现代 1.4.4 / 现代 2.0.3.9 / 经典）
+    /// 移植自现代灾厄版 Buffs/StatBuffs/AmidiasBlessing.cs —— 三个参照版本（现代 1.4.4 / 现代 2.0.3.9 / 经典）
     /// 的类体逐字相同，故不存在版本分支。
     /// 效果为水下无限呼吸：每帧把剩余呼吸值顶到呼吸上限之上，因此缺氧倒计时不会启动，
     /// 深渊等强制缺氧区域同样有效。

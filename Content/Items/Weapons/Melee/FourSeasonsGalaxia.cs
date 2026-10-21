@@ -205,7 +205,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     }
                 }
             }
-            // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
+            // 经典灾厄：ModPlayer 类名是 经典灾厄玩家类（ZoneAstral 与 GravityNormalizerBuff 同名同义）
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 var calamityPlayerType = classic.Code.GetTypes()
@@ -363,7 +363,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     }
                 }
             }
-            // 经典版灾厄：ModPlayer 类名是 CalamityPlayerPreTrailer（ZoneAstral 与 GravityNormalizerBuff 同名同义）
+            // 经典灾厄：ModPlayer 类名是 经典灾厄玩家类（ZoneAstral 与 GravityNormalizerBuff 同名同义）
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 var calamityPlayerType = classic.Code.GetTypes()
@@ -401,7 +401,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：欧米茄环境之刃 + 星辉矿锭 ×8 + 暗黑碎片 ×8，宇宙砧 ──
+            // ── 现代灾厄：欧米茄环境之刃 + 星辉矿锭 ×8 + 暗黑碎片 ×8，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
@@ -416,7 +416,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：材料改为 Phantoplasm、且改在德雷顿熔炉合成 ──
+            // ── 经典灾厄：材料改为 Phantoplasm、且改在德雷顿熔炉合成 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)

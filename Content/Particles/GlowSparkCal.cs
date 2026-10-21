@@ -7,15 +7,15 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Particles
 {
     /// <summary>
-    /// 灾厄版发光火花（GlowSparkCal，移植自 CalamityEntropy 的 PRT_GlowSparkCal，即灾厄 GlowSparkParticle 的搬运版）：
+    /// 灾厄版发光火花（GlowSparkCal，移植自 附属模组的 PRT_GlowSparkCal，即灾厄 GlowSparkParticle 的搬运版）：
     /// 与本模组的 <see cref="GlowSpark"/> 是近亲，区别是多了初始颜色 / 挤压（Squash）/ 重力开关 / 收缩速度等可配置项，
     /// 贴图用的是灾厄那张 GlowSpark。星熠分形与分形之星命中时都会撒一片。
     /// <para>
-    /// 与 CE 原版的差异：① 基类换成本模组 <see cref="BaseParticle"/>（<c>SetProperty→SetDRK</c>、
-    /// <c>PreDraw→UseCustomDraw + CustomDraw</c>）；② CE 的 <c>Opacity</c> 由基类提供且本粒子只写不读，
+    /// 与 附属模组原版的差异：① 基类换成本模组 <see cref="BaseParticle"/>（<c>SetProperty→SetDRK</c>、
+    /// <c>PreDraw→UseCustomDraw + CustomDraw</c>）；② 附属模组的 <c>Opacity</c> 由基类提供且本粒子只写不读，
     /// 本模组基类没有该字段，直接省掉；③ 去掉对象池（<c>CanPool</c>/<c>Reset</c>）、<c>ShouldKillWhenOffScreen</c>
     /// （本模组粒子系统不淘汰出屏粒子）与 <c>InGame_World_MaxCount</c>（本模组有全局粒子上限）；
-    /// ④ 贴图改为与类同名的 Content/Particles/GlowSparkCal.png（CE 取自它自己的 Assets/Particles/GlowSpark）；
+    /// ④ 贴图改为与类同名的 Content/Particles/GlowSparkCal.png（附属模组取自它自己的 Assets/Particles/GlowSpark）；
     /// ⑤ 天顶世界周二彩蛋（把火花换成猛犸象贴图）照搬，贴图为 Content/Particles/MammothParticle.png；
     /// ⑥ <c>PRTDrawMode</c> 三态混合简化：本粒子恒为加法混合，直接用 <see cref="UseAdditiveBlend"/>；
     /// ⑦ <c>Configure</c> 由返回 this 的链式写法改为普通设置方法，调用点在 <c>DRKLoader.NewParticle</c> 之后调它
@@ -43,7 +43,7 @@ namespace CalamityDemutation.Content.Particles
         /// <summary>需要自绘（颜色渐变与两层叠加都在 CustomDraw 里）</summary>
         public override bool UseCustomDraw => true;
         /// <summary>
-        /// 按 CE 的 Configure 语义设置参数：注意必须在 <c>DRKLoader.NewParticle</c> 之后调用，
+        /// 按 附属模组的 Configure 语义设置参数：注意必须在 <c>DRKLoader.NewParticle</c> 之后调用，
         /// 因为它要从已经填好的 Velocity 与 Color 派生旋转与初始颜色。
         /// </summary>
         public void Configure(bool affectedByGravity, int lifetime, Vector2 squash, bool quickShrink = false, bool glow = true, float shrinkSpeed = 1f)

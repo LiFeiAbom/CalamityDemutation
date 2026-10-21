@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 宙宇波能刃的右键炸弹（移植自灾厄大修 0.4.0.1.3 ExcelsusBomb）：
+    /// 宙宇波能刃的右键炸弹（移植自重制版 ExcelsusBomb）：
     /// 右键投出的蓝色炸弹，命中即爆，爆炸时放大到 600×600 结算伤害并喷紫色光粒与三圈尘土。贴图复用 StreamGouge。
     /// </summary>
     internal class ExcelsusBomb : ModProjectile
@@ -120,7 +120,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 }
             }
         }
-        /// <summary>等价大修 CWRUtils.GetRandomVevtor：在 [startAngle, targetAngle] 度范围随机方向乘模长</summary>
+        /// <summary>等价重制版相关随机向量工具：在 [startAngle, targetAngle] 度范围随机方向乘模长</summary>
         private static Vector2 GetRandomVector(float startAngle, float targetAngle, float length)
         {
             float angle = (startAngle + (targetAngle - startAngle) * Main.rand.NextFloat()) * (MathHelper.Pi / 180f);

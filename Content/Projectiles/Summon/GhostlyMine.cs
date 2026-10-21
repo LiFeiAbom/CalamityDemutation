@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 幽灵地雷（GhostlyMine） - 血炎召唤头（BloodflareHelmet）套装每 15 秒召唤的环绕地雷
-    ///（按经典版灾厄 Projectiles/Summon/GhostlyMine.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/GhostlyMine.cs 1:1 移植）。
     /// 行为：以主人为中心、半径 550 像素，按 ai[1]（初值取生成方给的 ai[0]）每帧 +1 度的极坐标环绕；
     /// 不落地、穿透 1、存活 900 帧；首帧播一次入场音并喷一圈 DungeonSpirit 尘（尘 180 的实名）；
     /// 命中敌人时把判定框撑到 150×150、播爆炸音并喷尘（伤害由原版结算）。

@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 弑神者破片弹（GodSlayerShrapnelRound） - 弑神者射手套装「发射远程武器时有几率射出」的追加弹
-    /// （移植自经典版灾厄 Projectiles/Typeless/GodSlayerShrapnelRound.cs，由 CalamityDemutationGlobalItem.Shoot 以
+    /// （移植自经典灾厄 Projectiles/Typeless/GodSlayerShrapnelRound.cs，由 CalamityDemutationGlobalItem.Shoot 以
     /// 5% 概率生成，伤害 = 本次射击伤害 ×2.1，穿金源套时 ×3.2）。
     /// 飞行时撒紫色尘尾，命中/超时后在残骸处炸开 4~6 枚 GodSlayerShrapnel（每枚伤害为破片弹的 30%）。
     /// </summary>

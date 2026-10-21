@@ -10,7 +10,7 @@ namespace CalamityDemutation.Players
     {
         /// <summary>
         /// SHPC 右键能量束附带的"追踪相位球"冷却（帧）：读到 0 才补发一颗、随即置 60
-        /// （源：CI `DestroyerLegendary` 用的玩家侧 <c>fireCD</c>；那边是通用开火冷却，本工程只服务这一处）。
+        /// （源：旧版支线 `DestroyerLegendary` 用的玩家侧 <c>fireCD</c>；那边是通用开火冷却，本工程只服务这一处）。
         /// </summary>
         public int shpcPhaseOrbCooldown = 0;
     }

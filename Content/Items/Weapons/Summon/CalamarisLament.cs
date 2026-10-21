@@ -7,13 +7,13 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 灾厄挽歌（Calamari's Lament）—— 「归虚之灵」链（CI 口径）**最后一件自持件**。
+    /// 灾厄挽歌（Calamari's Lament）—— 「归虚之灵」链（旧版支线口径）**最后一件自持件**。
     /// 老规矩取灾厄 **2.0.3.9**：88×108、伤害 **110**、使用/动画 **10 帧**、魔力 10、`autoReuse`、法杖姿态、
     /// **月后 13 档（荧光绿，即灾厄 `PureGreen`）**、价值 **1 铂金 30 金**（`Rarity13BuyPrice`）、音 `SoundID.Item85`，
     /// 在鼠标处召唤一只**小鱿鱼**（<see cref="CalamarisLamentMinion"/>）。
     /// </summary>
     /// <remarks>
-    /// 为什么自持、为什么取 2.0.3.9：1.4.4-release（实装那版）是伤害 120 / 使用 **24 帧**（更慢），
+    /// 为什么自持、为什么取 2.0.3.9：现代灾厄（实装那版）是伤害 120 / 使用 **24 帧**（更慢），
     /// 2.0 那版则**只有物品本体**（仆从、增益、墨汁弹都是 2.0.3.9 才补齐的），故取 2.0.3.9 这套完整实现。
     /// <para>
     /// **与源的两处差异**：① 源里那个 `[GFB]` 彩蛋（天顶世界专用音效 `CalamityMod/Sounds/Item/Inkling` 与

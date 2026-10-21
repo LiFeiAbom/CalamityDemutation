@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 蓝色星流箭的后续箭（BlueExoArrow2） - 蓝色星流箭命中时由「弹幕齐射」撒出的那串追踪箭，＝CI 的
+    /// 蓝色星流箭的后续箭（BlueExoArrow2） - 蓝色星流箭命中时由「弹幕齐射」撒出的那串追踪箭，＝旧版支线的
     /// <c>ExoArrowBlue2</c>。
     /// <para>
     /// 判定 5×5、穿透 1、**额外更新 5 帧**（比四色星流箭更快，观感是"窜出去的一串"）、

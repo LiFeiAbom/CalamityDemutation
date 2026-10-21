@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 弑神者烈焰（GodSlayerBlaze） - 弑神者法师头（GodSlayerVisage）套装「受到伤害时释放魔法弑神爆炸」的弹幕
-    ///（按经典版灾厄 Projectiles/Typeless/GodSlayerBlaze.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Typeless/GodSlayerBlaze.cs 1:1 移植）。
     /// 250×250 的大判定框、无限穿透、每敌 5 帧局部无敌、存活 60 帧；
     /// ai[0] 在这里被源当作**半径累加器**（每帧 +4），随半径把每帧喷出的 ShadowbeamStaff 尘数量
     /// 从 25 递减到 0，半径超过 230 时自毁——所以实际寿命约 58 帧。

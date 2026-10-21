@@ -35,11 +35,11 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
             modPlayer.yharimsInsignia = true;
         }
         /// <summary>
-        /// 配方：兼容灾厄现代版与经典版，两版灾厄材料名/数量不同，需分别注册配方
+        /// 配方：兼容现代灾厄版与经典版，两版灾厄材料名/数量不同，需分别注册配方
         /// </summary>
         public override void AddRecipes()
         {
-            // 兼容灾厄现代版与经典版：两者材料名/数量不同，需分别注册配方
+            // 兼容现代灾厄版与经典版：两者材料名/数量不同，需分别注册配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 Recipe recipe = CreateRecipe();

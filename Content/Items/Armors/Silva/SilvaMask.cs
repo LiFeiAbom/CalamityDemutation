@@ -7,11 +7,11 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
 {
     /// <summary>
     /// 始源林海面具（SilvaMask，英文名 Silva Mask） - 始源林海套装的**盗贼**向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；CI 对应件 SilvaHeadRogue）。
+    ///（按经典灾厄同名件 1:1 移植；旧版支线对应件 SilvaHeadRogue）。
     /// 注意与同目录另外四颗区分：<see cref="SilvaHelm"/> 近战 / <see cref="SilvaHornedHelm"/> 射手 /
     /// <see cref="SilvaHelmet"/> 召唤 / <see cref="SilvaMaskedCap"/> 法师，经典版里这颗 <c>SilvaMask</c> 才是盗贼头。
     /// 单件：盗贼伤害 +13%、盗贼暴击 +13%、移速 +20%
-    ///（移速这一条经典版没有、取自 CI 的 SilvaHeadRogue，用户 2026-10-06 点名补上）。
+    ///（移速这一条经典版没有、取自 旧版支线的 SilvaHeadRogue，用户 2026-10-06 点名补上）。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1~7. 通用七条（免疫减益 / 治疗叶球 / 移速加速度 +5% / 免死无敌四连）——silvaSet，
     ///      与其余四颗头共用同一套实现（见 SilvaHelm / CalamityDemutationPlayer）
@@ -54,9 +54,9 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         /// 写入本地化套装描述；并实现「生命高于 50% 时盗贼武器投掷更快」。
         /// <para>
         /// 关于投掷速率：经典版写在 <c>UseTimeMultiplier</c> 里返回 **1.1f**（tML 里该值 &gt;1 表示"更慢"，
-        /// 与 tooltip 的"faster"相反）。本工程沿用射手头当年的处置——**从 CI**：CI 的 SilvaHeadRogue
+        /// 与 tooltip 的"faster"相反）。本工程沿用射手头当年的处置——**从旧版支线**：旧版支线的 SilvaHeadRogue
         /// 用 <c>GetAttackSpeed&lt;RogueDamageClass&gt;() += 0.1f</c>，此处按同样口径写盗贼攻速 +10%。
-        /// 判据也照 CI：生命 &gt;50%、手持武器属于盗贼类、`useTime &gt; 3`。
+        /// 判据也照旧版支线：生命 &gt;50%、手持武器属于盗贼类、`useTime &gt; 3`。
         ///（注意经典版侧没有盗贼 DamageClass，只装经典版时手持无类型武器不会命中该判据。）
         /// </para>
         /// </summary>
@@ -70,7 +70,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             DamageClass rogue = CDUtil.GetRogueDamageClass();
             if (player.statLife > (int)(player.statLifeMax2 * 0.5) && player.HeldItem.DamageType == rogue && player.HeldItem.useTime > 3)
             {
-                player.GetAttackSpeed(rogue) += 0.1f;   // 生命 >50% 且持盗贼武器：盗贼攻速 +10%（CI 口径）
+                player.GetAttackSpeed(rogue) += 0.1f;   // 生命 >50% 且持盗贼武器：盗贼攻速 +10%（旧版支线口径）
             }
         }
         /// <summary>
@@ -84,7 +84,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             player.GetDamage(rogue) += 0.13f;                  // 盗贼伤害 +13%
             player.GetCritChance(rogue) += 13;                 // 盗贼暴击率 +13%
             CDUtil.AddClassicThrowingStats(player, 0.13f, 13); // 经典版：写进它的自定义投掷字段（反射）
-            player.moveSpeed += 0.2f;                          // 移速 +20%（经典版没有，CI 的 SilvaHeadRogue 有，用户 2026-10-06 点名补上）
+            player.moveSpeed += 0.2f;                          // 移速 +20%（经典版没有，旧版支线的 SilvaHeadRogue 有，用户 2026-10-06 点名补上）
         }
         /// <summary>
         /// 配方：与其余始源林海头部逐字一致（经典分支照经典版源码；现代分支沿用工程既有写法），均需本模组材料 LeadCore
@@ -93,7 +93,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
+                // 现代灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
                 if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
                     && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
@@ -110,7 +110,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
+                // 经典灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
                 if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
                     && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)

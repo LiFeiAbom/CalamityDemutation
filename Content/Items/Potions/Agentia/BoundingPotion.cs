@@ -30,14 +30,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             Item.value = Item.buyPrice(0, 2, 0, 0);            // 价值 2 金
         }
         /// <summary>
-        /// 合成表：现代版与经典版灾厄各两套配方，同名材料不同，故分两分支注册
+        /// 合成表：现代版与经典灾厄各两套配方，同名材料不同，故分两分支注册
         /// （药剂瓶处用植物/青蛙，炼金台处用灾厄血珠）
         /// </summary>
         public override void AddRecipes()
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：药剂瓶 + 青蛙 + PlantyMush
+                // 现代灾厄：药剂瓶 + 青蛙 + PlantyMush
                 if(calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush))
                 {
                     Recipe recipe = CreateRecipe();
@@ -47,7 +47,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.Bottles);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×20（炼金台）
+                // 现代灾厄：药剂瓶 + 血珠×20（炼金台）
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -59,7 +59,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：药剂瓶 + 青蛙 + ManeaterBulb
+                // 经典灾厄：药剂瓶 + 青蛙 + ManeaterBulb
                 if(classic.TryFind<ModItem>("ManeaterBulb", out ModItem maneaterBulb))
                 {
                     Recipe recipe = CreateRecipe();
@@ -69,7 +69,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.Bottles);
                     recipe.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×20（炼金台）
+                // 经典灾厄：药剂瓶 + 血珠×20（炼金台）
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipe = CreateRecipe();

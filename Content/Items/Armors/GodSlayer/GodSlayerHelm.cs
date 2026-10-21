@@ -26,7 +26,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 75, 0, 0);  // 价值 75 金
-            Item.defense = 48;                        // 防御 48（与经典版灾厄同值，源码同行另留 //96 注释，系开发期遗留数字）
+            Item.defense = 48;                        // 防御 48（与经典灾厄同值，源码同行另留 //96 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;  // 月后稀有度 14（蓝色名）
         }
         /// <summary>
@@ -67,7 +67,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             player.GetAttackSpeed<MeleeDamageClass>() += 0.2f;   // +20% 近战攻速
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，分别注册。
+        /// 注册配方：现代版与经典灾厄材料不同，分别注册。
         /// 现代版用 CosmiliteBar(10) + AscendantSpiritEssence(2)，于 CosmicAnvil（宇宙砧）合成；
         /// 经典版用 CosmiliteBar(14) + NightmareFuel(8) + EndothermicEnergy(8)，于 DraedonsForge（德雷顿熔炉）合成。
         /// </summary>

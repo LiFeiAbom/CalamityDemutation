@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 弑神幻影（GodSlayerPhantom） - 弑神者召唤头套装的"命中召唤"追加弹幕
-    ///（按经典版灾厄 Projectiles/Typeless/GodSlayerPhantom.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Typeless/GodSlayerPhantom.cs 1:1 移植）。
     /// 由 <c>CalamityDemutationGlobalProjectile.OnHitNPC</c> 在"召唤物/哨兵命中敌人且节流预算归零"时生成：
     /// 三帧动画、朝 400 像素内最近的敌人加速飞行（限速 15）、离主人超过 600 像素时先飞回主人；
     /// 命中附加 600 帧弑神者地狱火，消亡时炸一圈 ShadowbeamStaff 尘并结算一次范围伤害。

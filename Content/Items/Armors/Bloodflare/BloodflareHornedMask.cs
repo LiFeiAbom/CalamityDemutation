@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
 {
     /// <summary>
     /// 血魇九头盔（BloodflareHornedMask，英文名 Bloodflare Hydra Hood） - 血炎套装的法师向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 BloodflareHeadMagic）。
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 BloodflareHeadMagic）。
     /// 单件：岩浆免疫时长 +240、水中自由移动、魔法伤害与魔法暴击各 +10%、最大法力 +100、
     /// 法力消耗 ×0.83（-17%）。
     /// 套装（逐条对应 player.setBonus 的官方描述，实现位置见括号）：
@@ -73,13 +73,13 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
                                                             //  用户 2026-10-09 指定补齐，与其余三颗法师头的蓝耗减免统一口径）
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
+        /// 注册配方：现代版与经典灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
+                // 现代灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
                 if (calamity.TryFind<ModItem>("Bloodstone", out ModItem bloodstone)
                     && calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb)
                     && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
@@ -94,7 +94,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄材料：BloodstoneCore×11、RuinousSoul×2
+                // 经典灾厄材料：BloodstoneCore×11、RuinousSoul×2
                 if (classic.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
                     && classic.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
                 {

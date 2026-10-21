@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
-    /// 魔法锤（MagicHammer，按 CI 的 MagicHammerOld 移植；类名去掉 Old 后缀）——
+    /// 魔法锤（MagicHammer，按旧版支线的 MagicHammerOld 移植；类名去掉 Old 后缀）——
     /// 光阴时流伞的礼帽随机抛出的重击工具之一：60×60、穿透 6、穿地形、
     /// 每名敌人 6 帧局部无敌、存活 180 帧；起始全透明，10 帧后按 1/3 概率逐次淡入到 alpha 50。
     /// 开场 30 帧只自旋，之后锁定一个目标（记住其索引 `ai[0]`，目标失效则重挑），

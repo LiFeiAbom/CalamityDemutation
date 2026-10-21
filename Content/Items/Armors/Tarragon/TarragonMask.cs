@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
 {
     /// <summary>
     /// 龙蒿面具（TarragonMask） - 龙蒿套装的法师向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 TarragonHeadMagic）。
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 TarragonHeadMagic）。
     /// 单件：魔法伤害 +10%、魔法暴击 +10%、减伤 +5%、最大法力 +100、法力消耗 ×0.85（-15%），
     /// 另有 +240 岩浆免疫时长、液体中自由移动，并免疫诅咒地狱/着火了/诅咒/冷冻。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
@@ -79,14 +79,14 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             player.buffImmune[BuffID.Chilled] = true;          // 免疫冷冻
         }
         /// <summary>
-        /// 配方：现代版与经典版灾厄材料不同，各注册一条（均使用原版合成站 TileID.LunarCraftingStation，
+        /// 配方：现代版与经典灾厄材料不同，各注册一条（均使用原版合成站 TileID.LunarCraftingStation，
         /// 与其余龙蒿头同规矩）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄配方（UelibloomBar + DivineGeode）
+                // 现代灾厄配方（UelibloomBar + DivineGeode）
                 if (calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar)
                     && calamity.TryFind<ModItem>("DivineGeode", out ModItem divineGeode))
                 {
@@ -99,7 +99,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄配方（UeliaceBar + DivineGeode）
+                // 经典灾厄配方（UeliaceBar + DivineGeode）
                 if (classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar)
                     && classic.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode))
                 {

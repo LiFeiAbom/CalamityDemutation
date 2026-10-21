@@ -41,7 +41,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：寒元锭（CryonicBar）×5 + 水晶碎片×10，秘银砧
+            // 现代灾厄：寒元锭（CryonicBar）×5 + 水晶碎片×10，秘银砧
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if(calamity.TryFind<ModItem>("CryonicBar", out ModItem cryonicBar))
@@ -53,7 +53,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
                     recipe.Register();
                 }
             }
-            // 经典版灾厄：同名材料两版叫法不同，这里是 VerstaltiteBar ×5 + 水晶碎片×10，秘银砧
+            // 经典灾厄：同名材料两版叫法不同，这里是 VerstaltiteBar ×5 + 水晶碎片×10，秘银砧
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if(classic.TryFind<ModItem>("VerstaltiteBar", out ModItem verstaltiteBar))

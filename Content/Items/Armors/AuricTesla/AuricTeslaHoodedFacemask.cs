@@ -89,12 +89,12 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         }
         /// <summary>
         /// 配方：由龙蒿面甲 + 血炎角盔 + 始源林海角盔 + 弑神者战盔（四件下位**射手**头）升阶。
-        /// 现代版灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与近战头同）；
+        /// 现代灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与近战头同）；
         /// 经典版用一长串后期材料、德雷顿熔炉——两分支的坯料清单与既有近战头逐字一致，只把下位头换成射手件。
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：四件下位射手头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
+            // ── 现代灾厄：四件下位射手头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -110,7 +110,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
+            // ── 经典灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)

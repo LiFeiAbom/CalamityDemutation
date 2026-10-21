@@ -28,7 +28,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
     /// <para>
     /// 与源的三点差别：① 源的 `bool uselessFuckYou = OwnerCanShoot;` 是**死代码**，删掉（否则破坏 0 警告基线）；
     /// ② 持握判据用工程既有的 <c>CDUtil.CantUseHoldout()</c>（与源那四个条件同义，另多兜住死亡/未激活）；
-    /// ③ 源的 `CalamityMod:BasicTint` 着色器本工程没有，**改用颜色乘法近似**（见 <c>PreDraw</c>）。
+    /// ③ 源的 `灾厄本体:BasicTint` 着色器本工程没有，**改用颜色乘法近似**（见 <c>PreDraw</c>）。
     /// </para>
     /// <para>
     /// 照源保留的两处：① 齐射前那句"伤害阶梯"（面板 ×(已装填+1)/7）**算完就被 <c>PickAmmo</c> 的 out 覆盖**，
@@ -220,7 +220,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         /// <summary>
         /// 自绘：把已装填的弩箭逐支画在弓上（照源），方向跟随弓、未装满时把"正在装的那支"往下错开并淡出。
         /// <para>
-        /// **近似处**：源给"刚装好的那一支"套了灾厄的 <c>CalamityMod:BasicTint</c> 着色器（随装填数推移色相、
+        /// **近似处**：源给"刚装好的那一支"套了灾厄的 <c>灾厄本体:BasicTint</c> 着色器（随装填数推移色相、
         /// 按蓄力进度淡出）。本工程没有这个着色器，改成把同色相的颜色**乘进顶点色**——
         /// 视觉接近，且不新增 `.fx` / `.fxc`（省掉预编译那一步）。
         /// </para>

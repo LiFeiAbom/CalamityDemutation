@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 爆炸（FuckYou） - 从灾厄 2.0 的 <c>CalamityMod.Projectiles.Typeless.FuckYou</c> 搬来的**通用爆炸弹幕**
-    /// （类名照源保留；CI 那边是直接调灾厄这一件，本工程按用户 2026-10-14 口径自持同款）。
+    /// （类名照源保留；旧版支线那边是直接调灾厄这一件，本工程按用户 2026-10-14 口径自持同款）。
     /// 它的用途是"死亡/消散时炸一下"，龙息弹（<c>DragonsBreathRound</c>）就靠它做击杀爆炸。
     /// <para>
     /// 数据逐条照源：判定 8×8 起手，**第一帧**放大到 `52 × scale`（`scale = ai[1] * 0.5`，`ai[1]` 由调用方给

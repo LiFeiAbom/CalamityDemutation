@@ -35,7 +35,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：海之遗骸（SeaRemains）×5 + 珊瑚×5，铁砧
+            // 现代灾厄：海之遗骸（SeaRemains）×5 + 珊瑚×5，铁砧
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if(calamity.TryFind<ModItem>("SeaRemains", out ModItem seaRemains))
@@ -47,7 +47,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                     recipe.Register();
                 }
             }
-            // 经典版灾厄：同名材料两版叫法不同，这里是维斯蒂德锭（VictideBar）×5 + 珊瑚×5，铁砧
+            // 经典灾厄：同名材料两版叫法不同，这里是维斯蒂德锭（VictideBar）×5 + 珊瑚×5，铁砧
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if(classic.TryFind<ModItem>("VictideBar", out ModItem victideBar))

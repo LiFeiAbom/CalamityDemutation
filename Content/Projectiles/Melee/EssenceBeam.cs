@@ -8,11 +8,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 宇宙精粹（Essence Beam）—— 移植自灾厄大修 Beta1.12 的 <c>EssenceBeam</c>（源放在 Spear 目录下，供宇宙暗流等长矛共用）。
+    /// 宇宙精粹（Essence Beam）—— 移植自旧版支线的 <c>EssenceBeam</c>（源放在 Spear 目录下，供宇宙暗流等长矛共用）。
     /// 粉色能量束：借用原版光束 AI 模板沿初速直飞，穿透 10 次、存活 600 帧，用 6 格残影拉出拖尾，
     /// 命中挂神裁狱火（GodSlayerInferno），消亡时炸开一圈暗影束尘。
     /// <para>
-    /// 与 CI 源的差异：
+    /// 与旧版支线源的差异：
     /// ① 残影绘制换成本工程的 <see cref="CDUtil.DrawAfterimagesCentered"/>（源用灾厄的 <c>CalamityUtils.DrawAfterimagesCentered</c>）；
     /// ② 命中减益走本工程的双版本容错封装（现代版 / 经典版 GodSlayerInferno，两版都取不到时退回原版诅咒地狱）；
     /// ③ 消亡尘的两处速度缩放改成直改 <c>Main.dust[d]</c>——源先取 <c>Dust dust = Main.dust[d]</c> 再改副本，

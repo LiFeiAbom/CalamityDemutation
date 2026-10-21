@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
         /// </summary>
         public override void AddRecipes()
         {
-            // 分别适配现代版与经典版灾厄的合成配方
+            // 分别适配现代版与经典灾厄的合成配方
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("PerennialBar", out ModItem perennialBar1))

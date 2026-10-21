@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
     /// <summary>
     /// 霜火之刃（Flarefrost Blade）—— 秘银砧档近战（整把照搬灾厄 2.0.3.9 的 <c>FlarefrostBlade</c>）。
     /// 挥舞时朝准心甩出一道霜火弹幕（弹幕伤害为面板的 60%），命中附加狱炎 + 霜咬各 180 帧。
-    /// 配方：冰晶锭×8 + 狱石锭×8 + 光明之魂×3 @ 秘银砧（冰晶锭 CalamityMod 专有，走软依赖）。
+    /// 配方：冰晶锭×8 + 狱石锭×8 + 光明之魂×3 @ 秘银砧（冰晶锭 灾厄本体专有，走软依赖）。
     /// 弹幕用的是灾厄本体 <c>Flarefrost</c>，同样走软依赖（灾厄未加载时本武器只是不会发射弹幕）。
     /// </summary>
     internal class FlarefrostBlade : ModItem
@@ -72,7 +72,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 配方（分版本）：现代版冰晶锭×8 + 狱石锭×8 + 光明之魂×3 @ 秘银砧；
-        /// 经典版灾厄没有 CryonicBar（叫 CryonicBar 的是现代版），沿用同名查找，查不到则本条不注册。
+        /// 经典灾厄没有 CryonicBar（叫 CryonicBar 的是现代版），沿用同名查找，查不到则本条不注册。
         /// </summary>
         public override void AddRecipes()
         {

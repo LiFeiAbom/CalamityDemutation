@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Buffs.SummonBuffs
 {
     /// <summary>
     /// 远古叶棱晶召唤增益（SilvaCrystal）：始源林海召唤头（SilvaHelmet）套装召唤的 SilvaCrystal 在场时保持此增益
-    ///（按经典版灾厄 Buffs/SilvaCrystal.cs 移植）。
+    ///（按经典灾厄 Buffs/SilvaCrystal.cs 移植）。
     /// 增益只负责把玩家侧的 <c>sCrystal</c> 标志点亮/熄灭——叶棱晶弹幕据此续命、消失时随之移除。
     /// </summary>
     internal class SilvaCrystal:ModBuff

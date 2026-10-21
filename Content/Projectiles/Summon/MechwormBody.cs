@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 机械蠕虫·身体（MechwormBody） - 弑神者召唤头蠕虫的第一节身体
-    ///（按经典版灾厄 Projectiles/Summon/MechwormBody.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/MechwormBody.cs 1:1 移植）。
     /// 每节身体都把自己钉在"前一段"（ai[0] 指向的弹幕）身后 16×缩放 像素处，并把段序 localAI[0]+1 回写给前一段，
     /// 于是从尾巴节往前逐节递增，头部的缩放随之变大（见 MechwormHead）。本类占 0.5 仆从栏。
     /// </summary>

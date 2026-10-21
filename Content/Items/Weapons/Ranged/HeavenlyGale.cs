@@ -10,25 +10,25 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
 {
     /// <summary>
     /// 天堂之风（Heavenly Gale） - 射手弓。**灾厄 2.0.3.9 起被重做**成"蓄力星流水晶弓"（现行 2.2.2 就是重做版），
-    /// 本件是"旧版回归"：取 **CI Beta1.12 的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）** 那一版形态。
+    /// 本件是"旧版回归"：取 **旧版支线的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）** 那一版形态。
     /// <para>
-    /// **口径（用户 2026-10-14 逐条拍板）**：形态取 **CI（ExoLore 分支）**、基础伤害 **256**
-    /// （2026-10-14 定的 208 已由用户于 2026-10-15 改成 256；源 CI 是 508）、
+    /// **口径（用户 2026-10-14 逐条拍板）**：形态取 **旧版支线（ExoLore 分支）**、基础伤害 **256**
+    /// （2026-10-14 定的 208 已由用户于 2026-10-15 改成 256；源 旧版支线是 508）、
     /// **配方（用户 2026-10-15 定稿）**：**武器一律用本工程自持件**、**非武器材料与站台一律软依赖本体**——
     /// **现代** = 自持六把（弩炮 / 潮涌 / 星穹悲愿 / 发条弓 / 烈风 / 行星湮灭）+ **奇迹物质×1 + 化神魂精×5**
     /// @嘉登熔炉（照 2.0 的骨架，材料按用户指定改为这两味）；
-    /// **经典** = 照 cal-1.4.2.101 的配方（武器换自持件，七味材料与嘉登熔炉全部软依赖经典版灾厄）。
+    /// **经典** = 照 经典灾厄的配方（武器换自持件，七味材料与嘉登熔炉全部软依赖经典灾厄）。
     /// 照工程既有口径**恒处 Lore 模式**（同第 9 节 ExoBlade / ExoBeam / 归墟之灵的处理）：
-    /// 不搬 CI 的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支，也不搬 CI 的
-    /// `CIConfig.AmmoConversion` 开关（即"木箭必转星流箭"这一条恒为开）。
+    /// 不搬 旧版支线的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支，也不搬 旧版支线的
+    /// `弹药转换开关` 开关（即"木箭必转星流箭"这一条恒为开）。
     /// </para>
     /// <para>
-    /// 面板（照 CI 的 Lore 分支）：46×98 / 使用·动画 9·18 帧 / 击退 4 / 弹速 12 / 箭类弹药 /
+    /// 面板（照旧版支线的 Lore 分支）：46×98 / 使用·动画 9·18 帧 / 击退 4 / 弹速 12 / 箭类弹药 /
     /// 一次射出 **7 支**（源非 Lore 分支是 5 支）/ 66% 不消耗弹药 / 月后稀有度 15 档 / 1 铂金 50 金。
     /// 七支的取型照源的 5 元素数组（橙出现两次）：青 20% / 橙 40% / 绿 20% / 蓝 20%；
     /// 其中**绿、橙两色会追踪敌人**（见各自弹幕）。
     /// **弹药全转化（用户 2026-10-15 实测后指定）**：背包里放的是哪种箭都一样，一律被换成星流箭池里的一种
-    /// （照 CI 把 `CIConfig.AmmoConversion` 打开那一支；源默认是"木箭才转、非木箭照射并 ×1.25"，**本工程不取**）。
+    /// （照旧版支线把 `弹药转换开关` 打开那一支；源默认是"木箭才转、非木箭照射并 ×1.25"，**本工程不取**）。
     /// **持握偏移（用户 2026-10-15 实测后指定）**：整张图要往右挪，见 <see cref="HoldoutOffset"/>。
     /// </para>
     /// </summary>
@@ -36,7 +36,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     {
         /// <summary>省弹率（照源：<c>rand(0,100) &lt; 66</c> 即不消耗，也就是 66%）</summary>
         private const int AmmoSavePercent = 66;
-        /// <summary>一次射出的箭数（照 CI 的 Lore 分支：7；非 Lore 分支是 5）</summary>
+        /// <summary>一次射出的箭数（照旧版支线的 Lore 分支：7；非 Lore 分支是 5）</summary>
         private const int ArrowsPerShot = 7;
         /// <summary>相邻两箭的角间隔（照源 <c>MathHelper.Pi / 10</c>）</summary>
         private const float ArrowSpread = MathHelper.Pi / 10f;
@@ -46,7 +46,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int MiracleMatterCount = 1;
         /// <summary>现代分支配方里的化神魂精数量（用户 2026-10-15 指定：5）</summary>
         private const int AscendantSpiritEssenceCount = 5;
-        /// <summary>经典分支配方的七味材料数量（照 cal-1.4.2.101）</summary>
+        /// <summary>经典分支配方的七味材料数量（照 经典灾厄）</summary>
         private const int ClassicNightmareFuelCount = 5;
         private const int ClassicEndothermicEnergyCount = 5;
         private const int ClassicCosmiliteBarCount = 5;
@@ -55,7 +55,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int ClassicPhantoplasmCount = 5;
         private const int ClassicAuricOreCount = 25;
         /// <summary>
-        /// 木箭要变成的星流箭池（照 CI 的 `ExoArrowsExoLore`）：**橙色故意出现两次**，
+        /// 木箭要变成的星流箭池（照旧版支线的 `ExoArrowsExoLore`）：**橙色故意出现两次**，
         /// 于是五等分的实际概率是青 20% / 橙 40% / 绿 20% / 蓝 20%
         /// </summary>
         private static int[] ExoArrows;
@@ -74,14 +74,14 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             };
         }
         /// <summary>
-        /// 基础属性：46×98 / 伤害 256（用户指定，源 CI 是 508）/ 使用·动画 9·18 帧 / 击退 4 / 弹速 12 /
+        /// 基础属性：46×98 / 伤害 256（用户指定，源 旧版支线是 508）/ 使用·动画 9·18 帧 / 击退 4 / 弹速 12 /
         /// 箭类弹药 / 使用音 `Item5` / 月后稀有度 15 档 / 1 铂金 50 金
         /// </summary>
         public override void SetDefaults()
         {
             Item.width = 46;                          // 贴图宽（像素）
             Item.height = 98;                         // 贴图高（像素）
-            Item.damage = 256;                        // 面板伤害（用户 2026-10-15 由 208 改成 256；源 CI 是 508）
+            Item.damage = 256;                        // 面板伤害（用户 2026-10-15 由 208 改成 256；源 旧版支线是 508）
             Item.DamageType = DamageClass.Ranged;
             Item.useTime = 9;
             Item.useAnimation = 18;
@@ -95,7 +95,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;
             Item.value = Item.buyPrice(1, 50, 0, 0);  // 价值 1 铂金 50 金（＝灾厄 Violet 档价目）
             Item.rare = ItemRarityID.Red;             // 基础稀有度红色，名称颜色由 postMoonLordRarity 覆盖
-            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后 15：紫（＝灾厄 Violet / CI CatalystViolet）
+            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后 15：紫（＝灾厄 Violet / 旧版支线 CatalystViolet）
         }
         /// <summary>
         /// 本件派生伤害走 <c>Shoot</c> 的 <c>damage</c> 参数（七支箭的伤害都由它派生），会自动跟随。
@@ -136,7 +136,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// 若日后觉得还不够或过头，**改这一个数就行**。
         /// </summary>
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
-        /// <summary>地上那件的发光层（照 CI 的同名 Glow 贴图）</summary>
+        /// <summary>地上那件的发光层（照旧版支线的同名 Glow 贴图）</summary>
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
             => Item.DrawItemGlowmaskSingleFrame(spriteBatch, rotation, ModContent.Request<Texture2D>("CalamityDemutation/Content/Items/Weapons/Ranged/HeavenlyGaleGlow").Value);
         /// <summary>
@@ -147,10 +147,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// （材料按用户指定改成这两味；后三者都是灾厄本体件，软依赖）。
         /// </para>
         /// <para>
-        /// **经典**（照 cal-1.4.2.101 的配方）= 武器同样换成本工程自持件——该版比现代**多一味炎翼弓、
+        /// **经典**（照 经典灾厄的配方）= 武器同样换成本工程自持件——该版比现代**多一味炎翼弓、
         /// 且把烈风换成了 `Phangasm`**（`Phangasm` 本工程没有移植过，这一味只能软依赖经典版本体件）；
         /// 材料七味（`NightmareFuel`×5 / `EndothermicEnergy`×5 / `CosmiliteBar`×5 / `DarksunFragment`×5 /
-        /// `HellcasterFragment`×3 / `Phantoplasm`×5 / `AuricOre`×25）与嘉登熔炉全部软依赖经典版灾厄。
+        /// `HellcasterFragment`×3 / `Phantoplasm`×5 / `AuricOre`×25）与嘉登熔炉全部软依赖经典灾厄。
         /// </para>
         /// 两分支各自注册一条，缺件写警告、不静默消失。
         /// </summary>

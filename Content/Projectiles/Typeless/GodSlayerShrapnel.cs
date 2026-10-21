@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 弑神者破片（GodSlayerShrapnel） - GodSlayerShrapnelRound 炸开后飞散的小破片
-    /// （移植自经典版灾厄同名弹幕）。
+    /// （移植自经典灾厄同名弹幕）。
     /// 行为照经典版：前 5 帧平飞，之后受重力（每帧 +0.2）、水平速度缓慢衰减；
     /// 弹体会随水平速度转动，并持续撒紫色尘；撞到地形不消失（源里 OnTileCollide 返回 false）。
     /// </summary>

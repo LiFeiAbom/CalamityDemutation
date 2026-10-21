@@ -7,15 +7,15 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（CI 口径）的自持件之一。
+    /// 宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（旧版支线口径）的自持件之一。
     /// 老规矩取灾厄 **2.0.3.9**：42×60 贴图（判定 42×60）、伤害 **127**、魔力 10、使用/动画 **15 帧**、
     /// 击退 4、**月后 12 档（青绿，即灾厄 `Turquoise`）**、价值 **1 铂金 20 金**（`Rarity12BuyPrice`）、
     /// 音 `SoundID.Item44`、`autoReuse`、弹速 10，在鼠标处点亮一盏**宇宙灯笼**（<see cref="CosmilampMinion"/>）。
     /// </summary>
     /// <remarks>
-    /// 为什么自持、为什么取 2.0.3.9：1.4.4-release（实装那版）把它砍到伤害 95、使用帧 24；
+    /// 为什么自持、为什么取 2.0.3.9：现代灾厄（实装那版）把它砍到伤害 95、使用帧 24；
     /// 2.0 那版更旧也更弱（伤害 89、且**还没有光束弹幕**，2.0.3.9 才加的 <see cref="CosmilampBeam"/>）；
-    /// 经典 cal-1.4.2.101 则是伤害 180 / 使用 36 帧的另一套。本工程按「回调 + 链条统一 2.0.3.9」取 2.0.3.9。
+    /// 经典灾厄则是伤害 180 / 使用 36 帧的另一套。本工程按「回调 + 链条统一 2.0.3.9」取 2.0.3.9。
     /// <para>
     /// 机制要点（照源）：一盏灯笼**吃 2 格召唤栏**（<see cref="LanternSummonCost"/>），
     /// 所以 <see cref="CanUseItem"/> 要 `maxMinions >= 2`；出手时会把**场上已有的灯笼计时器全部归零**

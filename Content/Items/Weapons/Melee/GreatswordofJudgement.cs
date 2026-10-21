@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 制裁大剑（Greatsword of Judgement） - 月后近战巨剑（移植自灾厄大修 0.4.0.1.3 的 GreatswordofJudgementEcType 重置版）。
+    /// 制裁大剑（Greatsword of Judgement） - 月后近战巨剑（移植自重制版的 GreatswordofJudgementEcType 重置版）。
     /// 与灾厄原版的区别只有三处：弹幕由"白色追踪球 JudgementProj"换成"审判光束 JudgementBeam"、
     /// 弹速 10 → 15、售价档改用 Rarity10（本工程 postMoonLordRarity = 10，名称保持红色，与原版观感一致）。
     /// </summary>

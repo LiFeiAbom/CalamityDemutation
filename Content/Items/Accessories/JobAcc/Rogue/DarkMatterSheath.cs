@@ -19,7 +19,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// <para>
     /// ③ 配方走本链的"两分支都能合成"口径：**静默剑鞘（本模组）×1 + 毁灭徽章（本模组）×1 +
     /// 熵构块 `MeldBlob`×14 @ 远古操纵机**。源配方（2.0~2.0.4）用的是已删除的熵构体 `MeldConstruct`×5，
-    /// 1.4.4-release 才改成 `MeldBlob`×14 直出；本件取后者（`MeldBlob` 在现代/经典两版灾厄里都在，
+    /// 现代灾厄才改成 `MeldBlob`×14 直出；本件取后者（`MeldBlob` 在现代/经典两版灾厄里都在，
     /// 远古操纵机是原版物），故只需注册一条。
     /// </para>
     /// <para>

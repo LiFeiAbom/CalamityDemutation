@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
     /// 星律之握览（SarosPossession）—— 自持件，老规矩取灾厄 **2.0**（用户 2026-10-09 点名移植：
-    /// CI 的「光阴时流伞」与 `MountedScannerLegacy` 的配方都吃本体那件 `SarosPossession`，故整件搬进来）。
+    /// 旧版支线的「光阴时流伞」与 `MountedScannerLegacy` 的配方都吃本体那件 `SarosPossession`，故整件搬进来）。
     /// 2.0 口径：贴图 56×56、伤害 **200**（源 171，按用户 2026-10-10 点名上调）、击退 4、魔力 10、
     /// 使用/动画 **10 帧**、弹速 10、
     /// **红底 + 月后 14 档（蓝，＝灾厄 `DarkBlue`）**、价值 **1 铂金 40 金**、音 `SoundID.DD2_BetsyFlameBreath`；

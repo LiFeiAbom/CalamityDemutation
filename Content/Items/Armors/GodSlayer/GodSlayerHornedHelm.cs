@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
 {
     /// <summary>
     /// 弑神者角盔（GodSlayerHornedHelm） - 弑神者套装的召唤向头部部件
-    ///（按经典版灾厄同名件 1:1 移植；现代版对应 GodSlayerHornedHelm，CI 则把它作为"合并头"的一项）。
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 GodSlayerHornedHelm，旧版支线则把它作为"合并头"的一项）。
     /// 单件：仆从上限 +3，另有用户 2026-10-05 指定的召唤头统一三条属性
     ///（召唤伤害 +12%、鞭子攻击范围 +12%、鞭子攻击速度 +12%）。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
@@ -69,13 +69,13 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             player.GetAttackSpeed<SummonMeleeSpeedDamageClass>() += 0.12f;  // 鞭子攻击速度 +12%（同上）
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（与既有近战/射手头同规矩）
+        /// 注册配方：现代版与经典灾厄材料不同，各注册一条（与既有近战/射手头同规矩）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：CosmiliteBar×10 + AscendantSpiritEssence×2 @ 宇宙砧
+                // 现代灾厄：CosmiliteBar×10 + AscendantSpiritEssence×2 @ 宇宙砧
                 if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
                     && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -89,7 +89,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8 @ 德雷顿熔炉
+                // 经典灾厄：CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8 @ 德雷顿熔炉
                 if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
                     && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
                     && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)

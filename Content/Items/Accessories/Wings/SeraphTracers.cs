@@ -17,9 +17,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
     /// **名字口径（用户 2026-10-14 指定）**：中文名沿用「炽天使翼靴」（= 源显示名 Seraph Tracers；
     /// 靴子模式的 `TreadsName` 作「炽天使履带」）。这个名字在实装 2.2.2 里属于顶层那件——
     /// 本工程自持件与它**同名不同物**，属用户既定的"同名并存"口径（同太阳神杖那件）。
-    /// **移植口径（同前三件）**：功能取 1.3-release、配方取 2.0、再按复合原则并入 1.4.4
+    /// **移植口径（同前三件）**：功能取 旧版灾厄、配方取 2.0、再按复合原则并入 1.4.4
     /// （= 实装 2.2.2 的 `SeraphTracers`）的增强。逐项对照：
-    /// ① 1.3-release `CelestialTracers` = 飞行 250 / 水平速度 12 / 倍率 3.0、跑速上限 10、移速 +24%、
+    /// ① 旧版灾厄 `CelestialTracers` = 飞行 250 / 水平速度 12 / 倍率 3.0、跑速上限 10、移速 +24%、
     /// 冰面·水面·岩浆面行走、岩浆 240 帧、免「着火！」、免坠落伤害、
     /// 垂直速度 1.0/0.175/1.2/3.25/0.15、飞行粉尘 91（= `DustID.GemDiamond`）、稀有度 15 档（Violet）、
     /// 价值 2 铂金 40 金，**单次受伤 >200 点 → 额外 30 帧无敌**（源里的 `cTracers` 标记，
@@ -34,19 +34,19 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
     /// **复合结果**：飞行 250 / 水平速度 12（取大）/ 倍率 3.0（取大）/ 跑速上限 10（取大）/
     /// 移速 +24%（取大）/ 完全免岩浆（取强）/ 免「着火！」/ 免坠落伤害 /
     /// 垂直速度 1.0 / 0.175 / 1.2 / 3.25 / 0.15（取大）/ 价值 2 铂金 40 金、稀有度取高到 20 档
-    /// （= 灾厄 `BurnishedAuric`，本工程金源套同档；源 1.3-release/2.0/2.0.4 是 15 档 Violet）/
-    /// **受伤 >200 额外 30 帧无敌**（1.3-release/2.0 的 `cTracers`，本工程自持实现）/
+    /// （= 灾厄 `BurnishedAuric`，本工程金源套同档；源 旧版灾厄/2.0/2.0.4 是 15 档 Violet）/
+    /// **受伤 >200 额外 30 帧无敌**（旧版灾厄/2.0 的 `cTracers`，本工程自持实现）/
     /// **免金源矿石排斥与危险砖块接触**（1.4.4 的 `seraphTracers`，镜像进灾厄侧同名字段）/
     /// **可切换翅膀**（1.4.4；靴子模式给火箭靴 2）。
     /// 未并进来的灾厄内部视觉通道（纯外观，按 §5 口径不硬塞）：`IBoots` / `elysianFire` / `cTracers`
     /// 在 CalamityPlayerDrawEffects 里的拖尾与火焰绘制、`tracersDust`、以及物品栏模式指示点——
     /// 本件自己的飞行粉尘已照源实现。
-    /// 面板：尺寸 54×42；贴图取**旧图**（1.3-release/2.0/2.0.4 的物品图同为 54×42 的同一张 `0B0DD705`；
+    /// 面板：尺寸 54×42；贴图取**旧图**（旧版灾厄/2.0/2.0.4 的物品图同为 54×42 的同一张 `0B0DD705`；
     /// 1.4.4 起换成另一张 54×42 的 `6F3EBEA5`）。
     /// **翅膀贴图按用户 2026-10-14 指定换成「德鲁之翼」那张**（本工程的 `DrewsWings_Wings.png`，86×248；
     /// 源自己的 `_Wings.png` 是另一张 86×248 的图）。
     /// 配方（双版本各注册一条，缺件即退化成单分支）：**现代**照 2.0 = 极乐翼靴 + 德鲁之翼 +
-    /// 金源锭×5 @ 宇宙砧；**经典**照 cal-1.4.2.101 = 极乐翼靴 + 德鲁之翼 + 暗日碎片×5 + 金源矿石×25 @ 嘉登熔炉。
+    /// 金源锭×5 @ 宇宙砧；**经典**照 经典灾厄 = 极乐翼靴 + 德鲁之翼 + 暗日碎片×5 + 金源矿石×25 @ 嘉登熔炉。
     /// </summary>
     [AutoloadEquip(EquipType.Wings)]
     internal class SeraphTracers:ModItem
@@ -63,8 +63,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             set { Item.wingSlot = value ? wingSlot : -1; }
         }
         /// <summary>
-        /// 注册翅膀数据：飞行时间 250（各版一致）、水平速度 12（1.3-release/2.0 的值，2.0.4/1.4.4 是 11）、
-        /// 水平加速度倍率 3.0（1.3-release/2.0 的值，2.0.4/1.4.4 是 2.8）；
+        /// 注册翅膀数据：飞行时间 250（各版一致）、水平速度 12（旧版灾厄/2.0 的值，2.0.4/1.4.4 是 11）、
+        /// 水平加速度倍率 3.0（旧版灾厄/2.0 的值，2.0.4/1.4.4 是 2.8）；
         /// 并记下本类型的 wingSlot 供模式开关用
         /// </summary>
         public override void SetStaticDefaults()
@@ -84,7 +84,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 20;  // 月后稀有度 20（= 源的 BurnishedAuric / 本工程金源档）
         }
         /// <summary>
-        /// 装备时：先画飞行粉尘（照 1.3-release；1.3-release/2.0 写 91，等于 `DustID.GemDiamond`），
+        /// 装备时：先画飞行粉尘（照 旧版灾厄；旧版灾厄/2.0 写 91，等于 `DustID.GemDiamond`），
         /// 再设置跑速/移速/三种行走免疫/免岩浆/免「着火！」/免坠落伤害与两项标记，
         /// 最后处理**靴子模式**——翅膀被关掉时给火箭靴 2 与 angelTreads 标记（+10% 飞行时间），
         /// 照 1.4.4 的 `if (!toggleEnabled)` 分支
@@ -107,12 +107,12 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
                 }
                 Main.dust[flightDust].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);  // 随翅膀染色
             }
-            player.accRunSpeed = 10f;         // 跑速上限（1.3-release/2.0 的 10；1.4.4 是 9，复合取大）
-            player.moveSpeed += 0.24f;        // 移速 +24%（1.3-release/2.0 的值；1.4.4 是 +18%，复合取大）
+            player.accRunSpeed = 10f;         // 跑速上限（旧版灾厄/2.0 的 10；1.4.4 是 9，复合取大）
+            player.moveSpeed += 0.24f;        // 移速 +24%（旧版灾厄/2.0 的值；1.4.4 是 +18%，复合取大）
             player.iceSkate = true;           // 冰面机动性
             player.waterWalk = true;          // 水面行走
             player.fireWalk = true;           // 岩浆面行走
-            player.lavaImmune = true;         // 完全免岩浆（2.0.4/1.4.4；1.3-release/2.0 只有 240 帧，复合取强）
+            player.lavaImmune = true;         // 完全免岩浆（2.0.4/1.4.4；旧版灾厄/2.0 只有 240 帧，复合取强）
             player.buffImmune[BuffID.OnFire] = true;   // 免疫「着火了！」
             player.noFallDmg = true;          // 免坠落伤害
             player.GetModPlayer<CalamityDemutationPlayer>().seraphTracers = true;  // 免金源矿石排斥 / 危险砖块接触（镜像进灾厄侧）
@@ -123,7 +123,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             }
         }
         /// <summary>
-        /// 垂直飞行参数：复合取大 = 1.3-release/2.0 那套（1.0 / 0.175 / 1.2 / 3.25 / 0.15；
+        /// 垂直飞行参数：复合取大 = 旧版灾厄/2.0 那套（1.0 / 0.175 / 1.2 / 3.25 / 0.15；
         /// 1.4.4 是 0.95 / 0.16 / 1.2 / 2.9 / 0.145），行尾为原版默认值
         /// </summary>
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
@@ -181,14 +181,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
         }
         /// <summary>
         /// 配方（分版本，两分支各自 TryGetMod + TryFind 串联，缺材料时静默跳过该条）：
-        /// 现代分支（CalamityMod 在场）照灾厄 2.0；经典分支（CalamityModClassicPreTrailer 在场）
-        /// 照经典世系 cal-1.4.2.101（多两味暗日碎片/金源矿石，站台换嘉登熔炉）。
+        /// 现代分支（灾厄本体在场）照灾厄 2.0；经典分支（经典灾厄在场）
+        /// 照经典灾厄经典灾厄（多两味暗日碎片/金源矿石，站台换嘉登熔炉）。
         /// 两分支的前件都用**本工程自持件**：极乐翼靴（本模组）与德鲁之翼（德鲁之翼在实装 2.2.2 里已被删，
         /// 本模组自持，见 DrewsWings.cs）。
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：极乐翼靴 + 德鲁之翼 + 金源锭×5 @ 宇宙砧
+            // 现代灾厄：极乐翼靴 + 德鲁之翼 + 金源锭×5 @ 宇宙砧
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if(calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar)
@@ -202,7 +202,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
                     recipe.Register();
                 }
             }
-            // 经典版灾厄：极乐翼靴 + 德鲁之翼 + 暗日碎片×5 + 金源矿石×25 @ 嘉登熔炉
+            // 经典灾厄：极乐翼靴 + 德鲁之翼 + 暗日碎片×5 + 金源矿石×25 @ 嘉登熔炉
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if(classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)

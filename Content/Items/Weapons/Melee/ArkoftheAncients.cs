@@ -164,7 +164,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：日光精华 ×3 + 极寒精华 ×3 + 落星 + 附魔剑，铁砧 ──
+            // ── 现代灾厄：日光精华 ×3 + 极寒精华 ×3 + 落星 + 附魔剑，铁砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight)
@@ -179,7 +179,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：日光精华→余烬精华，且改用秘银砧、并额外给出 Arkhalis 替代路线 ──
+            // ── 经典灾厄：日光精华→余烬精华，且改用秘银砧、并额外给出 Arkhalis 替代路线 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder)

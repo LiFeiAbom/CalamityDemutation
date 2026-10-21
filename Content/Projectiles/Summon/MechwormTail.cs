@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 机械蠕虫·尾（MechwormTail） - 弑神者召唤头蠕虫的尾节
-    ///（按经典版灾厄 Projectiles/Summon/MechwormTail.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/MechwormTail.cs 1:1 移植）。
     /// 与两节身体同构，唯一差别：尾巴不占仆从栏，且前一段不在时**自毁**（身体只是返回）。
     /// 右键接新身体节时，新的身体节会插在尾巴之前（见 GodSlayerHornedHelm / 玩家侧维护逻辑）。
     /// </summary>

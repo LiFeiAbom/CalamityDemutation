@@ -31,7 +31,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     internal class RuinMedallion : ModItem
     {
         /// <summary>
-        /// 基础属性：20×28、价值 24 金（灾厄 2.0.x 粉档 `Rarity5BuyPrice`；1.4.4-release 才是 20 金）、
+        /// 基础属性：20×28、价值 24 金（灾厄 2.0.x 粉档 `Rarity5BuyPrice`；现代灾厄才是 20 金）、
         /// 稀有度粉、饰品
         /// </summary>
         public override void SetDefaults()

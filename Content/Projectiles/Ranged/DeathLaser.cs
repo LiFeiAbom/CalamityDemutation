@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 死亡激光弹幕（移植自 CWR 的 DeathLaser，裁剪掉锚定手持弓的 Status==0 分支）：
+    /// 死亡激光弹幕（移植自重制版的 DeathLaser，裁剪掉锚定手持弓的 Status==0 分支）：
     /// 自由飞行的激光束，线判定碰撞，加色混合绘制 Body/Head/Don 三截光束。
     /// </summary>
     internal class DeathLaser : ModProjectile
@@ -111,7 +111,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         }
         /// <summary>
         /// 命中敌怪：按灾厄双版本分别查找并施加 180 帧的 GodSlayerInferno（弑神炼狱）debuff
-        /// （现代版 CalamityMod / 经典版 CalamityModClassicPreTrailer 分支各自注册）。
+        /// （现代灾厄 / 经典灾厄分支各自注册）。
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

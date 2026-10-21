@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
     /// 魔影面甲（DemonshadeHelmSummon） - 恶魔之影套（Demonshade）的召唤职业头部件。
     /// 单件给召唤伤害、仆从栏与哨兵栏，以及鞭子的攻速与攻击范围。
     /// 套装与近战头盔 DemonshadeHelm 同构，职业换成召唤，且增伤幅度不同（+130% 而非 +100%）。
-    /// 造型取自灾厄大修的 DemonshadeHelmSummon：面甲单独画在 _Extension 贴图上，
+    /// 造型取自重制版的 DemonshadeHelmSummon：面甲单独画在 _Extension 贴图上，
     /// 由 HatExtensionLayer 在原版头部层之后叠加绘制。
     /// </summary>
     [AutoloadEquip(EquipType.Head)]
@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         /// </summary>
         public string ExtensionTexture => "CalamityDemutation/Content/Items/Armors/Demonshade/DemonshadeHelmSummon_Extension";
         /// <summary>
-        /// 附加层相对头部的偏移。该值与贴图同源（取自灾厄大修 CWRPlayerDraw 的 Summon 分支），
+        /// 附加层相对头部的偏移。该值与贴图同源（取自重制版的玩家绘制 的 Summon 分支），
         /// 是画师按这套贴图规格定死的，改动会让面甲错位。
         /// </summary>
         public Vector2 ExtensionSpriteOffset(PlayerDrawSet drawInfo) => new Vector2(-6f, -4f);
@@ -107,7 +107,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.whipRangeMultiplier += 0.30f;           // 鞭子范围：常态 +30% / 膨胀 +45%
         }
         /// <summary>
-        /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
+        /// 注册配方：现代灾厄与经典预发布版灾厄（经典灾厄）
         /// 材料与近战头盔一致（ShadowspecBar×40），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。
         /// </summary>
         public override void AddRecipes()
@@ -117,8 +117,8 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
                 if (calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar) && calamity.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient(shadowspecBar.Type, 40);  // 现代版灾厄：ShadowspecBar×40
-                    recipe.AddTile(draedonsForge.Type);            // 现代版灾厄：德雷顿熔炉
+                    recipe.AddIngredient(shadowspecBar.Type, 40);  // 现代灾厄：ShadowspecBar×40
+                    recipe.AddTile(draedonsForge.Type);            // 现代灾厄：德雷顿熔炉
                     recipe.Register();
                 }
             }
@@ -127,8 +127,8 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
                 if (classic.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar) && classic.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
                 {
                     Recipe recipeClassic = CreateRecipe();
-                    recipeClassic.AddIngredient(classicShadowspecBar.Type, 40);  // 经典版灾厄：ShadowspecBar×40
-                    recipeClassic.AddTile(classicDraedonsForge.Type);            // 经典版灾厄：德雷顿熔炉
+                    recipeClassic.AddIngredient(classicShadowspecBar.Type, 40);  // 经典灾厄：ShadowspecBar×40
+                    recipeClassic.AddTile(classicDraedonsForge.Type);            // 经典灾厄：德雷顿熔炉
                     recipeClassic.Register();
                 }
             }

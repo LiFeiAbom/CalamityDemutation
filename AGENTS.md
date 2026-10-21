@@ -3,8 +3,8 @@
 > 本文件是给后续会话/协作者的项目记忆：工程口径、已确立的换算表、踩过的坑、当前状态。
 > 内容按"能直接照做"的标准写；改动工程时请同步更新它。
 
-**2026-10-18 会话交接**：本会话移植 CI 的星火凤凰雨（`PhoenixFlameBarrage`，见 §22），
-落地「光之舞」整条下位链（§23：2.0 配方 + CI 白焰雨机制 + 现代版物品贴图），
+**2026-10-18 会话交接**：本会话移植星火凤凰雨（`PhoenixFlameBarrage`，见 §22），
+落地「光之舞」整条下位链（§23：2.0 配方 + 旧版兼容机制 + 现代灾厄物品贴图），
 并新增「酒」门类首件血腥玛丽（§25）；提交后 `master` 与远端同步。
 
 **2026-10-19 追加**：酒类第二件莫斯科骡子落地（§27）——2.0 系列效果、2.0.7.2 熔渣线双配方；
@@ -31,27 +31,22 @@
 
 ### 内容来源规则（重要）
 
-- **允许的来源**：灾厄本体（CalamityMod 2.0.x / 2.2.2 / 1.4.4-release 的公开源码）、
-  CI（CalamityInheritance，`CalamityInheritance-Beta1.12`）。
-- **已全部删除**：CWR（灾厄大修 = CalamityOverhaul）与 CE（灾厄：熵 = CalamityEntropy）来源的内容。
+- **参考范围**：灾厄本体与部分灾厄附属模组。
+- **已清理**：与灾厄本体存在同名类但来源不再保留的附属内容。
   删除依据：物品在本机灾厄源码里是否有**同名类**——没有的删（含其专属弹幕/粒子/减益/贴图/音效/文案），
-  有的保留（"灾厄已有、但经大修重制"的版本）。
-- **保留的 CWR 重制件**（灾厄本体有同名物）：`Excelsus`、`Terratomere`、`DragonRage`、`AnarchyBlade`、
+  有的保留（灾厄已有、但采用重制版的版本）。
+- **保留的旧版重制件**（灾厄本体有同名物）：`Excelsus`、`Terratomere`、`DragonRage`、`AnarchyBlade`、
   `CometQuasher`、`EntropicClaymore`、`GreatswordofJudgement`、`StellarStriker`，以及魔影套的职业头盔变体
   （`DemonshadeHelmMagic/Ranged/Summon`）。
 - 若日后要恢复被删内容，用 git 历史（删除提交 `19ad483` / `f8c48ab`；`git show <sha>^:<path>` 可取回）。
-  **不要把 CE/CWR 内容再引进来**。
+  **不要把已清理的附属模组内容再引进来。**
 
 ## 2. 本机参考源码（侦察用）
 
-`D:\Game\Terraria\ModModel\` 下（2026-10-07 全量盘点，**每个目录里还套着一层同名子目录**）：
-现代版世系 `CalamityModPublic-2.0`、`-2.0.3.9`、`-2.0.4`、`-2.0.7.2-archipelago`、
-`-1.4.4`、`-1.4.4-release`、`-1.3-release`；经典版世系 `CalamityModClassic-cal-1.0`、`-cal-1.1`、`-cal-1.2`、
-`-cal-1.4.2.101`（**cal-1.2 的命名空间是 `CalamityModClassic1Point2`**，与后续几版的 `...PreTrailer` 不同）；
-以及 `CalamityInheritance-Beta1.12`、`CalamityOverhaul-0.4.0.1.3` / `-0.4.0.3.5` / `-0.5.0.1.7` / `-main`、
-`CalamityEntropy-master`、`InnoVault-main`、`Luminance-main`、`FargosSoulsMod-1.6` / `-master`、
-`Lilac-Arcane-Pack-master`、`Player and World`。
-**已装 mod 的权威内容**另有两条路：`ModReader\<mod>\`（tML 的"解包"输出，**可能落后好几个版本，别当权威**）
+本机在 `D:\Game\Terraria\ModModel\` 留有现代灾厄、经典灾厄及部分灾厄附属模组的参考源码，
+也包含若干辅助模组与编译参考；目录通常再套一层同名子目录。需要查具体版本时按任务即时筛选，
+不在项目记忆里维护完整来源清单。
+**已装 mod 的权威内容**另有两条路：`ModReader\<mod>\`（tML 的解包输出，可能落后于实装版本）
 与第 6 节的 .tmod 直读法（最准）。灾厄中文名对照可查
 `C:\Users\28155\Documents\My Games\Terraria\tModLoader\ModLocalization\CalamityMod\Localization\zh-Hans\`。
 
@@ -63,7 +58,7 @@
 | 魔影锭 | 灾厄 `ShadowspecBar` | |
 | 嘉登熔炉 | `DraedonsForge`（两版都有） | 经典版常用站台 |
 | 宇宙砧 | `CosmicAnvil`（现代版） | |
-| 月后稀有度 | `Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = N` | 12~22 档；12 青绿 / 13 荧光绿 / 14 蓝(=CI DeepBlue) / 15 紫(=CE AbyssalBlue) / **16 品红(=灾厄 HotPink，即"魔影档")** / 17 传奇 / 18 闪烁紫 / 19 纯蓝 / 20 彩虹 / 21 暗红 / 22 橙；基础稀有度统一填 `ItemRarityID.Red`。**整表色值照经典版 `cal-1.4.2.101` 的 `CalamityGlobalItem.ModifyTooltips` switch**（12/13/14/15/16/18~22 逐个对得上），**其中 17 档是"传奇武器、按件取色"**（色表见 §20.1） |
+| 月后稀有度 | `Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = N` | 12~22 档；12 青绿 / 13 荧光绿 / 14 蓝(=旧版支线 DeepBlue) / 15 紫(=附属模组 AbyssalBlue) / **16 品红(=灾厄 HotPink，即"魔影档")** / 17 传奇 / 18 闪烁紫 / 19 纯蓝 / 20 彩虹 / 21 暗红 / 22 橙；基础稀有度统一填 `ItemRarityID.Red`。**整表色值照经典版 `经典 1.4.2.101` 的 `CalamityGlobalItem.ModifyTooltips` switch**（12/13/14/15/16/18~22 逐个对得上），**其中 17 档是"传奇武器、按件取色"**（色表见 §20.1） |
 | 价值 | 照源写；同档参考：16 档的 `Nemesis` = 3 铂金 20 金 | |
 | 双版本配方 | `ModLoader.TryGetMod("CalamityMod"/"CalamityModClassicPreTrailer")` 各注册一条 | 材料/站台按各自版本取 |
 | 冰核 | 现代 `EssenceofEleum` / 经典·旧版 `CoreofEleum` | 同一个件改名（同日光精华那对 `EssenceofCinder`→`EssenceofSunlight`）；写配方时按版本 TryFind |
@@ -103,7 +98,7 @@
   确认自己那几行落在正确的段里；**看到 `Tooltip: ""` 就是"我插错段了"的信号**。
   **写完任何文件都要顺手做本地化**（用户明确要求）：只要新增/改动的是玩家可见文本——物品、弹幕、增益/减益的
   `DisplayName` 与 `Tooltip`、配置项、界面文案——就必须同步补两个语言文件。配置项的键是
-  `Configs.<配置类名>.<选项名>.Label` / `.Tooltip`（例：`Configs.ConfigSystem.StatInflation`）。
+  `Configs.<配置类名>.<选项名>.Label` / `.Tooltip`。
   忘了补时 `dotnet build` 会自动追加缺失键，但**只补英文默认值**；zh-Hans 那边追加的是 `//` 注释占位，
   中文必须自己填。补完同样要把行尾整回 CRLF。
 - **效果类本地化描述口径（用户 2026-10-19 定，血腥玛丽为样板）**：新写/重写的物品与增益效果摘要
@@ -116,16 +111,16 @@
 - **音效**：全部登记在 `Sounds/CalamityDemutationSounds.cs` 的 `SoundStyle` 字段。目录只有两层：`Sounds/` 下开
   `Item/` 与 `Custom/` 两个平面目录，**里面不再套子目录**——物品/武器自身的挥砍·蓄力·使用音放
   `Sounds/Item/<原名>.<ogg|wav|mp3>`，借用的灾厄 Boss / 特效冲击音（冲刺、爆炸、死亡音）与其他自备音放
-  `Sounds/Custom/<原名>`。音高按"CE 值 − 1"的既有口径换算。
+  `Sounds/Custom/<原名>`。音高按旧版附属模组的既有口径换算。
   **同名不同扩展名是加载期硬错（2026-10-08 踩过）**：同一个目录里出现 `X.ogg` 与 `X.wav` 时，tML 会在
   `ReLogic.Content.Sources.ContentSource.SetAssetNames` 抛 `Multiple extensions for asset X, (.ogg, .wav)`，
   同样把整个模组禁用（跟缺资源一个下场，`Tools/CheckResources.ps1` 查不到、`dotnet build` 也不报）。
-  两个版本世系里同名的音效若音频不同，必须给其中一个改名（本例：经典版保命音保留原名
+  两个版本里同名的音效若音频不同，必须给其中一个改名（本例：经典版保命音保留原名
   `Sounds/Custom/SilvaActivation.wav`，现代版 2.0 的同名 ogg 改名 `SilvaActivationModern.ogg`）。
   自查一行：`Get-ChildItem -Recurse -File -Include *.ogg,*.wav,*.mp3,*.png | Group-Object {$_.DirectoryName+'|'+$_.BaseName} | ? Count -gt 1`
 - **粒子**：本工程自研 `Content/Particles`（基类 `BaseParticle`，注册与驱动在 `Content/Particles/Core/DRKLoader.cs`，
   `DRKLoader.NewParticle(particle, pos, vel, color, scale)` + 粒子自己的 `Configure(...)`）。
-- **弹幕基类**：手持类武器走 `Content/Projectiles/BaseProjectiles/BaseHeldProjCO`、CWR 系走
+- **弹幕基类**：手持类武器走 `Content/Projectiles/BaseProjectiles/BaseHeldProjCO`、旧版重制体系走
   `Content/Projectiles/Melee/Core/BaseSwingCO`（+`SwingSystem`）。
 - **贴图**：物品/弹幕贴图同目录同名；复用别人贴图时用显式 `Texture => "CalamityDemutation/..."`；
   通用素材放 `Assets/ExtraTextures/`。
@@ -155,29 +150,29 @@
   （也就是说旧口径那 286 之后还漏着 164 个类，别再以为"跑过脚本就是全过"）。
   **它的必要性**：`dotnet build` 不报、`CheckResources.ps1` 只核显式字符串路径，隐式同名贴图只会在**加载期**炸。
   实例：2026-10-09 进游戏时 `MissingResourceException: Content/Buffs/SummonBuffs/CosmicEnergyBuff`
-  直接把整个模组禁用——原因就是新增益 `CosmicEnergyBuff` **忘了拷图标**（CI 那边叫 `CosmicEnergyOld.png`），
+  直接把整个模组禁用——原因就是新增益 `CosmicEnergyBuff` **忘了拷图标**（旧版支线里叫 `CosmicEnergyOld.png`），
   人肉列清单时漏了它；补上图标 + 这个脚本即解决（脚本第一次跑就抓住同类隐患 0 个）。
 - **着色器（大坑）**：`.fx` **不会**被 tModLoader 构建时编译。新增 `.fx` 后必须手动预编译出同名 `.fxc`：
   `FXC\fxc.exe /nologo /T fx_2_0 /Fo 名字.fxc 名字.fx`（会刷一条 X4717 警告，正常），
   再在 `Common/Effects/EffectLoader.cs` 里登记句柄。漏了这步 → 运行期抛 `MissingResourceException`，
   **整个模组会被 tModLoader 禁用**（不是"贴图不显示"）。同理，删 `.fx` 时记得连 `.fxc` 一起删。
-- **单文件装多类**：CE/CWR 来源的武器常把 物品 + 手持弹幕 + 标记弹幕 写在同一个文件里（CI/本体来源的多为分文件），
+- **单文件装多类**：部分附属模组来源的武器常把物品 + 手持弹幕 + 标记弹幕写在同一个文件里（本体来源多为分文件），
   移植时随源风格走。
-- **命名口径（用户 2026-10-09 定，新件/改名一律照此）**：**类名/文件名不许带 CI 式的来源或版本后缀**——
+- **命名口径（用户 2026-10-09 定，新件/改名一律照此）**：**类名/文件名不许带旧版附属式来源或版本后缀**——
   已点名禁止的是 `Old`（大小写皆算）这一族；移植时若源里叫 `XxxOld` / `XxxLegacy`，**本工程一律去掉后缀**，
   源名只写进类注释留档。
   **已改（2026-10-09）**：`CosmicImmaterializerOld` → **`CosmicImmaterializer`**（归墟之灵，物品）、
   `CosmicEnergySpiralOld` → **`CosmicEnergySpiral`**（宇宙之灵仆从弹幕）。
   **旧名兼容属性已删（2026-10-10，用户点名「我不需要」）**：这两件原先各挂了一处
-  `[LegacyName("旧名")]`（tML 的改名兼容特性，CalamityMod 与 CI 自己也在用）——**现已移除**，
-  工程不再为 CI 式旧名保留解析入口；**新增/改名件一律不要再写 `[LegacyName]`**。
+  `[LegacyName("旧名")]`（tML 的改名兼容特性，灾厄本体与旧版附属模组也会使用）——**现已移除**，
+  工程不再为旧版附属式旧名保留解析入口；**新增/改名件一律不要再写 `[LegacyName]`**。
   改名时"配套修正"清单（照这次走）：① 类名与文件名一致（含**隐式同名贴图** `类名.png` 与 `类名Glow.png`）；
   ② 所有 `ModContent.*Type<T>` 与 `Item.shoot` 引用点；③ 本地化键（`Items.X` / `Projectiles.X.DisplayName`，
   在各自段的字母序位置**原地改键**，不要挪位）；④ 显式贴图字符串（如发光层的 `".../XxxGlow"`）；
   ⑤ `AGENTS.md`/注释里的旧名（历史段落按惯例可留旧名，但**当前状态**段落要改成新名）；
   ⑥ 跑 `dotnet build` + 两个自检脚本 —— 改名后 **`CheckImplicitTextures.ps1` 是必跑项**（隐式贴图只会在加载期炸）。
-  **已知但本轮未动（用户点名"只改那几个真 CI 后缀"）**：`HoneyDew2` / `LivingDew2` / `RadiantOoze2` /
-  `AmbrosialAmpoule2` 这四个数字后缀、`Base*CO`（CO = CalamityOverhaul 来源标记）四个基类、
+  **已知但本轮未动（用户点名"只改那几个真旧版后缀"）**：`HoneyDew2` / `LivingDew2` / `RadiantOoze2` /
+  `AmbrosialAmpoule2` 这四个数字后缀、`Base*CO`（CO = 旧版重制来源标记）四个基类、
   `Sounds/Custom/SilvaActivationModern.ogg`（因同名不同扩展名会硬错而被迫区分）、
   以及源本来就带数字的 `DefenseBlast2` / `BrimstoneHellfireballFriendly2` / `HellfireExplosionFriendly2` /
   `MechwormBody2` / `EssenceFlame2`。
@@ -293,7 +288,7 @@
   mod 自身版本在头部文件表里（脚本第一行就会打出来，本机实测 `CalamityMod 2.2.2`）。
   路径提醒：`tModLoader-Logs\` 在本机并不存在（别再照老记法去找 `client.log`）。
 - **用户的"批量移植"剧本（2026-10-07 定型，同类任务照办）**：① 先在参考源里**逐版出数据**
-  （2.0 / 2.0.3.9 / 2.0.4 / 1.4.4-release 的尺寸·档位·价值·效果·配方·玩家侧实现差异）摆给用户；
+  （2.0 / 2.0.3.9 / 2.0.4 / 现代 1.4.4 的尺寸·档位·价值·效果·配方·玩家侧实现差异）摆给用户；
   ② 用户**逐条拍板**（取哪版数值、配方走哪版、要不要与本体同名件互斥、中文名、要不要追加基础属性）；
   ③ 再**一件一件**落地，顺序按"从链条下位往上"（先做最底的材料/前件，再做上位的）；
   每件都走：实现 → `dotnet build` 0/0 + 资源自检 → 更新本文件 → 提交推送。
@@ -359,7 +354,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      不写也不会错；② **仆从打出的"子弹"（非 minion/sentry）不会被重算**，所以照灾厄那样把
      `Projectile.damage`（已经吃过加成的值）传下去**不会二次缩放**；③ 但若子弹自己标了 `minion = true`
      （如归虚之灵的爆裂），就会被每帧重算 —— 这时想让它打"半额"**必须把 `originalDamage` 也折半**，
-     只把传入的 damage 折半是无效的（CI 的 Lore 分支就漏了这一步，见批次 C 归虚之灵那条）。
+     只把传入的 damage 折半是无效的（旧版支线的 Lore 分支就漏了这一步，见批次 C 归虚之灵那条）。
 - **开关不只管伤害**：同一开关也可以门控「数量 / 栏位 / 几率 / 回复量」这类非伤害项——焚灭天惩的每次洒落火球数 10→15
   （`ProjectilesPerBarrage` 由 `const` 改成运行时属性）；弑神者胸甲 / 金源胸甲的「受击概率完全免伤」2%→5%
   （`FreeDodge` 里读 `StatInflationEnabled ? 20 : 50`，见 9.3 第 1 条）；弑神保命回复量 100→300
@@ -372,7 +367,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 禅心剑 | 710 | 3651 | 真近战爆发 70% 已接 |
 | 星流之刃 | 900 | 6700 | 等于 2026-09-26 削弱前的原值 |
 | 星河之刃 | 84 | 188 | |
-| 破灭魔王剑 | 166 | 520 | 关态 2026-10-01 由 230 改为现代版灾厄源值 166 |
+| 破灭魔王剑 | 166 | 520 | 关态 2026-10-01 由 230 改为现代灾厄源值 166 |
 | 月炎之锋 | 480 | 640 | |
 | 元素方舟 | 126 | 235 | |
 | 环境之刃 | 63 | 70 | 用户先报 160 后更正为 70（160 是真·环境之刃的值） |
@@ -382,7 +377,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 庇护之刃 | 110（进度 ×6.00） | 135（进度 ×9.10） | 恢复 `65ba667` 削弱前的旧值；进度表加第三列存旧增量 |
 | 灾厄之刃（Devastation） | 114 | 250 | |
 | 巨龙之怒 | 1275 | 6375 | 犽戎档 ×5；备选「888×5=4440」已被用户否决 |
-| 远古方舟 | 92 | 194 | 关态取 CI 源码值 |
+| 远古方舟 | 92 | 194 | 关态取 旧版支线源码值 |
 | 死神擢升 | 1200 | 1350 | |
 | 元素圣剑 | 4000 | 10000 | |
 | 熵之舞 | 92 | 113 | |
@@ -394,15 +389,15 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 凤凰之刃 | 95 | 160 | 6 处裸面板派生全部改读 `BaseDamage` |
 | 宇宙暗流 | 600 | 1800 | LAP 神吞后 ×3（宇宙锭出自神明吞噬者宝藏袋） |
 | 泰拉巨刃 | 185 | 370 | |
-| 真·远古方舟 | 60 | 194 | 等于现代版灾厄 2.0.4 的同名值 |
+| 真·远古方舟 | 60 | 194 | 等于现代灾厄 2.0.4 的同名值 |
 | 真·环境之刃 | 160 | 400 | |
 | 银河 | 99 | 425 | |
 | 焚灭天惩 | 244 | 388 | 同一开关额外把每次洒落的火球数 10→15 |
 | 暴政 | 890 | 2200 | 同一开关额外把每次挥砍的火焰 6→10、单枚火焰伤害 25%→75% |
-| 女妖之爪（BansheeHook） | 220 | 250 | 用户 2026-10-03 指定；关态 220 取自大修重制版（源本体 250），2026-10-05 审计时补登记 |
-| 巨龙之息（DragonsBreath） | 220 | 478 | 用户 2026-10-14 指定（本件走 CI 支线，关态 = CI 的 220；见 §12） |
+| 女妖之爪（BansheeHook） | 220 | 250 | 用户 2026-10-03 指定；关态 220 取自重制版（源本体 250），2026-10-05 审计时补登记 |
+| 巨龙之息（DragonsBreath） | 220 | 478 | 用户 2026-10-14 指定（本件走 旧版支线，关态 = 旧版支线的 220；见 §12） |
 | 速射机枪（Minigun） | 375 | 920 | 用户 2026-10-14 指定（关态也由用户改过：源 2.0 是 275；见 §13） |
-| 天堂之风（HeavenlyGale） | 256 | 720 | 用户 2026-10-14 指定膨胀、**2026-10-15 把关态从 208 改成 256**（形态取 CI 的 ExoLore 分支，源 CI 关态是 508；见 §15） |
+| 天堂之风（HeavenlyGale） | 256 | 720 | 用户 2026-10-14 指定膨胀、**2026-10-15 把关态从 208 改成 256**（形态取 旧版支线的 ExoLore 分支，源 旧版支线关态是 508；见 §15） |
 | 月光弓（LunarianBow） | 32 | 80 | 用户 2026-10-14 指定（天堂之风链底件；见 §15.4） |
 | 炎翼弓（FlarewingBow） | 17 | 54 | 用户 2026-10-14 指定（天堂之风链；见 §15.6） |
 | 剑刃巨弓（BladedgeGreatbow） | 28 | 60 | 用户 2026-10-14 指定（天堂之风链，2.2.2 已删件；见 §15.7） |
@@ -458,9 +453,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 圣化火花 `SanctifiedSpark` | 128 | 231 | 哨兵武器，同样走 originalDamage |
 | 天狼星 `Sirius` | **275**（源 160 → 上调） | 600 | 光束按 ×(ln 栏位+1) 派生，自动跟随 |
 | 幽花之主 `EtherealSubjugator`（原名 空灵征服者） | 200 | 300 | 同上补了显式 originalDamage；中文名按用户点名改 |
-| 归墟之灵 `CosmicImmaterializer`（原名 归虚之灵；类名 2026-10-09 由 `...Old` 去掉后缀） | **560**（CI 源 360 → 上调） | 3000 | 中文名按用户点名改 |
+| 归墟之灵 `CosmicImmaterializer`（原名 归虚之灵；类名 2026-10-09 由 `...Old` 去掉后缀） | **560**（旧版支线源 360 → 上调） | 3000 | 中文名按用户点名改 |
 | 星律之握览 `SarosPossession` | **200**（源 171 → 上调） | 681 | 2026-10-10 用户点名；光环按 `log₃(栏位)+1` 派生，自动跟随 |
-| 光阴时流伞 `TemporalUmbrella` | **963**（CI 源 1000 → 调整） | 4000（＝CI 的 `ShadowspecBuff` 档） | 2026-10-10 用户点名；原先靠引擎自动写 `originalDamage`，加膨胀时补了显式写入 |
+| 光阴时流伞 `TemporalUmbrella` | **963**（旧版支线源 1000 → 调整） | 4000（＝旧版支线的 `ShadowspecBuff` 档） | 2026-10-10 用户点名；原先靠引擎自动写 `originalDamage`，加膨胀时补了显式写入 |
 | 太阳神杖 `SunGodStaff` | 60 | **不接入** | 用户 2026-10-09 明确「故意不动」，**不是遗漏，别再问** |
 
 **这批判的两条落地要点（下次加召唤武器的膨胀照办）**：
@@ -540,12 +535,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ① **「太阳神杖 / 天狼星」召唤链 ✅ 全链落地**：沙漠羽毛 → 太阳之灵法杖 → 太阳神杖 → **链尾 天狼星 `Sirius`**，
      四件都含配方（逐版侦察、软依赖改写与配方结论见「批次 B」）。
      **口径更正（2026-10-08）**：链尾不是太阳神杖——2.0 里 `Sirius` 的配方第一味就是 `SunGodStaff`。
-  ② **「归虚之灵」召唤链 ✅ 全链落地（批次 C 收官）**：用户 2026-10-08 点名要移植 CI 那条线的**归虚之灵**
-     （＝CI 的 `CosmicImmaterializerOld`，CI 官方中文写作「归虚之灵[Legacy]」）。
-     **⚠ 口径更新（用户 2026-10-09）**：CI 那条线**不再软依赖**——**除奇迹物质 `MiracleMatter` 之外，
-     CI 八重配方上要用的件全部自持**（理由：1.4.4-release 把这一大票内容砍了，用户要回调；源一律取 2.0 / 2.0.3.9）。
+  ② **「归虚之灵」召唤链 ✅ 全链落地（批次 C 收官）**：用户 2026-10-08 点名要移植 旧版支线那条线的**归虚之灵**
+     （＝旧版支线的 `CosmicImmaterializerOld`，旧版支线官方中文写作「归虚之灵[Legacy]」）。
+     **⚠ 口径更新（用户 2026-10-09）**：旧版支线那条线**不再软依赖**——**除奇迹物质 `MiracleMatter` 之外，
+     旧版支线八重配方上要用的件全部自持**（理由：现代 1.4.4 把这一大票内容砍了，用户要回调；源一律取 2.0 / 2.0.3.9）。
      链（往回推）：**归虚之灵 ← 元素之斧 ← 苍华之庭 `PlantationStaff`**；
-     CI 八重配方另需 **天狼星 + 古冰晶 + 圣化火花 + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌**。
+     旧版支线八重配方另需 **天狼星 + 古冰晶 + 圣化火花 + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌**。
      **已落地**：链底 苍华之庭 ✅（现代 + 经典两条配方）、元素之斧 ✅（2026-10-09）、
      **古冰晶 `AncientIceChunk` ✅（2026-10-09，含冰灵仆从与冰锥）**、
      **圣化火花 `SanctifiedSpark` ✅（2026-10-09，含哨兵炮台与两枚火弹；＝2.0 的 能量法杖 `EnergyStaff` 改名件）**、
@@ -554,10 +549,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
         **灾厄挽歌 `CalamarisLament` ✅（2026-10-09，含小鱿鱼仆从 + 墨汁弹）**、
       天狼星 ✅（批次 B 链尾，2026-10-08）；
         **链顶 归墟之灵 `CosmicImmaterializer` ✅（2026-10-09，含宇宙之灵仆从 + 大小爆裂；
-        类名同日由 CI 式的 `CosmicImmaterializerOld` 去掉 `Old` 后缀）**——
-        用户 2026-10-09 拍板：**走 CI 那条线、直接移植含 ExoLore（传颂之物）的那条分支**，
-        即数值取 CI 版（伤害 **360**、`CatalystViolet`＝月后 15 档、带发光层），
-        配方取 **CI 八重 @ 嘉登熔炉**，并照工程既有口径**恒处 Lore 模式**。
+        类名同日由 旧版支线式的 `CosmicImmaterializerOld` 去掉 `Old` 后缀）**——
+        用户 2026-10-09 拍板：**走 旧版支线那条线、直接移植含 ExoLore（传颂之物）的那条分支**，
+        即数值取 旧版支线（伤害 **360**、`CatalystViolet`＝月后 15 档、带发光层），
+        配方取 **旧版支线八重 @ 嘉登熔炉**，并照工程既有口径**恒处 Lore 模式**。
         **同日两处后续口径（用户点名）**：① tooltip **去掉 ExoLore 说明行**、回到常规三行；
         ② 源里"没穿月后召唤套伤害 ×0.66"**不照抄**，伤害与 `originalDamage` 都按全额走。
         **⇒ 这条链到此全部完成**（链底 → 链顶九件：苍华之庭 / 元素之斧 / 古冰晶 / 圣化火花 / 空灵征服者 /
@@ -574,18 +569,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      其余 4 把（震爆手雷 / 弹道毒炸弹 / 破坏者 / 封存奇点）**冻结为不接入**。
   ④ **【2026-10-09 已全部结清 —— 原先那份"待拍板"清单用户已逐条拍板，别再当待办】**：
      ① 龙蒿面具 / 血魇九头盔缺蓝耗减免 → **已补**（照现代版 2.0.4 补 `manaCost *= 0.85f` / `*= 0.83f`，中英 tooltip 同步）；
-     ② 林海 / 弑神者 / 金源三套的**法师套装效果**（6 处）→ **已全部换成 CI 口径**
+     ② 林海 / 弑神者 / 金源三套的**法师套装效果**（6 处）→ **已全部换成 旧版支线口径**
         （逐条见 9.3 那张表末尾的"2026-10-09 全部结清"）；
-     ③ 始源林海盗贼头 `SilvaMask` → 潜行上限**用户点名维持 150**；无敌加伤换成 CI 口径
+     ③ 始源林海盗贼头 `SilvaMask` → 潜行上限**用户点名维持 150**；无敌加伤换成 旧版支线口径
         （窗口**内** +40%，从 `ModifyHitNPCWithProj` 搬到 `PostUpdateMiscEffects` 的 `GetDamage(RogueDamageClass)`）；
      ④ 金源复合盗贼头 `AuricTeslaPlumedHelm` 那三处差异 → **用户点名"不动"**，别再提；
-     ⑤ 9.3 第 6 条的两个复核项 → **已查清**：林海近战头的现代配方 30/8/2 就是 **1.4.4-release 的原值**
-        （旧记录那句"任何源里都没有对应物"是**错的**，无需改动）；现代金源胸甲漏的霜冻屏障**已照 CI 补上**。
+     ⑤ 9.3 第 6 条的两个复核项 → **已查清**：林海近战头的现代配方 30/8/2 就是 **现代 1.4.4 的原值**
+        （旧记录那句"任何源里都没有对应物"是**错的**，无需改动）；现代金源胸甲漏的霜冻屏障**已照旧版支线补上**。
      另两条尾巴也结案：`Devastation` 显示名 → 用户定"**名字不变**"（8 节悬案 3 结案）；
      欧米茄蓝职业头（三源皆无职业变体）→ **不动**。⇒ **本工程当前没有挂着的口径题。**
   ⑤ **【新批次 · 已收官】自持件 `SarosPossession`（中文名「星律之握览」）✅ 2026-10-09**——
-     用户点名移植 CI 的召唤武器「光阴时流伞」，照老规矩**从链条下位往上做**。
-     **CI 没有自己的 `SarosPossession`**（CI 只在 `TemporalUmbrellaOld:64` 与 `MountedScannerLegacy:114`
+     用户点名移植 旧版支线的召唤武器「光阴时流伞」，照老规矩**从链条下位往上做**。
+     **旧版支线没有自己的 `SarosPossession`**（旧版支线只在 `TemporalUmbrellaOld:64` 与 `MountedScannerLegacy:114`
      两处引用灾厄本体那件），故本工程把它**自持**；**口径取 2.0**（用户 2026-10-09 拍板）：
      56×56 / 伤害 **200**（源 171，用户 2026-10-10 点名上调）/ 击退 4 / 魔力 10 / 使用·动画 10 帧 / 弹速 10 /
      月后 **14 档（蓝）** / **1 铂金 40 金** / 音 `SoundID.DD2_BetsyFlameBreath`。
@@ -602,20 +597,20 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
      ③ 源用灾厄的 `ProfanedFire` 尘 → 改用原版 `DustID.Torch`。
      **数值膨胀（2026-10-10 用户点名，已落地）**：关态 **200**（源 171 上调）/ 开态 **681**；
      顶层「光阴时流伞」同批处理，见下一条 ⑥。
-  ⑥ **【同批次 · 收官】顶层「光阴时流伞」`TemporalUmbrella` ✅ 2026-10-09** —— CI 口径自持件。
-     用户拍板：**配方取 CI 的第①条**、**天顶世界的全部内容一律不做**。
-     CI 对应件 `TemporalUmbrellaOld`（CI 官方中文「光阴时流伞」；本工程中文名经用户 2026-10-10 定稿**同样是「光阴时流伞」**，
-     类名按第 4 节的命名口径去掉 `Old`）。属性：判定 74×72 / **伤害 963**（CI 源 1000，用户 2026-10-10 点名调整）/ 魔力 **99** / 使用·动画 10 帧 /
+  ⑥ **【同批次 · 收官】顶层「光阴时流伞」`TemporalUmbrella` ✅ 2026-10-09** —— 旧版支线口径自持件。
+     用户拍板：**配方取 旧版支线的第①条**、**天顶世界的全部内容一律不做**。
+     旧版支线对应件 `TemporalUmbrellaOld`（旧版支线官方中文「光阴时流伞」；本工程中文名经用户 2026-10-10 定稿**同样是「光阴时流伞」**，
+     类名按第 4 节的命名口径去掉 `Old`）。属性：判定 74×72 / **伤害 963**（旧版支线源 1000，用户 2026-10-10 点名调整）/ 魔力 **99** / 使用·动画 10 帧 /
      击退 1 / **月后 16 档（品红＝灾厄 HotPink，即"魔影档"）** / **2 铂金 80 金** / 音 `SoundID.Item68` / 弹速 10；
      在鼠标处召唤一顶**魔法礼帽** `MagicHat`（占 5 栏、1500 像素内索敌、**每 5 帧随机抛出 1 件工具**）。
      连带落地礼帽的 **7 件工具**（`Content/Projectiles/Summon/Umbrella/`：MagicAxe / MagicBat / MagicBird /
      MagicBullet / MagicHammer / MagicRifle / MagicUmbrella）、召唤增益 `MagicHatBuff` 与玩家标志 `magicHat`
-     —— 共 **10 个类 + 10 张贴图**，全部按命名口径去掉 CI 的 `Old` 后缀。
+     —— 共 **10 个类 + 10 张贴图**，全部按命名口径去掉 旧版支线的 `Old` 后缀。
      **配方**：尖刺岩杖 `SpikecragStaff` + **本工程自持的 `SarosPossession`** + 原版雨伞 `ItemID.Umbrella` +
      原版高顶礼帽 `ItemID.TopHat` + 魔影锭 `ShadowspecBar`×4 @ 嘉登熔炉 `DraedonsForge`；只注册现代分支（无经典版）。
-     CI 的另两条配方（**灾厄精华换购**、**天顶世界专用**）按用户口径**都不做**。
+     旧版支线的另两条配方（**灾厄精华换购**、**天顶世界专用**）按用户口径**都不做**。
      **四处与源的有意差异**：① 源里 `Main.zenithWorld ? 150 : …` 的天顶世界分支**整条删除**（用户点名要删）；
-     ② 源里 `CIServerConfig.ShadowspecBuff ? 4000 : 1000` 在本工程没有对应开关，改为挂在 `StatInflation` 上
+     ② 源里 `旧版支线的配置档位 ? 4000 : 1000` 在本工程没有对应开关，改为挂在 `StatInflation` 上
      （**关态 963 / 开态 4000**，2026-10-10 用户点名）；③ `GlacialState` 已被实装灾厄删除 → 走
      `ApplyCalamityBuffWithFallback` 退回 `BuffID.Frozen`；④ 源的 `MagicBat` 把伤害类型写成盗贼、
      `MagicBullet` 的护甲碎裂写了两遍，分别照抄为 `CDUtil.GetRogueDamageClass()` 与只写一遍（类注释有记）。
@@ -626,14 +621,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
        本批数值膨胀改动**都已在游戏里跑通**，加载/运行均无异常。⇒ 这条不再是待办。
     ② **数值膨胀（2026-10-10 已结清并实测）**：新链两件已按用户点名挂上 `StatInflation` ——
        `SarosPossession` 关态 **200**（源 171 上调）/ 开态 **681**；`TemporalUmbrella` 关态 **963**
-       （CI 源 1000 调整）/ 开态 **4000**（＝CI 的 `ShadowspecBuff` 档）。两件都是召唤件，
+       （旧版支线源 1000 调整）/ 开态 **4000**（＝旧版支线的 `ShadowspecBuff` 档）。两件都是召唤件，
        `Shoot` 里的 `originalDamage` 一并改读 `BaseDamage`（其余按栏位/自身伤害派生，自动跟随）。
     ③ **中文名（2026-10-10 用户定稿）**：两件分别定名 **「星律之握览」**（维持原样）与
-       **「光阴时流伞」**（原先误写成「光阴流时伞」，已按用户口径改名；CI 官方名也是「光阴时流伞」）。
+       **「光阴时流伞」**（原先误写成「光阴流时伞」，已按用户口径改名；旧版支线官方名也是「光阴时流伞」）。
     ④ **删掉 Legacy 旧名兼容（2026-10-10 用户点名「我不需要」）**：`CosmicImmaterializer` 与
        `CosmicEnergySpiral` 身上那两处 `[LegacyName("...Old")]` **已删**；其余提到 `[LegacyName]` 的地方
-       只是注释在讲灾厄/CI 源的旧名，属史料，未动。
-    ⑤ **不要再问/不要再动**：CI 的另两条配方（灾厄精华换购、天顶世界专用）用户已定**不做**；
+       只是注释在讲灾厄/旧版支线源的旧名，属史料，未动。
+    ⑤ **不要再问/不要再动**：旧版支线的另两条配方（灾厄精华换购、天顶世界专用）用户已定**不做**；
        命名口径里"已知但本轮未动"的四类（第 4 节）也别自作主张改；
        `Devastation` 显示名、欧米茄蓝职业头、金源盗贼头三处差异都已结案。
   - **进游戏实测历史**：2026-10-09 曾因漏一张增益图标（`CosmicEnergyBuff`）被 tML 在加载期禁用过一次
@@ -677,12 +672,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⑥ 封存奇点 = 尘暴瓶 `DuststormInABottle` + 暗等离子 `DarkPlasma`×3 @ 远古操纵机 ✅（两版灾厄都有这两味）；
   ⑦ 半影 = 灾厄魂 `RuinousSoul`×6 + 夜魇锭 `CosmiliteBar`×8 + 夜魇燃料 `NightmareFuel`×20 @ 宇宙砧（现代）/
   嘉登熔炉（经典——**经典版没有宇宙砧**，按工程惯例换站台）✅；
-  ⑧ 超新星 = **全链唯一需要拍板的一条**：2.0 配方里的奇迹物质 `MiracleMatter` **经典版灾厄没有**（现代有）。
+  ⑧ 超新星 = **全链唯一需要拍板的一条**：2.0 配方里的奇迹物质 `MiracleMatter` **经典灾厄没有**（现代有）。
   **主导决定（用户 2026-10-08 授权"你是主导者"）**：现代分支照 2.0 八字全写；**经典分支去掉奇迹物质那一味**、
   其余七味照旧（都是本模组自持件 + 原版站台），这样经典分支也能合成。
   **配方难题的处置（用户 2026-10-08 授权"你是主导者"，按方案 B 走）**：链上唯一被现代版删掉、
   又挡在配方上的材料是**熵构体 `MeldConstruct`**（毁灭之星 2.0 配方要 ×10；2.0/2.0.3.9/2.0.4/2.0.7.2 都有，
-  1.4.4-release 与实装 2.2.2 都没有）；所以**把熵构体也搬进本模组**，毁灭之星保持 2.0 原配方一字不改。
+  现代 1.4.4 与实装 2.2.2 都没有）；所以**把熵构体也搬进本模组**，毁灭之星保持 2.0 原配方一字不改。
   熵构体 2.0 口径 = 15×12 判定 / 38×40 贴图 / 叠 999 / 卖 1 金 20 银 / 青档 / 研究 25；
   配方 `MeldBlob×6 + Stardust×3 → ×3 @ 月亮事件站台`（**熔凝团与星尘现代/经典两版都在**，故一条配方两分支通用）。
   **超新星本体的配方也由本工程自出**（不用用户找）：按 2.0 那条落地 =
@@ -697,13 +692,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   把 2.0/2.0.3.9 那条线的下位件全部搬进本模组，超新星将来吃的是**本模组的**下位件。
 - **待做 4 件的逐版数值（本次已侦察完，直接照这份落地）**：
   破坏者 `TotalityBreakers` = 2.0 `32×42 / 55 / 击退 5 / 28 帧 / 石灰 Lime / 60 金 / 弹速 12 / 弹幕 TotalityFlask`；
-  2.0.3.9+ = 50 伤害 + 潜行倍率 1.3×；1.4.4-release = 64。
+  2.0.3.9+ = 50 伤害 + 潜行倍率 1.3×；现代 1.4.4 = 64。
   毁灭之星 `StarofDestruction` = 2.0 `94×94 / 150 / 击退 10 / 38 帧 / 青 Cyan / 95 金 / 弹速 5 / 弹幕 DestructionStar`；
-  2.0.3.9+ = 40 帧 + 潜行 0.8×；2.0.4 = 红档；1.4.4-release = 400 伤害 / 90 帧 / 弹速 12 / 潜行 0.25 / 弹幕 `DestructionBolt`（**大改**）。
+  2.0.3.9+ = 40 帧 + 潜行 0.8×；2.0.4 = 红档；现代 1.4.4 = 400 伤害 / 90 帧 / 弹速 12 / 潜行 0.25 / 弹幕 `DestructionBolt`（**大改**）。
   封存奇点 `SealedSingularity` = 2.0 `34×34 / 260 / 击退 5 / 25 帧 / 灾厄 Turquoise（月后 12 青绿）/ 弹速 14 / 弹幕 SealedSingularityProj`；
-  2.0.3.9+ = 潜行 0.72×；1.4.4-release = `32×32 / 220 / 30 帧 / 击退 3 / 弹速 13 / 弹幕 SealedSingularityHoldout`（**大改**）。
+  2.0.3.9+ = 潜行 0.72×；现代 1.4.4 = `32×32 / 220 / 30 帧 / 击退 3 / 弹速 13 / 弹幕 SealedSingularityHoldout`（**大改**）。
   半影 `Penumbra` = 2.0 `46×32 / 1008 / 击退 8 / 40 帧 / 红底+灾厄 DarkBlue（月后 14 蓝）/ 1 铂金 80 金 / 弹速 9 / 弹幕 PenumbraBomb`；
-  2.0.3.9/2.0.4 = 830 + 潜行 0.85×；1.4.4-release = 725 / 35 帧 / CosmicPurple / 潜行 0.9。
+  2.0.3.9/2.0.4 = 830 + 潜行 0.85×；现代 1.4.4 = 725 / 35 帧 / CosmicPurple / 潜行 0.9。
   各件自己的 2.0 配方（留意下游材料）：破坏者 = 燃烧瓶×50 + 圣化水 + 亵渎水 + 乏燃料容器 + 日纱×10 @ 秘银砧；
   毁灭之星 = 熵构体 `MeldConstruct`×10 @ 月亮事件站台（**熵构体现代已删**，届时要照暗物质剑鞘的做法换 1.4.4 侧材料）；
   封存奇点 = 尘暴瓶 `DuststormInABottle` + 暗等离子 `DarkPlasma`×3 @ 月亮事件站台；
@@ -712,7 +707,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   超新星 = 2.0 `34×36 / 675 / 24 帧 / 击退 8 / 红底+灾厄 Violet（月后 15 紫）/ 1 铂金 50 金 / 潜行 ×1.08`；
   2.0.3.9 = 同 2.0 但配方已是新版；2.0.4 = `106×112 / 5036 / 70 帧 / 击退 18 / Violet / 2 铂金 40 金 / 潜行 0.7`
   （智能炸弹 + `SupernovaStealthBoom` + 三个自备音 + Glowmask）；
-  1.4.4-release = `106×112 / 5200 / 70 帧 / ExoticRainbow / 潜行 0.8` + `SupernovaHoldout`（右键投掷、按住左键蓄潜行）。
+  现代 1.4.4 = `106×112 / 5200 / 70 帧 / ExoticRainbow / 潜行 0.8` + `SupernovaHoldout`（右键投掷、按住左键蓄潜行）。
   2.0 的弹幕组 = `SupernovaBomb` → `SupernovaBoom` + 尖刺 3~4 + 追踪能量 6（潜行弹每 8 帧喷追踪能量），
   全是原版音（`SoundID.Item15` / `Item14`）。
   **实装 2.2.2 的配方（IL 直读，仅备查）** = 封存奇点 + 毁灭之星 + 破坏者 + 弹道毒炸弹 + 奇迹物质 @ 嘉登熔炉。
@@ -720,7 +715,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   超新星 = 2.0 `34×36 / 675 / 24 帧 / 击退 8 / 红底+灾厄 Violet（月后 15 紫）/ 1 铂金 50 金 / 潜行 ×1.08`；
   2.0.3.9 = 同 2.0 但配方已是新版；2.0.4 = `106×112 / 5036 / 70 帧 / 击退 18 / Violet / 2 铂金 40 金 / 潜行 0.7`
   （智能炸弹 + `SupernovaStealthBoom` + 三个自备音 + Glowmask）；
-  1.4.4-release = `106×112 / 5200 / 70 帧 / ExoticRainbow / 潜行 0.8` + `SupernovaHoldout`（右键投掷、按住左键蓄潜行）。
+  现代 1.4.4 = `106×112 / 5200 / 70 帧 / ExoticRainbow / 潜行 0.8` + `SupernovaHoldout`（右键投掷、按住左键蓄潜行）。
   配方：2.0 = 封存奇点 + 毁灭之星 + 破坏者 + 弹道毒炸弹 + **震爆手雷×200** + **半影** @ 嘉登熔炉；
   2.0.3.9 起删掉后两项，其余不动。2.0 的弹幕组 = `SupernovaBomb` → `SupernovaBoom` + 尖刺 3~4 + 追踪能量 6
   （潜行弹每 8 帧喷追踪能量），全是原版音（`SoundID.Item15` / `Item14`）。
@@ -737,11 +732,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   工程手法（上批固化）：潜行相关字段一律写 `PostUpdateEquips`；"潜行打击必暴击"用 `HitModifiers.SetCrit()`
   写 `CalamityDemutationPlayer.ModifyHitNPCWithProj`；镜子系闪避共用 `mirrorDodgeCooldown`、写 `FreeDodge`。
   工程基线：`dotnet build` 0 警告 0 错误、资源自检 **160 条全命中**（超新星 + 三把膨胀档落地后复核）。
-- **【批次 C · 「归虚之灵」召唤链（CI 线）：从链底往上移植，配方环节停下来找用户拍板】**
-  用户 2026-10-08 点名：「我记得我需要移植的是召唤武器：**归墟之灵**，走的 CI 那条线」+「和之前一样，从最低下位开始」。
-  **身份**：CI 的 `Content.Items.Weapons.Summon.CosmicImmaterializerOld`（CI 官方中文名 **归虚之灵[Legacy]**，
-  本工程沿用 CI 的写法「归虚之灵」；用户口写"归墟"）。
-  **链（从下往上）**：**苍华之庭 `PlantationStaff`（2.0.3.9）** → **元素之斧 `ElementalAxe`（2.0.3.9）** → **归虚之灵（CI 口径）**。
+- **【批次 C · 「归虚之灵」召唤链（旧版支线线）：从链底往上移植，配方环节停下来找用户拍板】**
+  用户 2026-10-08 点名：「我记得我需要移植的是召唤武器：**归墟之灵**，走的 旧版支线那条线」+「和之前一样，从最低下位开始」。
+  **身份**：旧版支线的 `Content.Items.Weapons.Summon.CosmicImmaterializerOld`（旧版支线官方中文名 **归虚之灵[Legacy]**，
+  本工程沿用 旧版支线的写法「归虚之灵」；用户口写"归墟"）。
+  **链（从下往上）**：**苍华之庭 `PlantationStaff`（2.0.3.9）** → **元素之斧 `ElementalAxe`（2.0.3.9）** → **归虚之灵（旧版支线口径）**。
   **归虚之灵逐版数据（侦察已完成，拍板时直接引）**：
   物品本体 **2.0 与 2.0.3.9 一模一样**：74×72、伤害 **560**、魔力 10、使用/动画 **10 帧**、击退 0、弹速 10、
   音 `SoundID.Item60`、**稀有度 Violet = 月后 15 档（紫）**、价值 `Rarity15BuyPrice`（**2.0.3.9 实测 = 1 铂金 50 金**）；
@@ -750,7 +745,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **配方两版不同（各 5 味，都 @ 嘉登熔炉）**：
   2.0 = 元素之斧 + **乌鸦先驱者法杖 `CorvidHarbringerStaff`** + **古冰晶 `AncientIceChunk`** + **能量法杖 `EnergyStaff`** + 奇迹物质 `MiracleMatter`；
   2.0.3.9（2.0.4 / 2.0.7.2 同）= 元素之斧 + **空灵征服者 `EtherealSubjugator`** + **宇宙灯笼 `Cosmilamp`** + **灾厄挽歌 `CalamarisLament`** + 奇迹物质。
-  **CI 版配方（8 味）** = 天狼星 `Sirius` + 古冰晶 + **元素之斧** + 圣化火花 `SanctifiedSpark` + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌 + 奇迹物质。
+  **旧版支线配方（8 味）** = 天狼星 `Sirius` + 古冰晶 + **元素之斧** + 圣化火花 `SanctifiedSpark` + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌 + 奇迹物质。
   **实装 2.2.2 自己的配方（另一条，参考）** = 天军 `LegionofCelestia` + 空灵征服者 + 宇宙灯笼 + 灾厄挽歌 + 奇迹物质 @ 嘉登熔炉
   （天军自己 = 植灵法杖 + `ItemID 4758`×1 + `ItemID 3467`×5 + 生命合金×5 + `ItemID 3459`×5 @ 秘银砧；**经典版没有天军**）。
   **仆从与弹幕（2.0 与 2.0.3.9 同构）**：`CosmicEnergySpiral` 78×78、**占 10 格召唤栏**、不造成接触伤害、彩虹染色、
@@ -815,7 +810,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     彩虹染色走 `GetAlpha`（`Main.DiscoRGB`）+ 自绘 `PreDraw`。
   - 命中挂 `ElementalMix` 60 帧，走 `ApplyCalamityBuffWithFallback`；**经典版确实没有该减益**
     （2026-10-09 复扫经典 1.4.2.101 全树 0 命中，现代 2.0.3.9 有 34 个文件命中）⇒ 退回原版燃烧 `BuffID.OnFire`。
-    参考：经典世系自己那份元素之斧挂的是 BrimstoneFlames + GlacialState + Plague + HolyLight 四件套，
+    参考：经典灾厄自己那份元素之斧挂的是 BrimstoneFlames + GlacialState + Plague + HolyLight 四件套，
     本工程按"从简单件兜底"的既有做法只留燃烧。
   - 增益 `Content/Buffs/SummonBuffs/ElementalAxeBuff.cs` + 玩家标志 `eAxe`
     （`Players/CalamityDemutationPlayer.cs` 三处：字段 + `ResetEffects` + `UpdateDead`）。
@@ -827,7 +822,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     to fight for you）、`Buffs.ElementalAxeBuff`（Elemental Axe / The elemental axe will protect you）、
     `Projectiles.ElementalAxeMinion.DisplayName`（Elemental Axe）。
 
-  **口径更新：CI 线全自持（2026-10-09，用户点名）**：CI 八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
+  **口径更新：旧版支线线全自持（2026-10-09，用户点名）**：旧版支线八重配方上要用的件**除奇迹物质 `MiracleMatter` 外全部自持**
   （奇迹物质本机现代版仍在，继续软引用）；源一律取 **2.0 / 2.0.3.9**。已自持：天狼星（批次 B 链尾）、
   元素之斧、古冰晶、圣化火花、空灵征服者、宇宙灯笼、**灾厄挽歌（2026-10-09 补齐，至此自持件全齐）**。
 
@@ -849,7 +844,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   - **无配方**：来源是**冰灵 `IceClasper` 掉落 1/3**（源 2.0.3.9 与经典 1.4.2.101 同一条），
     挂在本工程 `NPCs/CalamityDemutationGlobalNPC.cs` 的 `ModifyNPCLoot`，**现代与经典两条分支各挂一次**
     （就在既有的 `FrostBarrier` 那条后面）。
-  - **两处刻意差异**：① 源 2.0.3.9 的 `Shoot` 没写 `originalDamage`（上游 1.4.4-release 才补），本工程照补，
+  - **两处刻意差异**：① 源 2.0.3.9 的 `Shoot` 没写 `originalDamage`（上游 现代 1.4.4 才补），本工程照补，
     免得召唤物伤害二次缩放；② 源基类那句 `overridesMinionDamagePrevention` 按其默认参数算出来就是 false
     （"不覆盖"），不改变任何行为，故未移植。
   - 尘编号把源裸值换成命名常量（56 = `DustID.BlueFairy`、172 = `DustID.DungeonWater`），保住 0 警告基线。
@@ -863,7 +858,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **落地记录：圣化火花（2026-10-09，落地提交 `45484fd`）—— 批次 C 第四件**
   - **身份**：2.0.3.9 的 `SanctifiedSpark` 就是 **2.0 的能量法杖 `EnergyStaff` 改名后的同一件**
-    （源里留着 `[LegacyName("EnergyStaff")]`）——所以 CI 八重配方里的"圣化火花"与 2.0 五重配方里的"能量法杖"
+    （源里留着 `[LegacyName("EnergyStaff")]`）——所以 旧版支线八重配方里的"圣化火花"与 2.0 五重配方里的"能量法杖"
     是**同一件东西**，不必再自持第二份能量法杖。
   - 物品 `Content/Items/Weapons/Summon/SanctifiedSpark.cs`：66×68 / 伤害 128 / 魔力 10 / 使用·动画 14 帧 /
     击退 5 / 紫档 / `Item.buyPrice(1,10,0,0)`（＝源 `Rarity11BuyPrice`）/ 法杖姿态（`Item.staff[type] = true`）、
@@ -893,7 +888,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **落地记录：空灵征服者（2026-10-09，落地提交 `bdb34db`）—— 批次 C 第五件**
   - **口径选择**：2.0 是伤害 45 + 挥动姿态 + 幻影**只占半格**栏位；2.0.3.9 是伤害 200 + 射击姿态 + 满 1 格；
-    实装 1.4.4-release 砍到伤害 160、使用帧 24。本工程按「回调 + 链条统一 2.0.3.9」取 **200**，
+    实装 现代 1.4.4 砍到伤害 160、使用帧 24。本工程按「回调 + 链条统一 2.0.3.9」取 **200**，
     **2.0 那套没采用**（要换等于只改 `SetDefaults` 里的四个数 + 幻影的 `minionSlots`）。
   - 物品 `Content/Items/Weapons/Summon/EtherealSubjugator.cs`：66×70 / 伤害 200 / 击退 1 / 使用·动画 10 帧 /
     魔力 10 / `autoReuse` / 月后 **13 档**（`postMoonLordRarity = 13`，＝灾厄 `PureGreen`）/ 1 铂金 30 金
@@ -926,7 +921,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **落地记录：宇宙灯笼（2026-10-09，落地提交 `ecaf748`）—— 批次 C 第六件**
   - **口径选择**：2.0 = 伤害 89、**且还没有光束弹幕**（`CosmilampBeam` 是 2.0.3.9 才加的）；
-    2.0.3.9 = 伤害 127 / 使用 15 帧；1.4.4-release = 95 / 24 帧；经典 cal-1.4.2.101 = 180 / 36 帧。
+    2.0.3.9 = 伤害 127 / 使用 15 帧；现代 1.4.4 = 95 / 24 帧；经典 1.4.2.101 = 180 / 36 帧。
     本工程按「回调 + 链条统一 2.0.3.9」取 **127**。
   - 物品 `Content/Items/Weapons/Summon/Cosmilamp.cs`：42×60 / 伤害 127 / 魔力 10 / 使用·动画 15 帧 /
     击退 4 / `autoReuse` / 月后 **12 档**（`postMoonLordRarity = 12`，＝灾厄 `Turquoise`）/ 1 铂金 20 金
@@ -959,7 +954,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
   **落地记录：灾厄挽歌（2026-10-09，落地提交 `54bb8e7`）—— 批次 C 第七件（自持件收官）**
   - **口径选择**：2.0 那版**只有物品本体**（仆从/增益/墨汁弹都是 2.0.3.9 才补齐的），
-    1.4.4-release 是伤害 120 / 使用 **24 帧**（更慢）。本工程取 **2.0.3.9 这套完整实现**：伤害 110 / 使用 10 帧。
+    现代 1.4.4 是伤害 120 / 使用 **24 帧**（更慢）。本工程取 **2.0.3.9 这套完整实现**：伤害 110 / 使用 10 帧。
   - 物品 `Content/Items/Weapons/Summon/CalamarisLament.cs`：88×108 / 伤害 110 / 使用·动画 10 帧 / 魔力 10 /
     `autoReuse` / 法杖姿态 / 月后 **13 档** / 1 铂金 30 金 / 音 `SoundID.Item85`；可调参数照源挂在物品类上
     （`EnemyDistanceDetection = 8000` / `ShootingExtraTargettingSpeed` / `ShootingMinionDistance` /
@@ -990,13 +985,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     中文＝**灾厄挽歌 / 小鱿鱼 / 小鱿鱼 / 鱿鱼墨汁**。
 
   **落地记录：归虚之灵（2026-10-09，落地提交 `e9f2e58`）—— 批次 C 链顶，本链收官**
-  - **用户拍板（2026-10-09）**：「走 CI 那条线，直接移植含有 ExoLore 那个分支」——即
-    **数值/文案照 CI**（伤害 360、`CatalystViolet`＝月后 15 档、带 `CosmicImmaterializerOldGlow` 发光层），
-    **配方取 CI 八重**，且**照工程既有口径恒处 Lore 模式**（同第 9 节 ExoBlade / ExoBeam 的处理）。
-  - **同日两处后续修正（用户点名）**：① tooltip 去掉 ExoLore 说明行，中英两份 hjson 都只留 CI 的常规三行；
+  - **用户拍板（2026-10-09）**：「走 旧版支线那条线，直接移植含有 ExoLore 那个分支」——即
+    **数值/文案照旧版支线**（伤害 360、`CatalystViolet`＝月后 15 档、带 `CosmicImmaterializerOldGlow` 发光层），
+    **配方取 旧版支线八重**，且**照工程既有口径恒处 Lore 模式**（同第 9 节 ExoBlade / ExoBeam 的处理）。
+  - **同日两处后续修正（用户点名）**：① tooltip 去掉 ExoLore 说明行，中英两份 hjson 都只留 旧版支线的常规三行；
     ② 源里"没穿月后召唤套时伤害与 `originalDamage` 都 ×0.66"**不照抄**——物品 `Shoot` 直接按全额生成，
     连那个私有的 `WearingPostMLSummonerSet` 判定也一并删了（本工程没有灾厄的等价 API）。
-  - **顺带修掉一处上游笔误**：CI 的 Lore 分支给小爆裂传的 `originalDamage` **忘了折半**（非 Lore 分支是
+  - **顺带修掉一处上游笔误**：旧版支线的 Lore 分支给小爆裂传的 `originalDamage` **忘了折半**（非 Lore 分支是
     `originalDamage / 2`），而本机 tML 会对带 `minion` 标记的弹幕**每帧**按 `originalDamage × 玩家加成` 重算，
     结果"小爆裂打半额"变成打满额——本工程按意图补回 `/ 2`（引擎口径见第 7 节第三条）。
   - 物品 `Content/Items/Weapons/Summon/CosmicImmaterializerOld.cs`：74×72 / 伤害 360 / 魔力 10 / 使用·动画 10 帧 /
@@ -1009,21 +1004,21 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     **`Main.projPet = true`**（照源） / 残影缓存 6 格 / 自身无接触伤害；跟随距离 **1400 / 1600 / 2400**、
     归位 1600、登场冷却 **100 帧**；**Lore 分支**（本工程常驻）：每轮 **12~18 枚小爆裂 + 2 枚 ±140° 斜射大爆裂
     + 1 枚直射大爆裂**、冷却 **60 帧**，发色恒为纯白。非 Lore 分支（5~8 小 + 1 大、冷却 100 帧、彩虹着色）不另留。
-  - 爆裂 `Content/Projectiles/Summon/CosmicBlast.cs`（＝CI 的 `CosmicBlastExoLore`）与
-    `CosmicBlastBig.cs`（＝CI 的 `CosmicBlastBigExoLore`）：18×18 / 4 帧 / 穿透 1 / 寿命 300，与
+  - 爆裂 `Content/Projectiles/Summon/CosmicBlast.cs`（＝旧版支线的 `CosmicBlastExoLore`）与
+    `CosmicBlastBig.cs`（＝旧版支线的 `CosmicBlastBigExoLore`）：18×18 / 4 帧 / 穿透 1 / 寿命 300，与
     24×24 / 穿透 1 / 寿命 600；都是"出场减速 → 加速追踪 1500 像素内目标"（`CDUtil.HomeInOnNPC`），
     命中挂整套星云系减益（`CDUtil.ExoDebuffs`）、PvP 挂奇迹枯萎（经典没有则退回燃烧），
     消失时分别把自己撑到 **144×144 / 288×288** 各打一次范围伤害，再喷彩虹尘；残影走 `CDUtil.DrawAfterimagesCentered`。
   - 增益 `Content/Buffs/SummonBuffs/CosmicEnergyBuff.cs`（源类名 `CosmicEnergyOld`）
     + 玩家标志 `cosmicEnergy`（三处齐全）。
-  - **配方（照 CI，只此一条）**：CI 八重 @ **嘉登熔炉**＝天狼星 + 古冰晶 + 元素之斧 + 圣化火花 + 空灵征服者 +
+  - **配方（照旧版支线，只此一条）**：旧版支线八重 @ **嘉登熔炉**＝天狼星 + 古冰晶 + 元素之斧 + 圣化火花 + 空灵征服者 +
     宇宙灯笼 + 灾厄挽歌 + **奇迹物质 `MiracleMatter`**（嘉登熔炉与奇迹物质走既有软引用；
-    **前七味全是本工程自持件**）。CI 另有一条把奇迹物质换成"古代奇迹物质"的变体，本工程没有那件、未移植；
+    **前七味全是本工程自持件**）。旧版支线另有一条把奇迹物质换成"古代奇迹物质"的变体，本工程没有那件、未移植；
     经典版没有奇迹物质，故**不注册经典分支**。
-  - 本地化：物品名中文沿用 CI 写法 **归虚之灵**（不带 `[Legacy]`，英文同理取 `Cosmic Immaterializer`）；
-    tooltip 照 CI 三行 **+ 一行 ExoLore 提示**（`[c/0080CA:…]`，把"恒处 Lore 模式"这件事讲明白）；
+  - 本地化：物品名中文沿用 旧版支线写法 **归虚之灵**（不带 `[Legacy]`，英文同理取 `Cosmic Immaterializer`）；
+    tooltip 照旧版支线三行 **+ 一行 ExoLore 提示**（`[c/0080CA:…]`，把"恒处 Lore 模式"这件事讲明白）；
     增益 **宇宙之灵**、仆从 **宇宙之灵**、两枚爆裂 **宇宙爆裂 / 大型宇宙爆裂**。
-  - 贴图五张取自 CI：`CosmicImmaterializerOld.png` 74×72、`CosmicImmaterializerOldGlow.png` 74×72、
+  - 贴图五张取自 旧版支线：`CosmicImmaterializerOld.png` 74×72、`CosmicImmaterializerOldGlow.png` 74×72、
     `CosmicEnergySpiralOld.png` 78×78、`CosmicBlast.png` 18×176（4 帧）、`CosmicBlastBig.png` 32×32。
 
   **批次 C 状态（2026-10-09 收官）**：**整条链全部落地**——链底 苍华之庭 → 元素之斧 → 古冰晶 → 圣化火花 →
@@ -1049,8 +1044,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **验证**：`dotnet build` 0 警告 0 错误；`CheckResources` 207 条全命中；`CheckImplicitTextures` **498 个类**全命中（从 499 降 1）。
 - 最近一批工作（2026-10-14）：**移植 4 件饰品（天使之靴链）+ 3 件武器（巨龙之息 / 速射机枪 + 配方前件 P90），
   并修掉两个工具盲区** —— 详见 **§10.7**（天使之靴 → 天界翼靴 → 极乐翼靴 → 炽天使翼靴，链条 4/4 完结）、
-  **§12**（巨龙之息，CI 支线）、**§13**（速射机枪 + P90）、**§14**（本次收尾：口径 / 关键事实 / 未决项 / 仓库状态）。
-  本次固定的口径：物件一律"功能取 1.3-release、配方取 2.0（或用户点名的支线）、再按复合原则并入 1.4.4"；
+  **§12**（巨龙之息，旧版支线）、**§13**（速射机枪 + P90）、**§14**（本次收尾：口径 / 关键事实 / 未决项 / 仓库状态）。
+  本次固定的口径：物件一律"功能取 现代 1.3、配方取 2.0（或用户点名的支线）、再按复合原则并入 1.4.4"；
   同名不同物照旧不做互斥；"贴脸射击"（`canFirePointBlankShots`）**一律不做**。
 - 最近一批工作（2026-10-13）：**血神核心（`CoreOfTheBloodGod`）改挂 +6% 近战攻击速度**（用户点名）。
   改动四处：`CalamityDemutationPlayer.PostUpdateMiscEffects` 的 `coreOfTheBloodGod` 块加回
@@ -1064,12 +1059,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   已核对：`GetAttackSpeed<MeleeDamageClass>()` 的其余出现（勇气勋章、血蠕虫围巾、血蠕虫牙等）不属于血神核心，未动。
 - 最近一批工作（2026-10-09 最晚）：**数值膨胀「召唤系」批次 —— 10 件落地（含 3 件上调基础值、3 件改名）；太阳神杖按用户指示不接入，本批结清。**
 - 最近一批工作（2026-10-09 更晚）：**修「进游戏被禁用」—— 补 CosmicEnergyBuff 图标（类同名隐式贴图缺失），并新增自检脚本 `Tools/CheckImplicitTextures.ps1`。**
-- 最近一批工作（2026-10-09 收官）：**移植归虚之灵（CosmicImmaterializerOld，CI 线含 ExoLore 分支）—— 「归虚之灵」链链顶，批次 C 全部完成。**
-- 最近一批工作（2026-10-09 更早）：**移植灾厄挽歌（CalamarisLament）—— 「归虚之灵」链（CI 口径）自持件（含小鱿鱼仆从 + 墨汁弹）。**
-- 最近一批工作（2026-10-09 更早）：**移植宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（CI 口径）自持件（含灯笼仆从 + 宇宙光束）。**
-- 最近一批工作（2026-10-09 更早）：**移植空灵征服者（EtherealSubjugator）—— 「归虚之灵」链（CI 口径）自持件（含幻影仆从 + 幽焰）。**
-- 最近一批工作（2026-10-09 再晚）：**移植圣化火花（SanctifiedSpark）—— 「归虚之灵」链（CI 口径）自持件；本工程第一件哨兵武器（含哨兵炮台 + 两枚火弹）。**
-- 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（CI 口径）的自持件之一（含冰灵仆从 + 冰锥）。**
+- 最近一批工作（2026-10-09 收官）：**移植归虚之灵（CosmicImmaterializerOld，旧版支线线含 ExoLore 分支）—— 「归虚之灵」链链顶，批次 C 全部完成。**
+- 最近一批工作（2026-10-09 更早）：**移植灾厄挽歌（CalamarisLament）—— 「归虚之灵」链（旧版支线口径）自持件（含小鱿鱼仆从 + 墨汁弹）。**
+- 最近一批工作（2026-10-09 更早）：**移植宇宙灯笼（Cosmilamp）—— 「归虚之灵」链（旧版支线口径）自持件（含灯笼仆从 + 宇宙光束）。**
+- 最近一批工作（2026-10-09 更早）：**移植空灵征服者（EtherealSubjugator）—— 「归虚之灵」链（旧版支线口径）自持件（含幻影仆从 + 幽焰）。**
+- 最近一批工作（2026-10-09 再晚）：**移植圣化火花（SanctifiedSpark）—— 「归虚之灵」链（旧版支线口径）自持件；本工程第一件哨兵武器（含哨兵炮台 + 两枚火弹）。**
+- 最近一批工作（2026-10-09 更晚）：**移植古冰晶（AncientIceChunk）—— 「归虚之灵」链（旧版支线口径）的自持件之一（含冰灵仆从 + 冰锥）。**
 - 最近一批工作（2026-10-09）：**移植元素之斧（ElementalAxe）—— 「归虚之灵」链的中间件（批次 C 第二件）。**
 - 最近一批工作（2026-10-08）：**数值膨胀 ×3 —— 毁灭之星 / 半影 / 超新星（本批次膨胀起点，3/7）。**
 - 最近一批工作（2026-10-08 更晚）：**修「掷出类武器没法附魔」—— 7 把盗贼武器统一补 `WeaponPrefix()` 钩子。**
@@ -1093,14 +1088,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ——**三味全在实装/原版，一件都不用自备**（日光精华在实装 2.2.2 里仍在，软引用）；
   太阳之灵法杖自己 = 砂岩砖×20 + **沙漠羽毛×2** @ 铁砧（**2.0 与经典三条线逐字相同**，故只注册一条、两分支通用）。
   ㈡ **1.3**：与㈠同（只是把源里的类名 `EssenceofCinder` 读作现代版 `EssenceofSunlight`）。
-  ㈢ **经典 cal-1.1/1.2**：太阳神杖 = 太阳之灵法杖 + **烬核×5 + 沙漠羽毛×3** @ 秘银砧（多一味羽毛）。
-  ㈣ **经典 cal-1.4.2.101**（**采用·经典分支**）：太阳神杖 = 太阳之灵法杖 + **烬核 `CoreofCinder`×5**（用本模组自持件）
+  ㈢ **经典 1.1/1.2**：太阳神杖 = 太阳之灵法杖 + **烬核×5 + 沙漠羽毛×3** @ 秘银砧（多一味羽毛）。
+  ㈣ **经典 1.4.2.101**（**采用·经典分支**）：太阳神杖 = 太阳之灵法杖 + **烬核 `CoreofCinder`×5**（用本模组自持件）
   + 三魂×3 @ 秘银砧——与 2.0 同构，只是把日光精华换成工程已有的烬核。
-  **落地口径（拍板结果）**：现代分支（`CalamityMod` 在场）取 `EssenceofSunlight`；经典分支
-  （`CalamityModClassicPreTrailer` 在场）取本模组的 `CoreofCinder`；两分支各注册一条，缺件即退化成单分支。
+  **落地口径（拍板结果）**：现代分支（现代灾厄在场）取 `EssenceofSunlight`；经典分支
+  （`经典灾厄` 在场）取本模组的 `CoreofCinder`；两分支各注册一条，缺件即退化成单分支。
   **面板数据备查**（要落地时直接抄）：
   太阳神杖 2.0 = 72×72 / 伤害 60 / 击退 1.25 / 使用 25 帧 / 魔力 10 / **浅紫 LightPurple** / 48 金；
-  经典版换 50×50 / 36 帧 / 12 金（cal-1.2 黄档、cal-1.4.2.101 浅紫档）。
+  经典版换 50×50 / 36 帧 / 12 金（经典 1.2 黄档、经典 1.4.2.101 浅紫档）。
   太阳之灵法杖 2.0 = 44×48 / 伤害 12 / 击退 1.15 / 使用 35 帧 / 魔力 10 / **蓝档** / `Rarity1BuyPrice`。
   沙漠羽毛 = 24×24 / 叠 999 / 卖 20 铜 / 蓝档 / 研究 5（已落地）。
   **链尾 天狼星 `Sirius` 侦察结论（2026-10-08 逐版核完，别再重查）**：
@@ -1117,7 +1112,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   配套四件：`SiriusMinion`（38×48 判定与贴图、入场粉尘 20）、`SiriusBeam`（4×4 **隐身**、1000 帧、粉尘 20）、
   `SiriusExplosion`（14×14 起手、判定后放大到 60×60、粉尘 267）、`SiriusBuff`（32×32 图标、同"按在场弹幕续增益"模板）。
   **各版差异**：2.0.3.9 / 2.0.4 / 2.0.7.2 = 伤害 **600**、击退 10、纯绿档、13 档价、上位材料换 **`VengefulSunStaff`**、
-  额外要求 `maxMinions >= 6`，站台仍是远古操纵机；1.4.4-release = 伤害 **90**、使用 **24** 帧、纯绿档、
+  额外要求 `maxMinions >= 6`，站台仍是远古操纵机；现代 1.4.4 = 伤害 **90**、使用 **24** 帧、纯绿档、
   配方材料变成 ×8 / ×4 / ×20 @ **秘银砧**，机制大改成"星爆 `Starburst` 资源条 → 攒满发射穿透类星体 `SiriusQuasar`
   （挂虚空霜）"，要往 `CalamityPlayer` 写一整套玩家侧字段（本工程得自建）。
   **配方里的召唤杖只有一根（2026-10-08 逐版核完 + 实装 IL 直读，别再重查）**：
@@ -1126,14 +1121,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   | 1.3 | `SunGodStaff` 太阳神杖 | `Lumenite`×5 + `RuinousSoul`×2 + `ExodiumClusterOre`×12 | 远古操纵机 |
   | 2.0（默认） | `SunGodStaff` 太阳神杖 | `Lumenyl`×5 + `RuinousSoul`×2 + `ExodiumCluster`×12 | 远古操纵机 |
   | 2.0.3.9 / 2.0.4 / 2.0.7.2 | `VengefulSunStaff` 复仇太阳杖 | `Lumenyl`×5 + `RuinousSoul`×2 + `ExodiumCluster`×12 | 远古操纵机 |
-  | 1.4.4 / 1.4.4-release | `VengefulSunStaff` 复仇太阳杖 | `Lumenyl`×8 + `RuinousSoul`×4 + `ExodiumCluster`×20 | 秘银砧 |
+  | 1.4.4 / 现代 1.4.4 | `VengefulSunStaff` 复仇太阳杖 | `Lumenyl`×8 + `RuinousSoul`×4 + `ExodiumCluster`×20 | 秘银砧 |
   | **实装 2.2.2（IL 直读）** | **`VengefulSunStaff`×1** | **`Lumenyl`×8 + `RuinousSoul`×4 + `ExodiumCluster`×20** | **秘银砧** |
   整棵太阳杖树只有两支杖：**太阳之灵法杖 →（太阳神杖 / 复仇太阳杖）→ 天狼星**，没有别的召唤杖参与。
   **实装 2.2.2 的复仇太阳杖**（IL 直读，顺带核的）= 太阳之灵法杖×1 + **月石 `ItemID.MoonStone`×1** + 三魂
   （`SoulofFright`/`SoulofMight`/`SoulofSight`）各×3 @ 秘银砧（`TileID 134`）；
-  实装 2.2.2 的太阳之灵法杖 = 琥珀×5 + 蚁狮颚×3 + 棕榈木×10 @ 铁砧（与 1.4.4-release 源码一致）。
-  **经典版没有天狼星**：把 `CalamityModClassicPreTrailer` 1.0.0.17 的 `.tmod` 挖开逐类型扫过，
-  `Sirius` **0 命中**（与经典源码目录一致，cal-1.x 压根没这件）；但它的三味材料都在，且类名与源码目录不同：
+  实装 2.2.2 的太阳之灵法杖 = 琥珀×5 + 蚁狮颚×3 + 棕榈木×10 @ 铁砧（与 现代 1.4.4 源码一致）。
+  **经典版没有天狼星**：把 `经典灾厄` 1.0.0.17 的 `.tmod` 挖开逐类型扫过，
+  `Sirius` **0 命中**（与经典源码目录一致，经典 1.x 压根没这件）；但它的三味材料都在，且类名与源码目录不同：
   流明石 `Items.AbyssItems.Lumenite`（**不是 `Lumenyl`**）、起源之簇 `Items.Placeables.ExodiumClusterOre`、
   灾厄魂 `Items.Polterghast.RuinousSoul`。经典版另有自己的 `SunGodStaff` / `SunSpiritStaff`（本工程自持件与之同名共存）。
   **.tmod 直读的补丁（2026-10-08 实测）**：新版 tML 的 .tmod 头在「20 字节哈希」之后还有**约 260 字节的签名/保留区**
@@ -1143,7 +1138,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   口径取 2.0：24×24 判定（贴图 24×32）、堆叠 999、售出价 **20 铜**、**蓝档**、研究解锁 5、无 tooltip。
   **无配方**——来源是**秃鹫掉落**，照 2.0 的 `CalamityGlobalNPCLoot` 写：**100% 掉 1~2 片**
   （落点在 `NPCs/CalamityDemutationGlobalNPC.cs` 的原版 NPC 分支里，紧挨 TrapperBulb 那条；
-  经典版 cal-1.4.2.101 的掉率是"普通 100% 掉 1、专家 1~3"，本件按 2.0 取 1~2）。
+  经典版 经典 1.4.2.101 的掉率是"普通 100% 掉 1、专家 1~3"，本件按 2.0 取 1~2）。
   **API 坑（新）**：这个 tML build 的 `NPCLoot.Add` **只接受 `IItemDropRule` 一个重载**
   （没有 `Add(itemId, chance, min, max)`）——要写 `npcLoot.Add(new CommonDrop(ModContent.ItemType<X>(), 1, 1, 2));`
   （`CommonDrop(itemId, chanceDenominator, min, max, chanceNumerator = 1)`）。第一次写成四参 `Add` 直接编译报 CS1501。
@@ -1208,7 +1203,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 最近一批工作（2026-10-08）：**移植半影（Penumbra）—— "超新星"下位链第七件（下位链到此收齐）。**
   口径：老规矩取 2.0：46×32、伤害 **1008**、击退 8、使用/动画各 40 帧、
   **红底 + 月后 14 档（蓝＝灾厄 DarkBlue）**、价值 **1 铂金 80 金**、弹速 **8**
-  （2.0.3.9/2.0.4 是 830 + 弹速 9、1.4.4-release 是 725 / 35 帧 / 紫档——都不取）。
+  （2.0.3.9/2.0.4 是 830 + 弹速 9、现代 1.4.4 是 725 / 35 帧 / 紫档——都不取）。
   **自带 +16% 暴击**：源特意用 `ModifyWeaponCrit` 而不是 `Item.crit`（源注释：tML 不喜欢 SetDefaults 里的高暴击），
   本工程照此办理——这也是本批次第一把带额外暴击的件。
   效果：掷暗影炸弹 → 炸开沿圆周迸出**会追踪的暗影魂**（常规 6 枚、每枚 ×0.15）；**潜行打击**改成在
@@ -1226,7 +1221,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 最近一批工作（2026-10-08）：**移植封存奇点（SealedSingularity）—— "超新星"下位链第六件。**
   口径：老规矩取 2.0：34×34、伤害 **260**、击退 5、使用/动画各 25 帧、
   **月后 12 档（青绿＝灾厄 Turquoise）**、价值 **1 铂金 20 金**（`Rarity12BuyPrice`）、弹速 14、
-  使用音 `SoundID.Item106`（2.0.3.9 起补了潜行 0.72×、1.4.4-release 整件重做成 Holdout——都不取）。
+  使用音 `SoundID.Item106`（2.0.3.9 起补了潜行 0.72×、现代 1.4.4 整件重做成 Holdout——都不取）。
   效果：命中/消散碎裂，召出**黑洞**把 500 像素内普通敌怪往中心吸；**潜行打击**那一发伤害 ×0.72，
   但黑洞**多活 180 帧**（以 `ai[0] = -180` 生成）、吸力 0.25（常规 0.1）、半径翻倍到 1000。
   **配方照 2.0**：尘暴瓶 `DuststormInABottle` + 暗等离子 `DarkPlasma`×3 @ 远古操纵机
@@ -1242,7 +1237,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   中英本地化补物品（zh **封存奇点**）与三条弹幕名。验证：编译 0 警告 0 错误；资源自检 156 条全命中。
 - 最近一批工作（2026-10-08）：**移植毁灭之星（StarofDestruction）—— "超新星"下位链第五件。**
   口径：老规矩取 2.0：94×94、伤害 **150**、击退 10、使用/动画各 38 帧、**青档（Cyan）**、价值 95 金、
-  弹速 5、使用音 `SoundID.Item1`（2.0.3.9 起 40 帧 + 潜行 0.8×、2.0.4 改红档、1.4.4-release 整件重做——都不取）。
+  弹速 5、使用音 `SoundID.Item1`（2.0.3.9 起 40 帧 + 潜行 0.8×、2.0.4 改红档、现代 1.4.4 整件重做——都不取）。
   效果：射出巨大**毁灭地雷**（实际按半径 47 的圆判命中、穿透 16、存活 300 帧、不撞物块），
   消散时炸成**毁灭鬼弹**，弹数 = 命中数（最多 16）；**潜行打击**那一发伤害 ×0.8 且**必定 16 弹**。
   **配方照 2.0**：本模组**熵构体×10 @ 远古操纵机**——自持件 + 原版站台，故**只注册一条、两分支通用**
@@ -1257,22 +1252,22 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   零新增音频（`SoundID.Item1` / `Item14`）；两张贴图从 2.0 源线复制；中英本地化补物品（zh **毁灭之星**）与两条弹幕名。
   验证：编译 0 警告 0 错误；资源自检 155 条全命中；两张隐式贴图已 `Test-Path` 核对。
 - 最近一批工作（2026-10-08）：**移植熵构体（MeldConstruct）—— "超新星"下位链第四件，也是毁灭之星的前件。**
-  为什么要自持：它被灾厄 **1.4.4-release 起删除**（实装 2.2.2 的 `.tmod` 里 0 命中），
+  为什么要自持：它被灾厄 **现代 1.4.4 起删除**（实装 2.2.2 的 `.tmod` 里 0 命中），
   而毁灭之星 2.0 的配方要它 ×10。用户授权按方案 B（连它一起搬），于是毁灭之星可以照 2.0 原配方一字不改。
   口径取 **2.0**：15×12 判定（贴图 38×40）、堆叠 **999**、售出价 **1 金 20 银**、**青档**、研究 25
   （2.0.3.9 起堆叠 9999、2.0.4 改成红档并把配方里的星尘换成星疫煤烟 `StarblightSoot`——都不取）。
   **配方照 2.0**：熔凝团 `MeldBlob`×6 + 星尘 `Stardust`×3 → 熵构体×3 @ 远古操纵机（原版站台）；
-  这两味**现代版与经典版灾厄都有**（已核），故只注册一条配方、两分支通用（先现代后经典，缺件写警告）。
+  这两味**现代版与经典灾厄都有**（已核），故只注册一条配方、两分支通用（先现代后经典，缺件写警告）。
   **落地**：`Content/Items/Materials/MeldConstruct.cs` + 2.0 那份 38×40 贴图；中英本地化补物品名
   （zh **熵构体**；材料无 tooltip，与源一致）。
   验证：编译 0 警告 0 错误；资源自检 154 条全命中；贴图 `Test-Path` 已核。
 - 最近一批工作（2026-10-08）：**移植破坏者（TotalityBreakers）—— "超新星"下位链第三件。**
   口径：老规矩取 2.0：32×42、伤害 **55**、击退 5、使用/动画各 28 帧、**石灰档（Lime）**、价值 60 金、
-  弹速 12、使用音 `SoundID.Item106`（2.0.3.9 起是 50 伤害 + 潜行 1.3×、1.4.4-release 是 64——本件不取）。
+  弹速 12、使用音 `SoundID.Item106`（2.0.3.9 起是 50 伤害 + 潜行 1.3×、现代 1.4.4 是 64——本件不取）。
   效果：掷出黑焦油瓶，落地炸成一大片燃烧焦油；**潜行打击**这一瓶伤害 ×1.15，且飞行途中每 20 帧滴一团焦油。
   **配方照 2.0**：燃烧瓶×50（原版）+ 圣化水 + 亵渎水 + 乏燃料容器 + 日纱×10 @ 秘银砧。
   ⚠ **本件只有现代分支**：后四件灾厄件（ConsecratedWater / DesecratedWater / SpentFuelContainer / SolarVeil）
-  **经典版灾厄没有**（它们比经典版那条线晚），已核过 cal-1.4.2.101；缺件写 `Mod.Logger.Warn`，不静默。
+  **经典灾厄没有**（它们比经典版那条线晚），已核过 经典 1.4.2.101；缺件写 `Mod.Logger.Warn`，不静默。
   **落地**：`Content/Items/Weapons/Rogue/TotalityBreakers.cs` + `Content/Projectiles/Rogue/` 下四枚：
   `TotalityFlask`（20×20、穿透 1、存活 180 帧、走原版燃烧瓶 AI `ProjAIStyleID.MolotovCocktail`、贴图借用物品贴图）、
   `TotalMeltdown`（120×122、13 帧 ×5 tick、同一敌人每 30 帧可再命中、命中挂 5 秒燃烧）、
@@ -1291,7 +1286,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 最近一批工作（2026-10-08）：**移植弹道毒炸弹（BallisticPoisonBomb）—— "超新星"下位链第二件。**
   口径同上一件（老规矩取 2.0）：30×38、伤害 **50**、击退 6.5、使用/动画各 26 帧、**石灰档（Lime）**、
   价值 60 金、弹速 12、使用音 `SoundID.Item1`
-  （2.0.3.9/2.0.4 是 72 伤害 + `Rarity7BuyPrice`、1.4.4-release 又降到 57——本件都不取）。
+  （2.0.3.9/2.0.4 是 72 伤害 + `Rarity7BuyPrice`、现代 1.4.4 又降到 57——本件都不取）。
   效果：粘性炸弹，落地或命中后炸出 3~4 枚尖刺（伤害 ×0.5）+ 8~12 朵毒云（伤害 ×0.25），命中挂 3 秒「毒液」；
   **潜行打击**一次抛 3 枚、每枚伤害取 `Math.Max(damage / 3, 1)`（照 2.0 源）。
   **配方照 2.0**：海沫炸弹 `SeafoamBomb` + 深渊细胞 `DepthCells`×10 + 硫磺沙 `SulphurousSand`×20 +
@@ -1338,7 +1333,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   症状：进游戏时 `Disabling Mod: CalamityDemutation`，报
   `System.Exception: Multiple extensions for asset Sounds\Custom\SilvaActivation, (.ogg, .wav)`。
   成因：`a65cbfe`（深渊魔镜）从实装灾厄抽来的 `SilvaActivation.ogg` 与本工程**基线里就有的**
-  经典版 `SilvaActivation.wav`（女巫套保命音，cal-1.4.2.101 原文件）撞名——两条都留着才会炸。
+  经典版 `SilvaActivation.wav`（女巫套保命音，经典 1.4.2.101 原文件）撞名——两条都留着才会炸。
   修法（**两个都保留**，因为两段音频不同且各自都是自己源线的原声）：现代那份改名
   `Sounds/Custom/SilvaActivationModern.ogg`，登记字段改名 `CalamityDemutationSounds.SilvaActivationModern`
   （深渊魔镜用）；经典那份保持原名，女巫套保命那处内联 `new SoundStyle(...)` 收进
@@ -1375,7 +1370,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **最大潜行值 +10 点、盗贼伤害 +4%、盗贼暴击 +4**（源为 +6%/+6）；
   ③ 沿用 (c) 口径：配方用**本模组自写的欺诈硬币**，现代分支 = 欺诈硬币 + `UnholyCore`×4 + `EssenceofHavoc`×2 @ 秘银砧，
   经典分支 = 欺诈硬币 + `UnholyCore`×4 + `EssenceofChaos`×2 @ 秘银砧（经典版没有 Havoc，只有 Chaos）。
-  **价值取 2.0.x 的 24 金**（`Rarity5BuyPrice`；1.4.4-release 是 20 金，本件不取）。
+  **价值取 2.0.x 的 24 金**（`Rarity5BuyPrice`；现代 1.4.4 是 20 金，本件不取）。
   **落地**：`Content/Items/Accessories/JobAcc/Rogue/RuinMedallion.cs`（+ 2.0 那份 20×28 贴图）；
   盗贼 +4%/+4 写 `PostUpdateMiscEffects`（现代走灾厄盗贼类、经典走 `CDUtil.AddClassicThrowingStats`），
   上限 +10 点（`GrantRogueStealth(Player, 0.10f)`）与半价（`SetStealthStrikeCost(Player, 0.5f)`）写 `PostUpdateEquips`；
@@ -1383,7 +1378,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 最近一批工作（2026-10-07）：**移植欺诈硬币（CoinofDeceit）—— "暗物质剑鞘"链的链下位材料、毁灭徽章的前件。**
   用户拍板：为让整条链在**经典分支也能合成**，采用方案 (c)（连带移植本件）。
   **效果取 2.0**：20×22、蓝档、1 金；潜行打击只消耗潜行上限的 **75%**
-  （2.0.3.9/2.0.4 = 85%、1.4.4-release = 90%——本件刻意保留 2.0 的 75%）；
+  （2.0.3.9/2.0.4 = 85%、现代 1.4.4 = 90%——本件刻意保留 2.0 的 75%）；
   盗贼基础属性按用户 2026-10-07 指定 **+3% 盗贼伤害 / +3 盗贼暴击**（源为 +6 盗贼暴击，拆一半到伤害上）。
   **配方取 1.4.4 / 2.0.3.9+ 一侧**（四版里唯一**全原版材料**的一条；2.0 的配方要酸木〔灾厄材料〕会锁死现代分支）：
   **任意铜锭×12 + 任意魔金锭×8 @ 铁砧**；源配方用灾厄自建的 `AnyCopperBar`/`AnyEvilBar` 组（内容全原版），
@@ -1429,7 +1424,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   但 2.0 给的是"潜行打击**半价**"、2.0.3.9+ 改成"只需 **75%** 上限"（`stealthStrike75Cost`）。
   暗物质剑鞘四版都是 48×62、**贴图完全同一张**（1446 字节）、半价 + 加速旗标 `darkGodSheath` + 盗贼 +6/+6；
   **2.0 那版（叫 `DarkGodsSheath`）= 上限 +20 + 必暴击 + 80 金/青档**；2.0.3.9 削成 +10、**仍是 80 金/青档**，
-  2.0.4 / 1.4.4-release 才改成红档 1 铂金、且已删必暴击。（2026-10-08 更正：先前记的"四版上限都 +10"与
+  2.0.4 / 现代 1.4.4 才改成红档 1 铂金、且已删必暴击。（2026-10-08 更正：先前记的"四版上限都 +10"与
   "2.0.3.9+ 是红档"两处都不准，以本行为准。）
   链上物品在已装 2.2.2 里**全都在**（SilencingSheath / RuinMedallion / DarkMatterSheath / CoinofDeceit /
   MeldBlob / UnholyCore / EssenceofHavoc），而**经典版一件都没有**（只有 MeldBlob / UnholyCore /
@@ -1451,18 +1446,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   是它自己的扩展方法，本工程调不到 → 用原版 `Player.immune/immuneTime` 复刻；
   ② 闪避"回潜行"在灾厄 Mod.Call 里**只有读没有写** → 新增反射桥
   **`CDUtil.AddRogueStealthValue`**（现代写 `CalamityPlayer.rogueStealth`、经典写
-  `CalamityPlayerPreTrailer.rogueStealth`，两版同名字段）。
+  `经典灾厄玩家类.rogueStealth`，两版同名字段）。
   弹幕 `AbyssalMirrorProjectile`（流明流体，12×14、贴图 10×42 三帧、50 帧寿命、末 25 帧淡出）命中挂
   `Eutrophication`（**只有现代版有**）+ 经典版用 `CrushDepth` 近似替代（两条都发，与 omega 蓝胸甲同款惯例）；
   伤害类型设 Generic（源用 `forceClassless`，避免二次吃职业加成）。
   音效从实装灾厄 .tmod 里抽出 `Sounds/Custom/AbilitySounds/SilvaActivation.ogg`，登记为
   `CalamityDemutationSounds.SilvaActivationModern`（工程"借用音放 Sounds/Custom"的既定口径）。
   **⚠️ 2026-10-08 修过一次加载期禁用**：工程 `Sounds/Custom/` 里**本来就有**一条经典版同名音效
-  `SilvaActivation.wav`（cal-1.4.2.101 原文件，女巫套保命触发时播的那个，见本文件第 4 节音效条），
+  `SilvaActivation.wav`（经典 1.4.2.101 原文件，女巫套保命触发时播的那个，见本文件第 4 节音效条），
   与这次新放的 `SilvaActivation.ogg` 撞名 → tML 抛
   `Multiple extensions for asset Sounds\Custom\SilvaActivation, (.ogg, .wav)` 并把整个模组禁用。
   两段音频**不是同一段**（经典 wav 4.8 秒 / 现代 ogg 2.4 秒），且各自都是自己那条源线的原声
-  （经典 `CalamityPlayerPreTrailer.cs:5639` 的保命音 / 现代 `SilvaHeadSummon.ActivationSound`，
+  （经典 `经典灾厄玩家类` 的保命音 / 现代 `SilvaHeadSummon.ActivationSound`，
   2.0 的深渊魔镜与女巫套保命共用它），故**两个都留**、把现代那份改名成 `SilvaActivationModern.ogg`：
   深渊魔镜用 `SilvaActivationModern`，女巫套保命改用 `SilvaActivation`（同时把那处内联
   `new SoundStyle(...)` 收进 `CalamityDemutationSounds`）。
@@ -1483,21 +1478,21 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   伤害/暴击/仇恨写在 `PostUpdateMiscEffects` 的 mirageMirror 块。
   **新增反射桥 `CDUtil.AddStealthGen(player, standstill, moving)`**：灾厄的 Mod.Call 里**没有**潜行恢复这一项
   （只有 AddMaxStealth / AddRogueVelocity / 各种潜行查询），只能反射写 `CalamityPlayer.stealthGenStandstill` /
-  `stealthGenMoving`（基准 1f，每帧复位）；**经典版灾厄根本没有这两个字段**，故该加成是现代版独占。
+  `stealthGenMoving`（基准 1f，每帧复位）；**经典灾厄根本没有这两个字段**，故该加成是现代版独占。
   +15% 上限走工程已有的 `GrantRogueStealthRatio`（相对当前上限，**不是**平铺 +15 点）。
   **备忘（整条链的换算口径，别忘）**：站定每帧恢复 = (上限 / 4 秒) × `stealthGenStandstill`；
   移动 = 上式 × 0.5 × `stealthGenMoving` × `stealthAcceleration`（`BaseStealthGenTime=4s`、
   `MovingStealthGenRatio=0.5`）。而潜行打击的**最大伤害**是按 `0.8×移动 + 0.2×站定` 反推的——
-  **恢复越快、单发上限越低**，移植时别当纯赚。另：现代 2.2.2 本体三件镜子都还在（配方与 1.4.4-release 一致），
+  **恢复越快、单发上限越低**，移植时别当纯赚。另：现代 2.2.2 本体三件镜子都还在（配方与 现代 1.4.4 一致），
   所以这一系列都是"同名不同物 + 用户明确允许叠加"的口径。
   验证：编译 0 警告 0 错误；资源自检 149 条全命中。
-- 最近一批工作（2026-10-07）：**移植纳米技术（Nanotech，盗贼饰品）—— 物品取经典版 1.4.2.101 口径，机制取 CI。**
+- 最近一批工作（2026-10-07）：**移植纳米技术（Nanotech，盗贼饰品）—— 物品取经典版 1.4.2.101 口径，机制取 旧版支线。**
   用户点名口径：盗贼伤害 **+20%**、盗贼暴击 **+20**（源 1.4.2 为 +15% / +10）、盗贼弹速 +15%；
-  手持盗贼武器时额外 +30 防御与 10% 伤害减免（照 cal-1.2 `CalamityPlayer1Point2.cs:917`）；
-  **纳米刀刃 / 潜行打击两条机制照 CI 的 `NanotechOld`**（不是 1.4.2 / cal-1.2 的旧写法）：刀刃
+  手持盗贼武器时额外 +30 防御与 10% 伤害减免（照 经典 1.2 `旧版灾厄玩家类`）；
+  **纳米刀刃 / 潜行打击两条机制照旧版支线的 `NanotechOld`**（不是 1.4.2 / 经典 1.2 的旧写法）：刀刃
   **每 30 帧**留一枚、**前 30 帧不能命中**、第 30 帧起才追踪（800 像素 / 速度 12 / 惯性 20）；
   潜行打击命中时从画面上方砸下 6 枚灾厄本体的 `NanoFlare`，潜行打击弹幕 +20 护甲穿透；
-  **刀刃伤害类型 = 盗贼**（CI 原版强设 Generic，用户要求改成盗贼）。
+  **刀刃伤害类型 = 盗贼**（旧版支线原版强设 Generic，用户要求改成盗贼）。
   **秒杀不做**：经典版那条 1/15 概率把 `FinalDamage.Base` 改成 `npc.lifeMax * 5`，靠写死的 NPC
   排除表，多模组环境下不可靠，效果与文案都不写。
   **落地**：`Content/Items/Accessories/JobAcc/Rogue/Nanotech.cs`（**新建了盗贼职业目录**——工程原先
@@ -1510,7 +1505,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `stealthStrike` / `stealthStrikeHitCount` 字段（2.2.2 实测字段名与类型）；经典版没有这套，恒 false，
   故潜行打击是现代版独占。顺手复用了工程已有的 `CDUtil.IsRogueProjectile`（现代走伤害类、经典反射读它的
   `rogue` 字段）与 `CDUtil.AddRogueVelocity`（现代走 Mod.Call、经典反射写 `throwingVelocity`）。
-  **坑位提醒**：CI 用的 `Projectile.FinalExtraUpdate()` 在本机 tML 里**不存在**（那是它依赖的 InnoVault
+  **坑位提醒**：旧版支线用的 `Projectile.FinalExtraUpdate()` 在本机 tML 里**不存在**（那是它依赖的 InnoVault
   扩展），本机等价写法是 `projectile.numUpdates == 0`（工程里 `GalaxyBlast` 已在用）。
   另注：灾厄 2.2.2 本体自带同名 `Nanotech`（46×46 / CosmicPurple / "盗贼徽章 + 吸血鬼护符 + 电工手套 …"
   的合并配方），与本件（28×32 / 90 金 / 月后 20 档）同名不同物，属"旧版回归"的既定做法。
@@ -1534,13 +1529,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   返回 false → 整个 `if` 块跳过 → **一条配方都没注册，日志里零报错**（`TryFind` 是"查询"不是"断言"，
   名字对不上天然静默；这也是本次排查绕远路的原因）。
   **本工程口径（2026-10-07 用户点名）**：凡"灾厄本体删掉/改名"的材料，**现代分支优先用本工程自写的同名件
-  补位，经典分支取经典版灾厄的**——既有先例就是 `CeaselessHungerPotion` / `ArkoftheElements` 的银河奇点。
+  补位，经典分支取经典灾厄的**——既有先例就是 `CeaselessHungerPotion` / `ArkoftheElements` 的银河奇点。
   本工程自备材料（`Content/Items/Materials/`）：`GalacticaSingularity`（银河奇点，四月亮碎片 @ 远古操纵机）、
   `CoreofChaos` / `CoreofCinder` / `CoreofEleum`（三核心，配方 = `EssenceofX` + 灵气 ×3 @ 秘银砧）、
   `MurkyPaste` / `TrapperBulb`（丛林前期）。
   **三处落地**：
   ① **虚无箭袋**（`QuiverofNihility`）：现代 = 任意箭袋 + **本工程 `GalacticaSingularity`×5** +
-     `DarkPlasma`×3 @ **远古操纵机**；经典 = 经典版灾厄的 `GalacticaSingularity`×5 + `DarkPlasma`×3
+     `DarkPlasma`×3 @ **远古操纵机**；经典 = 经典灾厄的 `GalacticaSingularity`×5 + `DarkPlasma`×3
      （照 2.0.4 源）。两分支共用局部方法 `AddNihilityRecipe`，配方组先用灾厄自带的 `AnyQuiver`、
      按名查不到才退到本模组自建的 `CalamityDemutation:AnyQuiver`。
      **没跟** 2.2.2 本体同名武器自己的配方（涡流碎片 `ItemID.FragmentVortex`(3456)×5 + `DarkPlasma`×3 @
@@ -1571,7 +1566,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **为什么只有金源套看得出来**：塔拉贡/血炎/弑神者单独穿时 `silvaSet`、`auricSet` 都是 false，
   根本进不了这两条分支；**金源套必定同时置 silvaSet 与 auricSet**，一穿就踩到。
   同理**始源林海套**也会中招（它自己置 silvaSet，会吃掉自己的 `silvaMage` 巨型爆炸与 `silvaThrowing` 1.25 倍）。
-  **源的对照（别再考古）**：经典版把 `tarraCrits++` 写在**玩家侧** `CalamityPlayerPreTrailer.cs:6156`
+  **源的对照（别再考古）**：经典版把 `tarraCrits++` 写在**玩家侧** `经典灾厄玩家类`
   的 `ModifyHitNPCWithProj` 里，其余法师效果也分散在 `CalamityGlobalItem.Shoot` / 玩家钩子中，
   **天然不受 `CalamityGlobalProjectile.OnHitNPC` 里那三处 `return` 影响**；是移植时把效果集中到一处才暴露出来。
   **修法**：两条吸血分支的三个"放弃"判据改写成一句嵌套 `if (num11 > 0f && (int)num12 > 0 && Main.LocalPlayer.lifeSteal > 0f)`
@@ -1579,7 +1574,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `OnHitPlayer`（PvP）的同类吸血分支位于方法**末尾**、后面没有别的效果，故无需改动（已核）。
   **顺带审计**：五颗金源头置的 21 个职业标记（`tarra/bloodflare/godSlayer/silva × Melee/Ranged/Mage/Summon/Throwing`）
   逐个查过消费点，全部有实现；修的只是可达性。**复合是"按头分职业"的**（法师头 → 四套的法师效果），
-  与 CI 的 `AuricTeslaHeadMagic`、经典版同构 —— **不是**"戴任意金源头都给全部效果"。
+  与旧版支线的 `AuricTeslaHeadMagic`、经典版同构 —— **不是**"戴任意金源头都给全部效果"。
   验证：编译 0 警告 0 错误。
 - 最近一批工作（2026-10-06）：**移植魔能谐振仪（Mana Polarizer，法师饰品）**，口径取灾厄 **2.0.3.9**，
   数值与配方按用户点名改写。
@@ -1620,7 +1615,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ③ `CalamityDemutation.cs` 的 `MsgPermanentUnlock` 包体收窄（去掉那个 wing 布尔，只留洋葱的 acc）；
   ④ 两份 hjson 各删一条 `Items.MoonPact`。**永久解锁标志据此从 2 个回到 1 个（只剩天界洋葱 `extraAccessoryML`）**。
   验证：编译 0 警告 0 错误，两道自检全命中。
-- 最近一批工作（2026-10-06）：**移植虚无箭袋（Quiver of Nihility，现代版灾厄 2.0.4 独有件）**，
+- 最近一批工作（2026-10-06）：**移植虚无箭袋（Quiver of Nihility，现代灾厄 2.0.4 独有件）**，
   并按用户点名把基础属性修正为「远程伤害 +12%、远程暴击率 +12%」（源只有远程暴击 +5）。
   ① 新增 `Content/Items/Accessories/JobAcc/Ranged/QuiverofNihility.cs`（+同名 `.png` / `_Back.png`，均取 2.0.4）：
   42×36、价值 1 铂金 50 金（照 2.0.4 的 `RarityTurquoiseBuyPrice`）、`AutoloadEquip(EquipType.Back)`、
@@ -1636,7 +1631,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   （`ResetEffects` / `UpdateDead` 两处复位）与 `PostUpdateMiscEffects` 的 +12% 远程伤害 / +12 远程暴击块；
   `Content/Projectiles/CalamityDemutationGlobalProjectile` 加 `nihilicArrow` 标记。
   ⑤ 配方照 2.0.4（任意箭袋 + `DarkPlasma`×3 + `GalacticaSingularity`×5 @ 远古操纵机）分双版本注册；
-  **经典版灾厄没有 `AnyQuiver` 配方组**，故新建 `Systems/RecipeSystem.cs`（ModSystem——`Mod.AddRecipeGroups`
+  **经典灾厄没有 `AnyQuiver` 配方组**，故新建 `Systems/RecipeSystem.cs`（ModSystem——`Mod.AddRecipeGroups`
   已标记过时，写在 Mod 里会刷 CS0672 警告）自建 `CalamityDemutation:AnyQuiver`（魔法/熔火/潜猎者箭袋，同源内容）。
   ⑥ 另从灾厄取了 `Assets/ExtraTextures/BasicCircle.png` 与 `Graphics/Metaballs/StreamGougeLayer.png`。
   中英本地化各补 `Items.QuiverofNihility`（en `Quiver of Nihility` / zh **虚无箭袋**）与
@@ -1665,10 +1660,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   （该块与龙蒿相关块同在 `PostUpdateMiscEffects`，且龙蒿标记由装备结算阶段更早置位，故条件判定安全）；
   中英 tooltip 同步改穿透为 10 并补条件行。验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线收尾·第五件 = 古圣金源复合盗贼头——金羽十杀盔（AuricTeslaPlumedHelm）**；
-  另按用户点名给始源林海面具补上 CI 的**移速 +20%**。
+  另按用户点名给始源林海面具补上 旧版支线的**移速 +20%**。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaPlumedHelm.cs`（贴图 30×20 / `_Head.png` 40×1120，
-  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、**防御 34**
-  （经典/CI 同值，源码同行另留 `//132`）、月后稀有度 20。
+  取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、**防御 34**
+  （经典/旧版支线同值，源码同行另留 `//132`）、月后稀有度 20。
   ② 套装（照经典版 1:1）：置位 `tarraSet+tarraThrowing` / `bloodflareSet+bloodflareThrowing` /
   `godSlayer+godSlayerThrowing` / `silvaSet+silvaThrowing` / `auricSet`；另加荆棘 3、lavaMax 240、
   ignoreWater、crimsonRegen、岩浆中 +30 防御 / +10 回血；**潜行上限 160**（`GrantRogueStealth(1.6f)`）。
@@ -1681,53 +1676,53 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⑤ 配方：四件下位**盗贼**头（龙蒿头盔 + 血饮魔精盔 + 弑神者面具 + 始源林海面具）＋
   现代 AuricBar×10 / 经典 AuricOre×60 等 ＋妄想护符；两分支的坯料清单与另四颗金源头逐字一致。
   ⑥ 中英本地化各补 `Items.AuricTeslaPlumedHelm`（en `Auric Tesla Plumed Helm` / zh **金羽十杀盔**，
-  两个名字都由用户给定）。**CI 对照结论见 9.3 第 7 条追记（CI 多移速 +25%、潜行写成 1.3+当前/6、
+  两个名字都由用户给定）。**旧版支线对照结论见 9.3 第 7 条追记（旧版支线多移速 +25%、潜行写成 1.3+当前/6、
   ArmorSetShadows 用轮廓线、且省掉了 lavaMax/岩浆奖励）。**
   验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线第四件 = 始源林海盗贼头——始源林海面具（SilvaMask）**。
   ⚠️ 命名：经典版里 **`SilvaMask` 才是盗贼头**（`SilvaHelm` 近战 / `SilvaHornedHelm` 射手 /
-  `SilvaHelmet` 召唤 / `SilvaMaskedCap` 法师）；**现代版 Silva 套没有盗贼头**，CI 对应件 `SilvaHeadRogue`。
+  `SilvaHelmet` 召唤 / `SilvaMaskedCap` 法师）；**现代版 Silva 套没有盗贼头**，旧版支线对应件 `SilvaHeadRogue`。
   显示名 en `Silva Mask`、zh **始源林海面具**（用户未点名，按「Mask → 面具」口径）。
   ① 新增 `Content/Items/Armors/Silva/SilvaMask.cs`（贴图 `SilvaMask.png` 20×22 / `_Head.png` 40×1120，
-  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 90 金、**防御 30**（源码同行另留 `//110`）、月后稀有度 15。
+  取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 90 金、**防御 30**（源码同行另留 `//110`）、月后稀有度 15。
   ② 单件：盗贼伤害 +13% / 盗贼暴击 +13%（`CDUtil.GetRogueDamageClass` 加类 + 经典版投掷桥）。
   ③ 套装 `silvaSet + silvaThrowing` + **潜行上限 150**（`GrantRogueStealth(1.5f)`）：
   (a)「生命 >50% 时盗贼武器投掷更快」——经典版写在 `UseTimeMultiplier` 里返回 **1.1f**
-  （tML 里该值 >1 表示"更慢"，与 tooltip 相反），本工程沿用射手头当年的处置——**从 CI**：
-  `player.GetAttackSpeed(rogue) += 0.1f`，判据照 CI（生命 >50% + 手持盗贼类 + `useTime > 3`）。
+  （tML 里该值 >1 表示"更慢"，与 tooltip 相反），本工程沿用射手头当年的处置——**从旧版支线**：
+  `player.GetAttackSpeed(rogue) += 0.1f`，判据照旧版支线（生命 >50% + 手持盗贼类 + `useTime > 3`）。
   注意经典侧没有盗贼 DamageClass，只装经典版时手持无类型武器不会命中该判据。
   (b)「无敌窗口结束后盗贼武器伤害 +10%」——落在 `ModifyHitNPCWithProj`（经典 6635 原样，
   盗贼判定换成 `CDUtil.IsRogueProjectile`）。
   (c) **源里的隐藏项**（不在 tooltip 内）：生命 >50% 且盗贼暴击 → 伤害 ×1.25，**被 `auricSet` 门控**
-  （经典 CalamityPlayerPreTrailer.cs:6136-6144）——落在 `GlobalProjectile.OnHitNPC`；
+  （经典灾厄玩家类）——落在 `GlobalProjectile.OnHitNPC`；
   因 tML 的 `HitInfo` 按值传入改不动已结算伤害，改为**事后补打 25% 实伤**（线性缩放下等效）。
   ④ 玩家侧新增 `silvaThrowing`（`ResetEffects` / `UpdateDead` 两处复位）。
   ⑤ 配方与其余始源林海头逐字一致（现代 PlantyMush×30 等 / 经典 DarksunFragment×5 等 + LeadCore）；
-  中英本地化各补 `Items.SilvaMask`。**CI 对照结论与待拍板项见 9.3 第 7 条。**
+  中英本地化各补 `Items.SilvaMask`。**旧版支线对照结论与待拍板项见 9.3 第 7 条。**
   验证：编译 0 警告 0 错误，资源自检 146 条全命中。
-- 最近一批工作（2026-10-06）：**按用户点名，把本次新建的职业头跟 CI 逐件对照，并落实 5 处调整**（对照表见 9.3 第 7 条）：
-  ① 始源林海法师头（SilvaMaskedCap）：**加「法力消耗 ×0.81」**（CI 的 SilvaHeadMagicold）。
-  ② 弑神者法师头（GodSlayerVisage）：**加「法力消耗 ×0.83」**（CI 的 GodSlayerHeadMagicold）。
+- 最近一批工作（2026-10-06）：**按用户点名，把本次新建的职业头跟 旧版支线逐件对照，并落实 5 处调整**（对照表见 9.3 第 7 条）：
+  ① 始源林海法师头（SilvaMaskedCap）：**加「法力消耗 ×0.81」**（旧版支线的 SilvaHeadMagicold）。
+  ② 弑神者法师头（GodSlayerVisage）：**加「法力消耗 ×0.83」**（旧版支线的 GodSlayerHeadMagicold）。
   ③ 弑神者盗贼头（GodSlayerMask）：**加「移速 +18%」**与**「潜行上限再 +当前上限/7」**
-  （CI 的 GodSlayerHeadRogueold 写法；单戴此头时 140 → 160）。后者为此新加了
+  （旧版支线的 GodSlayerHeadRogueold 写法；单戴此头时 140 → 160）。后者为此新加了
   `CDUtil.GetRogueStealthMax`（现代走 ModCall `GetMaxStealth`、经典反射）与 `CDUtil.GrantRogueStealthRatio`——
-  它读的是"加上基础档之后的实时上限"，所以会连带把玩家其它盗贼装备给的上限一起按比例放大，与 CI 行为一致。
-  ④ 金源召唤头（AuricTeslaSpaceHelmet）：套装**补 +1 仆从**（CI 的 AuricTeslaHeadSummon）。
-  ⑤ 金源法师头（AuricTeslaWireHemmedVisage）：**跟 CI 一致**——法伤 +20% → **+30%**，并补「法力消耗 ×0.8」。
-  用户明确"不动"的两件：始源林海召唤头（不取 CI 的鞭速 +15%）、弑神者召唤头（防御保持 12，不取 CI 的 29）。
+  它读的是"加上基础档之后的实时上限"，所以会连带把玩家其它盗贼装备给的上限一起按比例放大，与旧版支线行为一致。
+  ④ 金源召唤头（AuricTeslaSpaceHelmet）：套装**补 +1 仆从**（旧版支线的 AuricTeslaHeadSummon）。
+  ⑤ 金源法师头（AuricTeslaWireHemmedVisage）：**跟 旧版支线一致**——法伤 +20% → **+30%**，并补「法力消耗 ×0.8」。
+  用户明确"不动"的两件：始源林海召唤头（不取 旧版支线的鞭速 +15%）、弑神者召唤头（防御保持 12，不取 旧版支线的 29）。
   中英本地化同步：两颗法师头 tooltip 各补「法力消耗降低 19% / 17%」、金源法师头改 30% + 蓝耗 20%、
   金源召唤头套装补「仆从上限 +1」、弑神者面具补「移速 +18%」与三行潜行说明（上限 160）。
   验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**盗贼线第三件 = 弑神者盗贼头——弑神者面具（GodSlayerMask）**。
   ⚠️ 命名：经典版里 **`GodSlayerMask` 才是盗贼头**（`GodSlayerHelm` 近战 / `GodSlayerHelmet` 射手 /
   `GodSlayerVisage` 法师 / `GodSlayerHornedHelm` 召唤）——就是早先判定"是盗贼头、先不移植"的那颗；
-  现代版对应 `GodSlayerHeadRogue`，CI 对应 `GodSlayerHeadRogueold`。显示名 en `God Slayer Mask`、
+  现代版对应 `GodSlayerHeadRogue`，旧版支线对应 `GodSlayerHeadRogueold`。显示名 en `God Slayer Mask`、
   zh **弑神者面具**（用户未点名，按 TarragonMask = 龙蒿面具 的「Mask → 面具」口径取）。
   ① 新增 `Content/Items/Armors/GodSlayer/GodSlayerMask.cs`（贴图 20×22 / `_Head.png` 40×1120，
-  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 75 金、**防御 29**（源码同行另留 `//96`）、月后稀有度 14。
+  取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 75 金、**防御 29**（源码同行另留 `//96`）、月后稀有度 14。
   ② 单件：盗贼伤害 +14% / 盗贼暴击 +14%（`CDUtil.GetRogueDamageClass` 加类 + 经典版投掷桥）。
   ③ 套装 `godSlayer + godSlayerThrowing`（**不置** `godSlayerDamage`——那是近战头专属）+ **潜行上限 140**
-  （`GrantRogueStealth(1.4f)`）；两条盗贼效果（照经典版 CalamityPlayerPreTrailer.cs:5225-5235 / 7931-7936）：
+  （`GrantRogueStealth(1.4f)`）；两条盗贼效果（照经典灾厄玩家类）：
   (a)「满生命时所有盗贼属性 +10%」——落在 `PostUpdateMiscEffects`：伤害 +10%、暴击 +10、**弹速 +10%**；
   弹速这条新加了 `CDUtil.AddRogueVelocity`（现代走官方 ModCall `AddRogueVelocity`、经典反射 `throwingVelocity`）。
   (b)「单次受伤 >80 → 额外无敌帧」——落在 `PostHurt`：`Player.immuneTime += 30`，带
@@ -1741,12 +1736,12 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `BloodflareHelmet` 召唤 / `BloodflareHornedMask` 法师）；现代版对应 `BloodflareHeadRogue`。
   显示名由用户给定：en `Bloodflare Imp Mask`、zh **血饮魔精盔**。
   ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHelm.cs`（贴图 `BloodflareHelm.png` 26×24 /
-  `_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 60 金、
+  `_Head.png` 40×1120，取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 60 金、
   **防御 28**（源码同行另留 `//85`）、月后稀有度 13。
   ② 单件（照经典版）：lavaMax +240、ignoreWater、盗贼伤害 +10% / 盗贼暴击 +10%
   （经 `CDUtil.GetRogueDamageClass` 加类 + 经典版投掷桥 `CDUtil.AddClassicThrowingStats`）。
   ③ 套装 `bloodflareSet + bloodflareThrowing` + `crimsonRegen` + **潜行上限 135**（`GrantRogueStealth(1.35f)`），
-  两条盗贼专属效果（照经典版 CalamityPlayerPreTrailer.cs:5142-5152 / 6226-6246）：
+  两条盗贼专属效果（照经典灾厄玩家类）：
   (a)「生命 >80% 上限时 +30 防御与 +5% 盗贼暴击；否则 +10% 盗贼伤害」——源是 if/else 互斥，
   落在 `PostUpdateMiscEffects`；
   (b)「盗贼暴击 50% 几率治疗你」——落在 `GlobalProjectile.OnHitNPC`：要求暴击 + 盗贼弹幕
@@ -1760,13 +1755,13 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⚠️ **命名坑**：经典版里 **`TarragonHelmet` 才是盗贼头**（`TarragonHelm` 近战 / `TarragonMask` 法师 /
   `TarragonVisage` 射手 / `TarragonHornedHelm` 召唤）；现代版对应 `TarragonHeadRogue`，显示名同为 Tarragon Helmet。
   ① 新增 `Content/Items/Armors/Tarragon/TarragonHelmet.cs`（贴图 `TarragonHelmet.png` 24×24 /
-  `_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 50 金、
+  `_Head.png` 40×1120，取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 50 金、
   **防御 15**（源码同行另留 `//98`）、月后稀有度 12。
   ② 单件（照经典版）：盗贼伤害 +10% / 盗贼暴击 +10%（经 `CDUtil.GetRogueDamageClass` 加类、
   另走经典版投掷桥 `CDUtil.AddClassicThrowingStats`）、减伤 +5%、lavaMax +240、ignoreWater、
   四条 debuff 免疫（诅咒地狱 / 着火了 / 诅咒 / 冷冻）。
   ③ 套装 `tarraSet + tarraThrowing` + **潜行上限 130**（`CDUtil.GrantRogueStealth(player, 1.3f)`），
-  三条盗贼专属效果（照经典版 CalamityPlayerPreTrailer.cs:3179 / 3870-3891 / 6158）：
+  三条盗贼专属效果（照经典灾厄玩家类 / 6158）：
   (a)「每 25 次盗贼暴击 → 5 秒免伤」——**计数**在 `CalamityDemutationGlobalProjectile.OnHitNPC`
   （判据 `hit.Crit && CDUtil.IsRogueProjectile(projectile)`，且冷却归零、未满 25）；
   **触发**与「免伤帧上限放宽到 300（源里非盗贼套是 120）」都在 `PostUpdateMiscEffects`，冷却 1800 帧（30 秒）。
@@ -1786,18 +1781,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   验证：编译 0 警告 0 错误，资源自检 146 条全命中。
 - 最近一批工作（2026-10-06）：**移植盗贼魔影头——魔影面罩（DemonshadeHelmRogue）**，
   顺带把「盗贼伤害类」与「盗贼潜行值」这两条跨模组接口查清并落地。
-  ① 新增 `Content/Items/Armors/Demonshade/DemonshadeHelmRogue.cs`：源 = 灾厄大修（CWR）0.4.0.1.3 的
-  `Content/Items/Armor/DemonshadeExter/DemonshadeHelmRogue`（**注意该件在 CWR 里被 `IsLoadingEnabled => false`
-  停用**，属未完工件，本工程按用户要求补全）；贴图三张取自 CWR 的 `DemonshadeHelmRogue*.png`
+  ① 新增 `Content/Items/Armors/Demonshade/DemonshadeHelmRogue.cs`：源 = 重制版的
+  `Content/Items/Armor/DemonshadeExter/DemonshadeHelmRogue`（**注意该件在 重制版里被 `IsLoadingEnabled => false`
+  停用**，属未完工件，本工程按用户要求补全）；贴图三张取自 重制版的 `DemonshadeHelmRogue*.png`
   （`_Head_Frome` → 本工程的 `_Extension`，48×1280）。防御 35、价值 5 铂金、稀有度 16；
-  附加层偏移 **(-4,-14)**（取自 CWR `CWRPlayerDraw` 的 Rogue 分支）。
+  附加层偏移 **(-4,-14)**（取自 重制版 `重制版的玩家绘制` 的 Rogue 分支）。
   ② 单件：**盗贼伤害 +50% / 盗贼暴击 +25%（膨胀 +50%）**——用户指定"与近战头一致"，
   但**明确删去攻速加成**（近战头自身仍有 +30% 攻速，与本件无关）。套装 `demonshadeSetBonus + redDevil +
   demonshadeClass + demonshadeRogue`、**+100% 盗贼伤害**，红魔 buff / 召唤 / 每帧伤害同步与其余变体逐行同构。
-  ③ **盗贼伤害类（1.4.4 口径，别再考古）**：现代版灾厄的盗贼类是**真 `DamageClass`**
-  （`CalamityMod/RogueDamageClass`，1.4.4-release 与 2.0.4 同名；`StealthDamageClass` 是它的子类、只给潜行打击用）；
+  ③ **盗贼伤害类（1.4.4 口径，别再考古）**：现代灾厄的盗贼类是**真 `DamageClass`**
+  （`CalamityMod/RogueDamageClass`，现代 1.4.4 与 2.0.4 同名；`StealthDamageClass` 是它的子类、只给潜行打击用）；
   `DamageClass` 在 tML 里是 `ModType`，所以用 `ModContent.TryFind("CalamityMod", "RogueDamageClass", out DamageClass)`
-  直接取，**零反射**，取不到才退到 `DamageClass.Throwing`（CWR 那颗头就是图省事用 Throwing 的）。
+  直接取，**零反射**，取不到才退到 `DamageClass.Throwing`（重制版那颗头就是图省事用 Throwing 的）。
   **方向性要点**：灾厄 `RogueDamageClass` 对 Throwing 是**完全继承**
   （`DamageClasses/RogueDamageClasses.cs` 的 `GetModifierInheritance → StatInheritanceData.Full`），
   所以给 Throwing 加成**能**作用到盗贼武器；但反之不成立——`DamageType = Throwing` 的弹幕
@@ -1807,19 +1802,19 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   盗贼武器按 `基准 × (throwingDamage + 玩家召唤伤害 additive)` 结算（见经典 `Items/Weapons/LunicEye.cs:47`）
   → 本工程为此加了反射桥 `CDUtil.AddClassicThrowingStats`（每帧加算）与 `CDUtil.GetRogueScaledDamage`。
   ④ **盗贼潜行（用户指定 200%）**：现代版走**官方 Mod.Call** —— `AddMaxStealth` + `SetWearingRogueArmor`
-  （这两个键在 2.0.4 与 1.4.4-release 的 ModCalls 里都有；现代版的闸门是**独立的** `wearingRogueArmor` 布尔，
+  （这两个键在 2.0.4 与 现代 1.4.4 的 ModCalls 里都有；现代版的闸门是**独立的** `wearingRogueArmor` 布尔，
   两个调用缺一不可。同族入口还有 `GetStealth / GetMaxStealth / ConsumeStealth / SetStealthProjectile /
   AddRogueVelocity / StealthStrikeAvailable` 等）。经典版 Call 里只有 zone/boss 查询 → 反射写 `rogueStealthMax`
   （经典版**没有** `wearingRogueArmor` 字段，闸门就是"上限 > 0"）。两边都按**加算**、且**必须每帧写**
   （灾厄在 ResetEffects 里把上限清零），调用点 = `CalamityDemutationPlayer.PostUpdateEquips`
   （`if (demonshadeRogue) CDUtil.GrantRogueStealth(Player, 2f);`；内部值 1f = 显示 100 点，2f = 200）。
   ⑤ 玩家侧新增 `demonshadeRogue`（`ResetEffects` / `UpdateDead` 两处复位）。
-  ⑥ 配方与其余魔影头一致（ShadowspecBar×40 @ 德雷顿熔炉；CWR 源是 ×12，本工程按既有口径取 40）。
+  ⑥ 配方与其余魔影头一致（ShadowspecBar×40 @ 德雷顿熔炉；重制版源是 ×12，本工程按既有口径取 40）。
   中英本地化各补 `Items.DemonshadeHelmRogue`（en `Demonshade Helm Rogue` / zh **魔影面罩**——两个名字都取自
-  CWR 自己的本地化文件；Tooltip / TooltipInflated / SetBonus 自拟，其中 SetBonus 末行
-  「最大盗贼潜行值提高到 200」是本工程补充的说明，CWR 原版没有 setBonus 文案）。
+  重制版自己的本地化文件；Tooltip / TooltipInflated / SetBonus 自拟，其中 SetBonus 末行
+  「最大盗贼潜行值提高到 200」是本工程补充的说明，重制版原版没有 setBonus 文案）。
   验证：编译 0 警告 0 错误，资源自检 146 条全命中。
-- 最近一批工作（2026-10-06）：**把「我们穿金源套」镜像给现代版灾厄（`auricSet` 反射桥）**，
+- 最近一批工作（2026-10-06）：**把「我们穿金源套」镜像给现代灾厄（`auricSet` 反射桥）**，
   顺手正法了金源近战头里的死代码（用户点名「看看如何用 system 函数把 auricSet 反射过来」）。
   背景：`AuricTeslaHelm.UpdateArmorSet` 末尾原有两段反射读灾厄 `CalamityPlayer.auricSet` 的代码，
   但只是 `bool auricSet = (bool)field.GetValue(calPlayer); auricSet = true;`——**改的是局部变量，从未写回**；
@@ -1840,9 +1835,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线收尾·第五件 = 古圣金源复合法师头——金虚万象盔（AuricTeslaWireHemmedVisage，
   英文名 Auric Tesla Wire-Hemmed Visage）**。口径同另三颗金源头：按经典版同名件 1:1 移植
-  （CI 的 `AuricTeslaHeadMagic` 与现代版同名件的防御同为 24，套装侧各家写法不同）。
+  （旧版支线的 `AuricTeslaHeadMagic` 与现代版同名件的防御同为 24，套装侧各家写法不同）。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaWireHemmedVisage.cs`（贴图 34×20 / `_Head.png` 40×1120，
-  取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、**防御 24**（源码另留 `//132`）、月后稀有度 20。
+  取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、**防御 24**（源码另留 `//132`）、月后稀有度 20。
   ② 套装（照经典版 1:1）：置位 `tarraSet+tarraMage` / `bloodflareSet+bloodflareMage` /
   `godSlayer+godSlayerMage` / `silvaSet+silvaMage` / `auricSet`；另加荆棘 3、lavaMax 240、ignoreWater、
   crimsonRegen、岩浆中 +30 防御 / +10 回血。按经典版原样**不置** `godSlayerDamage`、**不加** aggro；
@@ -1851,17 +1846,17 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   龙蒿叶暴风与法弹回血、血炎幽灵魔弹与暴击火焰爆炸、弑神者烈焰/治疗烈焰与受击魔法爆炸、
   始源林海法弹巨型爆炸与无敌后法伤加成。
   ④ 单件：`auricBoost` + 魔法伤害 +20%、魔法暴击 +20%、最大法力 +100（经典版原样；
-  现代/CI 是 30/20 + 蓝耗 ×0.8，工程走经典）。
+  现代/旧版支线是 30/20 + 蓝耗 ×0.8，工程走经典）。
   ⑤ 配方：四件下位**法师**头（龙蒿面具 + 血魇九头盔 + 弑神者面甲 + 始源林海罩帽）＋
   现代 AuricBar×10 / 经典 AuricOre×60 等材料 ＋妄想护符；两分支的坯料清单与另三颗金源头逐字一致。
   ⑥ 中英本地化各补 `Items.AuricTeslaWireHemmedVisage`（DisplayName / Tooltip / SetBonus），行尾整回 CRLF。
   显示名：en `Auric Tesla Wire-Hemmed Visage`、zh **金虚万象盔**（两个名字都由用户给定）。
   验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线第四件 = 始源林海法师头——始源林海罩帽（SilvaMaskedCap）**。
-  口径同前几件：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植
+  口径同前几件：单件与套装都照经典灾厄同名件 1:1 移植
   （现代版对应 SilvaHeadMagic，防御同为 21）。
   ① 新增 `Content/Items/Armors/Silva/SilvaMaskedCap.cs`（贴图 `SilvaMaskedCap.png` 26×22 /
-  `SilvaMaskedCap_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 90 金、
+  `SilvaMaskedCap_Head.png` 40×1120，取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 90 金、
   **防御 21**（源码同行另留 `//110`）、月后稀有度 15。
   ② 单件：魔法伤害 +13%、魔法暴击 +13%、最大法力 +100（经典版 UpdateEquip 原样）。
   ③ 套装 `silvaSet + silvaMage`（**不置** silvaMelee / silvaRanged / silvaSummon），两条法师专属效果：
@@ -1872,7 +1867,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   且只对「穿透为 1 的魔法弹幕」生效——本工程照源实现、保留原文案
   （与 tarraMage 的「50% 几率」同类，别再当 bug 去"修"）。
   (b)「无敌窗口结束后魔法武器伤害 +10%」——`ModifyHitNPCWithProj`
-  （经典版 CalamityPlayerPreTrailer.cs:6639 原样，判据 silvaCountdown <= 0 && hasSilvaEffect && silvaMage && 魔法职业）。
+  （经典灾厄玩家类 原样，判据 silvaCountdown <= 0 && hasSilvaEffect && silvaMage && 魔法职业）。
   ④ 玩家侧新增 `silvaMage`（`ResetEffects`/`UpdateDead` 两处复位；本件无独立冷却字段）。
   ⑤ 配方与其余始源林海头逐字一致（现代 PlantyMush×30 + EffulgentFeather×8 + AscendantSpiritEssence×2 /
   经典 DarksunFragment×5 + EffulgentFeather×5 + CosmiliteBar×5 + Tenebris×6 + NightmareFuel×14 +
@@ -1882,9 +1877,9 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线第三件 = 弑神者法师头——弑神者面甲（GodSlayerVisage）**。
   ⚠️ **命名坑**：经典版里 `GodSlayerMask` 是**盗贼头**（工程无盗贼职业故不移植），法师头叫
-  `GodSlayerVisage` —— 别再按名字猜。现代版已无此件，CI 对应件 `GodSlayerHeadMagicold`（数值同为防 21 / 14-14）。
+  `GodSlayerVisage` —— 别再按名字猜。现代版已无此件，旧版支线对应件 `GodSlayerHeadMagicold`（数值同为防 21 / 14-14）。
   ① 新增 `Content/Items/Armors/GodSlayer/GodSlayerVisage.cs`（贴图 `GodSlayerVisage.png` 20×24 /
-  `_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 75 金、
+  `_Head.png` 40×1120，取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 75 金、
   **防御 21**（源码同行另留 `//96`）、月后稀有度 14。
   ② 单件：魔法伤害 +14%、魔法暴击 +14%、最大法力 +100（经典版 UpdateEquip 原样）。
   ③ 套装 `godSlayer + godSlayerMage`（**不置** `godSlayerDamage` / `godSlayerSummon`——那两组分别是
@@ -1913,10 +1908,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   验证：编译 0 警告 0 错误，资源自检 145 条全命中。
 - 最近一批工作（2026-10-06）：**法师线第二件 = 血炎法师头——血魇九头盔（BloodflareHornedMask，英文名
   Bloodflare Hydra Hood）**，另把龙蒿面具防御由 10 调到 **14**（用户指定）。
-  口径同前两线：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；
+  口径同前两线：单件与套装都照经典灾厄同名件 1:1 移植；
   英文显示名取**现代版**的（`Bloodflare Hydra Hood`，与其余血炎件「Wyvern Helm / Demon Helm / Ram Mask」
   同一套命名），中文名由用户给定（血魇九头盔）。
-  ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHornedMask.cs`（贴图取自经典版 cal-1.4.2.101：
+  ① 新增 `Content/Items/Armors/Bloodflare/BloodflareHornedMask.cs`（贴图取自经典版 经典 1.4.2.101：
   `BloodflareHornedMask.png` 22×26 / `_Head.png` 40×1120）：18x18（源码即 18）、价值 60 金、
   **防御 22**（源码同行另留 `//85`）、月后稀有度 13。
   ② 单件：lavaMax +240、ignoreWater、魔法伤害 +10%、魔法暴击 +10%、最大法力 +100（经典版 UpdateEquip 原样）。
@@ -1937,11 +1932,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `Projectiles.GhostlyBolt.DisplayName`，行尾整回 CRLF。
   验证：编译 0 警告 0 错误，资源自检 145 条全命中（新增隐形贴图引用 1 条）。
 - 最近一批工作（2026-10-06）：**法师线开始·第一件 = 龙蒿法师头——龙蒿面具（TarragonMask）**。
-  口径同射手/召唤线：单件与套装都照经典版 CalamityModClassicPreTrailer 同名件 1:1 移植
+  口径同射手/召唤线：单件与套装都照经典灾厄同名件 1:1 移植
   （现代版对应 TarragonHeadMagic，仅作对照：它改给 15% 法伤 / 10% 减伤 / 15% 蓝耗减免，
   且回血走通用吸血球体系，与经典版完全不同）。
   ① 新增 `Content/Items/Armors/Tarragon/TarragonMask.cs`（贴图 `TarragonMask.png` 22×30 /
-  `TarragonMask_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 50 金、
+  `TarragonMask_Head.png` 40×1120，取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 50 金、
   **防御 14**（用户 2026-10-06 指定；源经典/现代都是 10，源码同行另留 `//98`）、月后稀有度 12。
   ② 单件：魔法伤害 +10%、魔法暴击 +10%、减伤 +5%、最大法力 +100、lavaMax +240、ignoreWater，
   并免疫诅咒地狱/着火了/诅咒/冷冻（经典版 UpdateEquip 原样）。
@@ -1960,18 +1955,18 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   行尾整回 CRLF。显示名：en `Tarragon Mask`、zh **龙蒿面具**。
   验证：编译 0 警告 0 错误，资源自检 144 条全命中。
 - 最近一批工作（2026-10-06）：**召唤线收尾·第五件 = 古圣金源召唤头——金宇星界盔（AuricTeslaSpaceHelmet），
-  复合下位四套召唤效果**（用户点名「进行复合，主要参照 CI 版和经典版」）。
+  复合下位四套召唤效果**（用户点名「进行复合，主要参照旧版支线和经典版」）。
   ① 新增 `Content/Items/Armors/AuricTesla/AuricTeslaSpaceHelmet.cs`（贴图 `AuricTeslaSpaceHelmet.png` 26×20 /
-  `AuricTeslaSpaceHelmet_Head.png` 40×1120，取自经典版 cal-1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、
-  **防御 12**（经典版与 CI 同值，源码同行另留 `//132`）、月后稀有度 20。
-  ② 套装（照经典版 1:1，CI 同值）：置位 `tarraSet+tarraSummon` / `bloodflareSet+bloodflareSummon` /
+  `AuricTeslaSpaceHelmet_Head.png` 40×1120，取自经典版 经典 1.4.2.101）：18x18（源码即 18）、价值 1 铂金 80 金、
+  **防御 12**（经典版与旧版支线同值，源码同行另留 `//132`）、月后稀有度 20。
+  ② 套装（照经典版 1:1，旧版支线同值）：置位 `tarraSet+tarraSummon` / `bloodflareSet+bloodflareSummon` /
   `godSlayer+godSlayerSummon` / `silvaSet+silvaSummon` / `auricSet`，**+120% 召唤伤害**；
   另加荆棘 3、lavaMax 240、ignoreWater、crimsonRegen、岩浆中 +30 防御 / +10 回血。
   按经典版原样**不置** `godSlayerDamage`、**不加** aggro（两者都只有近战头有）。
-  ③ 招牌召唤物：主人端补 `SilvaCrystal` 增益并保证**叶棱晶**在场（基础伤害 **3000**，经典版/CI 同值，
+  ③ 招牌召唤物：主人端补 `SilvaCrystal` 增益并保证**叶棱晶**在场（基础伤害 **3000**，经典版/旧版支线同值，
   仍走 `originalDamage`）；**噬神机械蠕虫不在此生成**——由已有玩家侧 `UpdateGodSlayerMechworm()`
   （`godSlayerSummon` 触发）统一维护，与下位弑神者头共用同一条路径。
-  ④ 单件：`auricBoost` + **+7 仆从上限**（经典版/CI 原样）；**另按本工程召唤头统一口径**补
+  ④ 单件：`auricBoost` + **+7 仆从上限**（经典版/旧版支线原样）；**另按本工程召唤头统一口径**补
   召唤伤害 / 鞭子攻击范围 / 鞭子攻击速度各 **+12%**——源里没有这三条，属工程自调（与四件下位召唤头一致）。
   ⑤ 配方：四件下位**召唤**头（龙蒿角盔 + 血炎狂龙盔 + 始源林海头盔 + 弑神者角盔）＋
   现代 AuricBar×10 / 经典 AuricOre×60 等材料 ＋妄想护符；两分支的坯料清单与既有近战/射手金源头逐字一致，
@@ -1981,7 +1976,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ⑥ 中英本地化各补 `Items.AuricTeslaSpaceHelmet`（DisplayName / Tooltip / SetBonus），行尾整回 CRLF。
   验证：编译 0 警告 0 错误，资源自检 144 条全命中。
 - 最近一批工作（2026-10-06）：**召唤线第四件 = 始源林海召唤头（SilvaHelmet）+ 远古叶棱晶（SilvaCrystal）**。
-  口径同前三件：单件照经典版（出处 = `CalamityModClassic-cal-1.4.2.101`，即 CalamityModClassicPreTrailer）、
+  口径同前三件：单件照经典版（出处 = `经典灾厄参考源码`，即 经典灾厄）、
   套装效果走经典版、并额外挂统一三条 +12%。
   ① 新增 `Content/Items/Armors/Silva/SilvaHelmet.cs`（贴图 `SilvaHelmet.png` 20×20 / `SilvaHelmet_Head.png` 40×1120
   取自经典版）：18x18（经典源码即 18）、价值 90 金、**防御 13**（经典版召唤头值，源码同行另留 `//110`）、月后稀有度 15；
@@ -1999,7 +1994,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `minion/sentry/ContinuouslyUpdateDamageStats` 才每帧按 `GetTotalDamage(DamageType).ApplyTo(originalDamage)` 重算，
   故爆炸（非 minion）不会被二次缩放、叶棱晶（minion）会随配装实时更新。
   ④ 玩家侧新增 `silvaSummon` / `sCrystal`（字段 + `ResetEffects` 与 `UpdateDead` 两处复位）；两条召唤向效果：
-  (a)「无敌窗口结束后 +2 仆从上限」→ `PostUpdateMiscEffects`（经典版 `CalamityPlayerPreTrailer.cs:3950` 原样）；
+  (a)「无敌窗口结束后 +2 仆从上限」→ `PostUpdateMiscEffects`（经典版 `经典灾厄玩家类` 原样）；
   (b)「无敌窗口结束后召唤弹幕伤害 +10%」→ `ModifyHitNPCWithProj`（经典版同函数的 `damageMult += 0.1`，
   判据由源的 `isSummon = minion || sentry || 白名单` 换成召唤职业等价判定）。
   ⑤ 配方与其余始源林海头逐字一致（现代 CosmicAnvil / 经典 DraedonsForge，双版本各需本模组 `LeadCore`）；
@@ -2015,7 +2010,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   `f2b71a6` 召唤线第三件 **弑神者角盔**（+ Mechworm 四段 + GodSlayerPhantom）｜
   `0482888` 召唤线第二件 **血炎狂龙盔**（+ GhostlyMine，并定下召唤头统一单件口径）｜
   `28ac093` 召唤线第一件 **龙蒿角盔**｜`47bf312` §9.3 第 4 条结案（12 件盔甲按工程现状、不回源）｜
-  `738df6e` 弑神保命回复量改受开关门控｜`c55baa6` 金源胸甲补回 CI 漏搬的 `godSlayerDamageProtect`｜
+  `738df6e` 弑神保命回复量改受开关门控｜`c55baa6` 金源胸甲补回 旧版支线漏搬的 `godSlayerDamageProtect`｜
   `13d84b1` §9.3 第 1 条结案（免伤 2% / 膨胀 5%）｜`b46440a` Part 2 收尾。
   **本日两处口径变更**：① 召唤头统一单件属性由 +10% 提到 **+11%**（召唤伤害 / 鞭子范围 / 鞭子攻速）；
   ② 弑神保命回复量由"恒 300"改为 **关态 100 / 开态 300**（受 `StatInflation` 门控）。
@@ -2074,7 +2069,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   由 `PostUpdateMiscEffects` 每帧调用。
   **与源的两处差异（经典/现代同源，均已核对）**：(a) 源那段"在尾巴前插入新身体节"的分支被包在"没有蠕虫头"的外层条件下，
   条件自相矛盾、永远不执行，故只实现可达的"整条重召"，不搬那段死代码；(b) 蠕虫伤害公式经典只取 `Multiplicative`，
-  现代/CI 改用 `Additive + Multiplicative`，工程取后者（公式本身不变，仆从数封顶 10）。
+  现代/旧版支线改用 `Additive + Multiplicative`，工程取后者（公式本身不变，仆从数封顶 10）。
   ④ 新增 `Content/Projectiles/Typeless/GodSlayerPhantom.cs`：召唤物/哨兵命中敌人且节流预算 `godSlayerDmg` 归零时，
   在弹幕位置朝随机方向生成一枚（伤害 = 本次命中伤害的一半 ×2）；命中附 600 帧弑神者地狱火，
   消亡时炸一圈 `DustID.ShadowbeamStaff` 尘（源裸数字 173，已反查）并 `Projectile.Damage()` 结算。
@@ -2082,7 +2077,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **与源的两处差异**：源挑出的目标索引 `num6` 从未被使用（幻影固定生成在弹幕自身位置、方向纯随机），
   故只保留其真实作用（附近有敌人就放行）；源无目标时会 `return` 掉整个 OnHitNPC 余下逻辑，
   工程只跳过生成，避免吞掉后面的效果。
-  玩家侧新增 `godSlayerSummon` / `godSlayerDmg`（float，每帧衰减 2.5，源在 CalamityPlayerPreTrailer.cs:3806-3809）/ `mWorm`。
+  玩家侧新增 `godSlayerSummon` / `godSlayerDmg`（float，每帧衰减 2.5，源在 经典灾厄玩家类）/ `mWorm`。
   ⑤ 配方与既有弑神者头同规矩：现代 `CosmiliteBar`×10 + `AscendantSpiritEssence`×2 @ 宇宙砧；
   经典 `CosmiliteBar`×14 + `NightmareFuel`×8 + `EndothermicEnergy`×8 @ 德雷顿熔炉。
   ⑥ 本地化：中英各补 `Items.GodSlayerHornedHelm`、`Buffs.Mechworm`、`Projectiles.GodSlayerPhantom` 与
@@ -2111,7 +2106,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   经典 `BloodstoneCore`×11 + `RuinousSoul`×2，均月球工作台。
   ⑥ 本地化：中英各补 `Items.BloodflareHelmet`（DisplayName / Tooltip / SetBonus）与 `Projectiles.GhostlyMine.DisplayName`，
   另给龙蒿角盔补上三条统一属性对应的 3 行 tooltip；行尾已整回 CRLF。
-  **四版本差异备查**：防 16 经典 = 现代（CI **没有**独立血炎召唤头，沿用现代那颗）；单件经典是
+  **四版本差异备查**：防 16 经典 = 现代（旧版支线 **没有**独立血炎召唤头，沿用现代那颗）；单件经典是
   `maxMinions+3 / lavaMax / ignoreWater`，现代改成召唤伤害 +5% 并把 `maxMinions+3` 挪到套装的 UpdateArmorSet；
   套装召唤伤害经典 55%、现代 50%；**现代删掉了 ≤50% 生命时的 +2 生命再生**（只留 +20 防御），
   地雷伤害模型同时换成 `CalcIntDamage<SummonDamageClass>(3750)`。
@@ -2130,8 +2125,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   用 `Player.ApplyDamageToNPC(..., DamageClass.Summon)` 结算，带 `whoAmI == Main.myPlayer` 判据）。
   ④ 配方与其余龙蒿头同规矩：现代 `UelibloomBar`×12 + `DivineGeode`×6；经典 `UeliaceBar`×7 + `DivineGeode`×6，均月球工作台。
   ⑤ 本地化中英各补 `Items.TarragonHornedHelm`（DisplayName / Tooltip / SetBonus），行尾已整回 CRLF。
-  **四版本差异备查**：防 3 经典 = 现代（CI **没有**独立的龙蒿召唤头，它沿用现代那颗 `TarragonHeadSummon`，
-  CI 自己在龙蒿线上只有 `AncientTarragonHelm` 与「合并头」`AuricTeslaHeadSummon`）。
+  **四版本差异备查**：防 3 经典 = 现代（旧版支线 **没有**独立的龙蒿召唤头，它沿用现代那颗 `TarragonHeadSummon`，
+  旧版支线自己在龙蒿线上只有 `AncientTarragonHelm` 与「合并头」`AuricTeslaHeadSummon`）。
   单件经典是 `maxMinions+3 / 减伤 5% / lavaMax / ignoreWater / 四减益免疫`，现代改成 `减伤 10% / 召唤伤害 +5%`
   并把 `maxMinions+3` 挪到套装的 UpdateArmorSet；**满血加成现代已删除**，工程按用户口径保留。
   光环三版对照：经典固定 200 且每帧（局部计时器 bug）／现代 120 按召唤伤害缩放、每 80 帧、经 `TarragonAura` 弹幕结算。
@@ -2144,8 +2139,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   已按最小改法给 5 处补判据（口径与清单见第 5 节新条目）。
   ② **本地化孤儿条目（已删，2026-10-05）**：`Projectiles` 段原有 10 条代码 0 引用的残留——
   `AbyssFractalHeld` / `BrilliantFractalHeld` / `ElementalFractalHeld` / `FinalFractalHeld` / `SpiritFractalHeld` /
-  `StarlitFractalHeld` / `VoidFractalHeld` / `WelkinFractalHeld`（CWR 分形系列）与 `RuneBolt` / `RuneSongHeld`，
-  中英两份都有，属删除 CWR/CE 内容时的残留（`Items` / `Buffs` 段无孤儿）；已从中英两份各删 10 行。
+  `StarlitFractalHeld` / `VoidFractalHeld` / `WelkinFractalHeld`（重制版分形系列）与 `RuneBolt` / `RuneSongHeld`，
+  中英两份都有，属删除 重制版/附属模组内容时的残留（`Items` / `Buffs` 段无孤儿）；已从中英两份各删 10 行。
   ③ **数值膨胀残留**：弑神近战套的弑神飞镖伤害读 `Player.HeldItem.damage`（base 值，不随膨胀开关），
   见 `Players/CalamityDemutationPlayer.cs` 的 `OnHitNPCWithItem` 与 `Content/Items/CalamityDemutationGlobalItem.cs` 的 `OnHitPvp`。
   **用户 2026-10-05 定口径：不接膨胀、维持现状（读武器自身数据），按"不改"结案**，别再动。
@@ -2153,7 +2148,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   A6 方面 `ApplyDamageToNPC` / `npc.immune[]` 的调用点全数复核——Item 与 Projectile 的 `OnHitNPC`/`OnHitPvp` 属主人端钩子无需判据；
   弑神者冲刺 `GodSlayerDashHits`（`GodSlayerDashMovement` 开头对非本机玩家 early-return）与盾牌冲撞 `ShieldSlamDashHits`（同款前置判据）均安全。
   A5 方面扫了「在非 AI 钩子里写 `ai[]`/`localAI[]` 却不发 `netUpdate`」的全部弹幕：真问题只有
-  **`AbominateHookScythe`**——锁敌状态（`ai[0] = 1` / `ai[2] = 目标索引`）只在主人端 `OnHitNPC` 写、上游 CWR 三个版本都没发 `netUpdate`，
+  **`AbominateHookScythe`**——锁敌状态（`ai[0] = 1` / `ai[2] = 目标索引`）只在主人端 `OnHitNPC` 写、上游 重制版三个版本都没发 `netUpdate`，
   已补一行 `Projectile.netUpdate = true`（IL 已确认项目同步包 msg 27 携带 `ai[0]/ai[1]/ai[2]`，故补发即生效）；
   其余命中均为 `==` 比较的误报，或主人端专用的视觉闩锁（`BansheeHookProj.localAI[0]`）、
   各端确定性递增的计时器（`GodSlayerDart.ai[1]`、`EntropicClaymoreHeld.ai[1]/ai[2]`）、以及 `ReceiveExtraAI` 的接收写入，均无需同步。
@@ -2166,7 +2161,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   而 `OnHitNPC` 本来只在主人端跑，TheEnforcer / PhoenixBlade / StellarStriker 用 `player.whoAmI` 比上游的 `Main.myPlayer` 更稳。
   E2：全工程 **0 空方法体**、**0 处对按值结构体**（`NPC.HitInfo` / `Player.HurtInfo` / `NPC.HitModifiers`）**的死写**；
   唯二的"可疑点"是 `bloomCounter` / `seaCounter` 恒真的 `flag = counter % 60 == 0` 与空 `if (counter >= 180) { }`——
-  **上游灾厄（1.3 / 1.4.2.101 / 2.0 / CI 各版）里这两个计数器同样是方法内局部变量**，属继承的历史残留，非移植回归，故不动。
+  **上游灾厄（1.3 / 1.4.2.101 / 2.0 / 旧版支线各版）里这两个计数器同样是方法内局部变量**，属继承的历史残留，非移植回归，故不动。
   ⑥ **第 3 批（C1 数值膨胀派生伤害 / E3 分叉实现）已扫完（2026-10-05）**：
   C1 全量过筛 **32 把已接入膨胀的武器**——派生点里**没有任何一处直读 `Item.damage`**（唯一命中的都是 `Item.DamageType` 的大小写误报），
   第 7 节点名的 7 个派生点（禅心剑 70% 真近战、破灭魔王剑 ×4、月炎之锋陨石雨、庇护之刃 DefenseBlast、
@@ -2201,7 +2196,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   - B5：`Sounds/CalamityDemutationSounds.cs` 的 17 个 `SoundStyle` 路径全部命中素材；音高站点 11 处。
     备注：其中 `MurasamaHitOrganic { Pitch = 1.25f }` 与 `DragonRage { Pitch = 0.3f + Level * 0.25f }`
     会超过 ±1——XNA 的 `SoundEffectInstance.Pitch` 上限是 ±1（IL 确认 `LegacySoundPlayer` 也是按 ±0.01~0.7 这类 XNA 单位写入的），
-    所以这两处会被引擎夹到 1.0。这是"CE 值 − 1"换算后的预期饱和，不是崩溃，暂不改。
+    所以这两处会被引擎夹到 1.0。这是"附属模组值 − 1"换算后的预期饱和，不是崩溃，暂不改。
   - C4：`postMoonLordRarity` 取值分布 = 10 / 12~17 / 20，全部合法（10 档是 `GreatswordofJudgement` 的有意例外，
     名称保持红色）；另有约 42 个物品**没有显式写 `Item.rare`**，但 `CalamityDemutationGlobalItem.SetDefaults` 会在
     `postMoonLordRarity != 0` 时统一补成 `ItemRarityID.Red`，所以观感与口径都成立，无需逐个补那一行。
@@ -2257,23 +2252,23 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **未抄**近战头里那两段反射读灾厄 `CalamityPlayer.auricSet` 的无效残留（9.2 已判定是死代码；
   整件事后来由反射桥取代，见 9.2 末条与第 8 节的 2026-10-06 记录）。
   **四版本差异备查**：防 40 经典/现代一致；现代 2.0.4 已**删掉 silvaSet/silvaRanged 与 lavaMax/lavaWet**、
-  `ArmorSetShadows` 改用 `armorEffectDrawOutlines`；CI `AuricTeslaHeadRanged` 额外给持远程武器时 +20% 远程攻速与
-  `AuricbloodflareRangedSoul`、沿用 CI 自己的旧金源件——工程走经典。
+  `ArmorSetShadows` 改用 `armorEffectDrawOutlines`；旧版支线 `AuricTeslaHeadRanged` 额外给持远程武器时 +20% 远程攻速与
+  `AuricbloodflareRangedSoul`、沿用 旧版支线自己的旧金源件——工程走经典。
   验证：编译 0 警告 0 错误，资源自检 143 条全命中。
-- 最近一批工作（2026-10-04）：**弑神者射手头两处机制向 CI 靠拢**（用户 2026-10-04 指定「只改这条、其余不动」）。
-  ① 破片弹：由经典版「每次射击 5% 概率、伤害 ×2.1（金源 ×3.2）」改为 CI 模型——
+- 最近一批工作（2026-10-04）：**弑神者射手头两处机制向 旧版支线靠拢**（用户 2026-10-04 指定「只改这条、其余不动」）。
+  ① 破片弹：由经典版「每次射击 5% 概率、伤害 ×2.1（金源 ×3.2）」改为 旧版支线模型——
   每 **2.5 秒**（150 帧）闸门放行一次，射击时若闸门开启即**必定**追加一枚、随即关闸；
   伤害 = `DamageSoftCap(本次射击 ×2, 1500)`、弹速 ×1.25。
-  CI 原实现蹭现代灾厄的 `CalamityPlayer.canFireGodSlayerRangedProjectile`（现代版在 `Player.miscCounter % 150 == 0` 复位）；
+  旧版支线原实现蹭现代灾厄的 `CalamityPlayer.canFireGodSlayerRangedProjectile`（现代版在 `Player.miscCounter % 150 == 0` 复位）；
   工程不写死灾厄类型，改在 `CalamityDemutationPlayer` 自建跨帧计时器 `godSlayerShrapnelCooldown`
   （字段 ~407、UpdateDead 复位、PostUpdateMiscEffects 递减），并顺手把既有的 `DamageSoftCap`
   由 `private static` 提为 `internal static` 供 `CalamityDemutationGlobalItem.Shoot` 复用。
-  ② 远程暴击「再次暴击」：由经典版 `1/max(15, 100 − 远程暴击率)` 单次骰子改为 CI 的**溢暴击**模型——
+  ② 远程暴击「再次暴击」：由经典版 `1/max(15, 100 − 远程暴击率)` 单次骰子改为 旧版支线的**溢暴击**模型——
   总暴击率（`Player.GetTotalCritChance(DamageClass.Ranged)`）> 100% 时按溢出部分（−100 后）的百分比概率触发，
   否则退化为固定 5%（`Main.rand.NextBool(20)`）；触发后 `modifiers.CritDamage *= 2f`（暴击 2 倍 → 4 倍）。
-  **备注**：CI 源码该 5% 分支写成 `hitInfo.Damage *= 4`，叠加在已含暴击（2 倍）的伤害上等于 **8 倍**，
-  与 CI 自身 tooltip「造成四倍伤害」矛盾，属笔误；工程取 tooltip 口径（两分支都翻倍到 4 倍），只让触发条件照 CI。
-  ③ 本地化：中英各把弑神者战盔套装文本的两行改成 CI 口径（「超过 100% 按溢出部分再次暴击」／
+  **备注**：旧版支线源码该 5% 分支写成 `hitInfo.Damage *= 4`，叠加在已含暴击（2 倍）的伤害上等于 **8 倍**，
+  与旧版支线自身 tooltip「造成四倍伤害」矛盾，属笔误；工程取 tooltip 口径（两分支都翻倍到 4 倍），只让触发条件照旧版支线。
+  ③ 本地化：中英各把弑神者战盔套装文本的两行改成 旧版支线口径（「超过 100% 按溢出部分再次暴击」／
   「未超过时 5% 概率 4 倍」／「每 2.5 秒射出一枚破片弹」）。
   **未动**：保命回血 300（9.3 第 3 条悬案照旧）、配方、稀有度、林海射手头及一切其他内容。
   验证：编译 0 警告 0 错误，资源自检 143 条全命中。
@@ -2282,23 +2277,23 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ① 新增 `Content/Items/Armors/Silva/SilvaHornedHelm.cs`（贴图 `SilvaHornedHelm.png` 26×24 /
   `SilvaHornedHelm_Head.png` 40×1120 取自经典版 1.4.2.101）：18x18（经典源码即 18，贴图实际 26×24）、
   价值 90 金、**防御 36**（比近战头的 52 低，经典版原样）、月后稀有度 15；单件远程 13/13。
-  显示名：en `Silva Horned Helm`、zh **始源林海角盔**（近战头保持 `Silva Helm` / 始源林海战盔；CI 同名件亦译「始源林海角盔」）。
+  显示名：en `Silva Horned Helm`、zh **始源林海角盔**（近战头保持 `Silva Helm` / 始源林海战盔；旧版支线同名件亦译「始源林海角盔」）。
   ② 玩家侧新增 `silvaRanged`（字段 + 两处复位）；套装里置 `silvaSet` + `silvaRanged`，**不置** `silvaMelee`
   （经典版射手头无近战专属三项，故套装文本相应比近战头少三行）。
   ③ 两条远程向效果：
   (a)「提高所有远程武器射速」→ `PostUpdateMiscEffects`：持远程武器且 `useTime > 3` 时
   `Player.GetAttackSpeed<RangedDamageClass>() += 0.1f`。**口径备注**：经典版把它写成 `UseTimeMultiplier`
   返回 `1.1/1.2`——tML 里该值 >1 表示「更慢」（现代灾厄同类写法一律 <1 表示更快），与 tooltip 相反、属写反；
-  CI 还原件 `SilvaHeadRanged.UpdateArmorSet` 按 +10% 远程攻速实现，本工程从 CI（让 tooltip 成真）。
+  旧版支线还原件 `SilvaHeadRanged.UpdateArmorSet` 按 +10% 远程攻速实现，本工程从旧版支线（让 tooltip 成真）。
   (b)「始源林海无敌期间远程武器伤害 +40%」→ `ModifyHitNPCWithProj`：
   `silvaRanged && silvaCountdown > 0 && hasSilvaEffect && proj 属远程` 时 `damageMult += 0.4`（判据与数值同经典版）。
   ④ 本地化：中英各补 `Items.SilvaHornedHelm`（DisplayName / Tooltip / SetBonus，套装文本 = 通用 7 行 + 远程 2 行，无占位符）。
   ⑤ 配方与既有近战头**逐字一致**（现代 `PlantyMush`×30 + `EffulgentFeather`×8 + `AscendantSpiritEssence`×2 @ 宇宙砧；
   经典 `DarksunFragment`×5 + `EffulgentFeather`×5 + `CosmiliteBar`×5 + `Tenebris`×6 + `NightmareFuel`×14 +
   `EndothermicEnergy`×14 @ 德雷顿熔炉；两条都另需本模组的 `LeadCore`）。
-  **四版本差异备查**：防 36 经典版与 CI（`SilvaHeadRanged`）一致；**现代 2.0.x 已无射手头**（目录只剩 Magic/Summon，与 9.2 表一致）；
-  CI 配方是 `PlantyMush`×6 + `EffulgentFeather`×5 + `AscendantSpiritEssence`×2 @ 宇宙砧（工程按「与近战头一致」口径，未采纳）；
-  CI 的射速 +10% 与无敌期 +40% 伤害（`SilvaRangedSetLegacy`）均与经典同。
+  **四版本差异备查**：防 36 经典版与旧版支线（`SilvaHeadRanged`）一致；**现代 2.0.x 已无射手头**（目录只剩 Magic/Summon，与 9.2 表一致）；
+  旧版支线配方是 `PlantyMush`×6 + `EffulgentFeather`×5 + `AscendantSpiritEssence`×2 @ 宇宙砧（工程按「与近战头一致」口径，未采纳）；
+  旧版支线的射速 +10% 与无敌期 +40% 伤害（`SilvaRangedSetLegacy`）均与经典同。
   验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**弑神者套装按职业补齐·第三件 = 射手头（GodSlayerHelmet）**。
   口径与前两件同：单件照经典版、套装效果走经典版。
@@ -2324,8 +2319,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **版本差异备查**：防 35 / 远程 14/14 各版一致；配方 1.4.4 是 `CosmiliteBar`×10（工程采用）、2.0 是 ×14、2.0.3.9 是 ×7；
   破片弹两版差得远——经典是「每次射击 5%、伤害 ×2.1（金源 ×3.2）」，现代 2.0.3.9 改成 `canFireGodSlayerRangedProjectile`
   冷却闸门 + 伤害 = `DamageSoftCap(damage, 800)`；「暴击再暴击」现代已整条删除。
-  **（2026-10-04 更新：这两条已按用户口径整条改走 CI 的「2.5 秒闸门 + SoftCap(×2,1500)」与「溢暴击」模型，见本节最新一笔。）**
-  **CI 对照**（`GodSlayerHeadRangedold`）：防 35、DeepBlue 稀有度、远程 14/14，**套装内**再给远程暴击 +10%，
+  **（2026-10-04 更新：这两条已按用户口径整条改走 旧版支线的「2.5 秒闸门 + SoftCap(×2,1500)」与「溢暴击」模型，见本节最新一笔。）**
+  **旧版支线对照**（`GodSlayerHeadRangedold`）：防 35、DeepBlue 稀有度、远程 14/14，**套装内**再给远程暴击 +10%，
   配方 `CosmiliteBar`×7 @ 宇宙砧，并带 `GodSlayerSetBonusesChange` 配置开关切换新旧套装逻辑——与本工程"经典 1:1"口径不同。
   验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**血炎套装按职业补齐·第二件 = 射手头（BloodflareHornedHelm）**。
@@ -2357,7 +2352,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 最近一批工作（2026-10-04）：**龙蒿套装按职业补齐·第一件 = 射手头（TarragonVisage）**。
   用户口径：单件照经典版、**不吸收** 1.4.4 的差异、套装效果**走经典版**。
   ① 新增 `Content/Items/Armors/Tarragon/TarragonVisage.cs`（贴图 `TarragonVisage.png` / `TarragonVisage_Head.png`
-  取自经典版灾厄 1.4.2.101）：18x18、价值 50 金、防御 21、月后稀有度 12；单件远程 10/10 + 减伤 5% +
+  取自经典灾厄 1.4.2.101）：18x18、价值 50 金、防御 21、月后稀有度 12；单件远程 10/10 + 减伤 5% +
   `lavaMax += 240` + `ignoreWater` + 免疫诅咒地狱/着火/诅咒/冷冻；配方双版本（现代 `UelibloomBar`×12 + `DivineGeode`×6，
   经典 `UeliaceBar`×7 + `DivineGeode`×6，均用 `TileID.LunarCraftingStation`）——与近战头同规矩，现代分支取 1.4.4 的数量。
   ② 玩家侧新增 `tarraRanged` 标记（字段 + `ResetEffects`/`UpdateDead` 复位），落地经典版两条远程套效：
@@ -2374,7 +2369,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **射手头四版本对照**（其余职业头可照此比对）：经典 `TarragonVisage` 防 21 / 远程 10/10 / 减伤 5% / lavaMax / ignoreWater / 四减益免疫；
   2.0 `TarragonHeadRanged` 与之相同但**无**那四项减益免疫；2.0.3.9 再删 `lavaMax`/`ignoreWater`；
   2.0.4 改成远程 +10%（**无暴击**）+ 减伤 10%；1.4.4 是防 28 / 暴击 +7 / 弹药消耗 -25%；
-  **CI 没有龙蒿职业头**（那边只有 `AncientTarragon` 三件套、单头、盗贼/召唤混合体）。
+  **旧版支线没有龙蒿职业头**（那边只有 `AncientTarragon` 三件套、单头、盗贼/召唤混合体）。
   验证：编译 0 警告 0 错误，资源自检 143 条全命中。
 - 最近一批工作（2026-10-04）：**音效目录整理** —— 删掉 `Sounds/Custom/SCalSounds/` 这一层，5 个文件平铺进
   `Sounds/Custom/`：`CatastropheResonanceSlash`（巨龙之怒挥砍）、`DevourerDeath` / `DevourerDeathImpact`
@@ -2431,10 +2426,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   ② 顺带用 IL 查清两条机制并写进第 7 节：`GetWeaponDamage` 会跑 `ModifyWeaponDamage`
   （`GetWeaponDamage(HeldItem)` 型派生伤害天然跟随）、`Projectile.minionSlots` 每帧实时汇总。
 - 更早一批：① 庇护之刃右键巨刃 / 元素圣剑右键真近战 / 死神擢升左键引导挥砍（`aa117b4`）
-  ② 数值膨胀第一批 14 把（`a0859eb`）③ 上游差异核对：判定巨龙之怒移植自 CWR **0.4.0.3.5**
-  （判定口径 = 手持体文件名 / useTime / 移植时源伤害 / 粒子 API：0.4.0.3.5 用 `DRK_Spark`、
-  0.5.0.1.7 已换 InnoVault 的 `PRT_Spark`），并列出它与源的差异（见下「悬案」）。
-- 更早的批次：① 移植泓渊亡铭（已随后被删）② 全工程联机适配修正 ③ **删除全部 CWR/CE 内容**（三笔提交）
+  ② 数值膨胀第一批 14 把（`a0859eb`）③ 上游差异核对：判定巨龙之怒移植自重制版
+  （判定口径 = 手持体文件名 / useTime / 移植时源伤害 / 粒子 API：较早重制版用 `DRK_Spark`、
+  后续重制版已换 InnoVault 的 `PRT_Spark`），并列出它与源的差异（见下「悬案」）。
+- 更早的批次：① 移植泓渊亡铭（已随后被删）② 全工程联机适配修正 ③ **删除全部 重制版/附属模组内容**（三笔提交）
   ④ 注释与文案的残留清理 + 一行死注释 ⑤ 补删 zh-Hans 里泓渊亡铭残留的两条弹幕名
   ⑥ **联机隐患复查**（219 处 `NewProjectile` 全量过筛 + 上游同名文件逐个体检）：
   修掉魔影头盔 ×4 的召唤缺判据、蓝欧米伽触手缺判据（对照上游发现是移植时丢的），
@@ -2444,17 +2439,17 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - **工作区**：干净。用户自己改的 `TheBurningSky.cs` 稀有度 14→15 与本批膨胀改到同一个文件，
   经用户同意已随本批一起提交。
 - **悬案（本次会话查清但都没动）**：
-  1. 熵之舞缺 `CanUseItem => player.ownedProjectileCounts[Item.shoot] <= 0` 守卫——0.4.0.3.5 的
+  1. 熵之舞缺 `CanUseItem => player.ownedProjectileCounts[Item.shoot] <= 0` 守卫——较早重制版的
      `SetKnifeHeld` 会经全局 `CanUseItem` 补上这条，Terratomere / DragonRage 都有、唯独它漏了；
      它是 28/38 帧，挥砍途中可能再生成一个手持体。用户已明确「不加任何东西」，别再提。
-  2. 巨龙之怒与 CWR 0.4.0.3.5 的差异：近战 `localNPCHitCooldown` 15→5；物品侧 `coolWorld` 判定被去掉
+  2. 巨龙之怒与重制版的差异：近战 `localNPCHitCooldown` 15→5；物品侧 `coolWorld` 判定被去掉
      （`newLevel == 6` 的 0.6× 伤害变成无条件生效），而手持体侧又内联了 coolWorld 的一部分
      （少了 `worldName == "HoCha113"`）；价值由 `sellPrice(gold: 75)` 变成 `buyPrice(1, 80, 0, 0)`；
      爆炸弹幕 `FireBall` 没设 `DamageType`（源对 `FuckYou` 会补 `DamageClass.Melee`）；
      突刺（`ai[0] == 3`）的 `DefenseEffectiveness *= 0f` 保留了，但源里那道
      「超级护甲 / 防御 > 999 / DR ≥ 95% / 不可破 DR 就不破防」的豁免被裁掉了。
   3. 灾厄之刃（`Devastation`）的本地化显示名是「毁灭」、代码注释却叫「灾厄之刃」，口径待统一。
-- 验证状态：编译 **0 警告 0 错误**；被删 CWR/CE 类名在工程内残留提及 **0**；音效字段与素材路径存在性检查通过；
+- 验证状态：编译 **0 警告 0 错误**；被删 重制版/附属模组类名在工程内残留提及 **0**；音效字段与素材路径存在性检查通过；
   联机复查结论：ModItem 可变状态字段 0 处、鼠标读取全部有守卫、摄像机 0 处、命中回调类生成点无需判据
   （理由见第 5 节）。
 - 最近一批工作（2026-10-08 更晚）：**移植太阳之灵法杖（SunSpiritStaff）—— 「太阳神杖 / 天狼星」链的中间件（②）。**
@@ -2471,7 +2466,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   （写在 `Players/CalamityDemutationPlayer.cs` 的字段 + `ResetEffects` + `UpdateDead` 三处）。
   **软依赖改写**：源用灾厄 `CalamityUtils.KillShootProjectiles(true, type, player)` 清场，本工程不引用灾厄类型，
   照经典版写等价的"先杀掉自己在场的同类再召唤"循环；伤害类型走 `DamageClass.Summon`（原版类型，无灾厄依赖）。
-  **配方（用户 2026-10-08 拍板）**：砂岩砖×20 + 沙漠羽毛×2 @ 铁砧 —— 2.0 与经典 cal-1.1/1.2/1.4.2.101
+  **配方（用户 2026-10-08 拍板）**：砂岩砖×20 + 沙漠羽毛×2 @ 铁砧 —— 2.0 与经典 1.1/1.2/1.4.2.101
   **逐字相同**，且两味都不依赖灾厄，故只注册一条、两分支通用。
   贴图三张直接取自 2.0（`SunSpiritStaff.png` 44×48 / `SolarPixie.png` 50×50 / `SolarSpirit.png` 32×32 增益图标）。
   本地化：中英各补 `Items.SunSpiritStaff`（zh 太阳之灵法杖）、`Buffs.SolarSpirit`（zh 太阳之灵）、
@@ -2490,8 +2485,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   **API 坑（新）**：源里 `Projectile.aiStyle = 48` 会被 tML 分析器当成"魔法数字"报警告（工程基线是 0 警告），
   必须写 `ProjAIStyleID.Ray`；同理源里的裸值尘 `244` / `246` 要写 `DustID.CopperCoin` / `DustID.GoldCoin`。
   **配方（用户 2026-10-08 拍板，两分支各一条、缺件即退化）**：
-  现代分支（`CalamityMod` 在场）照源 2.0 = 太阳之灵法杖 + **日光精华 `EssenceofSunlight`×5** + 三魂（力量/视域/恐惧）各×3 @ 秘银砧；
-  经典分支（`CalamityModClassicPreTrailer` 在场）照源 cal-1.4.2.101 = 太阳之灵法杖 + **烬核 `CoreofCinder`×5**
+  现代分支（现代灾厄在场）照源 2.0 = 太阳之灵法杖 + **日光精华 `EssenceofSunlight`×5** + 三魂（力量/视域/恐惧）各×3 @ 秘银砧；
+  经典分支（`经典灾厄` 在场）照源 经典 1.4.2.101 = 太阳之灵法杖 + **烬核 `CoreofCinder`×5**
   （用本模组自持件，不借经典版的 `EssenceofCinder`）+ 三魂各×3 @ 秘银砧。
   贴图三张取自 2.0（`SunGodStaff.png` 72×72 / `SolarGod.png` 74×90 / `SolarGodSpiritBuff.png` 32×32）；
   本地化中英各补 `Items.SunGodStaff`（zh **太阳神杖**）、`Buffs.SolarGodSpiritBuff`（zh **太阳神之灵**）、
@@ -2552,7 +2547,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 ## 9. 古圣金源套（AuricTesla）与其四套下位 —— 对照结论与待办
 
-> 2026-10-01 侦察完成（用户点名「古圣金源套装及其下位」，要求与灾厄本体 / CI 对比，越详细越好）。
+> 2026-10-01 侦察完成（用户点名「古圣金源套装及其下位」，要求与灾厄本体 / 旧版支线对比，越详细越好）。
 > **侦察阶段一行代码没改**；9.3 的 1~5 条已在 2026-10-03 / 10-05 / 10-06 逐项落地，
 > **只剩 9.3 的 6、7 两条追记里那 5 处"要不要向源对齐"的口径题待用户拍板**
 > （清单已汇总到第 8 节第一屏④），9.4 是查清后不必重复考古的机制结论。
@@ -2560,33 +2555,27 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 ### 9.1 源流判定（一句话）
 
 工程里的 5 套 12 件（金源 3 + 龙蒿 3 + 血炎 3 + 弑神者 3 + 始源林海 3）是
-**`CalamityModClassicPreTrailer`（预发布经典版）的逐行移植**，再叠三层外来物：
+**经典灾厄同名件的逐行移植**，再叠三层外来物：
 
 1. **近战攻速**取自现代灾厄（经典版近战头都没有攻速）：金源头 28%、血碾溃阵盔（原「血炎面具」）18%、龙蒿头 15%、弑神头 20%。
-2. **从 CI 借的件**：现代版配方（四件坯料 + AuricBar + CosmicAnvil）、`GodSlayerDMGprotect`
-   （≤阈值完全免伤、触发后阈值跌回 20 每帧 +1）、CI 式两段飞镖 `GodSlayerDart`、以及"近战命中每 60 帧放一枚飞镖"。
+2. **从旧版支线借的件**：现代版配方（四件坯料 + AuricBar + CosmicAnvil）、`GodSlayerDMGprotect`
+   （≤阈值完全免伤、触发后阈值跌回 20 每帧 +1）、旧版支线式两段飞镖 `GodSlayerDart`、以及"近战命中每 60 帧放一枚飞镖"。
 3. **工程自调**：五职业分列加成合并成 `GenericDamageClass` 并把伤害/暴击抬高（**暴击一律抬到与伤害同值**）＋
    `StatInflation` 回滚（但只覆盖 5 件胸甲）。
 
-本机源的完整路径（侦察用，别再去翻别的版本）：
-
-| 版本 | 路径 |
-|---|---|
-| 灾厄经典（= 本工程的实际源） | `D:\Game\Terraria\ModModel\CalamityModClassic-cal-1.4.2.101\CalamityModClassic-cal-1.4.2.101\Items\Armor\AuricTesla*.cs`＋同目录 `Tarragon*/Bloodflare*/GodSlayer*/Silva*`；玩家侧逻辑在同级 `CalamityPlayerPreTrailer.cs` |
-| 灾厄本体 2.0.4（对照） | `…\CalamityModPublic-2.0.4\CalamityModPublic-2.0.4\Items\Armor\{Auric,Tarragon,Bloodflare,GodSlayer,Silva}\` |
-| 灾厄本体 1.4.4 公开源码（对照，攻速/AuricBar 数量取自它） | `…\CalamityModPublic-1.4.4-release\…\Items\Armor\…` |
-| CI Beta1.12（对照） | `…\CalamityInheritance-Beta1.12\…\Content\Items\Armor\{AuricTesla,Silva,GodSlayerOld,Ancient*}\`＋`CIPlayer\CalamityInheritancePlayer*.cs` |
+本机参考范围：经典灾厄同名套装、现代灾厄 2.0.4 / 1.4.4 的对照件，以及部分灾厄附属模组的旧版兼容实现。
+具体源码目录按任务从本机参考缓存中检索，不在此维护逐文件路径。
 
 移植判据（想复核时照这个比对即可）：经典版的 12 条套装副作用、3 条 AuricOre 长材料配方、
 `tarraMelee` 的 25%/`rand(90,180)`、`fBarrier` 的 `rand(200+dmg/2, 301+dmg*2)` 与 500/700/900 三段衰减、
 `silvaCountdown=600`＋`silvaHitCounter×100` 扣上限＋400 下限、`auricBoost` 潜行 `0.2f`/`10`、
 跑速 `auricSet?0.1 : silvaSet?0.05` —— 工程全部原样搬运。
 
-### 9.2 对照速查表（工程 / 灾厄 2.0.4 / CI / 灾厄经典）
+### 9.2 对照速查表（工程 / 灾厄 2.0.4 / 旧版支线 / 灾厄经典）
 
 形制类数值（防御、生命、移速、价值、稀有度）**一致**；下表只列有差异的地方。
 
-| 部件 | 工程 | 灾厄 2.0.4 | CI Beta1.12 | 灾厄经典 |
+| 部件 | 工程 | 灾厄 2.0.4 | 旧版支线 | 灾厄经典 |
 |---|---|---|---|---|
 | 金源头 | 防 54；近战 20/20；**攻速 28% 在单件** | 防 54；近战 20/10；攻速 28% 在套装；套装另给 aggro+1200 | 防 54；20/20/28 | 防 54；20/20；**无攻速** |
 | 金源召唤头 | 防 12；单件 +7 仆从＋统一三条 12%（召唤伤害/鞭子范围/鞭子攻速）；套装 +120%、含 godSlayer、叶棱晶 3000 | 防 12；单件仅 +15% 召唤伤害；套装 +75%、+6 仆从、**无 godSlayer**、叶棱晶 750 | 防 12；+7；套装 +120%、+1 仆从、叶棱晶 3000 | 防 12；+7；套装 +120%、叶棱晶 3000、含 lavaMax 与岩浆奖励 |
@@ -2594,7 +2583,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 金源胸 | 移速 +25%；通用 **22/22** | **无移速**；通用 8/5 | 移速 +25%；8/5；+GodSlayerDMGprotect | 移速 +25%；8/5 |
 | 金源腿 | 通用 **14/14** | 移速仅 +10%；12/5 | 移速 +50%；12/10 | 移速 +50%；12/5 |
 | 龙蒿胸/腿 | 通用 10/10（腿半血再 +15% 移速） | `lifeRegen=3`；胸 10/5；腿移速仅 10%、8/8 | `AncientTarragon` 是另一套召唤/盗贼混合体，**与工程无关** | `lifeRegen=2`；胸 10/5；腿 6/6 |
-| 血碾溃阵盔（原血炎面具） | 保留 lavaMax240/ignoreWater；10/10＋攻速 18% | 10/5；攻速在套装；**无 lavaMax/ignoreWater** | CI 直接用灾厄本体那件 | 无攻速 |
+| 血碾溃阵盔（原血炎面具） | 保留 lavaMax240/ignoreWater；10/10＋攻速 18% | 10/5；攻速在套装；**无 lavaMax/ignoreWater** | 旧版支线直接用灾厄本体那件 | 无攻速 |
 | 血炎胸/腿 | 通用 14/14；腿移速 30% | 12/8；腿移速 17%、10/7 | — | 12/8；腿 30%、10/7 |
 | 弑神头 | 14/14＋攻速 20% | 14/**7**；攻速在套装 | old：48 防、14/14/20%、aggro+1000 | 14/14；无攻速 |
 | 弑神胸 | 反伤 **+0.9**；通用 **15/15** | 反伤 +0.5；**无移速**；11/6 | old：反伤 +0.5、移速 15%、10/6 | 反伤 +0.5、移速 15%、11/6 |
@@ -2602,24 +2591,24 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 | 林海头 | 13/13＋攻速 19% | 2.0.4 **没有近战头**（只有 Magic/Summon） | `SilvaHeadMelee` 13/13 | 13/13；无攻速 |
 | 林海胸/腿 | 通用 **18/18**／12/12 | 12/8、**无移速**／移速仅 10%、12/12 | old：移速 20%、12/8／移速 45%、12/7 | 移速 20%、12/8／45%、12/7 |
 
-- 工程**每套只有一个近战头**；灾厄现代与 CI 每套都有 5 个头（近战/远程/法师/召唤/盗贼）。现代版 Auric
+- 工程**每套只有一个近战头**；现代灾厄与旧版支线每套都有 5 个头（近战/远程/法师/召唤/盗贼）。现代版 Auric
   头还改了名（`PlumedHelm/HoodedFacemask/WireHemmedVisage/SpaceHelmet/RoyalHelm`）。
-- 金源配方：经典分支 1:1；现代分支＝CI 的坯料清单（四件套＋妄想护符），但 AuricBar 数量取 **1.4.4 公开源码**
-  的 10/20/15（CI 与 2.0.4 都是 12/18/15）；霜冻屏障原先只放在经典分支，**2026-10-09 已照 CI
+- 金源配方：经典分支 1:1；现代分支＝旧版支线的坯料清单（四件套＋妄想护符），但 AuricBar 数量取 **1.4.4 公开源码**
+  的 10/20/15（旧版支线与 2.0.4 都是 12/18/15）；霜冻屏障原先只放在经典分支，**2026-10-09 已照旧版支线
   AuricTeslaBodyArmorold 的坯料清单补进现代分支**（详见 9.3 第 6 条）。
-- `ArmorSetShadows`：工程/经典＝`armorEffectDrawShadow`；现代与 CI＝`armorEffectDrawOutlines`。
+- `ArmorSetShadows`：工程/经典＝`armorEffectDrawShadow`；现代与旧版支线＝`armorEffectDrawOutlines`。
 - 金源头里原先那两段反射读灾厄 `CalamityPlayer.auricSet` 的代码是**无效残留**（读进局部变量就丢、没写回）——
   **2026-10-06 已正法**：死代码删除，改由 `Utilities/CDUtil_CalamityReflect.cs` 的
-  `CDUtil.MirrorAuricSetToCalamity` 每帧把本模组的 `auricSet` 镜像到**现代版灾厄**；调用点 =
+  `CDUtil.MirrorAuricSetToCalamity` 每帧把本模组的 `auricSet` 镜像到**现代灾厄**；调用点 =
   `CalamityDemutationPlayer.PostUpdateEquips`（必须在灾厄 `ResetEffects` 清零之后、它 `PostUpdateMiscEffects` 读取之前）。
   **考证结论（别再重查）**：
-  - `auricSet` 是 `CalamityPlayer` / `CalamityPlayerPreTrailer` 的 **public bool 字段**
-    （1.4.4-release `CalPlayer/CalamityPlayer.cs:1299`；2.0.4 同名；经典版 `CalamityPlayerPreTrailer.cs:639`），
+  - `auricSet` 是 `CalamityPlayer` / `经典灾厄玩家类` 的 **public bool 字段**
+    （现代 1.4.4 `现代灾厄玩家类`；2.0.4 同名；经典版 `经典灾厄玩家类`），
     两边都在 `ResetEffects`/`UpdateDead` 里每帧清零。
-  - **`Mod.Call` 里没有 auric 入口**：`ModCalls`（1.4.4-release 与 2.0.4 都是 `CalamityMod.Call → ModCalls.Call`）
+  - **`Mod.Call` 里没有 auric 入口**：`ModCalls`（现代 1.4.4 与 2.0.4 都是 `CalamityMod.Call → ModCalls.Call`）
     只有 Rogue / PostML 召唤 / Wearing... 那几个套装开关，外加 `SetPlayerColdImmune` / `SetPlayerHeatImmune` /
     `SetPlayerDefenseDamageImmune`；搜 `auric|rejection` **0 命中**。所以这件事只能走反射。
-  - 1.4.4-release 的 `CalamityPlayer` 有一段 `#region External variables -- Not used by Calamity, only via Mod.Call or reflection`，
+  - 现代 1.4.4 的 `CalamityPlayer` 有一段 `#region External variables -- Not used by Calamity, only via Mod.Call or reflection`，
     其中 `externalAuricRejectionImmunity`（25FEB2025 加入）**只**授予金源矿石的排斥免疫
     （`CalamityPlayerMiscEffects.cs:917` 的 `auricSet || seraphTracers || creativeGodMode || externalAuricRejectionImmunity`），
     不是整套 auricSet；且 2.0.4 **没有**这个字段（版本差异）。故未采用。
@@ -2627,7 +2616,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
     ② 飞毯贴图（`:1140`）③ 灾厄自己叶棱晶的伤害档（`:4002`，需它自己的 silvaSummon，我们不会触发）
     ④ 金源拖影与纳米粒子（`CalamityPlayerDrawEffects.cs:453`）→ 镜像过去**零平衡副作用**。
   - **经典版不能镜像**：它的 auricSet 在 `PostUpdateRunSpeeds` 里无条件给 +10% 跑速/加速度
-    （`CalamityPlayerPreTrailer.cs:5477/5492`），而工程自己也实现了一份同样的 +10% → 会变双份。故只镜像现代版；
+    （`经典灾厄玩家类`），而工程自己也实现了一份同样的 +10% → 会变双份。故只镜像现代版；
     经典版其余 auricSet 分支都还要求它自己的 *Set 标记，我们不置位，本就不会触发。
 
 ### 9.3 明天要处理的清单（建议按此顺序）
@@ -2635,35 +2624,35 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 1. **【行为 bug】「5% 完全无效」是空操作 —— 已结（2026-10-03 `45c8e30` 修好、2026-10-05 复核确认）。**
    原问题：`Players/CalamityDemutationPlayer.cs` 的 `ModifyHurt` 里 `if (godSlayerReflect && Main.rand.NextBool(20))`
    → 只写了 `Player.immune/immuneNoBlink`，IL 已证实（见 9.4）这**不会**取消本次伤害，等于白设标记、tooltip 在骗人。
-   落地：随机判定挪进 `FreeDodge` 里 `return true`（CI 是置 `freeDodgeFromShieldAbsorption` 再被 FreeDodge 吃掉，等价），
+   落地：随机判定挪进 `FreeDodge` 里 `return true`（旧版支线是置 `freeDodgeFromShieldAbsorption` 再被 FreeDodge 吃掉，等价），
    并自行补 15 帧无敌（原版 FreeDodge 分支只归零伤害、不代补无敌帧）；
-   几率经用户 2026-10-05 确认取 **关态 2%（1/50，= 经典版本意与 CI 实际值）/ 开态 5%（1/20）**，受 `StatInflation` 门控（见第 7 节）。
+   几率经用户 2026-10-05 确认取 **关态 2%（1/50，= 经典版本意与旧版支线实际值）/ 开态 5%（1/20）**，受 `StatInflation` 门控（见第 7 节）。
    同步改动：`GodSlayerChestplate` / `AuricTeslaBodyArmor` 的置位与类注释，以及两份 hjson 里这两件的 `Tooltip`（2%）与 `TooltipInflated`（5%）。
 2. **【语义】"≤80 伤害削为 1" 的置位从近战头搬到了胸甲 —— 已结（2026-10-03 `45c8e30` 归还整套，2026-10-05 复核确认）。**
    原问题：工程由 `GodSlayerChestplate` 置 `godSlayerReflect`、经典版由近战头置 `godSlayerDamage`，
    于是"只穿胸甲不戴头也能吃这个减伤"。
    现状：≤80 → 1 已回归近战头（`GodSlayerHelm.cs:56`、`AuricTeslaHelm.cs:65`；射手头按经典版故意不置），
-   消费判据与经典源 `CalamityPlayerPreTrailer.cs:7559` 逐字相同。三个同族标记的分工：
+   消费判据与经典源 `经典灾厄玩家类` 逐字相同。三个同族标记的分工：
    - `godSlayerDamage`（≤80 → 1）＝ **经典版**整套路径，由近战头置位；
-   - `godSlayerReflect`（2% / 膨胀 5% 概率完全免伤）＝ CI 的 `GodSlayerReflect`，两件胸甲都置；
-   - `godSlayerDamageProtect`（≤80 完全闪避、保护上限触发后重置为 20 并逐帧回升）＝ CI 的 `GodSlayerDMGprotect`。
-   **2026-10-05 顺带补了一处移植漏行**：CI 的 `AuricTeslaBodyArmorold.cs:47-49` 是
+   - `godSlayerReflect`（2% / 膨胀 5% 概率完全免伤）＝ 旧版支线的 `GodSlayerReflect`，两件胸甲都置；
+   - `godSlayerDamageProtect`（≤80 完全闪避、保护上限触发后重置为 20 并逐帧回升）＝ 旧版支线的 `GodSlayerDMGprotect`。
+   **2026-10-05 顺带补了一处移植漏行**：旧版支线的 `AuricTeslaBodyArmorold.cs:47-49` 是
    `GodSlayerReflect` / `GodSlayerDMGprotect` / `fBarrier` 三行连写，工程只搬了首尾两行；
    已给 `AuricTeslaBodyArmor.UpdateEquip` 补上 `godSlayerDamageProtect = true`（一行代码，无 tooltip 变更——
    中英文案本来就没写这条机制，与 `GodSlayerChestplate` 的处理一致）。
 3. **【数值】弑神保命回复 300 ≠ 源的 150 —— 已结（2026-10-05 用户定：关态 100 / 开态 300）。**
    原问题：`PreKill` 里 `int heal = draconicSurge ? statLifeMax2 : 300;` 恒为 300，与各源都对不上
-   （经典版 150；CI 那行是 `statLife += 100` 的笔误；现代灾厄**整套保命机制已删除**，只剩冲刺）。
-   落地：改成 `ConfigSystem.StatInflationEnabled ? 300 : 100`——关态取 CI 的 100，开态维持 300。
+   （经典版 150；旧版支线那行是 `statLife += 100` 的笔误；现代灾厄**整套保命机制已删除**，只剩冲刺）。
+   落地：改成 `ConfigSystem.StatInflationEnabled ? 300 : 100`——关态取 旧版支线的 100，开态维持 300。
    文案同步：两个弑神者头盔的 `SetBonus` 那行改用 `{1}` 占位（`Format(冲刺键显示名, 回复量)`），
    `DraconicElixir` 的 tooltip 去掉硬编码的 300，改成"其常规回复量"。
 4. **【数值方向】12 件的通用伤害/暴击全部高于所有源，且召唤/盗贼吃满 —— 已结（2026-10-05 用户定：以工程现状为准，不回源）。**
    原问题：五职业分列 → `GenericDamageClass` 合并时取了更强的一档（例：金源胸 8%/5%→22%/22%），
-   于是这 12 件的通用伤害/暴击都高于灾厄 2.0.4 / CI / 经典版任何一源，且召唤与盗贼也吃满。
+   于是这 12 件的通用伤害/暴击都高于灾厄 2.0.4 / 旧版支线 / 经典版任何一源，且召唤与盗贼也吃满。
    结论：**保持工程现状**，不复刻经典版、不逐件回源；新会话别再拿源值来"修正"这 12 件。
    （原条目另注"`StatInflation` 只覆盖 5 件胸甲、其余 7 件没有回滚档"已作废：2026-10-05 复核 12 件全部挂档，见第 7 节。）
 5. **【功能缺口】每套只有近战头，且配方直接引用自己的近战头 —— 已转成"逐套补职业头"的长期任务（用户 2026-10-05 定：补头，不写注释）。**
-   CI 用 `RecipeGroup("CalamityInheritance:AnyGodSlayerHeadMelee")` 之类接受任意职业头，工程接受不到 ——
+   旧版支线用 `RecipeGroup("旧版支线:AnyGodSlayerHeadMelee")` 之类接受任意职业头，工程接受不到 ——
    戴法师/远程/召唤头的玩家无法升阶。做法改为**逐套补齐 + 每套各自的双版本配方**（不做配方组）。
    **进度（2026-10-05）**：
    - **射手头**：龙蒿 / 血炎 / 弑神者 / 始源林海 / 金源五套已补（见第 8 节逐笔；金源那颗是「合并下位四套」的
@@ -2679,38 +2668,38 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
    - 盗贼头不补（工程无盗贼职业）；欧米茄蓝只有单颗通用头盔，三源皆无职业变体。
 6. **【小口径】迁移细节复核项 —— 2026-10-09 用户点名「进行匹配和对照」，两条都已查清：**
    ① **林海近战头的现代配方（PlantyMush 30/羽毛 8/精魂 2）有源、不必改**：旧记录说"任何源里都没有对应物"
-      **是错的**——它就是 **`CalamityModPublic-1.4.4-release`** 的 `Items/Armor/Silva/SilvaHeadMagic.cs`
-      （与 `SilvaHeadSummon` 同值）配方，且工程其余林海件的现代分支也全取 1.4.4-release
+      **是错的**——它就是 **`现代灾厄参考源码`** 的 `Items/Armor/Silva/SilvaHeadMagic.cs`
+      （与 `SilvaHeadSummon` 同值）配方，且工程其余林海件的现代分支也全取 现代 1.4.4
       （胸 90/12/4、腿 60/10/3、各头 30/8/2），自洽。2.0.3.9 / 2.0.4 把这批改便宜了（头 6/5/2、胸 12/10/3），
-      2.0 更早一版用的是 Tenebris 而非 PlantyMush；CI 的 `SilvaHeadMelee` 也是 6/5/2。
+      2.0 更早一版用的是 Tenebris 而非 PlantyMush；旧版支线的 `SilvaHeadMelee` 也是 6/5/2。
       ⇒ **维持现状**（用户 2026-10-09 拍板"进行匹配和对照"后核出的结论：无需改动）。
    ② **现代金源胸甲漏的霜冻屏障已补齐**：`AuricTeslaBodyArmor.AddRecipes` 的现代分支原先只有四套胸甲
-      （照 1.4.4-release 的结构，而 1.4.4-release **和** 2.0.4 的该配方里都没有霜冻屏障），
-      但 CI 的 `AuricTeslaBodyArmorold` 两条配方**都带 `FrostBarrier`**，而工程的现代分支本就以
-      "CI 的坯料清单 + 1.4.4-release 的 AuricBar 数量"为口径 ⇒ 补上本模组自有的 `FrostBarrier`×1
+      （照 现代 1.4.4 的结构，而 现代 1.4.4 **和** 2.0.4 的该配方里都没有霜冻屏障），
+      但 旧版支线的 `AuricTeslaBodyArmorold` 两条配方**都带 `FrostBarrier`**，而工程的现代分支本就以
+      "旧版支线的坯料清单 + 现代 1.4.4 的 AuricBar 数量"为口径 ⇒ 补上本模组自有的 `FrostBarrier`×1
       （该件可获取：两个 NPC 各 10% 掉落 + 商店 NPC 出售）。
    ③ `Devastation` 那类命名口径见 8 节悬案 3（**用户 2026-10-09 定：名字不变**，不再处理）。
 
-7. **【对照】2026-10-06 新建职业头 × CI 逐件对照（用户已拍板，5 处已落地，别再重查）：**
+7. **【对照】2026-10-06 新建职业头 × 旧版支线逐件对照（用户已拍板，5 处已落地，别再重查）：**
 
-   | 我们的件 | 我们（源 = 经典版） | CI 对应件 | 差异 | 处置 |
+   | 我们的件 | 我们（源 = 经典版） | 旧版支线对应件 | 差异 | 处置 |
    |---|---|---|---|---|
-   | SilvaHelmet 召唤 | 防 13 / +5 仆从 / 套 +75% / 叶棱晶 1500 | SilvaHeadSummonold | CI 多鞭速 +15%、SilvaSummonSetLegacy | **不动**（鞭速由工程统一 12/12/12 覆盖） |
-   | SilvaMaskedCap 法师 | 防 21 / 法伤 13-13 / 法力 100 | SilvaHeadMagicold | CI 多 **蓝耗 ×0.81** | **已补** |
-   | GodSlayerHornedHelm 召唤 | 防 **12** / +3 仆从 / 套 +65% | GodSlayerHeadSummonold | CI 防御 **29** | **不动** |
-   | GodSlayerVisage 法师 | 防 21 / 法伤 14-14 / 法力 100 | GodSlayerHeadMagicold | CI 多 **蓝耗 ×0.83** | **已补** |
-   | GodSlayerMask 盗贼 | 防 29 / 盗贼 14-14 / 潜行 140 | GodSlayerHeadRogueold | CI 多 **移速 +18%**、**潜行 +当前上限/7** | **已补**（潜行 140 → 160） |
-   | AuricTeslaSpaceHelmet 召唤 | 防 12 / +7 仆从 / 套 +120% / 叶棱晶 3000 | AuricTeslaHeadSummon | CI 套装多 **+1 仆从** | **已补** |
-   | AuricTeslaWireHemmedVisage 法师 | 防 24 / 法伤 **+20**-20 / 法力 100 | AuricTeslaHeadMagic | CI 多 **蓝耗 ×0.8**、法伤 **+30** | **按 CI 对齐** |
+   | SilvaHelmet 召唤 | 防 13 / +5 仆从 / 套 +75% / 叶棱晶 1500 | SilvaHeadSummonold | 旧版支线多鞭速 +15%、SilvaSummonSetLegacy | **不动**（鞭速由工程统一 12/12/12 覆盖） |
+   | SilvaMaskedCap 法师 | 防 21 / 法伤 13-13 / 法力 100 | SilvaHeadMagicold | 旧版支线多 **蓝耗 ×0.81** | **已补** |
+   | GodSlayerHornedHelm 召唤 | 防 **12** / +3 仆从 / 套 +65% | GodSlayerHeadSummonold | 旧版支线防御 **29** | **不动** |
+   | GodSlayerVisage 法师 | 防 21 / 法伤 14-14 / 法力 100 | GodSlayerHeadMagicold | 旧版支线多 **蓝耗 ×0.83** | **已补** |
+   | GodSlayerMask 盗贼 | 防 29 / 盗贼 14-14 / 潜行 140 | GodSlayerHeadRogueold | 旧版支线多 **移速 +18%**、**潜行 +当前上限/7** | **已补**（潜行 140 → 160） |
+   | AuricTeslaSpaceHelmet 召唤 | 防 12 / +7 仆从 / 套 +120% / 叶棱晶 3000 | AuricTeslaHeadSummon | 旧版支线套装多 **+1 仆从** | **已补** |
+   | AuricTeslaWireHemmedVisage 法师 | 防 24 / 法伤 **+20**-20 / 法力 100 | AuricTeslaHeadMagic | 旧版支线多 **蓝耗 ×0.8**、法伤 **+30** | **按旧版支线对齐** |
 
-   **没有 CI 对照的**：龙蒿 / 血炎两套（CI 里没有自己的甲，直接引用灾厄本体件）、魔影套（CI 无）——
-  这几件的对照基准只能是**现代版**，不是 CI。
+   **没有 旧版支线对照的**：龙蒿 / 血炎两套（旧版支线里没有自己的甲，直接引用灾厄本体件）、魔影套（旧版支线无）——
+  这几件的对照基准只能是**现代版**，不是 旧版支线。
 
    **2026-10-06 追记 · 法师线五件复核（**逐行重读代码，非照抄旧记录**；待用户拍板）：**
 
-   CI 侧只有 3 颗法师头，工程这 3 件的**单件数值已完全一致**（复核确认，无需再动）：
+   旧版支线侧只有 3 颗法师头，工程这 3 件的**单件数值已完全一致**（复核确认，无需再动）：
 
-   | 我们的件 | 我们（现值） | CI | 单件结论 |
+   | 我们的件 | 我们（现值） | 旧版支线 | 单件结论 |
    |---|---|---|---|
    | SilvaMaskedCap | 防 21 / +13% / +13 / 法力 100 / **蓝耗 ×0.81** | SilvaHeadMagicold 同 | **一致** |
    | GodSlayerVisage | 防 21 / +14% / +14 / 法力 100 / **蓝耗 ×0.83** | GodSlayerHeadMagicold 同 | **一致** |
@@ -2718,70 +2707,70 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
    **套装效果才是真差异（工程一律走经典版口径）：**
 
-   | 项 | 我们（经典版） | CI | 差异 |
+   | 项 | 我们（经典版） | 旧版支线 | 差异 |
    |---|---|---|---|
    | 林海法师·法弹巨型爆炸 | `penetrate == 1` 命中时 **3% 概率**（`rand(0,100)>=97`），撑大判定框后把本次伤害 ×4（金源 ×7）再结算 | `SilvaMagicSetLegacy`：`(penetrate==1 \\|\\| timeLeft<=5)` 时 **100% 触发、300 帧冷却**，生成独立 `SilvaBurst`，伤害 = `800 + 0.6×弹幕伤害` | **机制与数值都不同**（概率制 vs 冷却制） |
    | 林海法师·无敌期法伤 | **+10%**，且要求 `silvaCountdown <= 0`（无敌**结束后**） | `HasCooldown(SilvaRevive) \\|\\| HasBuff(SilvaRevival)` 期间 **+60%** | 数值差 6 倍、时机也不同 |
    | 弑神者法师·弑神火 | 节流预算 `godSlayerDmg`（每帧 -2.5，与召唤侧共用），射 `GodSlayerOrb`，伤害 = 半伤 ×1.5（金源 ×2.0） | `fireCD = 2`，随机方向射 `GodSlayerOrb`，伤害 = `(400 + 手持武器伤害/2) × 5` | **伤害公式完全不同** |
    | 弑神者法师·治疗烈焰 | `healMult = 0.06`（金源 0.03）− numHits×0.015，走 `GodSlayerHealOrb` | 固定 `rand(5, 11)` 点，`GodSlayerHealOrb`，距离 3000 / 冷却倍率 2 | **比例制 vs 固定随机** |
    | 弑神者法师·受击爆炸 | `GodSlayerBlaze` 1200（金源 2400） | `GodSlayerBlaze` 1200（金源不翻倍） | 仅金源档差 2 倍 |
-   | `AuricSilvaSet`（CI 独有） | **无对应标记**（金源法师头置 `silvaSet`，走 3% 递减吸血） | 任意弹幕命中即生成 `SilvaOrb` 回血 `rand(5,11)`，距离 3000 / 倍率 2 | CI 多一条"任意命中回血" |
+   | `AuricSilvaSet`（旧版支线独有） | **无对应标记**（金源法师头置 `silvaSet`，走 3% 递减吸血） | 任意弹幕命中即生成 `SilvaOrb` 回血 `rand(5,11)`，距离 3000 / 倍率 2 | 旧版支线多一条"任意命中回血" |
 
-   **⇒ 2026-10-09 全部结清（用户逐条拍板「换成 CI 模式」，6 处都已落地）——** 代码位置如下，别再重查：
+   **⇒ 2026-10-09 全部结清（用户逐条拍板「换成 旧版支线模式」，6 处都已落地）——** 代码位置如下，别再重查：
    - 林海法师·法弹巨型爆炸 → `CalamityDemutationGlobalProjectile.OnHitNPC` 改为生成**独立**弹幕
      `Content/Projectiles/Magic/SilvaBurst.cs`（**本轮新增**：96×96 隐形判定、穿透 -1、局部无敌只结算一次、
-     存活 2 帧；源 = CalamityMod 的 `Projectiles/Magic/SilvaBurst`，它用的也是隐形占位图）；闸门 =
+     存活 2 帧；源 = 灾厄本体的 `Projectiles/Magic/SilvaBurst`，它用的也是隐形占位图）；闸门 =
      `CalamityDemutationPlayer.silvaMageBurstCooldown`（触发后 300 帧）。伤害 = `800 + 0.6 × 触发弹幕伤害`；
      判据从"只认 `penetrate == 1`"放宽成"`penetrate == 1` **或** `timeLeft <= 5`"，且不再掷概率。
    - 林海法师·无敌期法伤 → `CalamityDemutationPlayer.PostUpdateMiscEffects` 里
      `silvaMage && silvaCountdown > 0 && hasSilvaEffect → GetDamage<MagicDamageClass>() += 0.6f`；
      `ModifyHitNPCWithProj` 里那条经典版 `+0.1`（`silvaCountdown <= 0`）**已删**。
    - 弑神者法师·弑神火 → 随机方向、初速 `rand(12,16)`、伤害 `(400 + 手持武器 Item.damage ÷ 2) × 5`，
-     闸门 = `godSlayerMageFireCD`（命中置 2）。**CI 写的是裸 `Item.damage`，故这条不随 `StatInflation` 变化**
+     闸门 = `godSlayerMageFireCD`（命中置 2）。**旧版支线写的是裸 `Item.damage`，故这条不随 `StatInflation` 变化**
      （与"按面板比例派生"的那些不同，属有意照抄源，别再改成 `GetWeaponDamage`）。
    - 弑神者法师·治疗烈焰 → **固定** `rand(5, 11)`、搜队友半径 **3000**、lifeSteal 消耗 **×2**。
    - 弑神者法师·受击爆炸 → `GodSlayerBlaze` 伤害**恒 1200**（去掉了"穿金源 2400"的三目）。
    - `AuricSilvaSet` → OnHitNPC 里**新增一条并列分支**（`silvaSet && target.canGhostHeal` 时任意命中生成
      固定 `rand(5,11)` 的 `SilvaOrb`，半径 3000 / 倍率 2）。它与经典版那条"按伤害比例递减"的吸血**并存**、
-     共用同一个 `Main.LocalPlayer.lifeSteal` 额度 —— 用户拍板时的口径是"CI 多一条"，故做成**追加**而非替换。
-   **两处与 CI 的已知偏差（有意保留，别再当成漏项）**：
-   ① CI 把「法师火 + 召唤幻影」共用一个 `fireCD`（召唤侧置 3）；本工程只把**法师侧**换成 `godSlayerMageFireCD`，
+     共用同一个 `Main.LocalPlayer.lifeSteal` 额度 —— 用户拍板时的口径是"旧版支线多一条"，故做成**追加**而非替换。
+   **两处与旧版支线的已知偏差（有意保留，别再当成漏项）**：
+   ① 旧版支线把「法师火 + 召唤幻影」共用一个 `fireCD`（召唤侧置 3）；本工程只把**法师侧**换成 `godSlayerMageFireCD`，
       召唤侧仍用经典版的 `godSlayerDmg` 预算（两者现在不再互相阻塞）。
-   ② CI 的 `GodSlayerOrb` 自导距 3000、惯性 25，本工程那颗仍是经典版移植过来的 600 / 20（本轮未动）。
+   ② 旧版支线的 `GodSlayerOrb` 自导距 3000、惯性 25，本工程那颗仍是经典版移植过来的 600 / 20（本轮未动）。
 
-   注：CI 的 `CalamityInheritancePlayer.cs:398/400` 那段 `AuricSilvaSet ? 0.05f` 的移速是**死代码**
+   注：旧版支线的 `旧版支线的玩家类:398/400` 那段 `AuricSilvaSet ? 0.05f` 的移速是**死代码**
    （`_ = 1f + …` 赋给了弃元），不生效，不用照搬。
 
-   **龙蒿面具 / 血魇九头盔：CI 无对应件**（CI 只在自己的远古套里出现，且金源法师头的配方直接引用
-   `CalamityMod.Items.Armor.{Tarragon,Bloodflare}.*HeadMagic`）→ 基准取**现代版 2.0.4**：
+   **龙蒿面具 / 血魇九头盔：旧版支线无对应件**（旧版支线只在自己的远古套里出现，且金源法师头的配方直接引用
+   `现代灾厄对应法师头`）→ 基准取**现代版 2.0.4**：
 
    | 我们的件 | 我们 | 现代 2.0.4 | 差异 |
    |---|---|---|---|
    | TarragonMask 法师 | 防 **14**（用户 2026-10-06 指定，经典/现代都是 10）/ 法伤 **+10%** / 暴击 +10 / 法力 100 / **无蓝耗** | 防 10 / 法伤 **+15%** / 暴击 +10 / 法力 100 / **蓝耗 ×0.85** | 工程少 蓝耗减免、法伤低 5% |
    | BloodflareHornedMask 法师 | 防 22 / 法伤 **+10%** / 暴击 +10 / 法力 100 / **无蓝耗** | 防 22 / 法伤 **+20%** / 暴击 +10 / 法力 100 / **蓝耗 ×0.83** | 工程少 蓝耗减免、法伤低 10% |
 
-   ⇒ **这两颗是五颗法师头里唯二没有蓝耗减免的**（其余三颗 CI/现代都挂了 0.8~0.83），
+   ⇒ **这两颗是五颗法师头里唯二没有蓝耗减免的**（其余三颗 旧版支线/现代都挂了 0.8~0.83），
    若要统一口径，最保守的补法是照现代版补 `manaCost *= 0.85f` / `*= 0.83f`。
 
-   **2026-10-06 追记 · 始源林海盗贼头（SilvaMask）的 CI 对照（**待用户拍板**）：**
+   **2026-10-06 追记 · 始源林海盗贼头（SilvaMask）的 旧版支线对照（**待用户拍板**）：**
 
-   | 项 | 我们（源 = 经典版） | CI（SilvaHeadRogue） | 差异 |
+   | 项 | 我们（源 = 经典版） | 旧版支线（SilvaHeadRogue） | 差异 |
    |---|---|---|---|
    | 单件移速 | 无 | **+20%**（`moveSpeed += 0.2f`） | **已补**（用户 2026-10-06 点名，中英 tooltip 同步加了一行） |
-   | 潜行上限 | **150**（1.5f） | **125**（1.25f） | CI 低 25 |
-   | 无敌加伤的档位/时机 | 无敌**结束后**盗贼伤害 **+10%** | 无敌**窗口/冷却期**（`HasCooldown(SilvaRevive)` 或 `HasBuff(SilvaRevival)`）盗贼伤害 **+40%** | **档位与时机都不同**（CI 由 `SilvaRougeSetLegacy` 实现，见 `CalamityInheritancePlayerMiscEffects.cs:714/826`） |
-   | 投掷速率 | 生命 >50% 盗贼攻速 +10%（本工程从 CI） | 同左（CI 的 UpdateArmorSet 原式） | 一致 |
+   | 潜行上限 | **150**（1.5f） | **125**（1.25f） | 旧版支线低 25 |
+   | 无敌加伤的档位/时机 | 无敌**结束后**盗贼伤害 **+10%** | 无敌**窗口/冷却期**（`HasCooldown(SilvaRevive)` 或 `HasBuff(SilvaRevival)`）盗贼伤害 **+40%** | **档位与时机都不同**（旧版支线由 `SilvaRougeSetLegacy` 实现，见 `旧版支线的玩家效果补丁:714/826`） |
+   | 投掷速率 | 生命 >50% 盗贼攻速 +10%（本工程从旧版支线） | 同左（旧版支线的 UpdateArmorSet 原式） | 一致 |
 
-   注：CI 的 `SilvaHeadRogue` 只挂 `SilvaRougeSetLegacy` + `SilvaRebornMark` + `AuricSilvaSet`，
-   通用七条由 CI 自己的 Silva/Auric 体系承担；本工程的通用七条在 `silvaSet` 里（与其余四颗头共用）。
+   注：旧版支线的 `SilvaHeadRogue` 只挂 `SilvaRougeSetLegacy` + `SilvaRebornMark` + `AuricSilvaSet`，
+   通用七条由 旧版支线自己的 Silva/Auric 体系承担；本工程的通用七条在 `silvaSet` 里（与其余四颗头共用）。
 
-   **2026-10-06 追记 · 金源复合盗贼头（AuricTeslaPlumedHelm）的 CI 对照（**待用户拍板**）：**
+   **2026-10-06 追记 · 金源复合盗贼头（AuricTeslaPlumedHelm）的 旧版支线对照（**待用户拍板**）：**
 
-   | 项 | 我们（源 = 经典版） | CI（AuricTeslaHeadRogue） | 差异 |
+   | 项 | 我们（源 = 经典版） | 旧版支线（AuricTeslaHeadRogue） | 差异 |
    |---|---|---|---|
-   | 单件移速 | 无 | **+25%**（`moveSpeed += 0.25f`） | **已补**（用户 2026-10-06 点名；CI 五颗金源头里只有盗贼这颗带移速，中英 tooltip 同步加了一行） |
+   | 单件移速 | 无 | **+25%**（`moveSpeed += 0.25f`） | **已补**（用户 2026-10-06 点名；旧版支线五颗金源头里只有盗贼这颗带移速，中英 tooltip 同步加了一行） |
    | 潜行上限 | **160**（`rogueStealthMax = 1.6f` 直接赋值） | **1.3 + 1.3/6 ≈ 152**（`+= 1.3f` 再 `+= 当前上限/6`） | 数值接近、写法不同 |
-   | lavaMax / 岩浆奖励 | 有（+240、泡岩浆 +30 防 +10 回血） | **没有** | CI 省掉了岩浆相关 |
+   | lavaMax / 岩浆奖励 | 有（+240、泡岩浆 +30 防 +10 回血） | **没有** | 旧版支线省掉了岩浆相关 |
    | ArmorSetShadows | `armorEffectDrawShadow` | `armorEffectDrawOutlines` | 表现不同（工程一律走经典） |
    | 配方 AuricBar | 工程口径 ×10（照 1.4.4 公开源码） | ×12 | 工程口径，不动 |
 
@@ -2799,15 +2788,15 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 2. 现代灾厄 2.0.4 **没有** `GodSlayerCooldown`，弑神"保命回复 + 45 秒冷却 + 冷却期 +10% 伤害"整套已删除
    （`rg GodSlayerCooldown` 命中 0；`godSlayerDamage` 只剩 >80 放飞镖与注释掉的 ≤80 判定）；
    林海复活也改成 480 帧重置 + 5 分钟冷却，**没有**经典版的扣最大生命惩罚。
-   CI 补回来的是 `GodSlayerDMGprotect` / `GodSlayerReborn` / `AuricSilvaSet`（600、900 两档 + 3 分钟冷却）。
+   旧版支线补回来的是 `GodSlayerDMGprotect` / `GodSlayerReborn` / `AuricSilvaSet`（600、900 两档 + 3 分钟冷却）。
 3. 工程的 `PreKill`/`ModifyHurt` 里那一票经典版逻辑（保命、25% 回血、fBarrier 数值、潜行）都能在
-   `CalamityModClassic-cal-1.4.2.101\CalamityPlayerPreTrailer.cs` 里逐行对上，
+   `经典灾厄参考源码\经典灾厄玩家类.cs` 里逐行对上，
    行号锚点：`tarraMelee` 7813–7820 / `fBarrier` 7830 / 弑神保命 5598–5629 / 林海复活 5631–5661 /
    潜行 4440–4473 / 跑速 5477–5525。
 4. 弹幕侧：工程 `Content/Projectiles/Healing/AuricOrb.cs` 是经典版 `Projectiles/Healing/AuricOrb.cs` 的 1:1 搬运
    （只有 `Main.player[Main.myPlayer]`→`Main.LocalPlayer`、`SendData(66)`→`MessageID.SpiritHeal` 两处现代化）；
    现代灾厄**已经没有 AuricOrb**（只有 SilvaOrb，走 `HealingProjectile` 体系）。
-   `Content/Projectiles/Melee/GodSlayerDart.cs` 则来自 CI 的 `ArmorProj/GodslayerDart.cs`（两段式），
+   `Content/Projectiles/Melee/GodSlayerDart.cs` 则来自 旧版支线的 `ArmorProj/GodslayerDart.cs`（两段式），
    不是灾厄本体的 `GodKiller`（一代只有"被打 80+ 触发的单段直飞"）。
 
 ## 10. 饰品速查（血神核心及其下位，2026-10-06 侦察）
@@ -2897,39 +2886,39 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 **链条（从下往上）**：天使之靴 `AngelTreads` →（经典类名 `InfinityBoots`，本工程移植件中文名「天界翼靴」）**炽天使翼靴** →
 极乐履带 → 天体履带。**实装口径**：本机装的灾厄 = **2.2.2**，其源码对应
-`D:\Game\Terraria\ModModel\CalamityModPublic-1.4.4-release`（用户 2026-10-14 确认，别再猜）。
+`D:\Game\Terraria\ModModel\现代灾厄参考源码`（用户 2026-10-14 确认，别再猜）。
 
 **逐版链条形态（2026-10-14 逐版核完，别再重查）**
 
 | 版本 | 链条（下位 → 上位） | 备注 |
 |---|---|---|
-| cal-1.1 / cal-1.2 | 天使之靴 → `InfinityBoots` → 极乐履带 | 老式夸张值（accRun 9.75 / 18 / 22，移速 +105%~+160%，还与 `wingTimeMax +50` 挂钩）；这代**没有**"炽天使翼靴"这个名字 |
-| cal-1.4.2.101 | 天使之靴 → `InfinityBoots` → 极乐履带 → 天体履带 | 收敛到 accRun 8；天使之靴配方含 霜火之靴 + 熔岩涉水靴 + 天空合金锭×20 |
-| 1.3-release / 2.0 | 天使之靴 → **炽天使翼靴 `SeraphTracers`** → 极乐履带 → 天体履带 | 2.0 的 `SeraphTracers` 挂着 `[LegacyName("InfinityBoots")]` = 经典 `InfinityBoots` 的后代；天使之靴配方改为 泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 |
+| 经典 1.1 / 经典 1.2 | 天使之靴 → `InfinityBoots` → 极乐履带 | 老式夸张值（accRun 9.75 / 18 / 22，移速 +105%~+160%，还与 `wingTimeMax +50` 挂钩）；这代**没有**"炽天使翼靴"这个名字 |
+| 经典 1.4.2.101 | 天使之靴 → `InfinityBoots` → 极乐履带 → 天体履带 | 收敛到 accRun 8；天使之靴配方含 霜火之靴 + 熔岩涉水靴 + 天空合金锭×20 |
+| 现代 1.3 / 2.0 | 天使之靴 → **炽天使翼靴 `SeraphTracers`** → 极乐履带 → 天体履带 | 2.0 的 `SeraphTracers` 挂着 `[LegacyName("InfinityBoots")]` = 经典 `InfinityBoots` 的后代；天使之靴配方改为 泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 |
 | 2.0.3.9 / 2.0.4 / 2.0.7.2 | 同上一行，但类名改称 `TracersCelestial` / `TracersElysian` / `TracersSeraph` | 显示名"Seraph Tracers"此时已挪到**顶层**那件；中层配方简化成 任意翅膀 + 月锭×5 |
-| 1.4.4 / 1.4.4-release（= 2.2.2） | 天使之靴 → 月行者 `MoonWalkers` → 虚空阔步者 `VoidStriders` → **炽天使翼靴 `SeraphTracers`** | 中间两档换名换配（`MoonWalkers` = `[LegacyName("InfinityBoots","TracersCelestial")]`，`VoidStriders` = `[LegacyName("ElysianTracers","TracersElysian")]`）；顶层 = 虚空阔步者 + 金源锭×5 + 登仙精华×3 @ 宇宙砧 |
+| 1.4.4 / 现代 1.4.4（= 2.2.2） | 天使之靴 → 月行者 `MoonWalkers` → 虚空阔步者 `VoidStriders` → **炽天使翼靴 `SeraphTracers`** | 中间两档换名换配（`MoonWalkers` = `[LegacyName("InfinityBoots","TracersCelestial")]`，`VoidStriders` = `[LegacyName("ElysianTracers","TracersElysian")]`）；顶层 = 虚空阔步者 + 金源锭×5 + 登仙精华×3 @ 宇宙砧 |
 
 **已落地：天使之靴（`Content/Items/Accessories/Movement/AngelTreads.cs` + `AngelTreads.png` / `AngelTreads_Shoes.png`）**
 
-- **口径（用户 2026-10-14 拍板）：功能取 1.3-release，配方取 2.0 那一批**；同日追加一句
-  **"补充那个 1.4.4 的增强，按照之前的复合原则进行"** → 本件 = **1.3-release 与 1.4.4 两代的并集**：
-  ① 岩浆免疫取 1.4.4 的 **420 帧（7 秒）**（1.3-release/2.0 只有 240）；
+- **口径（用户 2026-10-14 拍板）：功能取 现代 1.3，配方取 2.0 那一批**；同日追加一句
+  **"补充那个 1.4.4 的增强，按照之前的复合原则进行"** → 本件 = **现代 1.3 与 1.4.4 两代的并集**：
+  ① 岩浆免疫取 1.4.4 的 **420 帧（7 秒）**（现代 1.3/2.0 只有 240）；
   ② 加 1.4.4 的 `player.lavaRose = true`（岩浆灼烧减伤；本工程 `voidofExtinction` / `theAmalgam` 已有同款用法）；
   ③ **保留**免「着火！」（1.4.4 那边删了，复合不取削弱项）；
-  ④ +10% 飞行时间：1.3-release 的 `angelTreads` 标记（`flightTimeMult += 0.1`）与 1.4.4 的
+  ④ +10% 飞行时间：现代 1.3 的 `angelTreads` 标记（`flightTimeMult += 0.1`）与 1.4.4 的
   `AngelTreads.FlightTimeBoost` 是同一个 0.1，**只算一次**，别叠成 20%；
-  ⑤ 纯外观项 `vanityRocketBoots` 与 `UpdateVanity` 也照 1.4.4 取（1.3-release/2.0 没有这两处）。
+  ⑤ 纯外观项 `vanityRocketBoots` 与 `UpdateVanity` 也照 1.4.4 取（现代 1.3/2.0 没有这两处）。
   底子：accRun 7.5 / 移速 +12% / 火箭靴 3 / 冰面·水面·岩浆面行走，两代完全一致。
-- 1.3-release 里 `CalamityPlayer.angelTreads` 标记**只用于 +10% 飞行时间**（`flightTimeMult += 0.1`；
+- 现代 1.3 里 `CalamityPlayer.angelTreads` 标记**只用于 +10% 飞行时间**（`flightTimeMult += 0.1`；
   后来 2.0 才给它加上 `harpyWingBoost && (harpyRing || angelTreads)` 的鸟妖之翼联动）→
   本工程记 `CalamityDemutationPlayer.angelTreads`，在 `PostUpdateMiscEffects`（`soaring` 那行旁边）
   把 `wingTimeMax` ×1.1；复位点两处与其它饰品标记同批（`ResetEffects` / `UpdateDead`）。
-- 面板：**36×34**（按 1.3-release 自带贴图取；源里写的 36×32 与自家贴图不符）/ 价值 35 金 / 浅紫 LightPurple。
-  贴图取 1.3-release 的**旧图**（2.2.2 那件是 32×36 新图，两者并存时外观可分）。
+- 面板：**36×34**（按 现代 1.3 自带贴图取；源里写的 36×32 与自家贴图不符）/ 价值 35 金 / 浅紫 LightPurple。
+  贴图取 现代 1.3 的**旧图**（2.2.2 那件是 32×36 新图，两者并存时外观可分）。
   `vanityRocketBoots` / `UpdateVanity` 按复合取 1.4.4 那两处（见上一条 ⑤）。
-- 配方（双分支各注册一条，缺件即退化成单分支）：**现代**（`CalamityMod` 在场）照 2.0 =
-  泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 @ 秘银砧；**经典**（`CalamityModClassicPreTrailer` 在场）照
-  cal-1.4.2.101 = 霜火之靴 + 熔岩涉水靴 + 鸟妖指环 + 余烬精华×5 + 天空合金锭×20 + 三魂 @ 秘银砧。
+- 配方（双分支各注册一条，缺件即退化成单分支）：**现代**（现代灾厄在场）照 2.0 =
+  泰拉闪耀靴 + 鸟妖指环 + 日光精华×5 + 三魂 @ 秘银砧；**经典**（`经典灾厄` 在场）照
+  经典 1.4.2.101 = 霜火之靴 + 熔岩涉水靴 + 鸟妖指环 + 余烬精华×5 + 天空合金锭×20 + 三魂 @ 秘银砧。
 - ⚠️ 本件在**实装 2.2.2 与经典版里都仍在**（同名不同物）：用户 2026-10-14 明确"这个不用管，移植就好"，
   与太阳神杖那件同属"自持旧版"口径，**不做互斥**。
 **已落地：天界翼靴（`Content/Items/Accessories/Wings/InfinityBoots.cs` + `InfinityBoots.png` /
@@ -2937,11 +2926,11 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 - **名字（用户 2026-10-14 指定）：中文名「天界翼靴」**（当天先定「无限之靴」，随即改为现名；
   英文名保持 `Infinity Boots` = 照源类名；靴子模式的 `TreadsName` 同步作「天界履带」）。
-  改名的原因：旧世系里这一档的显示名本来就叫 Seraph Tracers（1.3-release 源码是
-  `DisplayName.SetDefault("Seraph Tracers")`，经典版 cal-1.4.2.101 本地化也是
+  改名的原因：旧版灾厄里这一档的显示名本来就叫 Seraph Tracers（现代 1.3 源码是
+  `DisplayName.SetDefault("Seraph Tracers")`，经典版 经典 1.4.2.101 本地化也是
   `DisplayName: Seraph Tracers`），2.0.3.9 起该名字被顶层借走、2.2.2 归顶层 `SeraphTracers`；
   故本件另起中文名，避开与本体顶层同名。
-- **口径（同一天拍板）：功能取 1.3-release、配方取 2.0、再按复合原则并入 1.4.4（MoonWalkers）的增强。**
+- **口径（同一天拍板）：功能取 现代 1.3、配方取 2.0、再按复合原则并入 1.4.4（MoonWalkers）的增强。**
   复合结果 = 飞行 **160**（1.4.4；1.3/2.0 是 140）/ 水平速度 9 / 加速倍率 **2.6**（2.0 起）/
   跑速上限 **8.5**（取大；1.4.4 是 8）/ 移速 **+16%**（取大；1.4.4 是 +14%）/ **完全免岩浆**
   （1.4.4 的 `lavaImmune`；1.3/2.0 只有 240 帧）/ 免「着火！」/ 免坠落伤害 / **火箭靴 4** /
@@ -2951,33 +2940,33 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   Shift+右键切换且不消耗，靴子模式时去掉第一行 tooltip（`Tooltip0`）、名字换成 `TreadsName`（天界履带），
   并给 `rocketBoots = vanityRocketBoots = 4` 与 `angelTreads` 标记（+10% 飞行时间）。
   未移植的两处**灾厄内部视觉通道**（纯外观，类注释里已写明）：`CalamityPlayer.IBoots`/`sTracers`
-  的移动拖尾尘埃 229、`CalamityUtils.DrawInventoryDot` 的模式点与双帧贴图（本件用 1.3-release 的单帧旧图）。
+  的移动拖尾尘埃 229、`CalamityUtils.DrawInventoryDot` 的模式点与双帧贴图（本件用 现代 1.3 的单帧旧图）。
 - **配方组口径（2026-10-14 直读实装 dll 坐实，别再猜）**：实装 **2.2.2 的 dll 里只有 `AnyWings`、
   没有 `WingsGroup`**（2.0 及更早源码里叫 `WingsGroup`）；经典版侧是 `WingsGroup`。本件用
   `RecipeGroup.recipeGroupIDs.ContainsKey("AnyWings") ? "AnyWings" : "WingsGroup"` 兜底
   （同 QuiverofNihility 的写法），两组都不在时退化掉"任意翅膀"这一味。
 - 配方：现代 = 天使之靴（本工程自持件）+ 任意翅膀 + 灾厄核心×3 + 生命合金×5 + 月锭×5 @ 远古操纵机；
   经典 = 天使之靴 + 任意翅膀 + 灾厄核心×3 + 生命之锭×5 + 月锭×5 @ 远古操纵机。
-- 面板：48×36 / 1 铂金 / 红；贴图取 1.3-release 旧图（48×36 图 + `0CE9510C` 那双 `_Shoes.png` +
-  80×248 翅膀图，这一套从 cal-1.4.2.101 一直用到 2.0.7.2）。
+- 面板：48×36 / 1 铂金 / 红；贴图取 现代 1.3 旧图（48×36 图 + `0CE9510C` 那双 `_Shoes.png` +
+  80×248 翅膀图，这一套从 经典 1.4.2.101 一直用到 2.0.7.2）。
 **已落地：极乐翼靴（`Content/Items/Accessories/Wings/ElysianTracers.cs` + `ElysianTracers.png` /
 `_Wings.png`，2026-10-14 · 链条第三级）**
 
 - **名字（用户 2026-10-14 指定）：中文名「极乐翼靴」**（英文名照源 `Elysian Tracers`；靴子模式的
-  `TreadsName` 作「极乐履带」）。旧世系这一档就是 `ElysianTracers` → 2.0.4 改名 `TracersElysian` →
+  `TreadsName` 作「极乐履带」）。旧版灾厄这一档就是 `ElysianTracers` → 2.0.4 改名 `TracersElysian` →
   1.4.4 起换成 `VoidStriders`（显示名 Void Striders）。
-- **口径同前两件**：功能取 1.3-release、配方取 2.0、再按复合并入 1.4.4（VoidStriders）。复合结果 =
-  飞行 **200**（1.4.4；1.3-release/2.0/2.0.4 是 180）/ 水平速度 **10.5**（取大）/ 倍率 **2.75**（取大）/
+- **口径同前两件**：功能取 现代 1.3、配方取 2.0、再按复合并入 1.4.4（VoidStriders）。复合结果 =
+  飞行 **200**（1.4.4；现代 1.3/2.0/2.0.4 是 180）/ 水平速度 **10.5**（取大）/ 倍率 **2.75**（取大）/
   跑速上限 **9.25**（取大；1.4.4 是 8.5）/ 移速 **+20%**（取大；1.4.4 是 +16%）/ **完全免岩浆**（取强）/
-  免「着火！」/ 免坠落伤害 / 垂直速度 **0.95 / 0.15 / 1.1 / 3.15 / 0.135**（取大 = 1.3-release 那套；
+  免「着火！」/ 免坠落伤害 / 垂直速度 **0.95 / 0.15 / 1.1 / 3.15 / 0.135**（取大 = 现代 1.3 那套；
   1.4.4 是 0.85/0.15/1.1/2.7/0.135）/ 稀有度与价值取 **14 档 / 2 铂金**
   （源 `Rarity14BuyPrice` = DarkBlue 档；1.4.4 降到 13 档 PureGreen，复合取高）/
   `socialShadowRocketBoots`（1.4.4）/**可切换翅膀**（1.4.4；靴子模式给火箭靴 **1** + `angelTreads` 标记）。
-- **装备栏只有 `EquipType.Wings`**（全世系一致）→ 本件**不需要** `_Shoes.png`。
-- 贴图取 1.3-release 旧图（48×36 物品图 `91B0A089` + 86×248 翅膀图 `D535C02E`，从 cal-1.4.2.101
+- **装备栏只有 `EquipType.Wings`**（全部版本一致）→ 本件**不需要** `_Shoes.png`。
+- 贴图取 现代 1.3 旧图（48×36 物品图 `91B0A089` + 86×248 翅膀图 `D535C02E`，从 经典 1.4.2.101
   一路用到 2.0.4；1.4.4 的 VoidStriders 只换物品图、翅膀图还是同一张）。
 - 配方：现代 = 天界翼靴 + 极乐之翼 + 宇宙锭×5 + 登仙精华×4 @ 宇宙砧（照 2.0；三味材料 2.2.2 里都在，已核）；
-  经典 = 天界翼靴 + 极乐之翼 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉（照 cal-1.4.2.101）。
+  经典 = 天界翼靴 + 极乐之翼 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉（照 经典 1.4.2.101）。
 - 未并进来的灾厄内部视觉通道（纯外观）：`IBoots` / `elysianFire` / `eTracers`（2.0 及更早）、
   `tracersDust`（2.0.4）、以及模式指示点。
 **已落地：炽天使翼靴（`Content/Items/Accessories/Wings/SeraphTracers.cs` + `SeraphTracers.png` /
@@ -2985,14 +2974,14 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 - **名字（用户 2026-10-14 指定）：中文名「炽天使翼靴」**（= 源显示名；`TreadsName` 作「炽天使履带」）。
   这个名字在实装 2.2.2 里属于顶层那件，本件与它**同名不同物**——用户既定的"同名并存"口径（同太阳神杖）。
-- **口径同前三件**：功能取 1.3-release（`CelestialTracers`）、配方取 2.0、再复合 1.4.4（`SeraphTracers`）。
+- **口径同前三件**：功能取 现代 1.3（`CelestialTracers`）、配方取 2.0、再复合 1.4.4（`SeraphTracers`）。
   复合结果 = 飞行 250 / 水平速度 12（取大）/ 倍率 3.0（取大）/ 跑速上限 10（取大）/ 移速 +24%（取大）/
   完全免岩浆（取强）/ 免「着火！」/ 免坠落伤害 / 垂直速度 1.0 · 0.175 · 1.2 · 3.25 · 0.15（取大）/
   价值 2 铂金 40 金、稀有度取高到 **20 档**（＝灾厄 `BurnishedAuric`，与工程金源套同档；
-  1.3-release/2.0/2.0.4 是 15 档 Violet）/ 可切换翅膀（1.4.4；靴子模式给火箭靴 2 + `angelTreads` 标记）。
+  现代 1.3/2.0/2.0.4 是 15 档 Violet）/ 可切换翅膀（1.4.4；靴子模式给火箭靴 2 + `angelTreads` 标记）。
 - **两处"藏起来的"效果都落地了（以后别再重查）**：
-  ① **单次受伤 >200 点 → 额外 30 帧无敌**（1.3-release/2.0 的 `cTracers`；源在
-  `CalamityPlayer.cs:6281` 里 `iFramesToAdd += 30`，最终 `Player.GiveIFrames(Player.immuneTime + 30)`）
+  ① **单次受伤 >200 点 → 额外 30 帧无敌**（现代 1.3/2.0 的 `cTracers`；源在
+  `现代灾厄玩家类` 里 `iFramesToAdd += 30`，最终 `Player.GiveIFrames(Player.immuneTime + 30)`）
   → 本工程记 `CalamityDemutationPlayer.seraphTracers`，在 **PostHurt** 里 `immuneTime += 30`
   （带 `whoAmI == Main.myPlayer` 判据）。1.4.4 把这条件删了，复合保留。
   ② **免金源矿石 Auric Rejection（300 伤害 + 大幅击退）与危险砖块接触效果**（1.4.4 的 `seraphTracers`；
@@ -3001,10 +2990,10 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   同一调用点 `PostUpdateEquips`；经典版没有该字段，探测失败自动短路）。
 - **翅膀贴图按用户 2026-10-14 指定换成「德鲁之翼」那张**（本件 `SeraphTracers_Wings.png` 就是
   `DrewsWings_Wings.png` 的副本，86×248 / `51D323D9`）；物品图仍取旧图（54×42 / `0B0DD705`，
-  1.3-release→2.0.4 同款；1.4.4 起换成 `6F3EBEA5`）。
+  现代 1.3→2.0.4 同款；1.4.4 起换成 `6F3EBEA5`）。
 - 配方：现代 = 极乐翼靴 + 德鲁之翼 + 金源锭×5 @ 宇宙砧（`AuricBar`/宇宙砧在 2.2.2 里都有，
   德鲁之翼用本模组自持件）；经典 = 极乐翼靴 + 德鲁之翼 + 暗日碎片×5 + 金源矿石×25 @ 嘉登熔炉
-  （照 cal-1.4.2.101）。
+  （照 经典 1.4.2.101）。
 - 链条现状：**4/4 完结**（天使之靴 → 天界翼靴 → 极乐翼靴 → 炽天使翼靴）。
 ## 11. 本机 Codex 客户端（环境维护；不是模组内容）
 
@@ -3186,13 +3175,13 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   `zsh`；用旧 shell 标志的配置会收到迁移提示）与 Linux/macOS 包 strip 符号——本机 Windows 包都不受影响。
   桌面 MSIX 应用仍是微软商店那条线，本次未动。
 
-## 12. 巨龙之息（Dragon's Breath）—— CI 支线移植（2026-10-14）
+## 12. 巨龙之息（Dragon's Breath）—— 旧版支线移植（2026-10-14）
 
-**这件换过形态（别再重查）**：老世系是**枪**（发射弹幕 `DragonsBreathRound`：1.3-release / 2.0 / 经典 / CI），
-2.0.3.9 起重做成**喷火器**（metaball + 手持弹幕；1.4.4-release = 实装 2.2.2 那支：伤害 328、引导式、吃凝胶弹药；
+**这件换过形态（别再重查）**：旧版是**枪**（发射弹幕 `DragonsBreathRound`：现代 1.3 / 2.0 / 经典 / 旧版支线），
+2.0.3.9 起重做成**喷火器**（metaball + 手持弹幕；现代 1.4.4 = 实装 2.2.2 那支：伤害 328、引导式、吃凝胶弹药；
 另有 2.0.4 的 478 渐强版）。实装 2.2.2 里**它还在**（喷火器那支），本工程移植的是老枪——与本体**同名不同物**。
 
-**口径（用户 2026-10-14 逐条拍板）**：走 **CI 支线**（`CalamityInheritance-Beta1.12` 的 `DragonsBreathold`）、
+**口径（用户 2026-10-14 逐条拍板）**：走 **旧版支线**（`旧版支线` 的 `DragonsBreathold`）、
 爆炸弹幕自持一枚与灾厄 `FuckYou` 同款的件、
 灾厄"贴脸射击"**不做**、数值膨胀 **220 → 478**、中文名就叫「巨龙之息」。
 
@@ -3200,18 +3189,18 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 | 版本 | 伤害 | 尺寸 | 使用/动画 | 两发间隔 | 弹丸 | 右键伤害倍率 | 右键散布 | 省弹 | 稀有度 / 价值 |
 |---|---|---|---|---|---|---|---|---|---|
-| cal-1.1 | 137 | 64×28 | 20 / 20 | — | 13 颗 `DragonBurst` | — | — | 80% | 10 档 / 10 铂 |
-| cal-1.2 | 185 | 64×28 | 20 / 20 | — | 13 颗 | — | — | 80% | — / 10 铂 |
-| cal-1.4.2.101 | 220 | 64×28 | 20 / 20 | — | 13 颗 | — | — | 80% | 月后 14 档 / 1 铂 80 金 |
-| 1.3-release / 2.0 | 198 | 124×78 | 9 / 18 | 15 | 6 | 0.8 | 1.52 | 66% | Violet（月后 15 档）/ 2 铂 40 金 |
-| **CI `DragonsBreathold`（采用）** | **220** | 124×78（本工程换 64×28） | 9 / 18 | **12** | **8** | **0.9** | **1.22** | 66% | CatalystViolet（= 月后 15 档）/ 2 铂 40 金 |
+| 经典 1.1 | 137 | 64×28 | 20 / 20 | — | 13 颗 `DragonBurst` | — | — | 80% | 10 档 / 10 铂 |
+| 经典 1.2 | 185 | 64×28 | 20 / 20 | — | 13 颗 | — | — | 80% | — / 10 铂 |
+| 经典 1.4.2.101 | 220 | 64×28 | 20 / 20 | — | 13 颗 | — | — | 80% | 月后 14 档 / 1 铂 80 金 |
+| 现代 1.3 / 2.0 | 198 | 124×78 | 9 / 18 | 15 | 6 | 0.8 | 1.52 | 66% | Violet（月后 15 档）/ 2 铂 40 金 |
+| **旧版支线 `DragonsBreathold`（采用）** | **220** | 124×78（本工程换 64×28） | 9 / 18 | **12** | **8** | **0.9** | **1.22** | 66% | CatalystViolet（= 月后 15 档）/ 2 铂 40 金 |
 | 2.0.4（喷火器） | 478 | 124×72 | 5 / 9 | 14 | — | — | — | 80% | Violet |
-| 1.4.4-release（喷火器，= 2.2.2） | 328 | 124×72 | 30 / 30 引导 | — | — | — | — | 80% | BurnishedAuric |
+| 现代 1.4.4（喷火器，= 2.2.2） | 328 | 124×72 | 30 / 30 引导 | — | — | — | — | 80% | BurnishedAuric |
 
 **已落地三件 + 两处工程级新增**
 
-- `Content/Items/Weapons/Ranged/DragonsBreath.cs`（物品）：**58×36**（用户 2026-10-14 指定换用 CI
-  「远古巨龙之息」`AncientDragonsBreath` 那张图 `E69B40A4`，原先 cal-1.4.2.101 的 64×28 旧图同日删除；
+- `Content/Items/Weapons/Ranged/DragonsBreath.cs`（物品）：**58×36**（用户 2026-10-14 指定换用 旧版支线
+  「远古巨龙之息」`AncientDragonsBreath` 那张图 `E69B40A4`，原先 经典 1.4.2.101 的 64×28 旧图同日删除；
   持握偏移随之取该图自带的 `(-15, 10)`）、伤害 220、9/18 帧、`reuseDelay 12`、
   击退 6.5、弹速 12、子弹弹药、66% 省弹、月后稀有度 15 档、价值 2 铂金 40 金；左键两连发
   （8 颗普通 → 8 颗龙息弹，第二发散布 ×0.5 + `Item74` 音效 + 30 颗烟尘）、右键全自动
@@ -3231,39 +3220,39 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **数值膨胀**：**220 → 478**（§7 表已登记；派生弹丸走 `Shoot` 的 `damage` 参数，自动跟随）。
 
 **没做的（按用户口径，别再提）**：① 灾厄"贴脸射击"（`canFirePointBlankShots`）——本工程无此机制，不做；
-② CI 的微光互换（与新版灾厄 `DragonsBreath` 双向转换、受 CI 自己的配置门控）——不移植。
-**顺带登记**：CI 另有一件「远古巨龙之息」`AncientDragonsBreath`（58×36 / 200 伤害 / 13 帧 / 8 颗霰弹 /
+② 旧版支线的微光互换（与新版灾厄 `DragonsBreath` 双向转换、受 旧版支线自己的配置门控）——不移植。
+**顺带登记**：旧版支线另有一件「远古巨龙之息」`AncientDragonsBreath`（58×36 / 200 伤害 / 13 帧 / 8 颗霰弹 /
 击退 9.5）——那是另一把武器，不在本次范围。
 
 ## 13. 速射机枪（Minigun）与配方前件 P90 —— 2026-10-14
 
 **速射机枪（`Minigun`，射手）**：**2.0.3.9 起被灾厄删除**（直读实装 2.2.2 的整包文件表：无同名文件）
 → 合规的"旧版回归"件。
-**口径（用户 2026-10-14 逐条拍板）**：实现取 **2.0**（与 1.3-release 逐项一致）、贴图用**现代那张**
+**口径（用户 2026-10-14 逐条拍板）**：实现取 **2.0**（与 现代 1.3 逐项一致）、贴图用**现代那张**
 （92×44 / `1A2E97E6`；经典支线另有 72×34 的 `AD1D5C07`，未取）、**伤害改用 375**（源 275）、
 数值膨胀 **375 → 920**、中文名「速射机枪」、灾厄"贴脸射击"（`canFirePointBlankShots`）**不做**。
 
 | 源版本 | 伤害 | 尺寸 | 使用/动画 | 击退 | 弹速 | 省弹 | 稀有度 / 价值 | 开火 | 配方 |
 |---|---|---|---|---|---|---|---|---|---|
-| 1.3-release / **2.0（采用）** | 275（→ **375**） | 92×44 | 3 / 3 | 2.5 | 22 | 80% | 自定义 Violet（月后 15 档）/ 2 铂 40 金 | 射弹药本体 + ±0.75 抖动 | 链式机枪 + `ClockGatlignum` + 金源锭×5 @ 宇宙砧 |
-| cal-1.2 | 250 | 72×34 | 3 / 3 | 2.5 | 22 | 80% | 无档 / 1 铂 75 金 | 同上 | 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉 |
-| cal-1.4.2.101（**经典分支采用**） | 390 | 72×34 | 3 / 3 | 2.5 | 22 | 80% | 月后 14 档 / 1 铂 80 金 | 同上 | 同上 |
-| CI `Minigun` | 275 | 92×44 | **2 / 2** | 2.5 | 22 | 80% | CatalystViolet | 走手持弹幕 `KingsbaneHoldoutReal`（引导转膛、转满每 3 帧一发、`extraUpdates 15`、穿甲 +50、额外打 CI 的 `AuricBullet`、屏幕震动） | 链式机枪 + `ClockGatlignum` + 宇宙锭×12 + 登仙精华×5 @ 宇宙砧 |
-| CI `ACTMinigun` | 285 | 92×44 | 3 / 3 | 2.5 | 22 | 80% | AlgtPink / CatalystViolet 可切 | 引导 + `noUseGraphic` + CI 自己的链枪音 | — |
+| 现代 1.3 / **2.0（采用）** | 275（→ **375**） | 92×44 | 3 / 3 | 2.5 | 22 | 80% | 自定义 Violet（月后 15 档）/ 2 铂 40 金 | 射弹药本体 + ±0.75 抖动 | 链式机枪 + `ClockGatlignum` + 金源锭×5 @ 宇宙砧 |
+| 经典 1.2 | 250 | 72×34 | 3 / 3 | 2.5 | 22 | 80% | 无档 / 1 铂 75 金 | 同上 | 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉 |
+| 经典 1.4.2.101（**经典分支采用**） | 390 | 72×34 | 3 / 3 | 2.5 | 22 | 80% | 月后 14 档 / 1 铂 80 金 | 同上 | 同上 |
+| 旧版支线 `Minigun` | 275 | 92×44 | **2 / 2** | 2.5 | 22 | 80% | CatalystViolet | 走手持弹幕 `KingsbaneHoldoutReal`（引导转膛、转满每 3 帧一发、`extraUpdates 15`、穿甲 +50、额外打 旧版支线的 `AuricBullet`、屏幕震动） | 链式机枪 + `ClockGatlignum` + 宇宙锭×12 + 登仙精华×5 @ 宇宙砧 |
+| 旧版支线 `ACTMinigun` | 285 | 92×44 | 3 / 3 | 2.5 | 22 | 80% | AlgtPink / CatalystViolet 可切 | 引导 + `noUseGraphic` + 旧版支线自己的链枪音 | — |
 
-- **卡点（已解决）**：2.0 与 CI 的配方都要 `ClockGatlignum`（发条加特林），而它**在 1.4.4 起被灾厄删除**
+- **卡点（已解决）**：2.0 与旧版支线的配方都要 `ClockGatlignum`（发条加特林），而它**在 1.4.4 起被灾厄删除**
   （实装 2.2.2 无此件）。按用户指定换成 **P90 + 原版链式机枪 + 金源锭×5 @ 宇宙砧**
   （`CosmicAnvil`，用户口中的"星宇砧"；链式机枪是用户 2026-10-14 追加的一味）。
-- **经典分支配方**：照 cal-1.4.2.101 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉。
+- **经典分支配方**：照 经典 1.4.2.101 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉。
 - 落地：`Content/Items/Weapons/Ranged/Minigun.cs` + `Minigun.png`；除膨胀外**没有派生点要改**
   （射的是弹药本体，伤害走 `Shoot` 的 `damage` 自动跟随）。
 
-**P90（配方前件；用户指定"移植 CI 的"）**：`Content/Items/Weapons/Ranged/P90.cs` + `P90.png`
-（60×28 / `A5B1C42B`，CI 与经典同款）。类名去掉 CI 式 `Legacy` 后缀（源类名 `P90Legacy`）。
+**P90（配方前件；用户指定"移植 旧版支线的"）**：`Content/Items/Weapons/Ranged/P90.cs` + `P90.png`
+（60×28 / `A5B1C42B`，旧版支线与经典同款）。类名去掉 旧版支线式 `Legacy` 后缀（源类名 `P90Legacy`）。
 
-- 数值（CI）：伤害 6、60×28、使用/动画 **2 帧**、**穿甲 20**、击退 1.5、弹速 18、子弹弹药、
+- 数值（旧版支线）：伤害 6、60×28、使用/动画 **2 帧**、**穿甲 20**、击退 1.5、弹速 18、子弹弹药、
   **33% 省弹**、**一次打两颗子弹**（同组抖动，各自 ±0.75）、稀有度 Lime、价值 **48 金**
-  （CI 的 `RarityPriceLime` = `RarityPrice7`）、音 `Item11`、持握偏移 (-14, -1)。
+  （旧版支线的 `RarityPriceLime` = `RarityPrice7`）、音 `Item11`、持握偏移 (-14, -1)。
 - 不取源的 `Main.zenithWorld` 分支（伤害 12 / 1 帧 / 一次 13 颗乱散）——与工程其它件（如巨龙之怒）同口径；
   `canFirePointBlankShots` 同样不做。
 - 配方（双分支）：原版配方组「铁锭/铅锭」×10 + 冰核×7 @ 秘银砧；冰核的类名按版本取
@@ -3275,25 +3264,25 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 **本次做的事，按顺序**
 
-1. **天使之靴链 4 件全落**（细节见 §10.7）：`AngelTreads`（功能取 1.3-release、配方取 2.0，随后按用户口径
+1. **天使之靴链 4 件全落**（细节见 §10.7）：`AngelTreads`（功能取 现代 1.3、配方取 2.0，随后按用户口径
    复合并入 1.4.4 增强：岩浆 240 → 420 帧 + `lavaRose`，保留免「着火！」）、`InfinityBoots`
    （中文名先定「无限之靴」，同日改为「**天界翼靴**」）、`ElysianTracers`（**极乐翼靴**）、
-   `SeraphTracers`（**炽天使翼靴**，链条顶层）。四件统一口径 = "1.3-release 功能 + 2.0 配方 + 复合 1.4.4"；
+   `SeraphTracers`（**炽天使翼靴**，链条顶层）。四件统一口径 = "现代 1.3 功能 + 2.0 配方 + 复合 1.4.4"；
    后三件带**可切换翅膀**（Shift+右键；靴子模式给火箭靴 + `angelTreads` 标记，名字换成 `TreadsName`）。
    实现锚点：`CalamityDemutationPlayer.angelTreads`（+10% 飞行时间，PostUpdateMiscEffects）、
    `seraphTracers`（PostHurt 的"单次受伤 > 200 → 额外 30 帧无敌" + 免金源矿石排斥的反射镜像
    `CDUtil.MirrorSeraphTracersToCalamity`）。
-2. **巨龙之息**（§12）：CI 支线 + 自持爆炸弹幕 `FuckYou` + 挂犽戎宝藏袋；贴图后按用户要求换成
-   CI「远古巨龙之息」那张 **58×36**（`E69B40A4`，持握偏移随之 `(-15, 10)`）。
+2. **巨龙之息**（§12）：旧版支线 + 自持爆炸弹幕 `FuckYou` + 挂犽戎宝藏袋；贴图后按用户要求换成
+   旧版支线「远古巨龙之息」那张 **58×36**（`E69B40A4`，持握偏移随之 `(-15, 10)`）。
 3. **速射机枪 + P90**（§13）：速射机枪取 **2.0**、关态伤害 **375** / 膨胀 **920**、现代配方 =
-   **P90 + 原版链式机枪 + 金源锭×5 @ 宇宙砧**、经典配方照 cal-1.4.2.101；P90 是 CI 支线的自持件
+   **P90 + 原版链式机枪 + 金源锭×5 @ 宇宙砧**、经典配方照 经典 1.4.2.101；P90 是 旧版支线的自持件
    （伤害 6 / 2 帧 / 穿甲 20 / 33% 省弹 / 一次两颗 / 48 金 / Lime 档）。
 4. **工具**：新增 `Tools/ReadTmod.ps1`（`.tmod` 直读：文件表 / 解包 / Cecil 反查；头部格式已校准，
    见 §6），并修掉 `Tools/CheckImplicitTextures.ps1` 的两处**静默漏检**（见 §4：口径 286 → 452 个类）。
 
 **本次坐实的关键事实（别再重查）**
 
-- 实装灾厄 = **2.2.2**，其源码对应 `CalamityModPublic-1.4.4-release`（用户 2026-10-14 确认）。
+- 实装灾厄 = **2.2.2**，其源码对应 `现代灾厄参考源码`（用户 2026-10-14 确认）。
 - 2.2.2 里**已删除**（本次涉及到的）：履带系旧类名 `InfinityBoots` / `ElysianTracers` / `CelestialTracers` /
   `TracersCelestial` / `TracersElysian` / `TracersSeraph`（2.2.2 换成了 `MoonWalkers` / `VoidStriders` /
   `SeraphTracers`）、`ClockGatlignum`、`Phantoplasm`、`CoreofEleum`（改名 `EssenceofEleum`）、`Minigun`。
@@ -3309,7 +3298,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 **未决 / 下次可能要做的**
 
-1. **速射机枪的经典分支没加 P90**：现代分支要 P90 + 链式机枪，经典分支（照 cal-1.4.2.101）只有链式机枪 +
+1. **速射机枪的经典分支没加 P90**：现代分支要 P90 + 链式机枪，经典分支（照 经典 1.4.2.101）只有链式机枪 +
    宇宙锭 + 幻魂——用户当时未拍板是否对齐，要齐就一行。
 2. 表现类微调（巨龙之息持握偏移 `(-15, 10)`、极乐翼靴 / 速射机枪等的偏移）：用户口径是"有改动我自己修正"，
    若给新数值直接改对应 `.cs` 即可。
@@ -3330,17 +3319,17 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 15.1 天堂之风本体 ✅ 已落地（2026-10-14）
 
-- **形态取 CI Beta1.12 的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）**（用户点名），照工程既有口径**恒处 Lore 模式**：
-  不搬 CI 的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支、也不搬 `CIConfig.AmmoConversion` 开关。
-- 用户逐条拍板：**伤害 256**（2026-10-14 先定 208，**2026-10-15 改成 256**；源 CI 508）、
+- **形态取 旧版支线的 `HeavenlyGaleold`（含 ExoLore 传颂之物分支）**（用户点名），照工程既有口径**恒处 Lore 模式**：
+  不搬 旧版支线的 `LoreExo / PanelsLoreExo` 判定、不留非 Lore 分支、也不搬 `弹药转换开关` 开关。
+- 用户逐条拍板：**伤害 256**（2026-10-14 先定 208，**2026-10-15 改成 256**；源 旧版支线 508）、
   **数值膨胀 256 → 720**、中文名 **天堂之风**、**带发光层**；
-  类名 / 文件名用 `HeavenlyGale`（不带 CI 式后缀）。**配方**：2026-10-14 先照 2.0 落，
+  类名 / 文件名用 `HeavenlyGale`（不带 旧版支线式后缀）。**配方**：2026-10-14 先照 2.0 落，
   **2026-10-15 定稿改成"武器全自持 + 材料/站台软依赖"，见 §15.18**。
 - 面板：46×98 / 使用·动画 9·18 帧 / 击退 4 / 弹速 12 / 箭类弹药 / 一次 **7 支**（±3 × π/10 排布，只挪箭点不散射速度）/
   **66% 不消耗弹药** / 月后 15 档（紫）/ 1 铂金 50 金 / 基础稀有度 `ItemRarityID.Red`。
 - 木箭 → 5 元素池 `[Teal, Orange, Orange, Green, Blue]` 均匀随机（**橙 40%、其余各 20%**）；
   非木箭 → 7 支原箭、伤害 ×1.25、`noDropItem`（Lore 分支没有"青箭 ×0.66"那套惩罚）。
-- 文件：`Content/Items/Weapons/Ranged/HeavenlyGale.cs`（+ `HeavenlyGale.png` / `HeavenlyGaleGlow.png`，取自 CI 的 46×98）；
+- 文件：`Content/Items/Weapons/Ranged/HeavenlyGale.cs`（+ `HeavenlyGale.png` / `HeavenlyGaleGlow.png`，取自 旧版支线的 46×98）；
   弹幕 7 个在 `Content/Projectiles/Ranged/`：`TealExoArrow` / `OrangeExoArrow` / `GreenExoArrow` / `BlueExoArrow` /
   `BlueExoArrow2` / `ExoMark` / `ExoTornado`（**只留 Lore 那一套**，同 `CosmicBlast` 的处理）。
 - **四处工程侧适配**：① `DrawBeam` 落成 `Utilities/ProjUtil.cs` 的新扩展
@@ -3349,7 +3338,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   ② 追踪用 `CDUtil.HomeInOnNPC`（**静态、非扩展**方法，必须写成 `CDUtil.HomeInOnNPC(Projectile, …)`）；
   ③ 橙箭死亡的 `SparkleParticle` 用工程既有 `Particles/GenericSparkle` 顶（同一族粒子，未再补一份）；
   ④ 源的 `pointBlankShotDuration`（灾厄贴脸射击）一律不写。
-- **补了一处上游缺口**：`ExoTornado` 源（2.0 / CI / 经典三处都一样）只**读**从不**写** `localAI[0]`，
+- **补了一处上游缺口**：`ExoTornado` 源（2.0 / 旧版支线 / 经典三处都一样）只**读**从不**写** `localAI[0]`，
   于是"前 30 帧有伤害"永不生效——照工程在 `SandTornado` 上的既有处理补上每帧自增。
 - 共用素材：`Content/Projectiles/LaserProj.png`（6×10 白条，本次从 2.0 拷入，四色星流箭 + 后续箭共用）、
   `Content/Projectiles/TornadoProj.png`（工程已有 60×60）、`Content/Projectiles/InvisibleProj.png`。
@@ -3377,7 +3366,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **改动小（可考虑直接引用本体）**：`LunarianBow`（32→27）、`ContinentalGreatbow`（34→45、帧 20→24）、
   `DarkechoGreatbow`（锭 8→12）、`Galeforce`（配方小改）、`SeaPrism` / `LifeAlloy`（**逐字相同**）、
   三种矿锭（矿数 −1）。
-- **CI 里这 13 把武器一件都没有** ⇒ 武器层只有两个源：**2.0（功能 + 配方）**与**经典版**（经典分支），2.2.2 只当对照。
+- **旧版支线里这 13 把武器一件都没有** ⇒ 武器层只有两个源：**2.0（功能 + 配方）**与**经典版**（经典分支），2.2.2 只当对照。
 
 ### 15.3 已自持的材料（本链底层其实已齐）
 
@@ -3417,7 +3406,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    `Alluvion` **✅ 见 15.17**）—— **批 4 全部完成**；材料 `MiracleMatter` 走软依赖（§3）。
 4. **批 5** **✅ 已结清（2026-10-15，见 §15.18）**：武器全自持、材料与站台软依赖；
    现代 = 自持六把 + `MiracleMatter`×1 + `AscendantSpiritEssence`×5 @嘉登熔炉，
-   经典 = 照 cal-1.4.2.101（武器换自持、`Phangasm` 与七味材料软依赖）。
+   经典 = 照 经典 1.4.2.101（武器换自持、`Phangasm` 与七味材料软依赖）。
 5. **未决（等用户拍板）**：① 三件**掉落类**已删材料（`Tenebris` / `HellcasterFragment` / `Phantoplasm`）怎么落地
    （挂回原 Boss 掉落 / 换等价物 / 只保留经典分支）；② 中层那三件"改动大"的要不要自持；
    ③ 工程 `CoreofCinder` 要不要向 2.0 的 `CoreofSunlight` 对齐（34×34 + 发光层 + 卖 40 银）。
@@ -3456,7 +3445,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   本工程没有这套 API，直接写 `Main.projectile[i].DamageType = DamageClass.Ranged`。
 - 配方（@**秘银砧**）：永恒锭×12；现代取 `PerennialBar`、经典取旧名 `DraedonBar`（同一件改名，见 §3），两分支各一条。
 - **经典版的另一套（不取，备查）**：经典是"5 发弹药 + 每发 1/5 概率换绿藻箭、**没有叶子**"、伤害 26 / 24 帧 / 弹速 16；
-  1.3-release 与 2.0 逐项一致。
+  现代 1.3 与 2.0 逐项一致。
 
 ### 15.8 已落地：宇宙弩炮（CosmicBolter）✅ 2026-10-14
 
@@ -3532,7 +3521,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   但 2.0 全工程**没有任何地方**给泡泡写过 `localAI[1]` ⇒ 实际永远走 `WaterSpout`。
   本工程照源两个分支都留（`SeasSearingSpout` 的唯一用途就在这儿）。
 - 配方：**现代**（照 2.0，@月台）= 海啸 + **炎翼弓（本工程自持件）** + 猎魂鲨牙×6 + 鲨鱼鳍×2 +
-  深渊细胞×10 + `Lumenyl`×10 + `PlantyMush`×5；**经典**（照 cal-1.4.2.101，@月台、逐字不同、**不含炎翼弓**）
+  深渊细胞×10 + `Lumenyl`×10 + `PlantyMush`×5；**经典**（照 经典 1.4.2.101，@月台、逐字不同、**不含炎翼弓**）
   = 星璇碎片×15 + 海啸 + 鲨鱼鳍×2 + 深渊细胞×10 + `Lumenite`×10 + `Tenebris`×5。
   两处"改名对"见 §3（暮色碎片 / 流明晶）。
 - **2.2.2 的改法（不取，备查）**：156 伤、配方砍到 4 味（海啸 + 炎翼弓 + 猎魂鲨牙×6 + 深渊细胞×10）、站台改秘银砧。
@@ -3599,7 +3588,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   **每 6 帧一次重整**（四次方权重衰减的转向幅度、左右各试取更接近的一边、响 `Item93`，且**顺手重选目标**）；
   尾迹 `DustID.LastPrism`（源写裸值 267）染黄；消亡爆 10 颗同类尘 + `Item94`。
 - 配方（用户指定「并存」，两条都注册、都 @远古操纵机、**全是原版件**）：
-  **现代**（照 2.0）= 月亮锭×5 + 齿轮×50；**经典**（照 cal-1.4.2.101）= 齿轮×50 + 月亮锭×15。
+  **现代**（照 2.0）= 月亮锭×5 + 齿轮×50；**经典**（照 经典 1.4.2.101）= 齿轮×50 + 月亮锭×15。
 - 本地化：`Items.ClockworkBow`、`Projectiles.ClockworkBowHoldout.DisplayName`（发条弓）、
   `Projectiles.PrecisionBolt.DisplayName`（精准弩箭），以及**首次启用的 `TextContent` 段**
   （`ClockworkBowTick` / `ClockworkBowTock` = Tick / Tock = 咔 / 嗒）。
@@ -3635,7 +3624,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   羽毛伤害由 `Shoot` 的 `damage` 参数派生，**膨胀自动跟随**，无需额外接线。
 - `FeatherLarge`（羽毛）：判定 14×14、穿透 1、寿命 300 帧、**无 `aiStyle`**（AI 只按速度摆正贴图）、
   6 帧残影（模式 0、抽稀 1）；撞墙砸瓦片尘 + `Dig` 后消亡；消亡撒 10 颗 `DustID.Harpy`（源写裸值 42）尘。
-- **两版差异（不取，备查）**：2.2.2 是 13 伤 / 20 帧；经典 cal-1.4.2.101 是 18 伤 / 17 帧但**击退 4**、
+- **两版差异（不取，备查）**：2.2.2 是 13 伤 / 20 帧；经典 1.4.2.101 是 18 伤 / 17 帧但**击退 4**、
   且**根本没有羽毛机制**（连 `Shoot` 都没重写、就是把普通弓）——所以它只能供配方，供不了机制。
 - 配方（照源，**两版逐字相同**、@天磨坊）：**空中锭 `AerialiteBar`×8** + 日耀板×3。
   `AerialiteBar` 是唯一的灾厄件，走软依赖；因两版同名同物，写成"有现代用现代、否则退经典"避免重复配方
@@ -3749,7 +3738,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   **现代**（照 2.0，@**宇宙砧 `CosmicAnvil`**）= **季风（自持件）** + `SeaPrism`×20 + `DepthCells`×10 +
   `Lumenyl`×20 + **`PlantyMush`**×5（2.0 写的是 `Tenebris`，实装 2.2.2 已改名，照 §3 取新版名）+
   `CosmiliteBar`×8 + `EndothermicEnergy`×20；
-  **经典**（照 cal-1.4.2.101，@**嘉登熔炉 `DraedonsForge`**）= 季风 + `Phantoplasm`×5 + `CosmiliteBar`×5 +
+  **经典**（照 经典 1.4.2.101，@**嘉登熔炉 `DraedonsForge`**）= 季风 + `Phantoplasm`×5 + `CosmiliteBar`×5 +
   `DepthCells`×10 + `Lumenite`×20 + `Tenebris`×5。三处"改名对"见 §3。
   2.2.2 砍到 4 味（季风 + 流明晶×20 + 宇宙锭×8 + 吸热能量×20）——**不取**。
 - 本地化：`Items.Alluvion`（Alluvion / 潮涌）、`Projectiles.TorrentialArrow.DisplayName`（Arrow / 洪流箭）。
@@ -3765,7 +3754,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 - **现代**（骨架照 2.0）= **自持六把**（`TheBallista` / `Alluvion` / `AstrealDefeat` / `ClockworkBow` /
   `Galeforce` / `PlanetaryAnnihilation`）+ **`MiracleMatter`×1 + `AscendantSpiritEssence`×5** @**`DraedonsForge`**。
   （源 2.0 只有 `MiracleMatter`×1、七味全是本体武器；用户点名把材料改成"1 奇迹物质 + 5 化神魂精"。）
-- **经典**（照 cal-1.4.2.101 的配方）= 武器同样换自持件，但该版**比现代多一味炎翼弓、且把烈风换成 `Phangasm`**；
+- **经典**（照 经典 1.4.2.101 的配方）= 武器同样换自持件，但该版**比现代多一味炎翼弓、且把烈风换成 `Phangasm`**；
   `Phangasm` 本工程**没有移植过**，这一味**只能软依赖经典版本体件**（若日后想换自持/去掉，改一处）。
   材料七味 + 站台全部软依赖：`NightmareFuel`×5 / `EndothermicEnergy`×5 / `CosmiliteBar`×5 /
   `DarksunFragment`×5 / `HellcasterFragment`×3 / `Phantoplasm`×5 / `AuricOre`×25 @`DraedonsForge`。
@@ -3774,19 +3763,19 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 **② 青色星流箭：维持"本地命中冷却 0"（用户 2026-10-15 拍板"维持0"）**
 
-- 背景（**CI 上游的一处自相矛盾，别再重查**）：CI 那边**文件名与类名是交叉的**——
+- 背景（**旧版支线上游的一处自相矛盾，别再重查**）：旧版支线那边**文件名与类名是交叉的**——
   `Content/Projectiles/ExoLore/ExoArrowTealExoLore.cs` 里声明的类叫 **`ExoArrowTeal`（冷却 0）**，
   而 `Content/Projectiles/Ranged/ExoArrowTeal.cs` 里声明的类叫 **`ExoArrowTealExoLore`（冷却 10）**；
   两者**除这一个常量外完全相同**。
-- CI 的 `HeavenlyGaleold.ExoArrowsExoLore` 是**按类名**取的 ⇒ 运行时 Lore 模式实际拿到的是冷却 10 那个；
-  但 CI 自己的 Lore 说明文字（zh-Hans："青色箭矢不再会受到穿透减伤的影响**并无视无敌帧**"）指向冷却 0。
+- 旧版支线的 `HeavenlyGaleold.ExoArrowsExoLore` 是**按类名**取的 ⇒ 运行时 Lore 模式实际拿到的是冷却 10 那个；
+  但 旧版支线自己的 Lore 说明文字（zh-Hans："青色箭矢不再会受到穿透减伤的影响**并无视无敌帧**"）指向冷却 0。
 - **本工程取冷却 0**（＝无视无敌帧，与随件 tooltip「青色星流箭可无限穿透并无视无敌帧」自洽）。
 
-**③ 顺带核实的"天堂之风＝CI 的 ExoLore 版"证据链（用户 2026-10-15 点名确认口径）**
+**③ 顺带核实的"天堂之风＝旧版支线的 ExoLore 版"证据链（用户 2026-10-15 点名确认口径）**
 
 - 箭数 7（`LoreExo` 分支；非 Lore 是 4~5）、箭池 `[青, 橙, 橙, 绿, 蓝]`（橙 40%）、66% 省弹、
-  非木箭 ×1.25 —— 全部照 CI Lore 分支。
-- 绿 / 橙**追踪**、蓝**穿透 5 + 冷却 20** 都只存在于 CI 的 `*ExoLore` 类里（非 Lore 版没有），我们取的正是这些值；
+  非木箭 ×1.25 —— 全部照旧版支线 Lore 分支。
+- 绿 / 橙**追踪**、蓝**穿透 5 + 冷却 20** 都只存在于 旧版支线的 `*ExoLore` 类里（非 Lore 版没有），我们取的正是这些值；
   弹幕来源：`GreenExoArrow`←`ExoArrowGreenExoLore`、`OrangeExoArrow`←`ExoArrowOrangeExoLore`、
   `BlueExoArrow`←`ExoArrowBlueExoLore`、`BlueExoArrow2`←`ExoArrowBlue2`（无 Lore 变体）、
   `ExoMark` / `ExoTornado` 两版同名同物。
@@ -3796,9 +3785,9 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 **① 弹药全转化**（"特殊箭矢覆盖背包箭矢"）
 
 - `Shoot` 里**删掉"木箭才转化、非木箭照射并 ×1.25"那一支**，改成**不管用的哪种箭、一律换成
-  `ExoArrows` 池里随机的一种**（＝ CI 把 `CIConfig.AmmoConversion` **打开**的那一支；源默认是关的）。
+  `ExoArrows` 池里随机的一种**（＝ 旧版支线把 `弹药转换开关` **打开**的那一支；源默认是关的）。
   `NormalArrowDamageMult` 常量一并删除，`noDropItem` 那套也随之不需要了。
-- **注意**：这条推翻了本节上一段（§15.18 ③）里"非木箭 ×1.25 —— 全部照 CI Lore 分支"的说法，
+- **注意**：这条推翻了本节上一段（§15.18 ③）里"非木箭 ×1.25 —— 全部照旧版支线 Lore 分支"的说法，
   **以本段为准**（用户实测后点名要"全转化"）。
 - tooltip 同步：首行改「Converts any ammo into…／将任何箭矢转化为…」，**删掉「非木箭 ×1.25」那一行**
   （en-US / zh-Hans 都改了）。
@@ -3844,7 +3833,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 16.1 本次做的事（按顺序）
 
-1. **天堂之风本体**（详见 §15.1）：取 CI `HeavenlyGaleOld` 的 ExoLore 分支、**恒处 Lore 模式**；
+1. **天堂之风本体**（详见 §15.1）：取 旧版支线 `HeavenlyGaleOld` 的 ExoLore 分支、**恒处 Lore 模式**；
    伤害 **256**（当时是 208，2026-10-15 改）/ 膨胀 **720** / 月后 15 档 + 1 铂金 50 金 / 带发光层；
    新增 7 枚弹幕 + `CDUtil.DrawBeam`。提交 `2f6c54a`。
 2. **批 2：链下位 7 把武器全部落地**（每件都走 编译 0/0 + 两道自检 + §15 记录 + 提交）：
@@ -3900,7 +3889,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
    （各自面板 / 配方 / 两版差异见 §15.2 与 2026-10-14 那条"下位武器"汇报）。
 3. **批 5**：把天堂之风的现代配方从"引用本体六把武器"改成**引用自持件**；经典分支去掉经典版没有的 `MiracleMatter`
    **✅ 已结清（2026-10-15，见 §15.18）**：现代 = 自持六把 + 奇迹物质×1 + 化神魂精×5 @嘉登熔炉；
-   经典 = 照 cal-1.4.2.101 的配方（武器换自持件，`Phangasm` 与七味材料 + 站台全部软依赖）。
+   经典 = 照 经典 1.4.2.101 的配方（武器换自持件，`Phangasm` 与七味材料 + 站台全部软依赖）。
 4. **存疑已结清（2026-10-15）**：用户澄清「现代版：一个奇迹物质 + 5 个化神魂精」指的正是**天堂之风的现代配方**
    （见 §15.18）：非武器材料用 1 奇迹物质 + 5 化神魂精，站台嘉登熔炉，其余武器全用自持件。
 
@@ -3927,7 +3916,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 | **天堂之风实测修正**：弹药全转化 + 持握贴图右移 `(-10, 0)` | — | 本节之后 | **§15.19** |
 | **下位链统一口径**：8 件弹药全转化 + 11 件补持握偏移 `(-10, 0)` | — | 本节之后 | **§15.20** |
 
-- 青色星流箭的 `localNPCHitCooldown` **维持 0**（用户拍板），CI 交叉命名的原委见 §15.18。
+- 青色星流箭的 `localNPCHitCooldown` **维持 0**（用户拍板），旧版支线交叉命名的原委见 §15.18。
 - **天堂之风链到此全部结清**：批 1 本体 / 批 2 下位 7 把 / 批 3 材料层（零新增）/ 批 4 T1 六把 / 批 5 配方定稿。
 
 ### 17.2 本次坐实的关键事实（别再重查）
@@ -3993,7 +3982,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 18.2 新增参考源
 
-`D:\Game\Terraria\ModModel\CalamityModPublic-2.1`（用户 2026-10-15 放入本机）——
+`D:\Game\Terraria\ModModel\现代灾厄参考源码`（用户 2026-10-15 放入本机）——
 **它是"重做后"的第一版**，与实装 2.2.2 只差四处（见 18.4）；**它不是旧形态**，别拿它当"旧版"用。
 
 ### 18.3 逐版数据（侦察完成，直接引这份）
@@ -4022,7 +4011,7 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 - **价值口径**：灾厄 `CalamityGlobalItem` 的价目表 —— Rarity10＝1 铂、11＝1 铂 20 金、12＝1 铂 50 金、
   13＝1 铂 75 金、14＝2 铂、15＝2 铂 40 金、16＝2 铂 80 金、17＝3 铂 20 金；别名 `RarityRedBuyPrice = Rarity10BuyPrice`、
-  `RarityTurquoiseBuyPrice = Rarity12BuyPrice`、`RarityVioletBuyPrice = Rarity15BuyPrice`（1.4.4-release 与 2.0.7.2 逐项相同）。
+  `RarityTurquoiseBuyPrice = Rarity12BuyPrice`、`RarityVioletBuyPrice = Rarity15BuyPrice`（现代 1.4.4 与 2.0.7.2 逐项相同）。
 - **贴图**：这条链**只有 PurgeGuzzler 换过图**（2.0/2.0.7.2 ＝ 58×44，2.1 起 ＝ 64×48）；
   以太流光炮 94×54、纳米净化 62×34、`AetherfluxCannonHoldout.png`（58×768 ＝ 8 帧 × 58×96）、
   `NanoPurgeHoldout.png`（34×256 ＝ 4 帧 × 34×64）跨 2.0 / 2.0.7.2 / 2.1 / 2.2.2 **四版 MD5 完全相同**。
@@ -4101,10 +4090,10 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 ### 18.8 已落地：以太流光炮（AetherfluxCannon）✅ 2026-10-15
 
 - **配方口径（用户 2026-10-15 定稿，分两次收紧）**：**本工程自持的纳米净化** + 金源锭×5 + 幽花锭×12 +
-  神圣晶簇×8 @**宇宙砧**；材料与站台**一律软依赖现代版灾厄**（缺任一件就整条不注册并写
+  神圣晶簇×8 @**宇宙砧**；材料与站台**一律软依赖现代灾厄**（缺任一件就整条不注册并写
   `Mod.Logger.Warn`）。**净化豪饮者那一味按用户指示删掉了**（"直接删掉…没有啥子用"）
-  ⇒ 这条配方与现代版灾厄自己那条**逐项一致**（本体 2.1 起也把 `PurgeGuzzler` 从配方里删了）。
-  本件**没有经典分支**（经典版灾厄连 `T1000` / 宇宙砧 / 幽花锭 都没有）。
+  ⇒ 这条配方与现代灾厄自己那条**逐项一致**（本体 2.1 起也把 `PurgeGuzzler` 从配方里删了）。
+  本件**没有经典分支**（经典灾厄连 `T1000` / 宇宙砧 / 幽花锭 都没有）。
 - 面板：94×54 / 魔力 7 / 使用·动画 36 帧 / 击退 4 / 弹速 24 /
   **月后 15 档（紫＝灾厄 `Violet`；基础稀有度 `Red`）** / **2 铂金 40 金** / `channel` + 不显武器贴图
   ——**除伤害外全部照 2.0.4**。**伤害由用户 2026-10-15 点名为 370**（2.0.4 原值 285；
@@ -4160,8 +4149,8 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 
 ### 19.2 本次坐实的关键事实（别再重查）
 
-- **新增参考源 `CalamityModPublic-2.1`** ＝"重做后"的第一版，**不是旧形态**；实装灾厄仍 = **2.2.2**，
-  其源码对应 `CalamityModPublic-1.4.4-release`。
+- **新增参考源 `现代灾厄参考源码`** ＝"重做后"的第一版，**不是旧形态**；实装灾厄仍 = **2.2.2**，
+  其源码对应 `现代灾厄参考源码`。
 - 全链逐版数据、版本梯度（**重做发生在 2.0.7.2 与 2.1 之间**）、2.1 → 2.2.2 的四处差异、
   贴图只有 PurgeGuzzler 换过图（58×44 → 64×48）、灾厄价目表（Rarity10＝1 铂 … 17＝3 铂 20 金）
   全部见 **§18.3 / §18.4**。
@@ -4210,18 +4199,18 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
 | 来源 | 类 | 形态 |
 |---|---|---|
 | 本体 1.3~2.0.4 | `Items\Weapons\Magic\SHPC` | 老式"等离子球 + 能量束"，**合成件**（等离子驱动核心×1 + 可疑碎片×4 + 任意秘银锭×10 @秘银砧） |
-| 本体 1.4.4-release（＝实装 2.2.2）/ 2.1 | `SHPC : LegendaryItem` | 大重做：**魂当弹药 + 右键真空吸魂**（`SHPB/SHPV/SHPS/SHPExplosion` + 三段真空音效），仍是**合成件**（上面三味 + 三王魂各 5） |
-| CI `CalamityInheritance-Beta1.12` | `Content\Items\Weapons\Legendary\DestroyerLegendary`（显示名 `SHPC[Legendary]`） | 老式手感 + **传奇成长与 T1/T2/T3**，**掉落件** |
+| 本体 现代 1.4.4（＝实装 2.2.2）/ 2.1 | `SHPC : LegendaryItem` | 大重做：**魂当弹药 + 右键真空吸魂**（`SHPB/SHPV/SHPS/SHPExplosion` + 三段真空音效），仍是**合成件**（上面三味 + 三王魂各 5） |
+| 旧版支线 `旧版支线` | `Content\Items\Weapons\Legendary\DestroyerLegendary`（显示名 `SHPC[Legendary]`） | 老式手感 + **传奇成长与 T1/T2/T3**，**掉落件** |
 
 **用户口径（2026-10-16 逐条拍板，已全部落地）**：面板 **117**；出手模板取本体 **2.0 / 2.0.3.9** 线；
 稀有度走月后自定义 **17 档（传奇）**；价值 **36 金**；名字中英同为 `SHPC`；音效照 2.0；
 **去掉合成配方**，改为**机械三王（双子魔眼 / 毁灭者 / 机械统帅）各自 1% 直接击杀掉落、不走宝藏袋**；
 增幅照 `DefenseBlade` 那套传奇加算表；**左右键与源版一致、不交换**（用户中途改口，已按"不交换"落地）。
 
-**掉落事实（与用户口径的出入，存档备查）**：CI 只挂在 `NPCID.TheDestroyer` 且**没写概率（＝必掉）**，
+**掉落事实（与用户口径的出入，存档备查）**：旧版支线只挂在 `NPCID.TheDestroyer` 且**没写概率（＝必掉）**，
 源码注释「三个机械boss都会掉，有意为之的」与代码不符；本体**任何版本都没有"1% × 三王直接掉"**——
-1.3~2.2.2 全是合成件，classic `cal-1.4.2.101` 是**毁灭者宝藏袋 1%**（复仇模式），
-classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件的掉落规则是**新口径**，不是照抄某一版。
+1.3~2.2.2 全是合成件，classic `经典 1.4.2.101` 是**毁灭者宝藏袋 1%**（复仇模式），
+classic `经典 1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件的掉落规则是**新口径**，不是照抄某一版。
 
 ### 20.1 落地清单
 
@@ -4229,25 +4218,25 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 |---|---|
 | `Content\Items\Weapons\Magic\SHPC.cs` | 物品本体：**98×34**（用户提供的贴图，见下）、面板 117、魔力 20、`useTime = useAnimation = 7`、击退 3.25、**弹速 30**（用户 2026-10-16 指定，源值 20）、`AltFunctionUse`、`ItemsThatAllowRepeatedRightClick`、`postMoonLordRarity = 17`、价值 36 金、**无配方**；**两种招式各 5 发**（`ShotsPerUse = 5`，＝源版 T2 常态化），右键另按 `PhaseOrbCooldown = 60` 附带一颗追踪相位球（＝源版 T1 常态化） |
 | `Players\CalamityDemutationPlayer.SHPC.cs` | SHPC 的玩家侧状态 partial：只有 `shpcPhaseOrbCooldown`（帧）；递减写在 `CalamityDemutationPlayer.ResetEffects` 末尾（§5 口径：武器状态一律不进 ModItem 字段） |
-| `Content\Projectiles\Magic\SHPCPlasma.cs` | 等离子球（源 2.0 `SHPB`）：4 帧、淡入、0.8↔1.2 缩放脉动、速度 ×0.985、**250 像素内有可追敌时启动 120 帧倒计时自爆**；死亡播 `Item105` 并在主人端生成爆炸。**`ai[2] == 1` 时每帧走 `CDUtil.HomeInOnNPC(proj, true, 1800, 24, 20)`**（＝源 CI 那颗额外球的参数；源把它写在死代码里，本工程改用源没碰过的 `ai[2]` 槽位，不影响 `ai[0]/ai[1]` 的随机相位） |
+| `Content\Projectiles\Magic\SHPCPlasma.cs` | 等离子球（源 2.0 `SHPB`）：4 帧、淡入、0.8↔1.2 缩放脉动、速度 ×0.985、**250 像素内有可追敌时启动 120 帧倒计时自爆**；死亡播 `Item105` 并在主人端生成爆炸。**`ai[2] == 1` 时每帧走 `CDUtil.HomeInOnNPC(proj, true, 1800, 24, 20)`**（＝源 旧版支线那颗额外球的参数；源把它写在死代码里，本工程改用源没碰过的 `ai[2]` 槽位，不影响 `ai[0]/ai[1]` 的随机相位） |
 | `Content\Projectiles\Magic\SHPCExplosion.cs` | 爆炸（源 2.0 `SHPExplosion`）：500×500、穿透 -1、60 帧、每目标 10 帧本地无敌、喷 246/73/187 三色尘（本体隐形，走共用 `InvisibleProj`） |
 | `Content\Projectiles\Magic\SHPCLaser.cs` | 能量束（源 2.0 `SHPL`）：5×5、`extraUpdates = 3`、`DrawBeam(100, 3)` 拉光束条（走共用 `LaserProj`）、消散撒三色尘 |
 | `Content\Projectiles\Magic\SHPCPlasma.png` | 拷自本体 2.0 `Projectiles/Magic/SHPB.png`（50×192，4 帧） |
-| `Content\Items\Weapons\Magic\SHPC.png` | **用户提供的 98×34 老版图**（源文件 `SHPC_(1.1.7.701).png`，即经典世系那张；原件已并入本路径并删除） |
+| `Content\Items\Weapons\Magic\SHPC.png` | **用户提供的 98×34 老版图**（源文件 `SHPC_(1.1.7.701).png`，即经典灾厄那张；原件已并入本路径并删除） |
 | `Sounds\Item\LaserCannon.ogg` + 登记 | 拷自本体 2.0；登记为 `CalamityDemutationSounds.LaserCannon`（右键能量束的使用音） |
 | `NPCs\CalamityDemutationGlobalNPC.OnKill` | 三王各 `Main.rand.NextBool(100)`、**`Item.NewItem` 直接生成**（避开 `ModifyNPCLoot` 在大师模式进袋）；双子按"**两只都被击杀**"判一次（另一只还活着就不 roll）；带 `Main.netMode != NetmodeID.MultiplayerClient` 守卫 |
-| `Content\Items\CalamityDemutationGlobalItem.GetLegendaryWeaponColor` | 17 档传奇**按件取色**，色值照 `cal-1.4.2.101` 的 `case 17: //Legendary Weapons`：`DefenseBlade`（源 `AegisBlade`）`(255, DiscoG, 53)`、**`SHPC` `(255, DiscoG, 155)`**（＝它弹幕一直用的那个"SHPC 色"）。两件同属 17 档、基础稀有度由 GlobalItem 统一改写成红档 ⇒ 用户 2026-10-16 说的"同一稀有度"＝**同档**，**颜色各按源表**（复核 1.4.2 后确认；原先给 SHPC 登记的 CI `SHPCAqua` #4169E1 作废）。源表另几件（Malachite / YharimsCrystal / BrinyBaron / CosmicDischarge / BlossomFlux / Vesuvius）已记在方法注释里备查 |
+| `Content\Items\CalamityDemutationGlobalItem.GetLegendaryWeaponColor` | 17 档传奇**按件取色**，色值照 `经典 1.4.2.101` 的 `case 17: //Legendary Weapons`：`DefenseBlade`（源 `AegisBlade`）`(255, DiscoG, 53)`、**`SHPC` `(255, DiscoG, 155)`**（＝它弹幕一直用的那个"SHPC 色"）。两件同属 17 档、基础稀有度由 GlobalItem 统一改写成红档 ⇒ 用户 2026-10-16 说的"同一稀有度"＝**同档**，**颜色各按源表**（复核 1.4.2 后确认；原先给 SHPC 登记的 旧版支线 `SHPCAqua` #4169E1 作废）。源表另几件（Malachite / YharimsCrystal / BrinyBaron / CosmicDischarge / BlossomFlux / Vesuvius）已记在方法注释里备查 |
 | `Localization\{en-US,zh-Hans}_Mods.CalamityDemutation.hjson` | 新增 `Items.SHPC`：`DisplayName: SHPC` + 4 行 tooltip（传奇武器 / 左键球 / 右键束 / 随流程成长）。**插在 `Items` 段内 `SeraphTracers` 与 `ShieldoftheOcean` 之间**（字母序），改完已整回 CRLF、无 BOM。另：`dotnet build` 会**自动往 `Projectiles` 段尾补三条弹幕显示名**（并把缩写拆成 `S H P C`），已改成规范名 `SHPC Plasma / SHPC Laser / SHPC Explosion`（zh-Hans 对应「SHPC 等离子球 / SHPC 能量束 / SHPC 爆炸」，自动补的那三条在 zh-Hans 里是 `//` 注释占位，需手填） |
 
 **两处踩到的坑（照做即可）**：① `CalamityDemutationGlobalNPC.cs` 要补 `using CalamityDemutation.Content.Items.Weapons.Magic;`
 （否则 `SHPC` 找不到）；② `SHPCLaser.cs` 要补 `using CalamityDemutation.Utilities;`（`DrawBeam` 是那边的扩展方法）。
 ③ 用户给的贴图是 **98×34**（不是 2.0 的 124×52），故 `Item.width/height` 按该图取；
-`HoldoutOffset` 源口径是经典世系的 `(-25, 0)`，**末次由用户 2026-10-16 点名定为 `(-15, 0)`**
+`HoldoutOffset` 源口径是经典灾厄的 `(-25, 0)`，**末次由用户 2026-10-16 点名定为 `(-15, 0)`**
 （期间先要"贴图整体右移 10 点"、给过 -35，随即改口定 -15 ⇒ **本件以用户点名为准**，
 别再照"越小越往右"那套外推；**也别照抄 2.0 的 `(-35, -10)`**，那个 Y 是配 124×52 大枪身的）。
 换贴图时记得同步这三处。
 
-### 20.2 CI 三阶线的取舍（用户 2026-10-16 拍板，已落地）
+### 20.2 旧版支线三阶线的取舍（用户 2026-10-16 拍板，已落地）
 
 - **T3 不移植**：要读灾厄的 `cShard`（彗星碎片）/ `eCore`（永恒核心）两个玩家标记，再叠加死灵质信标
   （`NecroplasmicBeacon`）的使用判定，成本高；且源里"不再消耗任何魔力"的实况只是把**右键**蓝耗改成 `×0.01`（左键照旧 20）。
@@ -4255,13 +4244,13 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
   ① **T2** → 两种招式一律 **5 发**；② **T1** → 能量束**每 60 帧**额外附带一颗**会追踪**的相位球。
 
 **两处"源里的实况"（免得日后有人照源改回去）**：
-① **T1 在原版 CI 里是空转**——那颗额外球的发射**不判 Tier**（只要 `fireCD == 0` 就发），
+① **T1 在原版 旧版支线里是空转**——那颗额外球的发射**不判 Tier**（只要 `fireCD == 0` 就发），
 而它的追踪判定 `if (ai[0] == 1f) HomeInOnNPC(...)` 又是**死代码**（同一段 AI 开头已把 `ai[0]` 覆盖成随机数）。
 本工程按"本该有的样子"写对：门控放在玩家侧冷却，追踪开关改用源没碰过的 `ai[2]`。
 ② **T2 在源里真生效**（`Tier2 ? 5 : 3`），我们直接取满档。
 
 若日后要改回"解锁式"（微光湖换强化道具 / 月总在场喝葡萄汁），需要新增强化道具 + 玩家侧 Tier 标记；
-源 CI 把 `DestroyerTier1/2/3` 存在 `CILegendaryTask.LegendarySaveData` 里存档，我们按 §5 口径放自己的 ModPlayer 即可。
+源 旧版支线把 `DestroyerTier1/2/3` 存在 `旧版支线的传奇存档数据` 里存档，我们按 §5 口径放自己的 ModPlayer 即可。
 
 ### 20.3 验证与状态（2026-10-16）
 
@@ -4271,7 +4260,7 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 我改用 `localAI[1]` 时漏了初值 ⇒ 敌人一进 250 像素就立刻爆炸）；**弹速 20 → 30**（`caa734c`）、
 **持枪偏移 `(-25, 0)` → `(-15, 0)`**（用户随后改口）+ 三条弹幕显示名的中英补齐（见 §20.1）。
 末次一条：用户 2026-10-16 要求"修正稀有度、和庇护之刃维持一个稀有度"，随后点名**以 1.4.2 那套为准**复核 ⇒
-两件同属 **17 档传奇**，名称色按 `cal-1.4.2.101` 的 `case 17` **按件取色**（庇护之刃 `(255, DiscoG, 53)`、SHPC `(255, DiscoG, 155)`，见 §20.1）。
+两件同属 **17 档传奇**，名称色按 `经典 1.4.2.101` 的 `case 17` **按件取色**（庇护之刃 `(255, DiscoG, 53)`、SHPC `(255, DiscoG, 155)`，见 §20.1）。
 另：根目录的 `Devil's_Devastation.png`（破灭魔王剑那张副本）已于同日按用户指示删除；其同名贴图改动仍在工作区未提交。
 
 ## 21. 2026-10-16 会话收尾（SHPC 全链 + 翅膀栏删除 + 一把新手套的像素活；下次从 §21.3 接）
@@ -4282,10 +4271,10 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 |---|---|
 | `3566295` | 清掉 Codex CLI 0.163.0 升级残留（约 1.04 GB；standalone 里被顶掉的 `releases\0.162.1` + `%TEMP%` 暂存）。口径见 §11.5 |
 | `95413ed` | **移植 SHPC**（传奇法师枪械）：本体、三个弹幕、两张贴图、LaserCannon 音效、三王各 1% 直接掉落（`OnKill`，不走藏袋）、17 档传奇、无配方。口径与踩坑见 §20 |
-| `800bdde` | SHPC 的 **T1/T2 常态化**（T3 不移植）：两种招式各 5 发；右键能量束每 60 帧附带一颗**会追踪**的相位球（源 CI 那条是空转的，我们写对了：门控放玩家侧冷却、追踪开关走弹幕 `ai[2]`） |
+| `800bdde` | SHPC 的 **T1/T2 常态化**（T3 不移植）：两种招式各 5 发；右键能量束每 60 帧附带一颗**会追踪**的相位球（源 旧版支线那条是空转的，我们写对了：门控放玩家侧冷却、追踪开关走弹幕 `ai[2]`） |
 | `72467b6` | 修 SHPC 等离子球"贴脸自爆倒计时缺初值"（源用实例字段 `= 120`，我改 `localAI[1]` 时漏了初值 ⇒ 敌人一进 250 像素就立刻爆炸） |
 | `caa734c` / `3c9c07c` | SHPC 弹速 **20 → 30**；持枪偏移 `(-25,0)` →（先 -35、随即用户点名）**`(-15,0)`**；顺带把 `dotnet build` 自动补的三条弹幕显示名改成规范中英（它会把 `SHPC` 拆成 `S H P C`） |
-| `e0bfc5a` / `6dc2001` | SHPC 稀有度：先按用户口径"与庇护之刃统一"，随后用户点名"以 1.4.2 那套为准"复核 ⇒ 两件同属 **17 档**、名称色按 `cal-1.4.2.101` 的 `case 17` **按件取色**（庇护之刃 `(255,DiscoG,53)`、SHPC `(255,DiscoG,155)`；CI 的 `SHPCAqua` #4169E1 作废） |
+| `e0bfc5a` / `6dc2001` | SHPC 稀有度：先按用户口径"与庇护之刃统一"，随后用户点名"以 1.4.2 那套为准"复核 ⇒ 两件同属 **17 档**、名称色按 `经典 1.4.2.101` 的 `case 17` **按件取色**（庇护之刃 `(255,DiscoG,53)`、SHPC `(255,DiscoG,155)`；旧版支线的 `SHPCAqua` #4169E1 作废） |
 | `5081e59` | **删除「拜月契约（MoonPact）+ 专用翅膀栏」整套**（物品+`ModAccessorySlot`+贴图+肉山掉落+玩家标志/存档/发包字段+两份本地化）。永久解锁标志从 2 个回到 1 个（只剩天界洋葱 `extraAccessoryML`） |
 
 另：本会话开始前用户让删掉根目录那张 `Devil's_Devastation.png`（破灭魔王剑贴图的重复副本）；同名贴图本体仍是他自己的未提交改动。
@@ -4293,7 +4282,7 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 ### 21.2 本次新得的关键事实（后续照做）
 
 1. **灾厄系物品贴图是 2× 颗粒**（普查与判据已写进 §4「贴图」条目）⇒ 新画物品贴图按 2× 出图。
-2. **17 档传奇按件取色**，色表照 `cal-1.4.2.101` 的 `CalamityGlobalItem.ModifyTooltips` `case 17`（我们 12~22 档整表就是从那一版移植的）；
+2. **17 档传奇按件取色**，色表照 `经典 1.4.2.101` 的 `CalamityGlobalItem.ModifyTooltips` `case 17`（我们 12~22 档整表就是从那一版移植的）；
    实现落在 `GetLegendaryWeaponColor`（§20.1）。
 3. **像素画工作流（本会话实测，值得复用）**：
    - 工具链：Python 3.14 + Pillow 12.3（本机已就绪）逐像素读写 + `Image.resize(..., NEAREST)`；出图后**必须 `view_image` 自检**——
@@ -4327,21 +4316,21 @@ classic `cal-1.2` 是毁灭者 1/10000→1/4000 的传奇稀有掉。⇒ 本件�
 ⚠️ 工作区里另有**用户自己的**内容（本会话未触碰）：`Content/Items/Weapons/Melee/DevilsDevastation.png`（已修改，未提交）。
 新手套那件事的三张素材（`1.png` / `BeetleEnchant.png` / `Fire_Gauntlet.webp`）**已全部被用户移出工作区**，见 §21.3。
 
-## 22. 星火凤凰雨（Phoenix Flame Barrage）—— CI 支线移植（2026-10-18）
+## 22. 星火凤凰雨（Phoenix Flame Barrage）—— 旧版支线移植（2026-10-18）
 
-**来源与命名**：CI Beta1.12 的 `Content/Items/Weapons/Magic/DragonStaff.cs` +
-`Content/Projectiles/Magic/DragonStaffProj.cs`；CI 本地化键 `DragonStaff` 的中文名是「星火凤凰雨[Legacy]」、
+**来源与命名**：旧版支线的 `Content/Items/Weapons/Magic/DragonStaff.cs` +
+`Content/Projectiles/Magic/DragonStaffProj.cs`；旧版支线本地化键 `DragonStaff` 的中文名是「星火凤凰雨[Legacy]」、
 英文 `Phoenix Flame Barrage Legacy`。按命名口径去掉 `[Legacy]`，本工程类名 `PhoenixFlameBarrage` /
-弹幕 `PhoenixFlame`。物品贴图改用 CI 的 `DragonStaff.png`（70×70，按类名存为
+弹幕 `PhoenixFlame`。物品贴图改用 旧版支线的 `DragonStaff.png`（70×70，按类名存为
 `PhoenixFlameBarrage.png`，走隐式同名贴图）；原先那张 106×140 的现代版
 `Phoenix_Flame_Barrage.png` 已按用户 2026-10-18 指示删除。
 
-**面板（照 CI）**：72×70 判定（贴合 CI 的 70×70 贴图）、伤害 290、魔力 20、
+**面板（照旧版支线）**：72×70 判定（贴合 旧版支线的 70×70 贴图）、伤害 290、魔力 20、
 使用 15 / 动画 30 帧、击退 3.5、弹速 30、`Item.staff`、`Item20` 音、自动复用、
-月后 **15 档（紫名，与焚灭天惩同级；用户 2026-10-18 指定）** / 2 铂金（CI `RarityPriceDeepBlue`）。
-CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植。
+月后 **15 档（紫名，与焚灭天惩同级；用户 2026-10-18 指定）** / 2 铂金（旧版支线 `RarityPriceDeepBlue`）。
+旧版支线源本身是 `DeepBlue` 14 档；旧版支线的 `SpecialRarityColor` 分支不移植。
 
-**机制（照 CI 的 DragonStaff）**：`Shoot` 每次从玩家上方 600 像素起、逐枚再抬 100 像素生成 30~32 枚火焰
+**机制（照旧版支线的 DragonStaff）**：`Shoot` 每次从玩家上方 600 像素起、逐枚再抬 100 像素生成 30~32 枚火焰
 （每 1/3 概率 +1，最多 32），每枚重新朝鼠标归一化并加 ±0.6 扰动；弹幕 20×20 / 穿透 1 / `extraUpdates 3` /
 不撞图格 / 不受水影响 / 600 帧；出场 `alpha 255`、每帧 -3 淡入（源没有 alpha 归零自毁）；
 命中挂圣火 300 帧（走 `ApplyCalamityBuffWithFallback`，经典版退回原版燃烧）；
@@ -4350,14 +4339,14 @@ CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植�
 - 两处工程处置：① 源 `FramesChanger(Projectile, 4, 3)` 只轮播 3 帧，与 4 帧图集不符，本工程按 4 帧循环；
   ② 圣火不硬引用灾厄类型。
 
-**获取**：CI 源里它没有配方，放在 `YharonEssence` 的随机武器池；本工程未移植 YharonEssence，
+**获取**：旧版支线源里它没有配方，放在 `YharonEssence` 的随机武器池；本工程未移植 YharonEssence，
 按本体同名旧件 `PhoenixFlameBarrage` 的犽戎袋口径，在现代 / 经典两个 `YharonBag` 各挂
 `CommonDrop(..., 3)`（1/3）。
 
 **数值膨胀**：用户 2026-10-18 指定 **290 → 458**；伤害走 `Shoot` 的 `damage` 参数，自动跟随。
 
-**文件**：`Content/Items/Weapons/Magic/PhoenixFlameBarrage.cs` + `PhoenixFlameBarrage.png`（CI 的 `DragonStaff.png`）；
-`Content/Projectiles/Magic/PhoenixFlame.cs` + `PhoenixFlame.png`（20×120，取自 CI 的
+**文件**：`Content/Items/Weapons/Magic/PhoenixFlameBarrage.cs` + `PhoenixFlameBarrage.png`（旧版支线的 `DragonStaff.png`）；
+`Content/Projectiles/Magic/PhoenixFlame.cs` + `PhoenixFlame.png`（20×120，取自 旧版支线的
 `DragonStaffProj.png`，与灾厄 `HolyFlame.png` 同一张）；`CalamityDemutationGlobalItem.ModifyItemLoot`
 两处犽戎袋；两份本地化 `Items.PhoenixFlameBarrage` + `Projectiles.PhoenixFlame.DisplayName`。
 
@@ -4365,11 +4354,11 @@ CI 源本身是 `DeepBlue` 14 档；CI 的 `SpecialRarityColor` 分支不移植�
 （普通 `dotnet build` 的 C# 编译同样通过，但沙箱禁止写 `Mods\CalamityDemutation.tmod`，
 TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`CheckImplicitTextures` **500 个类**全命中。
 
-**实测（2026-10-18）**：用户进游戏实测通过，无问题（CI 贴图版、膨胀 458、15 档稀有度）。
+**实测（2026-10-18）**：用户进游戏实测通过，无问题（旧版支线贴图版、膨胀 458、15 档稀有度）。
 
-## 23. 光之舞（Dance of Light）—— 2.0 配方 + CI 机制 + 现代贴图（2026-10-18）
+## 23. 光之舞（Dance of Light）—— 2.0 配方 + 旧版支线机制 + 现代贴图（2026-10-18）
 
-**用户口径（2026-10-18）**：本体机制取 **CI `DanceofLightLegacy`（白焰雨）**，
+**用户口径（2026-10-18）**：本体机制取 **旧版支线 `DanceofLightLegacy`（白焰雨）**，
 配方取 **灾厄 2.0**，物品贴图取 **现代版 `TheDanceofLight.png`**。
 
 **下位链（已全部剥离）**：
@@ -4389,12 +4378,12 @@ TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`Check
   2.0 / 2.0.3.9 的嘉登熔炉都是 `CosmicAnvilItem + HardmodeForge + TinkerersWorkshop + LunarCraftingStation +
   AuricBar×15 + ExoPrism×12 + AscendantSpiritEssence×25`（2.2.2 只把化神魂精改成 ×15）。
 - 材料层按工程口径不迁移；`ShadowspecBar` / `DraedonsForge` 在现代与经典分支各 `TryFind` 一次。
-- CI / 经典白焰雨配方**没有天界破晓**；2.0 重做版才有。本次按用户指定采用 2.0 配方，因此多这一味原版件。
+- 旧版支线 / 经典白焰雨配方**没有天界破晓**；2.0 重做版才有。本次按用户指定采用 2.0 配方，因此多这一味原版件。
 
 **本体（`Content/Items/Weapons/Magic/DanceofLight.cs`）**：
-40×42（现代贴图判定）/ 伤害 **200**（用户 2026-10-18 指定；CI 源为 700）/ 魔力 9 / 使用·动画 15 帧 / 击退 4 / 弹速 30 /
-月后 **16 档**（CI `DonatorPink`，品红）/ **2 铂金 80 金**（CI `RarityPriceDonatorPink`）/
-`Item105` / `HoldoutOffset` 零偏移。出手照 CI：4~6 枚白焰从玩家上方不同高度朝鼠标坠落。
+40×42（现代贴图判定）/ 伤害 **200**（用户 2026-10-18 指定；旧版支线源为 700）/ 魔力 9 / 使用·动画 15 帧 / 击退 4 / 弹速 30 /
+月后 **16 档**（旧版支线 `DonatorPink`，品红）/ **2 铂金 80 金**（旧版支线 `RarityPriceDonatorPink`）/
+`Item105` / `HoldoutOffset` 零偏移。出手照旧版支线：4~6 枚白焰从玩家上方不同高度朝鼠标坠落。
 数值膨胀按用户 2026-10-18 指定取 **200 → 700**。
 
 **弹幕（全部自持）**：
@@ -4402,7 +4391,7 @@ TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`Check
 - `WhiteFlame`：12×12、隐形贴图、`extraUpdates 2`、不撞图格、120 帧、钻石尘；
   10 帧后在 700 像素内追踪（16 / 20），消亡分裂 **2** 枚 `WhiteFlameAlt`；命中圣火 360 帧。
 - `WhiteFlameAlt`：6×6、穿透 3、局部无敌 1 帧、120 帧、钻石尘；
-  CI 源 `homeTimer` 初值 100、条件 >60 恒真，等效于**从第一帧起 1800 像素全局追踪**（16 / 5）。
+  旧版支线源 `homeTimer` 初值 100、条件 >60 恒真，等效于**从第一帧起 1800 像素全局追踪**（16 / 5）。
 - 圣火一律走 `ApplyCalamityBuffWithFallback`，经典版缺 `HolyFlames` 时退回原版燃烧。
 
 **远古之怒（`Content/Items/Weapons/Magic/WrathoftheAncients.cs`）**：
@@ -4448,7 +4437,7 @@ TML001 仅打包阶段失败）；`CheckResources` **208 条**全命中；`Check
 | **2.1（唯一有配方）** | 上述酒桶配方 | 20×32 / 堆叠 9999 / 蓝档 / 2 银 / `DefaultToFood(20, 32, buff, 6 分钟, true)` |
 | 2.0.4 | 无配方；血月时 FAP 以 4 金出售 | 28×18 / 堆叠 9999 / Lime 档 / 2 金 60 银 / 增益 480 秒 |
 | 2.0 / 2.0.3.9 | 无配方；FAP 出售（2.0.3.9 为 4 金）/ 地下神龛宝箱 | 22×30 / 28×18 |
-| 经典 cal-1.4.2.101 | 无配方；FAP 以 15 金出售 | 22×30 |
+| 经典 1.4.2.101 | 无配方；FAP 以 15 金出售 | 22×30 |
 
 **2.1 原版增益效果（侦察记录）**：`BloodyMaryBuff` 是 debuff、可存档、护士不能移除；
 血月期间通用伤害 +10%、移动速度 +10%、防御 -4%；酒醉等级 +1、生命回复 -4；
@@ -4500,7 +4489,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 ```
 
 - 血泪 / 麦芽酒那条无条件注册（都是原版物品）。
-- 血珠那条分别在现代 `CalamityMod` / 经典 `CalamityModClassicPreTrailer` 里 `TryFind`，两条各注册一次。
+- 血珠那条分别在现代 `CalamityMod` / 经典 `经典灾厄` 里 `TryFind`，两条各注册一次。
 - 不再使用 2.1 的「瓶装水×10 + 血月召唤物 @ 酒桶，产 10」。
 - 物品价值仍为 2 金 60 银；面板、增益效果与 6 分钟持续时间均不变。
 
@@ -4516,7 +4505,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 
 **来源**：
 
-- 物品壳取 `CalamityModPublic-2.0.4/Items/Potions/Alcohol/MoscowMule.cs`（32×32 图，`DefaultToFood` 32×34、堆叠 9999、黄档、8 分钟、价值 5 金 30 银、研究 5）。
+- 物品壳取 `现代灾厄参考源码/Items/Potions/Alcohol/MoscowMule.cs`（32×32 图，`DefaultToFood` 32×34、堆叠 9999、黄档、8 分钟、价值 5 金 30 银、研究 5）。
 - 效果取 `2.0.3.9+` 的 `CalamityPlayerMiscEffects` / `CalamityPlayerLifeRegen` / `CalamityPlayer.ModifyWeaponKnockback`：
   通用伤害 **+9%**、通用暴击 **+3%**、武器击退 **+50%**、生命再生 **−2 HP/s**、酒醉 **+1**。
 - 配方取 `2.0.7.2`（各产 1）：
@@ -4533,7 +4522,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **配方软依赖（2026-10-19 用户确认）**：
 
 - 现代 `CalamityMod` 用 `ScoriaOre`（熔渣矿）。
-- 经典 `CalamityModClassicPreTrailer` 没有 `ScoriaOre`，用 `CruptixBar`（Chaotic Bar）作为对应材料；
+- 经典 `经典灾厄` 没有 `ScoriaOre`，用 `CruptixBar`（Chaotic Bar）作为对应材料；
   若两者都没有，再回退 `ChaoticOre`。
 - 经典版是**用锭代替矿**：`CruptixBar` 由 5 个 `ChaoticOre` 在精金熔炉烧成 1 个，
   所以经典版这两条配方的材料成本明显高于现代版。
@@ -4592,7 +4581,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **当时查到的字段/时序**（后续自写中毒可参考）：
 
 - 现代：`CalamityPlayer.alcoholPoisonLevel`（`public int`）。
-- 经典：`CalamityPlayerPreTrailer.alcoholPoisonLevel`（`public int`）。
+- 经典：`经典灾厄玩家类.alcoholPoisonLevel`（`public int`）。
 - 时序：灾厄 `ResetEffects` 清零 → 酒 buff `Update` 加 1 → 经典 `PostUpdateMiscEffects` /
   现代 `UpdateLifeRegen` 再叠加灾厄自己的酒并判定 `>3`。
 - 两版字段都存在时两边都写；缺字段/改名/类型变化时 fail-open。
@@ -4769,7 +4758,7 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 
 **用户口径**：移植 `Seared Pan`，先从下位武器开始；下位件明确取 **2.0**。
 
-**来源与链条**：`CalamityModPublic-2.0`。`Seared Pan` 在 2.0.4 后删除，实装 2.2.2 已无；
+**来源与链条**：`现代灾厄参考源码`。`Seared Pan` 在 2.0.4 后删除，实装 2.2.2 已无；
 `Utensil Poker` 仍存在于实装 2.2.2。它没有配方，2.0 来源是月亮领主武器池。
 
 **物品面板（2.0）**：碰撞箱 44×66、贴图 30×32、伤害 333、击退 8、使用/动画 15/45 帧、

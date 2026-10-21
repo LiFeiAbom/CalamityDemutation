@@ -66,7 +66,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             }
         }
         /// <summary>
-        /// 命中敌人：附加 360 帧硫磺火（灾厄现代版与经典版分别查找），并播放 89 号音效（音量 0.5、音高随机 0.4）。
+        /// 命中敌人：附加 360 帧硫磺火（现代灾厄版与经典版分别查找），并播放 89 号音效（音量 0.5、音高随机 0.4）。
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -75,7 +75,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
             SoundEngine.PlaySound(SoundID.Item89 with { Volume = 0.5f, PitchVariance = 0.4f }, Projectile.Center);
         }
         /// <summary>
-        /// 命中玩家（PvP）：与 OnHitNPC 同构，附加 360 帧硫磺火（灾厄现代版与经典版分别查找），并播放 89 号音效。
+        /// 命中玩家（PvP）：与 OnHitNPC 同构，附加 360 帧硫磺火（现代灾厄版与经典版分别查找），并播放 89 号音效。
         /// </summary>
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {

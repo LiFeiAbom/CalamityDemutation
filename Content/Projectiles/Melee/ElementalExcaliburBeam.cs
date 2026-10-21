@@ -10,7 +10,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
     /// 元素圣剑光束（ElementalExcaliburBeam） - 元素圣剑（ElementalExcalibur）左键挥砍发射的彩虹光束，
-    /// 移植自灾厄现代版 2.0.3.9 的 <c>GayBeam</c>（该版的虹彩圣剑 IridescentExcalibur 的普通攻击弹幕）。
+    /// 移植自现代灾厄版 2.0.3.9 的 <c>GayBeam</c>（该版的虹彩圣剑 IridescentExcalibur 的普通攻击弹幕）。
     /// <para>
     /// ai[0] 是颜色编号（0~11，与武器 MeleeEffects 里的调色板同序）。除换色外，每种颜色还各带一套独有的飞行行为：
     /// 0 红-普通；1 橙-飞到中段回旋追玩家；2 黄-到点分裂；3 淡绿-离主人过远就贴回去；4 绿-追敌；
@@ -19,8 +19,8 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// </para>
     /// <para>
     /// 与源码的差异：源码命中敌人 / 玩家都只挂一个 MiracleBlight（600 帧），本工程改为软依赖双版本查找并分别补挂——
-    /// 现代版 <c>CalamityMod</c>（VulnerabilityHex / MiracleBlight / Dragonfire）、经典版
-    /// <c>CalamityModClassicPreTrailer</c>（DemonFlames / GodSlayerInferno / HolyLight），各 600 帧；
+    /// 现代版 <c>灾厄本体</c>（VulnerabilityHex / MiracleBlight / Dragonfire）、经典版
+    /// <c>经典灾厄</c>（DemonFlames / GodSlayerInferno / HolyLight），各 600 帧；
     /// 其余行为（含源码本就有的过 <c>OnHitPlayer</c> 与 <c>OnTileCollide</c>）与源码一致。
     /// </para>
     /// </summary>
@@ -255,7 +255,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             {
                 Projectile.velocity *= -1f;   // 蓝：反向弹开
             }
-            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))   // 现代版灾厄
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))   // 现代灾厄
             {
                 if (calamity.TryFind<ModBuff>("VulnerabilityHex", out ModBuff vulnerabilityHex))
                     target.AddBuff(vulnerabilityHex.Type, 600);
@@ -264,7 +264,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (calamity.TryFind<ModBuff>("Dragonfire", out ModBuff dragonfire))
                     target.AddBuff(dragonfire.Type, 600);
             }
-            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))   // 经典版灾厄
+            if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))   // 经典灾厄
             {
                 if (classic.TryFind<ModBuff>("DemonFlames", out ModBuff demonFlames))
                     target.AddBuff(demonFlames.Type, 600);

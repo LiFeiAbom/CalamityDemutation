@@ -8,13 +8,13 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 宇宙暗流的长矛弹幕（移植自灾厄大修 Beta1.12 的 <c>StreamGougeProjOld</c>）——
+    /// 宇宙暗流的长矛弹幕（移植自旧版支线的 <c>StreamGougeProjOld</c>）——
     /// 源注释里写明"灾厄的矛基类有动画问题，所以自己写了一套"，本弹幕即那套自写长矛逻辑：
     /// 矛身挂在玩家手上，沿鼠标方向在 56~196 像素之间"刺出—收回"，寿命与玩家的挥击动画等长；
     /// 刺出的第一帧朝矛尖甩出一束宇宙精粹（<see cref="EssenceBeam"/>，伤害为长矛的 4 倍），
     /// 刺到最远点时在矛尖炸开一圈传送门尘。
     /// <para>
-    /// 与 CI 源的差异（数值全部照搬）：
+    /// 与旧版支线源的差异（数值全部照搬）：
     /// ① 矛的转角：源写 <c>rotation += 45°/135°</c>，而源自己又把原版矛 AI 钩子干掉了，于是转角会逐帧累加——
     ///    18 帧的刺击里整根矛会自转 6 圈多。这里按源内同一套方向常量、另一处正确写法（<c>MarniteSpearProj</c> 投掷模式）
     ///    改成直接赋值，并补上源里没人赋值的 <c>spriteDirection</c>，矛尖才会始终朝着刺击方向；

@@ -25,7 +25,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// </para>
     /// <para>
     /// 配方（照源 2.0.3.9）：夜眼 `EyeOfNight` + 刃杖 `ItemID.Smolstar` + 生命碎片 `LivingShard`×12 @ 秘银砧。
-    /// **经典分支（`CalamityModClassicPreTrailer`）里没有夜眼**，按用户 2026-10-08 拍板**直接去掉那一味**，
+    /// **经典分支（`经典灾厄`）里没有夜眼**，按用户 2026-10-08 拍板**直接去掉那一味**，
     /// 其余两味（刃杖 + 生命碎片×12）照旧、同站台。
     /// </para>
     /// </remarks>

@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
 {
     /// <summary>
     /// 弑神者战盔（GodSlayerHelmet） - 弑神者套装的射手向头部部件
-    /// （按经典版灾厄同名件 1:1 移植；现代版类名 GodSlayerHeadRanged，显示名同为 God Slayer Helmet）。
+    /// （按经典灾厄同名件 1:1 移植；现代版类名 GodSlayerHeadRanged，显示名同为 God Slayer Helmet）。
     /// 单件：远程伤害与暴击率各 +14%。
     /// 套装（逐条对应 player.setBonus 的官方描述，实现位置见括号）：
     /// 1. 致命伤不会死亡并回复生命 / 每 45 秒一次 / 冷却期间 +10% 全伤害（godSlayer → CalamityDemutationPlayer.PreKill）
@@ -64,7 +64,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             player.GetCritChance<RangedDamageClass>() += 14;   // +14% 远程暴击
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，各注册一条。
+        /// 注册配方：现代版与经典灾厄材料不同，各注册一条。
         /// 现代分支与既有近战头、1.4.4 公开源码一致（CosmiliteBar×10 + AscendantSpiritEssence×2 @ 宇宙砧）；
         /// 经典分支照经典版源码（CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8 @ 德雷顿熔炉）
         /// </summary>

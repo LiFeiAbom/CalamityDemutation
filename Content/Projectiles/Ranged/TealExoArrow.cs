@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 青色星流箭（TealExoArrow） - 天堂之风把木箭转化出的四色星流箭之一，＝CI 的
+    /// 青色星流箭（TealExoArrow） - 天堂之风把木箭转化出的四色星流箭之一，＝旧版支线的
     /// <c>Content/Projectiles/ExoLore/ExoArrowTealExoLore</c>（本工程常驻 Lore 模式，故不留非 Lore 版）。
     /// <para>
     /// 定位是"无限穿透 + 无视无敌帧"：判定 5×5、穿透 -1、额外更新 3 帧、寿命 300 帧，
@@ -25,7 +25,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         /// <summary>相邻两次盖印的间距（像素），同时是 <c>localAI[0]</c> 每帧的增长量（照源第二个参数）</summary>
         private const float BeamStep = 1.5f;
         /// <summary>
-        /// 共用光束贴图：本工程把灾厄 / CI 的 `Projectiles/LaserProj` 放在 Projectiles 根目录（与 InvisibleProj 同一处），
+        /// 共用光束贴图：本工程把灾厄 / 旧版支线的 `Projectiles/LaserProj` 放在 Projectiles 根目录（与 InvisibleProj 同一处），
         /// 四色星流箭与后续箭共用这一张
         /// </summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/LaserProj";

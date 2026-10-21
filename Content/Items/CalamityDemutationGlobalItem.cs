@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Items
 {
     /// <summary>
     /// 全局物品类，管理自定义稀有度系统（postMoonLordRarity）和原版装备数值回调
-    /// （回退现代版灾厄对原版武器/护甲/饰品的伤害、攻速、弹速、防御、斧力、价值削弱）。
+    /// （回退现代灾厄对原版武器/护甲/饰品的伤害、攻速、弹速、防御、斧力、价值削弱）。
     /// </summary>
     internal class CalamityDemutationGlobalItem : GlobalItem
     {
@@ -235,7 +235,7 @@ namespace CalamityDemutation.Content.Items
         {
             if (postMoonLordRarity != 0 && entity.rare != ItemRarityID.Red)
                 entity.rare = ItemRarityID.Red;
-            // 回退灾厄对原版玩家装备的削弱：仅 Config 开启 + 现代版灾厄已加载时恢复原版数值
+            // 回退灾厄对原版玩家装备的削弱：仅 Config 开启 + 现代灾厄已加载时恢复原版数值
             if (ConfigSystem.Instance?.RevertVanillaNerfs == true && ModLoader.HasMod("CalamityMod"))
                 RevertVanillaNerf(entity);
         }
@@ -257,8 +257,8 @@ namespace CalamityDemutation.Content.Items
                 }
             }
             // 弑神者射手套装（godSlayerRanged）的「每 2.5 秒射出一枚弑神者破片弹」：
-            // 2026-10-04 按用户口径改走 CI 模型，取代原先经典版的「每次射击 5% 概率」。
-            // CI：GodSlayerRangedSet && CalamityPlayer.canFireGodSlayerRangedProjectile（现代灾厄在
+            // 2026-10-04 按用户口径改走 旧版支线模型，取代原先经典版的「每次射击 5% 概率」。
+            // 旧版支线：GodSlayerRangedSet && CalamityPlayer.canFireGodSlayerRangedProjectile（现代灾厄在
             // miscCounter % 150 == 0 复位 = 每 2.5 秒放行一次）→ 一次「远程且非蓄力」的射击即追加一枚、随即关闸；
             // 伤害 = DamageSoftCap(本次射击 ×2, 1500)、弹速 ×1.25。本工程按同样节奏自建闸门
             // （CalamityDemutationPlayer.godSlayerShrapnelCooldown）。
@@ -354,7 +354,7 @@ namespace CalamityDemutation.Content.Items
                     14 => new Color(43, 96, 222),      // 14：蓝
                     15 => new Color(108, 45, 199),     // 15：紫
                     16 => new Color(255, 0, 255),      // 16：品红
-                    17 => GetLegendaryWeaponColor(item.type), // 17：传奇武器（按件取色，色表照 cal-1.4.2.101 的 case 17）
+                    17 => GetLegendaryWeaponColor(item.type), // 17：传奇武器（按件取色，色表照 经典灾厄的 case 17）
                     18 => new Color(Main.DiscoR, 100, 255), // 18：闪烁紫
                     19 => new Color(0, 0, 255),        // 19：纯蓝
                     20 => new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB), // 20：彩虹闪烁
@@ -365,7 +365,7 @@ namespace CalamityDemutation.Content.Items
             }
         }
         /// <summary>
-        /// 向灾厄各 Boss 宝藏袋注入本模组的饰品掉落，兼容现代版（CalamityMod）与经典预发布版（CalamityModClassicPreTrailer）两套灾厄
+        /// 向灾厄各 Boss 宝藏袋注入本模组的饰品掉落，兼容现代灾厄与经典预发布版（经典灾厄）两套灾厄
         /// </summary>
         public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
         {
@@ -397,7 +397,7 @@ namespace CalamityDemutation.Content.Items
                 if (calamity.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
-                    // 女妖之爪（CWR 重制版）：源版波尔提斯袋里它与另外 6 把武器同属一组，
+                    // 女妖之爪（重制版）：源版波尔提斯袋里它与另外 6 把武器同属一组，
                     // 走 DropHelper.CalamityStyle(1/3) 的"每把 1/3、全空则保底随机给一把"抽取；
                     // 本工程沿用既有简化口径（同 YharonBag / DevourerofGodsBag 的 1/3），挂在宝袋上
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BansheeHook>(), 3));
@@ -457,12 +457,12 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
                     // 焚灭天惩（源版里它与 DragonRage 同属犽戎宝袋那组 8 把武器、走 DropHelper.CalamityStyle 保底抽取；
-                    // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典版灾厄的犽戎宝袋都掉了这把）
+                    // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典灾厄的犽戎宝袋都掉了这把）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
-                    // 巨龙之息（射手）：源版（1.3-release/2.0 的 YharonBag.cs 里 DropHelper.WeightStack<DragonsBreath>）
+                    // 巨龙之息（射手）：源版（旧版灾厄/2.0 的 YharonBag.cs 里 DropHelper.WeightStack<DragonsBreath>）
                     // 同在犽戎袋这组武器里，本工程沿用同一条 1/3 简化口径挂回
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
-                    // 星火凤凰雨（CI 的 DragonStaff）：CI 源把它放在 YharonEssence 的随机武器池里；
+                    // 星火凤凰雨（旧版支线的 DragonStaff）：旧版支线源把它放在 YharonEssence 的随机武器池里；
                     // 本工程未移植 YharonEssence，故按本体同名旧件（PhoenixFlameBarrage）的犽戎袋口径挂 1/3
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
                 }
@@ -491,7 +491,7 @@ namespace CalamityDemutation.Content.Items
                 if (classic.TryFind<ModItem>("PolterghastBag", out ModItem polterghastBag) && item.type == polterghastBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
-                    // 女妖之爪（CWR 重制版）：经典版波尔提斯袋里它本就是 CommonDrop(..., 3)，这里是精确复刻
+                    // 女妖之爪（重制版）：经典版波尔提斯袋里它本就是 CommonDrop(..., 3)，这里是精确复刻
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BansheeHook>(), 3));
                     // 本工程自持的空灵征服者：经典版噬魂幽花袋同样挂一条 1/3（口径与上面一致）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 3));
@@ -543,11 +543,11 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(ItemDropRule.ByCondition(new Conditions.IsHardmode(), ModContent.ItemType<DrewsWings>(), 1));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonRage>(), 3));
                     // 焚灭天惩（源版里它与 DragonRage 同属犽戎宝袋那组 8 把武器、走 DropHelper.CalamityStyle 保底抽取；
-                    // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典版灾厄的犽戎宝袋都掉了这把）
+                    // 本工程沿用既有简化口径给 1/3，与 DragonRage 一致。现代版与经典灾厄的犽戎宝袋都掉了这把）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<TheBurningSky>(), 3));
-                    // 巨龙之息（射手）：同上，经典版灾厄的犽戎袋里也有它
+                    // 巨龙之息（射手）：同上，经典灾厄的犽戎袋里也有它
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
-                    // 星火凤凰雨（CI 的 DragonStaff）：同上，挂进经典版犽戎袋
+                    // 星火凤凰雨（旧版支线的 DragonStaff）：同上，挂进经典版犽戎袋
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
                 }
             }
@@ -596,7 +596,7 @@ namespace CalamityDemutation.Content.Items
         /// PvP：近战武器直接挥砍命中玩家时，按攻击者的装备 / 套装 / 身上的 buff 给受害者施加效果，
         /// 效果集合与 OnHitNPCWithItem 对齐：
         /// - 亚利姆徽章：随机 120/240/360 帧神圣火（现代版）与圣光（经典版）；
-        /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 灾厄现代/经典两版本）；
+        /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 现代灾厄/经典两版本）；
         /// - 神圣之怒 buff（HolyWrath）：120 帧神圣火与圣光；
         /// - omega 蓝胸甲（omegaBlueChestplate）：240 帧 HadopelagicPressure / CrushDepth；
         /// - 恶魔残影套装（demonshadeSetBonus）：随机 360/240/120 帧恶魔烈焰；
@@ -868,7 +868,7 @@ namespace CalamityDemutation.Content.Items
         }
         // ── 私有工具 ──
         /// <summary>
-        /// 17 级传奇武器的名称颜色：**按件取色**，色值照经典版 `cal-1.4.2.101` 的
+        /// 17 级传奇武器的名称颜色：**按件取色**，色值照经典版 `经典灾厄` 的
         /// `CalamityGlobalItem.ModifyTooltips` 里 <c>case 17: //Legendary Weapons</c> 那一段
         /// （本工程 12~22 档稀有度整表就是从那一版移植的；用户 2026-10-16 复核后确认"同一档 ≠ 同一色"）。
         /// 源表里的另几件（日后移植时照抄）：Malachite `(DiscoR, 203, 103)`、YharimsCrystal `(255, DiscoG, 53)`、
@@ -912,17 +912,17 @@ namespace CalamityDemutation.Content.Items
         }
     }
     /// <summary>
-    /// 全局增益类：回退现代版灾厄（CalamityMod）对原版增益 buff 的数值削弱。
+    /// 全局增益类：回退现代灾厄对原版增益 buff 的数值削弱。
     /// 灾厄在 Buffs/CalamityGlobalBuff.cs 的 Update 里对部分原版 buff 做了削弱，这里反向抵消恢复原版效果。
     /// </summary>
     internal class CalamityDemutationGlobalBuff : GlobalBuff
     {
         /// <summary>
         /// tModLoader 的 GlobalBuff.Update 钩子：每帧对持有该增益的玩家调用，type 为增益 ID。
-        /// 仅当开启"回退原版削弱"配置且安装现代版灾厄（CalamityMod）时生效，否则直接返回。
+        /// 仅当开启"回退原版削弱"配置且安装现代灾厄时生效，否则直接返回。
         /// 按 type 分支，用 +X 精确抵消灾厄 CalamityGlobalBuff 对原版增益的削弱——
         /// 箭术、魔法力量、洞察、糖冲刺、挖矿、迅捷、微醺、饱食/熟食等，
-        /// 逐条恢复原版的伤害/暴击/攻速/移速/挖速加成。经典版灾厄不在处理范围。
+        /// 逐条恢复原版的伤害/暴击/攻速/移速/挖速加成。经典灾厄不在处理范围。
         /// </summary>
         public override void Update(int type, Player player, ref int buffIndex)
         {
@@ -1006,7 +1006,7 @@ namespace CalamityDemutation.Content.Items
             // 单纯补 5%/球虽然能凑出 15/30/45 的数字，但加算 ≠ 乘算：玩家另有减伤时会超补
             // （例：其他减伤 30% + 3 球 → 加算 75% vs 原版乘算 61.5%）。
             // 这里按乘算等效还原：目标 = 1 - (1 - 其他减伤) × (1 - 15% × 球数)。
-            // 依赖「灾厄先加载先跑」：本模组弱引用 CalamityMod，故此刻 player.endurance 里已含灾厄那 10%/球。
+            // 依赖「灾厄先加载先跑」：本模组弱引用 灾厄本体，故此刻 player.endurance 里已含灾厄那 10%/球。
             else if (type >= BuffID.BeetleEndurance1 && type <= BuffID.BeetleEndurance3 && player.beetleDefense)
             {
                 int orbs = player.beetleOrbs < 0 ? 0 : player.beetleOrbs;

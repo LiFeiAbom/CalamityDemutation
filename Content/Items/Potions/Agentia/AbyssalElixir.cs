@@ -31,14 +31,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         }
         /// <summary>
         /// 合成表：两版灾厄各有一条专属材料配方，外加共通的药剂瓶 + 血珠×40 退路，均在炼金台。
-        /// 专属材料取两版各自能拿到的海洋物：沉海旗鱼只有现代版灾厄才有（经典版没有沉海捕获物系列），
+        /// 专属材料取两版各自能拿到的海洋物：沉海旗鱼只有现代灾厄才有（经典版没有沉海捕获物系列），
         /// 故经典版退回原版珊瑚 / 贝壳
         /// </summary>
         public override void AddRecipes()
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：药剂瓶 + 沉海旗鱼 + 珊瑚
+                // 现代灾厄：药剂瓶 + 沉海旗鱼 + 珊瑚
                 if(calamity.TryFind<ModItem>("SunkenSailfish", out ModItem sunkenSailfish1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×40
+                // 现代灾厄：药剂瓶 + 血珠×40
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -60,14 +60,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：药剂瓶 + 珊瑚 + 贝壳
+                // 经典灾厄：药剂瓶 + 珊瑚 + 贝壳
                 Recipe recipeClassic = CreateRecipe();
                 recipeClassic.AddIngredient(ItemID.BottledWater);
                 recipeClassic.AddIngredient(ItemID.Coral);
                 recipeClassic.AddIngredient(ItemID.Seashell);
                 recipeClassic.AddTile(TileID.AlchemyTable);
                 recipeClassic.Register();
-                // 经典版灾厄：药剂瓶 + 血珠×40
+                // 经典灾厄：药剂瓶 + 血珠×40
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     recipeClassic = CreateRecipe();

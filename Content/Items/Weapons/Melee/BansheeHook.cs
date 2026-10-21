@@ -13,8 +13,8 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 女妖之爪（BansheeHook） - 移植自灾厄大修（CalamityOverhaul）0.4.0.1.3 的重制版，
-    /// 对应灾厄本体同名武器（现代版 2.0.3.9 / 经典版 cal-1.4.2.101，两者均为波尔提斯掉落）。
+    /// 女妖之爪（BansheeHook） - 移植自重制版，
+    /// 对应灾厄本体同名武器（现代版 2.0.3.9 / 经典版 经典灾厄，两者均为波尔提斯掉落）。
     /// <para>
     /// 重制内容：左键挥爪时先散射 4 枚哀怨之镰，再在收钩瞬间甩出惊惧巨镰；右键改为引导式蓄能，
     /// 蓄满后爪子跟手悬停、持续从鼠标位置拉出追杀的惊惧巨镰，蓄能耗尽自动收招（详见 BansheeHookProj）。

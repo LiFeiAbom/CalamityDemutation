@@ -39,7 +39,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：狂暴药水 + UnholyEssence + 本模组银河奇点
+                // 现代灾厄：狂暴药水 + UnholyEssence + 本模组银河奇点
                 if(calamity.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -49,7 +49,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×40 + UnholyEssence
+                // 现代灾厄：药剂瓶 + 血珠×40 + UnholyEssence
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1) && calamity.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence2))
                 {
                     Recipe recipe = CreateRecipe();
@@ -62,7 +62,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：狂暴药水 + UnholyEssence + 灾厄经典版自有的银河奇点
+                // 经典灾厄：狂暴药水 + UnholyEssence + 灾厄经典版自有的银河奇点
                 if(classic.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence3) && classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
                 {
                     Recipe recipeClassic = CreateRecipe();
@@ -72,7 +72,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.AlchemyTable);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×40 + UnholyEssence
+                // 经典灾厄：药剂瓶 + 血珠×40 + UnholyEssence
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence4))
                 {
                     Recipe recipeClassic = CreateRecipe();

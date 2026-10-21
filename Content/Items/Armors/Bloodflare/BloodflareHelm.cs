@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
 {
     /// <summary>
     /// 血饮魔精盔（BloodflareHelm，英文名 Bloodflare Imp Mask） - 血炎套装的**盗贼**向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 BloodflareHeadRogue）。
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 BloodflareHeadRogue）。
     /// 注意与同目录另外三颗区分：<see cref="BloodflareMask"/> 近战 / <see cref="BloodflareHornedHelm"/> 射手 /
     /// <see cref="BloodflareHelmet"/> 召唤 / <see cref="BloodflareHornedMask"/> 法师，经典版里这颗 <c>BloodflareHelm</c> 才是盗贼头。
     /// 单件：岩浆免疫时长 +240、水中自由移动、盗贼伤害与盗贼暴击各 +10%。
@@ -79,13 +79,13 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             CDUtil.AddClassicThrowingStats(player, 0.1f, 10);  // 经典版：写进它的自定义投掷字段（反射）
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
+        /// 注册配方：现代版与经典灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
+                // 现代灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
                 if (calamity.TryFind<ModItem>("Bloodstone", out ModItem bloodstone)
                     && calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb)
                     && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
@@ -100,7 +100,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄材料：BloodstoneCore×11、RuinousSoul×2
+                // 经典灾厄材料：BloodstoneCore×11、RuinousSoul×2
                 if (classic.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
                     && classic.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
                 {

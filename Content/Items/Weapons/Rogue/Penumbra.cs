@@ -11,7 +11,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
     /// 半影（Penumbra）—— 「超新星」下位链的第七件（链上最后一个下位件）。
     /// 老规矩取灾厄 **2.0**：46×32、伤害 **1008**、击退 8、使用/动画各 40 帧、
     /// **红底 + 月后 14 档（蓝，＝灾厄 DarkBlue）**、价值 **1 铂金 80 金**、弹速 **8**
-    /// （2.0.3.9/2.0.4 是 830 伤害 + 弹速 9、1.4.4-release 是 725 / 35 帧 / 紫档——本件都不取）。
+    /// （2.0.3.9/2.0.4 是 830 伤害 + 弹速 9、现代灾厄是 725 / 35 帧 / 紫档——本件都不取）。
     /// </summary>
     /// <remarks>
     /// 效果：掷出一枚暗影炸弹，炸开时沿圆周迸出**会追踪的暗影魂**（常规 6 枚 ∶ 每枚伤害 ×0.15）；
@@ -21,7 +21,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
     /// <para>
     /// 配方照 2.0：灾厄魂 <c>RuinousSoul</c>×6 + 夜魇锭 <c>CosmiliteBar</c>×8 + 夜魇燃料 <c>NightmareFuel</c>×20；
     /// 站台按工程惯例分版本——现代版宇宙砧 <c>CosmicAnvil</c>、经典版嘉登熔炉 <c>DraedonsForge</c>
-    /// （**经典版灾厄没有宇宙砧**）。三味材料两版都有（已核），缺件写警告、不静默消失。
+    /// （**经典灾厄没有宇宙砧**）。三味材料两版都有（已核），缺件写警告、不静默消失。
     /// </para>
     /// </remarks>
     internal class Penumbra : ModItem

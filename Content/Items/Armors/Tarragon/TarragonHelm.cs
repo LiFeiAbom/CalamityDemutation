@@ -26,7 +26,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 50, 0, 0);  // 价值 50 金
-            Item.defense = 33;                        // 防御 33（与经典版灾厄同值，源码同行另留 //98 注释，系开发期遗留数字）
+            Item.defense = 33;                        // 防御 33（与经典灾厄同值，源码同行另留 //98 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 12;  // 月后自定义稀有度 12 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }
         /// <summary>
@@ -75,14 +75,14 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             player.buffImmune[BuffID.Chilled] = true;            // 免疫冷冻
         }
         /// <summary>
-        /// 配方：现代版与经典版灾厄材料不同，分别注册两套配方
+        /// 配方：现代版与经典灾厄材料不同，分别注册两套配方
         /// （均使用原版合成站 TileID.LunarCraftingStation）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄配方（UelibloomBar + DivineGeode）
+                // 现代灾厄配方（UelibloomBar + DivineGeode）
                 if (calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar)
                     && calamity.TryFind<ModItem>("DivineGeode", out ModItem divineGeode))
                 {
@@ -95,7 +95,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄配方（UeliaceBar + DivineGeode）
+                // 经典灾厄配方（UeliaceBar + DivineGeode）
                 if (classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar)
                     && classic.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode))
                 {

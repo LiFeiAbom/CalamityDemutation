@@ -36,7 +36,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Attack
         /// </summary>
         public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player) => incomingItem.type != ModContent.ItemType<CalamityRing>() && incomingItem.type != ModContent.ItemType<TheAmalgam>();
         /// <summary>
-        /// 配方：黑曜石玫瑰 + 地狱火 + 灾厄之戒在秘银砧合成（兼容现代版与经典版灾厄）
+        /// 配方：黑曜石玫瑰 + 地狱火 + 灾厄之戒在秘银砧合成（兼容现代版与经典灾厄）
         /// </summary>
         public override void AddRecipes()
         {

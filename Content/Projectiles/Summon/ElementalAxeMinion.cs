@@ -83,7 +83,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
             return false;
         }
         /// <summary>
-        /// 命中挂"元素混合"（`ElementalMix`）60 帧：现代版灾厄有该减益、**经典版没有**，
+        /// 命中挂"元素混合"（`ElementalMix`）60 帧：现代灾厄有该减益、**经典版没有**，
         /// 所以走双版本自动 + 原版兜底的写法，缺件时退回燃烧 `BuffID.OnFire`。
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

@@ -42,7 +42,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             player.GetCritChance<GenericDamageClass>() += 15;  // 全暴击 +15%
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，分别注册。
+        /// 注册配方：现代版与经典灾厄材料不同，分别注册。
         /// 现代版用 CosmiliteBar(20) + AscendantSpiritEssence(4)，于 CosmicAnvil（宇宙砧）合成；
         /// 经典版用 CosmiliteBar(23) + NightmareFuel(11) + EndothermicEnergy(11)，于 DraedonsForge（德雷顿熔炉）合成。
         /// </summary>

@@ -99,7 +99,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 配方：死神镰刀 + 毁灭之魂×4 + 扭曲虚空×1 + 暗影之魂×15，在远古操纵台合成。
-        /// 四个材料在现代版 / 经典版灾厄中均存在，故分两条同名配方注册。
+        /// 四个材料在现代版 / 经典灾厄中均存在，故分两条同名配方注册。
         /// </summary>
         public override void AddRecipes()
         {

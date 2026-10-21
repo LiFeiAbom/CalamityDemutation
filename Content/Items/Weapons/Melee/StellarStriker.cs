@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 月炎之锋（Stellar Striker）—— 月球工作台档近战（行为移植自灾厄大修 0.4.0.1.3 的 <c>StellarStrikerEcType</c>）。
+    /// 月炎之锋（Stellar Striker）—— 月球工作台档近战（行为移植自重制版的 <c>StellarStrikerEcType</c>）。
     /// 左键：15 帧快挥，每次挥砍射出一道 1/3 伤害的星流束（<see cref="StellarStrikerBeam"/>）。
     /// 右键：20 帧慢挥、挥砍体积放大 1.5 倍，命中时在敌人头顶召唤一场月炎陨石雨（半伤害 + 暴击再减半）。
     /// 配方：本模组彗星陨刃 + 月锭×5 @ 月球工作台。
@@ -85,7 +85,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>
         /// 在鼠标方向上方的随机高度生成两波月炎火球（<c>ProjectileID.LunarFlare</c>），
         /// 生成后再把它们的伤害类型改回近战（原版火球默认是魔法）。
-        /// 大修原码里有两处 <c>_ = ...</c> 的丢弃表达式（算完就扔），不产生任何效果，已略去。
+        /// 重制版原码里有两处 <c>_ = ...</c> 的丢弃表达式（算完就扔），不产生任何效果，已略去。
         /// </summary>
         public static void SpawnFlares(Item item, Player player, float knockback, int damage, bool crit)
         {

@@ -11,8 +11,8 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 归虚之灵召唤的**宇宙之灵**（照 CI 的 <c>Projectiles/Summon/CosmicEnergySpiralOld.cs</c> 移植；
-    /// **命名口径（用户 2026-10-09）**：类名去掉 CI 式的 <c>Old</c> 后缀，旧名以
+    /// 归虚之灵召唤的**宇宙之灵**（照旧版支线的 <c>Projectiles/Summon/CosmicEnergySpiralOld.cs</c> 移植；
+    /// **命名口径（用户 2026-10-09）**：类名去掉 旧版支线式的 <c>Old</c> 后缀，旧名以
     /// 未保留旧名兼容属性，用户 2026-10-10：不需要 Legacy 旧名）：
     /// 78×78 判定、**占 10 格召唤栏**、`extraUpdates = 1`、**自身不造成接触伤害**；
     /// 平时悬在主人身边（跟随距离 1400 / 有目标 1600 / 回程 2400，照源那套翻倍的值），

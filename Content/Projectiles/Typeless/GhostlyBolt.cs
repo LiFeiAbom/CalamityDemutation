@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 幽灵魔弹（GhostlyBolt） - 血炎法师头（BloodflareHornedMask）套装「魔法武器有时射出幽灵魔弹」的弹幕
-    ///（按经典版灾厄 Projectiles/Typeless/GhostlyBolt.cs 1:1 移植；现代版同源、只是把贴图显式指向隐形图）。
+    ///（按经典灾厄 Projectiles/Typeless/GhostlyBolt.cs 1:1 移植；现代版同源、只是把贴图显式指向隐形图）。
     /// 本体不可见（透明度恒 255、无绘制代码，源与现代版皆如此），全靠尘表现：
     /// 第 6 帧播一次魔法音并喷 40 粒 GiantCursedSkullBolt 尘（源裸数字 181 已 Cecil 反查），
     /// 之后每帧再喷 3 粒带自身速度的拖尾尘；无限穿透、每敌 6 帧局部无敌、存活 900 帧、穿地形、入水不减速。

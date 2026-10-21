@@ -11,16 +11,16 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 星流之刃（ExoBlade）—— 月后终盘近战巨剑（行为照搬 CI 的 <c>Exobladeold</c>，即改版前旧 Exoblade 的复刻）。
+    /// 星流之刃（ExoBlade）—— 月后终盘近战巨剑（行为照搬 旧版支线的 <c>Exobladeold</c>，即改版前旧 Exoblade 的复刻）。
     /// 挥砍射出一道会掉头追踪玩家的星流射线（<see cref="ExoBeam"/>），命中敌人时：
     /// 累计命中 5 次或目标血量 ≤15% 时原地炸出 <see cref="ExoBoom"/>（伤害为本次命中的 1/4）；
     /// 累计命中 2 次或目标血量 ≤15% 时从屏幕外甩来 2 颗星云彗星（<see cref="ExoComet"/>）；
     /// 挂整套星云系减益，并在目标可吸血且自身未挂月噬时回血 5~8。
     /// 配方按**现代版 / 经典版各一条**（两版不同，见 <c>AddRecipes</c>）：
     /// 现代版 = 六把自有下位剑 + 奇迹物质 @ 嘉登熔炉；经典版 = 同样六把剑 + 七种经典版材料 @ 嘉登熔炉。
-    /// 伤害：移植时取经典版原值 6700，2026-09-26 按用户削弱方案改为 900（＝CI 值）；
-    /// 与 CI 源的两处差异：①去掉「损失生命值 1:1 转平伤」与灾厄真近战伤害类加成（本工程没有 TrueMeleeDamageClass）；
-    /// ②CI 的传颂之物（LoreExo）分支不存在，直接常驻它那条「多次命中触发」的行为分支，不搬 Lore 专属弹幕与 tooltip 行。
+    /// 伤害：移植时取经典版原值 6700，2026-09-26 按用户削弱方案改为 900（＝旧版支线值）；
+    /// 与旧版支线源的两处差异：①去掉「损失生命值 1:1 转平伤」与灾厄真近战伤害类加成（本工程没有 TrueMeleeDamageClass）；
+    /// ②旧版支线的传颂之物（LoreExo）分支不存在，直接常驻它那条「多次命中触发」的行为分支，不搬 Lore 专属弹幕与 tooltip 行。
     /// </summary>
     internal class ExoBlade : ModItem
     {
@@ -53,7 +53,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>
         /// 命中派生的星流爆炸（本次命中 1/4）与星云彗星（本次命中全额）按命中伤害结算，会自动跟随。
         /// </summary>
-        /// <summary>每 14 帧挥砍都射出一道星流射线（不搬 CI 的传颂之物专属光束）</summary>
+        /// <summary>每 14 帧挥砍都射出一道星流射线（不搬 旧版支线的传颂之物专属光束）</summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<ExoBeam>(), damage, knockback, player.whoAmI, 0f);
@@ -67,9 +67,9 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.TerraBlade, 0f, 0f, 100, new Color(0, 255, 255));
         }
         /// <summary>
-        /// 命中结算（常驻 CI 的「多次命中触发」分支）：先从随机一侧屏幕外算一颗冲向目标的彗星初始速度，
+        /// 命中结算（常驻 旧版支线的「多次命中触发」分支）：先从随机一侧屏幕外算一颗冲向目标的彗星初始速度，
         /// 再按命中计数决定是否炸爆炸 / 甩彗星，最后挂减益并回血。
-        /// 两个命中计数是 ModItem 实例字段（CI 源如此），多人下会串，与 AnarchyBlade 的 ShootCount 同理。
+        /// 两个命中计数是 ModItem 实例字段（旧版支线源如此），多人下会串，与 AnarchyBlade 的 ShootCount 同理。
         /// </summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -162,10 +162,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 两条配方分别对应现代版与经典版（**两版配方不同，各自成条，不能混用**），都软依赖、缺料即不注册：
-        /// · 现代版（沿用 CI <c>Exobladeold</c> 的配方）：六把自有下位剑 + 奇迹物质 @ 嘉登熔炉，挂 CalamityMod。
+        /// · 现代版（沿用 旧版支线 <c>Exobladeold</c> 的配方）：六把自有下位剑 + 奇迹物质 @ 嘉登熔炉，挂 灾厄本体。
         /// · 经典版（<c>DraedonsExoblade</c> 的配方，去掉其中唯一的非我方武器项 BalefulHarvester）：
         ///   同样六把剑 + 噩梦燃料×5 + 吸热能量×5 + 宇宙锭×5 + 暗日碎片×5 + 冥府碎片×3 + 幽魂质×5 + 金 Auric 矿×25 @ 嘉登熔炉，
-        ///   挂 CalamityModClassicPreTrailer（其中冥府碎片与幽魂质只有经典版才有）。
+        ///   挂 经典灾厄（其中冥府碎片与幽魂质只有经典版才有）。
         /// </summary>
         public override void AddRecipes()
         {

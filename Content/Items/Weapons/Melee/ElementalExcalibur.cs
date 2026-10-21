@@ -53,11 +53,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>
         /// 彩虹光束走传进来的 <c>damage</c>，右键真近战的 ×2 是命中倍率，两者都会自动跟随。
         /// </summary>
-        /// <summary>右键可用（CI 口径的右键真近战打击）</summary>
+        /// <summary>右键可用（旧版支线口径的右键真近战打击）</summary>
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>
         /// 按左右键切换弹幕：右键把 Item.shoot 清空（本次挥砍不发射彩虹光束，只走剑身判定），
-        /// 左键恢复彩虹光束与 12 的弹速。照抄 CI <c>ElementalExcalibur.CanUseItem</c>。
+        /// 左键恢复彩虹光束与 12 的弹速。照抄 旧版支线 <c>ElementalExcalibur.CanUseItem</c>。
         /// </summary>
         public override bool CanUseItem(Player player)
         {
@@ -75,7 +75,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>武器暴击率额外 +10%（原版对 SetDefaults 里的高暴击值处理异常，故放到此回调）</summary>
         public override void ModifyWeaponCrit(Player player, ref float crit) => crit += 10;
-        /// <summary>右键真近战命中伤害 ×2（CI 口径）</summary>
+        /// <summary>右键真近战命中伤害 ×2（旧版支线口径）</summary>
         public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
         {
             if (player.altFunctionUse == 2)
@@ -227,7 +227,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>配方（两版同配方）：真·断钢剑 + 审判之剑 + 暗影焰锭×5，在德雷顿熔炉合成</summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：德雷顿熔炉（DraedonsForge）
+            // 现代灾厄：德雷顿熔炉（DraedonsForge）
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 Recipe recipe = CreateRecipe();
@@ -237,7 +237,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 recipe.AddTile(calamity.Find<ModTile>("DraedonsForge").Type);  // 德雷顿熔炉
                 recipe.Register();
             }
-            // 经典版灾厄：同名熔炉不同物，分开注册
+            // 经典灾厄：同名熔炉不同物，分开注册
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 Recipe recipeClassic = CreateRecipe();

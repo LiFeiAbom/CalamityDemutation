@@ -38,14 +38,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             modPlayer.rampartofDeities = true;
         }
         /// <summary>
-        /// 配方：寒霜壁垒 + 神之护符，现代版（CalamityMod）与经典版（CalamityModClassicPreTrailer）
+        /// 配方：寒霜壁垒 + 神之护符，现代灾厄与经典灾厄
         /// 的灾厄材料与合成站均不同，故分两分支注册
         /// </summary>
         public override void AddRecipes()
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：材料为 AuricBar 与 AscendantSpiritEssence，在 CosmicAnvil 合成
+                // 现代灾厄：材料为 AuricBar 与 AscendantSpiritEssence，在 CosmicAnvil 合成
                 if(calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -59,7 +59,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：材料为 GalacticaSingularity、DivineGeode 与 CosmiliteBar，在 DraedonsForge 合成
+                // 经典灾厄：材料为 GalacticaSingularity、DivineGeode 与 CosmiliteBar，在 DraedonsForge 合成
                 if(classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity) && classic.TryFind<ModItem>("DivineGeode", out ModItem divineGeode) && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar2) && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge1))
                 {
                     Recipe recipeClassic = CreateRecipe();

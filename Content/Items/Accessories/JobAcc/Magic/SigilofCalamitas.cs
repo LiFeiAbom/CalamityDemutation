@@ -44,7 +44,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Magic
             player.GetModPlayer<CalamityDemutationPlayer>().sigilofCalamitas = true;
         }
         /// <summary>
-        /// 配方：兼容灾厄现代版与经典版，两版灾厄材料名不同，需分别注册配方；
+        /// 配方：兼容现代灾厄版与经典版，两版灾厄材料名不同，需分别注册配方；
         /// 每版内再给出腐化世界（邪水 UnholyWater）与猩红世界（血水 BloodWater）两种选择。
         /// </summary>
         public override void AddRecipes()

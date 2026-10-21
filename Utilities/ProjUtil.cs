@@ -16,7 +16,7 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
-        /// 普通的追逐行为（移植自 CWR 的 ChasingBehavior）：直接把实体速度设为朝目标方向的
+        /// 普通的追逐行为（移植自重制版的 ChasingBehavior）：直接把实体速度设为朝目标方向的
         /// <paramref name="speed"/>，目标进入 <paramref name="shutdownDistance"/> 内则减速为剩余距离（不会加速）。
         /// </summary>
         public static Vector2 ChasingBehavior(this Entity entity, Vector2 targetCenter, float speed, float shutdownDistance = 16f)
@@ -29,7 +29,7 @@ namespace CalamityDemutation.Utilities
             return velocity;
         }
         /// <summary>
-        /// 渐近速度（移植自 CWR 的 AsymptoticVelocity）：目标在 <paramref name="shutdownDistance"/> 之外时返回
+        /// 渐近速度（移植自重制版的 AsymptoticVelocity）：目标在 <paramref name="shutdownDistance"/> 之外时返回
         /// <paramref name="speed"/>，进入该距离后返回剩余距离，用于追踪时减速收束。
         /// </summary>
         public static float AsymptoticVelocity(Vector2 thisCenter, Vector2 targetCenter, float speed, float shutdownDistance)
@@ -38,7 +38,7 @@ namespace CalamityDemutation.Utilities
             return toTarget.LengthSquared() > shutdownDistance * shutdownDistance ? speed : MathHelper.Min(speed, toTarget.Length());
         }
         /// <summary>
-        /// 缓和的追逐行为（移植自 CWR 的 ChasingBehavior2）：让实体速度方向以
+        /// 缓和的追逐行为（移植自重制版的 ChasingBehavior2）：让实体速度方向以
         /// <paramref name="homingStrength"/> 为单帧最大转角平滑转向目标点，
         /// 速度大小按 <paramref name="speedUpdates"/> 系数缩放。
         /// </summary>
@@ -164,7 +164,7 @@ namespace CalamityDemutation.Utilities
             projectile.ExpandHitboxBy((int)((float)projectile.width * expandRatio), (int)((float)projectile.height * expandRatio));
         }
         /// <summary>
-        /// 弹幕爆炸（移植自 CWR 的 Explode）：播放爆炸声、临时把碰撞箱扩大为
+        /// 弹幕爆炸（移植自重制版的 Explode）：播放爆炸声、临时把碰撞箱扩大为
         /// <paramref name="blastRadius"/> 半径并立即结算一次伤害判定，之后还原碰撞箱。
         /// 常用于弹幕 Kill 时扩大命中范围补一次伤害。
         /// </summary>
@@ -191,7 +191,7 @@ namespace CalamityDemutation.Utilities
             projectile.height = originalHeight;
         }
         /// <summary>
-        /// 寻找距离指定位置最近的合法敌人（移植自 CWR 的 FindClosestNPC）。
+        /// 寻找距离指定位置最近的合法敌人（移植自重制版的 FindClosestNPC）。
         /// <paramref name="ignoreTiles"/> 为 false 时要求两点间视线无遮挡；
         /// <paramref name="bossPriority"/> 为 true 时优先锁定 Boss（含血肉墙）。
         /// </summary>
@@ -413,7 +413,7 @@ namespace CalamityDemutation.Utilities
             return velocity;
         }
         /// <summary>
-        /// 判断一条线段是否与矩形相交（移植自灾厄熵的 CEUtils.LineThroughRect）：
+        /// 判断一条线段是否与矩形相交（移植自附属模组的线段检测工具）：
         /// 两端点任一落在矩形内即算命中，否则按线宽做线段-AABB 相交测试。
         /// </summary>
         public static bool LineThroughRect(Vector2 start, Vector2 end, Rectangle rect, int lineWidth = 4)
@@ -423,7 +423,7 @@ namespace CalamityDemutation.Utilities
                 || Collision.CheckAABBvLineCollision(rect.TopLeft(), rect.Size(), start, end, lineWidth, ref point);
         }
         /// <summary>
-        /// 按比例或定速转向目标角度（移植自灾厄熵的 CEUtils.RotateTowardsAngle）：
+        /// 按比例或定速转向目标角度（移植自附属模组的角度旋转工具）：
         /// 先把两角都归一化到 [-π, π]，<paramref name="useFixedSpeed"/> 为真时单帧转角夹在
         /// ±<paramref name="rotateSpeed"/> 弧度内，否则按 <paramref name="rotateSpeed"/> 的比例插值。
         /// </summary>
@@ -444,7 +444,7 @@ namespace CalamityDemutation.Utilities
         }
         /// <summary>
         /// 随机角度平滑转向：把当前角度向目标角度最多旋转 <paramref name="maxChange"/> 弧度。
-        /// 移植自 CWR 的 RotTowards，供 ChasingBehavior2 等追踪逻辑使用。
+        /// 移植自重制版的 RotTowards，供 ChasingBehavior2 等追踪逻辑使用。
         /// </summary>
         public static float RotTowards(this float curAngle, float targetAngle, float maxChange)
         {

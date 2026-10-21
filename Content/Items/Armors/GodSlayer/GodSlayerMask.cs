@@ -8,8 +8,8 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
 {
     /// <summary>
     /// 弑神者面具（GodSlayerMask） - 弑神者套装的**盗贼**向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 GodSlayerHeadRogue，
-    /// CI 对应件 GodSlayerHeadRogueold）。
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 GodSlayerHeadRogue，
+    /// 旧版支线对应件 GodSlayerHeadRogueold）。
     /// 注意与同目录另外三颗区分：<see cref="GodSlayerHelm"/> 近战 / <see cref="GodSlayerHelmet"/> 射手 /
     /// <see cref="GodSlayerVisage"/> 法师 / <see cref="GodSlayerHornedHelm"/> 召唤，
     /// 经典版里这颗 <c>GodSlayerMask</c> 才是盗贼头。
@@ -63,7 +63,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             modPlayer.godSlayerThrowing = true;
             player.setBonus = this.GetLocalization("SetBonus").Format(KeybindsSystem.GodslayerDashKeyDisplay, 100);
             CDUtil.GrantRogueStealth(player, 1.4f);              // 潜行上限 140（源 rogueStealthMax = 1.4f；内部值 1f = 显示 100 点）
-            CDUtil.GrantRogueStealthRatio(player, 1f / 7f);      // 再按当前上限 +1/7（CI 的 GodSlayerHeadRogueold 写法；
+            CDUtil.GrantRogueStealthRatio(player, 1f / 7f);      // 再按当前上限 +1/7（旧版支线的 GodSlayerHeadRogueold 写法；
                                                                  // 单戴此头时 140 → 160，用户 2026-10-06 点名补上）
         }
         /// <summary>
@@ -77,16 +77,16 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             player.GetDamage(rogue) += 0.14f;                  // 盗贼伤害 +14%
             player.GetCritChance(rogue) += 14;                 // 盗贼暴击率 +14%
             CDUtil.AddClassicThrowingStats(player, 0.14f, 14); // 经典版：写进它的自定义投掷字段（反射）
-            player.moveSpeed += 0.18f;                         // 移速 +18%（CI 的 GodSlayerHeadRogueold 原样，用户点名补上）
+            player.moveSpeed += 0.18f;                         // 移速 +18%（旧版支线的 GodSlayerHeadRogueold 原样，用户点名补上）
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（与既有弑神者头同规矩）
+        /// 注册配方：现代版与经典灾厄材料不同，各注册一条（与既有弑神者头同规矩）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：CosmiliteBar×10 + AscendantSpiritEssence×2 @ 宇宙砧
+                // 现代灾厄：CosmiliteBar×10 + AscendantSpiritEssence×2 @ 宇宙砧
                 if (calamity.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
                     && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -100,7 +100,7 @@ namespace CalamityDemutation.Content.Items.Armors.GodSlayer
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8 @ 德雷顿熔炉
+                // 经典灾厄：CosmiliteBar×14 + NightmareFuel×8 + EndothermicEnergy×8 @ 德雷顿熔炉
                 if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
                     && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)
                     && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)

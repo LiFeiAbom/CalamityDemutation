@@ -47,7 +47,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 伤害：源用 35 × (召唤伤害×5/3 + 召唤伤害×0.46×(仆从数−1))，仆从数封顶 10；
-            // 经典版只取 Multiplicative 那一小块，现代/CI 改用 Additive + Multiplicative，这里取后者（已修正）
+            // 经典版只取 Multiplicative 那一小块，现代/旧版支线改用 Additive + Multiplicative，这里取后者（已修正）
             int maxMinionScale = Math.Min(Player.maxMinions, 10);
             StatModifier summonStat = Player.GetTotalDamage<SummonDamageClass>();
             float summonDamage = summonStat.Additive + summonStat.Multiplicative;

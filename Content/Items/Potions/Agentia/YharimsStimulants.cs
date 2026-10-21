@@ -29,11 +29,11 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             Item.value = Item.buyPrice(0, 2, 0, 0);       // 价值 2 金
         }
         /// <summary>
-        /// 提供两种合成路线（六瓶原版药水 / 灾厄血珠），均兼容现代版与经典版灾厄
+        /// 提供两种合成路线（六瓶原版药水 / 灾厄血珠），均兼容现代版与经典灾厄
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄 ──
+            // ── 现代灾厄 ──
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 路线一：六瓶原版增益药水，炼药桌合成
@@ -56,7 +56,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：配方完全相同，只是分开注册（两版血珠同名） ──
+            // ── 经典灾厄：配方完全相同，只是分开注册（两版血珠同名） ──
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 Recipe recipeClassic = CreateRecipe();

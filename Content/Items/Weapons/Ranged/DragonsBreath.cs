@@ -8,26 +8,26 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Ranged
 {
     /// <summary>
-    /// 巨龙之息（Dragon's Breath） - 射手武器，**犽戎宝藏袋掉落、无配方**（源 1.3-release/2.0 的
+    /// 巨龙之息（Dragon's Breath） - 射手武器，**犽戎宝藏袋掉落、无配方**（源 旧版灾厄/2.0 的
     /// <c>YharonBag.cs</c> 里 `DropHelper.WeightStack&lt;DragonsBreath&gt;`；本工程挂在既有犽戎袋钩子上）。
     /// <para>
-    /// **口径（用户 2026-10-14 逐条拍板）**：走 **CI 支线**（`CalamityInheritance-Beta1.12` 的 `DragonsBreathold`）、
+    /// **口径（用户 2026-10-14 逐条拍板）**：走 **旧版支线**（`旧版支线` 的 `DragonsBreathold`）、
     /// 爆炸弹幕自持一枚与灾厄 <c>FuckYou</c> 同款的件、
     /// </para>
     /// <para>
-    /// 与源（CI）的差别逐条：① 类名 `DragonsBreathold` → **`DragonsBreath`**（工程命名口径：去掉 CI 式 `old` 后缀）；
-    /// ② 贴图 124×78 → **58×36**（用户 2026-10-14 指定换成 **CI「远古巨龙之息」`AncientDragonsBreath`** 那张图，
-    /// 同日已把原先 cal-1.4.2.101 的 64×28 旧图替换掉；持握偏移随之用该图自带的 (-15, 10)）；
+    /// 与源（旧版支线）的差别逐条：① 类名 `DragonsBreathold` → **`DragonsBreath`**（工程命名口径：去掉 旧版支线式 `old` 后缀）；
+    /// ② 贴图 124×78 → **58×36**（用户 2026-10-14 指定换成 **旧版支线「远古巨龙之息」`AncientDragonsBreath`** 那张图，
+    /// 同日已把原先 经典灾厄的 64×28 旧图替换掉；持握偏移随之用该图自带的 (-15, 10)）；
     /// ③ `Item.Calamity().canFirePointBlankShots`（灾厄贴脸射击）
-    /// ——本工程没有这套机制，不做；④ 微光与新版灾厄 `DragonsBreath` 互换（CI 的 `CIServerConfig.CustomShimmer`）
+    /// ——本工程没有这套机制，不做；④ 微光与新版灾厄 `DragonsBreath` 互换（旧版支线的 `旧版支线的微光配置`）
     /// ——不移植；⑤ 弹幕与爆炸弹幕改成本工程自持件（`DragonsBreathRound` / `FuckYou`），
-    /// CI 自己直接调灾厄那两件。
+    /// 旧版支线自己直接调灾厄那两件。
     /// </para>
     /// <para>
-    /// 数值（CI）：伤害 **220**、使用/动画 **9 / 18** 帧、两发间隔 `reuseDelay` **12**、击退 **6.5**、
-    /// 弹速 **12**、弹药 = **子弹**、**66% 不消耗弹药**、月后稀有度 **15 档**（= CI 的 `CatalystViolet`，
-    /// 价值 **2 铂金 40 金**）、禁用「Murderous」前缀（CI 原样）。
-    /// 攻击方式（CI，与 1.3-release/2.0 同构，只是弹数与倍率不同）：**左键两连发**——第一发 **8 颗普通子弹**
+    /// 数值（旧版支线）：伤害 **220**、使用/动画 **9 / 18** 帧、两发间隔 `reuseDelay` **12**、击退 **6.5**、
+    /// 弹速 **12**、弹药 = **子弹**、**66% 不消耗弹药**、月后稀有度 **15 档**（= 旧版支线的 `CatalystViolet`，
+    /// 价值 **2 铂金 40 金**）、禁用「Murderous」前缀（旧版支线原样）。
+    /// 攻击方式（旧版支线，与 旧版灾厄/2.0 同构，只是弹数与倍率不同）：**左键两连发**——第一发 **8 颗普通子弹**
     /// （每颗间隔 `Spread = 0.018` 弧度），第二发 **8 颗龙息弹**（散布 ×0.5 更紧，另有额外音效与 30 颗烟尘）；
     /// **右键全自动**——伤害 ×**0.9**、8 颗里随机混 4 颗龙息弹、散布 ×**1.22**、`reuseDelay` 归零。
     /// **点射散布无随机**（照源注释）。
@@ -35,26 +35,26 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// </summary>
     internal class DragonsBreath:ModItem
     {
-        /// <summary>左键两发之间的间隔帧（照 CI：12；1.3-release/2.0 是 15）</summary>
+        /// <summary>左键两发之间的间隔帧（照旧版支线：12；旧版灾厄/2.0 是 15）</summary>
         private const int BetweenShotsPause = 12;
-        /// <summary>每发的弹丸数（照 CI：8；1.3-release/2.0 是 6）</summary>
+        /// <summary>每发的弹丸数（照旧版支线：8；旧版灾厄/2.0 是 6）</summary>
         private const int PelletsPerShot = 8;
-        /// <summary>右键全自动时的使用时间倍率（照 CI：0.8 = 更快）</summary>
+        /// <summary>右键全自动时的使用时间倍率（照旧版支线：0.8 = 更快）</summary>
         private const float FullAutoFireRateMult = 0.8f;
-        /// <summary>右键全自动时的伤害倍率（照 CI：0.9；1.3-release/2.0 是 0.8）</summary>
+        /// <summary>右键全自动时的伤害倍率（照旧版支线：0.9；旧版灾厄/2.0 是 0.8）</summary>
         private const float FullAutoDamageMult = 0.9f;
         /// <summary>每颗弹丸之间的角度间隔（照源注释：这是"每颗"的量，所以很小）</summary>
         private const float Spread = 0.018f;
-        /// <summary>左键第二发（龙息弹）的散布倍率（照 CI：0.5，比第一发紧一倍）</summary>
+        /// <summary>左键第二发（龙息弹）的散布倍率（照旧版支线：0.5，比第一发紧一倍）</summary>
         private const float SecondShotSpreadFactor = 0.5f;
-        /// <summary>右键全自动的散布倍率（照 CI：1.22；1.3-release/2.0 是 1.52）</summary>
+        /// <summary>右键全自动的散布倍率（照旧版支线：1.22；旧版灾厄/2.0 是 1.52）</summary>
         private const float FullAutoSpreadFactor = 1.22f;
         /// <summary>不打散弹的固定省弹率（照源：66% 不消耗弹药）</summary>
         private const float AmmoSaveChance = 0.66f;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的源值 220</summary>
 
         /// <summary>
-        /// 研究解锁一份；并允许右键重复触发（右键全自动需要每次点击都重新施放）——照 CI
+        /// 研究解锁一份；并允许右键重复触发（右键全自动需要每次点击都重新施放）——照旧版支线
         /// </summary>
         public override void SetStaticDefaults()
         {
@@ -63,13 +63,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         }
         /// <summary>
         /// 物品基础属性：64×28 贴图、伤害 220、使用/动画 9/18 帧、两发间隔 12、击退 6.5、弹速 12、
-        /// 子弹弹药、月后稀有度 15 档、价值 2 铂金 40 金（全部照 CI）
+        /// 子弹弹药、月后稀有度 15 档、价值 2 铂金 40 金（全部照旧版支线）
         /// </summary>
         public override void SetDefaults()
         {
-            Item.width = 58;                          // 贴图宽（像素，取 CI「远古巨龙之息」那张图）
+            Item.width = 58;                          // 贴图宽（像素，取 旧版支线「远古巨龙之息」那张图）
             Item.height = 36;                         // 贴图高（像素）
-            Item.damage = 220;                        // 面板伤害（照 CI；1.3-release/2.0 是 198）
+            Item.damage = 220;                        // 面板伤害（照旧版支线；旧版灾厄/2.0 是 198）
             Item.DamageType = DamageClass.Ranged;     // 射手伤害类型
             Item.useTime = 9;
             Item.useAnimation = 18;
@@ -81,7 +81,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.shoot = ModContent.ProjectileType<DragonsBreathRound>();
             Item.shootSpeed = 12f;
             Item.useAmmo = AmmoID.Bullet;             // 吃子弹类弹药
-            Item.value = Item.buyPrice(2, 40, 0, 0);  // 价值 2 铂金 40 金（CI 的 CatalystViolet / 灾厄 Rarity15）
+            Item.value = Item.buyPrice(2, 40, 0, 0);  // 价值 2 铂金 40 金（旧版支线的 CatalystViolet / 灾厄 Rarity15）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后稀有度 15（紫）
         }
         /// <summary>
@@ -92,7 +92,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.NextFloat() > AmmoSaveChance;
         /// <summary>
-        /// 持握偏移：用这张图（CI「远古巨龙之息」）自带的 (-15, 10)；换图后如看着别扭直接改这里
+        /// 持握偏移：用这张图（旧版支线「远古巨龙之息」）自带的 (-15, 10)；换图后如看着别扭直接改这里
         /// </summary>
         public override Vector2? HoldoutOffset() => new Vector2(-15, 10);
         /// <summary>
@@ -100,7 +100,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// </summary>
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>
-        /// 右键时两发间隔归零（全自动），左键时保持 <see cref="BetweenShotsPause"/>（照 CI）
+        /// 右键时两发间隔归零（全自动），左键时保持 <see cref="BetweenShotsPause"/>（照旧版支线）
         /// </summary>
         public override bool CanUseItem(Player player)
         {
@@ -108,16 +108,16 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             return base.CanUseItem(player);
         }
         /// <summary>
-        /// 右键全自动时使用时间 ×0.8（照 CI；1.4.4 的钩子名是 UseSpeedMultiplier）
+        /// 右键全自动时使用时间 ×0.8（照旧版支线；1.4.4 的钩子名是 UseSpeedMultiplier）
         /// </summary>
         public override float UseSpeedMultiplier(Player player) => player.altFunctionUse == 2 ? FullAutoFireRateMult : 1f;
         /// <summary>
-        /// 禁用「Murderous」前缀（照 CI：该前缀会把这把多弹丸武器的收益放大得过头）
+        /// 禁用「Murderous」前缀（照旧版支线：该前缀会把这把多弹丸武器的收益放大得过头）
         /// </summary>
         public override bool AllowPrefix(int pre) => pre != PrefixID.Murderous;
         /// <summary>
         /// 开火：左键第一发 8 颗普通子弹、第二发 8 颗龙息弹（更紧 + 音效 + 烟尘）；
-        /// 右键 8 颗随机混 4 颗龙息弹、伤害 ×0.9、散布 ×1.22。逐行照 CI 的 <c>Shoot</c>。
+        /// 右键 8 颗随机混 4 颗龙息弹、伤害 ×0.9、散布 ×1.22。逐行照旧版支线的 <c>Shoot</c>。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -177,7 +177,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             return false;
         }
         /// <summary>
-        /// 第二发开火时的烟尘爆发（照 CI）：30 颗，多为烟（53/54）+ 少量火星（262），
+        /// 第二发开火时的烟尘爆发（照旧版支线）：30 颗，多为烟（53/54）+ 少量火星（262），
         /// 有 1/4 概率改往上飘，尺寸随机 0.5~1.6
         /// </summary>
         private void SpawnDragonsBreathDust(Vector2 pos, Vector2 velocity)

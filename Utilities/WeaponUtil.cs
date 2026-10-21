@@ -31,8 +31,8 @@ namespace CalamityDemutation.Utilities
         }
         /// <summary>
         /// 为目标 NPC 附加“全套混合元素减益”：先上 4 种原版减益各 5 秒，
-        /// 若安装了现代版/经典版灾厄，再补上灾厄专属元素减益；
-        /// 经典版灾厄另有低概率（1/30）附带极寒冻结（ExoFreeze）。
+        /// 若安装了现代版/经典灾厄，再补上灾厄专属元素减益；
+        /// 经典灾厄另有低概率（1/30）附带极寒冻结（ExoFreeze）。
         /// </summary>
         public static void ExoDebuffs(this NPC target)
         {
@@ -41,7 +41,7 @@ namespace CalamityDemutation.Utilities
             target.AddBuff(BuffID.OnFire, 300);
             target.AddBuff(BuffID.CursedInferno, 300);
             target.AddBuff(BuffID.Ichor, 300);
-            // 现代版灾厄：附加灾厄专属元素减益（500 帧 ≈ 8.3 秒）
+            // 现代灾厄：附加灾厄专属元素减益（500 帧 ≈ 8.3 秒）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 500); }
@@ -49,7 +49,7 @@ namespace CalamityDemutation.Utilities
                 if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 500); }
                 if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 500); }
             }
-            // 经典版灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
+            // 经典灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (Main.rand.NextBool(30))
@@ -72,7 +72,7 @@ namespace CalamityDemutation.Utilities
             target.AddBuff(BuffID.OnFire, 300);
             target.AddBuff(BuffID.CursedInferno, 300);
             target.AddBuff(BuffID.Ichor, 300);
-            // 现代版灾厄：附加灾厄专属元素减益（500 帧 ≈ 8.3 秒）
+            // 现代灾厄：附加灾厄专属元素减益（500 帧 ≈ 8.3 秒）
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModBuff>("HolyFlames", out ModBuff holyFlames)) { target.AddBuff(holyFlames.Type, 500); }
@@ -80,7 +80,7 @@ namespace CalamityDemutation.Utilities
                 if (calamity.TryFind<ModBuff>("BrimstoneFlames", out ModBuff brimstoneFlames)) { target.AddBuff(brimstoneFlames.Type, 500); }
                 if (calamity.TryFind<ModBuff>("Plague", out ModBuff plague)) { target.AddBuff(plague.Type, 500); }
             }
-            // 经典版灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
+            // 经典灾厄：稳定附加 4 种元素减益，且有 1/30 概率额外附加极寒冻结
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (Main.rand.NextBool(30))

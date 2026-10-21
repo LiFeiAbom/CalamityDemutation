@@ -39,7 +39,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
         /// 故只把原版自动生成的「防御」行从 50 改成实际生效的 57。
         /// </summary>
         /// <summary>
-        /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
+        /// 注册配方：现代灾厄与经典预发布版灾厄（经典灾厄）
         /// 材料相同（ShadowspecBar×45），但对应各自的暗影合金锭与德雷顿熔炉，故分别注册。
         /// </summary>
         public override void AddRecipes()
@@ -49,8 +49,8 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
                 if (calamity.TryFind<ModItem>("ShadowspecBar", out ModItem shadowspecBar) && calamity.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
                     Recipe recipe = CreateRecipe();
-                    recipe.AddIngredient(shadowspecBar.Type, 45);  // 现代版灾厄：ShadowspecBar×45
-                    recipe.AddTile(draedonsForge.Type);            // 现代版灾厄：德雷顿熔炉
+                    recipe.AddIngredient(shadowspecBar.Type, 45);  // 现代灾厄：ShadowspecBar×45
+                    recipe.AddTile(draedonsForge.Type);            // 现代灾厄：德雷顿熔炉
                     recipe.Register();
                 }
             }
@@ -59,8 +59,8 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
                 if (classic.TryFind<ModItem>("ShadowspecBar", out ModItem classicShadowspecBar) && classic.TryFind<ModTile>("DraedonsForge", out ModTile classicDraedonsForge))
                 {
                     Recipe recipeClassic = CreateRecipe();
-                    recipeClassic.AddIngredient(classicShadowspecBar.Type, 45);  // 经典版灾厄：ShadowspecBar×45
-                    recipeClassic.AddTile(classicDraedonsForge.Type);            // 经典版灾厄：德雷顿熔炉
+                    recipeClassic.AddIngredient(classicShadowspecBar.Type, 45);  // 经典灾厄：ShadowspecBar×45
+                    recipeClassic.AddTile(classicDraedonsForge.Type);            // 经典灾厄：德雷顿熔炉
                     recipeClassic.Register();
                 }
             }

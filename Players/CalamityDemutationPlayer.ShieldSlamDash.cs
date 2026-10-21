@@ -107,7 +107,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 屏幕震动：每帧把玩家身上累积的震动强度换成一次随机圆内偏移加到屏幕位置，再线性衰减 0.185 并钳在 0~20。
         /// 与灾厄 CalamityPlayer.ModifyScreenPosition 一致（灾厄多一个 Screenshake 总开关，本工程未加配置项）。
-        /// 另外叠加一层全局震动 <c>CalamityDemutation.ScreenShakeAmp</c>（CE 的 screenShakeAmp 口径）。
+        /// 另外叠加一层全局震动 <c>CalamityDemutation.ScreenShakeAmp</c>（附属模组的 screenShakeAmp 口径）。
         /// </summary>
         public override void ModifyScreenPosition()
         {
@@ -116,9 +116,9 @@ namespace CalamityDemutation.Players
                 Main.screenPosition += Main.rand.NextVector2Circular(GeneralScreenShakePower, GeneralScreenShakePower);
                 GeneralScreenShakePower = MathHelper.Clamp(GeneralScreenShakePower - 0.185f, 0f, 20f);
             }
-            // 全局屏幕震动：横轴抖幅是纵轴的 8 倍（CE 原式），衰减在 EffectsSystem 里每帧 -0.5。
-            // CE 那句没有归属判断，而本钩子对每个活跃玩家各调一次，多人下整屏会被叠加好几遍；
-            // 这里限定只由本地玩家施加一次——单机下与 CE 完全一致。
+            // 全局屏幕震动：横轴抖幅是纵轴的 8 倍（附属模组原式），衰减在 EffectsSystem 里每帧 -0.5。
+            // 附属模组那句没有归属判断，而本钩子对每个活跃玩家各调一次，多人下整屏会被叠加好几遍；
+            // 这里限定只由本地玩家施加一次——单机下与 附属模组完全一致。
             if (Player.whoAmI == Main.myPlayer && CalamityDemutation.ScreenShakeAmp > 0f)
             {
                 float amp = CalamityDemutation.ScreenShakeAmp;
@@ -550,7 +550,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 单个盾牌冲刺的数值档（只读）。字段与灾厄四个冲刺类里的硬编码常量逐一对应，
         /// 其中减益分两条路：VanillaDebuff 非 0 时用原版减益（华丽盾的霜燃 2），
-        /// 否则按 CalamityDebuff / ClassicDebuff 分别在现代版与经典版灾厄里查找。
+        /// 否则按 CalamityDebuff / ClassicDebuff 分别在现代版与经典灾厄里查找。
         /// </summary>
         private readonly struct ShieldSlamProfile
         {
@@ -566,9 +566,9 @@ namespace CalamityDemutation.Players
             public readonly float ScreenShake;
             /// <summary>撞击附加减益的帧数（0 = 无减益）</summary>
             public readonly int DebuffFrames;
-            /// <summary>现代版灾厄的减益类名（空串表示不用灾厄减益）</summary>
+            /// <summary>现代灾厄的减益类名（空串表示不用灾厄减益）</summary>
             public readonly string CalamityDebuff;
-            /// <summary>经典版灾厄的减益类名（两个版本减益常改名，如神圣烈焰在现代版叫 HolyFlames、经典版叫 HolyLight）</summary>
+            /// <summary>经典灾厄的减益类名（两个版本减益常改名，如神圣烈焰在现代版叫 HolyFlames、经典版叫 HolyLight）</summary>
             public readonly string ClassicDebuff;
             /// <summary>原版减益的 buff ID（0 = 不用原版减益）</summary>
             public readonly int VanillaDebuff;

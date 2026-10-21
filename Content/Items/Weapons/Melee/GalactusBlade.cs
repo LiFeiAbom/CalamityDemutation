@@ -122,7 +122,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         public override void OnHitPvp(Player player, Player target, Player.HurtInfo hurtInfo) => CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 300);
         /// <summary>
         /// 配方（分版本）：现代版照抄 2.0.4 源——狂星之怒 + 灾厄的 DivineGeode×10 + 银河奇点×5，在远古操纵台；
-        /// 经典版镜像经典灾厄原配方——银河奇点取经典版灾厄的，另外多出灵气/力量之魂/夜明锭/暗黑碎块/光明碎块。
+        /// 经典版镜像经典灾厄原配方——银河奇点取经典灾厄的，另外多出灵气/力量之魂/夜明锭/暗黑碎块/光明碎块。
         /// 现代版的银河奇点沿用本工程口径，取本模组自有的 <c>GalacticaSingularity</c>。
         /// </summary>
         public override void AddRecipes()

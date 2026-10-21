@@ -6,7 +6,7 @@ namespace CalamityDemutation.Systems
 {
     /// <summary>
     /// Boss 击杀进度查询系统。
-    /// 通过反射读取 CalamityMod（现代版）或 CalamityModClassicPreTrailer（经典版）
+    /// 通过反射读取 现代灾厄或 经典灾厄
     /// 的击杀标记，向模组其余部分提供统一的 Boss 进度查询接口。
     /// 现代版优先，若两者皆不可用则对应查询返回 false。
     /// </summary>
@@ -73,11 +73,11 @@ namespace CalamityDemutation.Systems
               new("Betsy",                  null,                       "downedBetsy")
         ];
         /// <summary>
-        /// 现代版 CalamityMod 的击杀标记属性缓存（Boss 键 → PropertyInfo）；模组未安装或类型缺失时为 null
+        /// 现代灾厄的击杀标记属性缓存（Boss 键 → PropertyInfo）；模组未安装或类型缺失时为 null
         /// </summary>
         private static Dictionary<string, PropertyInfo> _calamityProps;
         /// <summary>
-        /// 经典版 CalamityModClassicPreTrailer 的击杀标记字段缓存；模组未安装或类型缺失时为 null
+        /// 经典灾厄的击杀标记字段缓存；模组未安装或类型缺失时为 null
         /// </summary>
         private static Dictionary<string, FieldInfo> _classicFields;
         /// <summary>

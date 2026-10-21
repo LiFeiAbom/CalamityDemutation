@@ -8,7 +8,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
 {
     /// <summary>
     /// 始源林海头盔（SilvaHelmet） - 始源林海套装的召唤向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 SilvaHeadSummon，
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 SilvaHeadSummon，
     /// 本工程沿用经典版的类名/防御/单件与套装数值）。
     /// 单件：仆从上限 +5；另有用户 2026-10-05 指定的三条召唤头统一属性
     ///（召唤伤害 +12%、鞭子攻击范围 +12%、鞭子攻击速度 +12%）。
@@ -102,7 +102,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
+                // 现代灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
                 if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
                     && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
@@ -119,7 +119,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
+                // 经典灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
                 if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
                     && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)

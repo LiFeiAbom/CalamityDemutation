@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 宙宇波能刃（Excelsus）—— 月后神吞档近战（移植自灾厄大修 0.4.0.1.3 的 ExcelsusEcType 重置版）。
+    /// 宙宇波能刃（Excelsus）—— 月后神吞档近战（移植自重制版的 ExcelsusEcType 重置版）。
     /// 左键散射三把旋转刃（ExcelsusMain/Blue/Pink），右键投出蓝色炸弹（ExcelsusBomb），命中召唤激光喷泉（LaserFountains）。
     /// 获取方式沿用灾厄原版：神吞宝藏袋掉落。
     /// </summary>

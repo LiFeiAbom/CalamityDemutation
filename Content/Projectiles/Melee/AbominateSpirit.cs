@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 惊惧之灵（AbominateSpirit） - 女妖之爪重制版（CalamityOverhaul 0.4.0.1.3）的配套弹幕，逐行移植。
+    /// 惊惧之灵（AbominateSpirit） - 女妖之爪重制版（重制版）的配套弹幕，逐行移植。
     /// <c>Status</c>（= <c>ai[0]</c>）决定贴图与命中效果：
     /// 0 大号（暗红，命中叠暗影焰/狱火/诅咒地狱火）、1 中号（暗绿，命中随机给主人一条武器附魔）、
     /// 2 小号（蓝，命中叠血腥与破晓）、3 治疗形态（金色，飞回主人回血，回血量按 <c>ai[1]</c> 的"目标最大生命"档决定）。

@@ -38,7 +38,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：圣水 + StarblightSoot×4 + 水晶碎块 + EssenceofSunlight
+                // 现代灾厄：圣水 + StarblightSoot×4 + 水晶碎块 + EssenceofSunlight
                 if(calamity.TryFind<ModItem>("StarblightSoot", out ModItem starblightSoot1) && calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -49,7 +49,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：圣水 + 血珠×20
+                // 现代灾厄：圣水 + 血珠×20
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -61,7 +61,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：圣水×5 + Stardust×20 + 水晶碎块×5 + EssenceofCinder×3
+                // 经典灾厄：圣水×5 + Stardust×20 + 水晶碎块×5 + EssenceofCinder×3
                 if(classic.TryFind<ModItem>("Stardust", out ModItem stardust1) && classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder1))
                 {
                     Recipe recipeClassic = CreateRecipe();
@@ -72,7 +72,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.AlchemyTable);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：圣水×5 + 血珠×50
+                // 经典灾厄：圣水×5 + 血珠×50
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipeClassic = CreateRecipe();

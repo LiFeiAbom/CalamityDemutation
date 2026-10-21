@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 鬼火（SpiritFlame） - 女妖之爪重制版（CalamityOverhaul 0.4.0.1.3）的配套弹幕，逐行移植。
+    /// 鬼火（SpiritFlame） - 女妖之爪重制版（重制版）的配套弹幕，逐行移植。
     /// 4 帧循环动画；<c>ai[0]</c> 决定行为：0 = 随主人飘（跟随玩家速度上飘）、1/2 = 原地加速旋转扩散、
     /// 3 = 上飘 + 左右摆动（用于蓄能期在鼠标处刷出的鬼火簇）。
     /// </summary>
@@ -33,7 +33,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         public override void AI()
         {
-            // 走表：每 10 帧推进一帧，超过第 3 帧回到 0（对应源的 CWRUtils.ClockFrame）
+            // 走表：每 10 帧推进一帧，超过第 3 帧回到 0（对应源的 相关计时工具）
             if (Main.GameUpdateCount % 10 == 0)
             {
                 Projectile.frameCounter++;

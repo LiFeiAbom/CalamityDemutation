@@ -10,14 +10,14 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// 装备时只置位 <c>nanotech</c> 标记，数值与行为统一在别处结算：
     /// ① <c>CalamityDemutationPlayer.PostUpdateMiscEffects</c>：盗贼伤害 +20%、盗贼暴击 +20
     ///    （用户 2026-10-07 点名；经典版源为 +15% / +10%）、盗贼弹速 +15%；手持盗贼武器时额外
-    ///    +30 防御与 +10% 伤害减免（照经典版 <c>CalamityPlayer1Point2.cs:917</c> 的口径）；
+    ///    +30 防御与 +10% 伤害减免（照经典版 <c>旧版灾厄玩家类</c> 的口径）；
     /// ② <c>CalamityDemutationGlobalProjectile.AI</c>：盗贼弹幕飞行途中每 30 帧在原地留下一枚纳米刀刃
     ///    （<c>Content/Projectiles/Rogue/Nanotech.cs</c>，伤害 = 弹幕伤害 ×0.15、伤害类型 = 盗贼），
     ///    潜行打击弹幕额外 +20 护甲穿透；
     /// ③ <c>CalamityDemutationGlobalProjectile.OnHitNPC</c>：潜行打击命中（前 3 次）时从画面上方砸下
     ///    6 枚灾厄本体的 <c>NanoFlare</c>。
-    /// ②③ 两条机制按用户 2026-10-07 的要求取自 CI 的 <c>NanotechOld</c>（不是 1.4.2 / cal-1.2 的旧写法：
-    /// 旧写法是"每 30 次命中"且刀刃射出就能打；CI 是"每 30 帧"且刀刃前 30 帧不能命中、之后才追踪）。
+    /// ②③ 两条机制按用户 2026-10-07 的要求取自 旧版支线的 <c>NanotechOld</c>（不是 旧版灾厄 的旧写法：
+    /// 旧写法是"每 30 次命中"且刀刃射出就能打；旧版支线是"每 30 帧"且刀刃前 30 帧不能命中、之后才追踪）。
     /// <para>
     /// **刻意不移植**：经典版 tooltip 里的「盗贼武器有概率秒杀普通敌人」——源实现是在
     /// <c>CalamityGlobalNPC1Point2.ModifyHitByProjectile</c> 里靠一张写死的 NPC 类型排除表把
@@ -25,7 +25,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Rogue
     /// 用户 2026-10-07 明确要求取消，故效果与文案都不写。
     /// </para>
     /// <para>
-    /// 与灾厄本体重名：现代版灾厄 2.2.2 自带一件 <c>Nanotech</c>（46×46、CosmicPurple，配方走
+    /// 与灾厄本体重名：现代灾厄 2.2.2 自带一件 <c>Nanotech</c>（46×46、CosmicPurple，配方走
     /// 「盗贼徽章 + 吸血鬼护符 + 电工手套 + 月锭 + 登升者之魂 @ 宇宙砧」的合并流），与本件（经典版
     /// 档位、旧配方）是同名不同物——属本工程"灾厄旧版内容回归"的既定做法，与虚无箭袋同理。
     /// </para>

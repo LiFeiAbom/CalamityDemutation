@@ -39,7 +39,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄 ──
+            // ── 现代灾厄 ──
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 腐化世界路线：星辉尘 ×15 + 寒元锭 ×5
@@ -69,7 +69,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：星辉尘→Stardust、寒元锭→CryoBar（同名物不同名） ──
+            // ── 经典灾厄：星辉尘→Stardust、寒元锭→CryoBar（同名物不同名） ──
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 腐化世界路线

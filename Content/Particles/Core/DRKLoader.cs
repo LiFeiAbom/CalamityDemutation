@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Particles.Core
     /// 2) PostUpdateEverything 每帧驱动全部粒子：叠加速度、累加存活时间、调用粒子 AI，并回收寿命耗尽或被 Kill 的粒子。
     /// 3) DrawAll 按混合模式（AlphaBlend / NonPremultiplied / Additive）分组批量绘制，避免逐粒子切换渲染状态。
     /// 粒子上限由 CalamityDemutationConstant.MaxParticleCount（10000）控制，超限时忽略非 Important 粒子。
-    /// 注：类名与部分成员名沿用旧版移植（CWR 系列已废弃），仅作为容器保留。
+    /// 注：类名与部分成员名沿用旧版移植（重制版系列已废弃），仅作为容器保留。
     /// </summary>
     internal class DRKLoader : ModSystem
     {
@@ -233,7 +233,7 @@ namespace CalamityDemutation.Content.Particles.Core
             sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
         }
         /// <summary>
-        /// 把批次接回该粒子所在混合桶的样式（CE 的 <c>PRTLoader.BeginDrawingWithMode</c> 等价物）：
+        /// 把批次接回该粒子所在混合桶的样式（附属模组的 <c>PRTLoader.BeginDrawingWithMode</c> 等价物）：
         /// 粒子在 CustomDraw 里为自己的采样需求 End/Begin 过批次之后必须调它，否则同桶里后面的粒子
         /// 会画进错误的批次（表现为那一帧后续粒子花屏）。
         /// </summary>
@@ -376,7 +376,7 @@ namespace CalamityDemutation.Content.Particles.Core
         public static void UpdateParticleVelocity(BaseParticle particle) => particle.Position += particle.Velocity;
         // ── 私有工具 ──
         /// <summary>
-        /// 显式注册单个粒子类型（替代 CWR 的反射枚举，DRK_Spark 无无参构造，故用未初始化对象读取 Texture）
+        /// 显式注册单个粒子类型（替代 重制版的反射枚举，DRK_Spark 无无参构造，故用未初始化对象读取 Texture）
         /// </summary>
         private static void RegisterParticle<T>() where T : BaseParticle
         {

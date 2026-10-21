@@ -23,13 +23,13 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
         }
         /// <summary>
         /// 装备时直接把玩家对"辐照（Irradiated）"的免疫置位；
-        /// 现代版与经典版灾厄各自查找同名 debuff，两分支互相兼容
+        /// 现代版与经典灾厄各自查找同名 debuff，两分支互相兼容
         /// </summary>
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：Irradiated
+                // 现代灾厄：Irradiated
                 if(calamity.TryFind<ModBuff>("Irradiated", out ModBuff irradiated1))
                 {
                     player.buffImmune[irradiated1.Type] = true;
@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Function
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：同名 Irradiated
+                // 经典灾厄：同名 Irradiated
                 if(classic.TryFind<ModBuff>("Irradiated", out ModBuff irradiated2))
                 {
                     player.buffImmune[irradiated2.Type] = true;

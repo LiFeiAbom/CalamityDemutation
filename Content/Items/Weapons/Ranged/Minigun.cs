@@ -9,8 +9,8 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 速射机枪（Minigun） - 射手武器。**2.0.3.9 起被灾厄删除**（直读实装 2.2.2 的整包文件表确认没有此件），
     /// 属"旧版回归"件。
     /// <para>
-    /// **口径（用户 2026-10-14 逐条拍板）**：实现取 **2.0**（与 1.3-release 逐项一致）、
-    /// 贴图用**现代那张**（92×44 / `1A2E97E6`，1.3-release / 2.0 / CI 三处同款）、
+    /// **口径（用户 2026-10-14 逐条拍板）**：实现取 **2.0**（与 旧版灾厄 逐项一致）、
+    /// 贴图用**现代那张**（92×44 / `1A2E97E6`，旧版灾厄 / 2.0 / 旧版支线三处同款）、
     /// 灾厄"贴脸射击"**不做**。
     /// </para>
     /// <para>
@@ -22,7 +22,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
     /// 配方（用户指定）：**现代 = P90（本工程自持件）+ 原版链式机枪 + 古圣金源锭 `AuricBar`×5
     /// @ 宇宙砧 `CosmicAnvil`** ——源配方那味 `ClockGatlignum`（发条加特林）已随 1.4.4 被灾厄删除，
     /// 故按用户口径换成 P90，并按用户 2026-10-14 追加要求再补一味**原版链式机枪**（`ItemID.ChainGun`）；
-    /// **经典 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉**（照经典世系 cal-1.4.2.101，与工程其它件同口径）。
+    /// **经典 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉**（照经典灾厄经典灾厄，与工程其它件同口径）。
     /// </para>
     /// </summary>
     internal class Minigun:ModItem
@@ -86,7 +86,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         }
         /// <summary>
         /// 配方（分版本，缺件即退化成单分支）：现代 = 本工程自持的 P90 + 金源锭×5 @ 宇宙砧（用户指定）；
-        /// 经典 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉（照 cal-1.4.2.101）。
+        /// 经典 = 链式机枪 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉（照 经典灾厄）。
         /// </summary>
         public override void AddRecipes()
         {

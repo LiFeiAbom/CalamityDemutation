@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 宇宙之灵的小爆裂（照 CI 的 <c>Content/Projectiles/ExoLore/CosmicBlastExoLore.cs</c> 移植，
+    /// 宇宙之灵的小爆裂（照旧版支线的 <c>Content/Projectiles/ExoLore/CosmicBlastExoLore.cs</c> 移植，
     /// 即 ExoLore 分支那一枚；本工程常驻 Lore 模式，故不留普通版）。
     /// 18×18 判定、4 帧动画、穿透 1、寿命 300；出场先减速，之后加速追踪 1500 像素内的敌人。
     /// 命中挂整套星云系减益（<see cref="CDUtil.ExoDebuffs"/>），消失时把自己撑到 144×144 再打一次范围伤害。

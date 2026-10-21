@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Projectiles.Healing
 {
     /// <summary>
     /// 弑神者治疗球（GodSlayerHealOrb） - 弑神者法师头（GodSlayerVisage）套装魔法命中时生成的追踪治疗弹幕
-    ///（按经典版灾厄 Projectiles/Healing/GodSlayerHealOrb.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Healing/GodSlayerHealOrb.cs 1:1 移植）。
     /// 4×4、穿透 1、穿地形、存活 240 帧、额外 3 次更新；飞行中朝 ai[0] 指定的玩家加速（上限 6.5 像素/帧），
     /// 进入 50 像素并与目标碰撞箱重叠时为其回复 ai[1] 点生命并销毁；治疗与同步只在弹幕主人端执行，
     /// 且主人处于吸血减益（moonLeech）时跳过。每帧在原地喷 1 粒 ShadowbeamStaff 尘（源裸数字 173 已 Cecil 反查）。

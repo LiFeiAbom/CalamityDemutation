@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
-    /// 宇宙之灵的大爆裂（照 CI 的 <c>Content/Projectiles/ExoLore/CosmicBlastBigExoLore.cs</c> 移植，
+    /// 宇宙之灵的大爆裂（照旧版支线的 <c>Content/Projectiles/ExoLore/CosmicBlastBigExoLore.cs</c> 移植，
     /// 即 ExoLore 分支那一枚）。24×24 判定、穿透 1、寿命 600；出场减速后加速追踪敌人，
     /// 一路撒彩虹尘与碎布（gore）。命中挂整套星云系减益，消失时撑到 288×288 再打一次范围伤害。
     /// </summary>

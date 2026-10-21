@@ -13,11 +13,11 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
     /// <summary>
     /// 金羽十杀盔（AuricTeslaPlumedHelm，英文名 Auric Tesla Plumed Helm） - 古圣金源套装的**盗贼**向头部部件：
     /// 一身**复合**承载龙蒿 / 血炎 / 弑神者 / 始源林海四套的**盗贼**效果
-    ///（按经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；CI 对应件 AuricTeslaHeadRogue，防御同为 34）。
+    ///（按经典灾厄同名件 1:1 移植；旧版支线对应件 AuricTeslaHeadRogue，防御同为 34）。
     /// 与近战头（AuricTeslaHelm）/ 射手头（AuricTeslaHoodedFacemask）/ 召唤头（AuricTeslaSpaceHelmet）/
     /// 法师头（AuricTeslaWireHemmedVisage）对称：置位四套的 *Throwing 标记。
     /// 按经典版原样**不置** godSlayerDamage（≤80 低伤压制，近战头专属）也**不加** aggro；
-    /// 套装也**不给额外盗贼伤害**（数值全在单件的 +20%，法伤头那套「跟 CI」的口径不适用于本件）。
+    /// 套装也**不给额外盗贼伤害**（数值全在单件的 +20%，法伤头那套「跟 旧版支线」的口径不适用于本件）。
     /// 四条盗贼效果全部由下位各自的既有实现承接，本件只置位标记：
     /// 龙蒿（25 次暴击免伤 / 带减益加伤）、血炎（生命阈值加成 / 暴击 50% 回血）、
     /// 弑神者（满血盗贼属性 +10% / 受伤 >80 额外无敌帧）、始源林海（>50% 攻速 / 无敌后 +10% /
@@ -27,7 +27,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
     internal class AuricTeslaPlumedHelm:ModItem
     {
         /// <summary>
-        /// 物品基础属性：18x18、防御 34（比近战头的 54、射手头的 40 低，经典/CI 同值，
+        /// 物品基础属性：18x18、防御 34（比近战头的 54、射手头的 40 低，经典/旧版支线同值，
         /// 源码同行另留 //132 注释，系开发期遗留数字）、价值 1 铂金 80 金、月后稀有度 20（彩虹闪烁名）
         /// </summary>
         public override void SetDefaults()
@@ -87,8 +87,8 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// 单件效果：置位 auricBoost 标记（静止时增伤/增暴击与击退加成），
         /// 并提升盗贼伤害 20%、盗贼暴击 20%（经典版 UpdateEquip 原样；
         /// 源里写的是 <c>CalamityCustomThrowingDamagePlayer.throwingDamage += 0.2f / throwingCrit += 20</c>）。
-        /// 另加**移速 +25%**——这一条经典版没有、是 **CI 对应件 AuricTeslaHeadRogue** 的设计，
-        /// 用户 2026-10-06 对 CI 照后点名补上（CI 五颗金源头里只有盗贼这颗带移速）。
+        /// 另加**移速 +25%**——这一条经典版没有、是 **旧版支线对应件 AuricTeslaHeadRogue** 的设计，
+        /// 用户 2026-10-06 对旧版支线照后点名补上（旧版支线五颗金源头里只有盗贼这颗带移速）。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
@@ -98,16 +98,16 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             player.GetDamage(rogue) += 0.2f;                    // 盗贼伤害 +20%
             player.GetCritChance(rogue) += 20;                  // 盗贼暴击率 +20%
             CDUtil.AddClassicThrowingStats(player, 0.2f, 20);   // 经典版：写进它的自定义投掷字段（反射）
-            player.moveSpeed += 0.25f;                          // 移速 +25%（CI 的 AuricTeslaHeadRogue 原样）
+            player.moveSpeed += 0.25f;                          // 移速 +25%（旧版支线的 AuricTeslaHeadRogue 原样）
         }
         /// <summary>
         /// 配方：由龙蒿头盔 + 血炎魔盔 + 弑神者面具 + 始源林海面具（四件下位**盗贼**头）升阶。
-        /// 现代版灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与另四颗金源头同）；
+        /// 现代灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与另四颗金源头同）；
         /// 经典版用一长串后期材料、德雷顿熔炉——两分支的坯料清单与既有四颗金源头逐字一致，只把下位头换成盗贼件。
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：四件下位盗贼头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
+            // ── 现代灾厄：四件下位盗贼头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -123,7 +123,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
+            // ── 经典灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)

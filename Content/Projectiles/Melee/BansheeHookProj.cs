@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 女妖之爪·手持体（BansheeHookProj） - 移植自灾厄大修（CalamityOverhaul）0.4.0.1.3 的重制版，
+    /// 女妖之爪·手持体（BansheeHookProj） - 移植自重制版，
     /// 长矛 AI 本体照灾厄 <c>BaseSpearProjectile</c> 的 <c>GhastlyGlaiveSpear</c> 分支逐行重写（本工程不引用灾厄类型）。
     /// <para>
     /// <c>ai[1] == 0</c>（左键）：按长矛的"画圈突刺"轨迹挥舞；挥到一半朝前方散出 4 枚哀怨之镰，
@@ -354,7 +354,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
-        /// <summary>蓄能条：在主人头顶 135 像素处按蓄能比例填充中间的条（贴图取 CWR 的 FrightEnergyCharge 三件套）</summary>
+        /// <summary>蓄能条：在主人头顶 135 像素处按蓄能比例填充中间的条（贴图取重制版的 FrightEnergyCharge 三件套）</summary>
         private void DrawChargeBar()
         {
             if (Projectile.ai[1] != 1)
@@ -407,7 +407,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                     ModContent.ProjectileType<BansheeHookBoom>(), (int)(info.Damage * 0.25), 10f, Projectile.owner, 0f, 0.85f + Main.rand.NextFloat() * 1.15f);
             }
         }
-        /// <summary>按角度区间随机取方向向量（对应源的 CWRUtils.GetRandomVevtor）</summary>
+        /// <summary>按角度区间随机取方向向量（对应源的 相关随机向量工具）</summary>
         private static Vector2 RandomVectorInDegrees(float startAngle, float targetAngle, float length)
         {
             float radians = MathHelper.ToRadians(startAngle + (targetAngle - startAngle) * Main.rand.NextFloat());

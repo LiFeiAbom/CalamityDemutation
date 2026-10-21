@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 龙怒火球弹幕（移植自 CWR 的 DragonRageFireOrb）：追踪敌人的火球。
+    /// 龙怒火球弹幕（移植自重制版的 DragonRageFireOrb）：追踪敌人的火球。
     /// 从简裁剪：metaball 拖尾、SmallSmoke/Spark 粒子全部换成原版 Dust，Dragonfire 换成原版着火 debuff。
     /// </summary>
     internal class DragonRageFireOrb : ModProjectile

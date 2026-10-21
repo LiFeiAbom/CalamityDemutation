@@ -38,7 +38,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄 ──
+            // ── 现代灾厄 ──
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 // 路线一：爬行甲壳版（深渊材料取自现代版：深海细胞/流明石/菌菇）
@@ -74,7 +74,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Comprehensive
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：深渊材料换名（Lumenyl→Lumenite、PlantyMush→Tenebris） ──
+            // ── 经典灾厄：深渊材料换名（Lumenyl→Lumenite、PlantyMush→Tenebris） ──
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 // 路线一：爬行甲壳版

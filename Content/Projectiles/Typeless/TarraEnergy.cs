@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
     /// 龙蒿生命能量（TarraEnergy） - 龙蒿射手套装「远程弹幕消失时分裂出的生命能量」
-    /// （移植自经典版灾厄 Projectiles/Typeless/TarraEnergy.cs，由 CalamityDemutationGlobalProjectile.OnKill 生成）。
+    /// （移植自经典灾厄 Projectiles/Typeless/TarraEnergy.cs，由 CalamityDemutationGlobalProjectile.OnKill 生成）。
     /// 行为照经典版：只按初速直线飞行（源用 aiStyle = 1 + PreAI 返回 false 关掉原版 AI，等价于纯直线运动），
     /// 命中一次即消失，存活 120 帧后自然消散。
     /// 视觉上本体全透明（引共用隐形贴图，与源一致），可见部分是每帧沿着速度方向拖出的 3 颗绿色尘（DustID.TerraBlade）。

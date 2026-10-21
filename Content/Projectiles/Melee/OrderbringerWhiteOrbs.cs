@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 审判光束命中的飞散白球（移植自灾厄大修 0.4.0.1.3 的 OrderbringerWhiteOrbs）：
+    /// 审判光束命中的飞散白球（移植自重制版的 OrderbringerWhiteOrbs）：
     /// 本体隐形，仅靠彩虹照明与尘表现。命中冷却走"全局共享"口径
     /// （usesIDStaticNPCImmunity + localNPCHitCooldown = -1）：多颗同时打同一敌人只结算一次。
     /// </summary>
@@ -15,7 +15,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>
         /// 基础属性：8×8、友方近战、每帧额外更新 2 次、无限穿透、存活 60 帧、不撞地形；
-        /// 命中冷却为全局共享（原版大修口径）
+        /// 命中冷却为全局共享（原版重制版口径）
         /// </summary>
         public override void SetDefaults()
         {

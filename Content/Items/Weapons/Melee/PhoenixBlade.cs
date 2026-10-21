@@ -9,11 +9,11 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
     /// 凤凰之刃（Phoenix Blade）—— 秘银砧档近战（行为照搬灾厄经典版 <c>Items/Weapons/PhoenixBlade.cs</c>）。
-    /// 大修与 2.0.3.9 都没有这把武器，经典版是唯一来源。
+    /// 重制版与 2.0.3.9 都没有这把武器，经典版是唯一来源。
     /// 效果：近战击杀敌人时在原处炸出一团日耀喷发剑式的爆炸（<c>ProjectileID.SolarWhipSwordExplosion</c>，
     /// 经典版源码里写的是数字 612），并朝斜上方甩出两枚追踪玩家的治疗火焰（灾厄经典版 <c>PhoenixHeal</c>）。
     /// 配方：毁灭刃 + 狱石锭×10 + 炽热精华 + 力量/视野/恐惧之魂各×3 @ 秘银砧。
-    /// 注意：炽热精华（<c>EssenceofCinder</c>）与治疗火焰都是经典版灾厄专有物，走软依赖，
+    /// 注意：炽热精华（<c>EssenceofCinder</c>）与治疗火焰都是经典灾厄专有物，走软依赖，
     /// 缺任意一项时本条配方不注册（本工程的 CoreofCinder 是另一件东西，不能顶替）。
     /// </summary>
     internal class PhoenixBlade : ModItem
@@ -41,7 +41,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>
         /// 面板回调与下面两处击杀表现（日耀爆炸 + 治疗火焰）统一读这里，避免只膨胀一半。
         /// </summary>
-        /// <summary>运行时解析经典版灾厄的治疗火焰弹幕 <c>PhoenixHeal</c> 的类型；未加载时返回 0</summary>
+        /// <summary>运行时解析经典灾厄的治疗火焰弹幕 <c>PhoenixHeal</c> 的类型；未加载时返回 0</summary>
         private static int PhoenixHealType() => ModContent.TryFind("CalamityModClassicPreTrailer", "PhoenixHeal", out ModProjectile phoenixHeal) ? phoenixHeal.Type : 0;
         /// <summary>近战击杀敌人：原位炸出日耀爆炸，并朝左右两侧斜上方各甩出一枚治疗火焰（速度被后面覆写成随机值）</summary>
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)

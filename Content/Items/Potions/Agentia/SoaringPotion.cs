@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：药剂瓶 + 羽毛 + 飞魂 + EssenceofSunlight
+                // 现代灾厄：药剂瓶 + 羽毛 + 飞魂 + EssenceofSunlight
                 if(calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×30
+                // 现代灾厄：药剂瓶 + 血珠×30
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -60,7 +60,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：药剂瓶 + 羽毛 + 飞魂 + EssenceofCinder
+                // 经典灾厄：药剂瓶 + 羽毛 + 飞魂 + EssenceofCinder
                 if(classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder1))
                 {
                     Recipe recipeClassic = CreateRecipe();
@@ -71,7 +71,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.AlchemyTable);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×30
+                // 经典灾厄：药剂瓶 + 血珠×30
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipeClassic = CreateRecipe();

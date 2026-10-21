@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 庇护巨刃（DefenseBladeProj，移植自灾厄大修 0.4.0.1.3 的 <c>AegisBladeProj</c>）——
+    /// 庇护巨刃（DefenseBladeProj，移植自重制版的 <c>AegisBladeProj</c>）——
     /// 庇护之刃右键掷出的巨刃，三段式：
     /// ① 升起（ai[1]=0）：以 -12 的纵向初速抛出，随减速逐渐展开；
     /// ② 蓄力悬停（ai[1]=1）：悬在玩家上方缓慢放大（上限 2.5 倍），按住右键持续蓄力，
@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
     /// ③ 掷出（ai[1]=2）：锁定 6000 像素内最近的敌人飞去，命中后用半径 1200 的爆炸收尾；
     ///    若巨刃放大超过 1.6 倍，消亡时还会抛洒 12 团防御烈焰（<see cref="DefenseFlame"/>，伤害 ×0.5）。
     /// <para>
-    /// 与源的差异：① CWR 的 LightParticle 换成本工程自研的 <see cref="GlowSpark"/>；
+    /// 与源的差异：① 重制版的 LightParticle 换成本工程自研的 <see cref="GlowSpark"/>；
     /// ② 输入只在主人端读取、靠 netUpdate 同步阶段（源的 <c>PressKey</c> 在别的客户端恒为 false，
     /// 会让那边的巨刃提前进入掷出阶段）。
     /// </para>
@@ -81,7 +81,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 if (Projectile.scale < 2.5f)
                 {
                     Projectile.scale += 0.02f;
-                    // 从巨刃外圈向中心收束的金色火花（源为 CWR 的 LightParticle）
+                    // 从巨刃外圈向中心收束的金色火花（源为 重制版的 LightParticle）
                     if (!Main.dedServ)
                     {
                         for (int i = 0; i < 6; i++)

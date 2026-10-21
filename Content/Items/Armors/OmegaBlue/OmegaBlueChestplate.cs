@@ -39,7 +39,7 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
             player.GetModPlayer<CalamityDemutationPlayer>().omegaBlueChestplate = true;
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，分别注册，均在原版月球工作台合成。
+        /// 注册配方：现代版与经典灾厄材料不同，分别注册，均在原版月球工作台合成。
         /// 现代版用 ReaperTooth(5) + DepthCells(25) + RuinousSoul(3)；
         /// 经典版用 ReaperTooth(16) + Lumenite(8) + Tenebris(8) + RuinousSoul(4)。
         /// </summary>

@@ -4,13 +4,13 @@
 Memories from the old Calamity mod — do you still remember those long-lost memories? Now, they have returned.
 
 一个灾厄扩展模组（tModLoader 1.4.4 / net8.0），主题是「灾厄旧版内容回归」：把旧版灾厄的武器、盔甲、饰品与机制重新带回来。
-软依赖 `CalamityMod` 与 `CalamityModClassicPreTrailer`（见 `build.txt` 的 `weakReferences`）；代码里一律用
+软依赖灾厄本体及旧版兼容分支（具体注册名见 `build.txt` 的 `weakReferences`）；代码里一律用
 `ModLoader.TryGetMod` / `TryFind<ModItem|ModTile|ModBuff>` 按名字取内容，不写死类型引用。
 
 ## 内容来源规则
 
-- **允许的来源**：灾厄本体（CalamityMod 的公开源码）与 CI（CalamityInheritance）。
-- **不再引入**：CWR（CalamityOverhaul）与 CE（CalamityEntropy）来源的内容——已按「灾厄本体有没有同名类」逐个判定并清理过。
+- **参考范围**：灾厄本体与部分灾厄附属模组。
+- **不再引入**：部分灾厄附属模组的内容。
 
 ## 开发
 
@@ -25,4 +25,4 @@ Memories from the old Calamity mod — do you still remember those long-lost mem
 
 ## 致谢
 
-内容源自 Calamity Mod 及其旧版世系（含 CalamityInheritance），版权归灾厄模组原作者与团队；本工程做的是旧版内容的回归移植与适配。
+内容参考灾厄本体与部分灾厄附属模组，版权归对应原作者与团队；本工程做的是旧版内容的回归移植与适配。

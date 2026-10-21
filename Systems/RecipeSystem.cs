@@ -7,7 +7,7 @@ namespace CalamityDemutation.Systems
     /// <summary>
     /// 配方组系统（照 tModLoader 的新口径写在 ModSystem 里——<c>Mod.AddRecipeGroups</c> 已标记过时）。
     /// 目前登记三项：虚无箭袋（QuiverofNihility）照灾厄 2.0.4 的配方要用「任意箭袋」入料，
-    /// 现代版灾厄自带 <c>AnyQuiver</c> 组、经典版灾厄没有，故本模组自建同内容的
+    /// 现代灾厄自带 <c>AnyQuiver</c> 组、经典灾厄没有，故本模组自建同内容的
     /// <c>CalamityDemutation:AnyQuiver</c> 供经典分支使用（现代分支仍直接用灾厄自己的 AnyQuiver）；
     /// 静默剑鞘（SilencingSheath）的源配方用的是灾厄自建的 <c>AnyEvilBar</c> / <c>Boss2Material</c>
     /// 两个组（内容全是原版物品：魔金锭/血金锭、暗影鳞片/组织样本），本件刻意**不依赖灾厄**，

@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
     /// 浅紫档、价值 48 金、音效 SoundID.Item44，召唤太阳神（SolarGod），全场只能同时存在一只。
     /// </summary>
     /// <remarks>
-    /// 本件在现代版灾厄 2.0.3.9 起已被删除（换成 VengefulSunStaff），故按"旧版回归"自持。
+    /// 本件在现代灾厄 2.0.3.9 起已被删除（换成 VengefulSunStaff），故按"旧版回归"自持。
     /// <para>
     /// 与源的差异：源用灾厄 CalamityUtils.KillShootProjectiles 清场，本工程是软依赖、不引用灾厄类型，
     /// 照经典版写等价的"先杀掉自己在场的同类再召唤"循环。
@@ -70,7 +70,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Summon
         /// <summary>
         /// 配方（用户 2026-10-08 拍板）：两分支各注册一条，缺件即退化成单分支——
         /// 现代分支照源 2.0 = 太阳之灵法杖 + 日光精华×5 + 三魂各×3 @ 秘银砧；
-        /// 经典分支照源 cal-1.4.2.101 = 太阳之灵法杖 + 烬核×5（用本模组自持件，不借经典版的 EssenceofCinder）
+        /// 经典分支照源 经典灾厄 = 太阳之灵法杖 + 烬核×5（用本模组自持件，不借经典版的 EssenceofCinder）
         /// + 三魂各×3 @ 秘银砧。
         /// </summary>
         public override void AddRecipes()

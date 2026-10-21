@@ -8,11 +8,11 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Magic
 {
     /// <summary>
-    /// 光之舞（Dance of Light）—— 机制移植自 CI Beta1.12 的
+    /// 光之舞（Dance of Light）—— 机制移植自 旧版支线的
     /// <c>DanceofLightLegacy</c>，物品贴图使用现代版 <c>TheDanceofLight.png</c>（40×42）。
     /// <para>
-    /// 面板取 CI（伤害按用户 2026-10-18 点名改为 200）：魔力 9、使用/动画 15 帧、击退 4、弹速 30、
-    /// 月后 16 档（CI 的 <c>DonatorPink</c>）/ 2 铂金 80 金（CI 的 <c>RarityPriceDonatorPink</c>）、
+    /// 面板取 旧版支线（伤害按用户 2026-10-18 点名改为 200）：魔力 9、使用/动画 15 帧、击退 4、弹速 30、
+    /// 月后 16 档（旧版支线的 <c>DonatorPink</c>）/ 2 铂金 80 金（旧版支线的 <c>RarityPriceDonatorPink</c>）、
     /// <c>Item105</c> 使用音。判定框按现代贴图取 40×42，持握偏移用现代版的零偏移。
     /// </para>
     /// <para>
@@ -34,7 +34,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         {
             Item.ResearchUnlockCount = 1;
         }
-        /// <summary>基础属性取 CI（伤害按用户点名 200）；判定框按现代版 40×42 贴图</summary>
+        /// <summary>基础属性取 旧版支线（伤害按用户点名 200）；判定框按现代版 40×42 贴图</summary>
         public override void SetDefaults()
         {
             Item.width = 40;
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Magic
         /// <summary>持握偏移照现代版（零偏移）</summary>
         public override Vector2? HoldoutOffset() => Vector2.Zero;
         /// <summary>
-        /// 出手照 CI：4~6 枚白焰从玩家上方不同高度朝鼠标坠落；
+        /// 出手照旧版支线：4~6 枚白焰从玩家上方不同高度朝鼠标坠落；
         /// 每枚弹幕命中挂圣火，消亡后再分裂 2 枚全局追踪火焰。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

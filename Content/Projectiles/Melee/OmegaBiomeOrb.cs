@@ -8,12 +8,12 @@ namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
     /// 欧米茄环境能量（OmegaBiomeOrb） - 欧米茄环境之刃发射的追踪弹幕，
-    /// 移植自灾厄经典版（CalamityModClassicPreTrailer）同名弹幕并按本工程口径重制。
+    /// 移植自灾厄经典灾厄同名弹幕并按本工程口径重制。
     /// <para>
     /// 颜色与粉尘依据生物群系、四柱环境变化（四柱只改配色，不参与命中判定），命中则按生物群系施加 debuff（一律 600 帧 = 10 秒）、
     /// 按月相事件（血月 / 霜月 / 南瓜月）给玩家 buff；
     /// 相对经典版的重制点：借用原版光束 AI 模板、把粉尘类型与颜色提成字段、补上 6 格残影绘制与 200 像素内的短程追踪，
-    /// 另外兼容现代版灾厄的"星陨之地"配色。
+    /// 另外兼容现代灾厄的"星陨之地"配色。
     /// </para>
     /// </summary>
     internal class OmegaBiomeOrb : ModProjectile
@@ -46,7 +46,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         }
         /// <summary>
         /// AI：每帧读取主人所在生物群系与四柱环境，刷新粉尘类型与渲染颜色并生成粉尘；
-        /// 支持现代版灾厄"星陨之地"配色；最后朝 200 像素内最近敌人短距离追踪
+        /// 支持现代灾厄"星陨之地"配色；最后朝 200 像素内最近敌人短距离追踪
         /// </summary>
         public override void AI()
         {
@@ -148,7 +148,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 dustType = 3;                                    // 森林等：恢复默认粉尘类型，避免残留上一群系的粉尘
                 color = new Color(0, 128, 0, Projectile.alpha);
             }
-            // 现代版灾厄专用：反射读取 CalamityPlayer.ZoneAstral，处于星陨之地时改用橙色星尘配色
+            // 现代灾厄专用：反射读取 CalamityPlayer.ZoneAstral，处于星陨之地时改用橙色星尘配色
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 var calamityPlayerType = calamity.Code.GetTypes()

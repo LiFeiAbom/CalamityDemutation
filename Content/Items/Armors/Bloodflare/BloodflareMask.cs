@@ -21,7 +21,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 60, 0, 0);  // 价值 60 金
-            Item.defense = 49;  // 防御 49（与经典版灾厄同值，源码同行另留 //85 注释，系开发期遗留数字）
+            Item.defense = 49;  // 防御 49（与经典灾厄同值，源码同行另留 //85 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 13;  // 月后稀有度 13 级，名称颜色为荧光绿
         }
         /// <summary>
@@ -71,14 +71,14 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             player.GetAttackSpeed<MeleeDamageClass>() += 0.18f; // 近战攻速 +18%
         }
         /// <summary>
-        /// 注册配方：现代版灾厄（CalamityMod）与经典预发布版灾厄（CalamityModClassicPreTrailer）
+        /// 注册配方：现代灾厄与经典预发布版灾厄（经典灾厄）
         /// 材料不同，故分别注册两套配方，均在远古操纵机（LunarCraftingStation）处合成。
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
+                // 现代灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
                 if (calamity.TryFind<ModItem>("Bloodstone", out ModItem bloodstone)
                     && calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb)
                     && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
@@ -93,7 +93,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄材料：BloodstoneCore×11、RuinousSoul×2
+                // 经典灾厄材料：BloodstoneCore×11、RuinousSoul×2
                 if (classic.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
                     && classic.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
                 {

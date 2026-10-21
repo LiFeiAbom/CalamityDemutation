@@ -181,7 +181,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool ancientFossil = false;
         /// <summary>
-        /// 已装备天使之靴（Angel Treads）：按灾厄 1.3-release 的 <c>CalamityPlayer.angelTreads</c> 语义
+        /// 已装备天使之靴（Angel Treads）：按灾厄 旧版灾厄 的 <c>CalamityPlayer.angelTreads</c> 语义
         /// 给 +10% 飞行时间（在 PostUpdateMiscEffects 里对 wingTimeMax ×1.1）。
         /// 其余效果（跑速上限 7.5、+12% 移速、火箭靴 3、三种行走免疫、岩浆 4 秒、免「着火！」）
         /// 由饰品自身的 UpdateAccessory 直接写 Player，不进这里。
@@ -327,7 +327,7 @@ namespace CalamityDemutation.Players
         public bool corruptFlask = false;
         /// <summary>
         /// 归虚之灵（CosmicEnergySpiral）宇宙之灵在场标记：由同名召唤增益每帧置位，
-        /// 供宇宙之灵续命（对应 CI 源的 cosmicEnergy）
+        /// 供宇宙之灵续命（对应 旧版支线源的 cosmicEnergy）
         /// </summary>
         public bool cosmicEnergy = false;
         /// <summary>
@@ -470,14 +470,14 @@ namespace CalamityDemutation.Players
         public int godSlayerMeleefireCD = 0;
         /// <summary>
         /// 弑神者射手套装的破片弹闸门（帧，150 = 2.5 秒；跨帧计时器，只在死亡时复位）。
-        /// CI/现代灾厄用 <c>CalamityPlayer.canFireGodSlayerRangedProjectile</c>（<c>Player.miscCounter % 150 == 0</c> 复位）
+        /// 旧版支线/现代灾厄用 <c>CalamityPlayer.canFireGodSlayerRangedProjectile</c>（<c>Player.miscCounter % 150 == 0</c> 复位）
         /// 每 2.5 秒放行一次；本工程按同样节奏自建闸门，射击时若闸门开启则必定追加破片弹并关闸 150 帧。
         /// 见 CalamityDemutationGlobalItem.Shoot。
         /// </summary>
         public int godSlayerShrapnelCooldown = 0;
         /// <summary>
         /// 弑神者套装·远程向（GodSlayerHelmet 的套装标记）：远程暴击有几率再次暴击造成 4 倍伤害
-        /// （见 ModifyHitNPCWithProj，2026-10-04 起走 CI 的「溢暴击」模型），
+        /// （见 ModifyHitNPCWithProj，2026-10-04 起走 旧版支线的「溢暴击」模型），
         /// 发射远程武器时每 2.5 秒射出一枚弑神者破片弹（见 CalamityDemutationGlobalItem.Shoot）
         /// </summary>
         public bool godSlayerRanged = false;
@@ -495,8 +495,8 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool godSlayerMage = false;
         /// <summary>
-        /// 弑神者法师「弑神火」的发射冷却（CI 的 <c>fireCD</c>：命中即置 2，即最快每 2 帧一枚）。
-        /// 跨帧计时器，只在死亡时复位。用户 2026-10-09 指定该套装效果换成 CI 模式后启用，
+        /// 弑神者法师「弑神火」的发射冷却（旧版支线的 <c>fireCD</c>：命中即置 2，即最快每 2 帧一枚）。
+        /// 跨帧计时器，只在死亡时复位。用户 2026-10-09 指定该套装效果换成 旧版支线模式后启用，
         /// 取代经典版「按本次命中伤害折半累加、每帧衰减 2.5」的 godSlayerDmg 预算
         /// （那个预算现在只归召唤侧的弑神幻影使用）。
         /// </summary>
@@ -509,7 +509,7 @@ namespace CalamityDemutation.Players
         public bool godSlayerThrowing = false;
         /// <summary>
         /// 弑神幻影的节流预算：每召出一枚按"本次命中伤害的一半"累加，每帧衰减 2.5，归零后才允许再召
-        ///（经典版 CalamityPlayerPreTrailer.cs:3806-3809 原样；源不在此处复位，靠衰减自清）
+        ///（经典版 经典灾厄玩家类 原样；源不在此处复位，靠衰减自清）
         /// </summary>
         public float godSlayerDmg = 0f;
         /// <summary>噬神机械蠕虫是否在场（由 MechwormHead.AI 与 Mechworm buff 每帧置位，供蠕虫各段续命）</summary>
@@ -665,7 +665,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool radiantOoze = false;
         /// <summary>
-        /// 光阴时流伞（MagicHat）魔法礼帽在场标记：由同名召唤增益每帧置位，供礼帽弹幕续命（对应 CI 的 MagicHatOld）
+        /// 光阴时流伞（MagicHat）魔法礼帽在场标记：由同名召唤增益每帧置位，供礼帽弹幕续命（对应 旧版支线的 MagicHatOld）
         /// </summary>
         public bool magicHat = false;
         /// <summary>
@@ -740,11 +740,11 @@ namespace CalamityDemutation.Players
         /// 始源林海套装·法师向（SilvaMaskedCap 的套装标记）：魔法弹幕命中敌人时有几率引发巨型爆炸
         /// （见 CalamityDemutationGlobalProjectile.OnHitNPC，闸门是 <see cref="silvaMageBurstCooldown"/>），
         /// 免死无敌窗口内魔法武器伤害 +60%（见 PostUpdateMiscEffects；
-        /// 用户 2026-10-09 指定两条都换成 CI 的 <c>SilvaMagicSetLegacy</c> 口径）
+        /// 用户 2026-10-09 指定两条都换成 旧版支线的 <c>SilvaMagicSetLegacy</c> 口径）
         /// </summary>
         public bool silvaMage = false;
         /// <summary>
-        /// 始源林海法师「法弹巨型爆炸」的冷却（CI 的 <c>SilvaMagicSetLegacyCooldown</c>：触发后置 300 帧）。
+        /// 始源林海法师「法弹巨型爆炸」的冷却（旧版支线的 <c>SilvaMagicSetLegacyCooldown</c>：触发后置 300 帧）。
         /// 跨帧计时器，只在死亡时复位。
         /// </summary>
         public int silvaMageBurstCooldown = 0;
@@ -753,12 +753,12 @@ namespace CalamityDemutation.Players
         public bool silvaSet = false;
         /// <summary>
         /// 始源林海召唤头（SilvaHelmet）套装标记：驱动免死无敌窗口结束后的召唤强化
-        ///（结束后 +2 仆从上限与 +10% 召唤伤害；对应经典版 CalamityPlayerPreTrailer 的 silvaSummon）
+        ///（结束后 +2 仆从上限与 +10% 召唤伤害；对应经典版 经典灾厄玩家类 的 silvaSummon）
         /// </summary>
         public bool silvaSummon = false;
         /// <summary>
         /// 始源林海套装·盗贼向（SilvaMask 的套装标记）：生命 >50% 时盗贼攻速 +10%（见该件的 UpdateArmorSet）、
-        /// 免死无敌窗口内盗贼伤害 +40%（见 PostUpdateMiscEffects；CI 的 SilvaRougeSetLegacy 口径）、
+        /// 免死无敌窗口内盗贼伤害 +40%（见 PostUpdateMiscEffects；旧版支线的 SilvaRougeSetLegacy 口径）、
         /// 以及源里那条被 auricSet 门控的隐藏项「生命 >50% 且盗贼暴击 → 伤害 ×1.25」
         ///（见 CalamityDemutationGlobalProjectile.OnHitNPC）；潜行上限 150 由该件的套装方法补给灾厄侧。
         /// </summary>
@@ -769,7 +769,7 @@ namespace CalamityDemutation.Players
         public bool sCrystal = false;
         /// <summary>
         /// 已装备炽天使翼靴（SeraphTracers）：
-        /// ① 单次受伤 >200 点 → 额外 30 帧无敌（照灾厄 2.0/1.3-release 的 <c>cTracers</c>，结算在 PostHurt）；
+        /// ① 单次受伤 >200 点 → 额外 30 帧无敌（照灾厄 2.0/旧版灾厄 的 <c>cTracers</c>，结算在 PostHurt）；
         /// ② 免金源矿石的 Auric Rejection 与危险砖块接触效果（照 1.4.4 的 <c>seraphTracers</c>——
         ///    经 CDUtil.MirrorSeraphTracersToCalamity 镜像进灾厄侧同名字段，让灾厄自己那些分支生效，
         ///    调用点见 PostUpdateEquips）。
@@ -1385,7 +1385,7 @@ namespace CalamityDemutation.Players
         /// 用于对最终值做乘算修正。本模组在此结算移速类加成——恶魔之影护腿（shadowSpeed）+50%、
         /// 女巫套装（silvaSet）+5%、金之特斯拉套装（auricSet）+10%，同时乘算 runAcceleration 与 maxRunSpeed；
         /// 极乐之庇护守护态（elysianGuard）再整体 ×0.85。
-        /// 若开启"回退原版削弱"且安装现代版灾厄，再补偿灾厄对暗影护甲与腾飞徽章移动属性的削弱。
+        /// 若开启"回退原版削弱"且安装现代灾厄，再补偿灾厄对暗影护甲与腾飞徽章移动属性的削弱。
         /// </summary>
         public override void PostUpdateRunSpeeds()
         {
@@ -1724,7 +1724,7 @@ namespace CalamityDemutation.Players
                 Player.spikedBoots = 2;
             }
             // 纳米技术（Nanotech）：盗贼 +20% 伤害 / +20 盗贼暴击 / +15% 盗贼弹速；
-            // 手持盗贼武器时额外 +30 防御与 +10% 伤害减免（减免口径照 cal-1.2 的 CalamityPlayer1Point2.cs:917，
+            // 手持盗贼武器时额外 +30 防御与 +10% 伤害减免（减免口径照 旧版灾厄 的 旧版灾厄玩家类，
             // 数值按用户 2026-10-07 点名把伤害与暴击都提到 20%）。
             if (nanotech)
             {
@@ -2043,7 +2043,7 @@ namespace CalamityDemutation.Players
                 Player.manaRegenBonus += 2;
                 Player.manaCost *= 0.95f;
                 Player.GetCritChance<GenericDamageClass>() += 10f;
-                // 其余数值按经典版 cal-1.4.2.101 逐项对齐：元素开启（可见）档较低，关闭（隐藏）档略高
+                // 其余数值按经典版 经典灾厄逐项对齐：元素开启（可见）档较低，关闭（隐藏）档略高
                 if (!heartoftheElementshideVisual)
                 {
                     Player.statLifeMax2 += 20;
@@ -3007,11 +3007,11 @@ namespace CalamityDemutation.Players
                     tarraCooldown--;
             }
             // 龙蒿法师头（TarragonMask）的法弹回血冷却：跨帧计时器，只在死亡时复位
-            //（经典版 CalamityPlayerPreTrailer.cs:3796 为无条件递减）
+            //（经典版 经典灾厄玩家类 为无条件递减）
             if (tarraMageHealCooldown > 0)
                 tarraMageHealCooldown--;
             // 龙蒿盗贼头（TarragonHelmet）的 tarraThrowing 套装效果
-            //（照经典版 CalamityPlayerPreTrailer.cs:3179 与 3870-3891）：
+            //（照经典版 经典灾厄玩家类 与 3870-3891）：
             // ① 免伤帧上限放宽到 300（5 秒）——这是下面那条"5 秒免伤"能站得住的前提（源里非盗贼套时上限是 120）；
             // ② 每 25 次盗贼暴击（计数在 GlobalProjectile.OnHitNPC）触发一次 5 秒免伤 + 30 秒冷却；
             // ③ 身上每挂一条减益就 +10% 盗贼伤害——**源是按 buff 槽逐条累加**（挂 3 条就是 +30%），
@@ -3048,7 +3048,7 @@ namespace CalamityDemutation.Players
                     bloodflareManaTimer--;
             }
             // 血炎盗贼头（BloodflareHelm）的 bloodflareThrowing 套装效果
-            //（照经典版 CalamityPlayerPreTrailer.cs:5142-5152）：
+            //（照经典版 经典灾厄玩家类）：
             // 生命高于 80% 上限时 +5% 盗贼暴击与 +30 防御；否则 +10% 盗贼伤害。源是 if/else，两者互斥。
             // 与其它套装加成一样按"每帧叠加、随 ResetEffects 清零"的方式生效。
             if (bloodflareThrowing)
@@ -3102,14 +3102,14 @@ namespace CalamityDemutation.Players
                 }
             }
             // 弑神者召唤头（GodSlayerHornedHelm）的两件事：
-            // ① 幻影节流预算每帧衰减 2.5（经典版 CalamityPlayerPreTrailer.cs:3806-3809 原样）；
+            // ① 幻影节流预算每帧衰减 2.5（经典版 经典灾厄玩家类 原样）；
             // ② 每帧维护噬神机械蠕虫（生成只在 UpdateGodSlayerMechworm 内做主人端判据）。
             if (godSlayerDmg > 0f)
                 godSlayerDmg -= 2.5f;
             if (godSlayerDmg < 0f)
                 godSlayerDmg = 0f;
             // 弑神者盗贼头（GodSlayerMask）的 godSlayerThrowing 套装效果
-            //（照经典版 CalamityPlayerPreTrailer.cs:5225-5235）：**满生命时**（源用 >= 判定）盗贼伤害 +10%、
+            //（照经典版 经典灾厄玩家类）：**满生命时**（源用 >= 判定）盗贼伤害 +10%、
             // 盗贼暴击 +10、盗贼弹速 +10%。三项都按"每帧叠加、随 ResetEffects 清零"生效。
             if (godSlayerThrowing)
             {
@@ -3164,7 +3164,7 @@ namespace CalamityDemutation.Players
             if (bloodflareRangedCooldown > 0)
                 bloodflareRangedCooldown--;
             // 血炎法师套装的火焰爆炸冷却：跨帧计时器，只在死亡时复位
-            //（经典版 CalamityPlayerPreTrailer.cs:3794 原样）
+            //（经典版 经典灾厄玩家类 原样）
             if (bloodflareMageCooldown > 0)
                 bloodflareMageCooldown--;
             if (silvaSet)
@@ -3224,12 +3224,12 @@ namespace CalamityDemutation.Players
                 Player.GetDamage<MeleeDamageClass>() += (float)(multiplier * 0.2); //ranges from 1.2 times to 1 times
             }
             // 始源林海召唤头（SilvaHelmet）：免死无敌窗口结束后 +2 仆从上限
-            //（经典版 CalamityPlayerPreTrailer.cs:3950 的 silvaSummon 分支原样）。
+            //（经典版 经典灾厄玩家类 的 silvaSummon 分支原样）。
             if (silvaCountdown <= 0 && hasSilvaEffect && silvaSummon)
                 Player.maxMinions += 2;
             // 始源林海射手套装：持远程武器时射速 +10%（silvaRanged）。
             // 经典版把它写成 UseTimeMultiplier 返回 1.1/1.2——tML 里该值 >1 表示「更慢」，与 tooltip 相反；
-            // CI 的还原件（SilvaHeadRanged.UpdateArmorSet）按 +10% 远程攻速实现，本工程从 CI，让 tooltip 成真。
+            // 旧版支线的还原件（SilvaHeadRanged.UpdateArmorSet）按 +10% 远程攻速实现，本工程从旧版支线，让 tooltip 成真。
             if (silvaRanged)
             {
                 Item heldItem = Player.HeldItem;
@@ -3237,20 +3237,20 @@ namespace CalamityDemutation.Players
                     Player.GetAttackSpeed<RangedDamageClass>() += 0.1f;
             }
             // 始源林海盗贼头（SilvaMask）：免死无敌窗口内盗贼伤害 +40%。
-            //（用户 2026-10-09 指定「加伤换成 CI 的模式」——CI 的 SilvaRougeSetLegacy 写在本钩子里、
+            //（用户 2026-10-09 指定「加伤换成 旧版支线的模式」——旧版支线的 SilvaRougeSetLegacy 写在本钩子里、
             //  走 GetDamage&lt;RogueDamageClass&gt;「伤害加成」，与经典版（也是工程原先的写法）
             //  「无敌窗口结束后 damageMult += 0.1」在时机、数值、实现位置三处都不同。
-            //  判据取 CI 的 HasBuff(SilvaRevival) 那一半：本工程没有 SilvaRevive 冷却体系，
+            //  判据取 旧版支线的 HasBuff(SilvaRevival) 那一半：本工程没有 SilvaRevive 冷却体系，
             //  「无敌窗口」即 silvaCountdown &gt; 0 &amp;&amp; hasSilvaEffect，与上面 silvaRanged 那行同一口径。）
             if (silvaThrowing && silvaCountdown > 0 && hasSilvaEffect)
                 Player.GetDamage(CDUtil.GetRogueDamageClass()) += 0.4f;
             // 始源林海法师头（SilvaMaskedCap）：免死无敌窗口内魔法伤害 +60%。
-            //（用户 2026-10-09 指定「换成 CI 模式」——CI 的 SilvaMagicSetLegacy 同样写在本钩子里、走
+            //（用户 2026-10-09 指定「换成 旧版支线模式」——旧版支线的 SilvaMagicSetLegacy 同样写在本钩子里、走
             //  GetDamage&lt;MagicDamageClass&gt;；经典版（也是工程原先的写法）是"窗口结束后 damageMult += 0.1"，
-            //  时机与数值都与 CI 不同。判据与本钩子上面 silvaRanged / silvaThrowing 两行同一口径。）
+            //  时机与数值都与旧版支线不同。判据与本钩子上面 silvaRanged / silvaThrowing 两行同一口径。）
             if (silvaMage && silvaCountdown > 0 && hasSilvaEffect)
                 Player.GetDamage<MagicDamageClass>() += 0.6f;
-            // 始源林海法师套装「法弹巨型爆炸」的冷却（CI 的 SilvaMagicSetLegacyCooldown：触发后置 300 帧）
+            // 始源林海法师套装「法弹巨型爆炸」的冷却（旧版支线的 SilvaMagicSetLegacyCooldown：触发后置 300 帧）
             if (silvaMageBurstCooldown > 0)
                 silvaMageBurstCooldown--;
             if (godSlayerDamageProtect)
@@ -3264,7 +3264,7 @@ namespace CalamityDemutation.Players
             }
             if (godSlayerMeleefireCD > 0)
                 godSlayerMeleefireCD--;
-            // 弑神者法师套装「弑神火」的发射冷却（CI 的 fireCD：命中即置 2）
+            // 弑神者法师套装「弑神火」的发射冷却（旧版支线的 fireCD：命中即置 2）
             if (godSlayerMageFireCD > 0)
                 godSlayerMageFireCD--;
             // 弑神者射手套装的破片弹闸门：与 abaddonCritCooldown 同为跨帧计时器，只在死亡时复位
@@ -3321,7 +3321,7 @@ namespace CalamityDemutation.Players
                 Player.extraFall += 25;
             }
             if (soaring) Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.1);// 解除处于飞行状态的限制
-            if (angelTreads) Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.1);// 天使之靴：+10% 飞行时间（灾厄 1.3-release 的 angelTreads 语义）
+            if (angelTreads) Player.wingTimeMax = (int)((double)Player.wingTimeMax * 1.1);// 天使之靴：+10% 飞行时间（灾厄 旧版灾厄 的 angelTreads 语义）
             if (profanedRage)
             {
                 Player.GetCritChance<GenericDamageClass>() += 12;
@@ -3668,7 +3668,7 @@ namespace CalamityDemutation.Players
         /// 扫描玩家饰品栏，检测上位饰品与其下位是否同时装备，补回被灾厄 gloveLevel 取最高 / nucleogenesis 覆盖吞掉的属性：
         /// 元素手套补回下位手套攻速（火手套 14% / 机械手套 12% / 力量·狂战士手套 12% / 野性爪 10%），
         /// 核生成补回下位饰品仆从栏（星染发生器 +2 / 静滞诅咒 +3 / 静滞祝福 +2 / 初影焰 +1 / 星爆核心 +1 / 伏特水母 +1 / 带电水母电池 +1）。
-        /// 仅在开启配置且加载现代版灾厄时生效。
+        /// 仅在开启配置且加载现代灾厄时生效。
         /// </summary>
         private void RevertCalamityContentNerfs()
         {
@@ -3765,13 +3765,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void PostUpdateEquips()
         {
-            // 金源套镜像：玩家穿本模组金源套时，把现代版灾厄的 CalamityPlayer.auricSet 也置真，
+            // 金源套镜像：玩家穿本模组金源套时，把现代灾厄的 CalamityPlayer.auricSet 也置真，
             // 让灾厄侧自己的 auricSet 分支（金源矿石排斥免疫 / 金源飞毯贴图 / 金源拖影）跟着生效。
             // 必须写在这里：灾厄在 ResetEffects 里每帧清零，而它的读取点在 PostUpdateMiscEffects（更晚的相位）。
             // 细节与"为什么不对经典版镜像"见 Utilities/CDUtil_CalamityReflect.cs 的类注释。
             if (auricSet)
                 CDUtil.MirrorAuricSetToCalamity(Player);
-            // 炽天使翼靴镜像：本件的 seraphTracers 同样每帧镜像进现代版灾厄
+            // 炽天使翼靴镜像：本件的 seraphTracers 同样每帧镜像进现代灾厄
             // （灾厄在 ResetEffects 里清零、到 PostUpdateMiscEffects 才读；它的消费点是
             //  CalamityPlayerMiscEffects.cs:917 的 rejectionImmunity 与 :943 的 `if (!seraphTracers)`
             //  危险砖块段——即"免金源矿石排斥 + 免星辉/焦炭矿等接触效果"）。
@@ -3786,7 +3786,7 @@ namespace CalamityDemutation.Players
             // 幻影魔镜（Mirage Mirror）：潜行恢复 +30% 站定 / +20% 移动、潜行上限 **+15%（相对当前上限）**。
             // 同样必须写在这里——灾厄在 ResetEffects 里每帧复位这些字段，到它 PostUpdateMiscEffects
             // 之后才读取；潜行恢复在灾厄的 Mod.Call 里没有对应项，走 CDUtil 的反射桥
-            //（经典版灾厄没有这两个字段，会直接短路）。
+            //（经典灾厄没有这两个字段，会直接短路）。
             if (mirageMirror)
             {
                 CDUtil.AddStealthGen(Player, 0.30f, 0.20f);
@@ -4168,7 +4168,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 欧米茄蓝胸甲（omegaBlueChestplate）的"禁止正面生命再生"：
         /// 把正的 lifeRegen 归零、并清空 lifeRegenTime 与 lifeRegenCount
-        /// （与灾厄两版逐字同款：经典版 CalamityPlayerPreTrailer 的 LastDebuffs 段、
+        /// （与灾厄两版逐字同款：经典版 经典灾厄玩家类 的 LastDebuffs 段、
         /// 现代版 CalamityPlayerLifeRegen 的 noLifeRegen 段）。
         /// 同时挂在 UpdateLifeRegen 与 UpdateBadLifeRegen 两处，因为本工程观察到
         /// UpdateBadLifeRegen 只在生命回复为负时被调用，而本条要在回复为正时也生效。
@@ -4414,7 +4414,7 @@ namespace CalamityDemutation.Players
         /// 恶魔之影套装（demonshadeSetBonus）反射读取灾厄的 rogueStealth / rogueStealthMax，
         /// 按潜行比例把角色染成半透明兰紫色（潜行越高越透明）；潜行耗尽或城镇 NPC 过多时转为暗红色并全亮，
         /// 移动时另生成 Shadowflame 尘埃。塔拉生命回复（tarraLifeRegen）则生成 Terra 绿色尘埃，
-        /// 并在无潜行值时把角色整体染绿并全亮。现代版与经典版灾厄各处理一次。
+        /// 并在无潜行值时把角色整体染绿并全亮。现代版与经典灾厄各处理一次。
         /// </summary>
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
@@ -4775,7 +4775,7 @@ namespace CalamityDemutation.Players
                 Player.immuneTime = 15;
                 return true;
             }
-            // 弑神者胸甲 / 金源胸甲的完全免伤（对应 CI 的 GodSlayerReflect 置 freeDodgeFromShieldAbsorption 再被 FreeDodge 吃掉）：
+            // 弑神者胸甲 / 金源胸甲的完全免伤（对应 旧版支线的 GodSlayerReflect 置 freeDodgeFromShieldAbsorption 再被 FreeDodge 吃掉）：
             // 注意：这里返回 true 时原版只把本次伤害归零（见 Player.Hurt 的 FreeDodge 分支），不会代补无敌帧，所以要自己给。
             // 原先这段判定写在 ModifyHurt 里、只设 Player.immune 标记，伤害照吃，属于空操作——中英 tooltip 的"5% 完全无效"当时并没有实现。
             if (godSlayerReflect && Main.rand.NextBool(50))
@@ -5039,7 +5039,7 @@ namespace CalamityDemutation.Players
         /// tModLoader 的 ModifyHitNPCWithProj 钩子：玩家弹幕命中 NPC、伤害结算前调用，乘算 modifiers.FinalDamage。
         /// 与近战版一致，狂怒 buff（enraged）提供 ×2.25 最终伤害且不受 Boss Rush 限制；
         /// 金之套装标记与女巫近战（auricSet &amp;&amp; silvaMelee）的弹幕再按当前生命比例追加至多 +0.2 倍。
-        /// 末尾在开启"回退原版削弱"且安装现代版灾厄时，对召唤弹幕补偿灾厄的跨职业惩罚（÷0.75 撤销之）。
+        /// 末尾在开启"回退原版削弱"且安装现代灾厄时，对召唤弹幕补偿灾厄的跨职业惩罚（÷0.75 撤销之）。
         /// </summary>
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
         {
@@ -5057,29 +5057,29 @@ namespace CalamityDemutation.Players
                 damageMult += multiplier * 0.2;
             }
             // 始源林海射手套装：免死无敌窗口内远程伤害 +40%
-            // （经典版 CalamityPlayerPreTrailer.ModifyHitNPCWithProj 的 damageMult += 0.4，判据与源一致：
+            // （经典版 经典灾厄玩家类.ModifyHitNPCWithProj 的 damageMult += 0.4，判据与源一致：
             //  无敌窗口开启 + 射手头在套装内 + 本次弹幕属于远程职业）
             if (silvaRanged && silvaCountdown > 0 && hasSilvaEffect && proj.CountsAsClass<RangedDamageClass>())
                 damageMult += 0.4;
             // 始源林海召唤头（SilvaHelmet）：免死无敌窗口结束后，召唤弹幕伤害 +10%
-            //（经典版 CalamityPlayerPreTrailer.ModifyHitNPCWithProj 的 damageMult += 0.1；
+            //（经典版 经典灾厄玩家类.ModifyHitNPCWithProj 的 damageMult += 0.1；
             //  源判据 isSummon = minion || sentry || 白名单，这里用召唤职业作等价判定）
             if (silvaSummon && silvaCountdown <= 0 && hasSilvaEffect && proj.CountsAsClass<SummonDamageClass>())
                 damageMult += 0.1;
-            // 备注：始源林海法师头（SilvaMaskedCap）那条「魔法加伤」已按用户 2026-10-09 的指示改成 CI 模式，
+            // 备注：始源林海法师头（SilvaMaskedCap）那条「魔法加伤」已按用户 2026-10-09 的指示改成 旧版支线模式，
             // 从本钩子（经典版的 damageMult += 0.1「无敌窗口结束后」）搬到了
-            // PostUpdateMiscEffects（CI 的 GetDamage<MagicDamageClass> += 0.6f「无敌窗口内」）。
-            // 备注：始源林海盗贼头（SilvaMask）那条「盗贼加伤」已按用户 2026-10-09 的指示改成 CI 模式，
+            // PostUpdateMiscEffects（旧版支线的 GetDamage<MagicDamageClass> += 0.6f「无敌窗口内」）。
+            // 备注：始源林海盗贼头（SilvaMask）那条「盗贼加伤」已按用户 2026-10-09 的指示改成 旧版支线模式，
             // 从本钩子（经典版的 damageMult += 0.1「无敌窗口结束后」）搬到了
-            // PostUpdateMiscEffects（CI 的 GetDamage&lt;RogueDamageClass&gt; += 0.4f「无敌窗口内」）。
-            // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 CI 模型，
+            // PostUpdateMiscEffects（旧版支线的 GetDamage&lt;RogueDamageClass&gt; += 0.4f「无敌窗口内」）。
+            // 弑神者射手套装：远程暴击的「再次暴击」——2026-10-04 按用户口径改走 旧版支线模型，
             // 取代原先经典版的 1/max(15, 100-暴击率) 单次骰子：
-            // · 总暴击率 >100% 时，按「溢出部分」（总暴击率 − 100）的百分比概率触发（CI 的 randomChance > 1 分支）；
-            // · 未超过 100%（或溢出 ≤1%）时，退化为固定 5% 概率（CI 的 Main.rand.NextBool(20)）。
+            // · 总暴击率 >100% 时，按「溢出部分」（总暴击率 − 100）的百分比概率触发（旧版支线的 randomChance > 1 分支）；
+            // · 未超过 100%（或溢出 ≤1%）时，退化为固定 5% 概率（旧版支线的 Main.rand.NextBool(20)）。
             // 触发后把暴击伤害翻倍：CritDamage 只对暴击生效，故等价于「暴击时造成 4 倍伤害」。
-            // 备注：CI 源码该 5% 分支写作 hitInfo.Damage *= 4——叠加在已含暴击（2 倍）的伤害上即 8 倍，
-            // 与 CI 自身 tooltip「造成四倍伤害」矛盾，属笔误；本工程取 tooltip 口径（两分支都翻倍到 4 倍），
-            // 只让触发条件照 CI。
+            // 备注：旧版支线源码该 5% 分支写作 hitInfo.Damage *= 4——叠加在已含暴击（2 倍）的伤害上即 8 倍，
+            // 与旧版支线自身 tooltip「造成四倍伤害」矛盾，属笔误；本工程取 tooltip 口径（两分支都翻倍到 4 倍），
+            // 只让触发条件照旧版支线。
             if (godSlayerRanged && proj.CountsAsClass<RangedDamageClass>())
             {
                 int excessCrit = (int)Player.GetTotalCritChance(DamageClass.Ranged) - 100;
@@ -5133,8 +5133,8 @@ namespace CalamityDemutation.Players
         {
             // 弑神者法师套装（godSlayerMage）的「受到伤害时释放魔法弑神爆炸」：
             // 任何一次有效受击都在脚下炸出一枚 GodSlayerBlaze，伤害恒为 1200
-            //（经典版 CalamityPlayerPreTrailer.cs:8168 写的是"穿金源 2400 / 否则 1200"，
-            //  用户 2026-10-09 指定换成 CI 口径：CI 的 GodSlayerMagicSet 分支不因金源翻倍，故去掉那个三目）。
+            //（经典版 经典灾厄玩家类 写的是"穿金源 2400 / 否则 1200"，
+            //  用户 2026-10-09 指定换成 旧版支线口径：旧版支线的 GodSlayerMagicSet 分支不因金源翻倍，故去掉那个三目）。
             // 本钩子每名玩家 × 每一端都会跑，故生成侧带主人端判据（见工程记忆第 5 节）。
             if (godSlayerMage && info.Damage > 0)
             {
@@ -5146,7 +5146,7 @@ namespace CalamityDemutation.Players
                 }
             }
             // 弑神者盗贼头（GodSlayerMask）的「单次受伤超过 80 点 → 额外无敌帧」
-            //（照经典版 CalamityPlayerPreTrailer.cs:7931-7936：info.Damage > 80 时 Player.immuneTime += 30）。
+            //（照经典版 经典灾厄玩家类：info.Damage > 80 时 Player.immuneTime += 30）。
             // 源把整段裹在 if (Player.whoAmI == Main.myPlayer) 里（PostHurt 是"每名玩家 × 每一端"都跑的钩子，
             // 见工程记忆第 5 节），本工程照此加判据。
             if (godSlayerThrowing && Player.whoAmI == Main.myPlayer && info.Damage > 80)
@@ -5553,7 +5553,7 @@ namespace CalamityDemutation.Players
                         target.AddBuff(holyClassic, 120, false);
                 }
             }
-            // 元素手套：施加多种 debuff（原版 6 种 + 现代/经典版灾厄扩展 debuff）
+            // 元素手套：施加多种 debuff（原版 6 种 + 现代/经典灾厄扩展 debuff）
             if (elementalGauntlet && (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<MeleeNoSpeedDamageClass>()))
             {
                 target.AddBuff(BuffID.Poisoned, 120, false);
@@ -5562,7 +5562,7 @@ namespace CalamityDemutation.Players
                 target.AddBuff(BuffID.Frostburn, 120, false);
                 target.AddBuff(BuffID.Ichor, 120, false);
                 target.AddBuff(BuffID.Venom, 120, false);
-                // 现代版灾厄元素 debuff
+                // 现代灾厄元素 debuff
                 ApplyCalamityBuff(target, "CalamityMod", "Voidfrost", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "Nightwither", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "Plague", 120);
@@ -5570,7 +5570,7 @@ namespace CalamityDemutation.Players
                 ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "GodSlayerInferno", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "ElementalMix", 120);
-                // 经典版灾厄元素 debuff（修：此分支原先缺失整段，仅装经典版时近战挥砍无这些，
+                // 经典灾厄元素 debuff（修：此分支原先缺失整段，仅装经典版时近战挥砍无这些，
                 // 现与弹幕命中分支（OnHitNPCWithProj）对齐补齐）
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "AbyssalFlames", 120);
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
@@ -5674,7 +5674,7 @@ namespace CalamityDemutation.Players
                 target.AddBuff(BuffID.Frostburn, 120, false);
                 target.AddBuff(BuffID.Ichor, 120, false);
                 target.AddBuff(BuffID.Venom, 120, false);
-                // 现代版灾厄元素 debuff
+                // 现代灾厄元素 debuff
                 ApplyCalamityBuff(target, "CalamityMod", "Voidfrost", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "Nightwither", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "Plague", 120);
@@ -5682,7 +5682,7 @@ namespace CalamityDemutation.Players
                 ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "GodSlayerInferno", 120);
                 ApplyCalamityBuff(target, "CalamityMod", "ElementalMix", 120);
-                // 经典版灾厄元素 debuff
+                // 经典灾厄元素 debuff
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "AbyssalFlames", 120);
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", 120);
                 ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "Plague", 120);
@@ -5752,7 +5752,7 @@ namespace CalamityDemutation.Players
             }
             if (proj.CountsAsClass<MeleeDamageClass>() && silvaMelee && Main.rand.NextBool(4))
                 target.AddBuff(ModContent.BuffType<SilvaHysteresis>(), 20);
-            // 龙蒿射手套装：远程暴击命中时在敌人处炸出一场树叶（经典版 CalamityPlayerPreTrailer.OnHitNPCWithProj 的口径：
+            // 龙蒿射手套装：远程暴击命中时在敌人处炸出一场树叶（经典版 经典灾厄玩家类.OnHitNPCWithProj 的口径：
             // 2~3 枚 ProjectileID.Leaf，每枚伤害 = 本次弹幕伤害 × 0.25，随机方向、速度 7.0~10.0）。
             // 源写在这条命中回调里，按工程口径只在主人端跑，无需额外判据
             if (tarraRanged && hit.Crit && proj.CountsAsClass<RangedDamageClass>())
@@ -5801,7 +5801,7 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genDust, ref PlayerDeathReason damageSource)
         {
-            // 三支保命的判定顺序与源一致（经典版 CalamityPlayerPreTrailer.PreKill：星云核心 → 弑神者 → 始源林海）。
+            // 三支保命的判定顺序与源一致（经典版 经典灾厄玩家类.PreKill：星云核心 → 弑神者 → 始源林海）。
             // 顺序有实际意义：金源套同时置 godSlayer 与 silvaSet，若把林海摆在前面，就会先触发"回到 1 点生命"
             // 的保护窗口，跳过弑神的回血与 45 秒冷却（以及冷却期的 +10% 伤害）。
             if (nebulousCore && Main.rand.NextBool(10))
@@ -6105,7 +6105,7 @@ namespace CalamityDemutation.Players
         /// <summary>
         /// 判断指定 buff 是否为"伪减益"（Main.debuff 为真、实为增益或特殊状态）——
         /// 这类 buff 不该被当作减益去计数/净化/缩短（龙蒿盗贼头、席尔瓦套两处调用）。
-        /// 覆盖本模组 Enraged，以及灾厄现代版/经典版的肾上腺素（AdrenalineMode）、怒气（RageMode）、
+        /// 覆盖本模组 Enraged，以及现代灾厄版/经典版的肾上腺素（AdrenalineMode）、怒气（RageMode）、
         /// Enraged。对应 buff 不存在时 GetBuffType 返回 0（无害，循环中 buffType&gt;0 不会命中）。
         /// </summary>
         private static bool IsPseudoDebuff(int buffType)
@@ -6115,9 +6115,9 @@ namespace CalamityDemutation.Players
                 pseudoDebuffBlacklist =
                 [
                     ModContent.BuffType<Enraged>(),                                  // 本模组 Enraged
-                    GetBuffType("CalamityMod", "AdrenalineMode"),                   // 灾厄现代版 肾上腺素
-                    GetBuffType("CalamityMod", "RageMode"),                         // 灾厄现代版 怒气
-                    GetBuffType("CalamityMod", "Enraged"),                          // 灾厄现代版 Enraged
+                    GetBuffType("CalamityMod", "AdrenalineMode"),                   // 现代灾厄版 肾上腺素
+                    GetBuffType("CalamityMod", "RageMode"),                         // 现代灾厄版 怒气
+                    GetBuffType("CalamityMod", "Enraged"),                          // 现代灾厄版 Enraged
                     GetBuffType("CalamityModClassicPreTrailer", "AdrenalineMode"),  // 灾厄经典版 肾上腺素
                     GetBuffType("CalamityModClassicPreTrailer", "RageMode"),        // 灾厄经典版 怒气
                     GetBuffType("CalamityModClassicPreTrailer", "Enraged"),         // 灾厄经典版 Enraged

@@ -8,7 +8,7 @@ using Terraria.ModLoader.IO;
 namespace CalamityDemutation.Content.Projectiles.BaseProjectiles
 {
     /// <summary>
-    /// 手持弹幕基类（移植自 CWR 的 BaseHeldProj）：处理玩家到鼠标的向量、左右键状态与联机同步。
+    /// 手持弹幕基类（移植自重制版的 BaseHeldProj）：处理玩家到鼠标的向量、左右键状态与联机同步。
     /// </summary>
     internal abstract class BaseHeldProjCO : ModProjectile
     {

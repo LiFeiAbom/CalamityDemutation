@@ -9,16 +9,16 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 宇宙暗流（Stream Gouge）—— 移植自灾厄大修 Beta1.12 的 <c>StreamGougeOld</c>（CI 里的旧版宇宙暗流）。
+    /// 宇宙暗流（Stream Gouge）—— 移植自旧版支线的 <c>StreamGougeOld</c>（旧版支线里的旧版宇宙暗流）。
     /// 月后宇宙锭长矛：本体不挥砍也不画本体，出手即从手里刺出一根宇宙长矛（<see cref="StreamGougeProj"/>），
     /// 长矛刺出的第一帧再额外甩出一束可无限穿透的宇宙精粹（<see cref="EssenceBeam"/>）。
     /// <para>
-    /// 与 CI 源的差异（其余数值全部照搬）：
-    /// ① 稀有度走本工程的月后体系：CI 的 <c>DeepBlue</c> 稀有度（Rarity14）→ <c>ItemRarityID.Red</c> +
-    ///    <c>postMoonLordRarity = 14</c>（同为蓝名），价值同为 2 铂金（CI 的 <c>RarityPriceDeepBlue</c>）；
+    /// 与旧版支线源的差异（其余数值全部照搬）：
+    /// ① 稀有度走本工程的月后体系：旧版支线的 <c>DeepBlue</c> 稀有度（Rarity14）→ <c>ItemRarityID.Red</c> +
+    ///    <c>postMoonLordRarity = 14</c>（同为蓝名），价值同为 2 铂金（旧版支线的 <c>RarityPriceDeepBlue</c>）；
     /// ② 配方按本工程口径分现代版 / 经典版各一条（源只写了现代版的宇宙砧）；
     /// ③ 源里的 <c>ProjShootSpeed</c> / <c>FadeoutSpeed</c> 两个静态字段从未被任何代码读取，不再保留；
-    /// ④ 武器基类由 CI 的 <c>CIMelee</c> 展开成本工程的写法：它只提供了创造栏归类与挥砍位置修正
+    /// ④ 武器基类由 旧版支线的 <c>旧版近战基类</c> 展开成本工程的写法：它只提供了创造栏归类与挥砍位置修正
     ///    （本工程对应 <c>CDUtil.BetterSwing</c>），而本武器 <c>noMelee = true</c>，挥砍修正不会被触发，故不写空壳。
     /// </para>
     /// </summary>
@@ -52,7 +52,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Red;                  // 基础稀有度红色，名称颜色由 postMoonLordRarity 覆盖
             Item.shoot = ModContent.ProjectileType<StreamGougeProj>();
             Item.shootSpeed = 25f;
-            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;   // 月后稀有度 14：蓝（对应 CI 的 DeepBlue）
+            Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;   // 月后稀有度 14：蓝（对应 旧版支线的 DeepBlue）
         }
         /// <summary>
         /// 即 LAP 分档表的「神吞后 ×3」——本武器由宇宙锭制作，宇宙锭出自神明吞噬者宝藏袋）。
@@ -73,7 +73,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         }
         /// <summary>
         /// 配方（分版本）：宇宙锭 ×14，于月后站台合成。
-        /// 现代版灾厄 = 宇宙砧（CosmicAnvil，照源）；经典版灾厄对应站台为嘉登熔炉（DraedonsForge），材料数量沿用源的 14。
+        /// 现代灾厄 = 宇宙砧（CosmicAnvil，照源）；经典灾厄对应站台为嘉登熔炉（DraedonsForge），材料数量沿用源的 14。
         /// </summary>
         public override void AddRecipes()
         {

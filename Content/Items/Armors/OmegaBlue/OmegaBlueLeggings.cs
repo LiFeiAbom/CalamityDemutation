@@ -32,7 +32,7 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
             player.moveSpeed += 0.3f;                          // 移速 +30%
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，分别注册，均在原版月球工作台合成。
+        /// 注册配方：现代版与经典灾厄材料不同，分别注册，均在原版月球工作台合成。
         /// 现代版用 ReaperTooth(4) + DepthCells(20) + RuinousSoul(2)；
         /// 经典版用 ReaperTooth(13) + Lumenite(6) + Tenebris(6) + RuinousSoul(3)。
         /// </summary>

@@ -93,7 +93,7 @@ namespace CalamityDemutation.Content.Items.Armors.OmegaBlue
             player.maxMinions += 2;      // 最大仆从 +2
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，分别注册，均在原版月球工作台合成。
+        /// 注册配方：现代版与经典灾厄材料不同，分别注册，均在原版月球工作台合成。
         /// 现代版用 ReaperTooth(3) + DepthCells(15) + RuinousSoul(1)；
         /// 经典版用 ReaperTooth(11) + Lumenite(5) + Tenebris(5) + RuinousSoul(2)。
         /// </summary>

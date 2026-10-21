@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 星流印记（ExoMark） - 绿色星流箭消亡时留在原地的那枚印记，＝CI 的
+    /// 星流印记（ExoMark） - 绿色星流箭消亡时留在原地的那枚印记，＝旧版支线的
     /// <c>Content/Projectiles/Ranged/ExoMark.cs</c>（与 2.0 / 经典版逐行一致）。
     /// <para>
     /// 时间轴由一个 <c>localAI[1]</c> 计数器驱动（<c>timeLeft</c> 的 900 帧只是兜底）：

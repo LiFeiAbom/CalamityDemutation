@@ -18,7 +18,7 @@ using CalamityDemutation.Common.Effects;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 巨龙之怒手持弹幕（移植自 CWR 的 DragonRageHeld）：7 个挥砍/突刺模式。
+    /// 巨龙之怒手持弹幕（移植自重制版的 DragonRageHeld）：7 个挥砍/突刺模式。
     /// 从简：TrueMeleeDamageClass→MeleeNoSpeed、灾厄音效→本模组 CalamityDemutationSounds、
     /// FuckYou→本工程 FireBall（等价爆炸弹幕）、DR/钢铁材质/BrimstoneHeart 检查裁剪。
     /// </summary>

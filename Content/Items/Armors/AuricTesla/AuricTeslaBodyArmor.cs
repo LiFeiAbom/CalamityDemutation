@@ -57,9 +57,9 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             // 置位弑神者反射标记：FreeDodge 结算完全免伤（膨胀开启 5%、关闭源值 2%）；
             // 低伤压制（≤80 → 1）跟随整套，由近战头的套装方法置 godSlayerDamage
             modPlayer.godSlayerReflect = true;
-            // 低伤保护：对齐 CI AuricTeslaBodyArmorold.cs:47-49 的「Reflect / DMGprotect / fBarrier」三行连写
+            // 低伤保护：对齐 旧版支线 AuricTeslaBodyArmorold.cs:47-49 的「Reflect / DMGprotect / fBarrier」三行连写
             //（工程原先把中间那行漏了）。≤80 的伤害在 FreeDodge 里被完全闪避，保护上限触发后重置为 20 并逐帧回升；
-            // 与近战头的 godSlayerDamage（≤80 → 1）分工：那条属经典版整套路径，这条属 CI 的单件路径。
+            // 与近战头的 godSlayerDamage（≤80 → 1）分工：那条属经典版整套路径，这条属 旧版支线的单件路径。
             modPlayer.godSlayerDamageProtect = true;
             player.statLifeMax2 += 100;   // 最大生命：常态 +100 / 膨胀 +400（削弱前旧值）
             player.moveSpeed += 0.25f;            // 移动速度 +25%
@@ -70,17 +70,17 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// 伤害与暴击 30%、5% 完全免伤），关闭时用 Tooltip 的源值（+100、22%、2%）。
         /// </summary>
         /// <summary>
-        /// 注册配方：现代版灾厄用金锭×20 + 宇宙砧，经典版灾厄用矿石与魂材 + 德雷顿熔炉，
+        /// 注册配方：现代灾厄用金锭×20 + 宇宙砧，经典灾厄用矿石与魂材 + 德雷顿熔炉，
         /// 两分支均以四套月后胸甲 + 一件霜冻屏障（本模组自有的 FrostBarrier）为坯料。
-        /// 2026-10-09 复核：现代分支原先只放了四套胸甲、漏掉霜冻屏障——CI 的
+        /// 2026-10-09 复核：现代分支原先只放了四套胸甲、漏掉霜冻屏障——旧版支线的
         /// AuricTeslaBodyArmorold 两条配方都带 FrostBarrier，本工程的现代分支本就以
-        /// 「CI 的坯料清单 + 1.4.4-release 的 AuricBar 数量」为口径，故补上这一味。
+        /// 「旧版支线的坯料清单 + 现代灾厄的 AuricBar 数量」为口径，故补上这一味。
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：四套胸甲 + AuricBar×20（宇宙砧）
+                // 现代灾厄：四套胸甲 + AuricBar×20（宇宙砧）
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
@@ -88,7 +88,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.AddIngredient<BloodflareBodyArmor>();
                     recipe.AddIngredient<SilvaArmor>();
                     recipe.AddIngredient<GodSlayerChestplate>();
-                    recipe.AddIngredient<FrostBarrier>();      // 霜冻屏障×1（CI 现代胸甲的坯料之一）
+                    recipe.AddIngredient<FrostBarrier>();      // 霜冻屏障×1（旧版支线现代胸甲的坯料之一）
                     recipe.AddIngredient(auricBar.Type, 20);
                     recipe.AddTile(cosmicAnvil.Type);
                     recipe.Register();
@@ -96,7 +96,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：四套胸甲 + 金矿石×100 + 各类月后魂材（德雷顿熔炉）
+                // 经典灾厄：四套胸甲 + 金矿石×100 + 各类月后魂材（德雷顿熔炉）
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
                     && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
                     && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)

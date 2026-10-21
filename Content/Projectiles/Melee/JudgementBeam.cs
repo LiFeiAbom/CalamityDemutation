@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 审判光束（移植自灾厄大修 0.4.0.1.3 的 JudgementBeam）：制裁大剑的弹幕，取代原版灾厄的白色追踪球。
+    /// 审判光束（移植自重制版的 JudgementBeam）：制裁大剑的弹幕，取代原版灾厄的白色追踪球。
     /// 贴图色板由自身贴图逐像素提取，随寿命在做多段颜色插值；飞行中喷柔和光粒与宝石尘，
     /// 并在 320 像素内追踪最近敌人。首次命中时播冲击音并朝三个均分方向飞散白球。
     /// </summary>

@@ -15,14 +15,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
     /// <summary>
     /// 极乐翼靴（Elysian Tracers） - 天界翼靴的上一档（本工程链条第三级）。
     /// **名字口径（用户 2026-10-14 指定）**：中文名「极乐翼靴」（英文名照源 = `Elysian Tracers`；
-    /// 靴子模式的 `TreadsName` 取「极乐履带」）——旧世系这一档就叫 Elysian Tracers，
+    /// 靴子模式的 `TreadsName` 取「极乐履带」）——旧版灾厄这一档就叫 Elysian Tracers，
     /// 2.0.4 改名 `TracersElysian`、1.4.4 起换成 `VoidStriders`（显示名 Void Striders）。
-    /// **移植口径（同前两件）：功能取 1.3-release、配方取 2.0 那一批、再按复合原则并入 1.4.4
+    /// **移植口径（同前两件）：功能取 旧版灾厄、配方取 2.0 那一批、再按复合原则并入 1.4.4
     /// （= 实装 2.2.2 的 VoidStriders）的增强。** 逐项对照：
-    /// ① 1.3-release = 飞行 180 / 水平速度 10.5 / 倍率 2.75、跑速上限 9.25、移速 +20%、
+    /// ① 旧版灾厄 = 飞行 180 / 水平速度 10.5 / 倍率 2.75、跑速上限 9.25、移速 +20%、
     /// 冰面·水面·岩浆面行走、岩浆 240 帧、免「着火！」、免坠落伤害、垂直速度 0.95/0.15/1.1/3.15/0.135、
     /// 飞行粉尘（206/173 随机）、稀有度 14 档（DarkBlue）价值 2 铂金，
-    /// 且装备栏**只有 Wings**（无 Shoes，与全世系一致，故本件不需要 `_Shoes.png`）；
+    /// 且装备栏**只有 Wings**（无 Shoes，与全部版本一致，故本件不需要 `_Shoes.png`）；
     /// ② 2.0 = 同一套（`WingStats(180, 10.5, 2.75)` 等价写法，配方前件改 `SeraphTracers`）；
     /// ③ 2.0.4 = 飞行 180 / 水平 10 / 倍率 2.7、跑速上限 8.5、移速 +16%、改成完全免岩浆、
     /// 垂直速度收成 0.85/0.15/1.1/2.7/0.135；
@@ -37,11 +37,11 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
     /// `elysianFire` / `eTracers`（2.0 及更早在 CalamityPlayerDrawEffects 里画的拖尾与火焰）、
     /// `tracersDust`（2.0.4/1.4.4）以及 `CalamityUtils.DrawInventoryDot` 的模式点——本件自己的飞行粉尘
     /// 已照源实现。
-    /// 面板：尺寸 48×36、价值 2 铂金、月后自定义稀有度 14（蓝）；贴图取 1.3-release 的旧图
-    /// （48×36 物品图 91B0A089 + 86×248 翅膀图 D535C02E，这一套从 cal-1.4.2.101 一直用到 2.0.4；
+    /// 面板：尺寸 48×36、价值 2 铂金、月后自定义稀有度 14（蓝）；贴图取 旧版灾厄 的旧图
+    /// （48×36 物品图 91B0A089 + 86×248 翅膀图 D535C02E，这一套从 经典灾厄一直用到 2.0.4；
     /// 1.4.4 的 VoidStriders 只换了物品图、翅膀图仍是同一张）。
     /// 配方（双版本各注册一条，缺件即退化成单分支）：**现代**照 2.0 = 天界翼靴 + 极乐之翼 +
-    /// 宇宙锭×5 + 登仙精华×4 @ 宇宙砧；**经典**照 cal-1.4.2.101 = 天界翼靴 + 极乐之翼 +
+    /// 宇宙锭×5 + 登仙精华×4 @ 宇宙砧；**经典**照 经典灾厄 = 天界翼靴 + 极乐之翼 +
     /// 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉。
     /// </summary>
     [AutoloadEquip(EquipType.Wings)]
@@ -59,9 +59,9 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             set { Item.wingSlot = value ? wingSlot : -1; }
         }
         /// <summary>
-        /// 注册翅膀数据：飞行时间 200（复合取 1.4.4 的值；1.3-release/2.0/2.0.4 是 180）、
-        /// 水平速度 10.5（1.3-release/2.0 的值，2.0.4/1.4.4 是 10）、
-        /// 水平加速度倍率 2.75（1.3-release/2.0 的值，2.0.4/1.4.4 是 2.7）；
+        /// 注册翅膀数据：飞行时间 200（复合取 1.4.4 的值；旧版灾厄/2.0/2.0.4 是 180）、
+        /// 水平速度 10.5（旧版灾厄/2.0 的值，2.0.4/1.4.4 是 10）、
+        /// 水平加速度倍率 2.75（旧版灾厄/2.0 的值，2.0.4/1.4.4 是 2.7）；
         /// 并记下本类型的 wingSlot 供模式开关用
         /// </summary>
         public override void SetStaticDefaults()
@@ -81,7 +81,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;  // 月后稀有度 14（蓝，= 源的 DarkBlue 档）
         }
         /// <summary>
-        /// 装备时：先画飞行粉尘（照 1.3-release；各版都用 206/173 两颗随机），
+        /// 装备时：先画飞行粉尘（照 旧版灾厄；各版都用 206/173 两颗随机），
         /// 再设置跑速/移速/三种行走免疫/免岩浆/免「着火！」/免坠落伤害与 socialShadowRocketBoots，
         /// 最后处理**靴子模式**——翅膀被关掉时给火箭靴 1 与 angelTreads 标记（+10% 飞行时间），
         /// 照 1.4.4 的 `if (!toggleEnabled)` 分支
@@ -104,12 +104,12 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
                 }
                 Main.dust[flightDust].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);  // 随翅膀染色
             }
-            player.accRunSpeed = 9.25f;       // 跑速上限（1.3-release/2.0 的 9.25；1.4.4 是 8.5，复合取大）
-            player.moveSpeed += 0.2f;         // 移速 +20%（1.3-release/2.0 的值；1.4.4 是 +16%，复合取大）
+            player.accRunSpeed = 9.25f;       // 跑速上限（旧版灾厄/2.0 的 9.25；1.4.4 是 8.5，复合取大）
+            player.moveSpeed += 0.2f;         // 移速 +20%（旧版灾厄/2.0 的值；1.4.4 是 +16%，复合取大）
             player.iceSkate = true;           // 冰面机动性
             player.waterWalk = true;          // 水面行走
             player.fireWalk = true;           // 岩浆面行走
-            player.lavaImmune = true;         // 完全免岩浆（2.0.4/1.4.4；1.3-release/2.0 只有 240 帧，复合取强）
+            player.lavaImmune = true;         // 完全免岩浆（2.0.4/1.4.4；旧版灾厄/2.0 只有 240 帧，复合取强）
             player.buffImmune[BuffID.OnFire] = true;   // 免疫「着火了！」
             player.noFallDmg = true;          // 免坠落伤害
             player.socialShadowRocketBoots = true;     // 1.4.4 新增：时装栏火箭靴也渲染残影
@@ -120,7 +120,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
             }
         }
         /// <summary>
-        /// 垂直飞行参数：复合取大 = 1.3-release 那套（0.95 / 0.15 / 1.1 / 3.15 / 0.135；
+        /// 垂直飞行参数：复合取大 = 旧版灾厄 那套（0.95 / 0.15 / 1.1 / 3.15 / 0.135；
         /// 1.4.4 是 0.85 / 0.15 / 1.1 / 2.7 / 0.135），行尾为原版默认值
         /// </summary>
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
@@ -178,12 +178,12 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
         }
         /// <summary>
         /// 配方（分版本，两分支各自 TryGetMod + TryFind 串联，缺材料时静默跳过该条）：
-        /// 现代分支（CalamityMod 在场）照灾厄 2.0；经典分支（CalamityModClassicPreTrailer 在场）
-        /// 照经典世系 cal-1.4.2.101（末味由登仙精华×4 @ 宇宙砧 换成 幻魂×5 @ 嘉登熔炉）。
+        /// 现代分支（灾厄本体在场）照灾厄 2.0；经典分支（经典灾厄在场）
+        /// 照经典灾厄经典灾厄（末味由登仙精华×4 @ 宇宙砧 换成 幻魂×5 @ 嘉登熔炉）。
         /// </summary>
         public override void AddRecipes()
         {
-            // 现代版灾厄：天界翼靴 + 极乐之翼 + 宇宙锭×5 + 登仙精华×4 @ 宇宙砧
+            // 现代灾厄：天界翼靴 + 极乐之翼 + 宇宙锭×5 + 登仙精华×4 @ 宇宙砧
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if(calamity.TryFind<ModItem>("ElysianWings", out ModItem elysianWings)
@@ -200,7 +200,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
                     recipe.Register();
                 }
             }
-            // 经典版灾厄：天界翼靴 + 极乐之翼 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉
+            // 经典灾厄：天界翼靴 + 极乐之翼 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if(classic.TryFind<ModItem>("ElysianWings", out ModItem classicElysianWings)

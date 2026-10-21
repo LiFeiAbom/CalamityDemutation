@@ -37,7 +37,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：水×5 + AncientBoneDust + 原版远古战斗护甲材料 + 日光精华（每次 5 瓶）
+                // 现代灾厄：水×5 + AncientBoneDust + 原版远古战斗护甲材料 + 日光精华（每次 5 瓶）
                 if(calamity.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust1) && calamity.TryFind<ModItem>("EssenceofSunlight", out ModItem essenceofSunlight))
                 {
                     Recipe recipe = CreateRecipe(5);
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×20
+                // 现代灾厄：药剂瓶 + 血珠×20
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -60,7 +60,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：水×5 + AncientBoneDust + 原版远古战斗护甲材料 + EssenceofCinder（每次 5 瓶）
+                // 经典灾厄：水×5 + AncientBoneDust + 原版远古战斗护甲材料 + EssenceofCinder（每次 5 瓶）
                 if(classic.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2) && classic.TryFind<ModItem>("EssenceofCinder", out ModItem essenceofCinder))
                 {
                     Recipe recipeClassic = CreateRecipe(5);
@@ -71,7 +71,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.AlchemyTable);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×20
+                // 经典灾厄：药剂瓶 + 血珠×20
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipeClassic = CreateRecipe();

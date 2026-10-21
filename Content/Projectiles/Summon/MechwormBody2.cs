@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 机械蠕虫·身体 2（MechwormBody2） - 弑神者召唤头蠕虫的第二节身体
-    ///（按经典版灾厄 Projectiles/Summon/MechwormBody2.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/MechwormBody2.cs 1:1 移植）。
     /// 行为与 <see cref="MechwormBody"/> 完全相同，只是贴图与类型不同（源如此，两节用不同贴图）。
     /// </summary>
     public class MechwormBody2 : ModProjectile

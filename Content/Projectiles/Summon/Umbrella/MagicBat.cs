@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
-    /// 魔法球棒（MagicBat，按 CI 的 MagicBatOld 移植；类名去掉 Old 后缀）——
+    /// 魔法球棒（MagicBat，按旧版支线的 MagicBatOld 移植；类名去掉 Old 后缀）——
     /// 由青色魔法伞（<see cref="MagicUmbrella"/>）命中时从画面上方砸下的追加打击。
     /// 20×20、穿透 1、穿地形、存活 150 帧，唯一的 AI 是让贴图顺着飞行方向旋转 45 度。
     /// </summary>

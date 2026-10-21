@@ -8,14 +8,14 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
-    /// 魔法斧（MagicAxe，按 CI 的 `MagicAxeOld` 移植；类名去掉 `Old` 后缀）——
+    /// 魔法斧（MagicAxe，按旧版支线的 `MagicAxeOld` 移植；类名去掉 `Old` 后缀）——
     /// 光阴时流伞的礼帽（<see cref="MagicHat"/>）随机抛出的重击工具之一。
     /// 52×52、穿地形、无限穿透、每名敌人 8 帧局部无敌、存活 180 帧，开场 30 帧只做自旋与防重叠，
     /// 之后在 <see cref="MagicHat.Range"/> 内追敌；贴到 500 像素内会**冲刺**一次
     /// （`ai[0] = 2` 状态，速度 16、额外更新 4 次持续 30 帧）。
     /// </summary>
     /// <remarks>
-    /// 命中附加四味减益（照 CI）：硫火 BrimstoneFlames、寒冰 GlacialState、瘟疫 Plague、神圣火 HolyFlames。
+    /// 命中附加四味减益（照旧版支线）：硫火 BrimstoneFlames、寒冰 GlacialState、瘟疫 Plague、神圣火 HolyFlames。
     /// 其中 GlacialState 在灾厄 2.2.2 里已被删除，本工程按既有口径用 ApplyCalamityBuffWithFallback
     /// 退回原版冻伤 BuffID.Frozen（与 Terratomere 同一处理）。
     /// </remarks>

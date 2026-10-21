@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
 {
     /// <summary>
     /// 始源林海角盔（SilvaHornedHelm） - 始源林海套装的射手向头部部件
-    /// （按经典版灾厄同名件 1:1 移植；现代版灾厄已无此件，CI 对应件为 SilvaHeadRanged）。
+    /// （按经典灾厄同名件 1:1 移植；现代灾厄已无此件，旧版支线对应件为 SilvaHeadRanged）。
     /// 单件：远程伤害 +13%、远程暴击 +13%。
     /// 套装（逐条对应 player.setBonus 的官方描述，实现位置见括号）：
     /// 1. 免疫几乎所有减益（silvaSet → CalamityDemutationPlayer.PostUpdateMiscEffects）
@@ -68,14 +68,14 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             player.GetCritChance<RangedDamageClass>() += 13;   // 远程暴击率 +13%
         }
         /// <summary>
-        /// 配方：现代版与经典版灾厄材料不同，分别注册两套配方，均需本模组材料 LeadCore。
+        /// 配方：现代版与经典灾厄材料不同，分别注册两套配方，均需本模组材料 LeadCore。
         /// 与既有近战头逐字一致（经典分支照经典版源码；现代分支沿用工程既有写法）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
+                // 现代灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
                 if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
                     && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
@@ -92,7 +92,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
+                // 经典灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
                 if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
                     && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)

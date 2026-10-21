@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Typeless
 {
     /// <summary>
-    /// 血液爆炸（BloodBombExplosion） - BloodBomb 落地/命中后的范围爆炸（移植自经典版灾厄同名弹幕）。
+    /// 血液爆炸（BloodBombExplosion） - BloodBomb 落地/命中后的范围爆炸（移植自经典灾厄同名弹幕）。
     /// 250x250 的大判定框、穿透无限、存活 60 帧、本地无敌帧 2 帧；每帧按递减的总量向四周喷洒血尘，
     /// 首帧播放爆炸音效。源里用 ai[0] 同时当"已存活帧数"和"目标坐标"两用（ai[0]/ai[1] 为 0 时即纯计时），
     /// 本工程只按 BloodBomb 的用法传入 0，故保留计时那一半语义。

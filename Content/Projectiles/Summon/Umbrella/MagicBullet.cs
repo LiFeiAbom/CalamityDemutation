@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
-    /// 魔法子弹（MagicBullet，按 CI 的 MagicBulletOld 移植；类名去掉 Old 后缀）——
+    /// 魔法子弹（MagicBullet，按旧版支线的 MagicBulletOld 移植；类名去掉 Old 后缀）——
     /// 淡紫色魔法步枪（<see cref="MagicRifle"/>）射出的子弹。
     /// 4×4、走原版子弹 AI（`aiStyle = 1`，模板取 `ProjectileID.BulletHighVelocity`，即源里的裸数字 242）、
     /// 额外更新 7 次、起始全透明后淡入、穿透 1、穿地形、存活 600 帧。

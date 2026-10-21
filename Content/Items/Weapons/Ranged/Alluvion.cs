@@ -44,7 +44,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         private const int TenebrisCount = 5;
         private const int ModernCosmiliteBarCount = 8;
         private const int EndothermicEnergyCount = 20;
-        /// <summary>经典分支配方的材料数量（照 cal-1.4.2.101）</summary>
+        /// <summary>经典分支配方的材料数量（照 经典灾厄）</summary>
         private const int PhantoplasmCount = 5;
         private const int ClassicCosmiliteBarCount = 5;
         /// <summary>当前生效的面板基础伤害：开则用膨胀值，否则维持 <c>Item.damage</c> 的 165</summary>
@@ -122,7 +122,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         /// **现代**（照 2.0，@**宇宙砧 `CosmicAnvil`**）= **季风（自持件）** + 海棱晶 `SeaPrism`×20 +
         /// 深渊细胞 `DepthCells`×10 + 流明晶 `Lumenyl`×20 + 暮色碎片×5（2.0 写 `Tenebris`，
         /// 实装 2.2.2 已改名 `PlantyMush`，照 §3 口径取新版名）+ 宇宙锭 `CosmiliteBar`×8 + 吸热能量 `EndothermicEnergy`×20；
-        /// **经典**（照 cal-1.4.2.101，@**嘉登熔炉 `DraedonsForge`**）= 季风 + 死灵质 `Phantoplasm`×5 +
+        /// **经典**（照 经典灾厄，@**嘉登熔炉 `DraedonsForge`**）= 季风 + 死灵质 `Phantoplasm`×5 +
         /// 宇宙锭×5 + 深渊细胞×10 + 流明晶 `Lumenite`×20 + 暮色碎片 `Tenebris`×5。
         /// 两处"改名对"（流明晶 / 暮色碎片 / 死灵质）见 AGENTS §3。
         /// 2.2.2 把配方砍到 4 味（季风 + 流明晶×20 + 宇宙锭×8 + 吸热能量×20）——**不取**。

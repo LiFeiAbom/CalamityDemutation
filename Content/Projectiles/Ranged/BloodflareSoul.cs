@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
     /// 血炎之魂（BloodflareSoul） - 血炎射手套装按 [键] 释放出的波尔特加斯特迷失灵魂
-    /// （移植自经典版灾厄 Projectiles/Ranged/BloodflareSoul.cs，由 CalamityDemutationPlayer 的按键块一次喷出 16 枚）。
+    /// （移植自经典灾厄 Projectiles/Ranged/BloodflareSoul.cs，由 CalamityDemutationPlayer 的按键块一次喷出 16 枚）。
     /// 行为照经典版：4 帧循环动画 + 血焰尘尾；离主人 600 像素以上时折返；
     /// 否则在 400 的曼哈顿距离内索敌，以速度 11、惯性 20 平滑转向（主人死亡后 30 帧内消散）。
     /// 消失时播放死亡音、把判定框撑到 110×110 并结算一次范围伤害（源的 OnKill 写法）。

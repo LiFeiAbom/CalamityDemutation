@@ -8,12 +8,12 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 龙息弹（DragonsBreathRound） - 巨龙之息射出的特殊弹丸（照 CI 的 `DragonsBreathRound` 逐行）。
+    /// 龙息弹（DragonsBreathRound） - 巨龙之息射出的特殊弹丸（照旧版支线的 `DragonsBreathRound` 逐行）。
     /// 判定 4×4（贴图是 2×28 的细长曳光条）、`extraUpdates = 10`、穿透 1、存活 180 帧、
-    /// 火焰拖尾（CI 用 `DustID.Flare`；1.3-release/2.0 写的是等价的数字 127——两者是否同一颗尘以 tML 常量为准）。
+    /// 火焰拖尾（旧版支线用 `DustID.Flare`；旧版灾厄/2.0 写的是等价的数字 127——两者是否同一颗尘以 tML 常量为准）。
     /// <para>
     /// 命中：挂 **Dragonfire** 300 帧（走本工程 <c>ApplyCalamityBuffWithFallback</c>，缺灾厄时退回原版
-    /// 「着火了！」`OnFire`）+ 原版「燃烧」`OnFire3` 600 帧（CI 的两条都保留）。
+    /// 「着火了！」`OnFire`）+ 原版「燃烧」`OnFire3` 600 帧（旧版支线的两条都保留）。
     /// 消亡：炸出一枚本工程自持的爆炸弹幕 <see cref="FuckYou"/>（伤害沿用弹丸伤害、
     /// `ai[1]` 随机 0.85~2.0 当缩放、并标成 Ranged 让它吃射手加成），音 `Item14`。
     /// </para>
@@ -89,7 +89,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
             }
         }
         /// <summary>
-        /// 命中：Dragonfire 300 帧（缺灾厄时退回「着火了！」）+ 原版「燃烧」600 帧（照 CI）
+        /// 命中：Dragonfire 300 帧（缺灾厄时退回「着火了！」）+ 原版「燃烧」600 帧（照旧版支线）
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

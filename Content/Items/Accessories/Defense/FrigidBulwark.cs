@@ -34,14 +34,14 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             modPlayer.frigidBulwark = true;
         }
         /// <summary>
-        /// 配方：圣骑士盾 + 冰冻海龟壳 + CoreofEleum，现代版（CalamityMod）与经典版
-        /// （CalamityModClassicPreTrailer）的 CoreofEleum 来源不同，故分两分支注册，均在秘银砧合成
+        /// 配方：圣骑士盾 + 冰冻海龟壳 + CoreofEleum，现代灾厄与经典版
+        /// （经典灾厄）的 CoreofEleum 来源不同，故分两分支注册，均在秘银砧合成
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：用本模组自有的 CoreofEleum 材料
+                // 现代灾厄：用本模组自有的 CoreofEleum 材料
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient(ItemID.PaladinsShield);
                 recipe.AddIngredient(ItemID.FrozenTurtleShell);
@@ -51,7 +51,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：从灾厄经典版查找同名 CoreofEleum
+                // 经典灾厄：从灾厄经典版查找同名 CoreofEleum
                 if(classic.TryFind<ModItem>("CoreofEleum", out ModItem coreofEleum1))
                 {
                     Recipe recipeClassic = CreateRecipe();

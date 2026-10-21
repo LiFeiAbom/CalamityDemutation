@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 泰拉巨刃的大刀光（移植自大修 TerratomereBigSlashs）：小闪电命中后生成的大型刀光，
+    /// 泰拉巨刃的大刀光（移植自重制版 TerratomereBigSlashs）：小闪电命中后生成的大型刀光，
     /// 命中目标累计电击计数（TerratomereBoltOnHitNum），累计超过 5 次触发泰拉巨刃爆炸、累计 6 次清零。
     /// 用 ExobladePierce 着色器 + BlobbyNoise / Extra_189 画刀光。
     /// </summary>

@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
     /// <summary>
     /// 金虚万象盔（AuricTeslaWireHemmedVisage，英文名 Auric Tesla Wire-Hemmed Visage） - 古圣金源套装的法师向头部部件：
     /// 一身**复合**承载龙蒿 / 血炎 / 弑神者 / 始源林海四套的**法师**效果
-    ///（按经典版 CalamityModClassicPreTrailer 同名件 1:1 移植；CI 对应件 AuricTeslaHeadMagic 与
+    ///（按经典灾厄同名件 1:1 移植；旧版支线对应件 AuricTeslaHeadMagic 与
     /// 现代版同名件的防御（24）一致，仅套装实现细节有别）。
     /// 与近战头（AuricTeslaHelm）/ 射手头（AuricTeslaHoodedFacemask）/ 召唤头（AuricTeslaSpaceHelmet）对称：
     /// 置位四套的 *Mage 标记，按经典版原样**不置** godSlayerDamage（≤80 低伤压制，近战头专属）也**不加** aggro。
@@ -24,7 +24,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
     internal class AuricTeslaWireHemmedVisage:ModItem
     {
         /// <summary>
-        /// 物品基础属性：18x18、防御 24（比近战头的 54、射手头的 40 低，经典/CI/现代三源同值，
+        /// 物品基础属性：18x18、防御 24（比近战头的 54、射手头的 40 低，经典/旧版支线/现代三源同值，
         /// 源码同行另留 //132 注释，系开发期遗留数字）、价值 1 铂金 80 金、月后稀有度 20（彩虹闪烁名）
         /// </summary>
         public override void SetDefaults()
@@ -82,26 +82,26 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// <summary>
         /// 单件效果：置位 auricBoost 标记（静止时增伤/增暴击与击退加成），
         /// 并提升魔法伤害 **30%**、魔法暴击 20%、最大法力 100、法力消耗 ×0.8。
-        /// 注：经典版此件单件是 +20% 法伤且没有蓝耗减免，用户 2026-10-06 要求**跟 CI 一致**
-        ///（CI 的 AuricTeslaHeadMagic：manaCost ×0.8 + 法伤 +0.3 + 暴击 +20 + 法力 +100），故取 CI 值。
+        /// 注：经典版此件单件是 +20% 法伤且没有蓝耗减免，用户 2026-10-06 要求**跟 旧版支线一致**
+        ///（旧版支线的 AuricTeslaHeadMagic：manaCost ×0.8 + 法伤 +0.3 + 暴击 +20 + 法力 +100），故取 旧版支线值。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.auricBoost = true;
-            player.GetDamage<MagicDamageClass>() += 0.3f;   // 魔法伤害 +30%（CI 口径，用户点名跟 CI 一致）
+            player.GetDamage<MagicDamageClass>() += 0.3f;   // 魔法伤害 +30%（旧版支线口径，用户点名跟 旧版支线一致）
             player.GetCritChance<MagicDamageClass>() += 20; // 魔法暴击率 +20%
             player.statManaMax2 += 100;                     // 最大法力 +100
-            player.manaCost *= 0.8f;                        // 法力消耗 ×0.8（CI 的 AuricTeslaHeadMagic 原样）
+            player.manaCost *= 0.8f;                        // 法力消耗 ×0.8（旧版支线的 AuricTeslaHeadMagic 原样）
         }
         /// <summary>
         /// 配方：由龙蒿面具 + 血炎角面 + 弑神者面甲 + 始源林海罩帽（四件下位**法师**头）升阶。
-        /// 现代版灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与另三颗金源头同）；
+        /// 现代灾厄用 10 个金之锭 + 妄想护符、宇宙砧（AuricBar 数量取 1.4.4 公开源码的 10，与另三颗金源头同）；
         /// 经典版用一长串后期材料、德雷顿熔炉——两分支的坯料清单与既有三颗金源头逐字一致，只把下位头换成法师件。
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：四件下位法师头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
+            // ── 现代灾厄：四件下位法师头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -117,7 +117,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
+            // ── 经典灾厄：同上四件 + 一长串后期材料，德雷顿熔炉 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)

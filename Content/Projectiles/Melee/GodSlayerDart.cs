@@ -115,7 +115,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// </summary>
         public override bool? CanHitNPC(NPC target) => Projectile.ai[0] != 0f;
         /// <summary>
-        /// 命中 NPC：对现代版 / 经典版灾厄分别取同名 GodSlayerInferno（神裁狱火）并施加 500 帧。
+        /// 命中 NPC：对现代版 / 经典灾厄分别取同名 GodSlayerInferno（神裁狱火）并施加 500 帧。
         /// </summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

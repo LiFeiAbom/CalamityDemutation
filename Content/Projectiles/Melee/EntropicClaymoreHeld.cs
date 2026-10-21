@@ -12,26 +12,26 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 熵之舞手持挥砍体（移植自灾厄大修 **0.4.0.3.5** 的 <c>EntropicClaymoreHeld</c>）：
+    /// 熵之舞手持挥砍体（移植自重制版的 <c>EntropicClaymoreHeld</c>）：
     /// 走 <c>BaseKnife</c> 的 <c>UpAndDown</c> 挥舞曲线（左右两段交替、奇偶挥舞镜像），
     /// 每 20×攻速 帧朝准心射出一枚 <see cref="EntropicClaymoreProj"/>（伤害同手持体），
     /// 出弹点沿刀身法线左右错开、并随发数前推；
     /// 出膛方向随发数在准心两侧**张开成扇面**、同时速度逐发递增（见 <see cref="Shoot"/>）。
     /// 剑身**不走常规绘制管线**（<see cref="DrawSwing"/> 空实现），改由 <see cref="IDrawWarp"/> 的
-    /// costomDraw 画在屏幕扭曲结果之上（大修同款接法），扭曲遮罩则由 <c>WarpDraw()</c> 画刀光弧线。
+    /// costomDraw 画在屏幕扭曲结果之上（重制版同款接法），扭曲遮罩则由 <c>WarpDraw()</c> 画刀光弧线。
     /// </summary>
     internal class EntropicClaymoreHeld : BaseSwingCO, IDrawWarp
     {
-        /// <summary>剑身贴图直接复用熵之舞的物品贴图（大修同理）</summary>
+        /// <summary>剑身贴图直接复用熵之舞的物品贴图（重制版同理）</summary>
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Melee/EntropicClaymore";
         /// <summary>
-        /// 挥舞参数包：大修把它放在 BaseKnife 基类上，本工程 BaseSwingCO 没有该字段，故子类自持一份
+        /// 挥舞参数包：重制版把它放在 BaseKnife 基类上，本工程 BaseSwingCO 没有该字段，故子类自持一份
         /// </summary>
         private SwingDataStruct SwingData = new();
         /// <summary>
         /// 挥舞基础属性初始化（由基类 <c>SetDefaults</c> 回调）：
         /// 额外更新 4（每帧 5 次更新）、锁玩家朝向、本地无敌帧 10×5、
-        /// 判定箱 96×96、弧光参数照抄大修 SetKnifeProperty
+        /// 判定箱 96×96、弧光参数照抄重制版 SetKnifeProperty
         /// </summary>
         public override void SetSwingProperty()
         {
@@ -52,7 +52,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>
         /// 首帧初始化（由基类 <c>PreUpdate</c> 在 Time==0 时回调）：
         /// 挥砍周期对齐物品 useTime（28 帧）、离心量取判定箱半宽、挥舞索引 0/1 交替。
-        /// 伤害类型不动——大修 BaseSwing 的 SetDefaults 给的就是 <c>DamageClass.Melee</c>（本工程 BaseSwingCO 同）。
+        /// 伤害类型不动——重制版 BaseSwing 的 SetDefaults 给的就是 <c>DamageClass.Melee</c>（本工程 BaseSwingCO 同）。
         /// </summary>
         public override void Initialize()
         {
@@ -114,14 +114,14 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         // ── IDrawWarp：剑身画在屏幕扭曲结果之上 ──
         /// <summary>允许 EffectsSystem 在扭曲结果之上再调用 costomDraw 绘制剑身</summary>
         bool IDrawWarp.canDraw() => true;
-        /// <summary>走"无蓝移"桶：剑身背后那片扭曲区域不该泛蓝（大修同款）</summary>
+        /// <summary>走"无蓝移"桶：剑身背后那片扭曲区域不该泛蓝（重制版同款）</summary>
         bool IDrawWarp.noBlueshift() => true;
         /// <summary>扭曲遮罩：把刀光弧线画进 screenTargetSwap，由 WarpShader 位移屏幕像素</summary>
         void IDrawWarp.Warp() => WarpDraw();
         /// <summary>
         /// 把剑身贴图本体画在扭曲结果之上。绘制逻辑与基类 <c>DrawSwing</c> 一致
         /// （逆挥垂直翻转、对角线翻转、扣离心量、叠加手臂法线偏移），
-        /// 差别只在光照取样与缩放：大修此处用 <c>MeleeSize</c>，本工程无该字段，等价于 <c>Projectile.scale</c>
+        /// 差别只在光照取样与缩放：重制版此处用 <c>MeleeSize</c>，本工程无该字段，等价于 <c>Projectile.scale</c>
         /// </summary>
         void IDrawWarp.costomDraw(SpriteBatch spriteBatch)
         {
@@ -147,7 +147,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
                 , Projectile.GetAlpha(Lighting.GetColor(new Point((int)(Projectile.Center.X / 16), (int)(Projectile.Center.Y / 16))))
                 , drawRoting, drawOrigin, Projectile.scale, effects, 0);
         }
-        /// <summary>剑身不走常规绘制管线，改由 IDrawWarp 的 costomDraw 画（大修同为空实现）</summary>
+        /// <summary>剑身不走常规绘制管线，改由 IDrawWarp 的 costomDraw 画（重制版同为空实现）</summary>
         public override void DrawSwing(SpriteBatch spriteBatch, Color lightColor) { }
     }
 }

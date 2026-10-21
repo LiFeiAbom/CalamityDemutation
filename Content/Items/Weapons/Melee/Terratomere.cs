@@ -6,14 +6,14 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 泰拉巨刃（Terratomere）—— 月后近战巨剑（移植自灾厄大修 0.4.0.1.3 的 TerratomereEcType 重置版）。
+    /// 泰拉巨刃（Terratomere）—— 月后近战巨剑（移植自重制版的 TerratomereEcType 重置版）。
     /// 手持挥砍体 TerratomereHoldout（83 帧四段弧线挥砍），挥砍途中发射 3 发泰拉闪电（TerratomereBolts）、
     /// 收招时放出一道大光束剑气（TerratomereBeams）；真近战命中回血并施加冰川状态。
-    /// 配方沿用现代版灾厄 1.4.4：原版泰拉刃 + 灾厄夜明锭（UelibloomBar）×18 于秘银砧；经典版退回五剑合成。
+    /// 配方沿用现代灾厄 1.4.4：原版泰拉刃 + 灾厄夜明锭（UelibloomBar）×18 于秘银砧；经典版退回五剑合成。
     /// </summary>
     internal class Terratomere : ModItem
     {
-        // ── 灾厄 Terratomere 系列常量（SwingTime 取大修 EcType 的 83，其余同灾厄原版）──
+        // ── 灾厄 Terratomere 系列常量（SwingTime 取重制版 EcType 的 83，其余同灾厄原版）──
         /// <summary>挥砍周期（帧）</summary>
         public const int SwingTime = 83;
         /// <summary>小刀光生成间隔（帧）</summary>

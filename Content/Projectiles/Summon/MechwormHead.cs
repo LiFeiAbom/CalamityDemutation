@@ -11,7 +11,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 机械蠕虫·头（MechwormHead） - 弑神者召唤头套装召唤的蠕虫头部
-    ///（按经典版灾厄 Projectiles/Summon/MechwormHead.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/MechwormHead.cs 1:1 移植）。
     /// 有目标时以最高 50 像素/帧的速度追击玩家选定的目标（无目标时悬停在玩家身边）；
     /// 用 localAI[0] 在链路上传递"自头往后的段序"，据此把缩放从 1.0 逐节放大（每节 +1%，上限 +50%）；
     /// 入场时喷一圈 BoneTorch 尘并淡入；头不占仆从栏，每节身体占 0.5。

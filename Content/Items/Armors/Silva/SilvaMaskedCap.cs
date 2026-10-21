@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
 {
     /// <summary>
     /// 始源林海罩帽（SilvaMaskedCap，英文名 Silva Masked Cap） - 始源林海套装的法师向头部部件
-    ///（按经典版灾厄 CalamityModClassicPreTrailer 同名件 1:1 移植；现代版对应 SilvaHeadMagic，防御同为 21）。
+    ///（按经典灾厄同名件 1:1 移植；现代版对应 SilvaHeadMagic，防御同为 21）。
     /// 单件：魔法伤害 +13%、魔法暴击 +13%、最大法力 +100。
     /// 套装效果（逐条对应 player.setBonus 的说明文字，实现位置见括号）：
     /// 1. 免疫几乎所有减益（silvaSet → CalamityDemutationPlayer.PostUpdateMiscEffects）
@@ -63,15 +63,15 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         }
         /// <summary>
         /// 穿戴时的属性加成：魔法三连（伤害 / 暴击 / 法力），经典版 UpdateEquip 原样
-        /// 另加「法力消耗 ×0.81」——这一条经典版没有、是 **CI 对应件 SilvaHeadMagicold** 的设计，
-        /// 用户 2026-10-06 对 CI 照后点名补上。
+        /// 另加「法力消耗 ×0.81」——这一条经典版没有、是 **旧版支线对应件 SilvaHeadMagicold** 的设计，
+        /// 用户 2026-10-06 对旧版支线照后点名补上。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
             player.GetDamage<MagicDamageClass>() += 0.13f;     // 魔法伤害 +13%
             player.GetCritChance<MagicDamageClass>() += 13;    // 魔法暴击率 +13%
             player.statManaMax2 += 100;                        // 最大法力 +100
-            player.manaCost *= 0.81f;                          // 法力消耗 ×0.81（CI 的 SilvaHeadMagicold 原样）
+            player.manaCost *= 0.81f;                          // 法力消耗 ×0.81（旧版支线的 SilvaHeadMagicold 原样）
         }
         /// <summary>
         /// 配方：与其余始源林海头部逐字一致（经典分支照经典版源码；现代分支沿用工程既有写法），均需本模组材料 LeadCore
@@ -80,7 +80,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
+                // 现代灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
                 if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
                     && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
@@ -97,7 +97,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
+                // 经典灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
                 if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
                     && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)

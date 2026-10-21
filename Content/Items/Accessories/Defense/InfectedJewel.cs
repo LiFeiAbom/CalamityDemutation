@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         }
         /// <summary>
         /// 配方（照源）：王冠宝石 + AureusCell×10 + Stardust×25 @ 秘银砧。
-        /// 现代版灾厄里 <c>Stardust</c> 已改名 <b>StarblightSoot</b>（用户 2026-09-28 指定的映射）；
+        /// 现代灾厄里 <c>Stardust</c> 已改名 <b>StarblightSoot</b>（用户 2026-09-28 指定的映射）；
         /// 经典版保留 <c>Stardust</c>，但 <b>AureusCell</b> 不存在，按用户指定改用 <b>AstralJelly</b>
         /// </summary>
         public override void AddRecipes()

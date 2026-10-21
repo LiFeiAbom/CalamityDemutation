@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
-    /// 魔法鸟（MagicBird，按 CI 的 MagicBirdOld 移植；类名去掉 Old 后缀）——
+    /// 魔法鸟（MagicBird，按旧版支线的 MagicBirdOld 移植；类名去掉 Old 后缀）——
     /// 光阴时流伞的礼帽随机抛出的追踪工具之一：14×14、占 0 栏、穿地形、存活 180 帧，
     /// 7 帧动画（每 6 帧一换）、按速度翻面；开场 30 帧只直飞并留下冰杖尘轨，
     /// 30 帧后在 <see cref="MagicHat.Range"/> 内追敌（速度 32、按 15:1 插值）。

@@ -37,14 +37,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：碎块药水×2 + 药剂瓶 + 甲虫壳
+                // 现代灾厄：碎块药水×2 + 药剂瓶 + 甲虫壳
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient<CrumblingPotion>(2);
                 recipe.AddIngredient(ItemID.BottledWater);
                 recipe.AddIngredient(ItemID.BeetleHusk);
                 recipe.AddTile(TileID.AlchemyTable);
                 recipe.Register();
-                // 现代版灾厄：药剂瓶 + 血珠×30 + 甲虫壳
+                // 现代灾厄：药剂瓶 + 血珠×30 + 甲虫壳
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     recipe = CreateRecipe();
@@ -57,14 +57,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：碎块药水×1 + 药剂瓶 + 甲虫壳
+                // 经典灾厄：碎块药水×1 + 药剂瓶 + 甲虫壳
                 Recipe recipeClassic = CreateRecipe();
                 recipeClassic.AddIngredient<CrumblingPotion>();
                 recipeClassic.AddIngredient(ItemID.BottledWater);
                 recipeClassic.AddIngredient(ItemID.BeetleHusk);
                 recipeClassic.AddTile(TileID.AlchemyTable);
                 recipeClassic.Register();
-                // 经典版灾厄：药剂瓶 + 血珠×30 + 甲虫壳
+                // 经典灾厄：药剂瓶 + 血珠×30 + 甲虫壳
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     recipeClassic = CreateRecipe();

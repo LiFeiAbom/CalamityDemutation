@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 星流风暴（ExoTornado） - 由 <see cref="ExoMark"/> 放出的贯穿地形竖直龙卷，＝CI 的
+    /// 星流风暴（ExoTornado） - 由 <see cref="ExoMark"/> 放出的贯穿地形竖直龙卷，＝旧版支线的
     /// <c>Content/Projectiles/Ranged/ExoTornado.cs</c>。
     /// <para>
     /// 时间轴由两个计数器分担：<c>ai[0]</c> 是存活计时（上限 <see cref="TornadoLifespan"/> 帧，AI 内自管，
@@ -18,19 +18,19 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
     /// 让它自然卷完再消失。
     /// </para>
     /// <para>
-    /// **CI 相对 2.0 改小过参数**：寿命 900 → 165、纵向取样范围 15 → 30（源码注释里留着这两个旧值）。
-    /// **本工程补的一处上游缺口**：源（CI / 经典版 / 2.0 三处都一样）只**读**从不**写** <c>localAI[0]</c>，
+    /// **旧版支线相对 2.0 改小过参数**：寿命 900 → 165、纵向取样范围 15 → 30（源码注释里留着这两个旧值）。
+    /// **本工程补的一处上游缺口**：源（旧版支线 / 经典版 / 2.0 三处都一样）只**读**从不**写** <c>localAI[0]</c>，
     /// 于是"30 帧后伤害归零"永远不触发；照工程对同一段源代码在 `SandTornado` 上的既有处理，
     /// 这里补上每帧自增，让该计时真正生效。
     /// </para>
     /// </summary>
     internal class ExoTornado : ModProjectile
     {
-        /// <summary>存活计时上限（照 CI：165）</summary>
+        /// <summary>存活计时上限（照旧版支线：165）</summary>
         private const float TornadoLifespan = 165f;
         /// <summary>有伤害的帧数（照源：前 30 帧）</summary>
         private const int DamageDuration = 30;
-        /// <summary>纵向取样范围（照 CI：上下各 30 格）</summary>
+        /// <summary>纵向取样范围（照旧版支线：上下各 30 格）</summary>
         private const int VerticalSampleRange = 30;
         /// <summary>龙卷的横向收紧系数（照源 <c>0.2</c>）</summary>
         private const float WidthFactor = 0.2f;
@@ -118,9 +118,9 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
         /// </summary>
         public override bool PreDraw(ref Color lightColor)
         {
-            const float fadeInFrames = 30f;     // 淡入帧数（照 CI）
-            const float shownFrames = 150f;     // 淡出起点（照 CI：150，源 2.0 是 600）
-            const float maxAlpha = 0.3f;        // 最大不透明度（照 CI）
+            const float fadeInFrames = 30f;     // 淡入帧数（照旧版支线）
+            const float shownFrames = 150f;     // 淡出起点（照旧版支线：150，源 2.0 是 600）
+            const float maxAlpha = 0.3f;        // 最大不透明度（照旧版支线）
             const float stampSpacing = 5.1f;    // 相邻盖印的像素间距（照源）
 
             float time = Projectile.ai[0];

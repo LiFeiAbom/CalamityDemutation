@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Magic
 {
     /// <summary>
-    /// 光之舞的主火焰 —— 移植自 CI Beta1.12 的 <c>WhiteFlameLegacy</c>。
+    /// 光之舞的主火焰 —— 移植自 旧版支线的 <c>WhiteFlameLegacy</c>。
     /// <para>
     /// 12×12、隐身贴图、<c>extraUpdates 2</c>、不撞图格、120 帧；每帧 5 颗钻石尘；
     /// 10 帧后在 700 像素内追踪（追踪速度 16、惯性 20）；消亡时分裂 2 枚
@@ -19,7 +19,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
     {
         /// <summary>与工程其它隐形弹幕共用占位贴图</summary>
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
-        /// <summary>基础属性照 CI</summary>
+        /// <summary>基础属性照旧版支线</summary>
         public override void SetDefaults()
         {
             Projectile.width = 12;
@@ -64,7 +64,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
                 Projectile.timeLeft = 30;
             }
         }
-        /// <summary>消亡音与 2 枚随机方向的分裂火焰（仅在主人端生成，照 CI）</summary>
+        /// <summary>消亡音与 2 枚随机方向的分裂火焰（仅在主人端生成，照旧版支线）</summary>
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item122, Projectile.position);
@@ -86,7 +86,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
                     speed.X, speed.Y, ModContent.ProjectileType<WhiteFlameAlt>(), Projectile.damage, 0f, Projectile.owner, 0f, 0f);
             }
         }
-        /// <summary>命中挂圣火 360 帧（照 CI）</summary>
+        /// <summary>命中挂圣火 360 帧（照旧版支线）</summary>
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             CalamityDemutationPlayer.ApplyCalamityBuffWithFallback(target, "HolyFlames", 360, BuffID.OnFire);

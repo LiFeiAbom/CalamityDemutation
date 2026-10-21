@@ -39,7 +39,7 @@ namespace CalamityDemutation.Content.Projectiles
         public bool nihilicArrow = false;
         /// <summary>
         /// 纳米技术（Nanotech）的潜行打击「+20 护甲穿透」是否已经给这枚弹幕加过。
-        /// 照 CI 的写法只在弹幕首次更新时加一次（本类 per-entity，字段随实例走）。
+        /// 照旧版支线的写法只在弹幕首次更新时加一次（本类 per-entity，字段随实例走）。
         /// </summary>
         public bool nanotechArmorPenApplied = false;
         // ── 属性 ──
@@ -92,14 +92,14 @@ namespace CalamityDemutation.Content.Projectiles
                 }
             }
             // 纳米技术（Nanotech）：盗贼弹幕飞行途中每 30 帧在原地留下一枚纳米刀刃。
-            // 机制照 CI 的 NanotechOld（用户 2026-10-07 指定）：判据为「友好 + 有伤害 + 非 NPC 弹幕/陷阱 +
+            // 机制照旧版支线的 NanotechOld（用户 2026-10-07 指定）：判据为「友好 + 有伤害 + 非 NPC 弹幕/陷阱 +
             // 算作盗贼弹幕」，节奏用 玩家 miscCounter % 30（numUpdates == 0 保证带 extraUpdates 的弹幕
-            // 一帧只判一次——本机 tML 没有 CI 依赖的 FinalExtraUpdate 扩展），生成只在主人端做。
+            // 一帧只判一次——本机 tML 没有 旧版支线依赖的 FinalExtraUpdate 扩展），生成只在主人端做。
             CalamityDemutationPlayer nanotechPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
             if (nanotechPlayer.nanotech && projectile.friendly && projectile.damage > 0
                 && !projectile.npcProj && !projectile.trap && CDUtil.IsRogueProjectile(projectile))
             {
-                // 潜行打击的 +20 护甲穿透：每枚弹幕只加一次（CI 同样只在首次更新时加）
+                // 潜行打击的 +20 护甲穿透：每枚弹幕只加一次（旧版支线同样只在首次更新时加）
                 if (!nanotechArmorPenApplied && CDUtil.IsStealthStrike(projectile, out _))
                 {
                     nanotechArmorPenApplied = true;
@@ -123,11 +123,11 @@ namespace CalamityDemutation.Content.Projectiles
         /// 比例降至 0 即放弃；治疗量 = 弹幕伤害 × 该比例，并从本次弹幕的 lifeSteal 额度中扣除 1.5 倍作为消耗。
         /// 随后在 1200 像素内挑出存活且生命缺口最大的队友，于弹幕位置生成 SilvaOrb / AuricOrb 弹幕
         /// （写入目标玩家索引与治疗量）为其回血。仅当 target.canGhostHeal 为真（该敌人允许吸血）时触发，
-        /// 口径对齐经典版灾厄 CalamityGlobalProjectile.cs:346/380。
-        /// 在这两条**经典版**分支之外，另有一条 CI 独有的分支（2026-10-09 用户点名补入）：
-        /// 凡置位 silvaSet（＝ CI 的 AuricSilvaSet）者，任意弹幕命中都会再生成一枚固定 rand(5,11) 点的
-        /// SilvaOrb（搜队友半径 3000、lifeSteal 消耗倍率 2），口径见 CI 的
-        /// CalamityInheritancePlayerOnHit.ProjLifesteal。
+        /// 口径对齐经典灾厄 CalamityGlobalProjectile.cs:346/380。
+        /// 在这两条**经典版**分支之外，另有一条 旧版支线独有的分支（2026-10-09 用户点名补入）：
+        /// 凡置位 silvaSet（＝ 旧版支线的 AuricSilvaSet）者，任意弹幕命中都会再生成一枚固定 rand(5,11) 点的
+        /// SilvaOrb（搜队友半径 3000、lifeSteal 消耗倍率 2），口径见 旧版支线的
+        /// 旧版支线的命中回血逻辑。
         /// 另有一条独立分支：装备魔能谐振仪（manaOverloader）且手持魔法武器时，魔法弹幕命中会按
         /// "伤害 × (0.2 − 已命中次数×0.05) × 当前魔力比例"（单次封顶 10）生成 ManaPolarizerHealOrb。
         /// </summary>
@@ -137,8 +137,8 @@ namespace CalamityDemutation.Content.Projectiles
             if (projectile.owner < 0 || projectile.owner >= Main.maxPlayers)
                 return;
             // 纳米技术（Nanotech）：潜行打击命中时（这枚弹幕的潜行打击命中数还不到 3 次）从画面上方
-            // 砸下 6 枚灾厄本体的「纳米闪光」NanoFlare——机制照 CI 的 NanotechOld，用户 2026-10-07 指定。
-            // NanoFlare 走软依赖按名取（经典版灾厄没有这件，取不到就整段跳过）；潜行打击状态由 CDUtil
+            // 砸下 6 枚灾厄本体的「纳米闪光」NanoFlare——机制照旧版支线的 NanotechOld，用户 2026-10-07 指定。
+            // NanoFlare 走软依赖按名取（经典灾厄没有这件，取不到就整段跳过）；潜行打击状态由 CDUtil
             // 反射读灾厄 GlobalProjectile 的 stealthStrike，经典版恒为 false。本块不写提前 return。
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().nanotech
                 && projectile.owner == Main.myPlayer
@@ -165,7 +165,7 @@ namespace CalamityDemutation.Content.Projectiles
                 if (manaHeal > 10f)
                     manaHeal = 10f;   // 源用 CalamityMod.lifeStealCap = 10
                 // lifeSteal 预算的判断与本文件里 silvaSet / auricSet 两条分支口径一致
-                // （现代版灾厄 2.0 之后已把这道判据挪进了 SpawnLifeStealProjectile）
+                // （现代灾厄 2.0 之后已把这道判据挪进了 SpawnLifeStealProjectile）
                 if (manaHealMult > 0f && (int)manaHeal > 0 && Main.LocalPlayer.lifeSteal > 0f)
                 {
                     Main.LocalPlayer.lifeSteal -= manaHeal * 3f;   // 源 SpawnLifeStealProjectile 的 cooldownMultiplier = 3
@@ -191,7 +191,7 @@ namespace CalamityDemutation.Content.Projectiles
             //  弑神者法师烈焰/治疗球、林海法师巨型爆炸、弑神者召唤幻影——即"金源头复合四套"的全部内容），
             //  提前 return 会把它们一并跳过。金源套同时置 silvaSet 与 auricSet，必进这两条分支，
             //  一旦 lifeSteal 额度耗尽就会整个方法返回 —— 这正是"穿龙蒿有叶风暴、穿金源没有"的原因。
-            //  源（经典版）把后面这些效果写在玩家侧 CalamityPlayerPreTrailer.ModifyHitNPCWithProj、
+            //  源（经典版）把后面这些效果写在玩家侧 经典灾厄玩家类.ModifyHitNPCWithProj、
             //  CalamityGlobalItem.Shoot 等钩子里，天然不受这两处 return 影响；本工程把它们集中到了本方法，
             //  故必须把"放弃"改写成嵌套 if（判据与顺序与原三条 return 完全等价）。
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet && target.canGhostHeal)
@@ -244,12 +244,12 @@ namespace CalamityDemutation.Content.Projectiles
                     Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<AuricOrb>(), 0, 0f, projectile.owner, (float)num14, num12);
                 }
             }
-            // CI 的 AuricSilvaSet 那条「任意弹幕命中敌人即生成治疗叶球」：
-            // 本工程的 silvaSet 就是 CI 的 AuricSilvaSet（林海五颗头 + 金源五颗头的套装方法都会置位它），
-            // 口径照 CI 的 CalamityInheritancePlayerOnHit.ProjLifesteal——回**固定** rand(5, 11) 点、
+            // 旧版支线的 AuricSilvaSet 那条「任意弹幕命中敌人即生成治疗叶球」：
+            // 本工程的 silvaSet 就是 旧版支线的 AuricSilvaSet（林海五颗头 + 金源五颗头的套装方法都会置位它），
+            // 口径照旧版支线的命中回血逻辑——回**固定** rand(5, 11) 点、
             // 走 SilvaOrb、搜队友半径 3000、生命值消耗倍率 2（SpawnLifeStealProjectile 的第 6 参）。
-            // 用户 2026-10-09 指定把这条 CI 独有的机制补进来：它与上面那条经典版「按伤害比例递减」的吸血
-            // 是**并列**的两条（CI 也把它写成独立一条），两者共用 same 一个 lifeSteal 额度，故总量仍受闸门约束。
+            // 用户 2026-10-09 指定把这条 旧版支线独有的机制补进来：它与上面那条经典版「按伤害比例递减」的吸血
+            // 是**并列**的两条（旧版支线也把它写成独立一条），两者共用 same 一个 lifeSteal 额度，故总量仍受闸门约束。
             if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().silvaSet && target.canGhostHeal)
             {
                 int silvaHealAmount = Main.rand.Next(5, 11);
@@ -276,7 +276,7 @@ namespace CalamityDemutation.Content.Projectiles
                 }
             }
             // 龙蒿盗贼套装（tarraThrowing）的「每 25 次盗贼暴击」计数
-            //（照经典版 CalamityPlayerPreTrailer.cs:6158：要求暴击 + 弹幕算盗贼弹幕，且冷却归零、未满 25；
+            //（照经典版 经典灾厄玩家类：要求暴击 + 弹幕算盗贼弹幕，且冷却归零、未满 25；
             //  判定方式见 CDUtil.IsRogueProjectile——现代版按 RogueDamageClass，经典版读它自己的
             //  CalamityGlobalProjectile.rogue，因为经典盗贼弹幕不带 DamageType）。
             CalamityDemutationPlayer roguePlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
@@ -286,7 +286,7 @@ namespace CalamityDemutation.Content.Projectiles
                 roguePlayer.tarraThrowingCrits++;
             }
             // 血炎盗贼套装（bloodflareThrowing）的「盗贼暴击 50% 几率治疗你」
-            //（照经典版 CalamityPlayerPreTrailer.cs:6226-6246）：
+            //（照经典版 经典灾厄玩家类）：
             // 要求暴击 + 弹幕算盗贼弹幕 + 骰中 50%，且目标允许吸血（canGhostHeal）。
             // **注意源只回 1 点生命**——算出来的数值只是拿去扣 lifeSteal 额度（×2），并不是治疗量，本工程照源。
             CalamityDemutationPlayer bloodThrowing = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
@@ -309,7 +309,7 @@ namespace CalamityDemutation.Content.Projectiles
             }
             // 始源林海盗贼头（SilvaMask）在经典版里还带一条**隐藏**加成（不在 tooltip 内，被 auricSet 门控）：
             // `if (auricSet) { if (silvaThrowing && 盗贼弹幕 && hit.Crit && 生命 >50%) hit.Damage *= 1.25; }`
-            //（CalamityPlayerPreTrailer.cs:6136-6144）—— 源如此：单穿始源林海套不生效，得配上金源套才吃，本工程照源。
+            //（经典灾厄玩家类）—— 源如此：单穿始源林海套不生效，得配上金源套才吃，本工程照源。
             // 实现差异：源是在命中**结算前**把 hit.Damage ×1.25；tML 的 GlobalProjectile.OnHitNPC 拿到的 HitInfo
             // 是按值传的、改不动已结算伤害，故改为**事后补打 25% 的实伤**（对线性缩放的最终伤害等效）。
             CalamityDemutationPlayer silvaThrowingPlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
@@ -358,7 +358,7 @@ namespace CalamityDemutation.Content.Projectiles
                 }
             }
             // 血炎法师套装（bloodflareMage）的「魔法暴击每 2 秒引发一次火焰爆炸」：
-            // 源写在玩家侧命中钩子里（CalamityPlayerPreTrailer.cs:6249），本工程挪到弹幕侧——
+            // 源写在玩家侧命中钩子里（经典灾厄玩家类），本工程挪到弹幕侧——
             // hit.Crit 同源、同样只在主人端跑。在目标中心朝随机方向喷 3 枚原版火球
             //（ProjectileID.BallofFire，源里裸数字 15 已 Cecil 反查），伤害 = 本次弹幕伤害 ×0.5，
             // 冷却 120 帧（2 秒）。
@@ -380,11 +380,11 @@ namespace CalamityDemutation.Content.Projectiles
                 }
             }
             // 弑神者法师套装（godSlayerMage）的「魔法攻击命中敌人时释放弑神者烈焰与治疗烈焰」：
-            // 用户 2026-10-09 指定换成 CI 口径（CI 的 ClPlayerClassSpecific.MagicOnHit ＋
-            // CalamityInheritancePlayerOnHit.ProjLifesteal）：
-            // ① 弑神火：闸门换成 CI 的 fireCD（命中即置 2 → 最快每 2 帧一枚），往**随机方向**以
+            // 用户 2026-10-09 指定换成 旧版支线口径（旧版支线的 ClPlayerClassSpecific.MagicOnHit ＋
+            // 旧版支线的命中回血逻辑）：
+            // ① 弑神火：闸门换成 旧版支线的 fireCD（命中即置 2 → 最快每 2 帧一枚），往**随机方向**以
             //    rand(12, 16) 的初速射一枚 GodSlayerOrb，伤害 =（400 + 手持武器伤害 ÷ 2）× 5；
-            //   CI 不挑目标——那枚光球自己会追 3000 像素内的敌人，本工程的 GodSlayerOrb 同样自寻敌
+            //   旧版支线不挑目标——那枚光球自己会追 3000 像素内的敌人，本工程的 GodSlayerOrb 同样自寻敌
             //   （不读 ai[0]），故这里不写目标索引。
             // ② 治疗烈焰：改为**固定** rand(5, 11) 点（不再按弹幕伤害的比例），走 GodSlayerHealOrb、
             //    搜队友半径 3000（原 1200）、生命值消耗倍率 2（源 SpawnLifeStealProjectile 的第 6 参）。
@@ -426,14 +426,14 @@ namespace CalamityDemutation.Content.Projectiles
                 }
             }
             // 始源林海法师套装（silvaMage）的「魔法弹幕引发巨型爆炸」：
-            // 用户 2026-10-09 指定换成 CI 的 SilvaMagicSetLegacy 口径（CI 的 ClPlayerClassSpecific.MagicOnHit）：
+            // 用户 2026-10-09 指定换成 旧版支线的 SilvaMagicSetLegacy 口径（旧版支线的 ClPlayerClassSpecific.MagicOnHit）：
             // 触发条件是「弹幕只穿透一名敌人（penetrate == 1）**或**即将消散（timeLeft <= 5）」时 **100%** 触发，
             // 触发后置 300 帧冷却；效果 = 播 SoundID.Zombie103，并在弹幕位置生成一枚**独立**的 SilvaBurst
             // （96×96 隐形判定，伤害 = 800 + 0.6 × 本弹幕伤害）。
             // 与经典版（也是工程原先的写法）的三点不同：① 3% 概率 → 100% + 300 帧冷却；
             // ② 撑大本弹幕判定框并把本次伤害 ×4（金源 ×7）→ 改为生成独立弹幕；
             // ③ 判据从"只认 penetrate == 1"放宽到"或即将消散"。
-            // 注：CI 的 ApplyArmorAccDamageBonusesTo 在本工程恒等（没有 Old Fashioned）故省略，与盾冲那处同一口径。
+            // 注：旧版支线的 ApplyArmorAccDamageBonusesTo 在本工程恒等（没有 Old Fashioned）故省略，与盾冲那处同一口径。
             CalamityDemutationPlayer silvaMagePlayer = Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
             if (projectile.CountsAsClass<MagicDamageClass>() && silvaMagePlayer.silvaMage
                 && silvaMagePlayer.silvaMageBurstCooldown <= 0
@@ -515,7 +515,7 @@ namespace CalamityDemutation.Content.Projectiles
         /// - omega 蓝胸甲（omegaBlueChestplate）：240 帧 HadopelagicPressure / CrushDepth（原误用 omegaBlueSet，已与 NPC 侧统一）；
         /// - 召唤专属：时滞（statisBlessing 与 statisCurse 各 60 帧、statisBeltOfCurses 120 帧，均附暗影焰）与原初暗影焰 300 帧；
         /// - 亚利姆徽章：随机 120/240/360 帧神圣火（现代版）与圣光（经典版）；
-        /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 灾厄现代/经典两版本）；
+        /// - 元素手套：全套元素 debuff 各 120 帧（原版五毒 + 现代灾厄/经典两版本）；
         /// - 女巫套装近战弹幕（silvaMelee）：1/4 概率 20 帧女巫眩晕；
         /// - 血焰套装（bloodflareMelee）/ 弑神近战（godSlayerMelee）：作用在攻击者自身（累计命中回血 / 生成弑神飞镖）；
         /// - 女巫套装（silvaSet）/ 奥瑞克套装（auricSet）：与 OnHitNPC 同构的吸血逻辑
@@ -589,7 +589,7 @@ namespace CalamityDemutation.Content.Projectiles
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityMod", "HolyFlames", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
                     CalamityDemutationPlayer.ApplyCalamityBuff(target, "CalamityModClassicPreTrailer", "HolyLight", Main.rand.NextBool(4) ? 360 : Main.rand.NextBool(2) ? 240 : 120);
                 }
-                // 攻击者装备元素手套：施加全套元素 debuff（原版五毒 + 灾厄现代/经典两版本）各 120 帧
+                // 攻击者装备元素手套：施加全套元素 debuff（原版五毒 + 现代灾厄/经典两版本）各 120 帧
                 if (CalamityDemutationPlayer.IsAccessoryEquipped(attacker, ModContent.ItemType<ElementalGauntlet>()))
                 {
                     target.AddBuff(BuffID.Poisoned, 120, false);

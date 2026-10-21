@@ -7,11 +7,11 @@ namespace CalamityDemutation.Content.Projectiles.Magic
     /// <summary>
     /// 始源林海爆裂（SilvaBurst） - 始源林海法师头（SilvaMaskedCap）套装效果
     /// 「魔法弹幕引发巨型爆炸」生成的**独立**爆裂判定
-    ///（按 CalamityMod 1.4.4-release / 2.0.4 的 <c>Projectiles/Magic/SilvaBurst.cs</c> 1:1 移植；
-    /// CI 的 <c>SilvaMagicSetLegacy</c> 引用的就是它，用户 2026-10-09 指定该套装效果换成 CI 模式后启用）。
+    ///（按 灾厄本体现代灾厄 / 2.0.4 的 <c>Projectiles/Magic/SilvaBurst.cs</c> 1:1 移植；
+    /// 旧版支线的 <c>SilvaMagicSetLegacy</c> 引用的就是它，用户 2026-10-09 指定该套装效果换成 旧版支线模式后启用）。
     /// 96×96 的隐形判定框（穿地形、穿透 -1），开启"每名敌人只结算一次"的局部无敌；
     /// 存活仅 2 帧，生成的那一帧在自身范围内喷出叶绿粉尘并加一团偏绿的光。
-    /// 伤害由生成方给定（CI：800 + 0.6 × 触发弹幕的伤害），本件自身不带任何减益，与源一致。
+    /// 伤害由生成方给定（旧版支线：800 + 0.6 × 触发弹幕的伤害），本件自身不带任何减益，与源一致。
     /// </summary>
     public class SilvaBurst : ModProjectile
     {

@@ -13,7 +13,7 @@ namespace CalamityDemutation.Content.Items.Materials
     /// <para>
     /// **无配方**——来源是**秃鹫掉落**，照 2.0 的 `CalamityGlobalNPCLoot` 写：
     /// 100% 掉 1~2 片（见 `NPCs/CalamityDemutationGlobalNPC.cs` 的 `ModifyNPCLoot`；
-    /// 经典版 cal-1.4.2.101 的掉率是"普通 100% 掉 1 片、专家 1~3 片"，本件按 2.0 口径取 1~2）。
+    /// 经典版 经典灾厄的掉率是"普通 100% 掉 1 片、专家 1~3 片"，本件按 2.0 口径取 1~2）。
     /// </para>
     /// </remarks>
     internal class DesertFeather : ModItem

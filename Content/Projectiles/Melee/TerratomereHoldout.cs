@@ -16,7 +16,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 泰拉巨刃手持挥砍体（移植自大修 RTerratomereHoldoutProj，改用本模组 PrimitiveRenderer + ExobladeSlash 着色器）：
+    /// 泰拉巨刃手持挥砍体（移植自重制版 RTerratomereHoldoutProj，改用本模组 PrimitiveRenderer + ExobladeSlash 着色器）：
     /// 83 帧四段弧线（等待→后摇→主挥→收招）挥砍，挥砍途中发射 3 发泰拉闪电、收招时放出一道大光束剑气；
     /// 真近战命中回血并施加冰川状态、召唤小刀光创造者。
     /// </summary>
@@ -53,7 +53,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         /// <summary>挥砍到收招段的完成度阈值</summary>
         public static float RecoveryCompletionRatio => 0.84f;
         // ── 覆写属性 ──
-        /// <summary>武器贴图复用现代版灾厄泰拉巨刃贴图</summary>
+        /// <summary>武器贴图复用现代灾厄泰拉巨刃贴图</summary>
         public override string Texture => "CalamityDemutation/Content/Items/Weapons/Melee/Terratomere";
         // ── 生命周期方法 ──
         /// <summary>拖尾缓存 100 点、TrailingMode 2（记录位置与旋转，供弧光采样）</summary>

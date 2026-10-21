@@ -30,14 +30,14 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             Item.value = Item.buyPrice(0, 2, 0, 0);           // 价值 2 金
         }
         /// <summary>
-        /// 合成表：现代版与经典版灾厄均用同名 AncientBoneDust（药剂瓶），
+        /// 合成表：现代版与经典灾厄均用同名 AncientBoneDust（药剂瓶），
         /// 或药剂瓶 + 血珠×10（炼金台），故两分支材料一致、仅取 Mod 来源不同
         /// </summary>
         public override void AddRecipes()
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：药剂瓶 + AncientBoneDust
+                // 现代灾厄：药剂瓶 + AncientBoneDust
                 if(calamity.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -46,7 +46,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.Bottles);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×10（炼金台）
+                // 现代灾厄：药剂瓶 + 血珠×10（炼金台）
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -58,7 +58,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：药剂瓶 + AncientBoneDust
+                // 经典灾厄：药剂瓶 + AncientBoneDust
                 if(classic.TryFind<ModItem>("AncientBoneDust", out ModItem ancientBoneDust2))
                 {
                     Recipe recipe = CreateRecipe();
@@ -67,7 +67,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.Bottles);
                     recipe.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×10（炼金台）
+                // 经典灾厄：药剂瓶 + 血珠×10（炼金台）
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2))
                 {
                     Recipe recipe = CreateRecipe();

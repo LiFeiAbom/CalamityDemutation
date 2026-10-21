@@ -84,13 +84,13 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Lime;              // 基础稀有度：青柠
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 17;// 月后自定义稀有度等级（0=未设置）
         }
-        /// <summary>右键可用（灾厄大修 0.4.0.1.3 的庇护巨刃）</summary>
+        /// <summary>右键可用（重制版的庇护巨刃）</summary>
         public override bool AltFunctionUse(Player player) => true;
         /// <summary>
-        /// 按左右键切换状态（照抄 CWR 的 AegisBladeEcType.CanUseItem）：
+        /// 按左右键切换状态（照抄 重制版的 AegisBladeEcType.CanUseItem）：
         /// 右键收起贴图与剑身判定、改用 Item73 音效并改为掷出 <see cref="DefenseBladeProj"/>；
         /// 左键恢复原有的巨剑挥砍与 <see cref="DefenseBeam"/>。
-        /// 巨刃在场期间整把武器不可再次使用（CWR 的 <c>ownedProjectileCounts == 0</c> 口径）。
+        /// 巨刃在场期间整把武器不可再次使用（重制版的 <c>ownedProjectileCounts == 0</c> 口径）。
         /// </summary>
         public override bool CanUseItem(Player player)
         {
@@ -110,10 +110,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             }
             return player.ownedProjectileCounts[ModContent.ProjectileType<DefenseBladeProj>()] == 0;
         }
-        /// <summary>右键掷刃的挥舞速度 ×1.33（CWR 原值）</summary>
+        /// <summary>右键掷刃的挥舞速度 ×1.33（重制版原值）</summary>
         public override float UseSpeedMultiplier(Player player) => player.altFunctionUse != 2 ? 1f : 1.33f;
         /// <summary>
-        /// 右键掷出庇护巨刃，伤害为面板的 3.3 倍（CWR 原值）；
+        /// 右键掷出庇护巨刃，伤害为面板的 3.3 倍（重制版原值）；
         /// 左键返回 true，交给默认逻辑发射 <see cref="DefenseBeam"/>。
         /// </summary>
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

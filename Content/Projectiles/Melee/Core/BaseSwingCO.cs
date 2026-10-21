@@ -16,7 +16,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee.Core
 {
     /// <summary>
-    /// 挥砍类手持弹幕基类（移植自 CWR 的 BaseSwingProj 体系）：
+    /// 挥砍类手持弹幕基类（移植自重制版的 BaseSwingProj 体系）：
     /// 统一处理「持握定位 → 挥舞弧线 → 弧光采样与渲染 → 发射子弹幕」的整条管线。
     /// 子类通常只需重写 SetSwingProperty/SwingAI/Shoot 与若干视觉参数即可形成一件挥砍武器。
     /// </summary>
@@ -51,7 +51,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee.Core
         /// </summary>
         public bool Incandescence = false;
         /// <summary>
-        /// 弧光采样长度是否忽略判定箱尺寸（对应 CE 的 <c>IgnoreImpactBoxSize</c>）：
+        /// 弧光采样长度是否忽略判定箱尺寸（对应 附属模组的 <c>IgnoreImpactBoxSize</c>）：
         /// 为 true 时按 22 取采样长度，为 false 时沿用判定箱高度。
         /// 判定箱远大于刀身的挥砍体（如天罚的 182×182）必须置位，
         /// 否则弧光带会整体外移、脱离刀身。

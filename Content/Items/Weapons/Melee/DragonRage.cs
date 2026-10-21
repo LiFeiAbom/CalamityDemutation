@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Melee
 {
     /// <summary>
-    /// 巨龙之怒（移植自 CWR 的 DragonRage）：左键四段挥砍、右键二段重击+一段蓄力。
+    /// 巨龙之怒（移植自重制版的 DragonRage）：左键四段挥砍、右键二段重击+一段蓄力。
     /// 从简：EctypeItem 基类砍掉直接继承 ModItem，TrueMeleeDamageClass→MeleeNoSpeed，Violet 稀有度→Red，
     /// 灾厄/Murasama 音效→本模组 CalamityDemutationSounds。
     /// </summary>

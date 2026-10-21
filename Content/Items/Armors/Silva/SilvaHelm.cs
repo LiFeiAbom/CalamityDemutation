@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             Item.width = 18;                          // 贴图宽（像素）
             Item.height = 18;                         // 贴图高（像素）
             Item.value = Item.buyPrice(0, 90, 0, 0);  // 价值 90 金
-            Item.defense = 52;                        // 防御 52（与经典版灾厄同值，源码同行另留 //110 注释，系开发期遗留数字）
+            Item.defense = 52;                        // 防御 52（与经典灾厄同值，源码同行另留 //110 注释，系开发期遗留数字）
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 15;  // 月后自定义稀有度 15 级（名称颜色覆盖见 CalamityDemutationGlobalItem）
         }
         /// <summary>
@@ -72,14 +72,14 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             player.GetAttackSpeed<MeleeDamageClass>() += 0.19f;  // 近战攻速 +19%
         }
         /// <summary>
-        /// 配方：现代版灾厄与经典版灾厄材料不同，分别注册两套配方，
+        /// 配方：现代灾厄与经典灾厄材料不同，分别注册两套配方，
         /// 两版均额外需要本模组材料 LeadCore
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
+                // 现代灾厄：在 CosmicAnvil 处用 PlantyMush/EffulgentFeather/AscendantSpiritEssence 合成
                 if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
                     && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
@@ -96,7 +96,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
+                // 经典灾厄：在 DraedonsForge 处用 DarksunFragment/EffulgentFeather/CosmiliteBar 等合成
                 if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
                     && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)

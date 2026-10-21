@@ -6,7 +6,7 @@ using Terraria;
 namespace CalamityDemutation.Content.Particles
 {
     /// <summary>
-    /// DRK 线状跟随粒子（DRK_LineFormPlayer，移植自灾厄大修的 PRT_Line_FormPlayer）——
+    /// DRK 线状跟随粒子（DRK_LineFormPlayer，移植自重制版的 PRT_Line_FormPlayer）——
     /// 外形与 <see cref="DRK_Spark"/> 一样是拉伸成条状的发光丝线，逐帧缩小、减速并向透明淡出；
     /// 唯一区别在跟随方式：它每帧叠加玩家**真实的位移增量**（position - oldPosition），
     /// 而 <see cref="DRK_Spark"/> 叠加的是跟随实体的速度向量。用于熵之飞刃吐出的淡绿色丝线。

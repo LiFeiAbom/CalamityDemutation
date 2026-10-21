@@ -32,13 +32,13 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         }
         /// <summary>
         /// 合成表：每次产出 4 瓶（炼金台）。现代版用本模组自有的银河奇点（GalacticaSingularity），
-        /// 经典版分支改取经典版灾厄的 GalacticaSingularity，两侧均搭配暗物质（DarkPlasma）
+        /// 经典版分支改取经典灾厄的 GalacticaSingularity，两侧均搭配暗物质（DarkPlasma）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：水×4 + DarkPlasma + 本模组银河奇点（每次 4 瓶）
+                // 现代灾厄：水×4 + DarkPlasma + 本模组银河奇点（每次 4 瓶）
                 if (calamity.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma1))
                 {
                     Recipe recipe = CreateRecipe(4);
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：水×4 + 血珠×20 + DarkPlasma（每次 4 瓶）
+                // 现代灾厄：水×4 + 血珠×20 + DarkPlasma（每次 4 瓶）
                 if (calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1) && calamity.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma2))
                 {
                     Recipe recipe = CreateRecipe(4);
@@ -61,7 +61,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：水×4 + DarkPlasma + 经典版 GalacticaSingularity（每次 4 瓶）
+                // 经典灾厄：水×4 + DarkPlasma + 经典版 GalacticaSingularity（每次 4 瓶）
                 if (classic.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma3) && classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
                 {
                     Recipe recipeClassic = CreateRecipe(4);
@@ -71,7 +71,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.AlchemyTable);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：水×4 + 血珠×20 + DarkPlasma（每次 4 瓶）
+                // 经典灾厄：水×4 + 血珠×20 + DarkPlasma（每次 4 瓶）
                 if (classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("DarkPlasma", out ModItem darkPlasma4))
                 {
                     Recipe recipeClassic = CreateRecipe(4);

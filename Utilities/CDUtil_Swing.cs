@@ -16,12 +16,12 @@ namespace CalamityDemutation.Utilities
     internal static partial class CDUtil
     {
         /// <summary>
-        /// 获取玩家当前“实际持有”的物品（对应 CWR 的 Player.ActiveItem()，即灾厄的
+        /// 获取玩家当前“实际持有”的物品（对应 重制版的 Player.ActiveItem()，即灾厄的
         /// GeneralExtensionUtils.ActiveItem）：鼠标上拿着东西时返回鼠标物品，否则返回手持物品。
         /// </summary>
         public static Item ActiveItem(this Player player) => Main.mouseItem.IsAir ? player.HeldItem : Main.mouseItem;
         /// <summary>
-        /// 检测玩家是否存活活跃（对应 CWR 的 Alives）
+        /// 检测玩家是否存活活跃（对应 重制版的 Alives）
         /// </summary>
         public static bool Alives(this Player player) => player != null && player.active && !player.dead;
         /// <summary>
@@ -61,7 +61,7 @@ namespace CalamityDemutation.Utilities
             return Vector2.Normalize(nVr);
         }
         /// <summary>
-        /// 按总帧数计算单帧缩放中心（对应 CWR 的 GetOrig）
+        /// 按总帧数计算单帧缩放中心（对应 重制版的 GetOrig）
         /// </summary>
         public static Vector2 GetOrig(Texture2D value, int frameCounterMax = 1)
         {
@@ -69,7 +69,7 @@ namespace CalamityDemutation.Utilities
             return new Vector2(value.Width * 0.5f, singleFrameY / 2);
         }
         /// <summary>
-        /// 获取玩家稳定中心（对应 CWR 的 GetPlayerStabilityCenter）
+        /// 获取玩家稳定中心（对应 重制版的 GetPlayerStabilityCenter）
         /// </summary>
         public static Vector2 GetPlayerStabilityCenter(this Player player) => player.MountedCenter.Floor() + new Vector2(0, player.gfxOffY);
         /// <summary>
@@ -107,18 +107,18 @@ namespace CalamityDemutation.Utilities
             return nonTransparentColors.ToArray();
         }
         /// <summary>
-        /// 检测玩家是否按下左/右键（对应 CWR 的 PressKey，netCed 为 true 时仅在本地玩家生效）
+        /// 检测玩家是否按下左/右键（对应 重制版的 PressKey，netCed 为 true 时仅在本地玩家生效）
         /// </summary>
         public static bool PressKey(this Player player, bool leftCed = true, bool netCed = true) => (!netCed || Main.myPlayer == player.whoAmI) && (leftCed ? PlayerInput.Triggers.Current.MouseLeft : PlayerInput.Triggers.Current.MouseRight);
         /// <summary>
-        /// 随机方向单位向量乘以 0~max 随机长度（对应 CWR 的 randVr）
+        /// 随机方向单位向量乘以 0~max 随机长度（对应 重制版的 randVr）
         /// </summary>
         public static Vector2 randVr(int max)
         {
             return Main.rand.NextVector2Unit() * Main.rand.Next(0, max);
         }
         /// <summary>
-        /// 随机方向单位向量乘以 min~max 随机长度（对应 CEUtils 的同名双参重载）
+        /// 随机方向单位向量乘以 min~max 随机长度（对应 附属模组工具 的同名双参重载）
         /// </summary>
         public static Vector2 randVr(int min, int max)
         {

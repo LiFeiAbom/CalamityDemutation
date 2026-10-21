@@ -87,7 +87,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
         /// <summary>
         /// 配方（照源，@秘银砧）：冰晶锭×8。唯一外部件是材料**冰晶锭**，走软依赖——
-        /// 现代版叫 `CryonicBar`、经典版与 1.3-release 是旧名 `VerstaltiteBar`（同一件改名，见 §3），
+        /// 现代版叫 `CryonicBar`、经典版与 旧版灾厄 是旧名 `VerstaltiteBar`（同一件改名，见 §3），
         /// 两分支各注册一条（两版数量都是 8，配方逐字对应）。
         /// </summary>
         public override void AddRecipes()

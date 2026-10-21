@@ -6,7 +6,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
 {
     /// <summary>
     /// 血炎狂龙盔（BloodflareHelmet） - 血炎套装的召唤向头部部件
-    ///（按经典版灾厄同名件 1:1 移植，对应现代版 BloodflareHeadSummon）。
+    ///（按经典灾厄同名件 1:1 移植，对应现代版 BloodflareHeadSummon）。
     /// 单件：仆从上限 +3、岩浆免疫时长 +240、水中自由移动；
     /// 另有用户 2026-10-05 指定的三条额外单件属性（召唤头的统一口径）：
     /// 召唤伤害 +12%、鞭子攻击范围 +12%、鞭子攻击速度 +12%。
@@ -75,13 +75,13 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             player.ignoreWater = true;                        // 水中不受移动减速
         }
         /// <summary>
-        /// 注册配方：现代版与经典版灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
+        /// 注册配方：现代版与经典灾厄材料不同，各注册一条（均在远古操纵机合成，与其余血炎头同规矩）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
+                // 现代灾厄材料：Bloodstone×25、BloodOrb×10、RuinousSoul×2
                 if (calamity.TryFind<ModItem>("Bloodstone", out ModItem bloodstone)
                     && calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb)
                     && calamity.TryFind<ModItem>("RuinousSoul", out ModItem ruinousSoul))
@@ -96,7 +96,7 @@ namespace CalamityDemutation.Content.Items.Armors.Bloodflare
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄材料：BloodstoneCore×11、RuinousSoul×2
+                // 经典灾厄材料：BloodstoneCore×11、RuinousSoul×2
                 if (classic.TryFind<ModItem>("BloodstoneCore", out ModItem bloodstoneCore)
                     && classic.TryFind<ModItem>("RuinousSoul", out ModItem classicRuinousSoul))
                 {

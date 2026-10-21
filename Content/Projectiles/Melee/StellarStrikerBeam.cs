@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 月炎之锋的光束弹幕（移植自灾厄大修 0.4.0.1.3 的 <c>StellarStrikerBeam</c>）。
+    /// 月炎之锋的光束弹幕（移植自重制版的 <c>StellarStrikerBeam</c>）。
     /// 本体不可见，靠两种环形尘埃（受玩家盾牌染色着色器影响）表现轨迹；
     /// 速度极快（<c>MaxUpdates = 5</c>），首次命中敌人时在四周炸出 6 颗短命月炎火球。
     /// </summary>
@@ -17,7 +17,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override string Texture => "CalamityDemutation/Content/Projectiles/InvisibleProj";
         /// <summary>持有者玩家</summary>
         private Player Owner => Main.player[Projectile.owner];
-        /// <summary>保证一整条光束只触发一次"命中炸火球"（大修原字段名 onhitNPCBool）</summary>
+        /// <summary>保证一整条光束只触发一次"命中炸火球"（重制版原字段名 onhitNPCBool）</summary>
         private bool onhitNPCBool = true;
         /// <summary>
         /// 基础属性：22×22、近战伤害、友方、可穿墙、忽略水、每帧更新 5 次、存活 120×5 帧
@@ -83,7 +83,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
             onhitNPCBool = false;
         }
         /// <summary>
-        /// 等价于大修的 <c>CWRDust.SpanCycleDust(Projectile, Dust, Dust)</c>：
+        /// 等价于重制版的 <c>重制版的尘粒工具(Projectile, Dust, Dust)</c>：
         /// 随机挑一颗尘，把它连同另一颗一起摆到弹体四周随机方位上，给一个切向初速并加淡入/缩放。
         /// </summary>
         private static void SpanCycleDust(Projectile projectile, Dust dust1, Dust dust2)

@@ -9,7 +9,7 @@ namespace CalamityDemutation.Content.Projectiles.Summon
 {
     /// <summary>
     /// 叶棱晶爆裂（SilvaCrystalExplosion） - 远古叶棱晶（SilvaCrystal）射出的生命能量爆裂
-    ///（按经典版灾厄 Projectiles/Summon/SilvaCrystalExplosion.cs 1:1 移植）。
+    ///（按经典灾厄 Projectiles/Summon/SilvaCrystalExplosion.cs 1:1 移植）。
     /// 无位移、就地停留 60 帧：期间朝本体所在方向画出一道光带（ai[1] = 本体索引，-1 表示本体已消失），
     /// 喷彩尘并点亮周围；寿命结束时把判定框撑到 60×60 并手工 <c>Damage()</c> 结算一次。
     /// 颜色由生成方给的 ai[0]（Hue）决定，用来配合主人的彩虹描边。

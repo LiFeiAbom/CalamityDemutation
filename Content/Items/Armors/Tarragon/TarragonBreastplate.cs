@@ -39,14 +39,14 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
         /// 关闭时用 Tooltip 的常态值（最大生命 +40、生命再生 +1）。
         /// </summary>
         /// <summary>
-        /// 配方：现代版与经典版灾厄材料不同，分别注册两套配方
+        /// 配方：现代版与经典灾厄材料不同，分别注册两套配方
         /// （均使用原版合成站 TileID.LunarCraftingStation）
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄配方（UelibloomBar + DivineGeode）
+                // 现代灾厄配方（UelibloomBar + DivineGeode）
                 if (calamity.TryFind<ModItem>("UelibloomBar", out ModItem uelibloomBar)
                     && calamity.TryFind<ModItem>("DivineGeode", out ModItem divineGeode))
                 {
@@ -59,7 +59,7 @@ namespace CalamityDemutation.Content.Items.Armors.Tarragon
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄配方（UeliaceBar + DivineGeode）
+                // 经典灾厄配方（UeliaceBar + DivineGeode）
                 if (classic.TryFind<ModItem>("UeliaceBar", out ModItem ueliaceBar)
                     && classic.TryFind<ModItem>("DivineGeode", out ModItem classicDivineGeode))
                 {

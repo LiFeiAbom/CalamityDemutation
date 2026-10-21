@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Melee
 {
     /// <summary>
-    /// 激光喷泉弹幕（移植自 CWR 的 LaserFountains）：隐形无伤害的发射源，
+    /// 激光喷泉弹幕（移植自重制版的 LaserFountains）：隐形无伤害的发射源，
     /// 每 12 帧向随机方向喷一束死亡激光（DeathLaser）。
     /// </summary>
     internal class LaserFountains : ModProjectile

@@ -32,13 +32,13 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
         }
         /// <summary>
         /// 合成表：暴怒药水 + 灾厄 UnholyEssence + 银河奇点，或药剂瓶 + 血珠×40 + UnholyEssence；
-        /// 现代版用本模组银河奇点，经典版取经典版灾厄的 GalacticaSingularity（均在炼金台）
+        /// 现代版用本模组银河奇点，经典版取经典灾厄的 GalacticaSingularity（均在炼金台）
         /// </summary>
         public override void AddRecipes()
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：暴怒药水 + UnholyEssence + 本模组银河奇点
+                // 现代灾厄：暴怒药水 + UnholyEssence + 本模组银河奇点
                 if(calamity.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence1))
                 {
                     Recipe recipe = CreateRecipe();
@@ -48,7 +48,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipe.AddTile(TileID.AlchemyTable);
                     recipe.Register();
                 }
-                // 现代版灾厄：药剂瓶 + 血珠×40 + UnholyEssence
+                // 现代灾厄：药剂瓶 + 血珠×40 + UnholyEssence
                 if(calamity.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb1) && calamity.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence2))
                 {
                     Recipe recipe = CreateRecipe();
@@ -61,7 +61,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：暴怒药水 + UnholyEssence + 经典版 GalacticaSingularity
+                // 经典灾厄：暴怒药水 + UnholyEssence + 经典版 GalacticaSingularity
                 if(classic.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence3) && classic.TryFind<ModItem>("GalacticaSingularity", out ModItem galacticaSingularity1))
                 {
                     Recipe recipeClassic = CreateRecipe();
@@ -71,7 +71,7 @@ namespace CalamityDemutation.Content.Items.Potions.Agentia
                     recipeClassic.AddTile(TileID.AlchemyTable);
                     recipeClassic.Register();
                 }
-                // 经典版灾厄：药剂瓶 + 血珠×40 + UnholyEssence
+                // 经典灾厄：药剂瓶 + 血珠×40 + UnholyEssence
                 if(classic.TryFind<ModItem>("BloodOrb", out ModItem bloodOrb2) && classic.TryFind<ModItem>("UnholyEssence", out ModItem unholyEssence4))
                 {
                     Recipe recipeClassic = CreateRecipe();

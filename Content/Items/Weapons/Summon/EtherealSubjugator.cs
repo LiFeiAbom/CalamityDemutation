@@ -9,17 +9,17 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Weapons.Summon
 {
     /// <summary>
-    /// 空灵征服者（Ethereal Subjugator）—— 「归虚之灵」链（CI 口径）的自持件之一。
+    /// 空灵征服者（Ethereal Subjugator）—— 「归虚之灵」链（旧版支线口径）的自持件之一。
     /// 老规矩取灾厄 **2.0.3.9**：66×70、伤害 **200**、击退 1、使用/动画 **10 帧**、魔力 10、`autoReuse`、
     /// **月后 13 档（荧光绿，即灾厄 `PureGreen`）**、价值 **1 铂金 30 金**（`Rarity13BuyPrice`）、
     /// 音 `SoundID.Item82`、握持偏移（<see cref="UseStyle"/> 里把物品位置往左上挪），
     /// 在鼠标处召唤一个**幻影**（<see cref="PhantomGuy"/>）——幻影自身无接触伤害，靠喷 <see cref="GhostFire"/> 打人。
     /// </summary>
     /// <remarks>
-    /// 为什么自持、为什么取 2.0.3.9：1.4.4-release（实装那版）把它砍到伤害 160、使用帧 24；
+    /// 为什么自持、为什么取 2.0.3.9：现代灾厄（实装那版）把它砍到伤害 160、使用帧 24；
     /// 2.0 那版更旧也更弱（伤害 45、挥动姿态、幻影只占半格召唤栏，源里的 tooltip 就写着
     /// "Each phantom takes only half of a minion slot"）。本工程按用户 2026-10-09
-    /// 「1.4.4-release 大砍、要回调」并从链条统一取 2.0.3.9 的口径落地。
+    /// 「现代灾厄大砍、要回调」并从链条统一取 2.0.3.9 的口径落地。
     /// **2.0 的"伤害 45 + 半格栏位"那套没有采用**，需要的话一句话就能换。
     /// <para>
     /// **无配方**——来源照源：**噬魂幽花 `Polterghast` 的"非专家武器池"**（源用

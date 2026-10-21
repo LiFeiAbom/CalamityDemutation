@@ -30,7 +30,7 @@ namespace CalamityDemutation.Content.Projectiles.Magic
     /// **三处工程侧适配**：① 灾厄 `LightDust` → 命名常量 `DustID.FireworksRGB`（一样吃 `color` 赋值）；
     /// ② 命中音 `<c>CalamityMod/Sounds/Item/MeldShoot</c>` → 本工程自持的
     /// <see cref="CalamityDemutationSounds.MeldShoot"/>；③ 圣火减益走
-    /// <see cref="CalamityDemutationPlayer.ApplyCalamityBuffWithFallback"/>（经典版灾厄没这个减益，退回原版燃烧）。
+    /// <see cref="CalamityDemutationPlayer.ApplyCalamityBuffWithFallback"/>（经典灾厄没这个减益，退回原版燃烧）。
     /// 粒子贴图仍取自 `Particles/BloomCircle` 与 `Particles/SemiCircularSmearVerticalBlank` 两张共用素材。
     /// </para>
     /// </summary>

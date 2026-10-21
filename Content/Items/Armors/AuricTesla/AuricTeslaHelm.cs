@@ -47,7 +47,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         /// <summary>
         /// 套装效果：一身承载塔拉贡/血焰/弑神者/席尔瓦四套，附加荆棘、岩浆延时、水下呼吸、
         /// 血腥再生、仇恨提升与岩浆中额外防御/回血。
-        /// 这里只置位**本模组**的 auricSet；把「我们穿了金源套」这件事同步给**现代版灾厄**的工作
+        /// 这里只置位**本模组**的 auricSet；把「我们穿了金源套」这件事同步给**现代灾厄**的工作
         /// 已挪到 <see cref="CalamityDemutation.Utilities.CDUtil.MirrorAuricSetToCalamity"/>，
         /// 由 CalamityDemutationPlayer.PostUpdateEquips 在 auricSet 为真时每帧写回
         ///（原先写在这里的两段反射是无效残留：读进局部变量就丢，从没写回；已删除）。
@@ -90,11 +90,11 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         }
         /// <summary>
         /// 配方：由龙蒿战盔 + 血碾溃阵盔 + 始源林海战盔 + 弑神者头盔升阶，
-        /// 现代版灾厄用 10 个金之锭 + 宇宙砧，经典版用若干后期材料 + 德雷顿熔炉。
+        /// 现代灾厄用 10 个金之锭 + 宇宙砧，经典版用若干后期材料 + 德雷顿熔炉。
         /// </summary>
         public override void AddRecipes()
         {
-            // ── 现代版灾厄：四件下位头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
+            // ── 现代灾厄：四件下位头 + 金之锭 ×10 + 妄想护符，宇宙砧 ──
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
@@ -110,7 +110,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
                     recipe.Register();
                 }
             }
-            // ── 经典版灾厄：四件下位头 + 一长串后期材料，德雷顿熔炉 ──
+            // ── 经典灾厄：四件下位头 + 一长串后期材料，德雷顿熔炉 ──
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)

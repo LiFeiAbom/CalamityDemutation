@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Ranged
 {
     /// <summary>
-    /// 蓝色星流箭（BlueExoArrow） - 天堂之风把木箭转化出的四色星流箭之一，＝CI 的
+    /// 蓝色星流箭（BlueExoArrow） - 天堂之风把木箭转化出的四色星流箭之一，＝旧版支线的
     /// <c>Content/Projectiles/ExoLore/ExoArrowBlueExoLore</c>（本工程常驻 Lore 模式，故不留非 Lore 版）。
     /// <para>
     /// 定位是"命中后追加一串后续箭矢"：判定 5×5、**穿透 5**、本地命中冷却 20 帧、额外更新 3 帧、寿命 300 帧

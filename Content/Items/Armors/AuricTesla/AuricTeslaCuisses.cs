@@ -43,7 +43,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
         {
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄：四套护腿 + 魔毯 + AuricBar×15（宇宙砧）
+                // 现代灾厄：四套护腿 + 魔毯 + AuricBar×15（宇宙砧）
                 if (calamity.TryFind<ModItem>("AuricBar", out ModItem auricBar) && calamity.TryFind<ModTile>("CosmicAnvil", out ModTile cosmicAnvil))
                 {
                     Recipe recipe = CreateRecipe();
@@ -59,7 +59,7 @@ namespace CalamityDemutation.Content.Items.Armors.AuricTesla
             }
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄：四套护腿 + 金矿石×80 + 各类魂材 + 魔毯（德雷顿熔炉）
+                // 经典灾厄：四套护腿 + 金矿石×80 + 各类魂材 + 魔毯（德雷顿熔炉）
                 if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
                     && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
                     && classic.TryFind<ModItem>("NightmareFuel", out ModItem nightmareFuel)

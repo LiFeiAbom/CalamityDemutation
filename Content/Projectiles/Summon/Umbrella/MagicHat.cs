@@ -8,13 +8,13 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Projectiles.Summon.Umbrella
 {
     /// <summary>
-    /// 魔法礼帽（MagicHat，按 CI 的 `Projectiles/Summon/Umbrella/MagicHatOld` 移植；类名去掉 `Old` 后缀）——
+    /// 魔法礼帽（MagicHat，按旧版支线的 `Projectiles/Summon/Umbrella/MagicHatOld` 移植；类名去掉 `Old` 后缀）——
     /// 光阴时流伞（<see cref="Content.Items.Weapons.Summon.TemporalUmbrella"/>）召唤的仆从。
     /// 30×30 判定、**占 5 个召唤栏位**、**自身不造成接触伤害**；平时悬在主人头顶上方 60 像素
     /// （重力翻转时翻面），随鼠标文字色微微脉动缩放，登场先喷 50 粒骨火尘。
     /// </summary>
     /// <remarks>
-    /// 攻击（照 CI）：在 <see cref="Range"/> = 1500 像素内找敌（优先玩家用召唤武器右键标记的目标），
+    /// 攻击（照旧版支线）：在 <see cref="Range"/> = 1500 像素内找敌（优先玩家用召唤武器右键标记的目标），
     /// 找到后**每 5 帧**随机抛出 1 件工具 —— 从
     /// <see cref="MagicUmbrella"/> / <see cref="MagicRifle"/> / <see cref="MagicHammer"/> /
     /// <see cref="MagicAxe"/> / <see cref="MagicBird"/> 里等概率选一件，

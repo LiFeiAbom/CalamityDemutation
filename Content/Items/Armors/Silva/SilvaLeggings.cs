@@ -31,13 +31,13 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             player.GetCritChance<GenericDamageClass>() += 12; // 通用暴击率 +12%
         }
         /// <summary>
-        /// 配方：现代版与经典版灾厄材料不同，分别注册两套配方，均需本模组材料 LeadCore
+        /// 配方：现代版与经典灾厄材料不同，分别注册两套配方，均需本模组材料 LeadCore
         /// </summary>
         public override void AddRecipes()
         {
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
-                // 现代版灾厄配方（合成站 CosmicAnvil）
+                // 现代灾厄配方（合成站 CosmicAnvil）
                 if (calamity.TryFind<ModItem>("PlantyMush", out ModItem plantyMush)
                     && calamity.TryFind<ModItem>("EffulgentFeather", out ModItem effulgentFeather)
                     && calamity.TryFind<ModItem>("AscendantSpiritEssence", out ModItem ascendantSpiritEssence)
@@ -54,7 +54,7 @@ namespace CalamityDemutation.Content.Items.Armors.Silva
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                // 经典版灾厄配方（合成站 DraedonsForge）
+                // 经典灾厄配方（合成站 DraedonsForge）
                 if (classic.TryFind<ModItem>("DarksunFragment", out ModItem darksunFragment)
                     && classic.TryFind<ModItem>("EffulgentFeather", out ModItem classicEffulgentFeather)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem cosmiliteBar)
