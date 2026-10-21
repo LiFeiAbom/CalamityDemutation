@@ -432,6 +432,28 @@ Items: {
 			'''
 	}
 
+	AncientAuricWings: {
+		DisplayName: Ancient Auric Wings
+		Tooltip:
+			'''
+			Absolutely Fabulous
+			16% increased damage
+			8% increased critical strike chance
+			16% increased melee attack speed
+			8% damage reduction
+			+8 armor penetration
+			+20 maximum life
+			+20 maximum mana
+			+2 HP/s
+			+2 MP/s
+			Horizontal speed: 12
+			Acceleration multiplier: 3
+			Flight time: 400
+			Excellent vertical speed
+			Immunity to fall damage
+			'''
+	}
+
 	AncientFossil: {
 		DisplayName: Ancient Fossil
 		Tooltip: Increases pick speed by 35% while underground

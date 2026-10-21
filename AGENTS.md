@@ -4842,3 +4842,41 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 重点测三连随机餐具、潜行屠刀、普通火球、三连金锅、潜行额外火球/火花、砸锅音效与六味配方。
 
 **当前状态**：`Seared Pan` 整条链的代码、资源与本地化已自持完成，只差完整打包和进游戏验收。
+
+## 37. 古圣金源之翼（Drew 之翼升级版，2026-10-21）
+
+**来源与用户口径**：从姊妹工程 `CalamityExpansion` 的 `AncientAuricWings` 移植，
+作为本工程 `DrewsWings` 的升级版。用户本轮重新拍板了全部基础属性与配方：
+飞行 400 帧，其余水平飞行参数继续沿用 Drew；稀有度明确为**月后 15 档**
+（与焚灭天惩同档，不再使用姊妹工程原先误记的 Burnished Auric 20 档对应）。
+
+**物品面板**：22×20、防御 8、饰品、`Item.rare = Red` +
+`postMoonLordRarity = 15`、价值 1 铂金；图标 `30×26`、翅膀外观 `86×248` 四帧。
+
+**属性**：
+
+- +16% 通用伤害、+8% 通用暴击率、+16% 近战攻击速度、+8% 伤害减免、+8 盔甲穿透。
+- +20 最大生命、+20 最大魔力。
+- 生命再生 +2 HP/s（`lifeRegen += 4`）；魔力再生 +2 MP/s（本地玩家每 60 帧 +2）。
+- 飞行 400 / 水平速度 12 / 水平加速倍率 3；垂直参数
+  1 / 0.175 / 1.2 / 3.25 / 0.15；免疫坠落伤害。
+- 恢复 Drew 式钻石尘，颜色改为古圣金源亮金 `(236, 214, 147)`，并保留翅膀染色 shader。
+
+**配方（现代灾厄单条）**：本模组 `DrewsWings` + `AuricBar`×12 +
+`SoulofFlight`×20 @ `DraedonsForge`。经典灾厄没有 `AuricBar`，与姊妹工程相同，
+软引用失败即跳过，不另造替代配方。
+
+**文件**：
+
+- `Content/Items/Accessories/Wings/AncientAuricWings.cs`。
+- `Content/Items/Accessories/Wings/AncientAuricWings.png`。
+- `Content/Items/Accessories/Wings/AncientAuricWings_Wings.png`。
+- `Players/CalamityDemutationPlayer.AncientAuricWings.cs`：装备标记与 +2 MP/s 计时器；
+  `ResetEffects`/`UpdateDead` 已纳入状态清零。
+- 中英本地化：`Items.AncientAuricWings`。
+
+**验证（2026-10-21）**：`dotnet build -v q -nologo` **0 警告 0 错误**；
+`CheckResources` **210 条**全命中；`CheckImplicitTextures` **531 个类**全命中。
+
+**待实测**：全部面板属性、400 帧飞行、暖金尘埃、+2 HP/s / +2 MP/s 实际速率、
+15 档名字颜色与“Drew + 12 圣金源锭 + 20 飞翔之魂”配方。

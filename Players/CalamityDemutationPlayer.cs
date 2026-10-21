@@ -978,6 +978,7 @@ namespace CalamityDemutation.Players
             ambrosialAmpoule = false;
             amidiasSpark = false;
             ancientFossil = false;
+            ancientAuricWings = false;
             angelTreads = false;
             archaicPowder = false;
             armorCrumbling = false;
@@ -1176,6 +1177,8 @@ namespace CalamityDemutation.Players
             ambrosialAmpoule = false;
             amidiasSpark = false;
             ancientFossil = false;
+            ancientAuricWings = false;
+            passiveManaRegenTimer = 0;
             angelTreads = false;
             archaicPowder = false;
             armorCrumbling = false;
@@ -1435,6 +1438,7 @@ namespace CalamityDemutation.Players
         public override void PostUpdateMiscEffects()
         {
             UpdateSearedPanCounter();
+            UpdateAncientAuricWingsManaRegen();
             // 血肉图腾冷却倒计时
             if (fleshTotemCooldown > 0)
                 fleshTotemCooldown--;
