@@ -5,6 +5,7 @@ using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Content.Items.Weapons.Magic;
 using CalamityDemutation.Content.Items.Weapons.Ranged;
+using CalamityDemutation.Content.Items.Weapons.Rogue;
 using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Content.Items.Accessories.Defense;
 using CalamityDemutation.Content.Items.Accessories.Function;
@@ -368,6 +369,10 @@ namespace CalamityDemutation.Content.Items
         /// </summary>
         public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
         {
+            if (item.type == ItemID.MoonLordBossBag)
+            {
+                itemLoot.Add(new CommonDrop(ModContent.ItemType<UtensilPoker>(), 3));
+            }
             if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
             {
                 if (calamity.TryFind<ModItem>("PerforatorBag", out ModItem perforatorBag) && item.type == perforatorBag.Type)

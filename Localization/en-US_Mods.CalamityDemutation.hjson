@@ -3116,6 +3116,16 @@ Items: {
 			'''
 	}
 
+	UtensilPoker: {
+		DisplayName: Utensil Poker
+		Tooltip:
+			'''
+			Fires random utensils in bursts of three
+			Stealth strikes replace any utensil with a powerful butcher knife
+			Space chickens, that is all.
+			'''
+	}
+
 	WrathoftheAncients: {
 		DisplayName: Wrath of the Ancients
 		Tooltip: Summons an energy pulse at the cursor that periodically releases homing spirits
@@ -3347,6 +3357,10 @@ Projectiles: {
 	GraniteEnergy.DisplayName: Granite Energy
 	WhiteFlame.DisplayName: White Flame
 	WhiteFlameAlt.DisplayName: White Flame Fragment
+	ButcherKnife.DisplayName: Butcher Knife
+	CarvingFork.DisplayName: Carving Fork
+	Fork.DisplayName: Fork
+	Knife.DisplayName: Knife
 }
 
 TextContent: {

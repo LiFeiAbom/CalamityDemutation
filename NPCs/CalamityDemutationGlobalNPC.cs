@@ -12,6 +12,7 @@ using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Items.Consumables;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Content.Items.Weapons.Magic;
+using CalamityDemutation.Content.Items.Weapons.Rogue;
 using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
@@ -193,6 +194,7 @@ namespace CalamityDemutation.NPCs
             else if (npc.type == NPCID.MoonLordCore)
             {
                 npcLoot.Add(new CommonDrop(ModContent.ItemType<CelestialOnion>(), 1));
+                npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NotExpert(), ModContent.ItemType<UtensilPoker>(), 4));
             }
             // 被附身铠甲属于原版怪，其掉落随原版链注册
             else if (npc.type == NPCID.PossessedArmor)

@@ -3115,6 +3115,16 @@ Items: {
 			'''
 	}
 
+	UtensilPoker: {
+		DisplayName: 餐具拨火棍
+		Tooltip:
+			'''
+			以三连发形式随机投掷餐具
+			潜行打击会以强力屠刀替代餐具
+			太空鸡，仅此而已。
+			'''
+	}
+
 	WrathoftheAncients: {
 		DisplayName: 远古之怒
 		Tooltip: 在鼠标位置召唤能量脉冲，周期性释放追踪灵体
@@ -3346,6 +3356,10 @@ Projectiles: {
 	GraniteEnergy.DisplayName: 花岗岩能量
 	WhiteFlame.DisplayName: 白色火焰
 	WhiteFlameAlt.DisplayName: 白色火焰残片
+	ButcherKnife.DisplayName: 屠刀
+	CarvingFork.DisplayName: 分肉叉
+	Fork.DisplayName: 餐叉
+	Knife.DisplayName: 餐刀
 }
 
 TextContent: {

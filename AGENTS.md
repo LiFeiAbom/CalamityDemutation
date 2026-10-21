@@ -4744,3 +4744,47 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **验证（2026-10-19）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **209 条**全命中；`CheckImplicitTextures` **521 个类**全命中。
 用户 2026-10-19 已实测通过数值与经典版 HallowedBar 配方。
+
+## 35. Seared Pan 下位武器：Utensil Poker（2.0，2026-10-21）
+
+**用户口径**：移植 `Seared Pan`，先从下位武器开始；下位件明确取 **2.0**。
+
+**来源与链条**：`CalamityModPublic-2.0`。`Seared Pan` 在 2.0.4 后删除，实装 2.2.2 已无；
+`Utensil Poker` 仍存在于实装 2.2.2。它没有配方，2.0 来源是月亮领主武器池。
+
+**物品面板（2.0）**：碰撞箱 44×66、贴图 30×32、伤害 333、击退 8、使用/动画 15/45 帧、
+`reuseDelay = 15`、弹速 12、紫档、价值 1 金 10 银、研究解锁 1；无近战判定、不显示手持贴图。
+
+**机制（2.0）**：
+
+- 每次从 `Fork` / `Knife` / `CarvingFork` 中随机投掷一件，形成三连发。
+- 潜行打击替换为 `ButcherKnife`，伤害 ×2、弹速 ×1.4，并标记盗贼潜行弹幕。
+- 2.0 物品源码里的 `counter` 在随机分支中从未参与判定；本实现不保留这个无效全局状态。
+- 现代 tML 需显式写 `Item.useLimitPerAnimation = 3`，否则 2.0 的三连发会退化成单发。
+- 旧 tooltip 的“命中给予吃饱”没有对应源码实现，2.1 也已删掉这行，本实现不伪造该效果。
+
+**四个弹幕**：
+
+- `Fork`：32×14，穿透 1，伤害 ×1.1、击退 ×2。
+- `Knife`：36×12，穿透 1，伤害 ×1.2。
+- `CarvingFork`：36×10，无限穿透，本地单体命中间隔 30 帧。
+- `ButcherKnife`：44×14，无限穿透，26 帧后回旋，撞墙反弹，本地单体命中间隔 60 帧。
+
+**获取（沿用工程简化池口径）**：不重写月亮领主整组原版武器池，自持件独立挂入：
+普通击杀 1/4；专家宝藏袋 1/3。当前灾厄自己的同名下位件仍会照本体规则掉落，不做互斥。
+
+**文件**：
+
+- `Content/Items/Weapons/Rogue/UtensilPoker.cs` + `UtensilPoker.png`。
+- `Content/Projectiles/Rogue/{Fork,Knife,CarvingFork,ButcherKnife}.cs` 与同名贴图。
+- `NPCs/CalamityDemutationGlobalNPC.cs`：普通月亮领主掉落。
+- `Content/Items/CalamityDemutationGlobalItem.cs`：专家宝藏袋掉落。
+- 中英本地化：`Items.UtensilPoker` 与四个 `Projectiles.*` 名称；中文名暂定“餐具拨火棍”。
+
+**验证（2026-10-21）**：`dotnet build -t:Compile` **0 警告 0 错误**；
+`CheckResources` **209 条**全命中；`CheckImplicitTextures` **526 个类**全命中。
+完整打包本轮被宿主的 workspace 写入边界拦在 `Mods/CalamityDemutation.tmod`（拒绝访问），
+不是 C# 编译错误；取得 `Mods` 写权限或由 tML 编辑器正常构建后再做进游戏实测。
+
+**下一步**：用户拍板 `Seared Pan` 用 2.0 六味配方后，移植本体、`SearedPanProjectile`、
+`NiceCock` 火焰球、`PanSpark` 金色火花与砸锅音效。
