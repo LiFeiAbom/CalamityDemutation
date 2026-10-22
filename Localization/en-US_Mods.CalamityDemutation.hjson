@@ -1783,6 +1783,18 @@ Items: {
 		Tooltip: 10% increased damage reduction, +5 defense, and increased life regen while in the Jungle
 	}
 
+	LumiStriker: {
+		DisplayName: Luminous Striker
+		Tooltip:
+			'''
+			Throws a stardust javelin trailed by rising stardust shards
+			Explodes into additional stardust shards upon hitting enemies
+			Stealth strikes hurl a javelin that can strike enemies four times
+			The javelin also releases shards that follow alongside it during flight
+			"Send the stars back to where they belong"
+			'''
+	}
+
 	LureofEnthrallment: {
 		Tooltip:
 			'''
@@ -3185,6 +3197,8 @@ Projectiles: {
 	IceClasperSummonProjectile.DisplayName: Ice Shard
 	JudgementBeam.DisplayName: Judgement Beam
 	LaserFountains.DisplayName: Laser Fountains
+	LumiShard.DisplayName: Stardust Shard
+	LumiStrikerProj.DisplayName: Luminous Striker
 	MechwormBody.DisplayName: Mechworm Body
 	MechwormBody2.DisplayName: Mechworm Body 2
 	MechwormHead.DisplayName: Mechworm

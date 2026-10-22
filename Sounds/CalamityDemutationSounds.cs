@@ -55,5 +55,9 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle MeldShoot = new("CalamityDemutation/Sounds/Custom/MeldShoot");
         /// <summary>炙热平底锅金锅与潜行锅命中时的砸锅声（灾厄 2.0 SearedPanSmash）。</summary>
         public static readonly SoundStyle SearedPanSmash = new("CalamityDemutation/Sounds/Item/SearedPanSmash");
+        /// <summary>CI 锤类返程音（Return1）：月影投矛潜伏投掷时播放。</summary>
+        public static readonly SoundStyle HammerReturn = new("CalamityDemutation/Sounds/Custom/Return1") { Volume = 0.7f, Pitch = 0.5f };
+        /// <summary>灾厄精金武器命中音（WulfrumKnifeTileHit2）：月影投矛每次命中时播放。</summary>
+        public static readonly SoundStyle WulfrumKnifeTileHit2 = new("CalamityDemutation/Sounds/Custom/WulfrumKnifeTileHit2") { Volume = 0.5f, PitchVariance = 0.4f };
     }
 }

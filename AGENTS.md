@@ -4925,3 +4925,52 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 **链条后续**：下一件为 `LumiStriker`（月影投矛），其 CI 配方依赖仍存在于实装灾厄
 2.2.2 的 `SpearofPaleolith` / `Turbulance` 与星尘碎片；完成后再落地
 `PhantasmalRuinold` 本体、幻影灵魂及命中爆发灵魂。
+
+## 39. 幻魂归墟链条·中位：月影投矛（LumiStriker，CI，2026-10-22）
+
+**来源**：CI Beta 1.12 `Content/Items/Weapons/Rogue/LumiStriker.cs`、
+`Content/Projectiles/Rogue/LumiStrikerProj.cs`、`LumiShard.cs`。物品与碎片贴图均与
+灾厄 2.0 对应件哈希相同；类名按工程口径去掉 `Legacy`。
+
+**物品面板（CI）**：碰撞箱 102×86、贴图 86×102、伤害 180、击退 16、使用/动画 30 帧、
+弹速 22、红档、价值 1 铂金、研究解锁 1；自动连发、无近战判定、使用音 `Item1`。
+
+**潜伏投掷（CI）**：弹速 ×1.2、单次面板伤害 ×0.70，播放 CI `Return1` 并标记潜行打击。
+伤害被压低是源设计，用来交换多次命中与追踪能力。
+
+**主弹幕（CI）**：
+
+- 普通：86×102 判定、穿透 4、寿命 120、逐敌 13 帧独立冷却；每 4 帧在自身位置生成一枚
+  向上飞的 `LumiShard`（伤害 ×0.5）。
+- 潜伏：首次 AI 改为寿命 1200、逐敌冷却 60、`extraUpdates = 3`；每 15 次更新生成一枚
+  沿弹速方向飞行的碎片（伤害 ×0.2，并携带 `ai0 = 1 / ai1 = 1`）。
+- 潜伏弹前 3 次更新不计伤害，随后开始追踪：首次范围 3600，之后缩至 1800，追踪速度 24、
+  惯性 30。每次命中降低一级 `extraUpdates`、速度 ×0.94，并进入 30 次更新的重新索敌等待。
+- 命中固定生成 7 枚随机方向 `LumiShard`（伤害 ×0.5），播放 Wulfrum 命中音并生成项目自研
+  `GlowSparkCal` 火花。逐弹状态改放 `ai/localAI`，不写共享 ModProjectile 字段。
+
+**星尘碎片**：
+
+- 10×18、穿透 1、寿命 120、不撞墙；前 30 帧不能命中，之后开始追踪。
+- 普通碎片：600 范围、速度 16、惯性 20。
+- 潜伏碎片：450 范围、速度 14、惯性 15。
+- 零初速生成的碎片会启用源版的轻微重力加速；消亡撒蓝/粉两色泡泡尘。
+
+**配方（CI，现代分支）**：`SpearofPaleolith` + `Turbulance` + 星尘碎片×6
+@ 远古操纵机。两件前置武器仍存在于实装灾厄 2.2.2，故软依赖本体；经典版缺件时不注册。
+
+**文件与音效**：
+
+- `Content/Items/Weapons/Rogue/LumiStriker.cs` + `LumiStriker.png`（86×102）。
+- `Content/Projectiles/Rogue/LumiStrikerProj.cs`、`LumiShard.cs` + `LumiShard.png`（10×18）。
+- `Sounds/Custom/Return1.ogg`、`Sounds/Custom/WulfrumKnifeTileHit2.ogg`，静态入口为
+  `CalamityDemutationSounds.HammerReturn` / `WulfrumKnifeTileHit2`。
+- 中英本地化：`Items.LumiStriker`、`Projectiles.LumiStrikerProj/LumiShard`。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **218 条**全命中；`CheckImplicitTextures` **539 个类**全命中。
+尚待进游戏实测普通碎片上升、潜伏四次命中/重新索敌、命中爆发与配方。
+
+**链条后续**：最后一件为 `PhantasmalRuinold`（幻魂归墟）本体。已具备本工程自持的
+`PhantomLance` 与 `LumiStriker`；仍需落地 `PhantasmalRuinGhost`、`PhantasmalSoulold`
+和本体弹幕，`RuinousSoul` / 死灵质继续软引用本体材料。

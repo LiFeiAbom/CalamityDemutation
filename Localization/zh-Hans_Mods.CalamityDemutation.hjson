@@ -1784,6 +1784,18 @@ Items: {
 		Tooltip: 身处丛林时伤害减免提高 10%，防御 +5，生命再生提升
 	}
 
+	LumiStriker: {
+		DisplayName: 月影投矛
+		Tooltip:
+			'''
+			投掷星尘标枪，飞行轨迹上生成上升的星尘碎片
+			命中爆炸后产生额外的星尘碎片
+			潜伏攻击时掷出一个可攻击敌人四次的星尘标枪
+			标枪飞行过程中也会生成跟随的星尘碎片
+			[c/99DFFD:将星辰送回属于它们的地方]
+			'''
+	}
+
 	LureofEnthrallment: {
 		Tooltip:
 			'''
@@ -3184,6 +3196,8 @@ Projectiles: {
 	IceClasperSummonProjectile.DisplayName: 冰锥
 	JudgementBeam.DisplayName: 审判光束
 	LaserFountains.DisplayName: 激光喷泉
+	LumiShard.DisplayName: 星尘碎片
+	LumiStrikerProj.DisplayName: 月影投矛
 	MechwormBody.DisplayName: 机械蠕虫身体
 	MechwormBody2.DisplayName: 机械蠕虫身体 2
 	MechwormHead.DisplayName: 机械蠕虫
