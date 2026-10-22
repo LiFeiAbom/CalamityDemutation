@@ -9,6 +9,11 @@ Buffs: {
 		Description: 受异界魂灵强化
 	}
 
+	BurningIII: {
+		DisplayName: 薪炎灼烧
+		Description: 来自薪炎的烈焰持续灼烧目标
+	}
+
 	BrimstoneWaifu: {
 		Description: 硫磺元素会保护你
 		DisplayName: 硫磺元素
@@ -2618,6 +2623,17 @@ Items: {
 	WifeinaBottlewithBoobs: {
 		Tooltip: 召唤一个沙元素为你治疗
 		DisplayName: 稀有瓶装沙元素
+	}
+
+	WarriorEmblemEX: {
+		DisplayName: 战士徽章EX
+		Tooltip:
+			'''
+			近战伤害提高 18%
+			近战攻击速度提高 10%
+			近战暴击率提高 8%
+			近战命中会造成薪炎灼烧
+			'''
 	}
 
 	YharimsInsignia: {

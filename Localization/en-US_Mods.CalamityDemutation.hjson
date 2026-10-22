@@ -9,6 +9,11 @@ Buffs: {
 		Description: Empowered by otherworldly spirits
 	}
 
+	BurningIII: {
+		DisplayName: Emberflare Burn
+		Description: The pyre's flames continue to sear the target
+	}
+
 	BrimstoneWaifu: {
 		Description: The brimstone elemental will protect you
 		DisplayName: Brimstone Elemental
@@ -2619,6 +2624,17 @@ Items: {
 	WifeinaBottlewithBoobs: {
 		Tooltip: Summons a sand elemental to heal you
 		DisplayName: Rare Elemental in a Bottle
+	}
+
+	WarriorEmblemEX: {
+		DisplayName: Warrior Emblem EX
+		Tooltip:
+			'''
+			Increases melee damage by 18%
+			Increases melee attack speed by 10%
+			Increases melee critical strike chance by 8%
+			Melee hits inflict Emberflare Burn
+			'''
 	}
 
 	YharimsInsignia: {

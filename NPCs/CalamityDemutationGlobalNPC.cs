@@ -99,6 +99,16 @@ namespace CalamityDemutation.NPCs
             }
         }
         /// <summary>
+        /// 薪炎灼烧：敌怪攻击结算时按当前减益状态降低 5 点防御，并使其受到伤害增加 5%。
+        /// </summary>
+        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+        {
+            if (!npc.HasBuff(ModContent.BuffType<BurningIII>()))
+                return;
+            modifiers.Defense.Flat -= BurningIII.DefenseLoss;
+            modifiers.FinalDamage *= BurningIII.DamageTakenMultiplier;
+        }
+        /// <summary>
         /// 血腥玛丽：血月期间把该玩家的刷怪率与最大刷怪量都放大 10 倍
         /// （spawnRate 越小刷得越快，故除以 10 并保证不低于 1）。
         /// </summary>
@@ -403,6 +413,14 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
+            if (npc.HasBuff(ModContent.BuffType<BurningIII>()))
+            {
+                if (npc.lifeRegen > 0)
+                    npc.lifeRegen = 0;
+                npc.lifeRegen -= BurningIII.BurnLifeRegen;
+                if (damage < BurningIII.BurnLifeRegen / 2)
+                    damage = BurningIII.BurnLifeRegen / 2;
+            }
             if (demonFlames)
             {
                 if (npc.lifeRegen > 0)

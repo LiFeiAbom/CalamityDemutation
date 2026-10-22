@@ -3762,6 +3762,8 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void PostUpdateEquips()
         {
+            if (Player.HasBuff(ModContent.BuffType<BurningIII>()))
+                Player.statDefense -= (int)BurningIII.DefenseLoss;
             // 金源套镜像：玩家穿本模组金源套时，把现代灾厄的 CalamityPlayer.auricSet 也置真，
             // 让灾厄侧自己的 auricSet 分支（金源矿石排斥免疫 / 金源飞毯贴图 / 金源拖影）跟着生效。
             // 必须写在这里：灾厄在 ResetEffects 里每帧清零，而它的读取点在 PostUpdateMiscEffects（更晚的相位）。
@@ -4194,6 +4196,13 @@ namespace CalamityDemutation.Players
             {
                 if (Player.lifeRegen < 0)
                     Player.lifeRegen = 0;
+            }
+            if (Player.HasBuff(ModContent.BuffType<BurningIII>()))
+            {
+                if (Player.lifeRegen > 0)
+                    Player.lifeRegen = 0;
+                Player.lifeRegenTime = 0;
+                Player.lifeRegen -= BurningIII.BurnLifeRegen;
             }
             if (hellfireExplosion)
             {
@@ -4889,6 +4898,8 @@ namespace CalamityDemutation.Players
         {
             double damageMult = 1.0 + ((bloodPact && Main.rand.NextBool(4)) ? 1.5 : 0.0) + (enraged ? 0.25 : 0.0);
             modifiers.FinalDamage *= (float)damageMult;
+            if (Player.HasBuff(ModContent.BuffType<BurningIII>()))
+                modifiers.FinalDamage *= BurningIII.DamageTakenMultiplier;
             if (theAbsorber)
             {
                 int healAmt = (int)modifiers.SourceDamage.Base / 20;
@@ -5519,6 +5530,9 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
         {
+            if (hit.DamageType.CountsAsClass(DamageClass.Melee)
+                && IsAccessoryEquipped(Player, ModContent.ItemType<WarriorEmblemEX>()))
+                target.AddBuff(ModContent.BuffType<BurningIII>(), BurningIII.Duration, false);
             // 亚利姆徽章：施加圣焰 debuff（现代版 HolyFlames / 经典版 HolyLight，
             // 各按 1/4、1/2、其余概率给 360/240/120 帧；GetBuffType 缓存容错，模组缺 buff 名静默跳过）
             if (yharimsInsignia && (item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<MeleeNoSpeedDamageClass>()))
@@ -5632,6 +5646,9 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
+            if (hit.DamageType.CountsAsClass(DamageClass.Melee)
+                && IsAccessoryEquipped(Player, ModContent.ItemType<WarriorEmblemEX>()))
+                target.AddBuff(ModContent.BuffType<BurningIII>(), BurningIII.Duration, false);
             // 亚利姆徽章：近战弹幕施加圣焰 debuff（现代/经典版，GetBuffType 缓存容错）
             if (yharimsInsignia && proj.CountsAsClass<MeleeDamageClass>())
             {

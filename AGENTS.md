@@ -5120,3 +5120,38 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 **验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **216 条**全命中；`CheckImplicitTextures` **544 个类**全命中。
 尚待进游戏实测持续引导、右键引爆、火箭撞墙、大范围爆炸与龙焰减益。
+
+## 43. 战士徽章EX（WarriorEmblemEX，CalamityExpansion，2026-10-22）
+
+**来源**：`D:\Game\Terraria\PrivateMod\CalamityExpansion` 的
+`Content/Items/Accessories/JobAcc/Melee/WarriorEmblemEX.cs`。原件的破晓EX与橙红渐变稀有度不移植，
+按用户拍板改为下列独立规格。
+
+**物品**：28×28 饰品贴图、Pink 稀有度（`ItemRarityID.Pink`）、价值 3 金
+（`Item.sellPrice(gold: 3)`）；**+18% 近战伤害 / +10% 近战攻击速度 / +8% 近战暴击率**。
+配方沿用原件现行版本：战士徽章 + 神圣锭×15 + 光/暗影/恐惧/力量/视域之魂各×25 @ 秘银砧。
+
+**薪炎灼烧（BurningIII）**：自持减益，显示名“薪炎灼烧”/ `Emberflare Burn`，图标复用
+CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹幕命中附加 300 帧，PvP 同步生效：
+
+- 每秒 100 HP（`lifeRegen -= 200`，伤害数字下限 100）。
+- 防御 −5；受到伤害额外增加 5%（`FinalDamage *= 1.05`）。
+- 视觉复刻原版第二档燃烧 Hellfire（`BuffID.OnFire3`）的 IL 分支：3/4 概率生成
+  `DustID.Torch`，scale 3.5、速度 ×1.8 再上抬 0.5，1/4 概率恢复重力并缩小一半；
+  粒子同帧始终附带 `(1, 0.3, 0.1)` 橙红照明。未采用“小幅度增幅”备选项。
+- 没有破晓EX的死亡爆炸或传染，也没有燃烧IV的溶解着色器。
+
+**文件与挂点**：
+
+- `Content/Items/Accessories/JobAcc/Melee/WarriorEmblemEX.cs` + `.png`（28×28）。
+- `Content/Buffs/NegativeBuffs/BurningIII.cs` + `.png`（32×32，复用燃烧IV图标）。
+- PvE 施加在 `CalamityDemutationPlayer.OnHitNPCWithItem/WithProj`；
+  玩家侧掉血、减防、易伤分别在 `UpdateBadLifeRegen/PostUpdateEquips/ModifyHurt`；
+  敌怪侧掉血与减防易伤在 `CalamityDemutationGlobalNPC.UpdateLifeRegen/ModifyIncomingHit`。
+- PvP 物品命中与弹幕命中分别在 `CalamityDemutationGlobalItem.OnHitPvp` /
+  `CalamityDemutationGlobalProjectile.OnHitPlayer`。
+- 中英本地化：`Items.WarriorEmblemEX`、`Buffs.BurningIII`。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **216 条**全命中；`CheckImplicitTextures` **546 个类**全命中。
+尚待进游戏实测近战/PvP 施加、100 HP/s、−5 防御、5% 易伤、Hellfire 粒子与配方。
