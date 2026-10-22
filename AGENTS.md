@@ -4974,3 +4974,57 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 **链条后续**：最后一件为 `PhantasmalRuinold`（幻魂归墟）本体。已具备本工程自持的
 `PhantomLance` 与 `LumiStriker`；仍需落地 `PhantasmalRuinGhost`、`PhantasmalSoulold`
 和本体弹幕，`RuinousSoul` / 死灵质继续软引用本体材料。
+
+## 40. 幻魂归墟链顶：幻魂归墟（PhantasmalRuin，CI，2026-10-22）
+
+**用户口径**：完整移植 CI 的“幻魂归墟”，从最低位向上补齐。本件为链顶；前置
+`PhantomLance` 与 `LumiStriker` 已在 §38/§39 自持完成。
+
+**来源与命名**：CI Beta 1.12 `PhantasmalRuinold` / `PhantasmalRuinProjold` /
+`PhantasmalRuinGhost` / `PhantasmalSoulold`。按工程命名口径统一去掉 `Old`
+后缀，类名分别为 `PhantasmalRuin`、`PhantasmalRuinProj`、
+`PhantasmalRuinGhost`、`PhantasmalSoul`；中文本地化键仍为“幻魂归墟”。
+
+**物品面板（CI）**：102×98、伤害 955、击退 8、使用/动画 35 帧、弹速 14.5、
+月后 13 档（纯绿）、价值 1 铂金 75 金、研究解锁 1；盗贼伤害、自动连发、
+无近战判定、使用音 `Item1`。潜伏分支生成时伤害 ×1.30 并打潜行标记。
+
+**主投矛**：30×30、穿透 1、不撞墙、寿命 600、`extraUpdates = 1`、12 点残影。
+普通形态每 18 次更新生成 `LostSoulFriendly`（伤害 ×0.5）；潜伏形态改为
+`PhantasmalRuinGhost`（伤害 ×0.5）。两者都会在每 26 次更新的特殊节拍生成一枚
+`Phantom`（伤害 ×0.7，改为盗贼类型），随后追加一枚幽灵/迷失灵魂（伤害 ×0.25）。
+
+**命中爆发**：普通命中生成 10~11 枚 `PhantasmalSoul`；潜伏命中增加到
+20~21 枚，并给每枚爆发灵魂打潜行标记。扇形范围 25~30°，每枚伤害为
+主投矛的 50%。音效使用原版 `NPCDeath39`。
+
+**支援弹幕**：
+
+- `LostSoulFriendly` 自持灾厄 2.0 版本：16×16、4 帧、240 寿命、`extraUpdates = 1`；
+  前 30 帧不能命中，之后追踪 600 范围内敌人。
+- `PhantasmalRuinGhost`：30×30、240 寿命、追踪范围 1300、速度 12、惯性 40。
+- `PhantasmalSoul`：4 帧、30×30、穿透 1、寿命 600、`extraUpdates = 2`、逐敌冷却 10；
+  伤害从约 1/10 逐步恢复，560 次更新后开始追踪；潜伏时 `extraUpdates = 4`。
+  消亡时临时扩为 64×64、伤害 ÷4 再结算一次，并撒 36 颗环状暗影尘。
+- `Phantom` 复用 §38 已自持的灾厄 2.0 支援弹，不引用现版本体类型。
+
+**配方（CI，现代分支）**：本模组 `LumiStriker` + 本模组 `PhantomLance`×500 +
+`RuinousSoul`×4 + `Necroplasm`×20 @ 远古操纵机。经典灾厄没有本链条所需的
+`Turbulance`，无法形成完整经典分支，故只注册现代配方；死灵质继续软引用。
+
+**文件**：
+
+- `Content/Items/Weapons/Rogue/PhantasmalRuin.cs` + `PhantasmalRuin.png`（102×98）。
+- `Content/Projectiles/Rogue/PhantasmalRuinProj.cs`、`PhantasmalRuinGhost.cs`、
+  `PhantasmalSoul.cs`、`LostSoulFriendly.cs`。
+- 对应贴图：`PhantasmalRuinGhost.png`（102×98）、`PhantasmalSoul.png`（30×184，
+  4 帧）、`LostSoulFriendly.png`（28×64，4 帧）。
+- 中英本地化：`Items.PhantasmalRuin`、`Projectiles.PhantasmalRuinProj/Ghost`、
+  `Projectiles.PhantasmalSoul/LostSoulFriendly`。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **219 条**全命中；`CheckImplicitTextures` **544 个类**全命中。
+尚待进游戏实测普通/潜伏轨迹、命中灵魂爆发、幻影追踪与 500 根幻影投矛配方。
+
+**当前状态**：CI 幻魂归墟整条链已落地并自持关键武器/弹幕；现代灾厄材料仍按
+软依赖口径引用。无遗留配方链缺口。

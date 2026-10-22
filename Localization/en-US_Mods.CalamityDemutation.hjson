@@ -2742,6 +2742,16 @@ Items: {
 			'''
 	}
 
+	PhantasmalRuin: {
+		DisplayName: Phantasmal Ruin
+		Tooltip:
+			'''
+			Fires an enormous ghost lance that emits lost souls as it flies
+			Explodes into tormented souls on enemy hits
+			Stealth strikes continuously leave spectral clones in their wake
+			'''
+	}
+
 	PhantomLance: {
 		DisplayName: Phantom Lance
 		Tooltip:
@@ -3197,6 +3207,7 @@ Projectiles: {
 	IceClasperSummonProjectile.DisplayName: Ice Shard
 	JudgementBeam.DisplayName: Judgement Beam
 	LaserFountains.DisplayName: Laser Fountains
+	LostSoulFriendly.DisplayName: Lost Soul
 	LumiShard.DisplayName: Stardust Shard
 	LumiStrikerProj.DisplayName: Luminous Striker
 	MechwormBody.DisplayName: Mechworm Body
@@ -3213,6 +3224,9 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PenumbraBomb.DisplayName: Penumbra Bomb
 	PenumbraSoul.DisplayName: Penumbra Soul
+	PhantasmalRuinGhost.DisplayName: Phantasmal Ruin Ghost
+	PhantasmalRuinProj.DisplayName: Phantasmal Ruin
+	PhantasmalSoul.DisplayName: Phantasmal Soul
 	Phantom.DisplayName: Phantom
 	PhantomGuy.DisplayName: Phantom
 	PhantomLanceProj.DisplayName: Phantom Lance

@@ -2741,6 +2741,16 @@ Items: {
 			'''
 	}
 
+	PhantasmalRuin: {
+		DisplayName: 幻魂归墟
+		Tooltip:
+			'''
+			发射巨大的幽魂投矛，并沿途释放跟踪灵魂，命中敌人时会爆炸并放出幽魂
+			潜伏攻击会沿途释放更多的长枪幻影
+			现在还是花后武器
+			'''
+	}
+
 	PhantomLance: {
 		DisplayName: 幻影投矛
 		Tooltip:
@@ -3196,6 +3206,7 @@ Projectiles: {
 	IceClasperSummonProjectile.DisplayName: 冰锥
 	JudgementBeam.DisplayName: 审判光束
 	LaserFountains.DisplayName: 激光喷泉
+	LostSoulFriendly.DisplayName: 迷失幽灵
 	LumiShard.DisplayName: 星尘碎片
 	LumiStrikerProj.DisplayName: 月影投矛
 	MechwormBody.DisplayName: 机械蠕虫身体
@@ -3212,6 +3223,9 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PenumbraBomb.DisplayName: 半影炸弹
 	PenumbraSoul.DisplayName: 半影之魂
+	PhantasmalRuinGhost.DisplayName: 幻影灵魂
+	PhantasmalRuinProj.DisplayName: 幻魂归墟
+	PhantasmalSoul.DisplayName: 幻影灵魂
 	Phantom.DisplayName: 幻影
 	PhantomGuy.DisplayName: 幻影
 	PhantomLanceProj.DisplayName: 幻影投矛
