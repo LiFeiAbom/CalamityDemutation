@@ -3767,7 +3767,6 @@ namespace CalamityDemutation.Players
             {
                 Player.GetDamage<GenericDamageClass>() += 0.08f;
                 Player.GetCritChance<GenericDamageClass>() += 8f;
-                Player.GetAttackSpeed<MeleeDamageClass>() += 0.08f;
                 Player.endurance += 0.08f;
             }
             if (Player.HasBuff(ModContent.BuffType<BurningIII>()))

@@ -5226,7 +5226,7 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 
 **古圣金源套装奖励**：在 `CalamityDemutationPlayer.PostUpdateEquips` 中，
 `auricSet && IsAccessoryEquipped(Player, ModContent.ItemType<AncientAuricWings>())` 时追加：
-通用伤害 +8%、通用暴击 +8、近战攻速 +8%、伤害减免 +8%。
+通用伤害 +8%、通用暴击 +8、伤害减免 +8%（2026-10-23 按用户要求移除近战攻速 +8%）。
 该钩子顺序已核为 `UpdateEquips → UpdateArmorSets → PlayerLoader.PostUpdateEquips`，
 因此五种古圣金源职业头设置的 `auricSet` 当帧即可读取。
 
