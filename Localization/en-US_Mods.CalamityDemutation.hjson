@@ -2730,6 +2730,17 @@ Items: {
 			'''
 	}
 
+	PhantomLance: {
+		DisplayName: Phantom Lance
+		Tooltip:
+			'''
+			Fires a spectral javelin that rapidly releases lost souls
+			Fades away and slows down over time
+			Lost souls released later deal less damage
+			Stealth strikes don't slow down and souls always deal full damage
+			'''
+	}
+
 	PhoenixBlade: {
 		DisplayName: Phoenix Blade
 		Tooltip: Melee kills explode and leave behind two healing flames
@@ -3188,7 +3199,9 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: Orderbringer White Orbs
 	PenumbraBomb.DisplayName: Penumbra Bomb
 	PenumbraSoul.DisplayName: Penumbra Soul
+	Phantom.DisplayName: Phantom
 	PhantomGuy.DisplayName: Phantom
+	PhantomLanceProj.DisplayName: Phantom Lance
 	PlantationStaffSeed.DisplayName: Seed
 	PlantationStaffSporeCloud.DisplayName: Spore Cloud
 	PlantationStaffSummon.DisplayName: Plantation

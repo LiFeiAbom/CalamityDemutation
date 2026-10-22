@@ -2729,6 +2729,17 @@ Items: {
 			'''
 	}
 
+	PhantomLance: {
+		DisplayName: 幻影投矛
+		Tooltip:
+			'''
+			发射一把分裂出迷失幽灵的长矛
+			随着时间缓慢减速后消失
+			迷失幽灵造成的伤害较小
+			潜伏攻击下长矛不会减速并且迷失幽灵具有全额伤害
+			'''
+	}
+
 	PhoenixBlade: {
 		DisplayName: 凤凰之刃
 		Tooltip: 近战击杀敌人时炸出一团日耀爆炸，并留下两枚恢复之火
@@ -3187,7 +3198,9 @@ Projectiles: {
 	OrderbringerWhiteOrbs.DisplayName: 携序白球
 	PenumbraBomb.DisplayName: 半影炸弹
 	PenumbraSoul.DisplayName: 半影之魂
+	Phantom.DisplayName: 幻影
 	PhantomGuy.DisplayName: 幻影
+	PhantomLanceProj.DisplayName: 幻影投矛
 	PlantationStaffSeed.DisplayName: 种子
 	PlantationStaffSporeCloud.DisplayName: 孢子云
 	PlantationStaffSummon.DisplayName: 苍华之庭

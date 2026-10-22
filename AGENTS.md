@@ -4884,3 +4884,44 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 **验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **214 条**全命中；`CheckImplicitTextures` **533 个类**全命中。
 尚待进游戏实测弹道分裂、反弹、拖尾和双版本配方。
+
+## 38. 幻魂归墟链条·最低位：幻影投矛（PhantomLance，CI，2026-10-22）
+
+**用户口径**：移植 CI 的“幻魂归墟”，先补齐下位，从最低的一件开始。CI 本地化中
+`PhantasmalRuinold` 为“幻魂归墟[Legacy]”，其配方依赖 `LumiStriker` 与
+`PhantomLance(500)`；`RuinousSoul` / 死灵质属于本体材料，继续软引用。
+本件先落地最低位 `PhantomLance`。
+
+**来源**：CI Beta 1.12 `Content/Items/Weapons/Rogue/PhantomLance.cs` 与
+`Content/Projectiles/Rogue/PhantomLanceProj.cs`。物品贴图与灾厄 2.0 哈希相同；
+主弹幕直接复用该物品贴图。
+
+**物品面板（CI）**：62×68、伤害 70、击退 5、使用/动画 23 帧、弹速 10、黄档、
+价值 60 金、研究解锁 99；消耗品、堆叠 9999、自动连发、无近战判定、使用音 `Item1`。
+CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时直接乘 1.75。
+
+**主弹幕**：20×20 判定、穿透 1、不撞墙、寿命 300、`extraUpdates = 1`、6 点残影。
+普通投矛从寿命 255 起淡出，并在寿命 ≥75 时每更新乘 0.995 减速；潜行投矛不减速、不淡出。
+每 18 次更新生成本工程自持的 2.0 `Phantom`：普通投矛伤害系数随剩余寿命从约 0.7 递减，
+潜行投矛固定 0.7；支援弹生成后改为盗贼伤害，并设 `localNPCHitCooldown = -2`。
+
+**支援弹幕**：`Content/Projectiles/Magic/Phantom.cs` 照灾厄 2.0：8×8、穿透 2、
+`extraUpdates = 1`、寿命 120；每更新旋转、撒两颗 ShadowbeamStaff 尘并追踪 300 范围内敌人
+（速度 12、惯性 20）。现代灾厄同名 `Phantom` 已重写，故不能软引用现版来冒充旧行为。
+
+**配方（CI）**：幽灵锭×1 @ 秘银砧 → 幻影投矛×150。没有更下位的自持武器。
+
+**文件**：
+
+- `Content/Items/Weapons/Rogue/PhantomLance.cs` + `PhantomLance.png`（62×68）。
+- `Content/Projectiles/Rogue/PhantomLanceProj.cs`。
+- `Content/Projectiles/Magic/Phantom.cs` + `Phantom.png`（8×8）。
+- 中英本地化：`Items.PhantomLance`、`Projectiles.PhantomLanceProj`、`Projectiles.Phantom`。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **215 条**全命中；`CheckImplicitTextures` **536 个类**全命中。
+尚待进游戏实测普通减速/淡出、潜行恒速、支援幻影追踪与 150 根配方。
+
+**链条后续**：下一件为 `LumiStriker`（月影投矛），其 CI 配方依赖仍存在于实装灾厄
+2.2.2 的 `SpearofPaleolith` / `Turbulance` 与星尘碎片；完成后再落地
+`PhantasmalRuinold` 本体、幻影灵魂及命中爆发灵魂。
