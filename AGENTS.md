@@ -5062,3 +5062,41 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 
 **当前状态**：魔影套只保留一个通用头盔、通用胸甲和通用护腿；套装公共效果不变。
 尚待进游戏验证通用攻速、+10 仆从 / +5 哨兵、不耗弹、减魔耗和鞭子加成。
+
+## 42. 小鸡大炮（Chicken Cannon，2.0 + 2.0.4.3 复合，2026-10-22）
+
+**用户口径**：武器面板与持续引导操作取 **2.0**；火箭与爆炸取 **2.0.4.3**；
+不采用大修 EC 的弹匣/换弹系统，但保留 2.0.4.3 的龙焰爆炸和龙焰减益。
+
+**物品面板（2.0）**：126×42、伤害 416、击退 1.5、使用/动画 33 帧、弹速 14.5、
+火箭弹药、月后 15 档（紫）、价值 1 铂金 50 金、研究解锁 1；自动连发、持续引导、
+物品自身无使用音。左键生成手持炮体，右键不耗弹并引爆玩家全部飞行中的小鸡火箭，
+右键使用速度 ×5。
+
+**手持炮体（2.0）**：126×44、4 帧动画，固定每 33 帧发射一枚火箭；首发弹药由物品
+生成手持体时消耗，因此 `ai[0] = 1` 抵消一次。鼠标瞄准只在本机主人端更新速度，
+速度变化触发 `netUpdate`。实际伤害、弹速、击退仍通过 `GetWeaponDamage` / `PickAmmo`
+读取武器与弹药。
+
+**火箭与爆炸（2.0.4.3）**：
+
+- `ChickenRocket`：10×10、穿透 1、`MaxUpdates = 2`、寿命 300、轻微重力；
+  速度低于 18 时缓慢加速，达到 12 以上持续喷火尘；撞墙后垂直上飞并最多延迟 20 次更新爆炸。
+- `ChickenExplosion`：1000×1000 隐形圆形判定、寿命 150、逐敌 15 帧独立冷却。
+  命中敌怪/玩家施加 300 帧龙焰；缺灾厄 `Dragonfire` 时回退原版 `OnFire`。
+- 爆炸沿用 2.0.4.3 的 70 颗火焰/铜币色/烟尘混合表现，并使用 `Item20` 爆炸音。
+
+**获取**：无配方。犽戎普通击杀 1/4、专家宝藏袋 1/3；现代与经典灾厄各挂一份，
+不做互斥。
+
+**文件**：
+
+- `Content/Items/Weapons/Ranged/ChickenCannon.cs` + `ChickenCannon.png`（126×42）。
+- `Content/Projectiles/Ranged/ChickenCannonHeld.cs` + `ChickenCannonHeld.png`（126×176，4 帧）。
+- `Content/Projectiles/Ranged/ChickenRocket.cs` + `ChickenRocket.png`（22×24）。
+- `Content/Projectiles/Ranged/ChickenExplosion.cs`（共用 `InvisibleProj`）。
+- 中英本地化：`Items.ChickenCannon` 与三个 `Projectiles.*` 名称。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **216 条**全命中；`CheckImplicitTextures` **544 个类**全命中。
+尚待进游戏实测持续引导、右键引爆、火箭撞墙、大范围爆炸与龙焰减益。

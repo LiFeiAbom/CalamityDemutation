@@ -1168,6 +1168,16 @@ Items: {
 			'''
 	}
 
+	ChickenCannon: {
+		DisplayName: Chicken Cannon
+		Tooltip:
+			'''
+			Fires chicken rockets which create enormous incendiary explosions
+			Explosions inflict Dragonfire
+			Right-click to detonate all airborne rockets
+			'''
+	}
+
 	DrewsWings: {
 		DisplayName: Drew's Wings
 		Tooltip:
@@ -3080,6 +3090,9 @@ Projectiles: {
 	CalamarisLamentMinion.DisplayName: Calamari
 	CalamarisLamentProjectile.DisplayName: Calamari Ink
 	CatastropheClaymoreSparkle.DisplayName: Catastrophe Claymore Sparkle
+	ChickenCannonHeld.DisplayName: Chicken Cannon
+	ChickenExplosion.DisplayName: Kentucky Fried Explosion
+	ChickenRocket.DisplayName: Chicken Rocket
 	CloudyWaifu.DisplayName: Cloudy Waifu
 	CosmicBlast.DisplayName: Cosmic Blast
 	CosmicBlastBig.DisplayName: Cosmic Blast Big

@@ -1168,6 +1168,16 @@ Items: {
 			'''
 	}
 
+	ChickenCannon: {
+		DisplayName: 小鸡大炮
+		Tooltip:
+			'''
+			发射小鸡火箭，产生巨大燃爆
+			爆炸会施加龙焰减益
+			右键引爆所有飞行中的火箭
+			'''
+	}
+
 	DrewsWings: {
 		DisplayName: Drew之翼
 		Tooltip:
@@ -3079,6 +3089,9 @@ Projectiles: {
 	CalamarisLamentMinion.DisplayName: 小鱿鱼
 	CalamarisLamentProjectile.DisplayName: 鱿鱼墨汁
 	CatastropheClaymoreSparkle.DisplayName: 灾变斩剑火花
+	ChickenCannonHeld.DisplayName: 小鸡大炮
+	ChickenExplosion.DisplayName: 肯德基爆炸
+	ChickenRocket.DisplayName: 小鸡火箭
 	CloudyWaifu.DisplayName: 云元素
 	CosmicBlast.DisplayName: 宇宙爆裂
 	CosmicBlastBig.DisplayName: 大型宇宙爆裂

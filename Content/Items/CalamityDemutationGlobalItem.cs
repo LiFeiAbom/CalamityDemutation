@@ -465,6 +465,7 @@ namespace CalamityDemutation.Content.Items
                     // 星火凤凰雨（旧版支线的 DragonStaff）：旧版支线源把它放在 YharonEssence 的随机武器池里；
                     // 本工程未移植 YharonEssence，故按本体同名旧件（PhoenixFlameBarrage）的犽戎袋口径挂 1/3
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 3));
                 }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -549,6 +550,7 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<DragonsBreath>(), 3));
                     // 星火凤凰雨（旧版支线的 DragonStaff）：同上，挂进经典版犽戎袋
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 3));
                 }
             }
         }

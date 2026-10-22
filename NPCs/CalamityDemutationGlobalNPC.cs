@@ -12,6 +12,7 @@ using CalamityDemutation.Content.Items.Materials;
 using CalamityDemutation.Content.Items.Consumables;
 using CalamityDemutation.Content.Items.Weapons.Melee;
 using CalamityDemutation.Content.Items.Weapons.Magic;
+using CalamityDemutation.Content.Items.Weapons.Ranged;
 using CalamityDemutation.Content.Items.Weapons.Rogue;
 using CalamityDemutation.Content.Items.Weapons.Summon;
 using CalamityDemutation.Players;
@@ -294,6 +295,11 @@ namespace CalamityDemutation.NPCs
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 4));
                     npcLoot.Add(notExpert0);
                 }
+                else if (calamity.TryFind<ModNPC>("Yharon", out ModNPC yharon) && npc.type == yharon.Type)
+                {
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 4));
+                    npcLoot.Add(notExpert0);
+                }
                 // 灾厄挽歌（本工程自持）：源里是巨型鱿鱼 ColossalSquid 的 1/3 掉落，但带"已击败噬魂幽花"门槛
                 else if (calamity.TryFind<ModNPC>("ColossalSquid", out ModNPC colossalSquid) && npc.type == colossalSquid.Type)
                 {
@@ -366,6 +372,11 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("CosmicWraith", out ModNPC cosmicWraith) && npc.type == cosmicWraith.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<Cosmilamp>(), 3));
+                }
+                else if (classic.TryFind<ModNPC>("Yharon", out ModNPC yharon) && npc.type == yharon.Type)
+                {
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 4));
+                    npcLoot.Add(notExpert1);
                 }
                 // 灾厄挽歌（本工程自持）：经典源为 ByCondition(new DownedPolterghast(), 1/3)，本工程用同一门槛
                 else if (classic.TryFind<ModNPC>("ColossalSquid", out ModNPC colossalSquid) && npc.type == colossalSquid.Type)
