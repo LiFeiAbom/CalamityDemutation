@@ -413,7 +413,7 @@ namespace CalamityDemutation.NPCs
         /// <summary>
         /// tModLoader 的 UpdateLifeRegen 钩子：每帧结算 NPC 生命回复时调用，
         /// 通过修改 npc.lifeRegen 施加持续灼烧，并用 ref damage 指定该灼烧显示的每帧伤害数字。
-        /// 恶魔烈焰（demonFlames）先清掉正回复，再 -5000，damage 下限抬到 2000；
+        /// 恶魔烈焰（demonFlames）先清掉正回复，再 -4000，damage 下限抬到 2000（即每秒 2000）；
         /// 女巫眩晕（silvaHysteresis）同样清正回复后 -900，damage 下限 400。
         /// 各标记均由对应的 debuff（DemonFlames / SilvaHysteresis / HellfireExplosion）每帧置位。
         /// </summary>
@@ -441,10 +441,10 @@ namespace CalamityDemutation.NPCs
                 {
                     npc.lifeRegen = 0;
                 }
-                npc.lifeRegen -= 5000;
-                if (damage < 2000)
+                npc.lifeRegen -= DemonFlames.DamagePerSecond * 2;
+                if (damage < DemonFlames.DamagePerSecond)
                 {
-                    damage = 2000;
+                    damage = DemonFlames.DamagePerSecond;
                 }
             }
             if(silvaHysteresis)

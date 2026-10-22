@@ -5200,3 +5200,7 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 **验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **217 条**全命中；`CheckImplicitTextures` **548 个类**全命中。
 尚待进游戏实测烈火手套/天界壳旗标、双减益叠加、溶解绘制、配方与 PvP。
+
+**2026-10-22 平衡修正**：魔影套装的恶魔烈焰持续损失由原 `lifeRegen -= 5000 / damage 2000`
+调整为 `lifeRegen -= 4000 / damage 2000`，即实际每秒生命损失 **2000**；常数统一为
+`DemonFlames.DamagePerSecond = 2000`。
