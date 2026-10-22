@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Buffs.NegativeBuffs
 {
     /// <summary>
-    /// 薪炎灼烧（BurningIII）：由战士徽章EX的近战命中附加。
+    /// 燃烧III（BurningIII）：由战士徽章EX的近战命中附加。
     /// 每秒 100 生命、防御 -5、受到伤害 +5%；粒子复刻原版 Hellfire（BuffID.OnFire3）。
     /// </summary>
     internal class BurningIII : ModBuff

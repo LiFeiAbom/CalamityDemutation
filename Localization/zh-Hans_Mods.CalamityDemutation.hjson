@@ -10,7 +10,7 @@ Buffs: {
 	}
 
 	BurningIII: {
-		DisplayName: 薪炎灼烧
+		DisplayName: 燃烧III
 		Description: 来自薪炎的烈焰持续灼烧目标
 	}
 
@@ -2632,7 +2632,7 @@ Items: {
 			近战伤害提高 18%
 			近战攻击速度提高 10%
 			近战暴击率提高 8%
-			近战命中会造成薪炎灼烧
+			近战命中会造成燃烧III
 			'''
 	}
 

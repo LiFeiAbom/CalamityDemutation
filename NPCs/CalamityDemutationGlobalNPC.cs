@@ -99,7 +99,7 @@ namespace CalamityDemutation.NPCs
             }
         }
         /// <summary>
-        /// 薪炎灼烧：敌怪攻击结算时按当前减益状态降低 5 点防御，并使其受到伤害增加 5%。
+        /// 燃烧III：敌怪攻击结算时按当前减益状态降低 5 点防御，并使其受到伤害增加 5%。
         /// </summary>
         public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
         {

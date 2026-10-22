@@ -10,7 +10,7 @@ Buffs: {
 	}
 
 	BurningIII: {
-		DisplayName: Emberflare Burn
+		DisplayName: Burning III
 		Description: The pyre's flames continue to sear the target
 	}
 
@@ -2633,7 +2633,7 @@ Items: {
 			Increases melee damage by 18%
 			Increases melee attack speed by 10%
 			Increases melee critical strike chance by 8%
-			Melee hits inflict Emberflare Burn
+			Melee hits inflict Burning III
 			'''
 	}
 
