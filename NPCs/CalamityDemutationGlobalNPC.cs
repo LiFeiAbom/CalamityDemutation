@@ -103,10 +103,16 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
         {
-            if (!npc.HasBuff(ModContent.BuffType<BurningIII>()))
-                return;
-            modifiers.Defense.Flat -= BurningIII.DefenseLoss;
-            modifiers.FinalDamage *= BurningIII.DamageTakenMultiplier;
+            if (npc.HasBuff(ModContent.BuffType<BurningIII>()))
+            {
+                modifiers.Defense.Flat -= BurningIII.DefenseLoss;
+                modifiers.FinalDamage *= BurningIII.DamageTakenMultiplier;
+            }
+            if (npc.HasBuff(ModContent.BuffType<DaybreakII>()))
+            {
+                modifiers.Defense.Flat -= DaybreakII.DefenseLoss;
+                modifiers.FinalDamage *= DaybreakII.DamageTakenMultiplier;
+            }
         }
         /// <summary>
         /// 血腥玛丽：血月期间把该玩家的刷怪率与最大刷怪量都放大 10 倍
@@ -420,6 +426,14 @@ namespace CalamityDemutation.NPCs
                 npc.lifeRegen -= BurningIII.BurnLifeRegen;
                 if (damage < BurningIII.BurnLifeRegen / 2)
                     damage = BurningIII.BurnLifeRegen / 2;
+            }
+            if (npc.HasBuff(ModContent.BuffType<DaybreakII>()))
+            {
+                if (npc.lifeRegen > 0)
+                    npc.lifeRegen = 0;
+                npc.lifeRegen -= DaybreakII.BurnLifeRegen;
+                if (damage < DaybreakII.BurnLifeRegen / 2)
+                    damage = DaybreakII.BurnLifeRegen / 2;
             }
             if (demonFlames)
             {

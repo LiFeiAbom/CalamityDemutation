@@ -7,7 +7,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
 {
     /// <summary>
     /// 战士徽章EX（移植自 CalamityExpansion）：Pink 稀有度的近战饰品，
-    /// +18% 近战伤害、+10% 近战攻击速度、+8% 近战暴击率；近战命中附加燃烧III。
+    /// +18% 近战伤害、+12% 近战攻击速度、+8% 近战暴击率；近战命中附加燃烧III。
     /// </summary>
     internal class WarriorEmblemEX : ModItem
     {
@@ -22,7 +22,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.GetDamage(DamageClass.Melee) += 0.18f;
-            player.GetAttackSpeed(DamageClass.Melee) += 0.10f;
+            player.GetAttackSpeed(DamageClass.Melee) += 0.12f;
             player.GetCritChance(DamageClass.Melee) += 8f;
         }
         public override void AddRecipes()

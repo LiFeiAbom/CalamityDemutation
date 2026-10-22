@@ -14,6 +14,11 @@ Buffs: {
 		Description: 来自薪炎的烈焰持续灼烧目标
 	}
 
+	DaybreakII: {
+		DisplayName: 破晓II
+		Description: 来自破晓的光焰持续灼烧目标
+	}
+
 	BrimstoneWaifu: {
 		Description: 硫磺元素会保护你
 		DisplayName: 硫磺元素
@@ -2630,7 +2635,7 @@ Items: {
 		Tooltip:
 			'''
 			近战伤害提高 18%
-			近战攻击速度提高 10%
+			近战攻击速度提高 12%
 			近战暴击率提高 8%
 			近战命中会造成燃烧III
 			'''
@@ -2835,6 +2840,21 @@ Items: {
 			'''
 			一次射出两支箭
 			将任何箭矢转化为滑行能量弹
+			'''
+	}
+
+	FireGauntletEX: {
+		DisplayName: 烈火手套EX
+		Tooltip:
+			'''
+			+24% 近战伤害
+			+24% 近战暴击率
+			+24% 近战攻击速度
+			+400 仇恨值
+			近战击退提高，近战武器大小提高 10%
+			允许近战武器和鞭子自动挥舞
+			获得烈火手套和天界壳效果
+			近战命中会造成燃烧III和破晓II
 			'''
 	}
 

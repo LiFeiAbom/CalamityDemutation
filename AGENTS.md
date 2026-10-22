@@ -5128,7 +5128,7 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 按用户拍板改为下列独立规格。
 
 **物品**：28×28 饰品贴图、Pink 稀有度（`ItemRarityID.Pink`）、价值 3 金
-（`Item.sellPrice(gold: 3)`）；**+18% 近战伤害 / +10% 近战攻击速度 / +8% 近战暴击率**。
+（`Item.sellPrice(gold: 3)`）；**+18% 近战伤害 / +12% 近战攻击速度 / +8% 近战暴击率**。
 配方沿用原件现行版本：战士徽章 + 神圣锭×15 + 光/暗影/恐惧/力量/视域之魂各×25 @ 秘银砧。
 配方注册受灾厄软门禁控制：现代版或经典版灾厄任一存在时注册；两版都未开启时物品仍可加载，但无配方。
 
@@ -5156,3 +5156,47 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 **验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **216 条**全命中；`CheckImplicitTextures` **546 个类**全命中。
 尚待进游戏实测近战/PvP 施加、100 HP/s、−5 防御、5% 易伤、Hellfire 粒子与配方。
+
+## 44. 烈火手套EX（FireGauntletEX，CalamityExpansion 复合口径，2026-10-22）
+
+**用户口径**：基础属性取 CalamityExpansion 原件并把三围改到 24%、武器大小改用原版 10% 旗标；
+同时模拟烈火手套与天界壳功能；命中同时施加燃烧III与破晓II；不移植破晓EX。
+
+**物品**：26×30、Purple（`ItemRarityID.Purple`）、售价 20 金（`Item.sellPrice(gold: 20)`）、
+`Item.defense = 8`；+24% 近战伤害/暴击率/攻击速度、+400 仇恨。
+
+**烈火手套功能**：`magmaStone`（攻击点燃）、`kbGlove`（近战击退×2）、
+`autoReuseGlove`（近战武器与鞭子自动挥舞）、`meleeScaleGlove`（原版 +10% 武器大小）。
+不再使用原件的 `autoReuseAllWeapons`、自定义击退倍率或 +20% `ModifyItemScale`，避免重复叠加。
+
+**天界壳功能**：`wolfAcc` / `accMerman`，隐藏饰品时同步 `hideWolf` / `hideMerman`；
+`lifeRegen += 2`、`pickSpeed -= 0.15f`、召唤击退 +1。天界壳的通用伤害/暴击/近战攻速/防御面板
+不再重复叠加。
+
+**破晓II（DaybreakII）**：自持减益，显示名“破晓II”/ `Daybreak II`，图标复用燃烧IV的 32×32 贴图，
+持续 300 帧，敌怪与 PvP 玩家均生效：
+
+- 450 HP/s（`lifeRegen -= 900`，伤害数字下限 450）。
+- 防御 −30；受到伤害额外增加 15%（`FinalDamage *= 1.15`）。
+- 视觉完整移植燃烧IV：橙红 `OrangeTorch` 火尘、`DRK_Spark` 火花、
+  `Neurons.png` 噪声溶解，发光色 `(255, 84, 16)`；排除月亮领主三件与 Ares 五件。
+- 烈火手套EX一次命中会同时附加燃烧III与破晓II；只装备战士徽章EX时仍只附加燃烧III。
+
+**配方**：现代灾厄 = 战士徽章EX + 烈火手套 + 狂战士手套 + 天界壳 + 日曜碎片×99 +
+宇宙锭 `CosmiliteBar`×5 @ 星宇砧 `CosmicAnvil`；经典灾厄材料相同，制作站替换为嘉登熔炉
+`DraedonsForge`。毁灭者徽章已删除；没有对应灾厄版本或缺件时该分支不注册。
+
+**文件与图形设施**：
+
+- `Content/Items/Accessories/JobAcc/Melee/FireGauntletEX.cs` + `.png`（26×30）。
+- `Content/Buffs/NegativeBuffs/DaybreakII.cs` + `.png`（32×32）。
+- `Assets/ExtraTextures/Neurons.png`（512×512）。
+- `Effects/DaybreakII.fx/.fxc`；复用源 `.fxc` 的 `HellfireIVPass`，在 `CDShaders` 注册为
+  `CalamityDemutation:DaybreakII`。
+- `Graphics/SpriteBatchScope.cs`；渲染目标复用工程已有的 `ScreenspaceTargetPool`。
+- 命中施加统一走 `CalamityDemutationPlayer.ApplyMeleeAccessoryDebuffs` 的 NPC / Player 重载。
+- 中英本地化：`Items.FireGauntletEX`、`Buffs.DaybreakII`，并同步战士徽章EX的 +12% 近战攻速。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **217 条**全命中；`CheckImplicitTextures` **548 个类**全命中。
+尚待进游戏实测烈火手套/天界壳旗标、双减益叠加、溶解绘制、配方与 PvP。

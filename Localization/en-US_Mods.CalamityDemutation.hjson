@@ -14,6 +14,11 @@ Buffs: {
 		Description: The pyre's flames continue to sear the target
 	}
 
+	DaybreakII: {
+		DisplayName: Daybreak II
+		Description: The flames of daybreak continue to sear the target
+	}
+
 	BrimstoneWaifu: {
 		Description: The brimstone elemental will protect you
 		DisplayName: Brimstone Elemental
@@ -2631,7 +2636,7 @@ Items: {
 		Tooltip:
 			'''
 			Increases melee damage by 18%
-			Increases melee attack speed by 10%
+			Increases melee attack speed by 12%
 			Increases melee critical strike chance by 8%
 			Melee hits inflict Burning III
 			'''
@@ -2836,6 +2841,21 @@ Items: {
 			'''
 			Fires two arrows at once
 			Converts any ammo into sliding energy bolts
+			'''
+	}
+
+	FireGauntletEX: {
+		DisplayName: Fire Gauntlet EX
+		Tooltip:
+			'''
+			+24% melee damage
+			+24% melee critical strike chance
+			+24% melee attack speed
+			+400 aggro
+			Increases melee knockback and melee weapon size by 10%
+			Allows autoswing for melee weapons and whips
+			Grants the effects of the Fire Gauntlet and Celestial Shell
+			Melee hits inflict Burning III and Daybreak II
 			'''
 	}
 
