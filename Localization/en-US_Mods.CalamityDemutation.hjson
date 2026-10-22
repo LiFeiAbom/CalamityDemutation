@@ -2865,9 +2865,9 @@ Items: {
 		DisplayName: Fire Gauntlet EX
 		Tooltip:
 			'''
-			+24% melee damage
-			+24% melee critical strike chance
-			+24% melee attack speed
+			+25% melee damage
+			+25% melee critical strike chance
+			+25% melee attack speed
 			+400 aggro
 			Increases melee knockback and melee weapon size by 10%
 			Allows autoswing for melee weapons and whips

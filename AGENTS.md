@@ -5169,7 +5169,7 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 同时模拟烈火手套与天界壳功能；命中同时施加燃烧III与破晓II；不移植破晓EX。
 
 **物品**：26×30、Purple（`ItemRarityID.Purple`）、售价 20 金（`Item.sellPrice(gold: 20)`）、
-`Item.defense = 8`；+24% 近战伤害/暴击率/攻击速度、+400 仇恨。
+`Item.defense = 8`；+25% 近战伤害/暴击率/攻击速度、+400 仇恨（2026-10-23 三围由 24 提到 25）。
 
 **烈火手套功能**：`magmaStone`（攻击点燃）、`kbGlove`（近战击退×2）、
 `autoReuseGlove`（近战武器与鞭子自动挥舞）、`meleeScaleGlove`（原版 +10% 武器大小）。

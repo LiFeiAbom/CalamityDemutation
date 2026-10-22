@@ -5,7 +5,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
 {
     /// <summary>
     /// 烈火手套EX（移植自 CalamityExpansion，按用户口径复合烈火手套与天界壳）：
-    /// Purple 稀有度、售价 20 金、防御 8；+24% 近战伤害/暴击率/攻击速度、+400 仇恨。
+    /// Purple 稀有度、售价 20 金、防御 8；+25% 近战伤害/暴击率/攻击速度、+400 仇恨。
     /// 近战命中同时施加燃烧III与破晓II。
     /// </summary>
     internal class FireGauntletEX : ModItem
@@ -21,9 +21,9 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage<MeleeDamageClass>() += 0.24f;
-            player.GetCritChance<MeleeDamageClass>() += 24f;
-            player.GetAttackSpeed<MeleeDamageClass>() += 0.24f;
+            player.GetDamage<MeleeDamageClass>() += 0.25f;
+            player.GetCritChance<MeleeDamageClass>() += 25f;
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.25f;
             player.aggro += 400;
             // 烈火手套功能：点火、近战击退×2、近战/鞭子自动挥舞、近战武器大小×1.1。
             player.magmaStone = true;
