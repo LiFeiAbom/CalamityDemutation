@@ -11,7 +11,7 @@ namespace CalamityDemutation.Content.Projectiles.Ranged
     /// </summary>
     internal class ChickenCannonHeld : ModProjectile
     {
-        private const float FireRate = 33f;
+        private const float FireRate = 25f;
         private Player Owner => Main.player[Projectile.owner];
         private ref float FreeShotLoaded => ref Projectile.ai[0];
         private ref float FramesTillNextShot => ref Projectile.ai[1];

@@ -23,7 +23,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Ranged
             Item.height = 42;
             Item.damage = 416;
             Item.DamageType = DamageClass.Ranged;
-            Item.useTime = Item.useAnimation = 33;
+            Item.useTime = Item.useAnimation = 25;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 1.5f;
