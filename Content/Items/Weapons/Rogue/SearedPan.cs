@@ -29,7 +29,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Rogue
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.useTime = Item.useAnimation = 25;
+            Item.useTime = Item.useAnimation = 20;
             Item.reuseDelay = 1;
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
