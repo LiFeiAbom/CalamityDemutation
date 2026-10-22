@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Players;
+using CalamityDemutation.Players;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -308,10 +308,10 @@ namespace CalamityDemutation.Content.Projectiles.Summon
                             Main.projectile[num659].timeLeft = 300;                  // 子弹幕寿命限制 300 帧
                             Main.projectile[num659].usesLocalNPCImmunity = true;     // 启用逐 NPC 独立命中冷却
                             Main.projectile[num659].localNPCHitCooldown = 10;        // 穿透时对同一敌人 10 帧内不重复结算
-                            // 伤害职业跟随穿戴者所戴的魔影头部件（近战/远程/…），读不到就退回近战。
+                            // 通用魔影头盔使用通用伤害，读不到时也退回通用。
                             // 三叉戟只在拥有者客户端生成（上方有 Main.myPlayer == Projectile.owner 守卫），
                             // 伤害也在该端结算，故此处直接读本机 ModPlayer 即可，不需要网络同步。
-                            DamageClass devilClass = modPlayer.demonshadeClass ?? DamageClass.Melee;
+                            DamageClass devilClass = modPlayer.demonshadeClass ?? DamageClass.Generic;
                             Main.projectile[num659].DamageType = devilClass;  // 114 是原版弹幕，默认吃不到加成；红魔本体不造成伤害，真正打人的是它，故必须同步改成对应职业
                             // 暴击必须显式重设：tML 在生成时把暴击快照进 Projectile.CritChance，且按弹幕自己的 DamageType 取值、
                             // 再由父弹幕继承。红魔本体是召唤类型，于是叉子继承到的是召唤暴击（输出职业 build 基本为 0），

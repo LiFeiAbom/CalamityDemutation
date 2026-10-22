@@ -36,8 +36,8 @@
   删除依据：物品在本机灾厄源码里是否有**同名类**——没有的删（含其专属弹幕/粒子/减益/贴图/音效/文案），
   有的保留（灾厄已有、但采用重制版的版本）。
 - **保留的旧版重制件**（灾厄本体有同名物）：`Excelsus`、`Terratomere`、`DragonRage`、`AnarchyBlade`、
-  `CometQuasher`、`EntropicClaymore`、`GreatswordofJudgement`、`StellarStriker`，以及魔影套的职业头盔变体
-  （`DemonshadeHelmMagic/Ranged/Summon`）。
+  `CometQuasher`、`EntropicClaymore`、`GreatswordofJudgement`、`StellarStriker`。
+  魔影职业头变体已于 2026-10-22 全部删除，整套改为单一通用头盔，见 §41。
 - 若日后要恢复被删内容，用 git 历史（删除提交 `19ad483` / `f8c48ab`；`git show <sha>^:<path>` 可取回）。
   **不要把已清理的附属模组内容再引进来。**
 
@@ -1779,6 +1779,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
   中英本地化各补 `Items.TarragonHelmet`（en `Tarragon Helmet`、zh **龙蒿头盔**——按本套「Helm→战盔」的对照，
   Helmet 取「头盔」；与弑神者那套的对照正好相反，别被带偏）。
   验证：编译 0 警告 0 错误，资源自检 146 条全命中。
+- ⚠️ 2026-10-22：职业化魔影头及四套专属逻辑已全部删除，以下 2026-10-06 记录仅作历史留档，见 §41。
 - 最近一批工作（2026-10-06）：**移植盗贼魔影头——魔影面罩（DemonshadeHelmRogue）**，
   顺带把「盗贼伤害类」与「盗贼潜行值」这两条跨模组接口查清并落地。
   ① 新增 `Content/Items/Armors/Demonshade/DemonshadeHelmRogue.cs`：源 = 重制版的
@@ -5028,3 +5029,36 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 
 **当前状态**：CI 幻魂归墟整条链已落地并自持关键武器/弹幕；现代灾厄材料仍按
 软依赖口径引用。无遗留配方链缺口。
+
+## 41. 魔影套装通用化（2026-10-22）
+
+**用户口径**：删除全部职业化魔影头，改为单一通用头盔，并统一使用近战魔影套贴图。
+
+**通用头盔（唯一头部件）**：保留 `DemonshadeHelm` 类名、近战 `Head / Extension` 贴图，
+防御力由 55 修正为 50；单件改为通用伤害 +50%、通用暴击 +25%、通用攻速 +30%，
+最大仆从数 +10、最大哨兵数 +5。套装奖励由近战 +100% 改为所有伤害 +100%。
+红魔与三叉戟同样改为 `DamageClass.Generic`，未穿戴头盔时也回退通用伤害。
+
+**胸甲新增基础属性**：
+
+- 使用远程武器时有 50% 概率不消耗弹药。
+- 魔力消耗 ×0.5。
+- 鞭子攻击速度 +30%、鞭子范围 +30%。
+
+不耗弹每帧由胸甲置位 `CalamityDemutationPlayer.demonshadeAmmoSaving`，由
+`CanConsumeAmmo` 消费；该字段与 `demonshadeClass` 均在 `ResetEffects` / `UpdateDead` 复位。
+
+**职业化清理**：
+
+- 删除 `DemonshadeHelmMagic`、`DemonshadeHelmRanged`、`DemonshadeHelmRogue`、
+  `DemonshadeHelmSummon` 四个物品类及中英本地化块。
+- 删除对应 12 张物品 / `_Head` / `_Extension` 贴图。
+- 删除玩家侧 `demonshadeRogue` 与盗贼潜行上限 200 的套装分支；通用套不再提供职业潜行加成。
+- 保留 `CDUtil` 盗贼潜行桥，其他盗贼套装和饰品仍在使用。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **215 条**全命中；`CheckImplicitTextures` **540 个类**全命中。
+全工程已无四个职业头类名或 `demonshadeRogue` 残留引用。
+
+**当前状态**：魔影套只保留一个通用头盔、通用胸甲和通用护腿；套装公共效果不变。
+尚待进游戏验证通用攻速、+10 仆从 / +5 哨兵、不耗弹、减魔耗和鞭子加成。

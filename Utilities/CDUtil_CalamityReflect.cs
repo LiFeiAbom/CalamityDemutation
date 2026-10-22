@@ -149,7 +149,7 @@ namespace CalamityDemutation.Utilities
             calamityGetModPlayerForSeraph = getModPlayer;
         }
 
-        // ── 盗贼潜行桥（魔影面罩 DemonshadeHelmRogue 用）──
+        // ── 盗贼潜行桥（盗贼套装与饰品通用）──
 
         /// <summary>是否已探测过经典版的潜行字段（无论成败只探测一次）</summary>
         private static bool classicStealthProbed;

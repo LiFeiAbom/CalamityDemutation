@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Players;
+using CalamityDemutation.Players;
 using CalamityDemutation.Systems;
 using CalamityDemutation.Systems.Graphic;
 using CalamityDemutation.Utilities;
@@ -9,10 +9,8 @@ using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Armors.Demonshade
 {
     /// <summary>
-    /// 魔影头盔（DemonshadeHelm） - 恶魔之影套（Demonshade）的**近战**职业头部件。
-    /// 单件给近战伤害、暴击与攻速；套装激活后置位 demonshadeSetBonus、redDevil 与 demonshadeClass，
-    /// 补上红魔 buff 并维持一只友方红魔。远程变体见 <see cref="DemonshadeHelmRanged"/>，
-    /// 两者套装逻辑逐行同构，只有职业不同。
+    /// 魔影头盔（DemonshadeHelm） - 通用魔影套的唯一头部件，使用近战套的原始外观。
+    /// 单件给通用伤害、暴击、攻速与召唤栏；套装激活后补上红魔并维持一只友方红魔。
     /// 另实现 IExtendedHat：现代版头盔造型的兜帽与角单独画在 _Extension 贴图上，
     /// 由 HatExtensionLayer 在原版头部层之后叠加绘制。
     /// </summary>
@@ -27,7 +25,7 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             Item.width = 18;          // 贴图宽（像素）
             Item.height = 18;         // 贴图高（像素）
             Item.value = Item.buyPrice(5, 0, 0, 0);  // 价值 5 铂金
-            Item.defense = 55;                        // 防御 55（经典版为 50，同行 //15 系经典版开发期遗留注释；本模组上调至 55）
+            Item.defense = 50;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 16;  // 月后稀有度 16 级，名称颜色为品红
         }
         /// <summary>
@@ -55,14 +53,14 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             player.armorEffectDrawOutlines = true;
         }
         /// <summary>
-        /// 套装激活：先叠加 +100% 近战伤害（必须早于红魔伤害取值，否则红魔与三叉戟会漏掉这一档），
+        /// 套装激活：先叠加 +100% 通用伤害（必须早于红魔伤害取值，否则红魔与三叉戟会漏掉这一档），
         /// 再置位 demonshadeSetBonus 与 redDevil 标记、补上红魔 buff 并召唤红魔，
         /// 每帧把当前伤害同步给场上红魔。
         /// 标记最终结算位置：demonshadeSetBonus 在 CalamityDemutationPlayer（潜行、受击反击、
         /// Y 键等）与 CalamityDemutationGlobalItem / CalamityDemutationGlobalProjectile
         /// （命中附带恶魔火焰）中消费；GlobalNPC 不读取该标记，它只处理 Enraged 的染色。
         /// redDevil 用于维持红魔弹幕存活。
-        /// setBonus 逐条含义：近战伤害提高 100%；施加攻击时造成魔影炙炎减益；
+        /// setBonus 逐条含义：所有伤害提高 100%；施加攻击时造成魔影炙炎减益；
         /// 受击时天降暗影光束与恶魔镰刀；一只友方红魔会跟随你；
         /// 按 Y 键以黑暗魔法激怒附近敌人 10 秒，使其伤害提高 25%，但承受的伤害提高 125%。
         /// 注：末条为灾厄 setBonus 原文直译。实际实现（CalamityDemutationPlayer 的 Y 键分支）是给玩家自身
@@ -74,8 +72,8 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             // 必须先加再取：player.GetDamage<X>() += 是就地修改玩家身上那份共享加成数据，
             // 同一方法内更早的读取看得到、更晚的读取看不到。原先放在方法末尾，
             // 结果红魔（及其射出的三叉戟）漏掉了这 +100%。
-            player.GetDamage<MeleeDamageClass>() += 1f;  // 近战伤害 +100%（套装奖励原文的 "100% increased damage" 原指召唤伤害，本模组按近战套装口径改为近战）
-            int redDevilDamage = (int)player.GetDamage<MeleeDamageClass>().ApplyTo(10000);  // 红魔弹幕伤害：以玩家近战伤害对 10000 基准换算（已含上方这 +100%）
+            player.GetDamage<GenericDamageClass>() += 1f;
+            int redDevilDamage = (int)player.GetDamage<GenericDamageClass>().ApplyTo(10000);
             player.setBonus = this.GetLocalizedValue("SetBonus");
             CalamityDemutationPlayer modPlayer = player.GetModPlayer<CalamityDemutationPlayer>();
             modPlayer.demonshadeSetBonus = true;  // 置位套装总标记
@@ -105,14 +103,16 @@ namespace CalamityDemutation.Content.Items.Armors.Demonshade
             }
         }
         /// <summary>
-        /// 单件装备加成：近战伤害、近战暴击与近战攻速；并置位职业标记供红魔三叉戟取值。
+        /// 单件装备加成：通用伤害、暴击、攻速以及召唤栏；并置位通用伤害标记供红魔三叉戟取值。
         /// </summary>
         public override void UpdateEquip(Player player)
         {
-            player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Melee;  // 置位职业标记：本件为近战变体
-            player.GetDamage<MeleeDamageClass>() += 0.5f;       // 近战伤害 +50%
-            player.GetCritChance<MeleeDamageClass>() += 25;  // 近战暴击率：常态 +25% / 膨胀 +50%
-            player.GetAttackSpeed<MeleeDamageClass>() += 0.30f; // 近战攻速 +30%
+            player.GetModPlayer<CalamityDemutationPlayer>().demonshadeClass = DamageClass.Generic;
+            player.GetDamage<GenericDamageClass>() += 0.5f;
+            player.GetCritChance<GenericDamageClass>() += 25;
+            player.GetAttackSpeed<GenericDamageClass>() += 0.30f;
+            player.maxMinions += 10;
+            player.maxTurrets += 5;
         }
         /// <summary>
         /// 近战暴击率由 25% 显示为 50%。

@@ -368,17 +368,14 @@ namespace CalamityDemutation.Players
         public bool darkSunRing = false;
         public bool deificAmulet = false;
         /// <summary>
-        /// 当前魔影头部件对应的伤害职业（Melee / Ranged / …），由各职业头盔在 UpdateEquip 中置位。
-        /// 供红魔三叉戟决定伤害类型与暴击档位，以及远程件的不消耗弹药判定使用；未穿戴时为 null。
+        /// 通用魔影头盔的伤害职业标记，供红魔三叉戟决定伤害类型；未穿戴时为 null。
         /// </summary>
         public DamageClass demonshadeClass = null;
         public bool demonshadeSetBonus = false;
         /// <summary>
-        /// 魔影套·盗贼变体（DemonshadeHelmRogue）的套装标记：由该头盔的 UpdateArmorSet 置位，
-        /// PostUpdateEquips 据此把盗贼潜行（上限 200 + "算作盗贼甲"）补给灾厄侧，
-        /// 见 <see cref="CalamityDemutation.Utilities.CDUtil.GrantRogueStealth"/>。
+        /// 魔影胸甲提供的 50% 不消耗弹药标记。
         /// </summary>
-        public bool demonshadeRogue = false;
+        public bool demonshadeAmmoSaving = false;
         public bool draconicSurge = false;
         public int draconicSurgeCooldown = 0;
         /// <summary>
@@ -1032,7 +1029,7 @@ namespace CalamityDemutation.Players
             deificAmulet = false;
             demonshadeClass = null;
             demonshadeSetBonus = false;
-            demonshadeRogue = false;
+            demonshadeAmmoSaving = false;
             draconicSurge = false;
             drewsSandyWaifu = false;
             eAxe = false;
@@ -1229,7 +1226,7 @@ namespace CalamityDemutation.Players
             deificAmulet = false;
             demonshadeClass = null;
             demonshadeSetBonus = false;
-            demonshadeRogue = false;
+            demonshadeAmmoSaving = false;
             draconicSurge = false;
             draconicSurgeCooldown = 0;
             drewsSandyWaifu = false;
@@ -3777,12 +3774,6 @@ namespace CalamityDemutation.Players
             //  危险砖块段——即"免金源矿石排斥 + 免星辉/焦炭矿等接触效果"）。
             if (seraphTracers)
                 CDUtil.MirrorSeraphTracersToCalamity(Player);
-            // 魔影面罩（盗贼变体）：把潜行上限抬到 200（内部 2f）并标成"算作盗贼甲"。
-            // 现代版走灾厄官方 Mod.Call（AddMaxStealth / SetWearingRogueArmor），经典版走反射——
-            // 细节见 Utilities/CDUtil_CalamityReflect.cs。时机同金源镜像：必须晚于灾厄 ResetEffects
-            //（它每帧把潜行上限清零）、早于它 PostUpdateMiscEffects（那里才积攒潜行）。
-            if (demonshadeRogue)
-                CDUtil.GrantRogueStealth(Player, 2f);
             // 幻影魔镜（Mirage Mirror）：潜行恢复 +30% 站定 / +20% 移动、潜行上限 **+15%（相对当前上限）**。
             // 同样必须写在这里——灾厄在 ResetEffects 里每帧复位这些字段，到它 PostUpdateMiscEffects
             // 之后才读取；潜行恢复在灾厄的 Mod.Call 里没有对应项，走 CDUtil 的反射桥
@@ -4387,11 +4378,11 @@ namespace CalamityDemutation.Players
         }
         /// <summary>
         /// tModLoader 的 CanConsumeAmmo 钩子：判定本次射击是否消耗弹药。
-        /// 代达罗斯纹章 1/5（20%）、元素箭袋 40%、魔影羽笠（射手头部件）50% 概率不消耗弹药。
+        /// 代达罗斯纹章 1/5（20%）、元素箭袋 40%、魔影胸甲 50% 概率不消耗弹药。
         /// </summary>
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
-            if (demonshadeClass == DamageClass.Ranged && weapon.DamageType == DamageClass.Ranged && Main.rand.NextFloat() < 0.5f)
+            if (demonshadeAmmoSaving && weapon.DamageType == DamageClass.Ranged && Main.rand.NextFloat() < 0.5f)
             {
                 return false;
             }
