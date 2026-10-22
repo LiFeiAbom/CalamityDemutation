@@ -5204,3 +5204,35 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 **2026-10-22 平衡修正**：魔影套装的恶魔烈焰持续损失由原 `lifeRegen -= 5000 / damage 2000`
 调整为 `lifeRegen -= 4000 / damage 2000`，即实际每秒生命损失 **2000**；常数统一为
 `DemonFlames.DamagePerSecond = 2000`。
+
+## 45. 古圣金源之翼重新移植（AncientAuricWings，2026-10-22）
+
+**用户口径**：以姊妹工程原件重新移植；保留基础飞行属性，删除全部独立基础增幅；
+穿戴全套古圣金源套装时追加伤害/暴击/近战攻速/减伤各 +8%；飞行时间取 **400 帧**，
+稀有度 **15 档**，配方前置本模组 `DrewsWings`。
+
+**物品**：22×20 判定、图标 30×26、翅膀外观 86×248、价值 1 铂金、基础稀有度 Red +
+`postMoonLordRarity = 15`。不提供防御、通用伤害/暴击、近战攻速、减伤、护甲穿透、
+生命/魔力上限、生命再生或每秒回蓝。
+
+**基础飞行**：`WingStats(400, 12f, 3f)`；垂直参数 `1 / 0.175 / 1.2 / 3.25 / 0.15`；
+免疫坠落伤害；保留上一版的 Drew 式暖金色钻石尘 `(236, 214, 147)`。
+
+**古圣金源套装奖励**：在 `CalamityDemutationPlayer.PostUpdateEquips` 中，
+`auricSet && IsAccessoryEquipped(Player, ModContent.ItemType<AncientAuricWings>())` 时追加：
+通用伤害 +8%、通用暴击 +8、近战攻速 +8%、伤害减免 +8%。
+该钩子顺序已核为 `UpdateEquips → UpdateArmorSets → PlayerLoader.PostUpdateEquips`，
+因此五种古圣金源职业头设置的 `auricSet` 当帧即可读取。
+
+**配方**：
+
+- 现代灾厄：`DrewsWings` + `AuricBar`×12 + 飞翔之魂×20 @ 星宇砧 `CosmicAnvil`。
+- 经典灾厄：经典版无 `AuricBar`，按 1 锭=5 矿换为 `AuricOre`×60；其余相同 @ 嘉登熔炉
+  `DraedonsForge`。
+
+**文件**：`Content/Items/Accessories/Wings/AncientAuricWings.cs` + `.png` + `_Wings.png`；
+中英本地化 `Items.AncientAuricWings`。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 个类**全命中。
+尚待进游戏实测 400 帧飞行、暖金尘埃、15 档颜色、双版本配方与 `auricSet` 套装增幅。

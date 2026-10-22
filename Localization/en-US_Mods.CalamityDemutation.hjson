@@ -457,6 +457,24 @@ Items: {
 			'''
 	}
 
+	AncientAuricWings: {
+		DisplayName: Ancient Auric Wings
+		Tooltip:
+			'''
+			Absolutely Fabulous
+			Horizontal speed: 12
+			Acceleration multiplier: 3
+			Flight time: 400
+			Excellent vertical speed
+			Immunity to fall damage
+			While wearing the full Auric Tesla set:
+			+8% damage
+			+8% critical strike chance
+			+8% melee attack speed
+			+8% damage reduction
+			'''
+	}
+
 	AngelTreads: {
 		DisplayName: Angel Treads
 		Tooltip:

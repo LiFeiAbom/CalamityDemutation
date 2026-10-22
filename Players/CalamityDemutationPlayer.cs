@@ -4,6 +4,7 @@ using CalamityDemutation.Content.Buffs.SummonBuffs;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;
 using CalamityDemutation.Content.Items.Accessories.Function;
 using CalamityDemutation.Content.Items.Accessories.JobAcc.Melee;
+using CalamityDemutation.Content.Items.Accessories.Wings;
 using CalamityDemutation.Content.Items.Potions.Alcohol;
 using CalamityDemutation.Content.Projectiles.Magic;
 using CalamityDemutation.Content.Projectiles.Melee;
@@ -3762,6 +3763,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public override void PostUpdateEquips()
         {
+            if (auricSet && IsAccessoryEquipped(Player, ModContent.ItemType<AncientAuricWings>()))
+            {
+                Player.GetDamage(DamageClass.Generic) += 0.08f;
+                Player.GetCritChance(DamageClass.Generic) += 8f;
+                Player.GetAttackSpeed(DamageClass.Melee) += 0.08f;
+                Player.endurance += 0.08f;
+            }
             if (Player.HasBuff(ModContent.BuffType<BurningIII>()))
                 Player.statDefense -= (int)BurningIII.DefenseLoss;
             if (Player.HasBuff(ModContent.BuffType<DaybreakII>()))

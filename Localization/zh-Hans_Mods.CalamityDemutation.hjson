@@ -457,6 +457,24 @@ Items: {
 			'''
 	}
 
+	AncientAuricWings: {
+		DisplayName: 古圣金源之翼
+		Tooltip:
+			'''
+			绝对惊艳
+			水平速度：12
+			加速倍率：3
+			飞行时间：400
+			极佳的垂直速度
+			免疫坠落伤害
+			穿戴全套古圣金源套装时：
+			+8% 伤害
+			+8% 暴击率
+			+8% 近战攻击速度
+			+8% 伤害减免
+			'''
+	}
+
 	AngelTreads: {
 		DisplayName: 天使之靴
 		Tooltip:
