@@ -43,6 +43,11 @@
 软依赖：`weakReferences = CalamityMod, CalamityModClassicPreTrailer`（见 `build.txt`），代码里一律用
 `ModLoader.TryGetMod` / `TryFind<ModItem|ModTile|ModBuff>` 按名字取内容，不写死类型引用。
 
+### 移植前置原则（用户 2026-10-22 定，硬性流程）
+
+**移植模组物品时，必须先查找并对比相关来源版本，把物品属性、效果、配方、依赖内容及版本差异完整列举给用户；
+只有经过用户与助手讨论、并由用户明确拍板后，才能开始移植和落代码。** 禁止在侦察完成后未经拍板直接实现。
+
 ### 内容来源规则（重要）
 
 - **参考范围**：灾厄本体与部分灾厄附属模组。
