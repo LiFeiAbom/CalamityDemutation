@@ -5130,6 +5130,7 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 **物品**：28×28 饰品贴图、Pink 稀有度（`ItemRarityID.Pink`）、价值 3 金
 （`Item.sellPrice(gold: 3)`）；**+18% 近战伤害 / +10% 近战攻击速度 / +8% 近战暴击率**。
 配方沿用原件现行版本：战士徽章 + 神圣锭×15 + 光/暗影/恐惧/力量/视域之魂各×25 @ 秘银砧。
+配方注册受灾厄软门禁控制：现代版或经典版灾厄任一存在时注册；两版都未开启时物品仍可加载，但无配方。
 
 **薪炎灼烧（BurningIII）**：自持减益，显示名“薪炎灼烧”/ `Emberflare Burn`，图标复用
 CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹幕命中附加 300 帧，PvP 同步生效：

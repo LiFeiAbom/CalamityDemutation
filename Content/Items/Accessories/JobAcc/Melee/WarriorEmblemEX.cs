@@ -27,6 +27,9 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
         }
         public override void AddRecipes()
         {
+            if (!ModLoader.TryGetMod("CalamityMod", out _)
+                && !ModLoader.TryGetMod("CalamityModClassicPreTrailer", out _))
+                return;
             CreateRecipe()
                 .AddIngredient(ItemID.WarriorEmblem)
                 .AddIngredient(ItemID.HallowedBar, 15)
