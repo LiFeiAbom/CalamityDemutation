@@ -1393,6 +1393,11 @@ Items: {
 		DisplayName: Eye of the Storm
 	}
 
+	Fabstaff: {
+		DisplayName: Fabstaff
+		Tooltip: Casts a bouncing beam that splits when enemies are near it
+	}
+
 	FlarefrostBlade: {
 		DisplayName: Flarefrost Blade
 		Tooltip:
@@ -3142,6 +3147,8 @@ Projectiles: {
 	ExoBeam.DisplayName: Exo Beam
 	ExoBoom.DisplayName: Exo Explosion
 	ExoComet.DisplayName: Exo Comet
+	FabBolt.DisplayName: Fab Bolt
+	FabRay.DisplayName: Fab Ray
 	FireBall.DisplayName: Fire Ball
 	FlameBlast.DisplayName: Flame Blast
 	FlameBurst.DisplayName: Flame Burst

@@ -4842,3 +4842,45 @@ debuff / 可存档 / PvP 有效 / 护士不能移除，持续 6 分钟。
 重点测三连随机餐具、潜行屠刀、普通火球、三连金锅、潜行额外火球/火花、砸锅音效与六味配方。
 
 **当前状态**：`Seared Pan` 整条链的代码、资源与本地化已自持完成，只差完整打包和进游戏验收。
+
+## 37. 绝学法杖（Fabstaff，2.0，2026-10-22）
+
+**用户口径**：机制与面板取 **2.0**；基础伤害最终指定为 **330**。对比阶段还核过
+经典 1.2 / 1.4.2.101、灾厄 1.3 / 2.0.3.9 / 2.0.4、现代实装 2.2.2 的 `Sylvestaff`
+重做版，以及 CI Beta 1.12 的 `FabstaffOld`；这些均未采用。
+
+**命名说明**：源码实际类型是 `Fabstaff`，不存在 `Fabsolstaff`；CI 的
+`FabstaffOld.DisplayName` 为“绝学法杖”。本工程按原名保留 `Fabstaff`，
+中文名使用“绝学法杖”，英文名 `Fabstaff`。
+
+**物品面板（2.0，伤害改为 330）**：84×84、耗魔 50、使用/动画 20 帧、击退 5、
+弹速 13.5、自动连发、法杖持握、无近战判定；月后 16 档、价值 2 铂金、研究解锁 1，
+使用音 `SoundID.Item60`。
+
+**机制（2.0）**：
+
+- `FabRay`：4×4 隐形判定、穿透 70、`extraUpdates = 3`、本地单体冷却 10 帧；
+  撞墙反弹并消耗穿透。每 12 次更新检测一次分裂时机。
+- 分裂先检查射线本体 180 像素内目标；随后从轨迹采样点按 280 像素范围寻找目标。
+  两段各自可生成一枚 `FabBolt`，生成只在本机主人端执行。
+- `FabBolt`：4×4 隐形判定、穿透 12、`extraUpdates = 2`、本地单体冷却 0；
+  飞行中按 `1.004` 加速，最后一次命中或撞墙后停止伤害并淡出。
+- 视觉复用工程 `CalamityDemutation:TrailStreak` 着色器；射线使用
+  `ScarletDevilStreak`，分裂弹使用从 2.0 原样取来的 `FabstaffStreak`。未新增着色器。
+
+**配方（现代 / 经典各一条）**：
+
+- 现代灾厄：彩虹魔杖 + `Necroplasm`×10 + `ShadowspecBar`×5 @ `DraedonsForge`。
+- 经典灾厄：彩虹魔杖 + `Phantoplasm`×10 + `ShadowspecBar`×5 @ `DraedonsForge`。
+- 材料与站台全部软依赖；某版缺件时只跳过该版配方并写加载警告。
+
+**文件**：
+
+- `Content/Items/Weapons/Magic/Fabstaff.cs` + `Fabstaff.png`（2.0 原贴图，84×84）。
+- `Content/Projectiles/Magic/FabRay.cs`、`FabBolt.cs`（共用 `InvisibleProj`）。
+- `ExtraTextures/Trails/FabstaffStreak.png`（2.0 原图，256×256）。
+- 中英本地化：`Items.Fabstaff`、`Projectiles.FabRay/FabBolt`。
+
+**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **214 条**全命中；`CheckImplicitTextures` **533 个类**全命中。
+尚待进游戏实测弹道分裂、反弹、拖尾和双版本配方。

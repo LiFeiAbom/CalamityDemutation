@@ -1394,6 +1394,11 @@ Items: {
 		DisplayName: 风暴之眼
 	}
 
+	Fabstaff: {
+		DisplayName: 绝学法杖
+		Tooltip: 发射一道在接近敌人时会自动分裂的弹射光束
+	}
+
 	FlarefrostBlade: {
 		DisplayName: 霜火之刃
 		Tooltip:
@@ -3141,6 +3146,8 @@ Projectiles: {
 	ExoBeam.DisplayName: 星流射线
 	ExoBoom.DisplayName: 星流爆炸
 	ExoComet.DisplayName: 终焉彗星
+	FabBolt.DisplayName: 绝学光弹
+	FabRay.DisplayName: 绝学射线
 	FireBall.DisplayName: 火球
 	FlameBlast.DisplayName: 烈焰冲击
 	FlameBurst.DisplayName: 烈焰迸发
