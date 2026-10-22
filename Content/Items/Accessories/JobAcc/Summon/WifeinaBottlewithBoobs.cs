@@ -41,7 +41,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Summon
                 // 数量不足 1 时补生成，防止每帧叠加多个仆从
                 if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Summon.DrewsSandyWaifu>()] < 1)
                 {
-                    Projectile.NewProjectile(player.GetSource_Accessory(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.DrewsSandyWaifu>(), (int)(45f * player.GetDamage(DamageClass.Summon).Multiplicative), 2f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(player.GetSource_Accessory(Item), player.Center.X, player.Center.Y, 0f, -1f, ModContent.ProjectileType<Projectiles.Summon.DrewsSandyWaifu>(), (int)(45f * player.GetDamage<SummonDamageClass>().Multiplicative), 2f, Main.myPlayer, 0f, 0f);
                 }
             }
         }

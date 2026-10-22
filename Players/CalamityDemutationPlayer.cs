@@ -3765,9 +3765,9 @@ namespace CalamityDemutation.Players
         {
             if (auricSet && IsAccessoryEquipped(Player, ModContent.ItemType<AncientAuricWings>()))
             {
-                Player.GetDamage(DamageClass.Generic) += 0.08f;
-                Player.GetCritChance(DamageClass.Generic) += 8f;
-                Player.GetAttackSpeed(DamageClass.Melee) += 0.08f;
+                Player.GetDamage<GenericDamageClass>() += 0.08f;
+                Player.GetCritChance<GenericDamageClass>() += 8f;
+                Player.GetAttackSpeed<MeleeDamageClass>() += 0.08f;
                 Player.endurance += 0.08f;
             }
             if (Player.HasBuff(ModContent.BuffType<BurningIII>()))

@@ -21,9 +21,9 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage(DamageClass.Melee) += 0.18f;
-            player.GetAttackSpeed(DamageClass.Melee) += 0.12f;
-            player.GetCritChance(DamageClass.Melee) += 8f;
+            player.GetDamage<MeleeDamageClass>() += 0.18f;
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.12f;
+            player.GetCritChance<MeleeDamageClass>() += 8f;
         }
         public override void AddRecipes()
         {

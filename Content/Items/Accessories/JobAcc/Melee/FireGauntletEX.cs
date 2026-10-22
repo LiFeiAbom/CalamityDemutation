@@ -21,9 +21,9 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage(DamageClass.Melee) += 0.24f;
-            player.GetCritChance(DamageClass.Melee) += 24f;
-            player.GetAttackSpeed(DamageClass.Melee) += 0.24f;
+            player.GetDamage<MeleeDamageClass>() += 0.24f;
+            player.GetCritChance<MeleeDamageClass>() += 24f;
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.24f;
             player.aggro += 400;
             // 烈火手套功能：点火、近战击退×2、近战/鞭子自动挥舞、近战武器大小×1.1。
             player.magmaStone = true;
@@ -40,7 +40,7 @@ namespace CalamityDemutation.Content.Items.Accessories.JobAcc.Melee
             }
             player.lifeRegen += 2;
             player.pickSpeed -= 0.15f;
-            player.GetKnockback(DamageClass.Summon) += 1f;
+            player.GetKnockback<SummonDamageClass>() += 1f;
         }
         public override void AddRecipes()
         {

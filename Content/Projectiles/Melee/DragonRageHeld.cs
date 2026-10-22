@@ -70,7 +70,7 @@ namespace CalamityDemutation.Content.Projectiles.Melee
         public override void SwingAI()
         {
             // speedUp 越小越快：与攻速、SwingAtkSpeed 成反比。下面的时间阈值乘它、转速衰减除它，两处合力实现整体加速
-            float speedUp = 1 / (Owner.GetAttackSpeed(DamageClass.MeleeNoSpeed) * SwingAtkSpeed);
+            float speedUp = 1 / (Owner.GetAttackSpeed<MeleeNoSpeedDamageClass>() * SwingAtkSpeed);
             // ai[0]=0：正摇的小挥砍——前 10×speedUp 帧长度与转速递增，之后递减（长度夹在 120~160）
             if (Projectile.ai[0] == 0)
             {

@@ -331,7 +331,7 @@ namespace CalamityDemutation.Utilities
                 && classicGetThrowingModPlayer.Invoke(player, null) is ModPlayer throwingPlayer
                 && classicThrowingDamageField.GetValue(throwingPlayer) is float throwingDamage)
             {
-                return (int)(baseDamage * (throwingDamage + player.GetDamage(DamageClass.Summon).Additive));
+                return (int)(baseDamage * (throwingDamage + player.GetDamage<SummonDamageClass>().Additive));
             }
             return (int)player.GetDamage(GetRogueDamageClass()).ApplyTo(baseDamage);
         }

@@ -135,7 +135,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
                 mp.ataraxiaHitSound = false;
             }
             int trueMeleeID = ModContent.ProjectileType<AtaraxiaBoom>();
-            int trueMeleeDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(0.7f * Item.damage);
+            int trueMeleeDamage = (int)player.GetTotalDamage<MeleeDamageClass>().ApplyTo(0.7f * Item.damage);
             var source = player.GetSource_ItemUse(Item);
             Projectile.NewProjectile(source, targetPos, Vector2.Zero, trueMeleeID, trueMeleeDamage, Item.knockBack, player.whoAmI, 0.0f, 0.0f);
         }

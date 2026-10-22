@@ -80,7 +80,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Vector2 playerCenter = player.RotatedRelativePoint(player.MountedCenter, true);
             Vector2 aimDirection = (mouseWorld - playerCenter).SafeNormalize(Vector2.UnitX * player.direction);
             SoundEngine.PlaySound(SoundID.Item73, mouseWorld);
-            int flameDamage = (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(BaseFlameDamageRatio * Item.damage);
+            int flameDamage = (int)player.GetTotalDamage<MeleeDamageClass>().ApplyTo(BaseFlameDamageRatio * Item.damage);
             int flameType = ModContent.ProjectileType<EssenceFlame2>();
             for (int i = 0; i < BaseFlamesPerBarrage; i++)
             {

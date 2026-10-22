@@ -104,6 +104,12 @@
 - **代码排版（用户 2026-10-19 定）**：新增/修改代码保持紧凑，不铺无意义空行；
   方法体内相邻语句、局部变量与后续逻辑、相邻配方块之间不空行；
   只有确实需要分隔大段逻辑时才留一行。参照 `BloodyMary.cs` / `MoscowMule.cs` / `TequilaSunrise.cs` 的写法。
+- **伤害类 getter 格式（用户 2026-10-22 定）**：固定职业一律用泛型形式：
+  `GetDamage<MeleeDamageClass>()`、`GetCritChance<GenericDamageClass>()`、
+  `GetAttackSpeed<MeleeNoSpeedDamageClass>()`、`GetKnockback<SummonDamageClass>()`、
+  `GetTotalDamage<RangedDamageClass>()` 等；不要再写 `GetDamage(DamageClass.Melee)` 这一类。
+  仅当伤害类是运行时变量（如 `rogue`、`throwingClass`、`Projectile.DamageType`、
+  `CDUtil.GetRogueDamageClass()`）时保留参数形式，因为 C# 泛型不能接收运行时类型。
 - **本地化**：每个语言一份扁平 hjson（`Localization/en-US_Mods.CalamityDemutation.hjson`、`zh-Hans_...`），
   顶层 `Buffs` / `Items` / `Keybinds` / `Projectiles` / `Systems` / `TextContent`
   （`TextContent` 自 2026-10-15 起启用，首用者是发条弓的「咔 / 嗒」：`ClockworkBowTick` / `ClockworkBowTock`）；
