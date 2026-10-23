@@ -9,16 +9,6 @@ Buffs: {
 		Description: Empowered by otherworldly spirits
 	}
 
-	BurningIII: {
-		DisplayName: Burning III
-		Description: The pyre's flames continue to sear the target
-	}
-
-	DaybreakII: {
-		DisplayName: Daybreak II
-		Description: The flames of daybreak continue to sear the target
-	}
-
 	BrimstoneWaifu: {
 		Description: The brimstone elemental will protect you
 		DisplayName: Brimstone Elemental
@@ -454,23 +444,6 @@ Items: {
 			Summons an ice clasper to fight for you
 			The clasper fires ice shards at distant enemies
 			While you are close to enemies, it will aggressively bash them with frozen fury
-			'''
-	}
-
-	AncientAuricWings: {
-		DisplayName: Ancient Auric Wings
-		Tooltip:
-			'''
-			Absolutely Fabulous
-			Horizontal speed: 12
-			Acceleration multiplier: 3
-			Flight time: 400
-			Excellent vertical speed
-			Immunity to fall damage
-			While wearing the full Auric Tesla set:
-			+8% damage
-			+8% critical strike chance
-			+8% damage reduction
 			'''
 	}
 
@@ -2648,17 +2621,6 @@ Items: {
 		DisplayName: Rare Elemental in a Bottle
 	}
 
-	WarriorEmblemEX: {
-		DisplayName: Warrior Emblem EX
-		Tooltip:
-			'''
-			Increases melee damage by 18%
-			Increases melee attack speed by 12%
-			Increases melee critical strike chance by 8%
-			Melee hits inflict Burning III
-			'''
-	}
-
 	YharimsInsignia: {
 		DisplayName: Yharim's Insignia
 		Tooltip:
@@ -2858,21 +2820,6 @@ Items: {
 			'''
 			Fires two arrows at once
 			Converts any ammo into sliding energy bolts
-			'''
-	}
-
-	FireGauntletEX: {
-		DisplayName: Fire Gauntlet EX
-		Tooltip:
-			'''
-			+25% melee damage
-			+25% melee critical strike chance
-			+25% melee attack speed
-			+400 aggro
-			Increases melee knockback and melee weapon size by 10%
-			Allows autoswing for melee weapons and whips
-			Grants the effects of the Fire Gauntlet and Celestial Shell
-			Melee hits inflict Burning III and Daybreak II
 			'''
 	}
 

@@ -99,22 +99,6 @@ namespace CalamityDemutation.NPCs
             }
         }
         /// <summary>
-        /// 燃烧III：敌怪攻击结算时按当前减益状态降低 5 点防御，并使其受到伤害增加 5%。
-        /// </summary>
-        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
-        {
-            if (npc.HasBuff(ModContent.BuffType<BurningIII>()))
-            {
-                modifiers.Defense.Flat -= BurningIII.DefenseLoss;
-                modifiers.FinalDamage *= BurningIII.DamageTakenMultiplier;
-            }
-            if (npc.HasBuff(ModContent.BuffType<DaybreakII>()))
-            {
-                modifiers.Defense.Flat -= DaybreakII.DefenseLoss;
-                modifiers.FinalDamage *= DaybreakII.DamageTakenMultiplier;
-            }
-        }
-        /// <summary>
         /// 血腥玛丽：血月期间把该玩家的刷怪率与最大刷怪量都放大 10 倍
         /// （spawnRate 越小刷得越快，故除以 10 并保证不低于 1）。
         /// </summary>
@@ -419,22 +403,6 @@ namespace CalamityDemutation.NPCs
         /// </summary>
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
-            if (npc.HasBuff(ModContent.BuffType<BurningIII>()))
-            {
-                if (npc.lifeRegen > 0)
-                    npc.lifeRegen = 0;
-                npc.lifeRegen -= BurningIII.BurnLifeRegen;
-                if (damage < BurningIII.BurnLifeRegen / 2)
-                    damage = BurningIII.BurnLifeRegen / 2;
-            }
-            if (npc.HasBuff(ModContent.BuffType<DaybreakII>()))
-            {
-                if (npc.lifeRegen > 0)
-                    npc.lifeRegen = 0;
-                npc.lifeRegen -= DaybreakII.BurnLifeRegen;
-                if (damage < DaybreakII.BurnLifeRegen / 2)
-                    damage = DaybreakII.BurnLifeRegen / 2;
-            }
             if (demonFlames)
             {
                 if (npc.lifeRegen > 0)

@@ -37,26 +37,11 @@
 - 本批提交：`99cd345`、`d43c07e`、`3d455db`、`66eb350`、`d19e7fe`、`c97789a`、
   `80d73a5`、`01c4e42`；均已在 `master` 远端。
 
-**2026-10-23 会话交接（战士/烈火饰品、破晓II、金源之翼）**：
-
-- 战士徽章EX（§43）：Pink、售价 3 金，+18% 近战伤害 / +12% 近战攻速 / +8% 近战暴击；
-  近战命中施加燃烧III。配方必须检测现代或经典灾厄任一生效后才注册。
-- 烈火手套EX（§44）：防御 8、Purple、售价 20 金，三围 **+25%**；模拟烈火手套与天界壳功能，
-  近战命中同时施加燃烧III与破晓II。现代 `AuricBar` 配方走星宇砧、经典走嘉登熔炉。
-- 破晓II：450 HP/s、防御 −30、易伤 15%，完整移植燃烧IV的 MiracleBlight 火尘与溶解着色器；
-  粒子/噪声/着色器和 `SpriteBatchScope` 均已入库。
-- 恶魔烈焰平衡：魔影套装减益统一为 `DemonFlames.DamagePerSecond = 2000`，
-  即实际每秒 2000；对应 `lifeRegen -= 4000 / damage 2000`。
-- 古圣金源之翼（§45）：飞行 400、Drew 之翼升级；删除全部独立基础增幅；
-  全套 `auricSet` 时只追加 +8% 伤害 / +8% 暴击率 / +8% 伤害减免（近战攻速已按用户要求移除）。
-  现代配方 `DrewsWings + AuricBar×12 + 飞翔之魂×20 @ CosmicAnvil`，
-  经典配方把金源锭换为 `AuricOre×60 @ DraedonsForge`。
-- 全工程固定伤害类 getter 已统一为泛型格式；运行时变量 `rogue` / `throwingClass` /
-  `Projectile.DamageType` 保留参数形式。规则见 §4。
-- 本批提交：`2f11d76`、`746906e`、`a071cf8`、`d8ca067`、`509ff1b`、`5a57db6`、
-  `95d95ad`、`bb512c9`、`b63cf95`；均已在 `master` 远端。
-- 最近验证：`dotnet build` 0 警告 0 错误；资源自检 217 条、隐式贴图 549 个类全命中。
-  尚待进游戏实测烈火手套双减益/溶解、金源之翼套装增幅与双版本配方。
+**2026-10-23 撤销**：按用户要求删除战士徽章EX、烈火手套EX、古圣金源之翼，
+以及只服务于它们的燃烧III、破晓II、贴图、溶解着色器、命中钩子和本地化。
+§43–§44 仅保留为历史决策记录，不再代表当前工程内容。
+同日无关的恶魔烈焰平衡与固定伤害类 getter 泛型清理继续保留。
+**验证（2026-10-23）**：`dotnet build` 0 警告 0 错误；资源自检 216 条、隐式贴图 544 个类全命中。
 
 ## 1. 工程是什么
 
@@ -5148,14 +5133,16 @@ CI 的 `StealthDamageMultiplier = 1.75` 在本工程改为潜行分支生成时�
 `CheckResources` **216 条**全命中；`CheckImplicitTextures` **544 个类**全命中。
 尚待进游戏实测持续引导、右键引爆、火箭撞墙、大范围爆炸与龙焰减益。
 
-## 43. 战士徽章EX（WarriorEmblemEX，CalamityExpansion，2026-10-22）
+## 43. 战士徽章EX（WarriorEmblemEX，已于 2026-10-23 删除）
+
+> 以下保留 2026-10-22 的移植记录，仅作历史参考；物品、燃烧III及其挂点均不属于当前工程。
 
 **来源**：`D:\Game\Terraria\PrivateMod\CalamityExpansion` 的
 `Content/Items/Accessories/JobAcc/Melee/WarriorEmblemEX.cs`。原件的破晓EX与橙红渐变稀有度不移植，
 按用户拍板改为下列独立规格。
 
 **物品**：28×28 饰品贴图、Pink 稀有度（`ItemRarityID.Pink`）、价值 3 金
-（`Item.sellPrice(gold: 3)`）；**+18% 近战伤害 / +12% 近战攻击速度 / +8% 近战暴击率**。
+（`Item.sellPrice(gold: 3)`）；**+18% 近战伤害 / +10% 近战攻击速度 / +8% 近战暴击率**。
 配方沿用原件现行版本：战士徽章 + 神圣锭×15 + 光/暗影/恐惧/力量/视域之魂各×25 @ 秘银砧。
 配方注册受灾厄软门禁控制：现代版或经典版灾厄任一存在时注册；两版都未开启时物品仍可加载，但无配方。
 
@@ -5183,14 +5170,15 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 **验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **216 条**全命中；`CheckImplicitTextures` **546 个类**全命中。
 尚待进游戏实测近战/PvP 施加、100 HP/s、−5 防御、5% 易伤、Hellfire 粒子与配方。
+## 44. 烈火手套EX（FireGauntletEX，已于 2026-10-23 删除）
 
-## 44. 烈火手套EX（FireGauntletEX，CalamityExpansion 复合口径，2026-10-22）
+> 以下保留 2026-10-22 的移植记录，仅作历史参考；物品、破晓II、着色器及其挂点均不属于当前工程。
 
 **用户口径**：基础属性取 CalamityExpansion 原件并把三围改到 24%、武器大小改用原版 10% 旗标；
 同时模拟烈火手套与天界壳功能；命中同时施加燃烧III与破晓II；不移植破晓EX。
 
 **物品**：26×30、Purple（`ItemRarityID.Purple`）、售价 20 金（`Item.sellPrice(gold: 20)`）、
-`Item.defense = 8`；+25% 近战伤害/暴击率/攻击速度、+400 仇恨（2026-10-23 三围由 24 提到 25）。
+`Item.defense = 8`；+24% 近战伤害/暴击率/攻击速度、+400 仇恨。
 
 **烈火手套功能**：`magmaStone`（攻击点燃）、`kbGlove`（近战击退×2）、
 `autoReuseGlove`（近战武器与鞭子自动挥舞）、`meleeScaleGlove`（原版 +10% 武器大小）。
@@ -5231,35 +5219,3 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 **2026-10-22 平衡修正**：魔影套装的恶魔烈焰持续损失由原 `lifeRegen -= 5000 / damage 2000`
 调整为 `lifeRegen -= 4000 / damage 2000`，即实际每秒生命损失 **2000**；常数统一为
 `DemonFlames.DamagePerSecond = 2000`。
-
-## 45. 古圣金源之翼重新移植（AncientAuricWings，2026-10-22）
-
-**用户口径**：以姊妹工程原件重新移植；保留基础飞行属性，删除全部独立基础增幅；
-穿戴全套古圣金源套装时追加伤害/暴击/近战攻速/减伤各 +8%；飞行时间取 **400 帧**，
-稀有度 **15 档**，配方前置本模组 `DrewsWings`。
-
-**物品**：22×20 判定、图标 30×26、翅膀外观 86×248、价值 1 铂金、基础稀有度 Red +
-`postMoonLordRarity = 15`。不提供防御、通用伤害/暴击、近战攻速、减伤、护甲穿透、
-生命/魔力上限、生命再生或每秒回蓝。
-
-**基础飞行**：`WingStats(400, 12f, 3f)`；垂直参数 `1 / 0.175 / 1.2 / 3.25 / 0.15`；
-免疫坠落伤害；保留上一版的 Drew 式暖金色钻石尘 `(236, 214, 147)`。
-
-**古圣金源套装奖励**：在 `CalamityDemutationPlayer.PostUpdateEquips` 中，
-`auricSet && IsAccessoryEquipped(Player, ModContent.ItemType<AncientAuricWings>())` 时追加：
-通用伤害 +8%、通用暴击 +8、伤害减免 +8%（2026-10-23 按用户要求移除近战攻速 +8%）。
-该钩子顺序已核为 `UpdateEquips → UpdateArmorSets → PlayerLoader.PostUpdateEquips`，
-因此五种古圣金源职业头设置的 `auricSet` 当帧即可读取。
-
-**配方**：
-
-- 现代灾厄：`DrewsWings` + `AuricBar`×12 + 飞翔之魂×20 @ 星宇砧 `CosmicAnvil`。
-- 经典灾厄：经典版无 `AuricBar`，按 1 锭=5 矿换为 `AuricOre`×60；其余相同 @ 嘉登熔炉
-  `DraedonsForge`。
-
-**文件**：`Content/Items/Accessories/Wings/AncientAuricWings.cs` + `.png` + `_Wings.png`；
-中英本地化 `Items.AncientAuricWings`。
-
-**验证（2026-10-22）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
-`CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 个类**全命中。
-尚待进游戏实测 400 帧飞行、暖金尘埃、15 档颜色、双版本配方与 `auricSet` 套装增幅。

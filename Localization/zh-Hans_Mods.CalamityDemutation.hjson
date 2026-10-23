@@ -9,16 +9,6 @@ Buffs: {
 		Description: 受异界魂灵强化
 	}
 
-	BurningIII: {
-		DisplayName: 燃烧III
-		Description: 来自薪炎的烈焰持续灼烧目标
-	}
-
-	DaybreakII: {
-		DisplayName: 破晓II
-		Description: 来自破晓的光焰持续灼烧目标
-	}
-
 	BrimstoneWaifu: {
 		Description: 硫磺元素会保护你
 		DisplayName: 硫磺元素
@@ -454,23 +444,6 @@ Items: {
 			召唤一头冰灵为你而战
 			冰灵会朝远处的敌人发射冰锥
 			当你贴近敌人时，它会带着冰霜之怒猛撞上去
-			'''
-	}
-
-	AncientAuricWings: {
-		DisplayName: 古圣金源之翼
-		Tooltip:
-			'''
-			绝对惊艳
-			水平速度：12
-			加速倍率：3
-			飞行时间：400
-			极佳的垂直速度
-			免疫坠落伤害
-			穿戴全套古圣金源套装时：
-			+8% 伤害
-			+8% 暴击率
-			+8% 伤害减免
 			'''
 	}
 
@@ -2647,17 +2620,6 @@ Items: {
 		DisplayName: 稀有瓶装沙元素
 	}
 
-	WarriorEmblemEX: {
-		DisplayName: 战士徽章EX
-		Tooltip:
-			'''
-			近战伤害提高 18%
-			近战攻击速度提高 12%
-			近战暴击率提高 8%
-			近战命中会造成燃烧III
-			'''
-	}
-
 	YharimsInsignia: {
 		DisplayName: 魔君之证章
 		Tooltip:
@@ -2857,21 +2819,6 @@ Items: {
 			'''
 			一次射出两支箭
 			将任何箭矢转化为滑行能量弹
-			'''
-	}
-
-	FireGauntletEX: {
-		DisplayName: 烈火手套EX
-		Tooltip:
-			'''
-			+25% 近战伤害
-			+25% 近战暴击率
-			+25% 近战攻击速度
-			+400 仇恨值
-			近战击退提高，近战武器大小提高 10%
-			允许近战武器和鞭子自动挥舞
-			获得烈火手套和天界壳效果
-			近战命中会造成燃烧III和破晓II
 			'''
 	}
 

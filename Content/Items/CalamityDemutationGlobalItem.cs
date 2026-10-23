@@ -613,7 +613,6 @@ namespace CalamityDemutation.Content.Items
             // 与 PvE 侧（CalamityDemutationPlayer.OnHitNPCWithItem）对齐：亚利姆徽章 / 元素手套 / 血炎近战 / 弑神近战
             // 这四项都是"近战饰品/套装"效果，只有近战（含无攻速近战）武器命中才生效，拿法师/远程武器打人也该不触发。
             bool meleeHit = item.CountsAsClass<MeleeDamageClass>() || item.CountsAsClass<MeleeNoSpeedDamageClass>();
-            CalamityDemutationPlayer.ApplyMeleeAccessoryDebuffs(player, target, item.DamageType);
             // 亚利姆徽章 / 元素手套：直接查 A 的实际装备（不依赖 ModPlayer 标志位）
             if (meleeHit && CalamityDemutationPlayer.IsAccessoryEquipped(player, ModContent.ItemType<YharimsInsignia>()))
             {

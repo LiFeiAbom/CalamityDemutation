@@ -583,7 +583,6 @@ namespace CalamityDemutation.Content.Projectiles
             bool isMelee = projectile.CountsAsClass<MeleeDamageClass>() || projectile.CountsAsClass<MeleeNoSpeedDamageClass>();
             if (isMelee)
             {
-                CalamityDemutationPlayer.ApplyMeleeAccessoryDebuffs(attacker, target, projectile.DamageType);
                 // 攻击者装备亚利姆徽章：随机 120/240/360 帧施加神圣火（现代版）与圣光（经典版）
                 if (CalamityDemutationPlayer.IsAccessoryEquipped(attacker, ModContent.ItemType<YharimsInsignia>()))
                 {
