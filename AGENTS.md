@@ -42,7 +42,41 @@
 §43–§44 仅保留为历史决策记录，不再代表当前工程内容。
 同日无关的恶魔烈焰平衡与固定伤害类 getter 泛型清理继续保留。
 **验证（2026-10-23）**：`dotnet build` 0 警告 0 错误；资源自检 216 条、隐式贴图 544 个类全命中。
-**2026-10-23 血神核心**：按用户要求恢复近战攻击速度，当前为 **+12%**。
+**2026-10-24 血神核心**：按用户要求移除新增的 **+12%** 近战攻击速度；当前不再提供近战攻速加成。
+**2026-10-23 硫酸炮**：按灾厄 2.0.7.2 的黏附酸弹机制移植，伤害改为 **220**；
+现代版改为硫海遗爵宝藏袋 **25%**，经典版恢复巨螯虾 **1/3** 掉落；无配方（§45）。
+**2026-10-23 极乐升天炮**：按 CI Beta 1.12 的 `ProfanedLancher` 移植，保留 270 面板、
+渎神核弹追踪、伤害粉尘、圣火与火箭终点爆炸；现代/经典 Providence 普通 1/4、宝袋 1/3（§46）。
+**2026-10-23 反器材狙击步枪**：按用户要求删除 `Skullmasher`、两枚专属弹幕、贴图、专属音效、
+噬神者两版掉落、全局弹幕标记与中英本地化；§47 仅保留历史记录。
+
+**2026-10-23 射手武器会话交接**：
+
+- 已完成：硫酸炮（§45，最终伤害 220）。
+- 待删除：极乐升天炮及 `ProfanedNuke` / `ProfanedNukeDust` 整套内容（§46）。用户已明确要求删除，
+  删除动作留到后续集中清理。
+- 暴政之终（Tyranny's End）：用户 2026-10-23 已取消移植，不再作为待办或后续计划。
+- 当前验证基线：`dotnet build` 0 警告 0 错误；`CheckResources` 217 条；
+  `CheckImplicitTextures` 549 个类全命中。
+- 工作区状态：上述改动均**未提交**；`master` 相对远端仍显示 ahead 2（另含本批未跟踪/未提交文件）。
+
+**2026-10-25 会话交接（Codex 0.164.0 + 重启接手）**：
+
+- Codex CLI、后台守护进程和 PATH 上的 `codex` 均已切到 **0.164.0**；官方包 SHA256、
+  两棵树预铺、`codex doctor` 与配置 schema 已核（详见 §11.6）。本机配置未改，
+  `Tools\FinalizeCodexDaemonUpdate.ps1` 的默认目标已改为 0.164.0，并新增 §11.6 维护记录。
+- 重启前当前会话仍由 0.163.0 的 PID 36772 持有；隐藏清理进程 PID 21832 会在它退出后删除
+  `standalone\releases\0.163.0-x86_64-pc-windows-msvc\`。**新会话先复核旧版目录已消失、
+  `standalone\releases` 只剩 0.164.0。**
+- 工作区基线：`HEAD = 1f6cfba`，`origin/master = 31b1644`，分支 ahead 2。以下改动均未提交：
+  `AGENTS.md`、血神核心、全局物品/弹幕、两版本地化、全局 NPC、玩家类、
+  `Tools/FinalizeCodexDaemonUpdate.ps1`；未跟踪文件为硫酸炮、极乐升天炮、`ProfanedNuke`、
+  `ProfanedNukeDust`、`SulphuricBlast` 及三张贴图。
+- 射手武器批次仍是：硫酸炮完成；极乐升天炮及 `ProfanedNuke` / `ProfanedNukeDust` 待删（§46）。
+  用户 2026-10-25 再次明确：**移植完成后必须清掉全部废弃或残留文件/目录**，包括代码、贴图、
+  音效、掉落、全局标记、辅助函数、本地化与失去引用的目录。清理后更新记忆并跑构建/资源两道自检。
+- 本次未改模组代码，未重跑 `dotnet build`；沿用的最近验证基线仍为 0 警告 0 错误、
+  `CheckResources` 217 条、`CheckImplicitTextures` 549 个类全命中。
 
 ## 1. 工程是什么
 
@@ -2855,7 +2889,7 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 
 | 物品（显示名） | 内部名 | 尺寸/价值/稀有度 | 效果 | 来源 |
 |---|---|---|---|---|
-| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；近战攻速 +12%；减伤 +10%；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半（沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% → 2026-10-17 +12% → 2026-10-18 删除 → 2026-10-23 恢复 +12%） | 合成（见 10.3） |
+| **血神核心** | `CoreOfTheBloodGod`（Comprehensive） | 26×26 / 90 金 / 专家 | 最大生命 +10%；通用伤害 +12%、通用暴击 +12%；减伤 +10%；防御<100 再 +15% 通用伤害；每帧吸血光环；继承血肉图腾的接触伤害减半（近战攻速沿革：2026-10-06 追加 +10% → 2026-10-10 删除 → 2026-10-13 改挂 +6% → 2026-10-17 +12% → 2026-10-18 删除 → 2026-10-23 恢复 +12% → 2026-10-24 删除） | 合成（见 10.3） |
 | 血炎晶核 | `BloodflareCore`（Comprehensive） | 26×26 / 45 金 / 专家 | 吸血光环；防御<100 → +15% 通用伤害；生命≤50% → 减伤+15%/通用伤害+10%/暴击+10%；生命≤15% → 减伤+30%/通用伤害+20%/暴击+20% | 掠夺者（Ravager）宝藏袋，需已击败亵渎（`BossSystem.Providence`） |
 | 血腥蠕虫围巾 | `BloodyWormScarf`（JobAcc/Melee，`EquipType.Neck`） | 26×42 / 15 金 / 专家 | 近战伤害 +10%、近战攻速 +10%、减伤 +15% | 合成（见 10.3） |
 | 血契 | `BloodPact`（Defense） | 26×26 / 24 金 / 黄 | 最大生命翻倍；代价是 25% 概率被暴击（受击约 ×2.5） | 掠夺者宝藏袋 |
@@ -3208,6 +3242,23 @@ active or queued work.` —— TUI 里的 **`/daemon`** 就是管理入口（等
   只读工具并行执行；Daybreak 对符合条件的账号默认开启。另有两条迁移提示（改用标准 shell 执行器、不再内置打过补丁的
   `zsh`；用旧 shell 标志的配置会收到迁移提示）与 Linux/macOS 包 strip 符号——本机 Windows 包都不受影响。
   桌面 MSIX 应用仍是微软商店那条线，本次未动。
+
+### 11.6 升到 0.164.0（2026-10-25：0.163.0 → 0.164.0，CLI 与守护进程同步）
+
+- **上游**：GitHub `rust-v0.164.0`（2026-10-23 发布）。Windows 包
+  `codex-package-x86_64-pc-windows-msvc.tar.gz` 为 **167,144,380** 字节，SHA256
+  `700116be3143576d006467af8576f7f4c9dada1feddfdb7f69743bfde0997018`，解压后 45 个文件、**483,688,315** 字节。
+  下载、校验、两棵树预铺、`bin\codex.exe --version` 均按 11.5 流程完成。
+- **配置零迁移**：0.163.0 与 0.164.0 的 `codex-rs/core/config.schema.json` 顶层属性同为 **103** 个，
+  无新增、无移除；`config.toml` 解析正常。
+- **切换实况**：standalone 与 app-server-daemon 的 `current` 均指向 `0.164.0`；
+  守护进程为 `appServerVersion = 0.164.0`（PID 33156）。`codex doctor` 判为
+  `21 ok / 5 notes / 4 warn / 0 fail`，安装结构一致、CLI 与后台版本一致。
+  `Tools\FinalizeCodexDaemonUpdate.ps1` 默认目标已改为 `0.164.0`。
+- **清理**：下载暂存目录已删；守护进程树里的 0.163.0 已由收尾脚本删除。standalone 的 0.163.0
+  因升级时仍在运行的会话锁住 `bin\codex.exe`，已启动隐藏清理进程（PID 21832，最多等待 7 天），
+  会在该会话退出后自动删除整个旧版目录。**重启 Codex 后应复核 `standalone\releases` 只剩 0.164.0。**
+- **桌面应用**：商店版另有 `26.1021.3705.0` 可更新，本次按既有分工未动 MSIX。
 
 ## 12. 巨龙之息（Dragon's Breath）—— 旧版支线移植（2026-10-14）
 
@@ -5220,3 +5271,109 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 **2026-10-22 平衡修正**：魔影套装的恶魔烈焰持续损失由原 `lifeRegen -= 5000 / damage 2000`
 调整为 `lifeRegen -= 4000 / damage 2000`，即实际每秒生命损失 **2000**；常数统一为
 `DemonFlames.DamagePerSecond = 2000`。
+
+**2026-10-25 平衡修正**：用户指定魔影炙炎 DPS **2000 → 2500**；当前为
+`lifeRegen -= 5000 / damage 2500`，常数改为 `DemonFlames.DamagePerSecond = 2500`。
+
+## 45. 硫酸炮（Sulphuric Acid Cannon，2.0.7.2 机制，2026-10-23）
+
+**用户口径**：采用灾厄 2.0 的无限弹药黏附酸弹；最终伤害调整为 **220**；
+获取改为硫海遗爵 `The Old Duke` 宝藏袋 **25%** 开出，不再保留巨螯虾掉落，无配方。
+
+**物品**：90×30 判定、贴图 98×32、220 射手伤害、使用/动画 18 帧、击退 6、自动连发、
+射速 16、无限弹药、月后 13 档（纯绿）、价值 1 铂金 75 金、使用音 `Item95`。
+
+**弹幕**：36×36 判定、贴图 26×2000（20 帧）、穿透无限、不撞墙、`MaxUpdates = 3`、
+逐敌冷却 33 帧。未黏附时在 720 范围内追踪（速度 16、惯性 60）；命中后黏附最多 8 秒，
+同一敌人最多同时黏 2 发，黏附期间保持完整伤害。命中 NPC/PvP 均施加 180 帧硫磺中毒，
+灾厄缺失时回退原版毒液。追踪与黏附逻辑使用本工程 `CDUtil.HomeInOnNPC` 和自写黏附状态，
+不硬引用灾厄内部工具。
+
+**获取**：
+
+- 现代灾厄：在 `CalamityDemutationGlobalItem.ModifyItemLoot` 中通过 `OldDukeBag` 软查找，
+  挂一条 `CommonDrop(..., 4)`，即硫海遗爵宝藏袋 25%。
+- 经典灾厄：在 `CalamityDemutationGlobalNPC.ModifyNPCLoot` 中通过 `Mauler` 软查找，
+  按经典 1.4.2.101 原来源挂 `CommonDrop(..., 3)`，即巨螯虾 1/3 掉落，
+  并保留已击败噬魂幽花门槛。
+
+**文件**：
+
+- `Content/Items/Weapons/Ranged/SulphuricAcidCannon.cs` + `.png`（98×32）。
+- `Content/Projectiles/Ranged/SulphuricBlast.cs` + `.png`（26×2000，20 帧）。
+- 中英本地化：`Items.SulphuricAcidCannon`、`Projectiles.SulphuricBlast`。
+
+**验证（2026-10-23）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **216 条**全命中；`CheckImplicitTextures` **546 个类**全命中。
+尚待进游戏实测追踪、双发上限、8 秒黏附伤害、减益与两版宝藏袋 25% 掉落。
+
+## 46. 极乐升天炮（Blissful Bombardier，待删除，2026-10-23）
+
+> **当前状态：用户已要求删除，但尚未执行。** 下次处理时须连同物品、两个弹幕、贴图、
+> Providence 普通/宝袋掉落、`ApplyHolyFlamesWithFallback` 中只服务本件的入口以及中英本地化一起清理。
+
+**用户口径**：完整采用 CI 的旧版路线。CI 实际类名为拼写错误的 `ProfanedLancher`，
+中文本地化仍是“极乐升天炮[Legacy]”；本工程按规范恢复为 `BlissfulBombardier`。
+
+**物品**：66×28 判定、贴图 66×28、270 射手伤害、使用/动画 15 帧、击退 7.5、自动连发、
+弹速 22、火箭弹药、月后 12 档（蓝绿）、价值 1 铂金 50 金、使用音 `Item61`。
+
+**渎神核弹（ProfanedNuke）**：22×22 判定、贴图 22×132（3 帧）、穿透 1、寿命 155 帧。
+飞行第 5 次更新后以 1800 范围、速度 22、惯性 15 追踪敌人；每 12 帧生成一团 50% 伤害粉尘。
+命中 NPC/PvP 施加 300 帧圣火并生成一团 25% 伤害粉尘；终点将 192×192 判定内的敌人结算一次，
+随后按火箭类型破砖：RocketII 半径 6、RocketIV 半径 12、MiniNukeII 半径 18；
+干/湿/熔岩/蜂蜜火箭会改写周围液体。特殊种子 `zenithWorld` 下每发变为 12 发散射核弹。
+
+**伤害粉尘（ProfanedNukeDust）**：46×46、不撞墙、无限穿透、静态逐敌冷却 15 帧；
+命中施加 120 帧圣火。AI 寿命随自身年龄衰减，命中生成的粉尘额外加速衰减。
+
+**减益软回退**：现代灾厄 `HolyFlames` → 经典灾厄 `HolyLight` → 原版 `OnFire`；
+入口在 `CalamityDemutationPlayer.ApplyHolyFlamesWithFallback` 的 NPC / Player 重载。
+
+**获取**：无配方。现代与经典 Providence 普通难度各 1/4，两个 `ProvidenceBag` 各 1/3。
+普通掉落写入 `CalamityDemutationGlobalNPC.ModifyNPCLoot`，宝藏袋写入
+`CalamityDemutationGlobalItem.ModifyItemLoot`。
+
+**文件**：
+
+- `Content/Items/Weapons/Ranged/BlissfulBombardier.cs` + `.png`（66×28）。
+- `Content/Projectiles/Ranged/ProfanedNuke.cs` + `.png`（22×132，3 帧）。
+- `Content/Projectiles/Ranged/ProfanedNukeDust.cs`（显式复用 `InvisibleProj`）。
+- 中英本地化：`Items.BlissfulBombardier`、`Projectiles.ProfanedNuke/ProfanedNukeDust`。
+
+**验证（2026-10-23）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 个类**全命中。
+尚待进游戏实测追踪、伤害粉尘、圣火回退、破砖/铺液、Zenith 散射与两版 Providence 掉落。
+
+## 47. 反器材狙击步枪（Skullmasher，已于 2026-10-23 删除）
+
+> 以下保留原始移植记录，仅作历史参考；物品、弹幕、贴图、音效、掉落与本地化均已不属于当前工程。
+
+**用户口径**：只移植本件；稀有度对齐“弑神者”档，获取改为噬神者本体直接掉落。中文显示名指定为
+“反器材狙击步枪”，不再沿用 CI 的“碎颅者”。
+
+**物品**：76×30 判定、贴图 100×32、510 射手伤害、+5 暴击、使用/动画 60 帧、击退 2、
+弹速 12、子弹类弹药、自动连发、售价 2 铂金、月后 14 档（蓝名）、开火音 `LargeWeaponFire`。
+
+**射击**：一次生成 5 发。普通子弹全部转换为自持 `AMRShot`；特殊子弹沿用自身弹幕，
+并由 `CalamityDemutationGlobalProjectile.skullmasherExtra` 标记，暴击时追加 4 枚同类型、
+30% 伤害的弹幕。CI 原始循环会因循环内改写 `type` 变成“1 发普通弹 + 4 发穿甲弹”，
+本工程按武器意图和中文说明统一为 5 发穿甲弹。
+
+**AMRShot**：4×4、额外 10 次更新、穿透 1、600 帧、无视防御；普通命中召来 2 枚
+`AMR2`，暴击召来 4 枚，每枚为 15% 伤害；命中施加 300 帧死亡标记，缺失时退回原版破损盔甲。
+PvP 固定按暴击档召来 4 枚。
+
+**获取**：无配方。现代与经典噬神者头部 `DevourerofGodsHead` 在击杀时各直接掉一件，
+`CommonDrop(..., 4)` 即 25%，不经过宝藏袋。
+
+**删除前文件**：
+
+- `Content/Items/Weapons/Ranged/Skullmasher.cs` + `.png`（100×32）。
+- `Content/Projectiles/Ranged/AMRShot.cs` + `.png`。
+- `Content/Projectiles/Ranged/AMR2.cs`（显式复用 `AMRShot.png`）。
+- `Sounds/Item/LargeWeaponFire.ogg`；静态入口 `CalamityDemutationSounds.LargeWeaponFire`。
+- 中英本地化：`Items.Skullmasher`、`Projectiles.AMRShot/AMR2`。
+
+**删除验证（2026-10-23）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
+`CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 个类**全命中。

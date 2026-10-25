@@ -950,7 +950,6 @@ Items: {
 			Boosts your max HP by 10%
 			10% increased damage reduction
 			Increases all damage and critical strike chance by 12%
-			Increases melee attack speed by 12%
 			When below 100 defense you gain 15% increased damage
 			Halves enemy contact damage
 			When you take contact damage this effect has a 20 second cooldown
@@ -2747,6 +2746,11 @@ Items: {
 			'''
 	}
 
+	SulphuricAcidCannon: {
+		DisplayName: Sulphuric Acid Cannon
+		Tooltip: Fires an acidic shot that sticks to enemies and dissolves them
+	}
+
 	ShatteringPotion: {
 		DisplayName: Shattering Potion
 		Tooltip:
@@ -2839,6 +2843,15 @@ Items: {
 			'''
 			Fires 4 arrows at once
 			Fires 2 additional leaves
+			'''
+	}
+
+	BlissfulBombardier: {
+		DisplayName: Blissful Bombardier
+		Tooltip:
+			'''
+			Fires a homing profaned nuke
+			The rocket leaves damaging holy dust and explodes on impact
 			'''
 	}
 
@@ -3217,6 +3230,7 @@ Projectiles: {
 	Spark.DisplayName: Spark
 	StandingFire.DisplayName: Standing Fire
 	StellarStrikerBeam.DisplayName: Stellar Striker Beam
+	SulphuricBlast.DisplayName: Sulphuric Blast
 	SupernovaBomb.DisplayName: Supernova Bomb
 	SupernovaBoom.DisplayName: Explosion
 	SupernovaHoming.DisplayName: Supernova Energy
@@ -3275,6 +3289,8 @@ Projectiles: {
 	FossilShard.DisplayName: Shard
 	ClockworkBowHoldout.DisplayName: Clockwork Bow
 	PrecisionBolt.DisplayName: Precision Bolt
+	ProfanedNuke.DisplayName: Profaned Nuke
+	ProfanedNukeDust.DisplayName: Profaned Nuke Dust
 	FeatherLarge.DisplayName: Feather
 	PlanetaryAnnihilationProj.DisplayName: Ball
 	AstrealArrow.DisplayName: Astreal Arrow

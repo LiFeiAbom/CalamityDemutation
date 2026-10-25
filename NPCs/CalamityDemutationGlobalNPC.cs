@@ -277,6 +277,8 @@ namespace CalamityDemutation.NPCs
                 else if (calamity.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 4));
+                    npcLoot.Add(notExpert0);
                 }
                 // 女妖之爪（CWR 重制版）：现代版源里它属于波尔提斯的"非专家武器池"——
                 // DropHelper.CalamityStyle(1/4, 7 把武器)：每把独立 1/4，若全不中则保底随机给一把；
@@ -358,6 +360,8 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 4));
+                    npcLoot.Add(notExpert1);
                 }
                 // 女妖之爪（CWR 重制版）：经典版源里就是波尔提斯的 CommonDrop(..., 4)，即 1/4 非专家掉落（精确复刻）
                 else if (classic.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
@@ -378,6 +382,13 @@ namespace CalamityDemutation.NPCs
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 4));
                     npcLoot.Add(notExpert1);
                 }
+                // 硫酸炮：经典版按原来源恢复为巨螯虾 1/3 掉落，并保留"已击败噬魂幽花"门槛
+                else if (classic.TryFind<ModNPC>("Mauler", out ModNPC mauler) && npc.type == mauler.Type)
+                {
+                    LeadingConditionRule postPolter2 = new(new PolterghastDownedCondition());
+                    postPolter2.OnSuccess(new CommonDrop(ModContent.ItemType<SulphuricAcidCannon>(), 3));
+                    npcLoot.Add(postPolter2);
+                }
                 // 灾厄挽歌（本工程自持）：经典源为 ByCondition(new DownedPolterghast(), 1/3)，本工程用同一门槛
                 else if (classic.TryFind<ModNPC>("ColossalSquid", out ModNPC colossalSquid) && npc.type == colossalSquid.Type)
                 {
@@ -397,7 +408,7 @@ namespace CalamityDemutation.NPCs
         /// <summary>
         /// tModLoader 的 UpdateLifeRegen 钩子：每帧结算 NPC 生命回复时调用，
         /// 通过修改 npc.lifeRegen 施加持续灼烧，并用 ref damage 指定该灼烧显示的每帧伤害数字。
-        /// 恶魔烈焰（demonFlames）先清掉正回复，再 -4000，damage 下限抬到 2000（即每秒 2000）；
+        /// 恶魔烈焰（demonFlames）先清掉正回复，再 -5000，damage 下限抬到 2500（即每秒 2500）；
         /// 女巫眩晕（silvaHysteresis）同样清正回复后 -900，damage 下限 400。
         /// 各标记均由对应的 debuff（DemonFlames / SilvaHysteresis / HellfireExplosion）每帧置位。
         /// </summary>

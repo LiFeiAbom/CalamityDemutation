@@ -950,7 +950,6 @@ Items: {
 			最大生命提高 10%
 			伤害减免提高 10%
 			所有伤害提高 12%，暴击率提高 12%
-			近战攻击速度提高 12%
 			防御低于 100 时，伤害提高 15%
 			敌怪的接触伤害减半
 			受到接触伤害后，该效果有 20 秒冷却
@@ -2746,6 +2745,11 @@ Items: {
 			'''
 	}
 
+	SulphuricAcidCannon: {
+		DisplayName: 硫酸炮
+		Tooltip: 发射会黏附在敌人身上并溶解它们的酸弹
+	}
+
 	ShatteringPotion: {
 		DisplayName: 粉碎药水
 		Tooltip:
@@ -2838,6 +2842,15 @@ Items: {
 			'''
 			一次射出 4 发箭
 			额外射出 2 片树叶
+			'''
+	}
+
+	BlissfulBombardier: {
+		DisplayName: 极乐升天炮
+		Tooltip:
+			'''
+			发射一枚追踪的渎神核弹
+			火箭飞行时留下伤害性圣火粉尘并在终点爆炸
 			'''
 	}
 
@@ -3216,6 +3229,7 @@ Projectiles: {
 	Spark.DisplayName: 火花
 	StandingFire.DisplayName: 滞留火焰
 	StellarStrikerBeam.DisplayName: 星流束
+	SulphuricBlast.DisplayName: 硫酸弹
 	SupernovaBomb.DisplayName: 超新星炸弹
 	SupernovaBoom.DisplayName: 爆炸
 	SupernovaHoming.DisplayName: 超新星能量
@@ -3274,6 +3288,8 @@ Projectiles: {
 	FossilShard.DisplayName: 碎片
 	ClockworkBowHoldout.DisplayName: 发条弓
 	PrecisionBolt.DisplayName: 精准弩箭
+	ProfanedNuke.DisplayName: 渎神核弹
+	ProfanedNukeDust.DisplayName: 渎神核弹粉尘
 	FeatherLarge.DisplayName: 羽毛
 	PlanetaryAnnihilationProj.DisplayName: 能量球
 	AstrealArrow.DisplayName: 星穹箭

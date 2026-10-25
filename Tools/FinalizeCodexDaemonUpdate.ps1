@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    把本机 app-server 守护进程切到指定版本（默认 0.163.0），并清掉旧版残留。
+    把本机 app-server 守护进程切到指定版本（默认 0.164.0），并清掉旧版残留。
 
 .DESCRIPTION
     守护进程（codex.exe -- app-server 模式）运行时会锁住自己的安装目录，
@@ -25,7 +25,7 @@
 [CmdletBinding()]
 param(
     # 目标版本；包必须已经预铺在 releases\<NewVersion>-x86_64-pc-windows-msvc\。
-    [string]$NewVersion = '0.163.0',
+    [string]$NewVersion = '0.164.0',
     # 开跑前先等这么多秒，留给"拉起它的那一轮会话"把话说完/退出。
     [int]$DelaySeconds = 0,
     # 只检查环境并打印现状，不动守护进程（用于自检脚本本身能否跑起来）。

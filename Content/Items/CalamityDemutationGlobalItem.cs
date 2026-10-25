@@ -404,6 +404,10 @@ namespace CalamityDemutation.Content.Items
                     // 本工程自持的空灵征服者：源里同在噬魂幽花袋的武器池里，按同一条 1/3 简化口径挂回
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 3));
                 }
+                if (calamity.TryFind<ModItem>("OldDukeBag", out ModItem oldDukeBag) && item.type == oldDukeBag.Type)
+                {
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<SulphuricAcidCannon>(), 4));
+                }
                 if (calamity.TryFind<ModItem>("SignusBag", out ModItem signusBag) && item.type == signusBag.Type)
                 {
                     // 宇宙灯笼（本工程自持）：源里 Signus 袋的武器池是 CalamityStyle(1/3, {宇宙灯笼, 宇宙苦无})，
@@ -418,6 +422,10 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Gehenna>(), 1));
+                }
+                if (calamity.TryFind<ModItem>("ProvidenceBag", out ModItem providenceBag) && item.type == providenceBag.Type)
+                {
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 3));
                 }
                 if ((calamity.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (calamity.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
                 {
@@ -505,6 +513,10 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Gehenna>(), 1));
+                }
+                if (classic.TryFind<ModItem>("ProvidenceBag", out ModItem providenceBag) && item.type == providenceBag.Type)
+                {
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 3));
                 }
                 if((classic.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (classic.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
                 {

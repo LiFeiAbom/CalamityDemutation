@@ -1,4 +1,4 @@
-﻿using CalamityDemutation.Content.Buffs.NegativeBuffs;
+using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Buffs.PositiveBuffs;
 using CalamityDemutation.Content.Buffs.SummonBuffs;
 using CalamityDemutation.Content.Items.Accessories.Comprehensive;

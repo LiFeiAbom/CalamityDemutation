@@ -12,7 +12,7 @@ namespace CalamityDemutation.Content.Buffs.NegativeBuffs
     internal class DemonFlames:ModBuff
     {
         /// <summary>每秒生命损失。</summary>
-        public const int DamagePerSecond = 2000;
+        public const int DamagePerSecond = 2500;
         /// <summary>
         /// 注册为减益：允许 PvP 传播、不随存档保存，并在专家/大师模式下延长持续时长
         /// </summary>
@@ -32,7 +32,7 @@ namespace CalamityDemutation.Content.Buffs.NegativeBuffs
         /// </summary>
         public override void Update(NPC npc, ref int buffIndex)
         {
-            // 置位标记：GlobalNPC 据此把 lifeRegen 减至 -4000，并把伤害下限抬到 2000
+            // 置位标记：GlobalNPC 据此把 lifeRegen 减至 -5000，并把伤害下限抬到 2500
             npc.GetGlobalNPC<CalamityDemutationGlobalNPC>().demonFlames = true;
         }
     }
