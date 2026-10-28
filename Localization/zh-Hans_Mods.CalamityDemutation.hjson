@@ -950,6 +950,7 @@ Items: {
 			最大生命提高 10%
 			伤害减免提高 10%
 			所有伤害提高 12%，暴击率提高 12%
+			近战攻击速度提高 10%
 			防御低于 100 时，伤害提高 15%
 			敌怪的接触伤害减半
 			受到接触伤害后，该效果有 20 秒冷却
@@ -2357,6 +2358,64 @@ Items: {
 			'''
 	}
 
+	ScarletDevil: {
+		DisplayName: 绯红恶魔
+		Tooltip:
+			'''
+			投出一把高速长枪，飞行途中持续生成追踪弹
+			长枪命中敌人时引发绯红爆炸
+			潜行打击命中时吸取生命并召出星形弹幕
+			「神枪『冈格尼尔之枪』」
+			'''
+	}
+
+	Wrathwing: {
+		DisplayName: 狂龙翼火
+		Tooltip:
+			'''
+			投出一把追踪敌人的长矛
+			命中敌人时喷出多枚追踪火球
+			[c/CA7C04:旧版投手/盗贼的时代一瞥]
+			'''
+	}
+
+	CursedDagger: {
+		DisplayName: 诅咒短剑
+		Tooltip:
+			'''
+			投出一把会弹跳的诅咒短剑，并在飞行途中持续散落受重力影响的咒火
+			潜行打击大幅提高投掷速度，并在沿途生成更多咒火弹幕
+			[c/A6EB7E:生成咒火的间隔与短剑飞行速度成反比]
+			'''
+	}
+
+	IchorSpear: {
+		DisplayName: 灵液长矛
+		Tooltip:
+			'''
+			投出一把高速灵液标枪，可穿透多个敌人
+			潜行打击会刺入敌人体内并持续造成伤害
+			'''
+	}
+
+	SpearofDestiny: {
+		DisplayName: 命运之矛
+		Tooltip:
+			'''
+			投掷三把投矛，其中外侧两把拥有追踪能力
+			潜行打击投出五把追踪长矛，穿透物块并穿透更多目标
+			'''
+	}
+
+	RealityRupture: {
+		DisplayName: 现实撕裂
+		Tooltip:
+			'''
+			交替投掷追踪的现实碎片与单发穿透长矛
+			潜行打击投出高速现实粉碎长矛，并在命中时产生大范围爆炸
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: 龙蒿护甲
 		Tooltip:
@@ -2845,21 +2904,22 @@ Items: {
 			'''
 	}
 
-	BlissfulBombardier: {
-		DisplayName: 极乐升天炮
-		Tooltip:
-			'''
-			发射一枚追踪的渎神核弹
-			火箭飞行时留下伤害性圣火粉尘并在终点爆炸
-			'''
-	}
-
 	CosmicBolter: {
 		DisplayName: 宇宙弩炮
 		Tooltip:
 			'''
 			一次射出 3 支箭
 			将任何箭矢转化为滑行能量弹
+			'''
+	}
+
+	ScorchedEarth: {
+		DisplayName: 焦土
+		Tooltip:
+			'''
+			发射四枚燃料空气火箭，命中后生成集束炸弹
+			每轮射击消耗两枚火箭
+			把你的目标烧成焦炭
 			'''
 	}
 
@@ -3246,6 +3306,19 @@ Projectiles: {
 	TotalityFire.DisplayName: 焦油烈焰
 	TotalityFlask.DisplayName: 破坏者火瓶
 	TotalityTar.DisplayName: 黑焦油
+	WrathwingSpear.DisplayName: 狂龙翼火
+	WrathwingFireball.DisplayName: 翼火弹
+	CursedDaggerProj.DisplayName: 诅咒短剑
+	IchorSpearProj.DisplayName: 灵液长矛
+	IchorSpearProjLegacy.DisplayName: 灵液标枪
+	SpearofDestinyProjectile.DisplayName: 命运之矛
+	RealityRuptureMini.DisplayName: 现实碎片
+	RealityRuptureLance.DisplayName: 现实之矛
+	RealityRuptureStealth.DisplayName: 崩裂现实
+	RealityRuptureStealthExplosion.DisplayName: 现实爆炸
+	ScarletDevilProjectile.DisplayName: 神枪「冈格尼尔」
+	ScarletDevilBullet.DisplayName: 冈格尼尔追踪弹
+	ScarletBlast.DisplayName: 绯红爆炸
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
@@ -3288,8 +3361,10 @@ Projectiles: {
 	FossilShard.DisplayName: 碎片
 	ClockworkBowHoldout.DisplayName: 发条弓
 	PrecisionBolt.DisplayName: 精准弩箭
-	ProfanedNuke.DisplayName: 渎神核弹
-	ProfanedNukeDust.DisplayName: 渎神核弹粉尘
+	ScorchedEarthRocket.DisplayName: 火箭
+	ScorchedEarthClusterBomb.DisplayName: 集束炸弹
+	ScorchedEarthBlast.DisplayName: 焦土爆炸
+	RocketFire.DisplayName: 火箭火焰
 	FeatherLarge.DisplayName: 羽毛
 	PlanetaryAnnihilationProj.DisplayName: 能量球
 	AstrealArrow.DisplayName: 星穹箭

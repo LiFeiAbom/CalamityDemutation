@@ -423,10 +423,6 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Gehenna>(), 1));
                 }
-                if (calamity.TryFind<ModItem>("ProvidenceBag", out ModItem providenceBag) && item.type == providenceBag.Type)
-                {
-                    itemLoot.Add(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 3));
-                }
                 if ((calamity.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (calamity.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<AeroStone>(), 10));
@@ -474,6 +470,7 @@ namespace CalamityDemutation.Content.Items
                     // 本工程未移植 YharonEssence，故按本体同名旧件（PhoenixFlameBarrage）的犽戎袋口径挂 1/3
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 3));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<Wrathwing>(), 3));
                 }
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
@@ -513,10 +510,6 @@ namespace CalamityDemutation.Content.Items
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<RoseStone>(), 10));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Gehenna>(), 1));
-                }
-                if (classic.TryFind<ModItem>("ProvidenceBag", out ModItem providenceBag) && item.type == providenceBag.Type)
-                {
-                    itemLoot.Add(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 3));
                 }
                 if((classic.TryFind<ModItem>("AquaticScourgeBag", out ModItem aquaticScourgeBag) && item.type == aquaticScourgeBag.Type) || (classic.TryFind<ModItem>("DesertScourgeBag", out ModItem desertScourgeBag) && item.type == desertScourgeBag.Type))
                 {
@@ -563,6 +556,7 @@ namespace CalamityDemutation.Content.Items
                     // 星火凤凰雨（旧版支线的 DragonStaff）：同上，挂进经典版犽戎袋
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<PhoenixFlameBarrage>(), 3));
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 3));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<Wrathwing>(), 3));
                 }
             }
         }

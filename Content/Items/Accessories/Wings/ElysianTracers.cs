@@ -1,4 +1,5 @@
 using CalamityDemutation.Players;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -179,7 +180,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
         /// <summary>
         /// 配方（分版本，两分支各自 TryGetMod + TryFind 串联，缺材料时静默跳过该条）：
         /// 现代分支（灾厄本体在场）照灾厄 2.0；经典分支（经典灾厄在场）
-        /// 照经典灾厄经典灾厄（末味由登仙精华×4 @ 宇宙砧 换成 幻魂×5 @ 嘉登熔炉）。
+        /// 换到嘉登熔炉，并把 4 个化神魂精按用户 2026-10-25 指定的完整配方等价换算。
         /// </summary>
         public override void AddRecipes()
         {
@@ -200,19 +201,22 @@ namespace CalamityDemutation.Content.Items.Accessories.Wings
                     recipe.Register();
                 }
             }
-            // 经典灾厄：天界翼靴 + 极乐之翼 + 宇宙锭×5 + 幻魂×5 @ 嘉登熔炉
+            // 经典灾厄：天界翼靴 + 极乐之翼 + 宇宙锭×5 + 化神魂精×4 的完整等价材料 @ 嘉登熔炉
             if(ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if(classic.TryFind<ModItem>("ElysianWings", out ModItem classicElysianWings)
                     && classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
-                    && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
                     && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
                     Recipe recipeClassic = CreateRecipe();
                     recipeClassic.AddIngredient<InfinityBoots>();
                     recipeClassic.AddIngredient(classicElysianWings.Type);
                     recipeClassic.AddIngredient(classicCosmiliteBar.Type, 5);
-                    recipeClassic.AddIngredient(phantoplasm.Type, 5);
+                    if (!CalamityMaterialEquivalents.TryAddClassicAscendantSpiritEssence(recipeClassic, 4))
+                    {
+                        return;
+                    }
+
                     recipeClassic.AddTile(draedonsForge.Type);
                     recipeClassic.Register();
                 }

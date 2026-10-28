@@ -1,4 +1,5 @@
 using CalamityDemutation.Players;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -61,8 +62,8 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
         }
         /// <summary>
         /// 配方（照源）：甘露安瓿（古）+ 感染宝石 + AuricBar×5 + AscendantSpiritEssence×4 @ 宇宙砧。
-        /// 经典版没有宇宙砧（改**嘉登熔炉**）、没有 AuricBar（改 **AuricOre**）、没有 AscendantSpiritEssence（改 **EndothermicEnergy**）
-        /// —— 三处替代均按用户 2026-09-28 的指定
+        /// 经典版没有宇宙砧（改**嘉登熔炉**）、没有 AuricBar（按每锭 5 矿 + 1 龙魂碎片换算）；
+        /// 4 个 AscendantSpiritEssence 按用户 2026-10-25 指定的完整配方等价换算。
         /// </summary>
         public override void AddRecipes()
         {
@@ -83,15 +84,21 @@ namespace CalamityDemutation.Content.Items.Accessories.Defense
             }
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
-                if (classic.TryFind<ModItem>("AuricOre", out ModItem auricOre)
-                    && classic.TryFind<ModItem>("EndothermicEnergy", out ModItem endothermicEnergy)
-                    && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
+                if (classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
                     Recipe recipeClassic = CreateRecipe();
                     recipeClassic.AddIngredient<AmbrosialAmpoule2>();
                     recipeClassic.AddIngredient<InfectedJewel>();
-                    recipeClassic.AddIngredient(auricOre.Type, 5);
-                    recipeClassic.AddIngredient(endothermicEnergy.Type, 4);
+                    if (!CalamityMaterialEquivalents.TryAddClassicAuricBar(recipeClassic, 5))
+                    {
+                        return;
+                    }
+
+                    if (!CalamityMaterialEquivalents.TryAddClassicAscendantSpiritEssence(recipeClassic, 4))
+                    {
+                        return;
+                    }
+
                     recipeClassic.AddTile(draedonsForge.Type);
                     recipeClassic.Register();
                 }

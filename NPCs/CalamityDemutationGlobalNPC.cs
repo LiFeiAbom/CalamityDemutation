@@ -154,6 +154,15 @@ namespace CalamityDemutation.NPCs
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<LifeJelly>(), 7, 5));
             }
+            else if (npc.type == NPCID.Clinger)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<CursedDagger>(), 100, 50));
+            }
+            else if (npc.type == NPCID.IchorSticker)
+            {
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<IchorSpear>(), 25, 15));
+                npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<SpearofDestiny>(), 200, 100));
+            }
             else if (npc.type == NPCID.GreenJellyfish)
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<VitalJelly>(), 7, 5));
@@ -277,8 +286,6 @@ namespace CalamityDemutation.NPCs
                 else if (calamity.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
-                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 4));
-                    npcLoot.Add(notExpert0);
                 }
                 // 女妖之爪（CWR 重制版）：现代版源里它属于波尔提斯的"非专家武器池"——
                 // DropHelper.CalamityStyle(1/4, 7 把武器)：每把独立 1/4，若全不中则保底随机给一把；
@@ -300,6 +307,7 @@ namespace CalamityDemutation.NPCs
                 else if (calamity.TryFind<ModNPC>("Yharon", out ModNPC yharon) && npc.type == yharon.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 4));
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<Wrathwing>(), 4));
                     npcLoot.Add(notExpert0);
                 }
                 // 灾厄挽歌（本工程自持）：源里是巨型鱿鱼 ColossalSquid 的 1/3 掉落，但带"已击败噬魂幽花"门槛
@@ -360,8 +368,6 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("Providence", out ModNPC providence) && npc.type == providence.Type)
                 {
                     npcLoot.Add(new CommonDrop(ModContent.ItemType<ElysianAegis>(), 1));
-                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BlissfulBombardier>(), 4));
-                    npcLoot.Add(notExpert1);
                 }
                 // 女妖之爪（CWR 重制版）：经典版源里就是波尔提斯的 CommonDrop(..., 4)，即 1/4 非专家掉落（精确复刻）
                 else if (classic.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
@@ -380,6 +386,7 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("Yharon", out ModNPC yharon) && npc.type == yharon.Type)
                 {
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 4));
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<Wrathwing>(), 4));
                     npcLoot.Add(notExpert1);
                 }
                 // 硫酸炮：经典版按原来源恢复为巨螯虾 1/3 掉落，并保留"已击败噬魂幽花"门槛

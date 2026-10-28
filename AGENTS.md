@@ -3,6 +3,209 @@
 > 本文件是给后续会话/协作者的项目记忆：工程口径、已确立的换算表、踩过的坑、当前状态。
 > 内容按"能直接照做"的标准写；改动工程时请同步更新它。
 
+**2026-10-27 DarkSunRing 火焰染色**
+
+- 正确目标文件是 `Content/Items/Accessories/Comprehensive/DarkSunRing.png`：
+  `32×192`、`DrawAnimationVertical(6, 6)` 的 6 帧物品动画；不要误用其他工程的贴图。
+- 火焰层由 7 种暖色、共 1096 个像素组成；棕色金属圈、紫黑描边、透明区均保持不动。
+- 火焰已映射到 `AuricBar` 九级锭体金色阶的前七级：
+  `(119,0,0)→(119,26,0)`、`(158,47,0)→(152,81,0)`、`(206,116,59)→(203,99,0)`、
+  `(239,142,82)→(225,129,4)`、`(255,191,73)→(241,175,0)`、
+  `(255,226,132)→(255,169,10)`、`(255,255,150)→(255,202,23)`。
+- 尺寸、帧数、Alpha 与非火焰像素逐像素不变。原图备份在
+  `%TEMP%\DarkSunRing_Demutation_original_20261027.png`。
+
+**2026-10-27 会话封装：星流之刃试改已完整回退**
+
+- 本轮最初要求移除 `ExoBeam.OnHitNPC` 的召彗星效果，中途曾试过删除整个
+  `OnHitNPC`、改为生成 `ExoBoom`、移除 `ExoBoom`，并把星流之刃伤害依次试改为
+  5000 / 2500。用户最终要求回退到“没有删除彗星”的版本；以上中间口径均已作废，
+  不得继续沿用或据此实现。
+- 当前最终状态：
+  - `ExoBeam.OnHitNPC` 原样保留 `OnHitEffects(target.Center)` 与 `target.ExoDebuffs()`，
+    命中敌人仍会随机生成一颗 `ExoComet`；`OnHitPlayer` 同样保留彗星与减益。
+  - 星流之刃 `Item.damage = 900`；本体每 2 次命中或目标濒死甩出 2 颗 `ExoComet`，
+    每 5 次命中或目标濒死生成 `ExoBoom`。
+  - 本地化恢复为 `ExoBoom` = 星流爆炸 / Exo Explosion；星流之刃 tooltip 为
+    “发射会跟踪玩家并在击中敌人时产生爆炸的星流光束”，没有残留“星流爆发 / Exo Burst”。
+  - `ExoBlade.cs`、`ExoBeam.cs`、`ExoComet.cs` 与 `ExoComet.png` 相对 `HEAD` 均无改动。
+- 回退后验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 234 条全命中；
+  `CheckImplicitTextures` 570 类全命中。
+- 当前工作区其余未提交内容仍属于此前的射手武器、盗贼武器、饰品与材料换算批次；
+  本轮没有 commit / push。新会话先看 `git status`，不要把星流之刃相关文件当作脏改动。
+
+**2026-10-26 会话封装：现实撕裂下位链（已完成，待实机）**
+
+- 用户版本口径：`CursedDagger` 取当前 CI 2.0.4.19；`IchorSpear` 取原灾 Public 2.0.3.9；
+  `SpearofDestiny` 取当前 CI 2.0.4.19；`RealityRupture` 取原灾 Public 2.0.7.2。
+- 下位顺序：`CursedDagger / IchorSpear → SpearofDestiny → RealityRupture`。
+- CI 诅咒短剑：34 伤害、16 帧、12 射速；普通刃会反弹并按速度间隔生成下落的
+  `CursedDartFlame`；潜行刃速度 ×2.5、无限穿透反弹，并交替生成
+  `CursedFlameFriendly / CursedDartFlame`。配方为本体诅咒焰×20 + 腐肉×15 @ 工作台；
+  腐化者掉率为普通 1/100、专家 1/50。
+- CI 命运之矛：42 伤害、20 帧、20 射速；普通投 3 矛，中央为本地 CI 版灵液标枪，
+  外侧两把追踪；潜行投 5 矛，全部追踪、穿墙、额外穿透。灵液黏黏怪掉率为
+  普通 1/200、专家 1/100。贴图、发光层均从当前 CI `.tmod` 的 rawimg 直接转换。
+- Public 2.0.3.9 灵液长矛：132 伤害、39 帧、潜行 ×0.38；潜行命中后最多两枚钉附，
+  持续跟随目标。灵液黏黏怪掉率保持原灾普通 1/25、专家 1/15，未采用 CI 的合成配方。
+- Public 2.0.7.2 现实撕裂：225 伤害、37 帧、潜行 ×3.9；普通交替双追踪现实碎片与
+  单发四倍伤害大型长矛；潜行单矛命中生成 200 像素圆形爆炸。配方为
+  本地 `SpearofDestiny` + 现代灾厄 `ArmoredShell / TwistingNether / DarkPlasma`
+  @ 月亮工作台，缺任一现代材料时不注册该配方。
+- 新增文件均位于 `Content/Items/Weapons/Rogue`、`Content/Projectiles/Rogue`，
+  中英本地化、音效和掉落已同步。
+- 绯红恶魔已按用户 2026-10-26 最终口径移植：本体、追踪弹与爆炸取 Public 2.0.4；
+  主长枪玩法仍取 2.0.4，但贴图改用本机可用的 Classic 1.4.2.101 独立长枪图
+  （本机不存在名为 `1.4.2.001` 的源码目录）。
+- 绯红恶魔面板为 **14570** 伤害、**30 帧**使用/动画、击退 8、弹速 30、+20% 暴击、
+  月后 16 档、价值 2 铂金 80 金。主长枪 108×108、300 帧；普通投掷每 5 帧生成
+  4 枚 3% 伤害追踪弹，潜行命中生成 40 枚环形弹 + 两圈各 108 枚星形弹，
+  合计 256 枚 1% 伤害追踪弹；命中爆炸为 500×500、30 帧、10 帧同敌冷却、0.75% 伤害。
+- 绯红恶魔潜行回血为实际命中伤害的 1%，单次上限 100，3000 像素内选择友军，
+  PvE/PvP 都生效，并走原版 `VampireHeal`。配方为
+  `Wrathwing + RealityRupture + BloodstoneCore×15 + SoulofNight×15
+  + ShadowspecBar×5 @ DraedonsForge`，现代/经典均按软依赖注册。
+- 当前验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 234 条全部命中；
+  `CheckImplicitTextures` 570 类全部命中。
+- 待用户实机验证：CI 咒火生成节拍/反弹、潜行五矛、灵液钉附、现实碎片与大型长矛交替、
+  绯红恶魔普通追踪弹节拍、潜行 256 弹星阵、爆炸范围与双版本吸血。
+
+**2026-10-26 极乐升天炮已删除；焦土链保留**
+
+- 用户要求删除极乐升天炮的残留内容；焦土及其火箭、爆炸、集束炸弹和 `RocketFire`
+  仍属于当前工程，不得随极乐升天炮一起删除。
+- 已删除 `BlissfulBombardier`、`ProfanedNuke`、`ProfanedNukeDust` 及两张贴图，
+  同时清掉两版 Providence 掉落、圣火软回退和双语文案。
+- 已删去 CI 的天顶世界 12 发散射分支；极乐升天炮现在只按普通远程射击生成一发渎神核弹。
+- **长期原则（用户 2026-10-26 指定）**：远程武器开火时若存在特殊射弹转化，
+  **全部射弹都转化为特殊射弹**，不要只转换其中一部分。
+- 实测发现问题后复核：旧实现同时在引擎选弹与 `Shoot` 内调用 `Player.PickAmmo`，
+  会重复走 OnConsumeAmmo/扣弹流程。现改为读取 `EntitySource_ItemUse_WithAmmo.AmmoItemIdUsed`，
+  不再二次选弹；同时补回 CI 的 `HoldoutOffset(-10, 0)`，并对齐爆炸粉尘、烟雾和 alpha 照明。
+- 无射弹根因：消耗弹药的 `ModItem.Shoot` 参数 `type` 是当前弹药射弹，并非武器的
+  `Item.shoot`。旧代码用 `type` 生成弹幕，实际没有创建 `ProfanedNuke`。
+  现按 CI/Public 2.0.3.9 显式使用 `ModContent.ProjectileType<ProfanedNuke>()`。
+- 移植后验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 217 条全命中；
+  `CheckImplicitTextures` 549 类全命中。
+- Grape Beer 已完成灾厄版本侦察，但**尚未移植、未改工程代码**。Classic 1.4.2.101、
+  Public 1.3、1.4.4、2.0、2.0.3.9、2.0.4、2.0.7.2、2.1 均有该物品；
+  1.4.4/1.4.4-release 完全相同，2.0.3.9/2.0.4 完全相同。
+- 焦土 `Scorched Earth` 已完成侦察与移植。用户说明它从 1.5.1.001 才引入；
+  本机没有 1.5.1.001 源码，因此从 Public 2.0 起逐版查找和比较，只查灾厄模组。
+- 焦土已确认存在于 Public 2.0、2.0.3.9、2.0.4、2.0.7.2、2.1；1.3 与 1.4.4 系列没有。
+  核心链路为 `ScorchedEarth.cs` + `ScorchedEarthRocket.cs` + `ScorchedEarthClusterBomb.cs`
+  + `ScorchedEarthBlast.cs`；2.1 另新增 `ScorchedEarthHoldout.cs`。
+- CalamityOverhaul 的 0.4.0.1.3、0.4.0.3.5、0.5.0.1.7 也都有焦土重制：
+  `ScorchedEarthEcType.cs` + `RScorchedEarth.cs` + `ScorchedEarthHeldProj.cs` 及四帧蓄势贴图；
+  三版 `RScorchedEarth.cs` 字节完全一致，EcType 从 0.4.0.3.5 起与后续一致。
+  `CalamityOverhaul-main` 未找到该武器本体，只有共用音效与文本引用。
+- 焦土对比结论：Public 2.0～2.0.7.2 是同一玩法世代，面板 500、4 连发、
+  两发耗一枚火箭、400 像素全程追踪，母弹死亡后生成 150 半径直伤区与 5 枚 25% 分弹。
+  2.0.3.9 起只有 API/本地化更新，2.0.4/2.0.7.2 只有灰尘、音效引用或邪教徒抗性等小改。
+- Public 2.1 为重做世代：550 伤害、持续持枪、4 枚间隔 10 tick 发射、50% 省弹；
+  火箭 20 帧减速蓄势、随后加速，37～66 帧短程追踪；命中生成 300 半径 `BasicBurst`、
+  日耀/Oiled 300 帧，并以 5/9 枚分弹区分普通/集束火箭。2.1 配方从 `BlissfulBombardier`
+  改为 `Scorpio`，本工程两件前置都没有。
+- CalamityOverhaul 三版物品面板均为 350 伤害、大修持枪/换弹，底层火箭仍调用灾厄
+  `ScorchedEarthRocket`；这是视觉与持枪重制，不是独立弹幕分支。
+- 旧版焦土 Public 2.0.7.2 下位链：`BlissfulBombardier`×1 + `DarksunFragment`×10
+  + 日耀碎片×50 + 任意精金/钛金锭×15 @ 星宇砧。
+- `BlissfulBombardier` 原先来自 Providence 的 7 武器池：普通难度每把 1/4、
+  宝袋每把 1/3，并带池内保底规则；该物品与掉落均已删除。
+- `DarksunFragment` 无配方，仅在击败神明吞噬者后由日食敌怪掉落：
+  弱日食敌 10%，中日食敌及死神/精神病人/吸血鬼/致命球 50%；
+  Eyezor 必掉 1-2，Nailhead 必掉 3-5，Mothron 必掉 20-30。
+- 焦土已于 2026-10-26 按 Public 2.0 移植：500 伤害、四连发、两发耗一枚火箭、
+  暗蓝 14 档、价值 2 铂金；弹幕链为 `ScorchedEarthRocket` → `ScorchedEarthBlast`
+  + 5 枚 `ScorchedEarthClusterBomb` → 每枚 2-3 个 `RocketFire`。
+- 曾试做“焦土EX + Grape Beer 式 600 像素双追踪”，用户随后决定完全回退；
+  当前恢复 Public 2.0 原版母火箭 400 像素追踪，集束炸弹不再追踪。
+- 焦土源配方为极乐升天炮 + DarksunFragment×10 + 日耀碎片×50 +
+  任意精金/钛金锭×15 @ 星宇砧；经典材料相同，在嘉登熔炉注册。
+  因本地极乐升天炮已删除，当前仅在灾厄侧仍提供同名旧件时才注册原配方。
+- Public 2.0 的武器/火箭/集束炸弹贴图与三段 `ScorchedEarthShot` 音效均保留；
+  `RocketFire` 复用本工程已有的 `Rogue/TotalityFire` 三帧贴图。
+- `CheckResources.ps1` 已支持 `SoundStyle("path", N)` 的 `path1..N` 变体检查，
+  不再要求不存在的无序号基础音频。
+- **长期稀有度口径（用户 2026-10-26 指定）**：古圣金源级别在
+  `postMoonLordRarity` 数字表中对应 **15**。
+- 狂龙翼火 `Wrathwing` 已移植：玩法采用当前 CI 2.0.4.19 的龙炎投矛链，
+  外观与名称采用现代灾厄 Wrathwing。400 盗贼伤害、12 帧、击退 8、弹速 28；
+  长矛 800 像素追踪，命中时喷 3 枚追踪火球并施加 6 秒破晓，终点结算 160 范围伤害。
+- 狂龙翼火三张现代贴图（物品/长矛/火球）与 Public 2.1 源文件 SHA256 一致；
+  火球计时通过 SendExtraAI/ReceiveExtraAI 同步；火球按用户 2026-10-26 要求
+  整体放大约 50%（碰撞框 84×96、绘制缩放 1.5）。
+- 后续按用户要求只把火球贴图换回 CI `DragonSpearFlare.png` 单帧外观；
+  物品与长矛仍使用现代 Wrathwing 贴图。
+- 获取按现代 Wrathwing 口径：现代/经典犽戎普通 1/4、犽戎宝袋 1/3；没有配方。
+  本工程仍未移植 CI 的 `YharonEssence` 七武器随机包。
+- 当前 CI 2.0.4.19 与 Beta 1.12 的主要差异：Beta 在长矛死亡时喷火球且没有显式
+  潜行标记；当前版改为命中时喷火球，并增加潜行标记与火球 AI 同步。
+- 工作区仍有血神核心、Purity / AsgardianAegis / ElysianTracers、
+  `CalamityMaterialEquivalents` 等未提交改动；继续遵守不自动 commit / push。
+
+**2026-10-26 会话封装（明天从这里继续）**
+
+- 用户要求封装但不提交：当前改动全部保留在本地工作区，**不要自动 commit / push**。
+- 本日完成：
+  - 新增 `Utilities/CalamityMaterialEquivalents.cs`，统一换算化神魂精与圣金源锭。
+  - `Purity` / `AsgardianAegis` / `ElysianTracers` 的经典分支改为完整四味化神魂精等价材料。
+  - `Purity` 的经典分支同时把 5 个 `AuricBar` 正确换算为 `AuricOre`×25
+    + `HellcasterFragment`×5。
+- 长期换算：
+  - 1 化神魂精 = `NightmareFuel`×5 + `Phantoplasm`×2 + `EndothermicEnergy`×5
+    + `DarksunFragment`×5。
+  - 1 `AuricBar` = `AuricOre`×5 + `HellcasterFragment`×1；
+    龙魂碎片现代名 `YharonSoulFragment`。
+- 灾厄原版独立的经典套装/武器配方本次未覆盖；不要把“单件替代”规则擅自套到这些长配方上。
+- 验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 232 条全部命中；
+  `CheckImplicitTextures` 566 类全部命中。
+- 工作区原有未提交内容仍保留，尤其是血神核心、射手武器等改动；
+  下次先看 `git status` 和本文后续待办，不要覆盖用户改动。
+- 2026-10-26 已按用户最终要求完整删除极乐升天炮、渎神核弹、渎神核弹粉尘、
+  两张贴图、两版 Providence 普通/宝袋掉落、专属圣火回退函数与双语文案；
+  焦土整条链保留。
+
+**2026-10-25 最终封装（用户终止任务，准备新会话）**
+
+- 用户要求本次不交 Git；新会话不要自动 `commit` / `push`。
+- 本轮在 `CalamityDemutation` 只改了血神核心：`CalamityDemutationPlayer` 的 `coreOfTheBloodGod`
+  结算块新增 `Player.GetAttackSpeed<MeleeDamageClass>() += 0.1f;`，即 **+10% 近战攻击速度**；
+  中英 tooltip 与 `CoreOfTheBloodGod.cs` 当前注释、本文沿革均已同步。
+- 验证：`dotnet build -t:Compile` **0 警告 0 错误**；`CheckResources` **217 条**全命中；
+  `CheckImplicitTextures` **549 类**全命中（抽象类 1 个按规则跳过）。
+- 工作区仍有此前未提交的射手武器、魔影炙炎、全局物品/弹幕、NPC、玩家类、本地化与工具改动；
+  新会话不要把“只有血神核心有脏改动”当成前提。极乐升天炮已于
+  2026-10-26 清理完成，焦土链保留。
+- 进游戏优先复核血神核心面板和实际攻速；其余待办仍按本文件后续章节执行。
+
+**2026-10-25 化神魂精的经典版等价替换（长期口径）**
+
+- 用户给出的现代版 `AscendantSpiritEssence` 配方（每 1 个）：
+  梦魇魔能 `NightmareFuel`×5 + 灵质 `Necroplasm`×2 + 恒温能量 `EndothermicEnergy`×5
+  + 日蚀之因碎片 `DarksunFragment`×5。
+- 经典灾厄没有 `Necroplasm`，对应旧名为 `Phantoplasm`；因此每 1 个化神魂精的经典等价物为
+  `NightmareFuel`×5 + `Phantoplasm`×2 + `EndothermicEnergy`×5 + `DarksunFragment`×5。
+- 本工程真正属于“单件替代”的三件已改为完整换算：
+  `Purity` / `AsgardianAegis` / `ElysianTracers` 均需 4 个化神魂精，
+  经典分支实际加入 **NightmareFuel×20 + Phantoplasm×8 + EndothermicEnergy×20 + DarksunFragment×20**。
+- 统一实现在 `Utilities/CalamityMaterialEquivalents.cs`。弑神者、始源林海等采用灾厄原版独立经典配方的分支
+  不属于单件替代，本次未改。
+- 验证：`dotnet build -t:Compile` 0 警告 0 错误。
+
+**2026-10-26 圣金源锭的经典版等价替换（长期口径）**
+
+- 每 1 个现代 `AuricBar`（圣金源锭）等价于 **5 个 `AuricOre`（圣金源矿）
+  + 1 个龙魂碎片**。
+- 龙魂碎片的现代内部名是 `YharonSoulFragment`；经典灾厄对应旧名
+  `HellcasterFragment`（中文旧称也出现过“狱火碎片”）。
+- 统一实现在 `Utilities/CalamityMaterialEquivalents.cs` 的
+  `TryAddClassicAuricBar(recipe, barCount)`，数量必须乘以锭数。
+- 无暇粹魂晶 `Purity` 需要 5 锭，经典分支已从错误地只收 `AuricOre`×5
+  修正为 `AuricOre`×25 + `HellcasterFragment`×5。
+- 灾厄原版独立经典配方的套装/武器分支本次未覆盖，不把既有的金源矿长材料单改写成等价式。
+- 验证：`dotnet build -t:Compile` 0 警告 0 错误。
+
 **2026-10-18 会话交接**：本会话移植星火凤凰雨（`PhoenixFlameBarrage`，见 §22），
 落地「光之舞」整条下位链（§23：2.0 配方 + 旧版兼容机制 + 现代灾厄物品贴图），
 并新增「酒」门类首件血腥玛丽（§25）；提交后 `master` 与远端同步。
@@ -43,21 +246,21 @@
 同日无关的恶魔烈焰平衡与固定伤害类 getter 泛型清理继续保留。
 **验证（2026-10-23）**：`dotnet build` 0 警告 0 错误；资源自检 216 条、隐式贴图 544 个类全命中。
 **2026-10-24 血神核心**：按用户要求移除新增的 **+12%** 近战攻击速度；当前不再提供近战攻速加成。
+**2026-10-25 血神核心**：按用户要求增加 **+10%** 近战攻击速度；当前提供近战攻速加成。
 **2026-10-23 硫酸炮**：按灾厄 2.0.7.2 的黏附酸弹机制移植，伤害改为 **220**；
 现代版改为硫海遗爵宝藏袋 **25%**，经典版恢复巨螯虾 **1/3** 掉落；无配方（§45）。
-**2026-10-23 极乐升天炮**：按 CI Beta 1.12 的 `ProfanedLancher` 移植，保留 270 面板、
-渎神核弹追踪、伤害粉尘、圣火与火箭终点爆炸；现代/经典 Providence 普通 1/4、宝袋 1/3（§46）。
+**2026-10-23 极乐升天炮**：曾按 CI Beta 1.12 的 `ProfanedLancher` 移植；2026-10-26
+已按用户要求删除整套物品、弹幕、掉落、辅助函数、贴图与本地化（§46）。
 **2026-10-23 反器材狙击步枪**：按用户要求删除 `Skullmasher`、两枚专属弹幕、贴图、专属音效、
 噬神者两版掉落、全局弹幕标记与中英本地化；§47 仅保留历史记录。
 
 **2026-10-23 射手武器会话交接**：
 
 - 已完成：硫酸炮（§45，最终伤害 220）。
-- 待删除：极乐升天炮及 `ProfanedNuke` / `ProfanedNukeDust` 整套内容（§46）。用户已明确要求删除，
-  删除动作留到后续集中清理。
+- 极乐升天炮及 `ProfanedNuke` / `ProfanedNukeDust` 整套内容已于 2026-10-26 删除（§46）。
 - 暴政之终（Tyranny's End）：用户 2026-10-23 已取消移植，不再作为待办或后续计划。
-- 当前验证基线：`dotnet build` 0 警告 0 错误；`CheckResources` 217 条；
-  `CheckImplicitTextures` 549 个类全命中。
+- 当前验证基线：`dotnet build` 0 警告 0 错误；`CheckResources` 232 条；
+  `CheckImplicitTextures` 566 个类全命中。
 - 工作区状态：上述改动均**未提交**；`master` 相对远端仍显示 ahead 2（另含本批未跟踪/未提交文件）。
 
 **2026-10-25 会话交接（Codex 0.164.0 + 重启接手）**：
@@ -68,11 +271,9 @@
 - 重启前当前会话仍由 0.163.0 的 PID 36772 持有；隐藏清理进程 PID 21832 会在它退出后删除
   `standalone\releases\0.163.0-x86_64-pc-windows-msvc\`。**新会话先复核旧版目录已消失、
   `standalone\releases` 只剩 0.164.0。**
-- 工作区基线：`HEAD = 1f6cfba`，`origin/master = 31b1644`，分支 ahead 2。以下改动均未提交：
-  `AGENTS.md`、血神核心、全局物品/弹幕、两版本地化、全局 NPC、玩家类、
-  `Tools/FinalizeCodexDaemonUpdate.ps1`；未跟踪文件为硫酸炮、极乐升天炮、`ProfanedNuke`、
-  `ProfanedNukeDust`、`SulphuricBlast` 及三张贴图。
-- 射手武器批次仍是：硫酸炮完成；极乐升天炮及 `ProfanedNuke` / `ProfanedNukeDust` 待删（§46）。
+- 工作区基线：`HEAD = 1f6cfba`，`origin/master = 31b1644`，分支 ahead 2。历史记录中的
+  “未跟踪极乐升天炮文件”已于 2026-10-26 过期；这些文件此后已入库并按要求删除。
+- 射手武器批次：硫酸炮完成；极乐升天炮及 `ProfanedNuke` / `ProfanedNukeDust` 已删除（§46）。
   用户 2026-10-25 再次明确：**移植完成后必须清掉全部废弃或残留文件/目录**，包括代码、贴图、
   音效、掉落、全局标记、辅助函数、本地化与失去引用的目录。清理后更新记忆并跑构建/资源两道自检。
 - 本次未改模组代码，未重跑 `dotnet build`；沿用的最近验证基线仍为 0 警告 0 错误、
@@ -125,12 +326,13 @@
 | 冰核 | 现代 `EssenceofEleum` / 经典·旧版 `CoreofEleum` | 同一个件改名（同日光精华那对 `EssenceofCinder`→`EssenceofSunlight`）；写配方时按版本 TryFind |
 | 永恒锭 | 现代 `PerennialBar` / 经典 `DraedonBar` | 同一个件改名（两者都 ← `PerennialOre`×5，30×24、Lime 档）；2026-10-14 移植 `BladedgeGreatbow` 时查实 |
 | 冰晶锭 | 现代 `CryonicBar` / 经典 `VerstaltiteBar` | 同一个件改名（两者都 ← `CryonicOre`×5，30×24）；2026-10-14 备查（`DarkechoGreatbow` 会用到） |
+| 圣金源锭 | 现代 `AuricBar` / 经典完整等价 `AuricOre`×5 + `HellcasterFragment`×1 | 每 1 锭计，必须乘以需求数量；龙魂碎片现代 `YharonSoulFragment`、经典旧名 `HellcasterFragment`；统一走 `Utilities/CalamityMaterialEquivalents.cs` |
 | 暮色碎片 | 现代 `PlantyMush` / 经典·旧版 `Tenebris` | 同一个件改名：2.2.2 的 `Tiles/Abyss/PlantyMush.cs` 挂着 `[LegacyName("Tenebris")]`（注释：把旧世界的 Tenebris 转成植生菇）。**掉落材料**——不新建物品、不挂掉落，按版本 TryFind；先例：吸收者（注释里明写 `PlantyMush→Tenebris`）、始源林海罩帽 |
 | 死灵质 | 现代 `Necroplasm` / 经典·旧版 `Phantoplasm` | 同一个件改名：2.0.4+ 叫 `Necroplasm`、**2.0.3.9 叫 `Polterplasm`**、更早与经典叫 `Phantoplasm`；先例：血神核心 / 元素箭袋 / 虚灵护符 / 元素护手 / 融合怪 / 海绵 / 纳米技术 / 诅咒星带 / 魔能谐振仪（后者三个名字一起试） |
 | 混沌精华 | 现代 `EssenceofHavoc` / 经典·旧版 `EssenceofChaos` | 同一个件改名；先例：毁灭徽章、本工程自持的混沌核心 |
 | 狱火碎片 | 现代 `YharonSoulFragment`（犽戎魂片）/ 经典·旧版 `HellcasterFragment` | 同一个件改名：2.2.2 的 `Items/Materials/YharonSoulFragment.cs` 挂 `[LegacyName("HellcasterFragment")]`；本工程将在 `AuricBar` 首次用到 |
 | 流明晶 | 现代 `Lumenyl` / 经典·旧版 `Lumenite` | 同一个件改名；先例：吸收者的注释「经典版深渊材料换名（`Lumenyl`→`Lumenite`、`PlantyMush`→`Tenebris`）」；季风 / 潮涌会用到 |
-| 化神魂精 | 灾厄 `AscendantSpiritEssence` | 中文名由**用户 2026-10-15 点名确认**；本工程既有件（席尔瓦套 / 弑神者套 / 极乐翼靴 / 纯净 等十余处）早已软引用它 |
+| 化神魂精 | 现代 `AscendantSpiritEssence` / 经典完整等价 `NightmareFuel`×5 + `Phantoplasm`×2 + `EndothermicEnergy`×5 + `DarksunFragment`×5 | 一组按 1 个 Essence 计，必须乘以所需数量；统一走 `Utilities/CalamityMaterialEquivalents.cs` |
 | 奇迹物质 | 灾厄 `MiracleMatter` | 既有件：归虚之灵 / 超新星 / 破灭魔王剑（ExoBlade）——这三处都是"软引用本体件"的现成范例 |
 
 - **材料（非武器 / 非饰品）一律软依赖（用户 2026-10-15 定）**：现代分支直接引用**实装 2.2.2** 的本体件，
@@ -2936,7 +3138,8 @@ public override void ModifyWeaponDamage(Player player, ref StatModifier damage) 
 - 获得途径：王冠宝石 = 史莱姆王掉落（`CalamityDemutationGlobalNPC.ModifyNPCLoot`，源与本工程都**没有配方**）；
   感染宝石 = 王冠宝石 + `AureusCell`×10 + `Stardust`×25 @ 秘银砧（现代版 `Stardust`→`StarblightSoot`、
   经典版 `AureusCell`→`AstralJelly`）；无暇粹魂晶 = 甘露安瓿（古）+ 感染宝石 + `AuricBar`×5 +
-  `AscendantSpiritEssence`×4 @ 宇宙砧（经典版换 `AuricOre`×5 + `EndothermicEnergy`×4 @ 嘉登熔炉）。
+  `AscendantSpiritEssence`×4 @ 宇宙砧（经典版换 `AuricOre`×25 + `HellcasterFragment`×5 + `NightmareFuel`×20 +
+  `Phantoplasm`×8 + `EndothermicEnergy`×20 + `DarksunFragment`×20 @ 嘉登熔炉）。
 - 实现锚点：装备只置标记 `crownJewel` / `infectedJewel` / `purity`（`CalamityDemutationPlayer`，`ResetEffects` 复位），
   数值在玩家侧结算（`CalamityDemutationPlayer.cs` 约 4224 行起的「宝石系三件」块，落在 `UpdateLifeRegen` 里）；
   动态防御三件共用 `jewelBonusDefense`（见 §8「随身上减益数上涨」那条）。
@@ -5307,10 +5510,11 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 `CheckResources` **216 条**全命中；`CheckImplicitTextures` **546 个类**全命中。
 尚待进游戏实测追踪、双发上限、8 秒黏附伤害、减益与两版宝藏袋 25% 掉落。
 
-## 46. 极乐升天炮（Blissful Bombardier，待删除，2026-10-23）
+## 46. 极乐升天炮（Blissful Bombardier，已于 2026-10-26 删除）
 
-> **当前状态：用户已要求删除，但尚未执行。** 下次处理时须连同物品、两个弹幕、贴图、
-> Providence 普通/宝袋掉落、`ApplyHolyFlamesWithFallback` 中只服务本件的入口以及中英本地化一起清理。
+> **当前状态：已按用户最终要求删除。** 以下仅保留原始移植记录；
+> 物品、两个弹幕、两张 CI 原始贴图、Providence 普通/宝袋掉落、
+> `ApplyHolyFlamesWithFallback` 两个重载以及中英本地化均已不属于当前工程。
 
 **用户口径**：完整采用 CI 的旧版路线。CI 实际类名为拼写错误的 `ProfanedLancher`，
 中文本地化仍是“极乐升天炮[Legacy]”；本工程按规范恢复为 `BlissfulBombardier`。
@@ -5345,6 +5549,10 @@ CalamityExpansion 燃烧IV的 32×32 `HellfireIV.png`。近战物品与近战弹
 `CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 个类**全命中。
 尚待进游戏实测追踪、伤害粉尘、圣火回退、破砖/铺液、Zenith 散射与两版 Providence 掉落。
 
+**删除前验证（2026-10-26）**：`dotnet build -t:Compile` **0 警告 0 错误**；
+`CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 类**全命中（抽象类 1 个跳过）。
+CI 两张贴图 SHA256 与源文件一致。
+
 ## 47. 反器材狙击步枪（Skullmasher，已于 2026-10-23 删除）
 
 > 以下保留原始移植记录，仅作历史参考；物品、弹幕、贴图、音效、掉落与本地化均已不属于当前工程。
@@ -5377,3 +5585,26 @@ PvP 固定按暴击档召来 4 枚。
 
 **删除验证（2026-10-23）**：`dotnet build` **0 警告 0 错误**（含完整打包）；
 `CheckResources` **217 条**全命中；`CheckImplicitTextures` **549 个类**全命中。
+
+## 48. 焦土整条链（Scorched Earth，2026-10-26 保留）
+
+> 用户明确要求保留焦土整条链；极乐升天炮的删除不改变本链归属。
+
+**当前内容**：
+
+- `Content/Items/Weapons/Ranged/ScorchedEarth.cs` + `.png`。
+- `Content/Projectiles/Ranged/ScorchedEarthRocket.cs` + `.png`。
+- `Content/Projectiles/Ranged/ScorchedEarthClusterBomb.cs` + `.png`。
+- `Content/Projectiles/Ranged/ScorchedEarthBlast.cs`。
+- `Content/Projectiles/Ranged/RocketFire.cs`。
+- `Sounds/Item/ScorchedEarthShot1/2/3.ogg`。
+- 中英 `Items.ScorchedEarth` 与 `Projectiles.ScorchedEarth* / RocketFire` 本地化。
+
+**玩法**：Public 2.0 口径，500 伤害、四连发、两发消耗一枚火箭；
+母火箭命中后生成焦土爆炸与五枚 25% 伤害的集束炸弹，每枚集束炸弹再生成 2-3 个 `RocketFire`。
+
+**配方兼容**：本地极乐升天炮删除后，只有灾厄侧仍提供同名 `BlissfulBombardier`
+旧件时才注册 Public 2.0 原配方；否则焦土正常加载但不注册配方。
+
+**恢复后验证（2026-10-26）**：`dotnet build -t:Compile` **0 警告 0 错误**；
+`CheckResources` **232 条**全命中；`CheckImplicitTextures` **566 类**全命中（抽象类 1 个跳过）。

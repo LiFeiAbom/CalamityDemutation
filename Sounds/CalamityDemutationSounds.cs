@@ -59,5 +59,17 @@ namespace CalamityDemutation.Sounds
         public static readonly SoundStyle HammerReturn = new("CalamityDemutation/Sounds/Custom/Return1") { Volume = 0.7f, Pitch = 0.5f };
         /// <summary>灾厄精金武器命中音（WulfrumKnifeTileHit2）：月影投矛每次命中时播放。</summary>
         public static readonly SoundStyle WulfrumKnifeTileHit2 = new("CalamityDemutation/Sounds/Custom/WulfrumKnifeTileHit2") { Volume = 0.5f, PitchVariance = 0.4f };
+        /// <summary>灵液长矛投掷音效，取自灾厄 2.0.7.2。</summary>
+        public static readonly SoundStyle IchorSpearThrow = new("CalamityDemutation/Sounds/Item/IchorSpearThrow") { Volume = 0.2f, PitchVariance = 0.4f };
+        /// <summary>现实撕裂普通投掷音效。</summary>
+        public static readonly SoundStyle RealityRupture = new("CalamityDemutation/Sounds/Item/RealityRupture") { Volume = 0.3f, PitchVariance = 0.3f };
+        /// <summary>现实撕裂大型长矛投掷音效。</summary>
+        public static readonly SoundStyle LanceofDestinyStrong = new("CalamityDemutation/Sounds/Item/LanceofDestinyStrong") { Volume = 0.4f, PitchVariance = 0.3f };
+        /// <summary>现实撕裂潜行投掷音效。</summary>
+        public static readonly SoundStyle RealityRuptureStealth = new("CalamityDemutation/Sounds/Item/RealityRuptureStealth") { Volume = 0.5f, PitchVariance = 0.3f };
+        /// <summary>现实撕裂潜行命中音效。</summary>
+        public static readonly SoundStyle RealityRuptureStealthHit = new("CalamityDemutation/Sounds/Item/RealityRuptureStealthHit") { Volume = 1.2f, PitchVariance = 0.3f };
+        /// <summary>吞噬者体节破裂 2，现实撕裂主矛命中音效。</summary>
+        public static readonly SoundStyle DevourerSegmentBreak2 = new("CalamityDemutation/Sounds/Custom/DevourerSegmentBreak2") { Volume = 0.6f, PitchVariance = 0.3f };
     }
 }

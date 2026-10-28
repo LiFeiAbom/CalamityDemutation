@@ -950,6 +950,7 @@ Items: {
 			Boosts your max HP by 10%
 			10% increased damage reduction
 			Increases all damage and critical strike chance by 12%
+			10% increased melee attack speed
 			When below 100 defense you gain 15% increased damage
 			Halves enemy contact damage
 			When you take contact damage this effect has a 20 second cooldown
@@ -2356,6 +2357,64 @@ Items: {
 			'''
 	}
 
+	ScarletDevil: {
+		DisplayName: Scarlet Devil
+		Tooltip:
+			'''
+			Throws an ultra high velocity spear, which creates homing projectiles
+			The spear creates a Scarlet Blast upon hitting an enemy
+			Stealth strikes grant lifesteal and summon a star of projectiles upon hitting an enemy
+			'Divine Spear "Spear the Gungnir"'
+			'''
+	}
+
+	Wrathwing: {
+		DisplayName: Wrathwing
+		Tooltip:
+			'''
+			Throws a homing infernal spear
+			Erupts a cluster of homing fireballs on enemy hits
+			[c/CA7C04:A glimpse of the legacy rogue era]
+			'''
+	}
+
+	CursedDagger: {
+		DisplayName: Cursed Dagger
+		Tooltip:
+			'''
+			Throws a bouncing cursed dagger that showers the area in cursed fire
+			Stealth strikes greatly increase throw speed and generate more cursed fire projectiles
+			[c/A6EB7E:Cursed fire generation rate increases with the dagger's travel speed]
+			'''
+	}
+
+	IchorSpear: {
+		DisplayName: Ichor Spear
+		Tooltip:
+			'''
+			Throws a high-velocity ichor tipped javelin that pierces through enemies
+			Stealth strikes impale enemies and deal repeated damage
+			'''
+	}
+
+	SpearofDestiny: {
+		DisplayName: Spear of Destiny
+		Tooltip:
+			'''
+			Throws three spears with the outer two having homing capabilities
+			Stealth strikes throw five homing spears that ignore tiles and pierce more targets
+			'''
+	}
+
+	RealityRupture: {
+		DisplayName: Reality Rupture
+		Tooltip:
+			'''
+			Cycles between throwing homing reality shards and a single piercing lance
+			Stealth strikes throw a high-velocity reality-shattering lance that explodes on hit
+			'''
+	}
+
 	TarragonBreastplate: {
 		DisplayName: Tarragon Breastplate
 		Tooltip:
@@ -2846,21 +2905,22 @@ Items: {
 			'''
 	}
 
-	BlissfulBombardier: {
-		DisplayName: Blissful Bombardier
-		Tooltip:
-			'''
-			Fires a homing profaned nuke
-			The rocket leaves damaging holy dust and explodes on impact
-			'''
-	}
-
 	CosmicBolter: {
 		DisplayName: Cosmic Bolter
 		Tooltip:
 			'''
 			Fires three arrows at once
 			Converts any ammo into sliding energy bolts
+			'''
+	}
+
+	ScorchedEarth: {
+		DisplayName: Scorched Earth
+		Tooltip:
+			'''
+			Fires a burst of four fuel-air rockets which explode into cluster bombs
+			Each burst consumes two rockets
+			Burns your targets to a fine crisp
 			'''
 	}
 
@@ -3247,6 +3307,19 @@ Projectiles: {
 	TotalityFire.DisplayName: Totality Fire
 	TotalityFlask.DisplayName: Totality Flask
 	TotalityTar.DisplayName: Totality Tar
+	WrathwingSpear.DisplayName: Wrathwing
+	WrathwingFireball.DisplayName: Wrathwing Fireball
+	CursedDaggerProj.DisplayName: Cursed Dagger
+	IchorSpearProj.DisplayName: Ichor Spear
+	IchorSpearProjLegacy.DisplayName: Ichor Javelin
+	SpearofDestinyProjectile.DisplayName: Spear of Destiny
+	RealityRuptureMini.DisplayName: Reality Shard
+	RealityRuptureLance.DisplayName: Lance of Reality
+	RealityRuptureStealth.DisplayName: Ruptured Reality
+	RealityRuptureStealthExplosion.DisplayName: Reality Explosion
+	ScarletDevilProjectile.DisplayName: Spear the Gungnir
+	ScarletDevilBullet.DisplayName: Gungnir Bullet
+	ScarletBlast.DisplayName: Scarlet Blast
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
@@ -3289,8 +3362,10 @@ Projectiles: {
 	FossilShard.DisplayName: Shard
 	ClockworkBowHoldout.DisplayName: Clockwork Bow
 	PrecisionBolt.DisplayName: Precision Bolt
-	ProfanedNuke.DisplayName: Profaned Nuke
-	ProfanedNukeDust.DisplayName: Profaned Nuke Dust
+	ScorchedEarthRocket.DisplayName: Rocket
+	ScorchedEarthClusterBomb.DisplayName: Cluster Bomb
+	ScorchedEarthBlast.DisplayName: Earth Scorcher
+	RocketFire.DisplayName: Fire
 	FeatherLarge.DisplayName: Feather
 	PlanetaryAnnihilationProj.DisplayName: Ball
 	AstrealArrow.DisplayName: Astreal Arrow

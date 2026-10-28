@@ -26,7 +26,7 @@ if ($constFile) {
     }
 }
 
-function Test-ResPath([string] $relative) {
+function Test-ResPath([string] $relative, [int] $soundVariants = 0) {
     # 去掉可能残留的模组名前缀：常量里的值形如 "CalamityDemutation/Assets/Masking"，
     # 而磁盘路径是 <工程根>/Assets/Masking/...，直接拼会多一层目录
     if ($relative.StartsWith('CalamityDemutation/')) { $relative = $relative.Substring('CalamityDemutation/'.Length) }
@@ -34,6 +34,20 @@ function Test-ResPath([string] $relative) {
     $base = Join-Path $root ($relative -replace '/', '\')
     foreach ($ext in $exts) {
         if (Test-Path -LiteralPath ($base + $ext)) { return $true }
+    }
+    # SoundStyle("path", N) 使用 path1.ext ... pathN.ext，不存在不带序号的基础文件。
+    if ($soundVariants -gt 0) {
+        for ($variant = 1; $variant -le $soundVariants; $variant++) {
+            $found = $false
+            foreach ($ext in $exts) {
+                if (Test-Path -LiteralPath ($base + $variant + $ext)) {
+                    $found = $true
+                    break
+                }
+            }
+            if (-not $found) { return $false }
+        }
+        return $true
     }
     return $false
 }
@@ -48,10 +62,15 @@ foreach ($file in $files) {
     $lines = Get-Content -Encoding UTF8 $file.FullName
     for ($i = 0; $i -lt $lines.Count; $i++) {
         $lineNo = $i + 1
+        $variantCounts = @{}
+        foreach ($m in [regex]::Matches($lines[$i], 'new(?:\s+SoundStyle)?\("CalamityDemutation/([^"]+)",\s*(\d+)\)')) {
+            $variantCounts[$m.Groups[1].Value] = [int]$m.Groups[2].Value
+        }
         foreach ($m in [regex]::Matches($lines[$i], '"CalamityDemutation/([^"]+)"')) {
             $checked++
             $p = $m.Groups[1].Value
-            if (-not (Test-ResPath $p)) { $missing += ('{0}:{1}  缺失 -> {2}' -f $rel, $lineNo, $p) }
+            $variantCount = if ($variantCounts.ContainsKey($p)) { $variantCounts[$p] } else { 0 }
+            if (-not (Test-ResPath $p $variantCount)) { $missing += ('{0}:{1}  缺失 -> {2}' -f $rel, $lineNo, $p) }
         }
         foreach ($m in [regex]::Matches($lines[$i], 'CalamityDemutationConstant\.(\w+)\s*\+\s*"([^"]+)"')) {
             $name = $m.Groups[1].Value

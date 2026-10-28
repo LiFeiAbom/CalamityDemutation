@@ -1,5 +1,6 @@
 using CalamityDemutation.Enums;
 using CalamityDemutation.Players;
+using CalamityDemutation.Utilities;
 using Terraria;
 using Terraria.ModLoader;
 namespace CalamityDemutation.Content.Items.Accessories.Movement
@@ -39,7 +40,7 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
         /// <summary>
         /// 配方（分版本），两版都以阿斯加德之英勇 + 极乐之庇护 为坯料：
         /// 现代版另加 CosmiliteBar×10 + AscendantSpiritEssence×4，于 CosmicAnvil 合成；
-        /// 经典版另加 CosmiliteBar×5 + Phantoplasm×5，于 DraedonsForge 合成。
+        /// 经典版另加 CosmiliteBar×5，并把 4 个化神魂精按完整配方等价换算，于 DraedonsForge 合成。
         /// 两分支各自 TryGetMod + TryFind 串联，缺材料/缺工作台时静默跳过该条配方。
         /// </summary>
         public override void AddRecipes()
@@ -62,14 +63,17 @@ namespace CalamityDemutation.Content.Items.Accessories.Movement
             if (ModLoader.TryGetMod("CalamityModClassicPreTrailer", out Mod classic))
             {
                 if (classic.TryFind<ModItem>("CosmiliteBar", out ModItem classicCosmiliteBar)
-                    && classic.TryFind<ModItem>("Phantoplasm", out ModItem phantoplasm)
                     && classic.TryFind<ModTile>("DraedonsForge", out ModTile draedonsForge))
                 {
                     Recipe recipeClassic = CreateRecipe();
                     recipeClassic.AddIngredient<AsgardsValor>();
                     recipeClassic.AddIngredient<ElysianAegis>();
                     recipeClassic.AddIngredient(classicCosmiliteBar.Type, 5);
-                    recipeClassic.AddIngredient(phantoplasm.Type, 5);
+                    if (!CalamityMaterialEquivalents.TryAddClassicAscendantSpiritEssence(recipeClassic, 4))
+                    {
+                        return;
+                    }
+
                     recipeClassic.AddTile(draedonsForge.Type);
                     recipeClassic.Register();
                 }
