@@ -74,38 +74,11 @@ namespace CalamityDemutation.Content.Projectiles.Rogue
         }
         private void SpawnOnStealthStrikeBullets()
         {
-            const float starSpeed = 25f;
-            for (int i = 0; i < 40; i++)
-            {
-                Vector2 shootVelocity = (MathHelper.TwoPi * i / 40f).ToRotationVector2() * starSpeed;
-                SpawnStealthBullet(shootVelocity);
-            }
-            const int pointsOnStar = 6;
-            for (int k = 0; k < 2; k++)
-            {
-                for (int i = 0; i < pointsOnStar; i++)
-                {
-                    float angle = MathHelper.Pi * 1.5f - i * MathHelper.TwoPi / pointsOnStar;
-                    float nextAngle = MathHelper.Pi * 1.5f - (i + 3) % pointsOnStar * MathHelper.TwoPi / pointsOnStar;
-                    if (k == 1)
-                        nextAngle = MathHelper.Pi * 1.5f - (i + 2) * MathHelper.TwoPi / pointsOnStar;
-                    Vector2 start = angle.ToRotationVector2();
-                    Vector2 end = nextAngle.ToRotationVector2();
-                    const int pointsOnSegment = 18;
-                    for (int j = 0; j < pointsOnSegment; j++)
-                    {
-                        Vector2 shootVelocity = Vector2.Lerp(start, end, j / (float)pointsOnSegment) * starSpeed;
-                        SpawnStealthBullet(shootVelocity);
-                    }
-                }
-            }
-        }
-        private void SpawnStealthBullet(Vector2 velocity)
-        {
-            int bullet = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + velocity, velocity,
-                ModContent.ProjectileType<ScarletDevilBullet>(), (int)(Projectile.damage * 0.01f), 0f, Projectile.owner);
-            if (bullet >= 0 && bullet < Main.maxProjectiles)
-                CDUtil.SetStealthStrike(Main.projectile[bullet]);
+            if (Projectile.owner != Main.myPlayer)
+                return;
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero,
+                ModContent.ProjectileType<ScarletDevilStealthBurst>(), (int)(Projectile.damage * 0.01f),
+                0f, Projectile.owner);
         }
         public override Color? GetAlpha(Color lightColor) => new Color(250, 250, 250);
         public override void OnKill(int timeLeft) => SoundEngine.PlaySound(SoundID.Item122, Projectile.position);

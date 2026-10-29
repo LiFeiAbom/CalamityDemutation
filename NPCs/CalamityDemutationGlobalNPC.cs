@@ -293,6 +293,7 @@ namespace CalamityDemutation.NPCs
                 else if (calamity.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<BansheeHook>(), 4));
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<GhoulishGouger>(), 4));
                     // 本工程自持的空灵征服者：源里它也在噬魂幽花的"非专家武器池"里（沿用同一条 1/4 简化口径）
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 4));
                     npcLoot.Add(notExpert0);
@@ -308,6 +309,12 @@ namespace CalamityDemutation.NPCs
                 {
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<ChickenCannon>(), 4));
                     notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<Wrathwing>(), 4));
+                    npcLoot.Add(notExpert0);
+                }
+                // 腐臭倾泻者：2.0.4 旧公爵普通难度武器池按本工程简化口径恢复为 1/4。
+                else if (calamity.TryFind<ModNPC>("OldDuke", out ModNPC oldDuke) && npc.type == oldDuke.Type)
+                {
+                    notExpert0.OnSuccess(new CommonDrop(ModContent.ItemType<FetidEmesis>(), 4));
                     npcLoot.Add(notExpert0);
                 }
                 // 灾厄挽歌（本工程自持）：源里是巨型鱿鱼 ColossalSquid 的 1/3 掉落，但带"已击败噬魂幽花"门槛
@@ -373,6 +380,7 @@ namespace CalamityDemutation.NPCs
                 else if (classic.TryFind<ModNPC>("Polterghast", out ModNPC polterghast) && npc.type == polterghast.Type)
                 {
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<BansheeHook>(), 4));
+                    notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<GhoulishGouger>(), 4));
                     // 本工程自持的空灵征服者：源里它也在噬魂幽花的"非专家武器池"里（沿用同一条 1/4 简化口径）
                     notExpert1.OnSuccess(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 4));
                     npcLoot.Add(notExpert1);

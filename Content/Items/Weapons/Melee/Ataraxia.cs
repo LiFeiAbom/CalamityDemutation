@@ -2,6 +2,7 @@ using CalamityDemutation.Content.Buffs.NegativeBuffs;
 using CalamityDemutation.Content.Projectiles.Melee;
 using CalamityDemutation.Players;
 using CalamityDemutation.Sounds;
+using CalamityDemutation.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -87,6 +88,7 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
         /// <summary>挥舞表现：在判定框中心区撒 3~5 颗尘（70 / 71 / 86 三选一，灾厄原码用魔法数字，照抄）</summary>
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
+            CDUtil.BetterSwing(player);
             int dustCount = Main.rand.Next(3, 6);
             Vector2 corner = new Vector2(hitbox.X + hitbox.Width / 4, hitbox.Y + hitbox.Height / 4);
             for (int i = 0; i < dustCount; ++i)

@@ -1,4 +1,6 @@
 using CalamityDemutation.Content.Projectiles.Melee;
+using CalamityDemutation.Utilities;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,6 +35,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 10;   // 月后稀有度 10 级（对应灾厄 Rarity10）
             Item.shoot = ModContent.ProjectileType<JudgementBeam>();   // 主弹幕：审判光束
             Item.shootSpeed = 15f;                        // 弹速
+        }
+        public override void MeleeEffects(Player player, Rectangle hitbox)
+        {
+            CDUtil.BetterSwing(player);
         }
         /// <summary>
         /// 审判光束走默认发射路径，取的就是本次修正后的面板值，会自动跟随。

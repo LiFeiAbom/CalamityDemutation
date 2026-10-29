@@ -3,6 +3,161 @@
 > 本文件是给后续会话/协作者的项目记忆：工程口径、已确立的换算表、踩过的坑、当前状态。
 > 内容按"能直接照做"的标准写；改动工程时请同步更新它。
 
+**2026-10-29 会话封装**
+
+- 用户实机确认当前测试没有问题，要求提交并推送。本批包含：
+  遗弃之刃 + 红日链、腐臭倾泻者、绯红恶魔潜行性能修复，以及实体挥砍近战 `BetterSwing` 补齐。
+- 最终验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 237 条全命中；
+  `CheckImplicitTextures` 586 类全命中；中英 HJSON 解析通过。
+- 绯红恶魔恢复到 Public 2.0.4 的 256 枚潜行爆发；Nanotech `NanoFlare` 保留 15 帧玩家级
+  共享冷却，用户已实测确认大卡顿消失。
+
+**2026-10-29 红日（Red Sun）**
+
+- 机制取灾厄 Public 2.0.4；用户指定面板伤害 **750**、`useTime = useAnimation = 14`，
+  并删除 `useLimitPerAnimation` 挥砍段数限制。每次使用从天空召下 3 枚太阳耀斑，
+  耀斑消散后分裂追踪沙火。物品使用 Classic 1.4.2.101 的 72×72 红色太阳图。
+- 红日本体命中施加神圣之火：现代 `HolyFlames` 300 帧，经典回落 `HolyLight` 300 帧；
+  耀斑 240 帧、沙火 120 帧。`RSSolarFlare` 为 46×46、四帧、120 帧、先缩小后放大；
+  贴图也改用 Classic 1.4.2.101 的 46×184 四帧图。
+  `SandFire` 为隐形 6×6、追踪 2000 像素、200 帧。
+- 配方接上本地 `ForsakenSaber` + 蚁狮爪 + 本地余烬核心×5 + 魔影锭×5 @ 嘉登熔炉；
+  现代/经典各按对应灾厄实例注册一条，余烬核心作为 2.0 `CoreofSunlight` 的既有等价件。
+- 文件：`Content/Items/Weapons/Melee/RedSun.cs/.png`、
+  `Content/Projectiles/Melee/RSSolarFlare.cs/.png`、
+  `Content/Projectiles/Melee/SandFire.cs`。Red Sun 与耀斑两张贴图都对应经典 1.4.2.101
+  源文件；SandFire 复用隐形贴图。
+- 实体挥砍近战统一补 `CDUtil.BetterSwing(player)`。本轮扫描出缺失的 `RedSun`、`ForsakenSaber`、
+  `Ataraxia`、`SoulHarvester`、`EssenceFlayer`、`Excelsus`、`GreatswordofJudgement` 均已补；
+  再次扫描所有 Swing 且非 `noMelee` 的近战武器，无遗漏。
+- 验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 237 条全命中；
+  `CheckImplicitTextures` 586 类全命中；中英 HJSON 解析通过。用户已实机确认测试无问题。
+- 待实测：14 帧连续挥砍节拍、三枚耀斑落点、低速/高速切换、分裂沙火追踪、神圣之火时长、
+  经典贴图比例和两条配方。本轮仍未提交、未推送。
+
+**2026-10-29 红日链第一下位：遗弃之刃**
+
+- Red Sun 2.0.4 配方里的唯一专属武器前件是 `ForsakenSaber`（遗弃之刃）；其下只有原版
+  禁戒碎片、精金/钛金锭和蚁狮爪，没有更低的专属武器。因此遗弃之刃就是本链第一件下位。
+- 已按 Public 2.0.4 落地：80 近战伤害、使用/动画 15 帧、击退 6、弹速 15、自动连发、
+  粉档、价值 24 金。每次挥砍发射两枚 `SandBlade`，伤害均为面板 1/2：一枚随机偏转并随机
+  0.8~1.2 倍变速，另一枚沿准星方向；沙刃 20×20 判定、穿透 1、300 帧，先减速后加速。
+- 文件：`Content/Items/Weapons/Melee/ForsakenSaber.cs/.png`、
+  `Content/Projectiles/Melee/SandBlade.cs/.png`。两张 PNG 与 2.0.4 源文件 SHA256 一致。
+- 配方：禁戒碎片×2 + 精金/钛金锭×5 @ 秘银砧。现代灾厄分支用 `AnyAdamantiteBar` 配方组，
+  经典分支按源分别登记精金与钛金两条；缺对应灾厄时不注册。
+- 验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 236 条全命中；
+  `CheckImplicitTextures` 583 类全命中；中英 HJSON 解析通过。用户已实机确认测试无问题。
+- 下一层 Red Sun 已落地；待实测沙刃两发分工、反复减速/加速与贴图朝向。
+
+**2026-10-29 腐臭倾泻者（Fetid Emesis）**
+
+- 用户拍板取灾厄 Public 2.0.4，并把面板伤害从 129 改为 **200**。中文名按用户指定为
+  「腐臭倾泻者」，英文 `Fetid Emesis`。
+- 物品：76×46、200 射手伤害、使用/动画 6 帧、击退 3、弹速 16、自动连发、消耗子弹类弹药；
+  40% 几率省弹；每次射击 1/8 概率改为喷出一枚黏附腐肉。稀有度月后 13 档（PureGreen），
+  价值 1 铂金 75 金。灾厄 `canFirePointBlankShots` 按工程既有口径不接入。
+- `EmesisGore`：12×12、穿透 10、600 帧、本地无敌 6 帧；黏附后跟随目标，最多 8 枚同时附在同敌，
+  命中施加 60 帧 `SulphuricPoisoning`（缺该减益时退回原版 `Venom`），PvP 同样生效。
+  保留源版腐肉尘、周期命中特效和呕吐音效；音效使用 120 帧玩家级共享冷却。
+- 获取：现代灾厄旧公爵 `OldDuke` 非专家普通难度 1/4；`OldDukeBag` 1/3。
+  经典灾厄没有这件原武器，故不注册经典分支。
+- 文件：`Content/Items/Weapons/Ranged/FetidEmesis.cs/.png`、
+  `Content/Projectiles/Ranged/EmesisGore.cs/.png`。两张贴图 SHA256 与 2.0.4 源文件一致。
+- 验证（当时）：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 236 条全命中；
+  `CheckImplicitTextures` 581 类全命中；中英 HJSON 解析通过。用户已实机确认测试无问题。
+- 待实测：40% 省弹、1/8 腐肉替换、最高 8 枚黏附、硫酸时长、呕吐音效冷却、
+  旧公爵本体与宝藏袋掉落。本轮仍未提交、未推送。
+
+**2026-10-29 纳米黑死神落地后删除与绯红恶魔性能修正**
+
+- 用户 2026-10-29 最终要求删除武器「纳米黑死神」（只删除这一件）。物品、主弹幕、追踪碎片、
+  三张独占贴图及中英文本地化均已移除，`Content` 与本地化目录中无 `NanoblackReaper` 残留引用；
+  其它近战武器和绯红恶魔不受影响。以下保留本次移植当时的实现记录，仅作历史参考。
+- 链顶 `NanoblackReaper` 曾按 `CalamityInheritance-Beta1.12` 落地；本地类名与文件去掉源项目的
+  `MeleeType` 前缀，游戏内名称同步精简为「纳米黑死神 / Nanoblack Reaper」：
+  455 近战伤害 / 击退 9 / 使用·动画 5 帧 / 弹速 12 / 护甲穿透 500 / 月后 16 档（Donator Pink）/
+  价值 2 铂金 80 金。物品与两段弹幕均使用 `DamageClass.MeleeNoSpeed`。
+- 主镰刀 240 帧、60 帧后回程，每 10~12 帧生成一枚 80% 伤害的追踪死神碎片；
+  碎片 90 帧、穿透 4、每 8 帧可再次命中，优先锁定 1800 像素内最近的 Boss，无 Boss 时才追普通敌人，
+  命中施加 600 帧 `MarkedforDeath`，PvP 同样生效。
+- 主配方使用本工程三件下位武器 + `ShadowspecBar×5 + EndothermicEnergy×40 + DarkPlasma×10
+  + Nanites×400 @ DraedonsForge`。`CalamitousEssence×1` 免站配方只在灾厄现代版、经典版或
+  CalamityInheritance 中实际存在该材料时注册，不在本工程自建该材料。
+- 文件：
+  `Content/Items/Weapons/Melee/NanoblackReaper.cs/.png`、
+  `Content/Projectiles/Melee/NanoblackReaperProj.cs`、
+  `Content/Projectiles/Melee/NanoblackReaperProjSplit.cs/.png` 与
+  `NanoblackReaperProjSplitGlow.png`。三张 PNG 与 Beta1.12 源文件 SHA256 一致。
+- 验证（2026-10-29 最新状态）：`dotnet build -t:Compile` 0 警告 0 错误；
+  `CheckResources` 236 条全命中；`CheckImplicitTextures` 581 类全命中。绯红恶魔潜行卡顿修复已由
+  用户实机确认消失；本轮仍未提交、未推送。
+- 用户 2026-10-29 先要求删除绯红恶魔，随后要求回归并修复潜行攻击大卡顿。物品、主长枪、追踪弹、
+  爆炸弹幕和双语本地化均已恢复；公共拖尾贴图 `ExtraTextures/Trails/ScarletDevilStreak.png` 继续
+  供宇宙灯、Fabstaff 与泰拉巨刃使用。
+- 卡顿根因已定位为潜行命中单帧直接创建 `40 + 2×6×18 = 256` 枚带潜行标记的追踪弹；同时每枚弹幕
+  从第 60 帧起每帧重新扫描 NPC。用户 2026-10-29 实测降到 184、96 枚仍严重卡顿，说明主要瓶颈不在
+  弹幕数量，现恢复 Public 2.0.4 的 256 枚、角度与 25 速度，并保留每帧 32 枚分批生成。
+  `ScarletDevilBullet` 继续使用首次锁定后的目标缓存和潜行反射缓存，目标失效或离开 1000 像素范围
+  才重新搜索。
+- 2026-10-29 复核确认 `ScarletDevilBullet` 本身在 1.3、1.4.4、2.0.3.9、2.0.4、2.0.7.2、2.1
+  各版源码中均无任何 `Dust` 调用，也没有烟尘型 `OnHit/OnKill`；烟尘只能来自全局命中钩子或饰品特效。
+  其中本工程 Nanotech 命中 6 枚 `NanoFlare` 的分支缺少原版的 15 帧玩家级共享冷却，导致 256 枚
+  子弹幕可按各自的潜行计数重复触发；现补 `nanotechFlareCooldown`，每 15 帧最多召出一组 6 枚。
+  `NanoFlare` 自身每帧 3 尘、死亡再 20 尘，正是卡顿烟尘来源。用户实机确认修复后瞬间不再卡顿；
+  后续修改 Nanotech 潜行命中时必须保留共享冷却，不能按每枚子弹幕各触发一组。
+
+**2026-10-28 CI 纳米黑死神定位**
+
+- 用户所说的 CI 武器是 **`MeleeTypeNanoblackReaper`**，中文名「纳米黑死神·近战版本[Legacy]」；
+  不要与灾厄本体盗贼版 `NanoblackReaper` 混淆。CI 只给本体盗贼版追加灾厄精华配方和数值回调，
+  自己完整自持的是这件近战 Legacy 版。
+- 源码取 `CalamityInheritance-Beta1.12`：物品 `Content/Items/Weapons/Melee/MeleeTypeNanoblackReaper.cs`，
+  弹幕 `Content/Projectiles/Melee/MeleeTypeNanoblackReaperProj.cs` 与
+  `MeleeTypeNanoblackReaperProjSplit.cs`。Beta1.12 与 Beta2.0 的两段弹幕和三张贴图字节一致；
+  物品代码仅差本地化分类一行，实际玩法相同。
+- 面板：伤害 455 / 击退 9 / 使用·动画 5 帧 / 弹速 12 / 护甲穿透 500 / Donator Pink / 价值 2 铂金 80 金。
+  主弹幕 240 帧、60 帧后返回，飞行中每 10~12 帧生成 80% 伤害的追踪死神碎片；碎片 90 帧、穿透 4，
+  优先追 Boss，命中施加死亡标记 10 秒。`NewDamage` 字段写成 700/455，但未接入实际伤害，当前固定 455。
+- 主配方：`GhoulishGouger + SoulHarvester + EssenceFlayer + ShadowspecBar×5 + EndothermicEnergy×40
+  + DarkPlasma×10 + Nanites×400 @ DraedonsForge`；另有一条 `CalamitousEssence×1` 免站配方。
+  上述灾厄材料和嘉登熔炉在实装 2.2.2 与经典 1.4.2.101 都在；`CalamitousEssence` 不存在于 2.2.2，
+  由 CI 自持，经典 1.4.2.101 则已有同件。
+- 下位替代按游戏阶段排序：**`SoulHarvester`（秘银砧档）→ `GhoulishGouger`（波尔提斯掉落）
+  → `EssenceFlayer`（宇宙砧档）**。第一件是 `SoulHarvester`；它不在本工程，CI 也是直接使用灾厄本体件。
+- `SoulHarvester` 逐版关键差异：2.0 = 98 伤害 / 20 帧 / 80 金，弹幕 420 帧、全局无敌帧 6；
+  2.0.3.9～2.1 与实装 2.2.2 = 85 / 22 / 60 金，弹幕 240 帧、本地无敌帧 30；
+  2.1 起低血爆炸改生成 `DirectStrike`，1.4.4 再降为 77 伤害；经典 1.4.2.101 = 98 / 20 / 80 金，
+  配方材料 `PlagueCellCluster` 对应现代 `PlagueCellCanister`。四条线共用
+  `DeathSickle + 瘟疫细胞罐×10 + CursedFlame×20 @ 秘银砧`。
+- 用户 2026-10-28 拍板取经典 1.4.2.101，并已落地：`Content/Items/Weapons/Melee/SoulHarvester`、
+  `Content/Projectiles/Melee/SoulScythe`、`Content/Projectiles/Ranged/HiveBombExplosion` 及三张经典贴图。
+  现代/经典各一条软依赖配方；验证 `dotnet build -t:Compile` 0/0、`CheckResources` 234 条、
+  `CheckImplicitTextures` 573 类全命中。待进游戏实测镰刀闪烁、全局无敌帧、低血双引爆与瘟疫时长。
+- 下位第二件 `GhoulishGouger` 按经典 1.4.2.101 落地，并按用户 2026-10-28 修正改为**近战伤害**：
+  160 伤害 / 12 帧 / 单发回旋镰刀 / 68×60 旧贴图，无潜行灵魂。文件为
+  `Content/Items/Weapons/Melee/GhoulishGouger.cs` 与 `Content/Projectiles/Melee/GhoulishGougerProjectile.cs`；
+  物品与弹幕均用 `DamageClass.Melee`，已挂现代/经典波尔提斯普通 1/4 与宝袋 1/3。
+- 下位第三件 `EssenceFlayer` 继续取经典 1.4.2.101 并已落地：450 伤害 / 19 帧 / 60×56 旧贴图，
+  发射 50×50 追踪魂镰，命中施加 500 帧神殇狱炎；击杀生成四帧治疗火焰，固定回复 8 生命。
+  文件为 `Content/Items/Weapons/Melee/EssenceFlayer.cs`、`Content/Projectiles/Melee/EssenceScythe.cs`
+  与 `Content/Projectiles/Healing/EssenceFlame.cs`；`CosmiliteBar`×11 @ 嘉登熔炉双版本注册。
+  治疗火焰目标改从 `Projectile.owner` 取得，修掉经典源固定追踪玩家 0 的多人 bug。
+- 三件下位武器至此完成；验证 0/0、`CheckResources` 235 条、`CheckImplicitTextures` 578 类全命中。
+  待实测分别覆盖灵魂收割者、食尸鬼凿刃和精华剥离者；下一步可进入链顶 `MeleeTypeNanoblackReaper`。
+
+**2026-10-28 会话封装（明天从这里继续）**
+
+- 用户要求封装但**不提交、不推送**。代码基线仍是 `HEAD = f412aca`；三件下位武器的代码、贴图、
+  双语本地化、波尔提斯掉落与 `AGENTS.md` 全部保留在本地工作区。
+- 今天完成：`SoulHarvester` → `GhoulishGouger`（已修正为近战伤害并移入 Melee）→ `EssenceFlayer`
+  （含追踪魂镰、治疗火焰与多人目标修正），均取经典 1.4.2.101 口径。
+- 最后验证：`dotnet build -t:Compile` 0 警告 0 错误；`CheckResources` 235 条、
+  `CheckImplicitTextures` 578 类全命中。本轮未进游戏实测。
+- 明天第一件事先拍板链顶 `MeleeTypeNanoblackReaper` 的配方：建议主配方直接使用本工程三件下位武器
+  + `ShadowspecBar×5 + EndothermicEnergy×40 + DarkPlasma×10 + Nanites×400 @ DraedonsForge`；
+  另一条 `CalamitousEssence×1` 配方需决定现代分支是否自持该材料。拍板后再落代码。
+
 **2026-10-27 DarkSunRing 火焰染色**
 
 - 正确目标文件是 `Content/Items/Accessories/Comprehensive/DarkSunRing.png`：

@@ -41,6 +41,10 @@ namespace CalamityDemutation.Content.Items.Weapons.Melee
             Item.shootSpeed = 12f;
             Item.GetGlobalItem<CalamityDemutationGlobalItem>().postMoonLordRarity = 14;
         }
+        public override void MeleeEffects(Player player, Rectangle hitbox)
+        {
+            CDUtil.BetterSwing(player);
+        }
         /// <summary>
         /// 面板回调与命中召唤激光喷泉的裸面板伤害统一读这里，避免只膨胀一半。
         /// </summary>

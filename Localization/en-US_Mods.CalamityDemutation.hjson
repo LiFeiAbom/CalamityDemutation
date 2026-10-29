@@ -3125,6 +3125,45 @@ Items: {
 		DisplayName: Wrath of the Ancients
 		Tooltip: Summons an energy pulse at the cursor that periodically releases homing spirits
 	}
+
+	GhoulishGouger: {
+		DisplayName: Ghoulish Gouger
+		Tooltip: Throws a ghoulish scythe
+	}
+
+	SoulHarvester: {
+		DisplayName: Soul Harvester
+		Tooltip: Enemies explode when on low health, spreading the plague
+	}
+
+	EssenceFlayer: {
+		DisplayName: Essence Flayer
+		Tooltip: Shoots an essence scythe that generates healing spirits on enemy kills
+	}
+
+	FetidEmesis: {
+		DisplayName: Fetid Emesis
+		Tooltip:
+			'''
+			Has a chance to release rotten chunks instead of bullets
+			40% chance to save ammo
+			'''
+	}
+
+	ForsakenSaber: {
+		DisplayName: Forsaken Saber
+		Tooltip: Shoots two sand blades that alter their velocity as they travel
+	}
+
+	RedSun: {
+		DisplayName: Red Sun
+		Tooltip:
+			'''
+			Drops a barrage of solar flares from the sky
+			'Over paradise'
+			'''
+	}
+
 }
 
 Keybinds: {
@@ -3320,6 +3359,7 @@ Projectiles: {
 	ScarletDevilProjectile.DisplayName: Spear the Gungnir
 	ScarletDevilBullet.DisplayName: Gungnir Bullet
 	ScarletBlast.DisplayName: Scarlet Blast
+	ScarletDevilStealthBurst.DisplayName: Scarlet Devil Star Burst
 	TrueBiomeOrb.DisplayName: Orb
 	WaterSpearFriendly.DisplayName: Spear
 	ElementalExcaliburBeam.DisplayName: Elemental Excalibur Beam
@@ -3390,6 +3430,15 @@ Projectiles: {
 	PanSpark.DisplayName: Spark
 	SearedPanFireball.DisplayName: Flame
 	SearedPanProjectile.DisplayName: Pan
+	SoulScythe.DisplayName: Soul Scythe
+	HiveBombExplosion.DisplayName: Explosion
+	GhoulishGougerProjectile.DisplayName: Ghoulish Scythe
+	EssenceScythe.DisplayName: Essence Scythe
+	EssenceFlame.DisplayName: Essence Flame
+	EmesisGore.DisplayName: Rotten Gore
+	SandBlade.DisplayName: Sand Blade
+	RSSolarFlare.DisplayName: Flare
+	SandFire.DisplayName: Fire
 }
 
 TextContent: {

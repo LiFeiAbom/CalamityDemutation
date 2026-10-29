@@ -401,12 +401,14 @@ namespace CalamityDemutation.Content.Items
                     // 走 DropHelper.CalamityStyle(1/3) 的"每把 1/3、全空则保底随机给一把"抽取；
                     // 本工程沿用既有简化口径（同 YharonBag / DevourerofGodsBag 的 1/3），挂在宝袋上
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BansheeHook>(), 3));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<GhoulishGouger>(), 3));
                     // 本工程自持的空灵征服者：源里同在噬魂幽花袋的武器池里，按同一条 1/3 简化口径挂回
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 3));
                 }
                 if (calamity.TryFind<ModItem>("OldDukeBag", out ModItem oldDukeBag) && item.type == oldDukeBag.Type)
                 {
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<SulphuricAcidCannon>(), 4));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<FetidEmesis>(), 3));
                 }
                 if (calamity.TryFind<ModItem>("SignusBag", out ModItem signusBag) && item.type == signusBag.Type)
                 {
@@ -499,6 +501,7 @@ namespace CalamityDemutation.Content.Items
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<Affliction>(), 1));
                     // 女妖之爪（重制版）：经典版波尔提斯袋里它本就是 CommonDrop(..., 3)，这里是精确复刻
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<BansheeHook>(), 3));
+                    itemLoot.Add(new CommonDrop(ModContent.ItemType<GhoulishGouger>(), 3));
                     // 本工程自持的空灵征服者：经典版噬魂幽花袋同样挂一条 1/3（口径与上面一致）
                     itemLoot.Add(new CommonDrop(ModContent.ItemType<EtherealSubjugator>(), 3));
                 }

@@ -3124,6 +3124,45 @@ Items: {
 		DisplayName: 远古之怒
 		Tooltip: 在鼠标位置召唤能量脉冲，周期性释放追踪灵体
 	}
+
+	GhoulishGouger: {
+		DisplayName: 食尸鬼凿刃
+		Tooltip: 投掷一把回旋的食尸鬼镰刀
+	}
+
+	SoulHarvester: {
+		DisplayName: 灵魂收割者
+		Tooltip: 敌人生命值较低时会爆炸，传播瘟疫
+	}
+
+	EssenceFlayer: {
+		DisplayName: 精华剥离者
+		Tooltip: 发射一把精华镰刀，击杀敌人时生成治疗灵魂
+	}
+
+	FetidEmesis: {
+		DisplayName: 腐臭倾泻者
+		Tooltip:
+			'''
+			有几率射出腐肉而非子弹
+			40% 几率不消耗弹药
+			'''
+	}
+
+	ForsakenSaber: {
+		DisplayName: 遗弃之刃
+		Tooltip: 射出两把会在飞行途中改变速度的沙刃
+	}
+
+	RedSun: {
+		DisplayName: 红日
+		Tooltip:
+			'''
+			从天空降下一阵太阳耀斑
+			「天堂之上」
+			'''
+	}
+
 }
 
 Keybinds: {
@@ -3319,6 +3358,7 @@ Projectiles: {
 	ScarletDevilProjectile.DisplayName: 神枪「冈格尼尔」
 	ScarletDevilBullet.DisplayName: 冈格尼尔追踪弹
 	ScarletBlast.DisplayName: 绯红爆炸
+	ScarletDevilStealthBurst.DisplayName: 绯红恶魔星阵
 	TrueBiomeOrb.DisplayName: 真·环境能量
 	WaterSpearFriendly.DisplayName: 水流长矛
 	ElementalExcaliburBeam.DisplayName: 元素圣剑光束
@@ -3389,6 +3429,15 @@ Projectiles: {
 	PanSpark.DisplayName: 火花
 	SearedPanFireball.DisplayName: 火焰
 	SearedPanProjectile.DisplayName: 平底锅
+	SoulScythe.DisplayName: 灵魂镰刀
+	HiveBombExplosion.DisplayName: 爆炸
+	GhoulishGougerProjectile.DisplayName: 食尸鬼镰刀
+	EssenceScythe.DisplayName: 精华镰刀
+	EssenceFlame.DisplayName: 精华火焰
+	EmesisGore.DisplayName: 腐臭肉块
+	SandBlade.DisplayName: 沙刃
+	RSSolarFlare.DisplayName: 太阳耀斑
+	SandFire.DisplayName: 沙火
 }
 
 TextContent: {

@@ -140,7 +140,9 @@ namespace CalamityDemutation.Content.Projectiles
             // 砸下 6 枚灾厄本体的「纳米闪光」NanoFlare——机制照旧版支线的 NanotechOld，用户 2026-10-07 指定。
             // NanoFlare 走软依赖按名取（经典灾厄没有这件，取不到就整段跳过）；潜行打击状态由 CDUtil
             // 反射读灾厄 GlobalProjectile 的 stealthStrike，经典版恒为 false。本块不写提前 return。
-            if (Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>().nanotech
+            CalamityDemutationPlayer nanotechHitPlayer =
+                Main.player[projectile.owner].GetModPlayer<CalamityDemutationPlayer>();
+            if (nanotechHitPlayer.nanotech && nanotechHitPlayer.nanotechFlareCooldown <= 0
                 && projectile.owner == Main.myPlayer
                 && CDUtil.IsStealthStrike(projectile, out int nanotechStealthHits) && nanotechStealthHits < 3
                 && ModContent.TryFind<ModProjectile>("CalamityMod", "NanoFlare", out ModProjectile nanoFlare))
@@ -152,6 +154,7 @@ namespace CalamityDemutation.Content.Projectiles
                     Projectile.NewProjectile(projectile.GetSource_FromThis(), flareSpawn, flareVelocity, nanoFlare.Type,
                         (int)(projectile.damage * 0.05), 3f, projectile.owner);
                 }
+                nanotechHitPlayer.nanotechFlareCooldown = 15;
             }
             // 魔能谐振仪（manaOverloader）：手持魔法武器时，魔法弹幕命中敌人按其伤害与当前魔力比例吸血
             // （源 CalamityPlayerOnHit 的 manaOverloader 分支）。它与下面的套装吸血相互独立（源里两者不在同一条

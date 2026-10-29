@@ -617,6 +617,13 @@ namespace CalamityDemutation.Players
         /// </summary>
         public bool nanotech = false;
         /// <summary>
+        /// 纳米技术潜行命中召出 NanoFlare 的玩家级共享冷却。
+        /// 256 枚子弹幕各自都有独立的潜行命中计数，没有共享冷却时会重复召出大量 NanoFlare。
+        /// </summary>
+        public int nanotechFlareCooldown;
+        /// <summary>腐臭倾泻者喷出腐肉时的呕吐音效共享冷却，照源为 120 帧。</summary>
+        public int fetidEmesisSoundCooldown;
+        /// <summary>
         /// 星云核心已装备（+20%通用伤害/暴击，20%概率免死并回复100生命）
         /// </summary>
         public bool nebulousCore = false;
@@ -1283,6 +1290,8 @@ namespace CalamityDemutation.Players
             manaJelly = false;
             manaOverloader = false;
             mirageMirror = false;
+            nanotechFlareCooldown = 0;
+            fetidEmesisSoundCooldown = 0;
             mirrorDodgeCooldown = 0;
             nanotech = false;
             nebulousCore = false;
@@ -1432,6 +1441,10 @@ namespace CalamityDemutation.Players
         public override void PostUpdateMiscEffects()
         {
             UpdateSearedPanCounter();
+            if (nanotechFlareCooldown > 0)
+                nanotechFlareCooldown--;
+            if (fetidEmesisSoundCooldown > 0)
+                fetidEmesisSoundCooldown--;
             // 血肉图腾冷却倒计时
             if (fleshTotemCooldown > 0)
                 fleshTotemCooldown--;
